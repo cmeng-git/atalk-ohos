@@ -1,0 +1,344 @@
+/*
+ * Jitsi, the OpenSource Java VoIP and Instant Messaging client.
+ *
+ * Distributable under LGPL license. See terms of license at gnu.org.
+ */
+package org.atalk.impl.neomedia.codec.audio.opus;
+
+import net.sf.fmj.media.AbstractCodec;
+
+import org.atalk.impl.neomedia.codec.AbstractCodec2;
+import org.atalk.impl.neomedia.jmfext.media.renderer.audio.AbstractAudioRenderer;
+import org.atalk.service.neomedia.codec.Constants;
+import org.atalk.service.neomedia.control.FECDecoderControl;
+
+import java.awt.Component;
+
+import javax.media.Buffer;
+import javax.media.Control;
+import javax.media.Format;
+import javax.media.PlugIn;
+import javax.media.ResourceUnavailableException;
+import javax.media.format.AudioFormat;
+
+import timber.log.Timber;
+
+/**
+ * Implements an Opus decoder.
+ *
+ * @author Boris Grozev
+ * @author Lyubomir Marinov
+ * @author Eng Chong Meng
+ */
+public class JNIDecoder extends AbstractCodec2 implements FECDecoderControl
+{
+    /**
+     * The list of <code>Format</code>s of audio data supported as input by <code>JNIDecoder</code> instances.
+     */
+    private static final Format[] SUPPORTED_INPUT_FORMATS
+            = new Format[]{new AudioFormat(Constants.OPUS_RTP)};
+
+    /**
+     * The list of <code>Format</code>s of audio data supported as output by <code>JNIDecoder</code> instances.
+     */
+    private static final Format[] SUPPORTED_OUTPUT_FORMATS = new Format[]{new AudioFormat(
+            AudioFormat.LINEAR,
+            48000,
+            16,
+            1,
+            AbstractAudioRenderer.NATIVE_AUDIO_FORMAT_ENDIAN,
+            AudioFormat.SIGNED,
+            /* frameSizeInBits */Format.NOT_SPECIFIED,
+            /* frameRate */Format.NOT_SPECIFIED,
+            Format.byteArray)
+    };
+
+    static {
+        /*
+         * If the Opus class or its supporting JNI library are not functional, it is too late to
+         * discover the fact in #doOpen() because a JNIDecoder instance has already been initialized
+         * and it has already signaled that the Opus codec is supported.
+         */
+        Opus.assertOpusIsFunctional();
+    }
+
+    /**
+     * Number of channels to decode into.
+     */
+    private int channels = 1;
+
+    /**
+     * Pointer to the native OpusDecoder structure
+     */
+    private long decoder = 0;
+
+    /**
+     * The size in samples per channel of the last decoded frame in the terms of the Opus library.
+     */
+    private int lastFrameSizeInSamplesPerChannel;
+
+    /**
+     * The sequence number of the last processed <code>Buffer</code>.
+     */
+    private long lastSeqNo = Buffer.SEQUENCE_UNKNOWN;
+
+    /**
+     * Number of packets decoded with FEC
+     */
+    private int nbDecodedFec = 0;
+
+    /**
+     * The size in bytes of an audio frame in the terms of the output <code>AudioFormat</code> of this
+     * instance i.e. based on the values of the <code>sampleSizeInBits</code> and <code>channels</code>
+     * properties of the <code>outputFormat</code> of this instance.
+     */
+    private int outputFrameSize;
+
+    /**
+     * The sample rate of the audio data output by this instance.
+     */
+    private int outputSampleRate;
+
+    /**
+     * Initializes a new <code>JNIDecoder</code> instance.
+     */
+    public JNIDecoder()
+    {
+        super("Opus JNI Decoder", AudioFormat.class, SUPPORTED_OUTPUT_FORMATS);
+
+        features = BUFFER_FLAG_FEC | BUFFER_FLAG_PLC;
+        inputFormats = SUPPORTED_INPUT_FORMATS;
+        addControl(this);
+    }
+
+    /**
+     * @see AbstractCodec2#doClose()
+     */
+    @Override
+    protected void doClose()
+    {
+        if (decoder != 0) {
+            Opus.decoder_destroy(decoder);
+            decoder = 0;
+        }
+    }
+
+    /**
+     * Opens this <code>Codec</code> and acquires the resources that it needs to operate. A call to
+     * {@link PlugIn#open()} on this instance will result in a call to <code>doOpen</code> only if
+     * {@link AbstractCodec#opened} is <code>false</code>. All required input and/or output formats are
+     * assumed to have been set on this <code>Codec</code> before <code>doOpen</code> is called.
+     *
+     * @throws ResourceUnavailableException if any of the resources that this <code>Codec</code> needs to operate cannot be acquired
+     * @see AbstractCodec2#doOpen()
+     */
+    @Override
+    protected void doOpen()
+            throws ResourceUnavailableException
+    {
+        if (decoder == 0) {
+            decoder = Opus.decoder_create(outputSampleRate, channels);
+            if (decoder == 0)
+                throw new ResourceUnavailableException("opus_decoder_create");
+
+            lastFrameSizeInSamplesPerChannel = 0;
+            lastSeqNo = Buffer.SEQUENCE_UNKNOWN;
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * Decodes an Opus packet.
+     */
+    @Override
+    protected int doProcess(Buffer inBuf, Buffer outBuf)
+    {
+        Format inFormat = inBuf.getFormat();
+
+        if ((inFormat != null) && (inFormat != this.inputFormat)
+                && !inFormat.equals(this.inputFormat) && (null == setInputFormat(inFormat))) {
+            return BUFFER_PROCESSED_FAILED;
+        }
+        long seqNo = inBuf.getSequenceNumber();
+
+        /*
+         * Buffer.FLAG_SILENCE is set only when the intention is to drop the specified input Buffer
+         * but to note that it has not been lost.
+         */
+        if ((Buffer.FLAG_SILENCE & inBuf.getFlags()) != 0) {
+            lastSeqNo = seqNo;
+            return OUTPUT_BUFFER_NOT_FILLED;
+        }
+
+        int lostSeqNoCount = calculateLostSeqNoCount(lastSeqNo, seqNo);
+        /*
+         * Detect the lost Buffers/packets and decode FEC/PLC. When no in-band forward error
+         * correction data is available, the Opus decoder will operate as if PLC has been specified.
+         */
+        boolean decodeFEC = ((lostSeqNoCount > 0)
+                && (lostSeqNoCount <= MAX_AUDIO_SEQUENCE_NUMBERS_TO_PLC) && (lastFrameSizeInSamplesPerChannel != 0));
+        // boolean decodeFEC = ((lostSeqNoCount > 0) && (lastFrameSizeInSamplesPerChannel != 0));
+
+        if (decodeFEC && ((inBuf.getFlags() & Buffer.FLAG_SKIP_FEC) != 0)) {
+            decodeFEC = false;
+            Timber.d("Opus: not decoding FEC/PLC for %s because of Buffer.FLAG_SKIP_FEC.", seqNo);
+        }
+
+        // After we have determined what is to be decoded, do decode it.
+        byte[] in = (byte[]) inBuf.getData();
+        int inOffset = inBuf.getOffset();
+        int inLength = inBuf.getLength();
+        int outOffset = 0;
+        int outLength = 0;
+        int totalFrameSizeInSamplesPerChannel = 0;
+
+        if (decodeFEC) {
+            inLength = (lostSeqNoCount == 1) ? inLength /* FEC */ : 0 /* PLC */;
+
+            byte[] out = validateByteArraySize(outBuf, outOffset + lastFrameSizeInSamplesPerChannel
+                    * outputFrameSize, outOffset != 0);
+            int frameSizeInSamplesPerChannel = Opus.decode(decoder, in, inOffset, inLength, out,
+                    outOffset, lastFrameSizeInSamplesPerChannel,1);
+
+            if (frameSizeInSamplesPerChannel > 0) {
+                int frameSizeInBytes = frameSizeInSamplesPerChannel * outputFrameSize;
+
+                outLength += frameSizeInBytes;
+                outOffset += frameSizeInBytes;
+                totalFrameSizeInSamplesPerChannel += frameSizeInSamplesPerChannel;
+
+                outBuf.setFlags(outBuf.getFlags()
+                        | (((in == null) || (inLength == 0)) ? BUFFER_FLAG_PLC : BUFFER_FLAG_FEC));
+
+                long ts = inBuf.getRtpTimeStamp();
+                ts -= lostSeqNoCount * lastFrameSizeInSamplesPerChannel;
+                if (ts < 0)
+                    ts += 1L << 32;
+                outBuf.setRtpTimeStamp(ts);
+                nbDecodedFec++;
+            }
+            lastSeqNo = incrementSeqNo(lastSeqNo);
+        }
+        else {
+            int frameSizeInSamplesPerChannel = Opus.decoder_get_nb_samples(decoder, in, inOffset, inLength);
+            byte[] out = validateByteArraySize(outBuf, outOffset + frameSizeInSamplesPerChannel
+                    * outputFrameSize, outOffset != 0);
+
+            frameSizeInSamplesPerChannel = Opus.decode(decoder, in, inOffset, inLength, out,
+                    outOffset, frameSizeInSamplesPerChannel,
+                    /* decodeFEC */0);
+            if (frameSizeInSamplesPerChannel > 0) {
+                int frameSizeInBytes = frameSizeInSamplesPerChannel * outputFrameSize;
+
+                outLength += frameSizeInBytes;
+                outOffset += frameSizeInBytes;
+                totalFrameSizeInSamplesPerChannel += frameSizeInSamplesPerChannel;
+
+                outBuf.setFlags(outBuf.getFlags() & ~(BUFFER_FLAG_FEC | BUFFER_FLAG_PLC));
+
+                /*
+                 * When we encounter a lost frame, we will presume that it was of the same duration
+                 * as the last received frame.
+                 */
+                lastFrameSizeInSamplesPerChannel = frameSizeInSamplesPerChannel;
+            }
+            lastSeqNo = seqNo;
+        }
+
+        int ret = (lastSeqNo == seqNo) ? BUFFER_PROCESSED_OK : INPUT_BUFFER_NOT_CONSUMED;
+
+        if (outLength > 0) {
+            outBuf.setDuration(totalFrameSizeInSamplesPerChannel * 1000L * 1000L * 1000L / outputSampleRate);
+            outBuf.setFormat(getOutputFormat());
+            outBuf.setLength(outLength);
+            outBuf.setOffset(0);
+            /*
+             * The sequence number is not likely to be important after the depacketization and the
+             * decoding but BasicFilterModule will copy them from the input Buffer into the output
+             * Buffer anyway so it makes sense to keep the sequence number straight for the sake of
+             * completeness.
+             */
+            outBuf.setSequenceNumber(lastSeqNo);
+        }
+        else {
+            ret |= OUTPUT_BUFFER_NOT_FILLED;
+        }
+        return ret;
+    }
+
+    /**
+     * Returns the number of packets decoded with FEC.
+     *
+     * @return the number of packets decoded with FEC
+     */
+    @Override
+    public int fecPacketsDecoded()
+    {
+        return nbDecodedFec;
+    }
+
+    /**
+     * Implements {@link Control#getControlComponent()}. <code>JNIDecoder</code> does not provide user interface of its own.
+     *
+     * @return <code>null</code> to signify that <code>JNIDecoder</code> does not provide user interface of its own
+     */
+    @Override
+    public Component getControlComponent()
+    {
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected Format[] getMatchingOutputFormats(Format inputFormat)
+    {
+        AudioFormat af = (AudioFormat) inputFormat;
+
+        return new Format[]{new AudioFormat(
+                AudioFormat.LINEAR,
+                af.getSampleRate(),
+                16,
+                1,
+                AbstractAudioRenderer.NATIVE_AUDIO_FORMAT_ENDIAN,
+                AudioFormat.SIGNED,
+                /* frameSizeInBits */Format.NOT_SPECIFIED,
+                /* frameRate */Format.NOT_SPECIFIED,
+                Format.byteArray)};
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * Makes sure that the <code>outputFormat</code> of this instance is in accord with the
+     * <code>inputFormat</code> of this instance.
+     */
+    @Override
+    public Format setInputFormat(Format format)
+    {
+        Format inFormat = super.setInputFormat(format);
+
+        if ((inFormat != null) && (outputFormat == null))
+            setOutputFormat(SUPPORTED_OUTPUT_FORMATS[0]);
+        return inFormat;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Format setOutputFormat(Format format)
+    {
+        Format setOutputFormat = super.setOutputFormat(format);
+
+        if (setOutputFormat != null) {
+            AudioFormat af = (AudioFormat) setOutputFormat;
+
+            outputFrameSize = (af.getSampleSizeInBits() / 8) * af.getChannels();
+            outputSampleRate = (int) af.getSampleRate();
+        }
+        return setOutputFormat;
+    }
+}
