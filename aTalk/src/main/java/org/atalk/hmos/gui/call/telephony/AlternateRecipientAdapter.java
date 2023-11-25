@@ -10,6 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import org.atalk.hmos.R;
+import org.atalk.hmos.gui.call.telephony.RecipientSelectView.Recipient;
 
 import java.util.List;
 
@@ -22,8 +23,8 @@ public class AlternateRecipientAdapter extends BaseAdapter
 
     private final Context context;
     private final AlternateRecipientListener listener;
-    private List<RecipientSelectView.Recipient> recipients;
-    private RecipientSelectView.Recipient currentRecipient;
+    private List<Recipient> recipients;
+    private Recipient currentRecipient;
     private boolean showAdvancedInfo;
 
 
@@ -34,12 +35,12 @@ public class AlternateRecipientAdapter extends BaseAdapter
         this.listener = listener;
     }
 
-    public void setCurrentRecipient(RecipientSelectView.Recipient currentRecipient)
+    public void setCurrentRecipient(Recipient currentRecipient)
     {
         this.currentRecipient = currentRecipient;
     }
 
-    public void setAlternateRecipientInfo(List<RecipientSelectView.Recipient> recipients)
+    public void setAlternateRecipientInfo(List<Recipient> recipients)
     {
         this.recipients = recipients;
         int indexOfCurrentRecipient = recipients.indexOf(currentRecipient);
@@ -60,7 +61,7 @@ public class AlternateRecipientAdapter extends BaseAdapter
     }
 
     @Override
-    public RecipientSelectView.Recipient getItem(int position)
+    public Recipient getItem(int position)
     {
         if (position == POSITION_HEADER_VIEW || position == POSITION_CURRENT_ADDRESS) {
             return currentRecipient;
@@ -74,7 +75,7 @@ public class AlternateRecipientAdapter extends BaseAdapter
         return position;
     }
 
-    private RecipientSelectView.Recipient getRecipientFromPosition(int position)
+    private Recipient getRecipientFromPosition(int position)
     {
         return recipients.get(position - NUMBER_OF_FIXED_LIST_ITEMS);
     }
@@ -86,7 +87,7 @@ public class AlternateRecipientAdapter extends BaseAdapter
             view = newView(parent);
         }
 
-        RecipientSelectView.Recipient recipient = getItem(position);
+        Recipient recipient = getItem(position);
 
         if (position == POSITION_HEADER_VIEW) {
             bindHeaderView(view, recipient);
@@ -112,7 +113,7 @@ public class AlternateRecipientAdapter extends BaseAdapter
         return position != POSITION_HEADER_VIEW;
     }
 
-    public void bindHeaderView(View view, RecipientSelectView.Recipient recipient)
+    public void bindHeaderView(View view, Recipient recipient)
     {
         RecipientTokenHolder holder = (RecipientTokenHolder) view.getTag();
         holder.setShowAsHeader(true);
@@ -129,7 +130,7 @@ public class AlternateRecipientAdapter extends BaseAdapter
         holder.headerRemove.setOnClickListener(v -> listener.onRecipientRemove(currentRecipient));
     }
 
-    public void bindItemView(View view, final RecipientSelectView.Recipient recipient)
+    public void bindItemView(View view, final Recipient recipient)
     {
         RecipientTokenHolder holder = (RecipientTokenHolder) view.getTag();
         holder.setShowAsHeader(false);
@@ -188,8 +189,8 @@ public class AlternateRecipientAdapter extends BaseAdapter
 
     public interface AlternateRecipientListener
     {
-        void onRecipientRemove(RecipientSelectView.Recipient currentRecipient);
+        void onRecipientRemove(Recipient currentRecipient);
 
-        void onRecipientChange(RecipientSelectView.Recipient currentRecipient, RecipientSelectView.Recipient alternateRecipient);
+        void onRecipientChange(Recipient currentRecipient, Recipient alternateRecipient);
     }
 }

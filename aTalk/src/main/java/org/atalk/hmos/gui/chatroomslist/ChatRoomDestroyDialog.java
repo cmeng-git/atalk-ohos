@@ -16,9 +16,6 @@
  */
 package org.atalk.hmos.gui.chatroomslist;
 
-import static org.atalk.hmos.R.id.ReasonDestroy;
-import static org.atalk.hmos.R.id.VenueAlternate;
-
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -102,8 +99,8 @@ public class ChatRoomDestroyDialog extends OSGiFragment
         public boolean onConfirmClicked(DialogActivity dialog)
         {
             View view = dialog.getContentFragment().getView();
-            String reason = ViewUtil.toString(view.findViewById(ReasonDestroy));
-            String venue = ViewUtil.toString(view.findViewById(VenueAlternate));
+            String reason = ViewUtil.toString(view.findViewById(R.id.ReasonDestroy));
+            String venue = ViewUtil.toString(view.findViewById(R.id.VenueAlternate));
 
             EntityBareJid entityBareJid = null;
             if (venue != null) {

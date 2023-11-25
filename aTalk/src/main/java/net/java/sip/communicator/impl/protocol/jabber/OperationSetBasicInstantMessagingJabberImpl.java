@@ -474,7 +474,6 @@ public class OperationSetBasicInstantMessagingJabberImpl extends AbstractOperati
             }
 
             // msg.addExtension(new Version());
-            // Disable carbon for OTR message
             if (event.isMessageEncrypted() && isCarbonEnabled) {
                 CarbonExtension.Private.addTo(messageBuilder);
             }
@@ -838,8 +837,8 @@ public class OperationSetBasicInstantMessagingJabberImpl extends AbstractOperati
         String msgID = message.getStanzaId();
         String correctedMessageUID = getCorrectionMessageId(message);
 
-        // Get the message type i.e. OTR or NONE; for chat message encryption indication
-        int encType = msgBody.startsWith("?OTR") ? IMessage.ENCRYPTION_OTR : IMessage.ENCRYPTION_NONE;
+        // Get the message type i.e. NONE; for chat message encryption indication
+        int encType = IMessage.ENCRYPTION_NONE;
 
         // set up default in case XHTMLExtension contains no message
         // if msgBody contains markup text then set as ENCODE_HTML mode

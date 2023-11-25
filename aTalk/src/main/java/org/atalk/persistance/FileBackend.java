@@ -355,8 +355,10 @@ public class FileBackend
     {
         String mimeType = null;
         if (ContentResolver.SCHEME_CONTENT.equals(uri.getScheme())) {
-            ContentResolver cr = ctx.getContentResolver();
-            mimeType = cr.getType(uri);
+            if (ctx != null) {
+                ContentResolver cr = ctx.getContentResolver();
+                mimeType = cr.getType(uri);
+            }
         }
         else {
             String fileExtension;

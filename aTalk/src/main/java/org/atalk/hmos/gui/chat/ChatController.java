@@ -329,8 +329,6 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
         int encryption = IMessage.ENCRYPTION_NONE;
         if (chatPanel.isOmemoChat())
             encryption = IMessage.ENCRYPTION_OMEMO;
-        else if (chatPanel.isOTRChat())
-            encryption = IMessage.ENCRYPTION_OTR;
 
         if (correctionUID == null) {
             try {

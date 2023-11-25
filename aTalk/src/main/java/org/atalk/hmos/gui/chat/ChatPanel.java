@@ -105,7 +105,7 @@ public class ChatPanel implements Chat, MessageListener {
 
     /**
      * The chatType for which the message will be send for method not using Transform process
-     * i.e. OTR. This is also the master copy where other will update or refer to.
+     * i.e. OMEMO. This is also the master copy where other will update or refer to.
      * The state may also be change by the under lying signal protocol based on the current
      * signalling condition.
      */
@@ -289,16 +289,6 @@ public class ChatPanel implements Chat, MessageListener {
         return ((mChatType == ChatFragment.MSGTYPE_OMEMO)
                 || (mChatType == ChatFragment.MSGTYPE_OMEMO_UA)
                 || (mChatType == ChatFragment.MSGTYPE_OMEMO_UT));
-    }
-
-    /**
-     * Check if current chat is set to OTR crypto mode
-     *
-     * @return return <code>true</code> if OMEMO crypto chat is selected
-     */
-    public boolean isOTRChat() {
-        return ((mChatType == ChatFragment.MSGTYPE_OTR)
-                || (mChatType == ChatFragment.MSGTYPE_OTR_UA));
     }
 
     /**
@@ -760,8 +750,6 @@ public class ChatPanel implements Chat, MessageListener {
         int encryption = IMessage.ENCRYPTION_NONE;
         if (isOmemoChat())
             encryption = IMessage.ENCRYPTION_OMEMO;
-        else if (isOTRChat())
-            encryption = IMessage.ENCRYPTION_OTR;
 
         try {
             mCurrentChatTransport.sendInstantMessage(message, encryption | encType);

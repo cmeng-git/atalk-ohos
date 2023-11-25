@@ -132,7 +132,7 @@ public class AndroidGUIActivator implements BundleActivator
         }
         ConfigurationUtils.loadGuiConfigurations();
 
-        // Register show history settings OTR link listener
+        // Register show history settings OMEMO link listener
         ChatSessionManager.addChatLinkListener(new CryptoFragment.ShowHistoryLinkListener());
     }
 

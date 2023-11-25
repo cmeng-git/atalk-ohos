@@ -1704,7 +1704,8 @@ public class MetaContactListServiceImpl implements MetaContactListService, Servi
                 }
             }
 
-            if (sourceFactory != null && mCurrentlyInstalledProviders.containsKey(accountID.getAccountUniqueID())) {
+            if (sourceFactory != null && mCurrentlyInstalledProviders.containsKey(
+                    pps.getAccountID().getAccountUniqueID())) {
                 Timber.d("Modifying an existing installed account: %s", accountID);
                 // the account is already installed and this event is coming from a modification.
                 // we don't return here as the account is removed and added again and we must

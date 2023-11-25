@@ -119,6 +119,12 @@ public class ChatActivity extends OSGiActivity
         ChatRoomConfiguration.ChatRoomConfigListener, LocalUserChatRoomPresenceListener {
     private static final int REQUEST_CODE_OPEN_FILE = 105;
     private static final int REQUEST_CODE_SHARE_WITH = 200;
+
+    /*
+     * Share of both text and images in a single intent for local forward only in aTalk;
+     * msgContent is saved intent.categories if both types are required;
+     * Otherwise follow standard share method i.e. REQUEST_CODE_SHARE_WITH
+     */
     private static final int REQUEST_CODE_FORWARD = 201;
 
     public final static String CRYPTO_FRAGMENT = "crypto_fragment";
@@ -173,7 +179,6 @@ public class ChatActivity extends OSGiActivity
     private MenuItem mChatRoomMember;
     private MenuItem mChatRoomConfig;
     private MenuItem mChatRoomNickSubject;
-    private MenuItem mOtr_Session;
     /**
      * Holds chatId that is currently handled by this Activity.
      */
@@ -221,7 +226,7 @@ public class ChatActivity extends OSGiActivity
         if (postRestoreIntent()) {
             return;
         }
-        // Add fragment for crypto padLock for OTR and OMEMO before start pager
+        // Add fragment for crypto padLock for OMEMO before start pager
         cryptoFragment = new CryptoFragment();
         getSupportFragmentManager().beginTransaction().add(cryptoFragment, CRYPTO_FRAGMENT).commit();
 
@@ -460,9 +465,17 @@ public class ChatActivity extends OSGiActivity
         mChatRoomMember = mMenu.findItem(R.id.show_chatroom_occupant);
         mChatRoomConfig = mMenu.findItem(R.id.chatroom_config);
         mChatRoomNickSubject = mMenu.findItem(R.id.chatroom_info_change);
-        mOtr_Session = menu.findItem(R.id.otr_session);
         setOptionItem();
         return true;
+    }
+
+    private boolean hasUploadService() {
+        XMPPConnection connection = selectedChatPanel.getProtocolProvider().getConnection();
+        if (connection != null) {
+            HttpFileUploadManager httpFileUploadManager = HttpFileUploadManager.getInstanceFor(connection);
+            return httpFileUploadManager.isUploadServiceDiscovered();
+        }
+        return false;
     }
 
     // Enable option items only applicable to the specific chatSession
@@ -472,13 +485,6 @@ public class ChatActivity extends OSGiActivity
             ChatSession chatSession = selectedChatPanel.getChatSession();
             boolean contactSession = (chatSession instanceof MetaContactChatSession);
             if (contactSession) {
-                boolean hasUploadService = false;
-                XMPPConnection connection = selectedChatPanel.getProtocolProvider().getConnection();
-                if (connection != null) {
-                    HttpFileUploadManager httpFileUploadManager = HttpFileUploadManager.getInstanceFor(connection);
-                    hasUploadService = httpFileUploadManager.isUploadServiceDiscovered();
-                }
-
                 mLeaveChatRoom.setVisible(false);
                 mDestroyChatRoom.setVisible(false);
                 mHistoryErase.setTitle(R.string.service_gui_HISTORY_ERASE_PER_CONTACT);
@@ -494,7 +500,7 @@ public class ChatActivity extends OSGiActivity
                 mCallVideoContact.setVisible(isShowVideoCall);
 
                 boolean isShowFileSend = !isDomainJid
-                        && (contactRenderer.isShowFileSendBtn(metaContact) || hasUploadService);
+                        && (contactRenderer.isShowFileSendBtn(metaContact) || hasUploadService());
                 mSendFile.setVisible(isShowFileSend);
                 mSendLocation.setVisible(!isDomainJid);
 
@@ -508,19 +514,12 @@ public class ChatActivity extends OSGiActivity
                 mChatRoomMember.setVisible(false);
                 mChatRoomConfig.setVisible(false);
                 mChatRoomNickSubject.setVisible(false);
-                // Also let CryptoFragment handles this to take care Omemo and OTR
-                mOtr_Session.setVisible(!isDomainJid);
             }
             else {
                 setupChatRoomOptionItem();
             }
             // Show the TTS enable option only if global TTS option is enabled.
             mTtsEnable.setVisible(ConfigurationUtils.isTtsEnable());
-
-            MenuItem mPadlock = mMenu.findItem(R.id.otr_padlock);
-            if (mPadlock != null) {
-                mPadlock.setVisible(contactSession);
-            }
         }
     }
 
@@ -531,13 +530,6 @@ public class ChatActivity extends OSGiActivity
             if (!(chatSession instanceof ConferenceChatSession))
                 return;
 
-            boolean hasUploadService = false;
-            XMPPConnection connection = selectedChatPanel.getProtocolProvider().getConnection();
-            if (connection != null) {
-                HttpFileUploadManager httpFileUploadManager = HttpFileUploadManager.getInstanceFor(connection);
-                hasUploadService = httpFileUploadManager.isUploadServiceDiscovered();
-            }
-
             // Only room owner is allowed to destroy chatRoom - role should not be null for joined room
             ChatRoomWrapper chatRoomWrapper = (ChatRoomWrapper) chatSession.getDescriptor();
             ChatRoomMemberRole role = chatRoomWrapper.getChatRoom().getUserRole();
@@ -547,7 +539,7 @@ public class ChatActivity extends OSGiActivity
 
             boolean isJoined = chatRoomWrapper.getChatRoom().isJoined();
             mLeaveChatRoom.setVisible(isJoined);
-            mSendFile.setVisible(isJoined && hasUploadService);
+            mSendFile.setVisible(isJoined && hasUploadService());
             mSendLocation.setVisible(isJoined);
 
             mTtsEnable.setVisible(isJoined);
@@ -567,7 +559,6 @@ public class ChatActivity extends OSGiActivity
             // not available in chatRoom
             mCallAudioContact.setVisible(false);
             mCallVideoContact.setVisible(false);
-            mOtr_Session.setVisible(false);
         }
     }
 
@@ -931,7 +922,7 @@ public class ChatActivity extends OSGiActivity
     }
 
     /**
-     * Opens a FileChooserDialog to let the user pick attachments
+     * Opens a FileChooserDialog to let the user pick attachments; Add the selected items into the mediaPreviewAdapter
      */
     private ActivityResultLauncher<String> getAttachments() {
         return registerForActivityResult(new ActivityResultContracts.GetMultipleContents(), uris -> {
@@ -1063,7 +1054,7 @@ public class ChatActivity extends OSGiActivity
      * @param file the file to open
      */
     public void openDownloadable(File file, View view) {
-        if (!file.exists()) {
+        if ((file == null) || !file.exists()) {
             showToastMessage(R.string.service_gui_FILE_DOES_NOT_EXIST);
             return;
         }
@@ -1159,7 +1150,7 @@ public class ChatActivity extends OSGiActivity
     /**
      * Release the exoPlayer resource on end
      */
-    public void releasePlayer() {
+    private void releasePlayer() {
         // remove the existing player view
         Fragment playerView = getSupportFragmentManager().findFragmentById(R.id.player_container);
         if (playerView != null)
@@ -1279,8 +1270,8 @@ public class ChatActivity extends OSGiActivity
 
     /*
      * This method handles the display of Youtube Player when screen orientation is rotated
-     * Set to fullscreen mode when in landscape, else otherwise
-     * Not working weell - disabled
+     * Set to fullscreen mode when in landscape, else otherwise.
+     * Not working well - disabled
      */
 //    @Override
 //    public void onConfigurationChanged(@NotNull Configuration newConfig)

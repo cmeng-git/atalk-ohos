@@ -4,7 +4,7 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
-#include "org_atalk_impl_neomedia_codec_video_h264_OMXDecoder.h"
+#include "H264_OMXDecoder.h"
 
 #include <android/log.h>
 #include <dlfcn.h> /* dlclose, dlopen, dlsym */

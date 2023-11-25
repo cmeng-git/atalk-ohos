@@ -50,7 +50,7 @@ public class MyWebViewClient extends WebViewClient
     // Domain match pattern for last two segments of host
     private final Pattern pattern = Pattern.compile("^.*?[.](.*?[.].+?)$");
 
-    private final org.atalk.hmos.gui.webview.WebViewFragment viewFragment;
+    private final WebViewFragment viewFragment;
     private final Context mContext;
 
     private EditText mPasswordField;

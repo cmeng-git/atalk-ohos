@@ -302,7 +302,7 @@ public class ColibriIQProvider extends IQProvider<ColibriConferenceIQ>
                             String direction = parser.getAttributeValue("",
                                     ColibriConferenceIQ.Channel.DIRECTION_ATTR_NAME);
                             if (StringUtils.isNotEmpty(direction)) {
-                                channel.setDirection(MediaDirection.fromString(direction));
+                                channel.setDirection(MediaDirection.valueOf(direction));
                             }
 
                             // endpoint

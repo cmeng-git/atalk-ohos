@@ -127,8 +127,7 @@ public class MessageSourceContact extends DataObject
     }
 
     /**
-     * Make sure the content of the message is not too long, as it will fill up tooltips and ui
-     * components.
+     * Make sure the content of the message is not too long, as it will fill up tooltips and ui components.
      */
     private void updateMessageContent()
     {

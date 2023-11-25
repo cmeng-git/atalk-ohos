@@ -89,7 +89,7 @@ public class UserAvatarManager extends AvatarManager
      */
     public static final String AVATAR_METADATA_NODE = AvatarMetadata.NAMESPACE;
 
-    private static Map<XMPPConnection, UserAvatarManager> instances = new WeakHashMap<>();
+    private static final Map<XMPPConnection, UserAvatarManager> instances = new WeakHashMap<>();
 
     /*
      * Listeners to be informed if there is new avatar updated.
@@ -99,7 +99,7 @@ public class UserAvatarManager extends AvatarManager
     /*
      * The PEPManager associated with tis connection.
      */
-    private PepManager mPepManager;
+    private final PepManager mPepManager;
 
     static {
         XMPPConnectionRegistry.addConnectionCreationListener(UserAvatarManager::getInstanceFor);

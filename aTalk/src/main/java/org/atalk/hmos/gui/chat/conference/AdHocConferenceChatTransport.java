@@ -305,7 +305,7 @@ public class AdHocConferenceChatTransport implements ChatTransport
             throws Exception
     {
         // check to see if server supports httpFileUpload service if contact is off line or legacy file transfer failed
-        if (httpFileUploadManager.isUploadServiceDiscovered()) {
+        if (allowsFileTransfer()) {
             int encType = IMessage.ENCRYPTION_NONE;
             Object url;
             try {
@@ -331,6 +331,7 @@ public class AdHocConferenceChatTransport implements ChatTransport
      *
      * @return {@code true} if this chat transport supports file transfer, otherwise returns {@code false}.
      */
+    @Override
     public boolean allowsFileTransfer()
     {
         return httpFileUploadManager.isUploadServiceDiscovered();

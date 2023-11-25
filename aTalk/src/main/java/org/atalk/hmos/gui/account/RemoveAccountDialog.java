@@ -5,8 +5,6 @@
  */
 package org.atalk.hmos.gui.account;
 
-import static net.java.sip.communicator.plugin.otr.OtrActivator.configService;
-
 import android.content.Context;
 import android.content.DialogInterface;
 
@@ -18,6 +16,7 @@ import net.java.sip.communicator.util.account.AccountUtils;
 
 import org.atalk.crypto.omemo.SQLiteOmemoStore;
 import org.atalk.hmos.R;
+import org.atalk.hmos.gui.AndroidGUIActivator;
 import org.jivesoftware.smackx.omemo.OmemoService;
 
 /**
@@ -83,7 +82,7 @@ public class RemoveAccountDialog
     {
         ProtocolProviderFactory providerFactory = AccountUtils.getProtocolProviderFactory(accountId.getProtocolName());
         String accountUuid = accountId.getAccountUuid();
-        configService.setProperty(accountUuid, null);
+        AndroidGUIActivator.getConfigurationService().setProperty(accountUuid, null);
 
         boolean isUninstalled = providerFactory.uninstallAccount(accountId);
         if (!isUninstalled)

@@ -107,7 +107,7 @@ android {
     }
 
     // aTalk is only compatible to ndkVersion '20.0.5594570' max version
-    ndkVersion '20.0.5594570'
+    ndkVersion '22.1.7171670'
 
     /*
      * Is OK for release version, but when build for debug it throws the following message and hangs aTalk:
@@ -220,14 +220,14 @@ dependencies {
     // generated files in libs/$(TARGET_ARCH_ABI)/*.so and libs/*.jar
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
+    // 1.12.0 is only compatible with API-34
     implementation 'androidx.core:core-ktx:1.10.1'
 
-    // Upgrade android libraries to 1.5.x create problem. Required API-33
-    // See https://issuetracker.google.com/issues/240473335
+    // not compatible with 1.8.0
     implementation 'androidx.activity:activity-ktx:1.7.2'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'androidx.fragment:fragment-ktx:1.6.1'
+    implementation 'androidx.fragment:fragment-ktx:1.6.2'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.legacy:legacy-support-v13:1.0.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
@@ -236,8 +236,8 @@ dependencies {
 
     // for android better picker
     implementation 'com.code-troopers.betterpickers:library:3.1.0'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.3'
     implementation 'com.jakewharton:butterknife:10.2.3'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.3'
 
     implementation('com.jakewharton.timber:timber:5.0.1') {
         transitive = false
@@ -328,9 +328,8 @@ dependencies {
     // (dependencies = jxmpp-core + jxmpp-stringprep-libidn')
     // implementation 'org.jetbrains:annotations-java5:15.0'
 
-    // osgi v8.0.0 is not compatible with android api-21
     implementation 'org.osgi:osgi.core:8.0.0'
-    implementation 'org.osmdroid:osmdroid-android:6.1.14'
+    implementation 'org.osmdroid:osmdroid-android:6.1.17'
 
     /*
      * https://www.javatips.net/api/jarjar-master/jarjar-gradle/src/main/java/org/anarres/gradle/plugin/jarjar/JarjarController.java

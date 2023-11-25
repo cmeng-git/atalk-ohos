@@ -70,7 +70,8 @@ public class AndroidUsingLinkProperties extends AbstractDnsServerLookupMechanism
     @Override
     public boolean isAvailable()
     {
-        return true;
+        // return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
+		return true;
     }
 
     private Network getActiveNetwork()

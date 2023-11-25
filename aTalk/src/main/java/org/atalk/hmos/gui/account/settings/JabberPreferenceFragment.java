@@ -307,20 +307,22 @@ public class JabberPreferenceFragment extends AccountPreferenceFragment
             return;
 
         super.onSharedPreferenceChanged(shPrefs, key);
-        if (key.equals(P_KEY_USER_ID)) {
-            getUserConfirmation(shPrefs);
-        }
-        else if (key.equals(P_KEY_PASSWORD)) {
-            // seems the encrypted password is not save to DB but work?- need further investigation in signin if have problem
-            jbrReg.setPassword(shPrefs.getString(P_KEY_PASSWORD, null));
-        }
-        else if (key.equals(P_KEY_STORE_PASSWORD)) {
-            jbrReg.setRememberPassword(shPrefs.getBoolean(P_KEY_STORE_PASSWORD, false));
-        }
-        else if (key.equals(P_KEY_DNSSEC_MODE)) {
-            String dnssecMode = shPrefs.getString(P_KEY_DNSSEC_MODE,
-                    getResources().getStringArray(R.array.dnssec_Mode_value)[0]);
-            jbrReg.setDnssMode(dnssecMode);
+        switch (key) {
+            case P_KEY_USER_ID:
+                getUserConfirmation(shPrefs);
+                break;
+            case P_KEY_PASSWORD:
+                // seems the encrypted password is not save to DB but work?- need further investigation in signin if have problem
+                jbrReg.setPassword(shPrefs.getString(P_KEY_PASSWORD, null));
+                break;
+            case P_KEY_STORE_PASSWORD:
+                jbrReg.setRememberPassword(shPrefs.getBoolean(P_KEY_STORE_PASSWORD, false));
+                break;
+            case P_KEY_DNSSEC_MODE:
+                String dnssecMode = shPrefs.getString(P_KEY_DNSSEC_MODE,
+                        getResources().getStringArray(R.array.dnssec_Mode_value)[0]);
+                jbrReg.setDnssMode(dnssecMode);
+                break;
         }
     }
 

@@ -327,7 +327,7 @@ public class ConferenceChatTransport implements ChatTransport {
     private Object httpFileUpload(File file, int chatType, FileSendConversation xferCon)
             throws Exception {
         // check to see if server supports httpFileUpload service if contact is off line or legacy file transfer failed
-        if (httpFileUploadManager.isUploadServiceDiscovered()) {
+        if (allowsFileTransfer()) {
             int encType = IMessage.ENCRYPTION_NONE;
             Object url;
             try {
@@ -351,8 +351,9 @@ public class ConferenceChatTransport implements ChatTransport {
      *
      * @return {@code true} if this chat transport supports file transfer, otherwise returns {@code false}.
      */
-    private boolean allowsFileTransfer() {
-        return (httpFileUploadManager != null) && httpFileUploadManager.isUploadServiceDiscovered();
+    @Override
+    public boolean allowsFileTransfer() {
+        return httpFileUploadManager.isUploadServiceDiscovered();
     }
 
     /**
@@ -361,8 +362,7 @@ public class ConferenceChatTransport implements ChatTransport {
      * @return the file length that is supported.
      */
     public long getMaximumFileLength() {
-        return (httpFileUploadManager == null)
-                ? 0 : httpFileUploadManager.getDefaultUploadService().getMaxFileSize();
+        return (allowsFileTransfer()) ? httpFileUploadManager.getDefaultUploadService().getMaxFileSize() : 0;
     }
 
     /**

@@ -101,7 +101,6 @@ import org.atalk.hmos.aTalkApp;
 import org.atalk.hmos.gui.AndroidGUIActivator;
 import org.atalk.hmos.gui.aTalk;
 import org.atalk.hmos.gui.account.AndroidLoginRenderer;
-import org.atalk.hmos.gui.chat.chatsession.ChatSessionFragment;
 import org.atalk.hmos.gui.chat.filetransfer.FileHistoryConversation;
 import org.atalk.hmos.gui.chat.filetransfer.FileHttpDownloadConversation;
 import org.atalk.hmos.gui.chat.filetransfer.FileReceiveConversation;
@@ -220,14 +219,9 @@ public class ChatFragment extends OSGiFragment implements ChatSessionManager.Cur
     // Message chatType definitions - persistent storage constants
     public final static int MSGTYPE_UNKNOWN = 0x0;
     public final static int MSGTYPE_NORMAL = 0x1;
-
     public final static int MSGTYPE_OMEMO = 0x02;
     public final static int MSGTYPE_OMEMO_UT = 0x12;
     public final static int MSGTYPE_OMEMO_UA = 0x22;
-
-    public final static int MSGTYPE_OTR = 0x03;
-    public final static int MSGTYPE_OTR_UA = 0x23;
-
     public final static int MSGTYPE_MUC_NORMAL = 0x04;
 
     /**
@@ -1598,7 +1592,7 @@ public class ChatFragment extends OSGiFragment implements ChatSessionManager.Cur
                 // check and make link clickable if it is not an HTTP file link
                 Spannable body = (Spannable) msgDisplay.getBody(messageViewHolder.messageView);
 
-                // OTR system messages must use setMovementMethod to make the link clickable
+                // All system messages must use setMovementMethod to make the link clickable
                 if (messageViewHolder.viewType == SYSTEM_MESSAGE_VIEW) {
                     messageViewHolder.messageView.setMovementMethod(LinkMovementMethod.getInstance());
                 }
@@ -1864,7 +1858,6 @@ public class ChatFragment extends OSGiFragment implements ChatSessionManager.Cur
             Timber.d("Contact presence status changed: %s", sourceContact.getAddress());
 
             if ((chatPanel.getMetaContact() != null) && chatPanel.getMetaContact().containsContact(sourceContact)) {
-                mCryptoFragment.onContactPresenceStatusChanged();
                 new UpdateStatusTask().execute();
             }
         }
@@ -2437,9 +2430,6 @@ public class ChatFragment extends OSGiFragment implements ChatSessionManager.Cur
                 case IMessage.ENCRYPTION_OMEMO:
                     encStateView.setImageResource(R.drawable.encryption_omemo);
                     break;
-                case IMessage.ENCRYPTION_OTR:
-                    encStateView.setImageResource(R.drawable.encryption_otr);
-                    break;
             }
         });
     }
@@ -2738,7 +2728,6 @@ public class ChatFragment extends OSGiFragment implements ChatSessionManager.Cur
      * - User launches a chatSession
      * - User scroll the chatFragment pages
      * - User changes cryptoMode for the current chatSession
-     * - Change requests from OTR Listener due to OTR state changes
      */
 
     @Override
@@ -2749,7 +2738,7 @@ public class ChatFragment extends OSGiFragment implements ChatSessionManager.Cur
 
     /**
      * Change chatFragment background in response to initial chat session launch or event
-     * triggered from omemoAuthentication and OTR mode changes in cryptoChatFragment
+     * triggered from omemoAuthentication changes in cryptoChatFragment
      *
      * @param chatType Change chat fragment view background color based on chatType
      */
@@ -2767,12 +2756,6 @@ public class ChatFragment extends OSGiFragment implements ChatSessionManager.Cur
                 case MSGTYPE_OMEMO_UA:
                 case MSGTYPE_OMEMO_UT:
                     focusView.setBackgroundResource(R.color.chat_background_omemo_ua);
-                    break;
-                case MSGTYPE_OTR:
-                    focusView.setBackgroundResource(R.color.chat_background_otr);
-                    break;
-                case MSGTYPE_OTR_UA:
-                    focusView.setBackgroundResource(R.color.chat_background_otr_ua);
                     break;
                 case MSGTYPE_NORMAL:
                     focusView.setBackgroundResource(R.color.chat_background_normal);

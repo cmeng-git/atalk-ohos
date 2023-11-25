@@ -88,6 +88,8 @@ jarJarDeps.dependsOn(
             destinationDir new File("${projectDir}/../aTalk/third_party/m2/org/igniterealtime/smack/smack-core-jarjar/${smackVersion}")
             destinationName "smack-core-jarjar-${smackVersion}.jar"
 
+            classDelete 'org.jivesoftware.smack.iqrequest.AbstractIqRequestHandler'
+            classDelete 'org.jivesoftware.smack.iqrequest.IQRequestHandler'
             classDelete 'org.jivesoftware.smack.packet.AbstractIqBuilder'
             classDelete 'org.jivesoftware.smack.packet.EmptyResultIQ'
             classDelete 'org.jivesoftware.smack.packet.ErrorIQ'

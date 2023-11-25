@@ -108,8 +108,7 @@ public class DHCPProvisioningDiscover implements Runnable
         byte[] macAddress;
         byte[] zeroIPAddress = {0x00, 0x00, 0x00, 0x00};
         byte[] broadcastIPAddr = {(byte) 255, (byte) 255, (byte) 255, (byte) 255};
-        DHCPOption[] dhcpOpts;
-        dhcpOpts = new DHCPOption[1];
+        DHCPOption[] dhcpOpts = new DHCPOption[1];
         List<DHCPTransaction> transactions = new ArrayList<DHCPTransaction>();
 
         try {

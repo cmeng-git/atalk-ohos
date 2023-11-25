@@ -175,8 +175,7 @@ public class XMLConfigurationStore implements ConfigurationStore
             DocumentBuilder builder = factory.newDocumentBuilder();
             Map<String, Object> props = new Hashtable<>();
 
-            // if the file is empty (or contains only sth insignificant)
-            // ignore it and create a new document.
+            // if the file is empty (or contains only sth insignificant) ignore it and create a new document.
             if (file.length() < "<sip-communicator>".length() * 2)
                 propertiesDocument = createPropertiesDocument();
             else

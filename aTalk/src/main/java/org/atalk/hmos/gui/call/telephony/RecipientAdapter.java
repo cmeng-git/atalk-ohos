@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.atalk.hmos.R;
+import org.atalk.hmos.gui.call.telephony.RecipientSelectView.Recipient;
 
 import java.util.List;
 import java.util.regex.Matcher;
@@ -21,7 +22,7 @@ import java.util.regex.Pattern;
 public class RecipientAdapter extends BaseAdapter implements Filterable
 {
     private final Context context;
-    private List<RecipientSelectView.Recipient> recipients;
+    private List<Recipient> recipients;
     private String highlight;
     private boolean showAdvancedInfo;
 
@@ -32,7 +33,7 @@ public class RecipientAdapter extends BaseAdapter implements Filterable
         this.context = context;
     }
 
-    public void setRecipients(List<RecipientSelectView.Recipient> recipients)
+    public void setRecipients(List<Recipient> recipients)
     {
         this.recipients = recipients;
         notifyDataSetChanged();
@@ -50,7 +51,7 @@ public class RecipientAdapter extends BaseAdapter implements Filterable
     }
 
     @Override
-    public RecipientSelectView.Recipient getItem(int position)
+    public Recipient getItem(int position)
     {
         return recipients == null ? null : recipients.get(position);
     }
@@ -68,7 +69,7 @@ public class RecipientAdapter extends BaseAdapter implements Filterable
             view = newView(parent);
         }
 
-        RecipientSelectView.Recipient recipient = getItem(position);
+        Recipient recipient = getItem(position);
         bindView(view, recipient);
 
         return view;
@@ -83,7 +84,7 @@ public class RecipientAdapter extends BaseAdapter implements Filterable
         return view;
     }
 
-    private void bindView(View view, RecipientSelectView.Recipient recipient)
+    private void bindView(View view, Recipient recipient)
     {
         RecipientTokenHolder holder = (RecipientTokenHolder) view.getTag();
         holder.name.setText(highlightText(recipient.getDisplayNameOrUnknown(context)));
@@ -94,7 +95,7 @@ public class RecipientAdapter extends BaseAdapter implements Filterable
         setContactPhotoOrPlaceholder(context, holder.photo, recipient);
     }
 
-    public static void setContactPhotoOrPlaceholder(Context context, ImageView imageView, RecipientSelectView.Recipient recipient)
+    public static void setContactPhotoOrPlaceholder(Context context, ImageView imageView, Recipient recipient)
     {
 //        ContactPicture.getContactPictureLoader(context).loadContactPicture(address, imageView);
     }

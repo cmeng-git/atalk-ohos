@@ -97,7 +97,6 @@ public class AccountID
 
     protected String avatarHash;
     protected String rosterVersion;
-    protected String otrFingerprint;
 
     protected String statusMessage = "status_Message";
 
@@ -355,6 +354,7 @@ public class AccountID
      *
      * @param key property key
      * @param defaultValue default value if the property does not exist
+     * will be over driven by setting in atalk-defaults.properties if property does not exist in DB
      * @return property value corresponding to property key
      */
     public boolean getAccountPropertyBoolean(Object key, boolean defaultValue)
@@ -1581,29 +1581,6 @@ public class AccountID
             } catch (final JSONException e) {
                 return false;
             }
-        }
-    }
-
-    public String getOtrFingerprint()
-    {
-        if (this.otrFingerprint == null) {
-            //			try {
-            //				if (this.mOtrService == null) {
-            //					return null;
-            //				}
-            //				final PublicKey publicKey = this.mOtrService.getPublicKey();
-            //				if (publicKey == null || !(publicKey instanceof DSAPublicKey)) {
-            return null;
-            //				}
-            //				this.otrFingerprint = new OtrCryptoEngineImpl().getFingerprint(publicKey)
-            //						.toLowerCase(Locale.US);
-            //				return this.otrFingerprint;
-            //			} catch (final OtrCryptoException ignored) {
-            //				return null;
-            //			}
-        }
-        else {
-            return this.otrFingerprint;
         }
     }
 

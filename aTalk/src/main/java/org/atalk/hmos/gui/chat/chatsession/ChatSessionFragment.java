@@ -440,10 +440,6 @@ public class ChatSessionFragment extends OSGiFragment implements View.OnClickLis
             case ChatFragment.MSGTYPE_OMEMO:
                 iconId = R.drawable.encryption_omemo;
                 break;
-            case ChatFragment.MSGTYPE_OTR:
-            case ChatFragment.MSGTYPE_OTR_UA:
-                iconId = R.drawable.encryption_otr;
-                break;
             case ChatFragment.MSGTYPE_NORMAL:
             case ChatFragment.MSGTYPE_MUC_NORMAL:
             default:

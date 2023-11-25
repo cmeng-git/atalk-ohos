@@ -24,7 +24,7 @@ public interface IMessage
 {
     /*
      * ENC_TYPE type defined in DB; use by IMessage Local to define the required actions
-     * Upper nibble (b7...b4) for body encryption Type i.e. OMEMO, OTR, NONE
+     * Upper nibble (b7...b4) for body encryption Type i.e. OMEMO, NONE
      * Lower nibble (b3...b2) for special mode flag - may not be included in DB e.g FLAG_REMOTE_ONLY etc
      * Lower nibble (b1...b0) for body mimeType i.e. HTML or PLAIN
      */
@@ -33,7 +33,6 @@ public interface IMessage
     int ENCODE_MIME_MASK = 0x03;
 
     // Only the following three defined value are store in DB encType column
-    int ENCRYPTION_OTR = 0x20;
     int ENCRYPTION_OMEMO = 0x10;
     int ENCRYPTION_NONE = 0x00;
 

@@ -732,8 +732,12 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
         assertConnected();
         boolean retry = true;
         String errorMessage = aTalkApp.getResString(R.string.service_gui_CHATROOM_JOIN_FAILED, nickname, getName());
-
         mPassword = password;
+
+        if (TextUtils.isEmpty(nickname)) {
+            throw new OperationFailedException(errorMessage, OperationFailedException.GENERAL_ERROR);
+        }
+
         // parseLocalPart or take nickname as it to join chatRoom
         String sNickname = nickname.split("@")[0];
         try {
@@ -2950,10 +2954,8 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
      * @param chatRoomMember the chatRoomMember of the contact.
      */
     public void updatePrivateContactPresenceStatus(ChatRoomMember chatRoomMember) {
-        OperationSetPersistentPresenceJabberImpl presenceOpSet = (OperationSetPersistentPresenceJabberImpl)
-                mPPS.getOperationSet(OperationSetPersistentPresence.class);
-        ContactJabberImpl contact
-                = (ContactJabberImpl) presenceOpSet.findContactByID(getName() + "/" + chatRoomMember.getNickName());
+        OperationSetPersistentPresence presenceOpSet = mPPS.getOperationSet(OperationSetPersistentPresence.class);
+        Contact contact = presenceOpSet.findContactByID(getName() + "/" + chatRoomMember.getNickName());
         updatePrivateContactPresenceStatus(contact);
     }
 

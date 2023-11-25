@@ -13,7 +13,6 @@ import android.media.AudioTrack;
 
 import com.google.common.primitives.Doubles;
 
-import org.atalk.hmos.gui.call.CallVolumeCtrlFragment;
 import org.atalk.impl.neomedia.MediaServiceImpl;
 import org.atalk.impl.neomedia.NeomediaActivator;
 import org.atalk.impl.neomedia.device.AudioSystem;
@@ -181,7 +180,6 @@ public class AudioTrackRenderer extends AbstractAudioRenderer<AudioSystem> {
      */
     public synchronized void close() {
         if (audioTrack != null) {
-            Timber.w(new Exception(), "Audio Track: closed: %s", audioTrack);
             audioTrack.release();
             audioTrack = null;
             setThreadPriority = true;
@@ -419,8 +417,6 @@ public class AudioTrackRenderer extends AbstractAudioRenderer<AudioSystem> {
      * @return one or a combination of the constants defined in {@link PlugIn}
      * @see Renderer#process(Buffer)
      */
-    private static int no = 0;
-
     public int process(Buffer buffer) {
         /*
          * We do not have early access to the Thread which runs the #process(Buffer) method of this
@@ -591,8 +587,6 @@ public class AudioTrackRenderer extends AbstractAudioRenderer<AudioSystem> {
              */
             processed = PlugIn.BUFFER_PROCESSED_FAILED;
         }
-//        if ((no++ % 50) == 0)
-//            Timber.w("Process data status: %s : %S", buffer.getLength(), processed);
         return processed;
     }
 
@@ -667,7 +661,7 @@ public class AudioTrackRenderer extends AbstractAudioRenderer<AudioSystem> {
      */
     public synchronized void start() {
         if (audioTrack != null) {
-            Timber.w(new Exception(), "Audio Track: start: %s", audioTrack);
+            // Timber.w(new Exception(), "Audio Track: start: %s", audioTrack);
             setThreadPriority = true;
             audioTrack.play();
         }

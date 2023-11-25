@@ -93,11 +93,11 @@ public class ProvisioningActivator implements BundleActivator
             Dictionary<String, String> properties = new Hashtable<String, String>();
             properties.put(ConfigurationForm.FORM_TYPE, ConfigurationForm.ADVANCED_TYPE);
 
-            bundleContext.registerService(ConfigurationForm.class.getName(),
-                    new LazyConfigurationForm(
-                            "net.java.sip.communicator.plugin.provisioning.ProvisioningForm",
-                            getClass().getClassLoader(), "plugin.provisioning.PLUGIN_ICON",
-                            "plugin.provisioning.PROVISIONING", 2000, true), properties);
+//            bundleContext.registerService(ConfigurationForm.class.getName(),
+//                    new LazyConfigurationForm(
+//                            "net.java.sip.communicator.plugin.provisioning.ProvisioningForm",
+//                            getClass().getClassLoader(), "plugin.provisioning.PLUGIN_ICON",
+//                            "plugin.provisioning.PROVISIONING", 2000, true), properties);
         }
 
         String method = provisioningService.getProvisioningMethod();

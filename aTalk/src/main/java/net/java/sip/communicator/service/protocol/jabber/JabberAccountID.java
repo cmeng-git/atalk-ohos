@@ -95,7 +95,7 @@ public class JabberAccountID extends AccountID
      * Creates an account id from the specified id and account properties.
      *
      * @param userId the id identifying this account i.e hawk@example.org
-     * @param accountProperties any other properties necessary!! for the account.
+     * @param accountProperties any other properties necessary for the account.
      */
     public JabberAccountID(String userId, Map<String, String> accountProperties)
             throws IllegalArgumentException

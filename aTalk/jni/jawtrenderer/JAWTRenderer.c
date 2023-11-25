@@ -5,8 +5,8 @@
  * See terms of license at gnu.org.
  */
 
-#include "org_atalk_impl_neomedia_jmfext_media_renderer_video_JAWTRenderer.h"
 #include "JAWTRenderer.h"
+#include "JAWTRenderer_Android.h"
 
 /*
  * Class:     org_atalk_impl_neomedia_jmfext_media_renderer_video_JAWTRenderer

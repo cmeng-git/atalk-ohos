@@ -80,6 +80,7 @@ import org.atalk.hmos.gui.account.settings.BoshProxyDialog;
 import org.atalk.hmos.gui.call.JingleMessageSessionImpl;
 import org.atalk.hmos.gui.dialogs.DialogActivity;
 import org.atalk.hmos.gui.login.LoginSynchronizationPoint;
+import org.atalk.hmos.gui.util.LocaleHelper;
 import org.atalk.hmos.plugin.timberlog.TimberLog;
 import org.atalk.service.configuration.ConfigurationService;
 import org.atalk.service.neomedia.SrtpControlType;
@@ -1000,6 +1001,7 @@ public class ProtocolProviderServiceJabberImpl extends AbstractProtocolProviderS
         config.setResource(mResource);
         config.setProxyInfo(proxy);
         config.setCompressionEnabled(false);
+        config.setLanguage(LocaleHelper.getXmlLocale());
 
         /*=== Configure connection for BOSH or TCP ===*/
         boolean isBosh = mAccountID.isBOSHEnable();
