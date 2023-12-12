@@ -8,6 +8,7 @@ package org.atalk.hmos.gui.account.settings;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Handler;
 
@@ -107,7 +108,9 @@ public abstract class AccountPreferenceFragment extends OSGiPreferenceFragment
      * Initialize onCreate. Dynamic retrieve may sometimes return null;
      */
     protected AccountPreferenceActivity mActivity;
+
     protected SharedPreferences shPrefs;
+    protected Editor mEditor;
 
     /**
      * Creates new instance of {@link AccountPreferenceFragment}
@@ -194,8 +197,7 @@ public abstract class AccountPreferenceFragment extends OSGiPreferenceFragment
         }
 
         shPrefs = getPreferenceManager().getSharedPreferences();
-        shPrefs.registerOnSharedPreferenceChangeListener(this);
-        shPrefs.registerOnSharedPreferenceChangeListener(summaryMapper);
+        mEditor = shPrefs.edit();
 
         /*
          * Workaround for de-synchronization problem when account was created for the first time.
@@ -214,8 +216,15 @@ public abstract class AccountPreferenceFragment extends OSGiPreferenceFragment
         mapSummaries(summaryMapper);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        shPrefs.registerOnSharedPreferenceChangeListener(this);
+        shPrefs.registerOnSharedPreferenceChangeListener(summaryMapper);
+    }
+
     /**
-     * Unregisters preference listeners.
+     * Unregisters preference listeners. Get executed when a Dialog is displayed.
      */
     @Override
     public void onStop()

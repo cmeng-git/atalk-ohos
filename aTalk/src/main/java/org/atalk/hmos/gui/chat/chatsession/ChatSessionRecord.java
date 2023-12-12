@@ -16,8 +16,6 @@
  */
 package org.atalk.hmos.gui.chat.chatsession;
 
-import org.atalk.hmos.gui.chat.ChatFragment;
-import org.atalk.hmos.gui.chat.ChatSession;
 import org.jxmpp.jid.EntityBareJid;
 
 import java.util.Date;

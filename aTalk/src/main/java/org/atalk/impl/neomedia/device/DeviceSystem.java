@@ -165,14 +165,18 @@ public abstract class DeviceSystem extends PropertyChangeNotifier {
             case AUDIO:
                 classNames = new String[]{
                         ".AudioRecordSystem",
-                        ".OpenSLESSystem"};
+                        ".OpenSLESSystem",
+                        ".AudioSilenceSystem",
+                        ".NoneAudioSystem"
+                };
                 break;
             case VIDEO:
                 classNames = new String[]{
                         // MediaRecorderSystem not working for API-23; so remove the support
                         // OSUtils.IS_ANDROID ? ".MediaRecorderSystem" : null,
                         ".AndroidCameraSystem",
-                        ".ImgStreamingSystem"};
+                        ".ImgStreamingSystem"
+                };
                 break;
             default:
                 throw new IllegalArgumentException("mediaType");

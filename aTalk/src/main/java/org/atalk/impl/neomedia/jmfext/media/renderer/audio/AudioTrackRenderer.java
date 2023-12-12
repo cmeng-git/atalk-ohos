@@ -661,7 +661,6 @@ public class AudioTrackRenderer extends AbstractAudioRenderer<AudioSystem> {
      */
     public synchronized void start() {
         if (audioTrack != null) {
-            // Timber.w(new Exception(), "Audio Track: start: %s", audioTrack);
             setThreadPriority = true;
             audioTrack.play();
         }

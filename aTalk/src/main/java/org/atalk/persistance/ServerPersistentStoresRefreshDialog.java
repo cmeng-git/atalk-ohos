@@ -46,7 +46,7 @@ import org.atalk.hmos.BuildConfig;
 import org.atalk.hmos.R;
 import org.atalk.hmos.aTalkApp;
 import org.atalk.hmos.gui.dialogs.DialogActivity;
-import org.atalk.persistance.migrations.MigrationTo2;
+import org.atalk.persistance.migrations.OmemoDBCreate;
 import org.atalk.service.fileaccess.FileCategory;
 import org.atalk.service.libjitsi.LibJitsi;
 import org.atalk.service.osgi.OSGiFragment;
@@ -255,7 +255,7 @@ public class ServerPersistentStoresRefreshDialog extends OSGiFragment
                 accountId.unsetKey(JSONKEY_REGISTRATION_ID);
                 db.updateAccount(accountId);
             }
-            MigrationTo2.createOmemoTables(db.getWritableDatabase());
+            OmemoDBCreate.createOmemoTables(db.getWritableDatabase());
 
             // start to regenerate all Omemo data for registered accounts - has exception
             // SQLiteOmemoStore.loadOmemoSignedPreKey().371 There is no SignedPreKeyRecord for: 0

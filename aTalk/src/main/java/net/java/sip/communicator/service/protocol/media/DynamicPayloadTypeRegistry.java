@@ -347,7 +347,6 @@ public class DynamicPayloadTypeRegistry
     private static Byte getPayloadTypeFromMap(Map<MediaFormat, Byte> formatMap, MediaFormat format)
     {
         for (Map.Entry<MediaFormat, Byte> mapping : formatMap.entrySet()) {
-            // Timber.w("PayLoadType: %s <= %s",format, mapping);
             if (mapping.getKey().matches(format)) {
                 return mapping.getValue();
             }

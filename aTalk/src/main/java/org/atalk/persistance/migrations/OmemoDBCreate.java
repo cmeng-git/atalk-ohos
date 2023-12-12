@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import org.atalk.crypto.omemo.SQLiteOmemoStore;
 
-public class MigrationTo2
+public class OmemoDBCreate
 {
     // Create all relevant tables for OMEMO crypto support
     public static void createOmemoTables(SQLiteDatabase db) {

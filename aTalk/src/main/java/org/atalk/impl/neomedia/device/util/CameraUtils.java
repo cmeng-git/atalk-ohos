@@ -47,7 +47,7 @@ public class CameraUtils
     private static PreviewSurfaceProvider surfaceProvider;
 
     /**
-     * The list of sizes from which the first supported by the respective {@link Camera} is to be
+     * The list of sizes from which the first supported by the respective {@link Camera2} is to be
      * chosen as the size of the one and only <code>Format</code> supported by the associated
      * <code>MediaRecorder</code> <code>CaptureDevice</code>.
      *

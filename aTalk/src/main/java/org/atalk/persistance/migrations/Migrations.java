@@ -23,15 +23,8 @@ public class Migrations {
     public static void upgradeDatabase(SQLiteDatabase db, MigrationsHelper migrationsHelper) {
         switch (db.getVersion()) {
             case 1:
-                MigrationTo2.createOmemoTables(db);
-            case 2:
-                MigrationTo3.updateSQLDatabase(db);
-            case 3:
-                MigrationTo4.updateOmemoIdentitiesTable(db);
-            case 4:
-                MigrationTo5.updateOmemoDevicesTable(db);
-            case 5:
-                MigrationTo6.updateChatSessionTable(db);
+                // OmemoDBCreate.createOmemoTables(db);
+                break;
         }
     }
 }

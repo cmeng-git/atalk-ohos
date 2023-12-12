@@ -51,7 +51,6 @@ import org.atalk.hmos.gui.util.DepthPageTransformer;
 import org.atalk.hmos.gui.util.EntityListHelper;
 import org.atalk.hmos.gui.webview.WebViewFragment;
 import org.atalk.impl.neomedia.device.AndroidCameraSystem;
-import org.atalk.persistance.migrations.MigrateDir;
 import org.jetbrains.annotations.NotNull;
 import org.osgi.framework.BundleContext;
 
@@ -156,11 +155,6 @@ public class aTalk extends MainMenuActivity implements EntityListHelper.TaskComp
         // allow 15 seconds for first launch login to complete before showing history log if the activity is still active
         ChangeLog cl = new ChangeLog(this);
         if (cl.isFirstRun()) {
-            // Purge obsoleted aTalk avatarCache directory and contents 2.2.0 (2020/03/13): To be removed in future release.
-            MigrateDir.purgeAvatarCache();
-            // Update camera database, and remove mediaRecorder support (2021/11/05); not longer supported since API-23.
-            AndroidCameraSystem.cleanMediaDB();
-
             runOnUiThread(() -> new Handler().postDelayed(() -> {
                 if (!isFinishing()) {
                     cl.getLogDialog().show();

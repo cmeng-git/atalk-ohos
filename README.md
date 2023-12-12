@@ -194,12 +194,12 @@ Libraries used in this project:
 * [zrtp4j-light](https://github.com/jitsi/zrtp4j)
 
 Other contributors:
-* [Others](https://github.com/cmeng-git/atalk-hmos_java/graphs/contributors)
+* [Others](https://github.com/cmeng-git/atalk-hmos/graphs/contributors)
 
 ## Documentation
 * [aTalk site](https://cmeng-git.github.io/atalk)
 * [FAQ](https://cmeng-git.github.io/atalk/faq.html)
-* [Release Notes](https://github.com/cmeng-git/atalk-hmos_java/blob/master/aTalk/ReleaseNotes.txt)
+* [Release Notes](https://github.com/cmeng-git/atalk-hmos/blob/master/aTalk/ReleaseNotes.txt)
 
 ## aTalk apk build for android
 * Following development environment setups are used to build aTalk.apk<br/>
@@ -216,9 +216,9 @@ Other contributors:
   These libraries sources include: opus, speex and ogg
 
 ## Feedback and Contributions
-Cannot found an UI language and would like to help; translate the content in [strings.xml](https://github.com/cmeng-git/atalk-hmos_java/blob/master/art/values-xlate/strings.xml).<br/>Create a pull request or forward the file to the developer.
+Cannot found an UI language and would like to help; translate the content in [strings.xml](https://github.com/cmeng-git/atalk-hmos/blob/master/art/values-xlate/strings.xml).<br/>Create a pull request or forward the file to the developer.
 
-If you have found bug, wish for new feature, or have other questions, [file an issue](https://github.com/cmeng-git/atalk-hmos_java/issues).
+If you have found bug, wish for new feature, or have other questions, [file an issue](https://github.com/cmeng-git/atalk-hmos/issues).
 
 License
 -------
