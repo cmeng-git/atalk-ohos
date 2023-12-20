@@ -86,8 +86,8 @@ android {
 
     defaultConfig {
         applicationId "org.atalk.hmos"
-        versionCode 400000
-        versionName "4.0.x"
+        versionCode 1000
+        versionName "0.1.0"
 
         minSdkVersion rootProject.minSdk
         targetSdkVersion rootProject.compileSdk
