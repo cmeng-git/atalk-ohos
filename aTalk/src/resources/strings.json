@@ -1,0 +1,4720 @@
+﻿{
+  "resources": {
+    "string": [
+      {
+        "name": "accept_call_video",
+        "#text": "Answer call with video"
+      },
+      {
+        "name": "account_delete_on_server",
+        "#text": "Delete account on server"
+      },
+      {
+        "name": "account_delete_on_server_unregistered",
+        "#text": "Delete account on server failed, user not registered!"
+      },
+      {
+        "name": "account_delete_on_server_failed",
+        "#text": "Delete account on server failed:\\n%1$s"
+      },
+      {
+        "name": "account_delete_on_server_successful",
+        "#text": "Delete account on server successful:\\n%1$s"
+      },
+      {
+        "name": "account_show_password",
+        "#text": "Show password"
+      },
+      {
+        "name": "account_server_override",
+        "#text": "Override server setting"
+      },
+      {
+        "name": "account_ibr_on_server",
+        "#text": "Register new account on server"
+      },
+      {
+        "name": "account_server_ip",
+        "#text": "Connect server IP"
+      },
+      {
+        "name": "ibr_registration",
+        "#text": "IB Registration"
+      },
+      {
+        "name": "captcha_ibr_request",
+        "#text": "Registration-Captcha"
+      },
+      {
+        "name": "captcha_ibr_failed",
+        "#text": "Registration-Captcha has failed!\\n%1$s"
+      },
+      {
+        "name": "captcha_ibr_success",
+        "#text": "Registration-Captcha is successful.\\nYou can now proceed to log in!"
+      },
+      {
+        "name": "captcha_ibr_reason",
+        "#text": "Inband registration requested by user"
+      },
+      {
+        "name": "captcha_ibr_pwd_empty",
+        "#text": "Error: password field is empty!"
+      },
+      {
+        "name": "captcha_ibr_hint",
+        "#text": "Enter the text you see"
+      },
+      {
+        "name": "captcha_ibr_retry",
+        "#text": "Click \\'OK\\' to retry or \\'Cancel\\' to end"
+      },
+      {
+        "name": "captcha_challenge",
+        "#text": "Captcha challenge"
+      },
+      {
+        "name": "captcha_protected",
+        "#text": "The chat room is protected with captcha challenge"
+      },
+      {
+        "name": "captcha_text_empty",
+        "#text": "Captcha text entry cannot be empty"
+      },
+      {
+        "name": "captcha_verification_valid",
+        "#text": "The CAPTCHA verification is valid"
+      },
+      {
+        "name": "captcha_verification_failed",
+        "#text": "The CAPTCHA verification has failed"
+      },
+      {
+        "name": "captcha_wait_timeout",
+        "#text": "%1$s chatRoom CAPTCHA challenge timeout;\\nplease rejoin chatRoom and try again."
+      },
+      {
+        "name": "choose_network",
+        "#text": "Choose a network"
+      },
+      {
+        "name": "encrypt_tooltip",
+        "#text": "Encrypt chat"
+      },
+      {
+        "name": "encrypt_choices",
+        "#text": "Encrypt Choices"
+      },
+      {
+        "name": "encrypt_unencrypted",
+        "#text": "Unencrypted"
+      },
+      {
+        "name": "network",
+        "#text": "Network"
+      },
+      {
+        "name": "notification_setting",
+        "#text": "Notification Settings\u2026"
+      },
+      {
+        "name": "open_file_no_application",
+        "#text": "No application found to open file"
+      },
+      {
+        "name": "password",
+        "#text": "password"
+      },
+      {
+        "name": "password_change_on_server_failed",
+        "#text": "Password change on server failed:\\n%1$s"
+      },
+      {
+        "name": "password_change_on_server_successful",
+        "#text": "Password change on server successful!"
+      },
+      {
+        "name": "password_",
+        "#text": "Password:"
+      },
+      {
+        "name": "send_process_signal",
+        "#text": "Send Process Signal"
+      },
+      {
+        "name": "call_info",
+        "#text": "Call info"
+      },
+      {
+        "name": "call_info_zrtp",
+        "#text": "\"Call ZRTP info"
+      },
+      {
+        "name": "osgi_framework_stop",
+        "#text": "Stop OSGi Framework"
+      },
+      {
+        "name": "save_password",
+        "#text": "Save password"
+      },
+      {
+        "name": "system_settings",
+        "#text": "Settings\u2026"
+      },
+      {
+        "name": "username_hint",
+        "#text": "username@example.com"
+      },
+      {
+        "name": "username_",
+        "#text": "Username:"
+      },
+      {
+        "name": "call_hang_up",
+        "#text": "Hang up call"
+      },
+      {
+        "name": "call_on_hold",
+        "#text": "Put call on hold"
+      },
+      {
+        "name": "call_max_transfer",
+        "#text": "Maximum of 2 calls are allowed for attended call transfer!"
+      },
+      {
+        "name": "call_transfer_call",
+        "#text": "Transfer call"
+      },
+      {
+        "name": "call_transfer",
+        "#text": "Transfer"
+      },
+      {
+        "name": "call_transfer_failed",
+        "#text": "Failed to proceed with call transfer: %1$s ⇢ %2$s\\n%3$s"
+      },
+      {
+        "name": "call_transfer_hint",
+        "#text": "Select the name of the contact you would like to transfer to and then click Transfer."
+      },
+      {
+        "name": "call_transfer_msg",
+        "#text": "%1$s call transferring to\u2026 %2$s"
+      },
+      {
+        "name": "attach_picture",
+        "#text": "Picture"
+      },
+      {
+        "name": "attach_take_picture",
+        "#text": "Take picture"
+      },
+      {
+        "name": "attach_video",
+        "#text": "Video"
+      },
+      {
+        "name": "attach_record_video",
+        "#text": "Record video"
+      },
+      {
+        "name": "attach_file",
+        "#text": "Share File"
+      },
+      {
+        "name": "copy",
+        "#text": "Copy"
+      },
+      {
+        "name": "delete",
+        "#text": "Delete"
+      },
+      {
+        "name": "edit",
+        "#text": "Edit"
+      },
+      {
+        "name": "forward",
+        "#text": "Forward\u2026"
+      },
+      {
+        "name": "chat_message_long_press_hint",
+        "#text": "Avoid clicking within the message area for multi-item selection operation"
+      },
+      {
+        "name": "quote",
+        "#text": "Quote"
+      },
+      {
+        "name": "reply",
+        "#text": "Reply"
+      },
+      {
+        "name": "select_all",
+        "#text": "Select all"
+      },
+      {
+        "name": "subject",
+        "#text": "Subject"
+      },
+      {
+        "name": "settings",
+        "#text": "Settings"
+      },
+      {
+        "name": "accept",
+        "#text": "Accept"
+      },
+      {
+        "name": "account",
+        "#text": "Account"
+      },
+      {
+        "name": "account_me",
+        "#text": "Me"
+      },
+      {
+        "name": "account_settings",
+        "#text": "Account settings\u2026"
+      },
+      {
+        "name": "account_unregistered",
+        "#text": "%1$s is not registered"
+      },
+      {
+        "name": "add",
+        "#text": "Add"
+      },
+      {
+        "name": "add_contact",
+        "#text": "Add contact"
+      },
+      {
+        "name": "add_contact_to_list",
+        "#text": "Add %1$s to your contact list"
+      },
+      {
+        "name": "add_contact_to",
+        "#text": "Add contact to"
+      },
+      {
+        "name": "add_contact_failed",
+        "#text": "Failed to add contact with id: %1$s"
+      },
+      {
+        "name": "add_contact_error",
+        "#text": "Add Contact Error"
+      },
+      {
+        "name": "add_contact_error_exist",
+        "#text": "The contact %1$s already exists in your contact list."
+      },
+      {
+        "name": "add_contact_error_network",
+        "#text": "Server did not respond to our request adding contact with jid: %1$s."
+      },
+      {
+        "name": "add_contact_error_not_supported",
+        "#text": "Failed to add contact with id: %1$s. Operation not supported."
+      },
+      {
+        "name": "add_contact_error_not_connected",
+        "#text": "You need to be connected in order to add a contact. Please sign in to the selected provider and try again."
+      },
+      {
+        "name": "add_group_error_local",
+        "#text": "Failed to add group with name: %1$s. The problem occurred during a local IO operation."
+      },
+      {
+        "name": "add_group_error_exist",
+        "#text": "The group %1$s already exists in your contact list. Please choose another name."
+      },
+      {
+        "name": "add_group_error_network",
+        "#text": "Failed to add group with name: %1$s. The problem occurred due to a network failure. Please check your network connection and try again."
+      },
+      {
+        "name": "add_group_failed",
+        "#text": "Failed to add group with name: %1$s."
+      },
+      {
+        "name": "add_group_error_empty_name",
+        "#text": "The group name must not be empty."
+      },
+      {
+        "name": "add_group_create",
+        "#text": "Create group"
+      },
+      {
+        "name": "add_group_name",
+        "#text": "Enter group name"
+      },
+      {
+        "name": "answer",
+        "#text": "Answer\u2026"
+      },
+      {
+        "name": "apply",
+        "#text": "Apply"
+      },
+      {
+        "name": "apply_changes",
+        "#text": "Applying account changes (~60S) \u2026"
+      },
+      {
+        "name": "at",
+        "#text": "at"
+      },
+      {
+        "name": "authentication_failed",
+        "#text": "Authentication failed for %1$s. The password you entered is not valid."
+      },
+      {
+        "name": "authentication_requested",
+        "#text": "Authentication requested"
+      },
+      {
+        "name": "authentication_requested_by_server",
+        "#text": "The %1$s server has requested your authentication."
+      },
+      {
+        "name": "authentication_title",
+        "#text": "%1$s authentication"
+      },
+      {
+        "name": "authorize",
+        "#text": "Authorize"
+      },
+      {
+        "name": "authorization_accepted",
+        "#text": "contact has accepted your authorization request."
+      },
+      {
+        "name": "authorization_rejected",
+        "#text": "contact has rejected your authorization request."
+      },
+      {
+        "name": "authorization_requested",
+        "#text": "Authorization requested"
+      },
+      {
+        "name": "authorization_request_info",
+        "#text": "The %1$s contact requests your authorization."
+      },
+      {
+        "name": "authorization_request",
+        "#text": "Authorization Request"
+      },
+      {
+        "name": "avatar_size_hint",
+        "#text": "Icon recommended: 64*64 (96*96 px square max)"
+      },
+      {
+        "name": "away",
+        "#text": "Away"
+      },
+      {
+        "name": "avatar_set_error",
+        "#text": "Failed to set avatar for %1$s"
+      },
+      {
+        "name": "avatar_retrieving",
+        "#text": "Retrieving avatar for %1$s"
+      },
+      {
+        "name": "busy",
+        "#text": "Busy"
+      },
+      {
+        "name": "call_audio",
+        "#text": "Audio call"
+      },
+      {
+        "name": "call_answered",
+        "#text": "%1$s has answered the call."
+      },
+      {
+        "name": "call_disable_on_fault",
+        "#text": "aTalk has failed to initialize %1$s\\nAll media calls/services will be disabled.\\n%2$s"
+      },
+      {
+        "name": "call_ended",
+        "#text": "The remote caller has ended the call: %1$s"
+      },
+      {
+        "name": "call_error",
+        "#text": "Remote party returns an error: %1$s"
+      },
+      {
+        "name": "call_failed",
+        "#text": "Call failed"
+      },
+      {
+        "name": "call_history_name",
+        "#text": "Call History"
+      },
+      {
+        "name": "call_history_remove_count",
+        "#text": "No of call history records deleted: %1$s"
+      },
+      {
+        "name": "call_history_remove_before_date_warning",
+        "#text": "Are you sure you want to purge all call records before the date: %1$s?"
+      },
+      {
+        "name": "call_history_remove_none",
+        "#text": "None record selected for delete"
+      },
+      {
+        "name": "call_history_remove_warning",
+        "#text": "Are you sure you want to purge all selected call records?"
+      },
+      {
+        "name": "call_incoming",
+        "#text": "Incoming call: %1$s"
+      },
+      {
+        "name": "call_incoming_status",
+        "#text": "Incoming call"
+      },
+      {
+        "name": "call_initiating",
+        "#text": "Initiating call"
+      },
+      {
+        "name": "call_rejected",
+        "#text": "%1$s has rejected the call."
+      },
+      {
+        "name": "call_retracted",
+        "#text": "%1$s has retracted the call."
+      },
+      {
+        "name": "call_missed",
+        "#text": "Missed calls from:"
+      },
+      {
+        "name": "call_no_active_device",
+        "#text": "aTalk could not find any active Audio/Video devices hence unable to create the call."
+      },
+      {
+        "name": "call_no_audio_device",
+        "#text": "No audio device configured."
+      },
+      {
+        "name": "call_no_audio_codec",
+        "#text": "No audio codec enabled."
+      },
+      {
+        "name": "call_no_device_codec_H",
+        "#text": "The device or codec is not properly configured in \\'Settings\u2026\\'.  %1$s"
+      },
+      {
+        "name": "call_no_device_codec_Q",
+        "#text": "Would you like to continue the call?"
+      },
+      {
+        "name": "call_no_matching_format",
+        "#text": "No matching media formats found against offer %1$s to receive call. Please verify device and codec setup in \\'Settings\u2026\\'."
+      },
+      {
+        "name": "call_outgoing",
+        "#text": "Outgoing call"
+      },
+      {
+        "name": "call_outgoing_with",
+        "#text": "Making call with %1$s\u2026"
+      },
+      {
+        "name": "call_via_",
+        "#text": "Call via: %1$s"
+      },
+      {
+        "name": "call_video",
+        "#text": "Video call"
+      },
+      {
+        "name": "call_with",
+        "#text": "Call with:"
+      },
+      {
+        "name": "cancel",
+        "#text": "Cancel"
+      },
+      {
+        "name": "contact_invalid",
+        "#text": "The selected contact is not valid: %1$s"
+      },
+      {
+        "name": "dismiss",
+        "#text": "Dismiss"
+      },
+      {
+        "name": "done",
+        "#text": "Done"
+      },
+      {
+        "name": "mark_as_read",
+        "#text": "Mark as read"
+      },
+      {
+        "name": "reason",
+        "#text": "Reason:"
+      },
+      {
+        "name": "set",
+        "#text": "Set"
+      },
+      {
+        "name": "share",
+        "#text": "Share\u2026"
+      },
+      {
+        "name": "share_text",
+        "#text": "Share text\u2026"
+      },
+      {
+        "name": "share_file",
+        "#text": "Share file\u2026"
+      },
+      {
+        "name": "snooze",
+        "#text": "Snooze"
+      },
+      {
+        "name": "playback_error",
+        "#text": "Cannot find any media content for playback"
+      },
+      {
+        "name": "playback_buffering",
+        "#text": "Buffering\u2026"
+      },
+      {
+        "name": "playback_completed",
+        "#text": "Media playback end"
+      },
+      {
+        "name": "playback_rate",
+        "#text": "Playback rate: %1$s"
+      },
+      {
+        "name": "auto_join",
+        "#text": "Auto join"
+      },
+      {
+        "name": "change_nickname",
+        "#text": "Change nickname"
+      },
+      {
+        "name": "change_nickname_",
+        "#text": "Change nickname\u2026"
+      },
+      {
+        "name": "change_nickname_error_conflict",
+        "#text": "Nickname already exists"
+      },
+      {
+        "name": "change_nickname_error",
+        "#text": "Error changing nickname for %1$s: %2$s"
+      },
+      {
+        "name": "change_nickname_label",
+        "#text": "In the field below, you can enter your new nickname."
+      },
+      {
+        "name": "change_nickname_null",
+        "#text": "Nick Name field content cannot be null"
+      },
+      {
+        "name": "chatroom_change_info",
+        "#text": "ChatRoom info change"
+      },
+      {
+        "name": "chatroom_change_subject",
+        "#text": "In the field below, you can enter the new subject for this room."
+      },
+      {
+        "name": "change_video_remote_quality",
+        "#text": "Change remote video quality"
+      },
+      {
+        "name": "chatroom_conference_item",
+        "#text": "%1$s\\'s conference"
+      },
+      {
+        "name": "chatroom_conference",
+        "#text": "Conferences"
+      },
+      {
+        "name": "chatroom",
+        "#text": "Chat Room"
+      },
+      {
+        "name": "chatroom_already_joined",
+        "#text": "You have already joined the %1$s chat room."
+      },
+      {
+        "name": "chatroom_configuration",
+        "#text": "ChatRoom configuration"
+      },
+      {
+        "name": "chatroom_configuration_failed",
+        "#text": "Failed to obtain the %1$s chat room configuration form."
+      },
+      {
+        "name": "chatroom_configuration_forbidden",
+        "#text": "Could not obtain the %1$s chat room configuration form. Only owners of the chat room can see and change the configuration form."
+      },
+      {
+        "name": "chatroom_configuration_members_edit_description",
+        "#text": "List on the right contains users that have member role in this chat room. When chat room is \\'Members-only\\' those will be the users that are allowed to join."
+      },
+      {
+        "name": "chatroom_configuration_members_edit_title",
+        "#text": "Edit Members List"
+      },
+      {
+        "name": "chatroom_configuration_submit_failed",
+        "#text": "An error occurred while trying to submit the configuration form for chat room %1$s."
+      },
+      {
+        "name": "chatroom_remove_tooltip",
+        "#text": "Removes the selected room from the list of saved rooms"
+      },
+      {
+        "name": "chatroom_save_tooltip",
+        "#text": "Saves the chat room for future use"
+      },
+      {
+        "name": "chatroom_send_message_forbidden",
+        "#text": "Message sending is forbidden (voice revoked)"
+      },
+      {
+        "name": "chatroom_user_joined",
+        "#text": "has joined %1$s"
+      },
+      {
+        "name": "chatroom_user_kicked",
+        "#text": "has been kicked from %1$s"
+      },
+      {
+        "name": "chatroom_user_left",
+        "#text": "has left %1$s"
+      },
+      {
+        "name": "chatroom_user_quit",
+        "#text": "has quit %1$s"
+      },
+      {
+        "name": "chatroom_name",
+        "#text": "Chat room name"
+      },
+      {
+        "name": "chatroom_name_info",
+        "#text": "In the field below enter the name of the chat room that you would like to create."
+      },
+      {
+        "name": "chatroom_not_exist",
+        "#text": "The %1$s room was not found in the %2$s server. Please verify if the name you typed is correct."
+      },
+      {
+        "name": "chatroom_not_connected",
+        "#text": "You need to be online in order to join the %1$s chat room."
+      },
+      {
+        "name": "chatroom_leave_not_connected",
+        "#text": "You need to be online in order to leave a chat room."
+      },
+      {
+        "name": "chatroom_not_joined",
+        "#text": "You need to have joined the chat room in order to do further operations with it."
+      },
+      {
+        "name": "chatroom_options",
+        "#text": "Chat room options"
+      },
+      {
+        "name": "chatroom_required_password",
+        "#text": "The %1$s chat room has requested a password."
+      },
+      {
+        "name": "chatroom_status_disable",
+        "#text": "Disable Room Status"
+      },
+      {
+        "name": "chatroom_status_enable",
+        "#text": "Enable Room Status"
+      },
+      {
+        "name": "chatroom_subject_changed",
+        "#text": "Room subject changed: \\'%1$s\\' => \\'%2$s\\'"
+      },
+      {
+        "name": "chatroom_nickname_changed",
+        "#text": "%1$s is now known as %2$s"
+      },
+      {
+        "name": "clear_custom_messages",
+        "#text": "Clear custom messages"
+      },
+      {
+        "name": "close",
+        "#text": "Close"
+      },
+      {
+        "name": "close_all_active_chats",
+        "#text": "Close all active chats"
+      },
+      {
+        "name": "close_current_chat",
+        "#text": "Close current chat session"
+      },
+      {
+        "name": "connected",
+        "#text": "Connected"
+      },
+      {
+        "name": "connecting_",
+        "#text": "Connecting %1$s"
+      },
+      {
+        "name": "connecting_status",
+        "#text": "Connecting\u2026"
+      },
+      {
+        "name": "connection_failed_message",
+        "#text": "Account connection login failed: User name: %1$s\\n\n        Server name: %2$s\\nPlease check your network connection OR contact your network administrator for more information."
+      },
+      {
+        "name": "connecting",
+        "#text": "Connecting"
+      },
+      {
+        "name": "contact_active",
+        "#text": "** %1$s is active in chat session"
+      },
+      {
+        "name": "contact_composing",
+        "#text": "** %1$s is composing a message"
+      },
+      {
+        "name": "contact_inactive",
+        "#text": "** %1$s is temporary away"
+      },
+      {
+        "name": "contact_gone",
+        "#text": "** %1$s has left the chat session"
+      },
+      {
+        "name": "contact_info",
+        "#text": "Contact info"
+      },
+      {
+        "name": "contact_name",
+        "#text": "Contact JID or Number"
+      },
+      {
+        "name": "contact_name_empty",
+        "#text": "The contact displayName must not be empty."
+      },
+      {
+        "name": "contact_owner",
+        "#text": "Contact Owner: %1$s"
+      },
+      {
+        "name": "contact_pause_typing",
+        "#text": "** %1$s has paused typing"
+      },
+      {
+        "name": "contact_rename",
+        "#text": "Contact new Name:"
+      },
+      {
+        "name": "contact_rename_tooltip",
+        "#text": "Enter new contact Name"
+      },
+      {
+        "name": "contact_rename_title",
+        "#text": "Change Contact Name"
+      },
+      {
+        "name": "contacts",
+        "#text": "Contacts"
+      },
+      {
+        "name": "contact_offline_hide",
+        "#text": "Hide offline contacts"
+      },
+      {
+        "name": "contact_offline_show",
+        "#text": "Show offline contacts"
+      },
+      {
+        "name": "copy_message_text",
+        "#text": "Copy message text"
+      },
+      {
+        "name": "create",
+        "#text": "Create"
+      },
+      {
+        "name": "create_call_failed",
+        "#text": "Failed to create the call."
+      },
+      {
+        "name": "create_conference_call",
+        "#text": "Create a conference call\u2026"
+      },
+      {
+        "name": "create_conference_chat",
+        "#text": "Create a conference chat\u2026"
+      },
+      {
+        "name": "create_group",
+        "#text": "Create group\u2026"
+      },
+      {
+        "name": "create_group_name_invalid",
+        "#text": "Invalid group name: %1$s"
+      },
+      {
+        "name": "create_group_name",
+        "#text": "In the field below enter the name of the group you would like to create."
+      },
+      {
+        "name": "create_group_first_wizard",
+        "#text": "Your contact list does not contain any groups. Please create a group first (File/Create group)."
+      },
+      {
+        "name": "aboutDialog_help",
+        "a": {
+          "href": "https://cmeng-git.github.io/atalk",
+          "#text": "Online Help"
+        }
+      },
+      {
+        "name": "About",
+        "#text": "About"
+      },
+      {
+        "name": "version_",
+        "#text": "Version %1$s"
+      },
+      {
+        "name": "help",
+        "#text": "Help"
+      },
+      {
+        "name": "check_new_version",
+        "#text": "Check Update"
+      },
+      {
+        "name": "show_history_log",
+        "#text": "History Logs"
+      },
+      {
+        "name": "online_help",
+        "#text": "Online help"
+      },
+      {
+        "name": "http_authorization_request",
+        "#text": "HTTP Authorization Request"
+      },
+      {
+        "name": "http_authorization_request_instruction",
+        "#text": "HTTP (%1$s) Authorization for %2$s\\nValidation code: %3$s\\nDo you accept this request for account:\\n%4$s?\\n\\nVerify given ID matches site if available"
+      },
+      {
+        "name": "app_authors_fmt",
+        "#text": "Authors: %1$s"
+      },
+      {
+        "name": "app_libraries",
+        "#text": "aTalk uses the following third-party libraries: %1$s"
+      },
+      {
+        "name": "app_revision_fmt",
+        "#text": "Revision Information: %1$s"
+      },
+      {
+        "name": "app_xep",
+        "#text": "aTalk supports the following XEPs: %1$s"
+      },
+      {
+        "name": "powered_by",
+        "#text": "Powered By atalk.org"
+      },
+      {
+        "name": "chat_audio_buddy_offline",
+        "#text": "Audio chat with an offline recipient is not allowed."
+      },
+      {
+        "name": "chat_audio_cancel",
+        "#text": "< slide left\\nto cancel"
+      },
+      {
+        "name": "chat_audio_start_record",
+        "#text": "Start Recording"
+      },
+      {
+        "name": "latitude",
+        "#text": "Latitude:"
+      },
+      {
+        "name": "location",
+        "#text": "Location:"
+      },
+      {
+        "name": "longitude",
+        "#text": "Longitude:"
+      },
+      {
+        "name": "altitude",
+        "#text": "Altitude:"
+      },
+      {
+        "name": "geo_send",
+        "#text": "Send GPS-Location"
+      },
+      {
+        "name": "geo_street_views_map",
+        "#text": "StreetViews & Map"
+      },
+      {
+        "name": "geo_share",
+        "#text": "Share geo-locations"
+      },
+      {
+        "name": "apply_new_location_setting",
+        "#text": "Click \\'Follow me\\' Button to apply the new setting"
+      },
+      {
+        "name": "btn_center_map",
+        "#text": "Center on my location"
+      },
+      {
+        "name": "btn_follow_me",
+        "#text": "Follow me"
+      },
+      {
+        "name": "single_location_fix",
+        "#text": "Single location update"
+      },
+      {
+        "name": "follow_me_start",
+        "#text": "Follow me (%1$dm) @%2$dS"
+      },
+      {
+        "name": "follow_me_stop",
+        "#text": "Stop follow-me (%1$dm) @%2$dS"
+      },
+      {
+        "name": "google_map",
+        "#text": "GoogleMap"
+      },
+      {
+        "name": "legal_info",
+        "#text": "Legal Info"
+      },
+      {
+        "name": "play_service_not_installed",
+        "#text": "Google Play services is not installed on this device."
+      },
+      {
+        "name": "split_street_view_panorama_and_map_description",
+        "#text": "Demonstrates how to show a Street View panorama and map."
+      },
+      {
+        "name": "split_street_view_panorama_and_map_label",
+        "#text": "Street View Panorama and Map"
+      },
+      {
+        "name": "map",
+        "#text": "Map"
+      },
+      {
+        "name": "permission_location_rationale",
+        "#text": "Access to the location service is required to demonstrate the \\'my location\\' feature, which shows your current location on the map."
+      },
+      {
+        "name": "permission_location_denied",
+        "#text": "This sample requires location permission to enable the \\'my location\\' layer. Please try again and grant access to use the location.\\nIf the permission has been permanently denied, it can be enabled from the System Settings > Apps > \\'Google Maps API Demos\\'."
+      },
+      {
+        "name": "permission_location_required",
+        "#text": "Location permission is required for this demo."
+      },
+      {
+        "name": "export_sql_db",
+        "#text": "Export aTalk SQL Database"
+      },
+      {
+        "name": "purge_debug_log",
+        "#text": "Purge aTalk Debug Log File"
+      },
+      {
+        "name": "purge_sql_db",
+        "#text": "Purge aTalk SQL DataBase - Danger!"
+      },
+      {
+        "name": "refresh_apply",
+        "#text": "Apply"
+      },
+      {
+        "name": "refresh_store",
+        "#text": "Refresh persistent stores\u2026"
+      },
+      {
+        "name": "refresh_store_avatar",
+        "#text": "XEP-0084/XEP-0153: Avatar"
+      },
+      {
+        "name": "refresh_store_caps",
+        "#text": "XEP-0115: Entity Capabilities"
+      },
+      {
+        "name": "refresh_store_disc_info",
+        "#text": "XEP-0030: Service Discovery"
+      },
+      {
+        "name": "refresh_store_hint",
+        "#text": "Check the item for its persistent store to be cleaned and refreshed; Perform only when necessary!\\n"
+      },
+      {
+        "name": "refresh_store_roster",
+        "#text": "XEP-0237: Roster"
+      },
+      {
+        "name": "refresh_store_omemo",
+        "#text": "XEP-0384: OMEMO Encryption"
+      },
+      {
+        "name": "unregistered_message",
+        "#text": "Account connection login failed:\\nUser Name: %1$s\\nServer Name: %2$s\\nThe account is offline."
+      },
+      {
+        "name": "create_videoBridge",
+        "#text": "Create a video bridge\u2026"
+      },
+      {
+        "name": "create_videoBridge_menu",
+        "#text": "Create a video bridge"
+      },
+      {
+        "name": "create_join_video_conference",
+        "#text": "Create / Join video conference"
+      },
+      {
+        "name": "create_video_conference",
+        "#text": "Create a new video conference for this chat room"
+      },
+      {
+        "name": "video_format_not_supported",
+        "#text": "Failed to set device camera preview to: %1$s; Exception: %2$s."
+      },
+      {
+        "name": "disconnected",
+        "#text": "Disconnected"
+      },
+      {
+        "name": "disconnecting_",
+        "#text": "Disconnecting %1$s"
+      },
+      {
+        "name": "deny",
+        "#text": "Deny"
+      },
+      {
+        "name": "display_name",
+        "#text": "Display Name"
+      },
+      {
+        "name": "contact_display_name",
+        "#text": "Contact Display Name"
+      },
+      {
+        "name": "do_not_disturb",
+        "#text": "Do not disturb"
+      },
+      {
+        "name": "duration",
+        "#text": "duration"
+      },
+      {
+        "name": "edit_status_message_tip",
+        "#text": "Set status message"
+      },
+      {
+        "name": "edited",
+        "#text": "edited"
+      },
+      {
+        "name": "enter_name_or_number",
+        "#text": "Enter name or number"
+      },
+      {
+        "name": "error",
+        "#text": "Error"
+      },
+      {
+        "name": "error_was_",
+        "#text": "Error was: %1$s"
+      },
+      {
+        "name": "exit",
+        "#text": "Exit"
+      },
+      {
+        "name": "extended_away",
+        "#text": "Extended Away"
+      },
+      {
+        "name": "free_for_chat",
+        "#text": "Free for chat"
+      },
+      {
+        "name": "file_byte_sent",
+        "#text": "%1$s sent"
+      },
+      {
+        "name": "file_receive_completed",
+        "#text": "File has been received from %1$s"
+      },
+      {
+        "name": "file_receive_failed",
+        "#text": "An error occurred while transferring file from %1$s"
+      },
+      {
+        "name": "file_receive_from",
+        "#text": "Receiving file from %1$s"
+      },
+      {
+        "name": "file_send_completed",
+        "#text": "File has been successfully sent to %1$s"
+      },
+      {
+        "name": "file_send_declined",
+        "#text": "%1$s has declined this file"
+      },
+      {
+        "name": "file_sending_to",
+        "#text": "Sending file to %1$s"
+      },
+      {
+        "name": "file_transfer_canceled",
+        "#text": "File transfer has been canceled"
+      },
+      {
+        "name": "file_transfer_preparing",
+        "#text": "Preparing file transfer with %1$s. Please wait\u2026"
+      },
+      {
+        "name": "file_transfer_declined",
+        "#text": "File transfer has been declined"
+      },
+      {
+        "name": "file_transfer_request_received",
+        "#text": "%1$s is sharing a file with you"
+      },
+      {
+        "name": "file_transfer_send_error",
+        "#text": "An error occurred while sending file to %1$s"
+      },
+      {
+        "name": "file_transfer_waiting_acceptance",
+        "#text": "Waiting for %1$s to accept your file"
+      },
+      {
+        "name": "purge",
+        "#text": "Purge"
+      },
+      {
+        "name": "estimated_time_",
+        "#text": "Estimated time: %1$s"
+      },
+      {
+        "name": "file",
+        "#text": "File"
+      },
+      {
+        "name": "file_delivery_error",
+        "#text": "Failed to send the selected file. %1$s"
+      },
+      {
+        "name": "file_does_not_exist",
+        "#text": "The specified file could not be found. It was either deleted or moved"
+      },
+      {
+        "name": "file_open_failed",
+        "#text": "Failed to open file. It may be deleted or moved"
+      },
+      {
+        "name": "file_open_no_application",
+        "#text": "We could not find the application associated with this type of file"
+      },
+      {
+        "name": "file_open_no_permission",
+        "#text": "You do not have enough permissions to open this file. Please check your read permissions and try again"
+      },
+      {
+        "name": "file_open_not_supported",
+        "#text": "The open file operation is not supported by your device current platform"
+      },
+      {
+        "name": "file_send_client_error",
+        "#text": "Remote client error on file sent: %1$s"
+      },
+      {
+        "name": "file_send_failed",
+        "#text": "Failed to send file: %1$s"
+      },
+      {
+        "name": "file_send_not_allow",
+        "#text": "Cannot send file during conference call!"
+      },
+      {
+        "name": "file_attachment",
+        "#text": "Send Attachment"
+      },
+      {
+        "name": "file_size_too_big",
+        "#text": "File size exceeds the maximum allowed for this protocol: %1$s"
+      },
+      {
+        "name": "file_transfer_active",
+        "#text": "File transfer in progress was being interrupted. Status tracking @ %1$s lost!"
+      },
+      {
+        "name": "file_transfer_not_supported",
+        "#text": "Contact client or server does not support file transfer or required protocols"
+      },
+      {
+        "name": "finish",
+        "#text": "Finish"
+      },
+      {
+        "name": "folder_not_exist",
+        "#text": "The folder containing this file could not be found. It was either deleted or moved"
+      },
+      {
+        "name": "folder_open_failed",
+        "#text": "Failed to open folder"
+      },
+      {
+        "name": "folder_open_no_permission",
+        "#text": "You do not have enough permissions to open this folder. Please check your read permissions and try again"
+      },
+      {
+        "name": "folder_open_no_application",
+        "#text": "We could not find an application to open this folder"
+      },
+      {
+        "name": "group_chat",
+        "#text": "Group Chat"
+      },
+      {
+        "name": "hide",
+        "#text": "Hide"
+      },
+      {
+        "name": "history",
+        "#text": "History"
+      },
+      {
+        "name": "history_contact",
+        "#text": "History - %1$s"
+      },
+      {
+        "name": "history_off_for_contact",
+        "#text": "Turn off history for this contact"
+      },
+      {
+        "name": "history_off_all",
+        "#text": "Turn off history for all chats and contacts"
+      },
+      {
+        "name": "history_erase_for_contact",
+        "#text": "Erase this contact history"
+      },
+      {
+        "name": "history_erase_all",
+        "#text": "Erase all contacts chat history"
+      },
+      {
+        "name": "history_purge_for_contact_warning",
+        "#text": "Are you sure you want to purge all selected messages for %1$s?"
+      },
+      {
+        "name": "history_purge_all_warning",
+        "#text": "Are you sure you want to purge all messages for all the entities?"
+      },
+      {
+        "name": "history_purge_error",
+        "#text": "Error removing locally stored messages for %1$s."
+      },
+      {
+        "name": "history_purge_media",
+        "#text": "Delete media from my phone"
+      },
+      {
+        "name": "history_offline_warning",
+        "#text": "Close and open this chat session to view MAM and Offline messages when online"
+      },
+      {
+        "name": "chatroom_alternate_venue",
+        "#text": "Alternate Venue:"
+      },
+      {
+        "name": "chatroom_alternate_address",
+        "#text": "You can continue the conversation in the following chat room: %1$s"
+      },
+      {
+        "name": "chatroom_bookmark_title",
+        "#text": "ChatRoom Bookmark"
+      },
+      {
+        "name": "chatroom_bookmark",
+        "#text": "Bookmark"
+      },
+      {
+        "name": "chatroom_auto_join",
+        "#text": "Auto Join"
+      },
+      {
+        "name": "chatroom_bookmark_update_failed",
+        "#text": "Failed to update Bookmarks for %1$s: %2$s"
+      },
+      {
+        "name": "chatroom_occupant",
+        "#text": "ChatRoom occupants"
+      },
+      {
+        "name": "chatroom_history_erase_per",
+        "#text": "Erase this chatRoom history"
+      },
+      {
+        "name": "chatroom_history_erase_all",
+        "#text": "Erase all chatRooms history"
+      },
+      {
+        "name": "chatroom_history_off_per",
+        "#text": "Turn off history for this chatRoom"
+      },
+      {
+        "name": "chatroom_info",
+        "#text": "ChatRoom info"
+      },
+      {
+        "name": "chatroom_info_name",
+        "#text": "Name"
+      },
+      {
+        "name": "chatroom_info_subject",
+        "#text": "Subject"
+      },
+      {
+        "name": "chatroom_info_description",
+        "#text": "Description"
+      },
+      {
+        "name": "chatroom_info_occupants",
+        "#text": "Occupants"
+      },
+      {
+        "name": "chatroom_info_member_only",
+        "#text": "Member Only"
+      },
+      {
+        "name": "chatroom_info_moderated",
+        "#text": "Moderated"
+      },
+      {
+        "name": "chatroom_info_non_anonymous",
+        "#text": "Non Anonymous"
+      },
+      {
+        "name": "chatroom_info_password_protected",
+        "#text": "Password Protected"
+      },
+      {
+        "name": "chatroom_info_persistent",
+        "#text": "Persistent"
+      },
+      {
+        "name": "chatroom_info_max_history_fetch",
+        "#text": "Max History"
+      },
+      {
+        "name": "chatroom_info_contact_jid",
+        "#text": "Contact Jid"
+      },
+      {
+        "name": "chatroom_info_subject_modifiable",
+        "#text": "Subject Modifiable"
+      },
+      {
+        "name": "chatroom_info_language",
+        "#text": "Language"
+      },
+      {
+        "name": "chatroom_info_ldap_group",
+        "#text": "LDAP Group"
+      },
+      {
+        "name": "chatroom_create",
+        "#text": "Create chat room\u2026"
+      },
+      {
+        "name": "chatroom_create_error",
+        "#text": "Failed to create chat room for:\\n%1$s"
+      },
+      {
+        "name": "chatroom_create_join",
+        "#text": "Create/Join chat room"
+      },
+      {
+        "name": "chatroom_create_wizard",
+        "#text": "Create chat room wizard"
+      },
+      {
+        "name": "chatroom_destroy",
+        "#text": "Destroy this chatRoom"
+      },
+      {
+        "name": "chatroom_destroy_exception",
+        "#text": "Error occurred while destroying chat room:\\n%1$s"
+      },
+      {
+        "name": "chatroom_destroy_error",
+        "#text": "Failed to remove chatRoom on server:\\n\\'%1$s\\'\\n%2$s\\n\\nProceed to purge local chatRoom."
+      },
+      {
+        "name": "chatroom_destroy_message",
+        "#text": "This group chat has been destroyed!\\nReason: %1$s"
+      },
+      {
+        "name": "chatroom_destroy_note",
+        "#text": "To inform other participants, please enter a reason and an alternative chatRoom venue to join."
+      },
+      {
+        "name": "chatroom_destroy_prompt",
+        "#text": "Account owner: %1$s.\\nAre you sure you want to destroy\\n\\'%2$s\\'\\nand all its chat history?"
+      },
+      {
+        "name": "chatroom_destroy_reason",
+        "#text": "inactive group chat"
+      },
+      {
+        "name": "chatroom_destroy_successful",
+        "#text": "\\'%1$s\\' has been removed Successfully!"
+      },
+      {
+        "name": "chatroom_destroy_title",
+        "#text": "Destroy chatRoom"
+      },
+      {
+        "name": "chatroom_join_failed",
+        "#text": "Failed to join room with nickname: %1$s\\n%2$s."
+      },
+      {
+        "name": "chatroom_join_failed_reason",
+        "#text": "Failed to join chat room %1$s:\\n%2$s"
+      },
+      {
+        "name": "chatroom_join_password",
+        "#text": " The chat room requests a password."
+      },
+      {
+        "name": "chatroom_join_failed_registration",
+        "#text": " The chat room requires registration."
+      },
+      {
+        "name": "chatroom_join_title",
+        "#text": "Join chat room"
+      },
+      {
+        "name": "chatroom_join_name",
+        "#text": "Please enter the name of the chat room you would like to join."
+      },
+      {
+        "name": "chatroom_join_subject_null",
+        "#text": "Please enter a subject for the chat room"
+      },
+      {
+        "name": "chatroom_join_wizard",
+        "#text": "Join chat room wizard"
+      },
+      {
+        "name": "cr_member_start_conversation",
+        "#text": "Start conversation"
+      },
+      {
+        "name": "cr_member_grant_owner_privilege",
+        "#text": "Grant owner privileges"
+      },
+      {
+        "name": "cr_member_revoke_owner_privilege",
+        "#text": "Revoke owner privileges"
+      },
+      {
+        "name": "cr_member_kick",
+        "#text": "Remove from group chat"
+      },
+      {
+        "name": "invitation_message",
+        "#text": "Invitation message:"
+      },
+      {
+        "name": "invitation_received",
+        "#text": "Invitation received"
+      },
+      {
+        "name": "invitation_received_message",
+        "#text": "%1$s has invited you to join %2$s chat room. You could accept, reject or ignore this invitation."
+      },
+      {
+        "name": "invitation_rejected",
+        "#text": "%1$s has rejected your invitation to join chat room. Reason: %2$s."
+      },
+      {
+        "name": "invite",
+        "#text": "Invite"
+      },
+      {
+        "name": "invite_contact_message",
+        "#text": "Select the names of the contacts you would like to add to this conversation and then click Invite."
+      },
+      {
+        "name": "invite_contact_to_call",
+        "#text": "Invite contacts to call"
+      },
+      {
+        "name": "invite_contact_to_chat",
+        "#text": "Invite contacts to chat"
+      },
+      {
+        "name": "invite_contact_to_videoBridge",
+        "#text": "Invite contacts (videobridge)"
+      },
+      {
+        "name": "invite_group_chat",
+        "#text": "Group chat invitation"
+      },
+      {
+        "name": "invite_reason",
+        "#text": "Invite Reason:"
+      },
+      {
+        "name": "invite_reject_reason",
+        "#text": "Reason (on reject):"
+      },
+      {
+        "name": "invite_reject_busy",
+        "#text": "Busy"
+      },
+      {
+        "name": "ignore",
+        "#text": "Ignore"
+      },
+      {
+        "name": "info",
+        "#text": "Info"
+      },
+      {
+        "name": "address",
+        "#text": "Address"
+      },
+      {
+        "name": "city",
+        "#text": "City"
+      },
+      {
+        "name": "country",
+        "#text": "Country"
+      },
+      {
+        "name": "email",
+        "#text": "Email"
+      },
+      {
+        "name": "emails",
+        "#text": "Emails"
+      },
+      {
+        "name": "fax",
+        "#text": "Fax"
+      },
+      {
+        "name": "home",
+        "#text": "Home"
+      },
+      {
+        "name": "home_page",
+        "#text": "Home page"
+      },
+      {
+        "name": "invalid_address",
+        "#text": "Invalid address: %1$s"
+      },
+      {
+        "name": "join",
+        "#text": "Join"
+      },
+      {
+        "name": "join_as",
+        "#text": "Join as"
+      },
+      {
+        "name": "join_existing_video_conference",
+        "#text": "Join an existing video conference"
+      },
+      {
+        "name": "join_video",
+        "#text": "Join video"
+      },
+      {
+        "name": "job_title",
+        "#text": "Job title"
+      },
+      {
+        "name": "join_automatically",
+        "#text": "Join automatically"
+      },
+      {
+        "name": "do_not_join_automatically",
+        "#text": "Do not join automatically"
+      },
+      {
+        "name": "kick",
+        "#text": "Kick"
+      },
+      {
+        "name": "kick_failed",
+        "#text": "Kick failed"
+      },
+      {
+        "name": "kick_failed_general_error",
+        "#text": "Failed to kick %1$s. A general server error occurred."
+      },
+      {
+        "name": "kick_failed_not_allowed",
+        "#text": "Failed to kick %1$s. The owner and the administrator of the room could not be kicked."
+      },
+      {
+        "name": "kick_failed_not_enough_permission",
+        "#text": "Failed to kick %1$s. You do not have enough privileges to do that."
+      },
+      {
+        "name": "last",
+        "#text": "Last"
+      },
+      {
+        "name": "last_message_correction",
+        "#text": "Last message correction"
+      },
+      {
+        "name": "last_name",
+        "#text": "Last name"
+      },
+      {
+        "name": "last_seen",
+        "#text": "Today: %s"
+      },
+      {
+        "name": "leave",
+        "#text": "Leave"
+      },
+      {
+        "name": "leave_chat_room",
+        "#text": "Leave chatRoom"
+      },
+      {
+        "name": "locally_on_hold",
+        "#text": "Locally on hold"
+      },
+      {
+        "name": "login_credential",
+        "#text": "Login User Credentials"
+      },
+      {
+        "name": "login_failed",
+        "#text": "Login failed"
+      },
+      {
+        "name": "logoff_failed",
+        "#text": "An error occurred while logging off with the following account: User name: %1$s, Server name: %2$s."
+      },
+      {
+        "name": "mobile",
+        "#text": "Mobile"
+      },
+      {
+        "name": "move",
+        "#text": "Move"
+      },
+      {
+        "name": "move_contact",
+        "#text": "Move Contact"
+      },
+      {
+        "name": "move_contact_error",
+        "#text": "Contact cannot be moved"
+      },
+      {
+        "name": "move_contact_message",
+        "#text": "Select the contact or group, where you would like to move the selected contact."
+      },
+      {
+        "name": "move_contact_failed",
+        "#text": "The contact you have chosen is the same as\\nthe source one. Please choose another contact!"
+      },
+      {
+        "name": "move_contact_prompt",
+        "#text": "Are you sure you want to move %1$s to %2$s?"
+      },
+      {
+        "name": "move_contact_to_group",
+        "#text": "Move to group"
+      },
+      {
+        "name": "nickname",
+        "#text": "Nick Name"
+      },
+      {
+        "name": "chatroom_open_automatically",
+        "#text": "Open this room automatically when"
+      },
+      {
+        "name": "personal",
+        "#text": "Personal"
+      },
+      {
+        "name": "message_delivery_error",
+        "#text": "Failed to deliver message."
+      },
+      {
+        "name": "message_delivery_failed",
+        "#text": "The above message could not be delivered"
+      },
+      {
+        "name": "message_delivery_internal_error",
+        "#text": "An internal error occurred. This is most probably a bug. Please report it via debug log."
+      },
+      {
+        "name": "message_delivery_not_supported",
+        "#text": "The protocol you are using does not support offline messages. You could try to reach %1$s through another protocol or wait until he/she becomes online."
+      },
+      {
+        "name": "message_delivery_unknown_error",
+        "#text": "Unknown error has occurred while delivering your message."
+      },
+      {
+        "name": "message_delivery_unsupported_operation",
+        "#text": "Unsupported operation."
+      },
+      {
+        "name": "message_delivery_network_error",
+        "#text": "A network problem occurred. Please check your network configuration and try again."
+      },
+      {
+        "name": "message_received",
+        "#text": "%1$s wrote"
+      },
+      {
+        "name": "message_delivery_not_registered",
+        "#text": "You must login first to send message."
+      },
+      {
+        "name": "multiple_login",
+        "#text": "Multiple login instants not allowed. The following account: User name: %1$s, Server name: %2$s has been disconnected."
+      },
+      {
+        "name": "mutually_on_hole",
+        "#text": "Mutually On Hold"
+      },
+      {
+        "name": "name",
+        "#text": "Name"
+      },
+      {
+        "name": "add_new_account",
+        "#text": "Add new account"
+      },
+      {
+        "name": "network_assert_error",
+        "#text": "The Jabber provider must be signed on before being able to communicate."
+      },
+      {
+        "name": "no",
+        "#text": "No"
+      },
+      {
+        "name": "no_online_telephony_account",
+        "#text": "At least one online telephony account is needed in order to make a call. Please login to one of your telephony accounts and try again."
+      },
+      {
+        "name": "not_authorized",
+        "#text": "Not authorized"
+      },
+      {
+        "name": "not_authorized_hint",
+        "#text": "You are not authorized to access the server. Check account settings, password or enable IB Registration and try again:\\n%s\""
+      },
+      {
+        "name": "off",
+        "#text": "Off"
+      },
+      {
+        "name": "offline",
+        "#text": "Offline"
+      },
+      {
+        "name": "ok",
+        "#text": "OK"
+      },
+      {
+        "name": "on",
+        "#text": "On"
+      },
+      {
+        "name": "online",
+        "#text": "Online"
+      },
+      {
+        "name": "open",
+        "#text": "Open"
+      },
+      {
+        "name": "open_file_vai_image",
+        "#text": "Click to open file."
+      },
+      {
+        "name": "folder",
+        "#text": "Folder"
+      },
+      {
+        "name": "other",
+        "#text": "Other"
+      },
+      {
+        "name": "organization",
+        "#text": "Organization"
+      },
+      {
+        "name": "phone",
+        "#text": "Phone"
+      },
+      {
+        "name": "phones",
+        "#text": "Phones"
+      },
+      {
+        "name": "play",
+        "#text": "Play"
+      },
+      {
+        "name": "postal_code",
+        "#text": "Postal Code"
+      },
+      {
+        "name": "rename",
+        "#text": "Rename"
+      },
+      {
+        "name": "registration_required",
+        "#text": "Error in account registration on server:\\n%s\""
+      },
+      {
+        "name": "save",
+        "#text": "Save"
+      },
+      {
+        "name": "show_stack_trace",
+        "#text": "Show stack Trace"
+      },
+      {
+        "name": "street",
+        "#text": "Street"
+      },
+      {
+        "name": "submit",
+        "#text": "Submit"
+      },
+      {
+        "name": "user_login",
+        "#text": "Please Login"
+      },
+      {
+        "name": "work",
+        "#text": "Work"
+      },
+      {
+        "name": "xmpp_connection_error",
+        "#text": "Encounter problem during XMPP Connection:\\n%s\""
+      },
+      {
+        "name": "btn_video_tooltip",
+        "#text": "Toggle video"
+      },
+      {
+        "name": "mic_control_title",
+        "#text": "Microphone gain level"
+      },
+      {
+        "name": "btn_mute_tooltip",
+        "#text": "Adjust microphone sound"
+      },
+      {
+        "name": "presence_not_supported",
+        "#text": "Presence is not supported by %1$s"
+      },
+      {
+        "name": "proactive_notification",
+        "#text": "is writing a message"
+      },
+      {
+        "name": "recent_messages",
+        "#text": "Recent conversations"
+      },
+      {
+        "name": "received_",
+        "#text": "%1$s received"
+      },
+      {
+        "name": "referred",
+        "#text": "Referred"
+      },
+      {
+        "name": "restoring_",
+        "#text": "Restoring\u2026"
+      },
+      {
+        "name": "decline",
+        "#text": "Decline"
+      },
+      {
+        "name": "remove",
+        "#text": "Remove"
+      },
+      {
+        "name": "remove_account",
+        "#text": "Remove account"
+      },
+      {
+        "name": "remove_account_prompt",
+        "#text": "Are you sure you want to remove the account:\\n%1$s?"
+      },
+      {
+        "name": "remove_contact",
+        "#text": "Remove contact"
+      },
+      {
+        "name": "remove_contact_prompt",
+        "#text": "Contact owner: %1$s.\\n\\nAre you sure you want to remove the contact: \\'%2$s\\' from your contact list?"
+      },
+      {
+        "name": "remove_contact_not_connected",
+        "#text": "You need to be connected in order to remove this contact. Please sign in and try again."
+      },
+      {
+        "name": "remove_group",
+        "#text": "Remove group"
+      },
+      {
+        "name": "remove_group_prompt",
+        "#text": "Are you sure you want to remove the group: \\'%1$s\\' and all its associated contacts from your contact list?"
+      },
+      {
+        "name": "remotely_on_hold",
+        "#text": "Remotely on hold"
+      },
+      {
+        "name": "rename_contact",
+        "#text": "Change Contact Name"
+      },
+      {
+        "name": "ringing",
+        "#text": "Ringing"
+      },
+      {
+        "name": "request",
+        "#text": "Request"
+      },
+      {
+        "name": "request_authorization",
+        "#text": "Request authorization"
+      },
+      {
+        "name": "request_authorization_prompt",
+        "#text": "Contact owner: %1$s\\n\\nNeed authorization from \\'%2$s\\' to add him/her to your contact list. Please enter your request again."
+      },
+      {
+        "name": "retry",
+        "#text": "Retry"
+      },
+      {
+        "name": "search",
+        "#text": "Search"
+      },
+      {
+        "name": "search_contact",
+        "#text": "Search contact"
+      }
+    ],
+    "#text": ">\n    ",
+    "string#1": [
+      {
+        "name": "phonebook",
+        "#text": "Phone book"
+      },
+      {
+        "name": "security",
+        "#text": "Security"
+      },
+      {
+        "name": "select_account_owner",
+        "#text": "Select Account Owner"
+      },
+      {
+        "name": "assign_group",
+        "#text": "Contact Assigned Group:"
+      },
+      {
+        "name": "no_group",
+        "#text": "No group"
+      },
+      {
+        "name": "send_log",
+        "#text": "Report Bugs"
+      },
+      {
+        "name": "send_log_prompt",
+        "#text": "aTalk has just recovered after serious crash. Do you want to report the bugs to developers?"
+      },
+      {
+        "name": "send_log_subject",
+        "#text": "aTalk bugs report"
+      },
+      {
+        "name": "send_log_title",
+        "#text": "aTalk bugs report via email"
+      },
+      {
+        "name": "send_log_info",
+        "#text": "Info below can help developer fix the problem:\\n\\n\n        1. What was the last thing you did before the problem happen?\\n\\n\\n\n        2. What was the problem that you see, include a snapshot of the display if available?\\n\\n\\n\n        3. Can you or how to reproduce the problem?"
+      },
+      {
+        "name": "send_message",
+        "#text": "Send a message"
+      },
+      {
+        "name": "send_message_failed",
+        "#text": "Failed to send message: %1$s"
+      },
+      {
+        "name": "send_message_not_supported",
+        "#text": "The entity you have selected does not support instant chat messaging: %1$s"
+      },
+      {
+        "name": "send_message_as_sms",
+        "#text": "Send as SMS"
+      },
+      {
+        "name": "send_message_private",
+        "#text": "Send private message"
+      },
+      {
+        "name": "send_via",
+        "#text": "Send via"
+      },
+      {
+        "name": "sent",
+        "#text": "sent"
+      },
+      {
+        "name": "server_chatroom",
+        "#text": "Server Chat Rooms"
+      },
+      {
+        "name": "shutting_down",
+        "#text": "shutting down\u2026"
+      },
+      {
+        "name": "status",
+        "#text": "Status"
+      },
+      {
+        "name": "type_your_request_reason",
+        "#text": "Type your request reason"
+      },
+      {
+        "name": "unknown",
+        "#text": "Unknown"
+      },
+      {
+        "name": "unknown_user",
+        "#text": "Unknown user"
+      },
+      {
+        "name": "unknown_state",
+        "#text": "Unknown state"
+      },
+      {
+        "name": "url_example",
+        "#text": "https://www.example.com"
+      },
+      {
+        "name": "volume_control_title",
+        "#text": "Output volume gain level"
+      },
+      {
+        "name": "volume_control_tooltip",
+        "#text": "Adjust volume"
+      },
+      {
+        "name": "volume_gain_level",
+        "#text": "Volume gain level: %1$s%%"
+      },
+      {
+        "name": "waiting_for_authorization",
+        "#text": "Waiting for authorization"
+      },
+      {
+        "name": "warning",
+        "#text": "Warning"
+      },
+      {
+        "name": "call_in_progress_warning",
+        "#text": "Cannot do this during a call"
+      },
+      {
+        "name": "yes",
+        "#text": "Yes"
+      },
+      {
+        "name": "account_create_failed",
+        "#text": "Failed to create new account due to error: %1$s"
+      },
+      {
+        "name": "create_account",
+        "#text": "Create account"
+      },
+      {
+        "name": "general_error",
+        "#text": "General error"
+      },
+      {
+        "name": "network_failure",
+        "#text": "Network failure"
+      },
+      {
+        "name": "select_avatar",
+        "#text": "Select new avatar image"
+      },
+      {
+        "name": "set_status",
+        "#text": "Change status"
+      },
+      {
+        "name": "sign_in",
+        "#text": "Sign in"
+      },
+      {
+        "name": "sign_out",
+        "#text": "Sign out"
+      },
+      {
+        "name": "server_info_not_complete",
+        "#text": "Please complete the server part of your account."
+      },
+      {
+        "name": "speed_info",
+        "#text": "Speed: %1$s/sec (%2$s)"
+      },
+      {
+        "name": "status_change_general_error",
+        "#text": "Failed to change status for account: User name: %1$s, Server name: %2$s, due to a general error."
+      },
+      {
+        "name": "status_change_message",
+        "#text": "has become %1$s"
+      },
+      {
+        "name": "status_change_network_failure",
+        "#text": "Failed to change status for account: User name: %1$s, Server name: %2$s, due to a network problem."
+      },
+      {
+        "name": "security_error",
+        "#text": "Security error"
+      },
+      {
+        "name": "security_info",
+        "#text": "Security information"
+      },
+      {
+        "name": "security_warning",
+        "#text": "Security warning"
+      },
+      {
+        "name": "username_password_null",
+        "#text": "Please enter proper username or/and password."
+      },
+      {
+        "name": "username_change_warning",
+        "#text": "Warning: Changing the account user name to \\'%1$s\\' will also purge %2$s messages for the existing account \\'%3$s\\'. Proceed?"
+      },
+      {
+        "name": "user_exist_error",
+        "#text": "This user already exists on the selected network. Please choose another user or network."
+      },
+      {
+        "name": "jan",
+        "#text": "Jan"
+      },
+      {
+        "name": "feb",
+        "#text": "Feb"
+      },
+      {
+        "name": "mar",
+        "#text": "Mar"
+      },
+      {
+        "name": "apr",
+        "#text": "Apr"
+      },
+      {
+        "name": "may",
+        "#text": "May"
+      },
+      {
+        "name": "jun",
+        "#text": "Jun"
+      },
+      {
+        "name": "jul",
+        "#text": "Jul"
+      },
+      {
+        "name": "aug",
+        "#text": "Aug"
+      },
+      {
+        "name": "sep",
+        "#text": "Sep"
+      },
+      {
+        "name": "oct",
+        "#text": "Oct"
+      },
+      {
+        "name": "nov",
+        "#text": "Nov"
+      },
+      {
+        "name": "dec",
+        "#text": "Dec"
+      },
+      {
+        "name": "service_protocol_ICE_FAILED",
+        "#text": "Could not establish connection (ICE failed and no relay found)"
+      },
+      {
+        "name": "callinfo_audio_info",
+        "#text": "Audio info"
+      },
+      {
+        "name": "callinfo_bandwidth",
+        "#text": "Bandwidth:"
+      },
+      {
+        "name": "callinfo_call_duration",
+        "#text": "Call duration:"
+      },
+      {
+        "name": "callinfo_call_identity",
+        "#text": "Identity:"
+      },
+      {
+        "name": "callinfo_call_information",
+        "#text": "Call information"
+      },
+      {
+        "name": "callinfo_call_transport",
+        "#text": "Signalling call transport:"
+      },
+      {
+        "name": "callinfo_codec",
+        "#text": "Codec/Frequency:"
+      },
+      {
+        "name": "callinfo_conference_focus",
+        "#text": "Conference focus:"
+      },
+      {
+        "name": "callinfo_default_encrypted",
+        "#text": "Encryption enabled:"
+      },
+      {
+        "name": "callinfo_jitter",
+        "#text": "Jitter:"
+      },
+      {
+        "name": "callinfo_key_exchange_protocol",
+        "#text": "Key exchange protocol"
+      },
+      {
+        "name": "callinfo_local_ip",
+        "#text": "Local IP/Port:"
+      },
+      {
+        "name": "callinfo_loss_rate",
+        "#text": "Loss rate:"
+      },
+      {
+        "name": "callinfo_media_stream_rip",
+        "#text": "RTP:"
+      },
+      {
+        "name": "callinfo_media_srtp",
+        "#text": "SRTP:"
+      },
+      {
+        "name": "callinfo_media_stream_transport_protocol",
+        "#text": "Media stream transport protocol:"
+      },
+      {
+        "name": "callinfo_na",
+        "#text": "N.A."
+      },
+      {
+        "name": "callinfo_peer_count",
+        "#text": "Participant count:"
+      },
+      {
+        "name": "callinfo_remote_ip",
+        "#text": "Remote IP/Port:"
+      },
+      {
+        "name": "callinfo_rtt",
+        "#text": "RTT:"
+      },
+      {
+        "name": "callinfo_details",
+        "#text": "Call Info Details"
+      },
+      {
+        "name": "callinfo_tls_cipher_suite",
+        "#text": "TLS cipher suite:"
+      },
+      {
+        "name": "callinfo_tls_certificate_content",
+        "#text": "The content of the TLS server certificate is displayed below."
+      },
+      {
+        "name": "callinfo_tls_protocol",
+        "#text": "TLS protocol:"
+      },
+      {
+        "name": "callinfo_view_certificate",
+        "#text": "View certificate"
+      },
+      {
+        "name": "callinfo_video_size",
+        "#text": "Video size"
+      },
+      {
+        "name": "callinfo_video_info",
+        "#text": "Video info"
+      },
+      {
+        "name": "callinfo_adaptive_jitter_buffer",
+        "#text": "Adaptive jitter buffer:"
+      },
+      {
+        "name": "callinfo_decoded_with_fec",
+        "#text": "Packets decoded with FEC:"
+      },
+      {
+        "name": "callinfo_discarded_percent",
+        "#text": "Packets currently being discarded:"
+      },
+      {
+        "name": "callinfo_discarded_total",
+        "#text": "Number of discarded packets:"
+      },
+      {
+        "name": "callinfo_harvesting_data",
+        "#text": "%1$d ms (for %2$d harvests)"
+      },
+      {
+        "name": "callinfo_harvesting_time",
+        "#text": "Harvesting time:"
+      },
+      {
+        "name": "callinfo_candidate_extended_type",
+        "#text": "ICE candidate extended type:"
+      },
+      {
+        "name": "callinfo_localhost_address",
+        "#text": "Local host IP/Port:"
+      },
+      {
+        "name": "callinfo_ice_local_reflexive_address",
+        "#text": "Local reflexive IP/Port:"
+      },
+      {
+        "name": "callinfo_ice_local_relayed_address",
+        "#text": "Local relayed IP/Port:"
+      },
+      {
+        "name": "callinfo_ice_remote_host_address",
+        "#text": "Remote host IP/Port:"
+      },
+      {
+        "name": "callinfo_ice_remote_reflexive_address",
+        "#text": "Remote reflexive IP/Port:"
+      },
+      {
+        "name": "callinfo_ice_remote_relayed_address",
+        "#text": "Remote relayed IP/Port:"
+      },
+      {
+        "name": "callinfo_ice_state",
+        "#text": "ICE Processing State:"
+      },
+      {
+        "name": "callinfo_ice_state_completed",
+        "#text": "Completed"
+      },
+      {
+        "name": "callinfo_ice_state_failed",
+        "#text": "Failed"
+      },
+      {
+        "name": "callinfo_ice_state_running",
+        "#text": "Connectivity checks"
+      },
+      {
+        "name": "callinfo_ice_state_waiting",
+        "#text": "Gather candidates"
+      },
+      {
+        "name": "callinfo_ice_state_jitter_buffer_delay",
+        "#text": "Jitter buffer:"
+      },
+      {
+        "name": "callinfo_total_harvesting_time",
+        "#text": "Total harvesting time:"
+      },
+      {
+        "name": "trust_always",
+        "#text": "Always trust this certificate"
+      },
+      {
+        "name": "cert_dialog_title",
+        "#text": "Certificate Verification"
+      },
+      {
+        "name": "cert_dialog_description",
+        "#text": "<html>%1$s cannot verify the identity of the server when connecting to<br/><b>%2$s</b><br/><br/>The certificate is not trusted (a self-signed certificate), which means that the server\\'s identity cannot be automatically verified.<br/><br/>Proceed with connection for this instance only?<br/>For more option and info, click Show Certificate.</html>"
+      },
+      {
+        "name": "cert_dialog_description_no_host",
+        "#text": "<html>%1$s cannot verify the\n        identity of the server\\'s certificate.<br/><br/>\n        The certificate is not trusted (a self-signed certificate), which means that the server\\'s\n        identity cannot be automatically verified.<br/><br/>\n        Proceed with connection for this instance only?<br/>\n        For more option and info, click \"Show Certificate\".</html>"
+      },
+      {
+        "name": "cert_dialog_client_description",
+        "#text": "<html>%1$s cannot verify the\n        identity of the connecting client.<br/><br/>\n        The certificate is not trusted (a self-signed certificate), which means that the client\\'s\n        identity cannot be automatically verified.<br/><br/>\n        Proceed with connection for this instance only?<br/>\n        For more option and info, click \"Show Certificate\".</html>"
+      },
+      {
+        "name": "cert_dialog_peer_description",
+        "#text": "<html>%1$s cannot verify the\n        identity of the peer %2$s.<br/><br/>\n        The certificate is not trusted (a self-signed certificate), which means that the peer\\'s\n        identity cannot be automatically verified.<br/><br/>\n        Proceed with connection for this instance only?<br/>\n        For more option and info, click \"Show Certificate\".</html>"
+      },
+      {
+        "name": "proceed",
+        "#text": "Proceed"
+      },
+      {
+        "name": "cert_info_issued_to",
+        "#text": "<b>Issued To</b>"
+      },
+      {
+        "name": "cert_info_chain",
+        "#text": "Certificate Chain:"
+      },
+      {
+        "name": "cert_info_cn",
+        "#text": "Common Name:"
+      },
+      {
+        "name": "cert_info_O",
+        "#text": "Organization:"
+      },
+      {
+        "name": "cert_info_C",
+        "#text": "Country Name:"
+      },
+      {
+        "name": "cert_info_ST",
+        "#text": "State or Province Name:"
+      },
+      {
+        "name": "cert_info_L",
+        "#text": "Locality Name:"
+      },
+      {
+        "name": "cert_info_issued_by",
+        "#text": "<b>Issued By</b>"
+      },
+      {
+        "name": "cert_info_OU",
+        "#text": "Organizational Unit:"
+      },
+      {
+        "name": "cert_info_validity",
+        "#text": "<b>Validity</b>"
+      },
+      {
+        "name": "cert_info_issued_on",
+        "#text": "Issued On:"
+      },
+      {
+        "name": "cert_info_expires_on",
+        "#text": "Expires On:"
+      },
+      {
+        "name": "cert_info_fingerprints",
+        "#text": "<b>Fingerprints</b>"
+      },
+      {
+        "name": "cert_info_details",
+        "#text": "<b>Certificate Info</b>"
+      },
+      {
+        "name": "cert_info_SN",
+        "#text": "Serial Number:"
+      },
+      {
+        "name": "cert_info_version",
+        "#text": "Version:"
+      },
+      {
+        "name": "cert_info_sign_algo",
+        "#text": "Signature Algorithm:"
+      },
+      {
+        "name": "cert_info_pubkey_info",
+        "#text": "<b>Public Key Info</b>"
+      },
+      {
+        "name": "cert_info_algo",
+        "#text": "Algorithm:"
+      },
+      {
+        "name": "cert_info_pubkey",
+        "#text": "Public Key:"
+      },
+      {
+        "name": "cert_info_key_bytes",
+        "#text": "%1$s bytes: %2$s"
+      },
+      {
+        "name": "cert_info_key_bits",
+        "#text": "%1$s bits"
+      },
+      {
+        "name": "cert_info_exponent",
+        "#text": "Exponent:"
+      },
+      {
+        "name": "cert_info_key_size",
+        "#text": "Key Size:"
+      },
+      {
+        "name": "cert_info_signature",
+        "#text": "Signature:"
+      },
+      {
+        "name": "service_gui_CONTINUE",
+        "#text": "Continue"
+      },
+      {
+        "name": "certificate_show",
+        "#text": "Show Certificate"
+      },
+      {
+        "name": "certificate_hide",
+        "#text": "Hide Certificate"
+      },
+      {
+        "name": "unsaved_changes",
+        "#text": "You have unsaved changes. Save or Cancel and exit."
+      },
+      {
+        "name": "unsaved_changes_title",
+        "#text": "UnSaved Changes"
+      },
+      {
+        "name": "please_wait",
+        "#text": "Please wait\u2026"
+      },
+      {
+        "name": "server_info_fetching",
+        "#text": "Fetching server advertised features/info\u2026"
+      },
+      {
+        "name": "security_audio_not_secure",
+        "#text": "Audio not secure"
+      },
+      {
+        "name": "security_call_not_secured_tooltip",
+        "#text": "Call not secure."
+      },
+      {
+        "name": "security_call_secured_compare_tooltip",
+        "#text": "Press here to compare security secret with your partner."
+      },
+      {
+        "name": "security_call_secured_tooltip",
+        "#text": "Call secured. Fore more information press here."
+      },
+      {
+        "name": "security_cipher",
+        "#text": "Cipher: %1$s"
+      },
+      {
+        "name": "security_clear",
+        "#text": "Clear"
+      },
+      {
+        "name": "security_compare_with_partner_short",
+        "#text": "Compare with partner:"
+      },
+      {
+        "name": "confirm",
+        "#text": "Confirm"
+      },
+      {
+        "name": "security_encryption_required",
+        "#text": "Encryption required!"
+      },
+      {
+        "name": "security_no_video",
+        "#text": "No video"
+      },
+      {
+        "name": "security_secure_audio",
+        "#text": "Secure audio"
+      },
+      {
+        "name": "security_secure_video",
+        "#text": "Secure video"
+      },
+      {
+        "name": "security_alert",
+        "#text": "Trying to secure call. Will disconnect in"
+      },
+      {
+        "name": "security_string_compared",
+        "#text": "String compared:"
+      },
+      {
+        "name": "security_verify_toast",
+        "#text": "Call security enabled! Tap to compare security string now or use the menu later."
+      },
+      {
+        "name": "security_video_not_secured",
+        "#text": "Video not secure"
+      },
+      {
+        "name": "avatar_chose_icon",
+        "#text": "Choose picture"
+      },
+      {
+        "name": "avatar_remove_icon",
+        "#text": "Remove current picture"
+      },
+      {
+        "name": "update_download",
+        "#text": "Download"
+      },
+      {
+        "name": "update_install",
+        "#text": "Install"
+      },
+      {
+        "name": "update_reInstall",
+        "#text": "Reinstall"
+      },
+      {
+        "name": "update_download_completed",
+        "#text": "Download finished"
+      },
+      {
+        "name": "update_download_ready",
+        "#text": "Update (%1$s) is downloaded and ready to be installed."
+      },
+      {
+        "name": "update_in_progress",
+        "#text": "In progress"
+      },
+      {
+        "name": "update_download_in_progress",
+        "#text": "Downloading update is in progress."
+      },
+      {
+        "name": "update_update_available",
+        "#text": "A new released version (%1$s-%2$s) for %3$s is available. Current installed version: %4$s."
+      },
+      {
+        "name": "update_up_to_date",
+        "#text": "Your current installed version: (%1$s-%2$s) is up to date. Online available version: %3$s."
+      },
+      {
+        "name": "update_new_version_none",
+        "#text": "No new version"
+      },
+      {
+        "name": "update_install_update",
+        "#text": "Install Updates"
+      },
+      {
+        "name": "update_download_failed",
+        "#text": "Failed to download new update!"
+      },
+      {
+        "name": "update_check_update",
+        "#text": "Check for updates"
+      },
+      {
+        "name": "update_version_invalid",
+        "#text": "Downloaded apk does not match; actual: %1$s (%2$s)"
+      },
+      {
+        "name": "update_vew_version_available",
+        "#text": "A new software version (%1$s) is available."
+      },
+      {
+        "name": "accountinfo_about_me",
+        "#text": "About Me:"
+      },
+      {
+        "name": "accountinfo_about_me_hint",
+        "#text": "Enter a brief description of yourself in this box"
+      },
+      {
+        "name": "accountinfo_age",
+        "#text": "Age:"
+      },
+      {
+        "name": "accountinfo_birth_date",
+        "#text": "Birth Date:"
+      },
+      {
+        "name": "accountinfo_change",
+        "#text": "Change"
+      },
+      {
+        "name": "accountinfo_city",
+        "#text": "City:"
+      },
+      {
+        "name": "accountinfo_country",
+        "#text": "Country:"
+      },
+      {
+        "name": "accountinfo_discard_change",
+        "#text": "User goes offline - Discarded all account info changes."
+      },
+      {
+        "name": "accountinfo_display_name",
+        "#text": "Display name:"
+      },
+      {
+        "name": "accountinfo_email",
+        "#text": "E-mail:"
+      },
+      {
+        "name": "accountinfo_extended",
+        "#text": "Extended"
+      },
+      {
+        "name": "accountinfo_first_name",
+        "#text": "First Name:"
+      },
+      {
+        "name": "accountinfo_gender",
+        "#text": "Gender:"
+      },
+      {
+        "name": "accountinfo_global_icon",
+        "#text": "Use global icon"
+      },
+      {
+        "name": "accountinfo_job_title",
+        "#text": "Job Title:"
+      },
+      {
+        "name": "accountinfo_last_name",
+        "#text": "Last Name:"
+      },
+      {
+        "name": "accountinfo_local_icon",
+        "#text": "Use this icon:"
+      },
+      {
+        "name": "accountinfo_middle_name",
+        "#text": "Middle Name:"
+      },
+      {
+        "name": "accountinfo_mobile_phone",
+        "#text": "Mobile Phone:"
+      },
+      {
+        "name": "accountinfo_nickname",
+        "#text": "Nickname:"
+      },
+      {
+        "name": "accountinfo_not_registered_message",
+        "#text": "Account is offline - must be online to change account info."
+      },
+      {
+        "name": "accountinfo_not_supported",
+        "#text": "Account info not available."
+      },
+      {
+        "name": "accountinfo_only_message",
+        "#text": "Only messages"
+      },
+      {
+        "name": "accountinfo_organisation",
+        "#text": "Organisation Name:"
+      },
+      {
+        "name": "accountinfo_phone",
+        "#text": "Phone:"
+      },
+      {
+        "name": "accountinfo_postcode",
+        "#text": "Postal code:"
+      },
+      {
+        "name": "accountinfo_region",
+        "#text": "Region:"
+      },
+      {
+        "name": "accountinfo_select_account",
+        "#text": "Please select an account:"
+      },
+      {
+        "name": "accountinfo_street",
+        "#text": "Street Address:"
+      },
+      {
+        "name": "accountinfo_title",
+        "#text": "Account Info"
+      },
+      {
+        "name": "accountinfo_user_picture",
+        "#text": "User Pictures"
+      },
+      {
+        "name": "accountinfo_work_email",
+        "#text": "Work E-mail:"
+      },
+      {
+        "name": "accountinfo_work_phone",
+        "#text": "Work Phone:"
+      },
+      {
+        "name": "certconfig_title",
+        "#text": "TLS configuration"
+      },
+      {
+        "name": "certconfig_trusted_store",
+        "#text": "Source of trusted root certificates"
+      },
+      {
+        "name": "certconfig_cert_list_title",
+        "#text": "TLS client authentication configurations"
+      },
+      {
+        "name": "certconfig_cert_list_description",
+        "#text": "The configurations managed here can be chosen as client TLS certificates in the account configurations (e.g. to authenticate with a certificate against your SIP provider instead of a username and password)."
+      },
+      {
+        "name": "certconfig_alias",
+        "#text": "Alias name in KeyStore"
+      },
+      {
+        "name": "certconfig_keystore_type",
+        "#text": "Type"
+      },
+      {
+        "name": "certconfig_cert_entry_title",
+        "#text": "TLS client certificate"
+      },
+      {
+        "name": "certconfig_keystore_file",
+        "#text": "File"
+      },
+      {
+        "name": "certconfig_keystore_password",
+        "#text": "Password"
+      },
+      {
+        "name": "certconfig_incomplete",
+        "#text": "Please enter a value for all fields"
+      },
+      {
+        "name": "certconfig_show_cert_exception",
+        "#text": "Unable to show the certificate (%1$s)."
+      },
+      {
+        "name": "certconfig_keystore_exception",
+        "#text": "Unable to load the keystore (%1$s)."
+      },
+      {
+        "name": "certconfig_file_type_description",
+        "#text": "Certificate stores (PKCS#11 Module, PKCS#12 files, Java ks Keystore)"
+      },
+      {
+        "name": "certconfig_alias_load_exception",
+        "#text": "Unable to obtain aliases from keystore (%1$s)."
+      },
+      {
+        "name": "certconfig_invalid_keystore_type",
+        "#text": "The selected Keystore type seems to be invalid (%1$s)."
+      },
+      {
+        "name": "certconfig_revocation_title",
+        "#text": "Certificate revocation options"
+      },
+      {
+        "name": "certconfig_revocation_check_enabled",
+        "#text": "CRL (Certificate Revocation List) check enabled"
+      },
+      {
+        "name": "certconfig_revocation_ocsp_enabled",
+        "#text": "OCSP (Online Certificate Status Protocol) check enabled"
+      },
+      {
+        "name": "connectioninfo_title",
+        "#text": "Connection Info"
+      },
+      {
+        "name": "contactinfo_title",
+        "#text": "Contact details"
+      },
+      {
+        "name": "contactinfo_contact_summary_description",
+        "#text": "Summary of contact info for"
+      },
+      {
+        "name": "contactinfo_contact_extended_description",
+        "#text": "Extended contact info for"
+      },
+      {
+        "name": "contactinfo_not_specified",
+        "#text": "[Not specified]"
+      },
+      {
+        "name": "contactinfo_user_pictures",
+        "#text": "User pictures"
+      },
+      {
+        "name": "contactinfo_status_message",
+        "#text": "Status Message"
+      },
+      {
+        "name": "notificationconfig_event_BusyCall",
+        "#text": "Busy Call"
+      },
+      {
+        "name": "notificationconfig_event_BusyCall_description",
+        "#text": "Busy call description"
+      },
+      {
+        "name": "notificationconfig_event_CallSaved",
+        "#text": "Call Saved"
+      },
+      {
+        "name": "notificationconfig_event_CallSecurityError",
+        "#text": "Call Security Error"
+      },
+      {
+        "name": "notificationconfig_event_CallSecurityError_description",
+        "#text": "Call security error description"
+      },
+      {
+        "name": "notificationconfig_event_CallSecurityOn",
+        "#text": "Call Security On"
+      },
+      {
+        "name": "notificationconfig_event_CallSecurityOn_description",
+        "#text": "Call security on description"
+      },
+      {
+        "name": "notificationconfig_event_Dialing",
+        "#text": "Dialing"
+      },
+      {
+        "name": "notificationconfig_event_Dialing_description",
+        "#text": "Dialing description"
+      },
+      {
+        "name": "notificationconfig_event_HangUp",
+        "#text": "Hang Up"
+      },
+      {
+        "name": "notificationconfig_event_HangUp_description",
+        "#text": "Hang up description"
+      },
+      {
+        "name": "notificationconfig_event_IncomingCall",
+        "#text": "Incoming Call"
+      },
+      {
+        "name": "notificationconfig_event_IncomingCall_description",
+        "#text": "Incoming call description."
+      },
+      {
+        "name": "notificationconfig_event_IncomingFile",
+        "#text": "Incoming File"
+      },
+      {
+        "name": "notificationconfig_event_IncomingInvitation",
+        "#text": "Incoming Invitation"
+      },
+      {
+        "name": "notificationconfig_event_IncomingMessage",
+        "#text": "Incoming Message"
+      },
+      {
+        "name": "notificationconfig_event_IncomingMessage_description",
+        "#text": "Incoming message description"
+      },
+      {
+        "name": "notificationconfig_event_LogFilesArchived",
+        "#text": "Log Files Archived"
+      },
+      {
+        "name": "notificationconfig_event_MissedCall",
+        "#text": "Missed Call"
+      },
+      {
+        "name": "notificationconfig_event_NetworkNotifications",
+        "#text": "Network Notifications"
+      },
+      {
+        "name": "notificationconfig_event_NetworkNotifications_description",
+        "#text": "Network notification description"
+      },
+      {
+        "name": "notificationconfig_event_ProactiveNotification",
+        "#text": "Typing Notifications"
+      },
+      {
+        "name": "notificationconfig_event_ProactiveNotification_description",
+        "#text": "Proactive chat state notification description"
+      },
+      {
+        "name": "notificationconfig_event_OutgoingCall",
+        "#text": "Outgoing Call"
+      },
+      {
+        "name": "notificationconfig_event_OutgoingCall_description",
+        "#text": "Outgoing call description"
+      },
+      {
+        "name": "notificationconfig_event_SecurityMessage",
+        "#text": "Security Message"
+      },
+      {
+        "name": "notificationconfig_event_SecurityMessage_description",
+        "#text": "Security message description"
+      },
+      {
+        "name": "notificationconfig_notification_sound",
+        "#text": "Sound on notification device"
+      },
+      {
+        "name": "notificationconfig_playback_sound",
+        "#text": "Sound on playback device"
+      },
+      {
+        "name": "notificationconfig_popup_notification",
+        "#text": "Popup notification"
+      },
+      {
+        "name": "notificationconfig_vibration",
+        "#text": "Vibration"
+      },
+      {
+        "name": "notificationconfig_sound_file",
+        "#text": "Sound file:"
+      },
+      {
+        "name": "callrecordingconfig_call_saved",
+        "#text": "Call saved successfully"
+      },
+      {
+        "name": "callrecordingconfig_call_saved_to",
+        "#text": "Save to: %1$s"
+      },
+      {
+        "name": "media_configform_audio_device_config_changed",
+        "#text": "Audio device configuration changed"
+      },
+      {
+        "name": "media_configform_audio_device_config_management_click",
+        "#text": "Click here for device management"
+      },
+      {
+        "name": "media_configform_preview",
+        "#text": "Preview"
+      },
+      {
+        "name": "media_security_checksum_mismatch",
+        "#text": "<html>Internal ZRTP packet checksum mismatch.<br/>If you see this message often this may mean a denial-of-service attack!</html>"
+      },
+      {
+        "name": "media_security_data_send_failed",
+        "#text": "<html>Failed to send encryption data. Internet data connection or peer is down.<br/><b>Your call is not secure</b><br/>Error code: %1$s</html>"
+      },
+      {
+        "name": "imedia_security_retry_rate_exceeded",
+        "#text": "<html>Too much retries during security negotiation. This may mean that the other party has internet connection problems.<br/><b>Your call is not secure</b><br/>Error code: %1$s</html>"
+      },
+      {
+        "name": "media_security_internal_protocol_error",
+        "#text": "<html>Internal protocol error occurred.<br/><b>Your call is not secure</b><br/>Error code: %1$s</html>"
+      },
+      {
+        "name": "media_security_off",
+        "#text": "Call encryption support off"
+      },
+      {
+        "name": "media_security_on",
+        "#text": "Call encryption support on"
+      },
+      {
+        "name": "media_security_severe_generic_message",
+        "#text": "<html>A severe security problem was detected.<br/><b>Your call is not secure</b><br/>Error code: %1$s</html>"
+      },
+      {
+        "name": "media_security_warning_no_rs_match",
+        "#text": "<html>No retained shared secret available.<br/><b>SAS verification is recommended</b></html>"
+      },
+      {
+        "name": "media_security_warning_no_expected_rs_match",
+        "#text": "<html>An expected retained shared secret is missing.<br/><b>SAS verification is required</b><br/>If SAS codes do not match then hangup and try again</html>"
+      },
+      {
+        "name": "media_security_zrtp_generic_message",
+        "#text": "<html>A severe ZRTP problem was detected.<br/><b>Your call is not secure</b><br/>Error code: %1$s</html>"
+      },
+      {
+        "name": "media_security_zrtp_handshake_timeout",
+        "#text": "The call is not secure; RTP handshake timeout: %s"
+      },
+      {
+        "name": "media_security_encryption_ended",
+        "#text": "The call encryption has ended: %1$s"
+      },
+      {
+        "name": "menu_crypto_plain_text",
+        "#text": "Plain Text"
+      },
+      {
+        "name": "omemo_authbuddy_authenticate_buddy",
+        "#text": "Authenticate Buddy"
+      },
+      {
+        "name": "omemo_authbuddy_authenticate_info",
+        "#text": "You have unauthenticated buddies. Unverified buddies cannot receive OMEMO message. Check to authenticate."
+      },
+      {
+        "name": "omemo_authbuddy_local_fingerprint",
+        "#text": "My Fingerprint %1$s:\\n%2$s"
+      },
+      {
+        "name": "omemo_authbuddy_verify_buddy",
+        "#text": "Verify Buddy"
+      },
+      {
+        "name": "omemo_identity_keypairs_missing",
+        "#text": "Create OMEMO IdentityKeyPairs for: %1$s"
+      },
+      {
+        "name": "omemo_identity_key_invalid",
+        "#text": "Invalid IdentityKey for omemoDevice: %1$s.\\nException: %2$s."
+      },
+      {
+        "name": "omemo_identity_key_missing",
+        "#text": "OMEMO IdentityKey for %1$s is missing.\\nProceed to download from server."
+      },
+      {
+        "name": "omemo_identity_keypairs_invalid",
+        "#text": "Invalid IdentityKeyPairs for omemoDevice: %1$s.\\nException: %2$s."
+      },
+      {
+        "name": "omemo_init_failed_corrupted_omemoKey_exception",
+        "#text": "Initialize OmemoManager has failed and omemo messaging is not working. If problem persists\n        after restart, please proceed to \"Regenerate OMEMO identities\" for the failed omemoDevice: %1$s.\\n\\nException: %2$s."
+      },
+      {
+        "name": "omemo_init_failed_no_response",
+        "#text": "Initialize OmemoManager has failed and omemo messaging may not work properly: %1$s"
+      },
+      {
+        "name": "omemo_init_failed_title",
+        "#text": "OmemoManager init failed"
+      },
+      {
+        "name": "omemo_menu_authenticated",
+        "#text": "OMEMO Authenticated"
+      },
+      {
+        "name": "omemo_send_error",
+        "#text": "Message send failed. Please try again after all errors have been corrected: %1$s"
+      },
+      {
+        "name": "omemo_menu_unauthenticated",
+        "#text": "OMEMO unAuthenticated"
+      },
+      {
+        "name": "omemo_menu_untrusted",
+        "#text": "OMEMO Un-Trusted"
+      },
+      {
+        "name": "omemo_rebuild_session",
+        "#text": "Rebuild new session for missing: %1$s"
+      },
+      {
+        "name": "omemo_purge_inactive_device_error",
+        "#text": "Failed to remove inactive omemo device for: %1$s."
+      },
+      {
+        "name": "settings_bosh_proxy",
+        "#text": "BOSH-Proxy Configuration"
+      },
+      {
+        "name": "settings_bosh_proxy_summary",
+        "#text": "Setup connection via BOSH/Proxy for the account"
+      },
+      {
+        "name": "bosh_proxy_url_null",
+        "#text": "BOSH URL field content cannot be empty"
+      },
+      {
+        "name": "bosh_proxy_host_port_null",
+        "#text": "Proxy Host and Port fields content cannot be empty"
+      },
+      {
+        "name": "bosh_proxy_type",
+        "#text": "Type:"
+      },
+      {
+        "name": "bosh_proxy_url",
+        "#text": "BOSH URL:"
+      },
+      {
+        "name": "bosh_proxy_use_http",
+        "#text": "Use HTTP Proxy"
+      },
+      {
+        "name": "bosh_proxy_host",
+        "#text": "Proxy Host:"
+      },
+      {
+        "name": "bosh_proxy_port",
+        "#text": "Proxy Port:"
+      },
+      {
+        "name": "provisioning_auto",
+        "#text": "Automatically discover a provisioning URI"
+      },
+      {
+        "name": "provisioning_bonjour",
+        "#text": "Bonjour"
+      },
+      {
+        "name": "provisioning_clipboard_failed",
+        "#text": "Failed to copy UUID to clipboard"
+      },
+      {
+        "name": "provisioning_copy_to_clipboard",
+        "#text": "Copy UUID to clipboard"
+      },
+      {
+        "name": "provisioning_credentials",
+        "#text": "Last stored provisioning credentials"
+      },
+      {
+        "name": "provisioning_enable",
+        "#text": "Enable provisioning"
+      },
+      {
+        "name": "provisioning_exit_on_failed",
+        "#text": "Exit the application if the provisioning fails"
+      },
+      {
+        "name": "provisioning_forget_password",
+        "#text": "Forget password"
+      },
+      {
+        "name": "provisioning_manual",
+        "#text": "Manually specify a provisioning URI"
+      },
+      {
+        "name": "provisioning_method",
+        "#text": "Provisioning method"
+      },
+      {
+        "name": "provisioning_failed",
+        "#text": "Provisioning failed"
+      },
+      {
+        "name": "provisioning_failed_message",
+        "#text": "<html>Provisioning failed. %1$s!<br/>Please, try again later or contact your administrator.</html>"
+      },
+      {
+        "name": "provisioning",
+        "#text": "Provisioning"
+      },
+      {
+        "name": "provisioning_summary",
+        "#text": "Configure provisioning settings"
+      },
+      {
+        "name": "provisioning_remove_credentials_message",
+        "#text": "Are you sure you want to remove provisioning password?"
+      },
+      {
+        "name": "provisioning_restart_alert",
+        "#text": "Note that your changes will only take effect next time you start aTalk!"
+      },
+      {
+        "name": "settings_dnssec_dane",
+        "#text": "SSL/DNSSEC/DANE Security"
+      },
+      {
+        "name": "settings_dns",
+        "#text": "DNS"
+      },
+      {
+        "name": "settings_dns_summary",
+        "#text": "Configure DNS settings"
+      },
+      {
+        "name": "dnsconfig_dnssec",
+        "#text": "DNS Security (DNSSEC)"
+      },
+      {
+        "name": "dnsconfig_dnssec_domain_name",
+        "#text": "Domain"
+      },
+      {
+        "name": "dnsconfig_dnssec_enable_failed",
+        "#text": "State change failed"
+      },
+      {
+        "name": "dnsconfig_dnssec_enable_failed_message",
+        "#text": "Change of the DNSSEC enabled state has failed."
+      },
+      {
+        "name": "dnsconfig_dnssec_mode",
+        "#text": "Behavior"
+      },
+      {
+        "name": "dnsconfig_dnssec_restart_alert",
+        "#text": "<html>Note that enabling or disabling DNSSEC disables the parallel resolver and will only take effect the next time you start aTalk.</html>"
+      },
+      {
+        "name": "dnsconfig_dnssec_title",
+        "#text": "Backup resolver"
+      },
+      {
+        "name": "dnsconfig_dnssec_check_absolute",
+        "#text": "Treat all domain names as absolute"
+      },
+      {
+        "name": "dnsconfig_dnssec_check_enable",
+        "#text": "Enable DNSSEC resolver"
+      },
+      {
+        "name": "dnsconfig_dnssec_label_default",
+        "#text": "Default behavior"
+      },
+      {
+        "name": "dnsconfig_dnssec_label_name_servers",
+        "#text": "Custom name servers"
+      },
+      {
+        "name": "dnsconfig_dnssec_label_name_servers_hint",
+        "#text": "<html>Multiple servers can be delimited with a comma, e.g. 149.20.64.20, 149.20.64.21 (OARC\\'s Open DNSSEC Validating Resolver)</html>"
+      },
+      {
+        "name": "dns_insecure_answer_title",
+        "#text": "DNSSEC failure"
+      },
+      {
+        "name": "dns_insecure_answer_message_insecure",
+        "#text": "DNS answer for %1$s is insecure."
+      },
+      {
+        "name": "dns_insecure_answer_message_reason",
+        "#text": "DNS answer for %1$s is insecure.\\nReason: %2$s"
+      },
+      {
+        "name": "dns_dnssec_advanced_options",
+        "#text": "Show advanced options"
+      },
+      {
+        "name": "dns_dnssec_advanced_reason_invalid",
+        "#text": "<html>DNSSEC signed zone %1$s returned invalid data.<br/>%2$s</html>"
+      },
+      {
+        "name": "dns_dnssec_advanced_reason_unsigned",
+        "#text": "%1$s query for %2$s is unsigned."
+      },
+      {
+        "name": "dns_dnssec_warning",
+        "#text": "<html><div width=\"600\">%1$s has tried to connect to the server at <b>%2$s<</b>,\n        which is a domain that carries a strong protection called DNSSEC. The information that %1$s has obtained\n        from the DNS server is not in accordance with the information DNSSEC provides about this domain.<br/><br/><b>\n        This should not happen unless very serious mistakes were made at %2$s. It therefore is a very strong indication that something is\n        seriously wrong with the trustworthiness of your network connection.</b><br/><br/>\n        If you are on someone else\\'s internet connection (like a WiFi hotspot) or if there are special circumstances that make you distrust\n        your regular internet provider, we strongly advise you to stop using it immediately and look for an alternative internet access point.\n        When you are safely connected to another network, the problem should be resolved automatically. If this is not the case, contact your\n        service provider to inform them about the issue. </div></html>"
+      },
+      {
+        "name": "settings_ssl_certificate",
+        "#text": "SSL Certificate"
+      },
+      {
+        "name": "settings_ssl_certificate_purge",
+        "#text": "Purge user approved certificates for: %1$s"
+      },
+      {
+        "name": "settings_ssl_certificate_remove",
+        "#text": "Remove Certificate"
+      },
+      {
+        "name": "settings_ssl_certificate_summary",
+        "#text": "Manage SSL Certificates"
+      },
+      {
+        "name": "tls_cert",
+        "#text": "Client TLS certificate"
+      },
+      {
+        "name": "tls_cert_prompt",
+        "#text": "Please select TLS certificate"
+      },
+      {
+        "name": "tls_cert_summary",
+        "#text": "Certificate use in user authentication with server"
+      },
+      {
+        "name": "zid_reset_summary",
+        "#text": "Reset long-lived ZRTP identifier"
+      },
+      {
+        "name": "zid_reset_title",
+        "#text": "Reset ZID"
+      },
+      {
+        "name": "zid_reset_done",
+        "#text": "ZID has been reset"
+      },
+      {
+        "name": "commit_progress_message",
+        "#text": "Storing account changes, please wait\u2026"
+      },
+      {
+        "name": "commit_progress_title",
+        "#text": "\"Committing\u2026\""
+      },
+      {
+        "name": "settings_not_set",
+        "#text": "(Not set)"
+      },
+      {
+        "name": "enc_audio_title",
+        "#text": "Audio encoding"
+      },
+      {
+        "name": "enc_override_global",
+        "#text": "Override global"
+      },
+      {
+        "name": "enc_video_title",
+        "#text": "Video encoding"
+      },
+      {
+        "name": "none",
+        "#text": "None"
+      },
+      {
+        "name": "sec_encryption",
+        "#text": "Encryption"
+      },
+      {
+        "name": "sec_protocols_title",
+        "#text": "Security protocols"
+      },
+      {
+        "name": "sec_protocols_message",
+        "#text": "Please select desired protocols order"
+      },
+      {
+        "name": "discard",
+        "#text": "Discard"
+      },
+      {
+        "name": "sec_zrtp_signalling_on",
+        "#text": "ZRTP will be advertised over signaling protocol"
+      },
+      {
+        "name": "sec_zrtp_signalling_off",
+        "#text": "There will be no ZRTP advertisement"
+      },
+      {
+        "name": "service_gui_SERVERS_LIST_ADD_SERVER",
+        "#text": "Add server"
+      },
+      {
+        "name": "service_gui_SERVERS_LIST_EMPTY",
+        "#text": "The list is empty. Click to add new entry\u2026"
+      },
+      {
+        "name": "service_gui_JINGLE_EDIT_JID",
+        "#text": "JID Address"
+      },
+      {
+        "name": "service_gui_JINGLE_EDIT_SUPPORT_RELAY",
+        "#text": "Support relay"
+      },
+      {
+        "name": "stun_turn_server",
+        "#text": "STUN/TURN Server"
+      },
+      {
+        "name": "ip_address",
+        "#text": "IP Address"
+      },
+      {
+        "name": "server_port",
+        "#text": "Server port"
+      },
+      {
+        "name": "turn_supported",
+        "#text": "Support TURN"
+      },
+      {
+        "name": "username",
+        "#text": "Username"
+      },
+      {
+        "name": "security_dtls_srtp",
+        "#text": "DTLS_SRTP options"
+      },
+      {
+        "name": "security_dtls_title",
+        "#text": "TLS Certificate Signature Algorithm"
+      },
+      {
+        "name": "security_encryption_enable",
+        "#text": "Enable call encryption"
+      },
+      {
+        "name": "security_encryption_protocols",
+        "#text": "Encryption protocols"
+      },
+      {
+        "name": "security_rtp_savp",
+        "#text": "RTP/SAVP indication"
+      },
+      {
+        "name": "security_rtp_savp_title",
+        "#text": "RTP/SAVP indication method"
+      },
+      {
+        "name": "security_sdes",
+        "#text": "SDes options"
+      },
+      {
+        "name": "security_sdes_dlg_title",
+        "#text": "Select desired cipher suites"
+      },
+      {
+        "name": "security_sdes_title",
+        "#text": "SDES cipher suites"
+      },
+      {
+        "name": "security_zrtp_options",
+        "#text": "ZRTP options"
+      },
+      {
+        "name": "security_zrtp_signalling",
+        "#text": "ZRTP signaling"
+      },
+      {
+        "name": "audio_encoding",
+        "#text": "Audio encoding"
+      },
+      {
+        "name": "audio_enc_global_override_summary",
+        "#text": "Override global defined audio formats for this account"
+      },
+      {
+        "name": "call_encryption",
+        "#text": "Call Encryption settings"
+      },
+      {
+        "name": "video_encoding",
+        "#text": "Video encoding"
+      },
+      {
+        "name": "video_enc_global_override_summary",
+        "#text": "Override global defined video formats for this account"
+      },
+      {
+        "name": "jbr_auto_sign_in",
+        "#text": "Connect at Startup"
+      },
+      {
+        "name": "jbr_auto_stun_discovery",
+        "#text": "Auto discover STUN/TURN servers"
+      },
+      {
+        "name": "jbr_connection_summary",
+        "#text": "Set Connection details\u2026"
+      },
+      {
+        "name": "jbr_connection",
+        "#text": "Connection Settings"
+      },
+      {
+        "name": "jbr_jingle_disable",
+        "#text": "Disable media calls (Jingle)"
+      },
+      {
+        "name": "jbr_jingle_summary",
+        "#text": "(audio and video calls with XMPP)"
+      },
+      {
+        "name": "jbr_dtmf_method",
+        "#text": "DTMF method"
+      },
+      {
+        "name": "jbr_dtmf_summary",
+        "#text": "DTMF method selection"
+      },
+      {
+        "name": "jbr_gmail_notifications",
+        "#text": "Gmail notifications for new messages"
+      },
+      {
+        "name": "jbr_google_contact_search",
+        "#text": "Google Contacts search"
+      },
+      {
+        "name": "jbr_gtalk_domain",
+        "#text": "Domain that will use GTalk call"
+      },
+      {
+        "name": "jbr_ice_summary",
+        "#text": "Configure ICE options\u2026"
+      },
+      {
+        "name": "jbr_jingle_auto",
+        "#text": "Auto discover Jingle Nodes relays"
+      },
+      {
+        "name": "jbr_jingle_list",
+        "#text": "Additional Jingle Nodes\u2026"
+      },
+      {
+        "name": "jbr_jingle_list_summary",
+        "#text": "User defined additional Jingle Nodes for use"
+      },
+      {
+        "name": "jbr_jingle_nodes",
+        "#text": "Jingle Nodes"
+      },
+      {
+        "name": "jbr_jingle_use",
+        "#text": "Use jingle nodes"
+      },
+      {
+        "name": "jbr_keep_alive",
+        "#text": "Keep alive"
+      },
+      {
+        "name": "jbr_keep_alive_enable",
+        "#text": "Enable Keep Alive option"
+      },
+      {
+        "name": "jbr_keep_alive_summary",
+        "#text": "Enable if experiencing frequent mobile network disconnection"
+      },
+      {
+        "name": "jbr_tls_ver_min",
+        "#text": "Minimum TLS version"
+      },
+      {
+        "name": "jbr_tls_ver_min_summary",
+        "#text": "Connect using this or higher TLS protocol version"
+      },
+      {
+        "name": "jbr_non_secure_allow",
+        "#text": "Allow non-secure connections"
+      },
+      {
+        "name": "jbr_non_ssk_summary",
+        "#text": "Disable SSL/TLS server connection encryption"
+      },
+      {
+        "name": "jbr_server_override",
+        "#text": "Override server default options"
+      },
+      {
+        "name": "jbr_password",
+        "#text": "Enter Password"
+      },
+      {
+        "name": "jbr_ping_interval",
+        "#text": "Ping interval (1~3600 seconds)"
+      },
+      {
+        "name": "jbr_ping_interval_tune_enable",
+        "#text": "Enable Ping Interval optimization"
+      },
+      {
+        "name": "jbr_ping_interval_tune_off_summary",
+        "#text": "Do not perform ping interval optimization for mobile network connection"
+      },
+      {
+        "name": "jbr_ping_interval_tune_on_summary",
+        "#text": "Perform ping interval optimization for mobile network connection"
+      },
+      {
+        "name": "jbr_server_port",
+        "#text": "Server Port"
+      },
+      {
+        "name": "jbr_priority",
+        "#text": "Priority (range:-128~127)"
+      },
+      {
+        "name": "jbr_resource_auto_gen",
+        "#text": "Auto generate resource"
+      },
+      {
+        "name": "jbr_resource_id",
+        "#text": "Jabber ID Resource"
+      },
+      {
+        "name": "jbr_resource_name",
+        "#text": "Resource name"
+      },
+      {
+        "name": "jbr_server_ip",
+        "#text": "Connect Server IP"
+      },
+      {
+        "name": "jbr_server_options",
+        "#text": "Server options"
+      },
+      {
+        "name": "jbr_store_password",
+        "#text": "Remember password"
+      },
+      {
+        "name": "jbr_store_password_summary",
+        "#text": "Save password for auto login on application start up"
+      },
+      {
+        "name": "jbr_stun_list",
+        "#text": "Additional STUN/TURN servers\u2026"
+      },
+      {
+        "name": "jbr_stun_list_summary",
+        "#text": "User defined additional STUN/TURN servers for use"
+      },
+      {
+        "name": "jbr_telephony_domain",
+        "#text": "Telephony domain"
+      },
+      {
+        "name": "jbr_telephony_voip_pbx",
+        "#text": "Telephony VoIP-PBX"
+      },
+      {
+        "name": "jbr_telephony_summary",
+        "#text": "Configure telephony options\u2026"
+      },
+      {
+        "name": "jbr_use_default_stun",
+        "#text": "Use Jitsi STUN server (fallback)"
+      },
+      {
+        "name": "jbr_use_ice",
+        "#text": "Use ICE"
+      },
+      {
+        "name": "jbr_use_google_ice",
+        "#text": "Use Google\\'s Jingle/ICE(experimental)"
+      },
+      {
+        "name": "jbr_use_upnp",
+        "#text": "Use UPnP"
+      },
+      {
+        "name": "jbr_user_id",
+        "#text": "USER ID"
+      },
+      {
+        "name": "jbr_user_name_password",
+        "#text": "User name and password"
+      },
+      {
+        "name": "contact_phone",
+        "#text": "Contact Name/Phone/Jid:"
+      },
+      {
+        "name": "call_via",
+        "#text": "Call via:"
+      },
+      {
+        "name": "contact_phone_empty",
+        "#text": "Contact phone number cannot be empty!"
+      },
+      {
+        "name": "recipient_error_non_ascii",
+        "#text": "Special characters are currently not supported!"
+      },
+      {
+        "name": "domain_not_in_roster",
+        "#text": "The specified Telephony Domain \\'%1$s\\' is not a member of the contact list"
+      },
+      {
+        "name": "not_in_call_group",
+        "#text": "%1$s does not belong to the defined call group"
+      },
+      {
+        "name": "jingle_not_supported",
+        "#text": "%1$s\\ndoes not support Jingle protocol"
+      },
+      {
+        "name": "recipient_error_parse_failed",
+        "#text": "Error parsing address!"
+      },
+      {
+        "name": "unknown_recipient",
+        "#text": "<Unknown Recipient>"
+      },
+      {
+        "name": "disabled",
+        "#text": "Disabled"
+      },
+      {
+        "name": "enabled",
+        "#text": "Enabled"
+      },
+      {
+        "name": "general",
+        "#text": "General"
+      },
+      {
+        "name": "settings_webview_dlg_title",
+        "#text": "Enter webView default access page:"
+      },
+      {
+        "name": "settings_webview_page",
+        "#text": "Web Access Page"
+      },
+      {
+        "name": "settings_messaging",
+        "#text": "Messaging"
+      },
+      {
+        "name": "settings_multichat_off",
+        "#text": "Separate window for ech conversation"
+      },
+      {
+        "name": "settings_multichat_on",
+        "#text": "Group chat messages in one window"
+      },
+      {
+        "name": "settings_multichat_window",
+        "#text": "Multichat window"
+      },
+      {
+        "name": "settings_history_log_off",
+        "#text": "Chat history disabled"
+      },
+      {
+        "name": "settings_history_log_on",
+        "#text": "Log chat history"
+      },
+      {
+        "name": "settings_history_logging",
+        "#text": "Chat history logging"
+      },
+      {
+        "name": "settings_history_mam_warning",
+        "#text": "Error in setting MAM option for offline user: %1$s"
+      },
+      {
+        "name": "settings_history_dlg_title",
+        "#text": "How many recent messages should be displayed?"
+      },
+      {
+        "name": "settings_history_size",
+        "#text": "Show recent messages"
+      },
+      {
+        "name": "settings_history_summary",
+        "#text": "%d recent messages in new chats"
+      },
+      {
+        "name": "settings_history_show",
+        "#text": "Show history"
+      },
+      {
+        "name": "settings_message_delivery_receipt",
+        "#text": "Message delivery receipt"
+      },
+      {
+        "name": "settings_message_delivery_receipt_summary",
+        "#text": "Let your contacts know when you have received and read their messages"
+      },
+      {
+        "name": "settings_typing_notifications",
+        "#text": "Send chat state notifications"
+      },
+      {
+        "name": "settings_thumbnail_option",
+        "#text": "Send/Receive thumbnail preview"
+      },
+      {
+        "name": "settings_file_max_auto_accept",
+        "#text": "Auto accept max file size"
+      },
+      {
+        "name": "settings_presence_subscribe_approval_mode",
+        "#text": "Presence subscribe approval"
+      },
+      {
+        "name": "settings_presence_subscribe_approval_auto",
+        "#text": "Subscribe approval - auto accept all"
+      },
+      {
+        "name": "settings_presence_subscribe_approval_manual",
+        "#text": "Subscribe approval - manual"
+      },
+      {
+        "name": "settings_chat_notifications",
+        "#text": "Show status bar notifications"
+      },
+      {
+        "name": "settings_notifications",
+        "#text": "Notifications"
+      },
+      {
+        "name": "settings_auto_update_check_enable",
+        "#text": "Enable auto SW update check"
+      },
+      {
+        "name": "settings_popup_handler",
+        "#text": "Popup notifications type"
+      },
+      {
+        "name": "pref_heads_up_notifications",
+        "#text": "Heads-up Notifications"
+      },
+      {
+        "name": "pref_heads_up_notifications_summary",
+        "#text": "Show Heads-up Notifications"
+      },
+      {
+        "name": "popup_auto",
+        "#text": "Auto"
+      },
+      {
+        "name": "popup_status_bar",
+        "#text": "Status bar notifications"
+      },
+      {
+        "name": "settings_event_summary",
+        "#text": "Configure individual notifications"
+      },
+      {
+        "name": "settings_event_title",
+        "#text": "Events"
+      },
+      {
+        "name": "quiet_hours",
+        "#text": "Quiet Hours"
+      },
+      {
+        "name": "quiet_hours_start_time",
+        "#text": "Start time"
+      },
+      {
+        "name": "quiet_hours_end_time",
+        "#text": "End time"
+      },
+      {
+        "name": "quiet_hours_enable",
+        "#text": "Enable quiet hours"
+      },
+      {
+        "name": "quiet_hours_summary",
+        "#text": "Notifications will be silenced during quiet hours"
+      },
+      {
+        "name": "settings_show_icon",
+        "#text": "Display aTalk icon"
+      },
+      {
+        "name": "settings_show_icon_summary_off",
+        "#text": "Hide aTalk active indicator in notification"
+      },
+      {
+        "name": "settings_show_icon_summary_on",
+        "#text": "Show aTalk active indicator in notification"
+      },
+      {
+        "name": "settings_auto_start",
+        "#text": "Auto start aTalk on reboot"
+      },
+      {
+        "name": "settings_auto_start_summary_disable",
+        "#text": "Disable aTalk auto start on next reboot"
+      },
+      {
+        "name": "settings_auto_start_summary_enable",
+        "#text": "Enable aTalk auto start on next reboot"
+      },
+      {
+        "name": "settings_locale",
+        "#text": "Language"
+      },
+      {
+        "name": "settings_locale_system",
+        "#text": "System default"
+      },
+      {
+        "name": "settings_theme_dark",
+        "#text": "Dark"
+      },
+      {
+        "name": "settings_theme_light",
+        "#text": "Light"
+      },
+      {
+        "name": "settings_theme",
+        "#text": "Theme"
+      },
+      {
+        "name": "tts_delay",
+        "#text": "Message Text to Speech delay (ms)"
+      },
+      {
+        "name": "tts_settings",
+        "#text": "General TTS settings\u2026"
+      },
+      {
+        "name": "tts_disable",
+        "#text": "Disable Text ➡ Speech"
+      },
+      {
+        "name": "tts_enable",
+        "#text": "Enable Text ➡ Speech"
+      },
+      {
+        "name": "tts_synthesis",
+        "#text": "Enter text to speak or synthesized and save to file:"
+      },
+      {
+        "name": "tts_voice",
+        "#text": "Default TTS voice:"
+      },
+      {
+        "name": "loading_wait",
+        "#text": "Loading, please wait\u2026"
+      },
+      {
+        "name": "settings_normalize_number",
+        "#text": "Special symbols in phone numbers"
+      },
+      {
+        "name": "settings_normalize_off",
+        "#text": "No phone number modifications"
+      },
+      {
+        "name": "settings_normalize_on",
+        "#text": "Special symbols will be removed from the number"
+      },
+      {
+        "name": "settings_phone_alpha_no_allow",
+        "#text": "No phone number modifications"
+      },
+      {
+        "name": "settings_phone_alpha_allow",
+        "#text": "Letters in phone numbers"
+      },
+      {
+        "name": "call",
+        "#text": "Call"
+      },
+      {
+        "name": "media_call",
+        "#text": "Media call"
+      },
+      {
+        "name": "audio",
+        "#text": "Audio"
+      },
+      {
+        "name": "settings_echo_cancel",
+        "#text": "Echo cancellation"
+      },
+      {
+        "name": "settings_echo_cancel_off",
+        "#text": "Disabled"
+      },
+      {
+        "name": "settings_echo_cancel_on",
+        "#text": "Enabled"
+      },
+      {
+        "name": "settings_agc",
+        "#text": "Automatic gain control"
+      },
+      {
+        "name": "settings_agc_off",
+        "#text": "Disabled"
+      },
+      {
+        "name": "settings_agc_on",
+        "#text": "Enabled"
+      },
+      {
+        "name": "settings_denoise",
+        "#text": "Noise suppression"
+      },
+      {
+        "name": "settings_denoise_off",
+        "#text": "Disabled"
+      },
+      {
+        "name": "settings_denoise_on",
+        "#text": "Enabled"
+      },
+      {
+        "name": "settings_audio_codecs_summary",
+        "#text": "Select and define priority for audio codecs"
+      },
+      {
+        "name": "settings_audio_codecs",
+        "#text": "Audio codecs"
+      },
+      {
+        "name": "video",
+        "#text": "Video"
+      },
+      {
+        "name": "settings_system_android_camera",
+        "#text": "AndroidCamera"
+      },
+      {
+        "name": "settings_system_media_recorder",
+        "#text": "MediaRecorder"
+      },
+      {
+        "name": "settings_camera",
+        "#text": "Camera"
+      },
+      {
+        "name": "settings_no_camera",
+        "#text": "No camera device found"
+      },
+      {
+        "name": "settings_use_back_camera",
+        "#text": "Use back camera"
+      },
+      {
+        "name": "settings_use_front_camera",
+        "#text": "Use front camera"
+      },
+      {
+        "name": "settings_direct_surface_decode",
+        "#text": "Use direct surface decoding"
+      },
+      {
+        "name": "settings_direct_surface_encode",
+        "#text": "Use direct surface encoding"
+      },
+      {
+        "name": "settings_hw_decode",
+        "#text": "Use hardware decoding (restart required)"
+      },
+      {
+        "name": "settings_hw_encode",
+        "#text": "Use hardware encoding (restart required)"
+      },
+      {
+        "name": "settings_media_codec_list",
+        "#text": "MediaCodecs"
+      },
+      {
+        "name": "settings_media_codec_list_summary",
+        "#text": "List of built-in media encoders/decoders"
+      },
+      {
+        "name": "settings_restart_require",
+        "#text": "Require to restart aTalk"
+      },
+      {
+        "name": "settings_video_codec_summary",
+        "#text": "Select and define priority for video codecs"
+      },
+      {
+        "name": "settings_video_codec",
+        "#text": "Video codecs"
+      },
+      {
+        "name": "settings_video_resolution",
+        "#text": "Video resolution"
+      },
+      {
+        "name": "settings_fps_limit_off",
+        "#text": "Unlimited"
+      },
+      {
+        "name": "settings_fps_limit_on",
+        "#text": "Adjusted frame rate"
+      },
+      {
+        "name": "settings_video_bitrate",
+        "#text": "Video bitrate (kilobits/s)"
+      },
+      {
+        "name": "settings_video_frame_rate",
+        "#text": "Video frame rate"
+      },
+      {
+        "name": "settings_video_fps_description",
+        "#text": "Values accepted between 5 and 30 fps"
+      },
+      {
+        "name": "settings_video_max_bw",
+        "#text": "RTP pacing threshold (kBytes/s)"
+      },
+      {
+        "name": "settings_video_fps_target",
+        "#text": "Target frame rate (per sec.)"
+      },
+      {
+        "name": "settings_messaging_security_summary",
+        "#text": "Message encryption security settings"
+      },
+      {
+        "name": "settings_messaging_security",
+        "#text": "Messaging Security"
+      },
+      {
+        "name": "omemo_messaging_security",
+        "#text": "OMEMO Messaging Security"
+      },
+      {
+        "name": "omemo_blind_trust_before_verification",
+        "#text": "Blind trust before verification"
+      },
+      {
+        "name": "omemo_blind_trust_before_verification_summary",
+        "#text": "Auto-trust all new devices of contacts that haven\u2019t been verified before; prompt for manual confirmation when a verified contact adds new devices."
+      },
+      {
+        "name": "omemo_regenerate_identities_summary",
+        "#text": "Upon regenerated your OMEMO identity, all your contacts will receive the new fingerprint and are required to re-verify you. Perform only when having omemo session setup problem."
+      },
+      {
+        "name": "omemo_regenerate_identities",
+        "#text": "Regenerate OMEMO identities"
+      },
+      {
+        "name": "omemo_regenerate_title",
+        "#text": "OMEMO Identities Refresh"
+      },
+      {
+        "name": "omemo_purge_devices_summary",
+        "#text": "Remove all inactive devices; only publish the current active device that you are using."
+      },
+      {
+        "name": "omemo_purge_device_unused",
+        "#text": "Purge unused identities"
+      },
+      {
+        "name": "omemo_purge_device",
+        "#text": "OMEMO Devices Delete"
+      },
+      {
+        "name": "key_fingerprint_security",
+        "#text": "Key & FingerPrint Security"
+      },
+      {
+        "name": "settings_crypto_priv_key_empty",
+        "#text": "Zero registered user found"
+      },
+      {
+        "name": "settings_crypto_priv_key_summary",
+        "#text": "Manage crypto private fingerprints"
+      },
+      {
+        "name": "settings_crypto_priv_key",
+        "#text": "Crypto private keys"
+      },
+      {
+        "name": "settings_fingerprint_summary",
+        "#text": "Manage all known devices fingerprints\\ncolor: cyan=ownDevice; gray=inactive"
+      },
+      {
+        "name": "settings_fingerprint_title",
+        "#text": "Crypto devices fingerprints"
+      },
+      {
+        "name": "crypto_key_generate_prompt",
+        "#text": "Do you want to generate new key for %1$s%2$s"
+      },
+      {
+        "name": "crypto_key_generate_title",
+        "#text": "Private key generation"
+      },
+      {
+        "name": "crypto_key_regenerate_prompt",
+        "#text": "Do you want to regenerate key for %1$s\\n\\n%2$s"
+      },
+      {
+        "name": "delete_selected",
+        "#text": "Delete Selected"
+      },
+      {
+        "name": "regenerate_selected",
+        "#text": "Regenerate Selected"
+      },
+      {
+        "name": "crypto_menu_key_generate",
+        "#text": "Generate new key"
+      },
+      {
+        "name": "crypto_menu_key_regenerate",
+        "#text": "Regenerate key"
+      },
+      {
+        "name": "crypto_menu_fingerprint_copy",
+        "#text": "Copy Fingerprint"
+      },
+      {
+        "name": "crypto_menu_fingerprint_distrust",
+        "#text": "Distrust Fingerprint"
+      },
+      {
+        "name": "crypto_menu_fingerprint_trust",
+        "#text": "Trust Fingerprint"
+      },
+      {
+        "name": "crypto_msg_omemo_session_setup_failed",
+        "#text": "OMEMO session setup not successful! %1$s"
+      },
+      {
+        "name": "crypto_msg_omemo_session_untrusted",
+        "#text": "Found ZERO trusted buddy to receive OMEMO messages!"
+      },
+      {
+        "name": "crypto_msg_omemo_session_unverified",
+        "#text": "Sending OMEMO messages to some unknown buddies with unverified fingerprints!"
+      },
+      {
+        "name": "crypto_msg_omemo_session_unverified_untrusted",
+        "#text": "MultiUserChat with some buddies untrusted or with unverified fingerprints!"
+      },
+      {
+        "name": "crypto_msg_omemo_session_verified",
+        "#text": "*** All buddies have been authenticated! ***"
+      },
+      {
+        "name": "crypto_fingerprint_status",
+        "#text": "Verified: %1$s"
+      },
+      {
+        "name": "crypto_no_key_present",
+        "#text": "No key present"
+      },
+      {
+        "name": "crypto_fingerprint_copy",
+        "#text": "Fingerprint copied to clipboard!"
+      },
+      {
+        "name": "crypto_omemo_distrust_messaging_stop",
+        "#text": "Stop further sending OMEMO message to buddy: %1$s"
+      },
+      {
+        "name": "crypto_omemo_trust_messaging_resume",
+        "#text": "Resume sending OMEMO message to buddy: %1$s"
+      },
+      {
+        "name": "advanced",
+        "#text": "Advanced"
+      },
+      {
+        "name": "settings_expert",
+        "#text": "Expert settings"
+      },
+      {
+        "name": "settings_expert_summary",
+        "#text": "Please be careful with these"
+      },
+      {
+        "name": "port",
+        "#text": "Port"
+      },
+      {
+        "name": "protocol",
+        "#text": "Protocol"
+      },
+      {
+        "name": "opus",
+        "#text": "Opus"
+      },
+      {
+        "name": "opus_sampling_rate",
+        "#text": "Sampling rate"
+      },
+      {
+        "name": "opus_bitrate",
+        "#text": "Encoder average bitrate (kbps)"
+      },
+      {
+        "name": "opus_complexity",
+        "#text": "Encoder complexity"
+      },
+      {
+        "name": "opus_min_expected_packet_loss",
+        "#text": "Minimum expected packet loss(%)"
+      },
+      {
+        "name": "opus_encoder_settings",
+        "#text": "Configure Opus encoder settings"
+      },
+      {
+        "name": "opus_use_dtx",
+        "#text": "Use DTX"
+      },
+      {
+        "name": "opus_use_fec",
+        "#text": "Use inband FEC"
+      },
+      {
+        "name": "silk",
+        "#text": "Silk"
+      },
+      {
+        "name": "silk_encoder_settings",
+        "#text": "Configure Silk encoder settings"
+      },
+      {
+        "name": "silk_use_fec",
+        "#text": "Use inband FEC"
+      },
+      {
+        "name": "silk_assume_pl",
+        "#text": "Always assume packet loss"
+      },
+      {
+        "name": "silk_fec_sat",
+        "#text": "Speech activity threshold (0\u20131)"
+      },
+      {
+        "name": "silk_fec_advertise",
+        "#text": "Advertise FEC support in SDP"
+      },
+      {
+        "name": "battery_optimizations",
+        "#text": "Battery Optimization"
+      },
+      {
+        "name": "battery_optimizations_dialog",
+        "#text": "Your device has battery usage optimization on aTalk; this may lead to delayed notifications or message lost.\\n\\nIt is recommended that you disable this optimization for aTalk."
+      },
+      {
+        "name": "battery_optimization_on",
+        "#text": "aTalk will be put to sleep when device goes into doze-standby. Manually restart aTalk to receive new messages."
+      },
+      {
+        "name": "device_does_not_support_battery_op",
+        "#text": "Your device does not support opting out of battery optimization"
+      },
+      {
+        "name": "disable",
+        "#text": "Disable"
+      },
+      {
+        "name": "next",
+        "#text": "Next"
+      },
+      {
+        "name": "permission_app_info",
+        "#text": "App Info"
+      },
+      {
+        "name": "permission_request_all",
+        "#text": "Request all"
+      },
+      {
+        "name": "permission_audio",
+        "#text": "Audio"
+      },
+      {
+        "name": "permission_camera",
+        "#text": "Camera"
+      },
+      {
+        "name": "permission_contacts",
+        "#text": "Contacts"
+      },
+      {
+        "name": "permission_location",
+        "#text": "Location"
+      },
+      {
+        "name": "permission_notifications",
+        "#text": "Notifications"
+      },
+      {
+        "name": "permission_phone",
+        "#text": "Phone"
+      },
+      {
+        "name": "permission_storage",
+        "#text": "Storage"
+      },
+      {
+        "name": "permission_hint",
+        "#text": "For application maximum performance and full features support, aTalk requires you to grant permissions for the following services. Without them, aTalk may not work or may have unexpected behavior!"
+      },
+      {
+        "name": "permission_denied",
+        "#text": "DENIED"
+      },
+      {
+        "name": "permission_granted",
+        "#text": "GRANTED"
+      },
+      {
+        "name": "permission_denied_permanently",
+        "#text": "PERMANENTLY DENIED"
+      },
+      {
+        "name": "permission_unknown",
+        "#text": "UNKNOWN"
+      },
+      {
+        "name": "audio_permission_denied_dialog_title",
+        "#text": "Audio permission request"
+      },
+      {
+        "name": "audio_permission_denied_feedback",
+        "#text": "Audio call will not be available until you grant the permission request"
+      },
+      {
+        "name": "camera_permission_denied_dialog_title",
+        "#text": "Camera permission request"
+      },
+      {
+        "name": "camera_permission_denied_feedback",
+        "#text": "All camera associated activities will not be available until you grant the permission request"
+      },
+      {
+        "name": "contacts_permission_denied_dialog_title",
+        "#text": "Contacts permission request"
+      },
+      {
+        "name": "contacts_permission_denied_feedback",
+        "#text": "Contacts permission is needed for phone state access and call setup"
+      },
+      {
+        "name": "location_permission_denied_dialog_title",
+        "#text": "Location permission request"
+      },
+      {
+        "name": "location_permission_denied_feedback",
+        "#text": "GPS-Location features will not be available until you grant the permission request"
+      },
+      {
+        "name": "notifications_permission_denied_dialog_title",
+        "#text": "Notifications permission request"
+      },
+      {
+        "name": "notifications_permission_denied_feedback",
+        "#text": "Notifications from aTalk will be disabled until you grant the permission request"
+      },
+      {
+        "name": "phone_permission_denied_dialog_title",
+        "#text": "Read Phone State permission request"
+      },
+      {
+        "name": "phone_permission_denied_feedback",
+        "#text": "Phone features will not be available until you grant the permission request"
+      },
+      {
+        "name": "storage_permission_denied_dialog_title",
+        "#text": "Storage permission request"
+      },
+      {
+        "name": "storage_permission_denied_feedback",
+        "#text": "Saving of sent and received contents in storage will not be allowed until you grant the permission request"
+      },
+      {
+        "name": "all_permission_denied_dialog_title",
+        "#text": "All permissions request"
+      },
+      {
+        "name": "all_permissions_denied_feedback",
+        "#text": "aTalk may not work properly or may have unexpected behavior as some services have been denied!\\nIf you have selected \\'Do not ask again\\' option, you need to go to android Settings -> APP INFO for aTalk to enable the resource access permission"
+      },
+      {
+        "name": "permission_denied_all_alert",
+        "#text": "aTalk would not work properly. You have denied aTalk of all permissions!\\nYou need to go to android Settings -> APP INFO for aTalk to enable the resource access permission."
+      },
+      {
+        "name": "permission_rationale_message",
+        "#text": "You are presented with each service needed by aTalk; please allow aTalk to access these services for full features supported"
+      },
+      {
+        "name": "permission_rationale_settings_button_text",
+        "#text": "SETTINGS"
+      },
+      {
+        "name": "permission_rationale_title",
+        "#text": "aTalk needs permissions"
+      },
+      {
+        "name": "location_permission_dialog_title",
+        "#text": "Location permission needed"
+      },
+      {
+        "name": "location_permission_dialog_message",
+        "#text": "Enable Location permission now?"
+      },
+      {
+        "name": "location_services_off",
+        "#text": "Location services OFF"
+      },
+      {
+        "name": "open_location_settings",
+        "#text": "Enable location services now?"
+      }
+    ]
+  }
+}

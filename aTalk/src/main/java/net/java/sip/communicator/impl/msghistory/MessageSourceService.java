@@ -60,9 +60,9 @@ import net.java.sip.communicator.service.protocol.event.SubscriptionListener;
 import net.java.sip.communicator.service.protocol.event.SubscriptionMovedEvent;
 
 import org.apache.commons.lang3.StringUtils;
-import org.atalk.hmos.R;
-import org.atalk.hmos.aTalkApp;
-import org.atalk.hmos.gui.chat.ChatMessage;
+import org.atalk.ohos.R;
+import org.atalk.ohos.aTalkApp;
+import org.atalk.ohos.gui.chat.ChatMessage;
 import org.atalk.persistance.DatabaseBackend;
 import org.atalk.service.configuration.ConfigurationService;
 import org.jetbrains.annotations.NotNull;
@@ -845,7 +845,7 @@ public class MessageSourceService extends MetaContactListAdapter implements Cont
     @Override
     public String getDisplayName()
     {
-        return aTalkApp.getResString(R.string.service_gui_RECENT_MESSAGES);
+        return aTalkApp.getResString(R.string.recent_messages);
     }
 
     /**

@@ -23,9 +23,9 @@ import net.java.sip.communicator.service.protocol.OperationSetBasicInstantMessag
 import net.java.sip.communicator.service.protocol.OperationSetMultiUserChat;
 import net.java.sip.communicator.service.protocol.ProtocolProviderService;
 
-import org.atalk.hmos.R;
-import org.atalk.hmos.aTalkApp;
-import org.atalk.hmos.gui.dialogs.DialogActivity;
+import org.atalk.ohos.R;
+import org.atalk.ohos.aTalkApp;
+import org.atalk.ohos.gui.dialogs.DialogActivity;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smackx.omemo.OmemoManager;
 import org.jivesoftware.smackx.omemo.OmemoService;
@@ -130,12 +130,12 @@ public class AndroidOmemoService implements OmemoManager.InitializationFinishedC
         Timber.w("%s: %s", title, errMsg);
         if (errMsg != null) {
             if (errMsg.contains("Invalid IdentityKeyPairs") || errMsg.contains("CorruptedOmemoKeyException")) {
-                String msg = aTalkApp.getResString(R.string.omemo_init_failed_CorruptedOmemoKeyException,
+                String msg = aTalkApp.getResString(R.string.omemo_init_failed_corrupted_omemoKey_exception,
                         mOmemoManager.getOwnDevice(), errMsg);
                 DialogActivity.showDialog(aTalkApp.getGlobalContext(), title, msg);
             }
             else {
-                aTalkApp.showToastMessage(R.string.omemo_init_failed_noresponse, mOmemoManager.getOwnDevice());
+                aTalkApp.showToastMessage(R.string.omemo_init_failed_no_response, mOmemoManager.getOwnDevice());
             }
         }
     }

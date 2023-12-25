@@ -4,9 +4,9 @@ import net.java.sip.communicator.service.provisioning.ProvisioningService;
 import net.java.sip.communicator.util.OrderedProperties;
 
 import org.apache.commons.lang3.StringUtils;
-import org.atalk.hmos.R;
-import org.atalk.hmos.aTalkApp;
-import org.atalk.hmos.gui.dialogs.DialogActivity;
+import org.atalk.ohos.R;
+import org.atalk.ohos.aTalkApp;
+import org.atalk.ohos.gui.dialogs.DialogActivity;
 import org.atalk.service.configuration.ConfigurationService;
 import org.atalk.service.httputil.HttpUtils;
 import org.atalk.service.resources.ResourceManagementService;
@@ -440,8 +440,8 @@ public class ProvisioningServiceImpl implements ProvisioningService
                     else
                         errorMsg = "";
 
-                    DialogActivity.showDialog(aTalkApp.getGlobalContext(), R.string.plugin_provisioning_PROV_FAILED,
-                            R.string.plugin_provisioning_PROV_FAILED_MSG, errorMsg);
+                    DialogActivity.showDialog(aTalkApp.getGlobalContext(), R.string.provisioning_failed,
+                            R.string.provisioning_failed_message, errorMsg);
 
                     // as shutdown service is not started and other bundles are scheduled to start, stop all of them
                     {

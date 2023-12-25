@@ -9,8 +9,8 @@ package net.java.sip.communicator.impl.muc;
 import net.java.sip.communicator.service.contactsource.ContactQuery;
 import net.java.sip.communicator.service.contactsource.ContactSourceService;
 
-import org.atalk.hmos.R;
-import org.atalk.hmos.aTalkApp;
+import org.atalk.ohos.R;
+import org.atalk.ohos.aTalkApp;
 
 /**
  * Contact source service for chat rooms.
@@ -37,7 +37,7 @@ public class ChatRoomContactSourceService implements ContactSourceService
      */
     public String getDisplayName()
     {
-        return aTalkApp.getResString(R.string.service_gui_CHAT_ROOMS);
+        return aTalkApp.getResString(R.string.chatroom);
     }
 
     /**

@@ -9,7 +9,7 @@ import android.media.MediaCodec;
 import android.media.MediaFormat;
 import android.view.Surface;
 
-import org.atalk.hmos.gui.call.RemoteVideoLayout;
+import org.atalk.ohos.gui.call.RemoteVideoLayout;
 import org.atalk.impl.neomedia.device.util.PreviewSurfaceProvider;
 import org.atalk.impl.neomedia.format.ParameterizedVideoFormat;
 import org.atalk.impl.neomedia.format.VideoMediaFormatImpl;

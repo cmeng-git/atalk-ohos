@@ -5,7 +5,7 @@
  */
 package org.atalk.impl.neomedia.codec.audio.silk;
 
-import org.atalk.hmos.plugin.timberlog.TimberLog;
+import org.atalk.ohos.plugin.timberlog.TimberLog;
 import org.atalk.impl.neomedia.codec.AbstractCodec2;
 import org.atalk.service.neomedia.control.FECDecoderControl;
 

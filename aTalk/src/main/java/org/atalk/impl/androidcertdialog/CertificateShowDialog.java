@@ -26,7 +26,7 @@ import android.widget.CompoundButton;
 
 import androidx.appcompat.app.AlertDialog;
 
-import org.atalk.hmos.R;
+import org.atalk.ohos.R;
 import org.atalk.service.osgi.OSGiDialogFragment;
 
 import java.security.cert.Certificate;

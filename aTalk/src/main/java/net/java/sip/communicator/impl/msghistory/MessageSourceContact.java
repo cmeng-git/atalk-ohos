@@ -29,8 +29,8 @@ import net.java.sip.communicator.service.protocol.event.MessageReceivedEvent;
 import net.java.sip.communicator.service.protocol.globalstatus.GlobalStatusEnum;
 import net.java.sip.communicator.util.DataObject;
 
-import org.atalk.hmos.R;
-import org.atalk.hmos.aTalkApp;
+import org.atalk.ohos.R;
+import org.atalk.ohos.aTalkApp;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -312,7 +312,7 @@ public class MessageSourceContact extends DataObject
         if (this.displayName != null)
             return this.displayName;
         else
-            return aTalkApp.getResString(R.string.service_gui_UNKNOWN_USER);
+            return aTalkApp.getResString(R.string.unknown_user);
     }
 
     /**

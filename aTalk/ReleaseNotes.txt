@@ -1,9 +1,17 @@
 Project aTalk-Android Release Notes
 =========================================================================
-Version:        0.1.0 (001000)
+Version:        00.02.000 (0002000)
+Release Date:   12/25/2023
+Author:         cmeng
+- Rename aTalk project namespace to org.atalk.ohos
+- Strings/Strings_NT: cleanup and simplify string name id
+- Cleanup resources.languages.resources.properties
+
+=========================================================================
+Version:        00.01.000 (0001000)
 Release Date:   12/20/2023
 Author:         cmeng
-- Rebase org.atalk.hmos version to 0.1.0
+- Rebase org.atalk.hmos version to 00.01.000
 
 /* === 12/12/2023 === */
 - Add user selectable option 'Delete account on server' when user remove an account; user must login to perform this action.

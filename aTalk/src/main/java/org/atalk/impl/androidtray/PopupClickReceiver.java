@@ -10,7 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 
-import org.atalk.hmos.aTalkApp;
+import org.atalk.ohos.aTalkApp;
 
 import timber.log.Timber;
 

@@ -62,7 +62,7 @@
             android:textColor="@color/list_text_selection_color" />
     </LinearLayout>
 
-    <org.atalk.hmos.gui.widgets.UnreadCountCustomView
+    <org.atalk.ohos.gui.widgets.UnreadCountCustomView
         android:id="@+id/unread_count"
         android:layout_width="@dimen/IconSize"
         android:layout_height="@dimen/IconSize"

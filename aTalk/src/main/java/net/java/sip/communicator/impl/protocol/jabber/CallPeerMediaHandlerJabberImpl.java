@@ -18,10 +18,10 @@ import net.java.sip.communicator.service.protocol.ProtocolProviderFactory;
 import net.java.sip.communicator.service.protocol.media.CallPeerMediaHandler;
 import net.java.sip.communicator.service.protocol.media.SrtpControls;
 
-import org.atalk.hmos.R;
-import org.atalk.hmos.aTalkApp;
-import org.atalk.hmos.gui.call.VideoCallActivity;
-import org.atalk.hmos.gui.dialogs.DialogActivity;
+import org.atalk.ohos.R;
+import org.atalk.ohos.aTalkApp;
+import org.atalk.ohos.gui.call.VideoCallActivity;
+import org.atalk.ohos.gui.dialogs.DialogActivity;
 import org.atalk.impl.neomedia.format.MediaFormatImpl;
 import org.atalk.impl.neomedia.transform.dtls.DtlsControlImpl;
 import org.atalk.service.libjitsi.LibJitsi;
@@ -412,7 +412,7 @@ public class CallPeerMediaHandlerJabberImpl extends CallPeerMediaHandler<CallPee
         // Fail if no media content/description element (e.g. all devices are inactive).
         if (mediaDescs.isEmpty()) {
             ProtocolProviderServiceJabberImpl.throwOperationFailedException(
-                    aTalkApp.getResString(R.string.service_gui_CALL_NO_ACTIVE_DEVICE),
+                    aTalkApp.getResString(R.string.call_no_active_device),
                     OperationFailedException.GENERAL_ERROR, null);
         }
 
@@ -446,7 +446,7 @@ public class CallPeerMediaHandlerJabberImpl extends CallPeerMediaHandler<CallPee
         // Fail if no media is described (e.g. all devices are inactive).
         if (mediaDescs.isEmpty()) {
             ProtocolProviderServiceJabberImpl.throwOperationFailedException(
-                    aTalkApp.getResString(R.string.service_gui_CALL_NO_ACTIVE_DEVICE),
+                    aTalkApp.getResString(R.string.call_no_active_device),
                     OperationFailedException.GENERAL_ERROR, null);
         }
         // Describe the transport(s).
@@ -1368,8 +1368,8 @@ public class CallPeerMediaHandlerJabberImpl extends CallPeerMediaHandler<CallPee
 
         if (!atLeastOneValidDescription) {
             // don't just throw exception. Must inform user to take action
-            DialogActivity.showDialog(aTalkApp.getGlobalContext(), R.string.service_gui_CALL,
-                    R.string.service_gui_CALL_NO_MATCHING_FORMAT_H, remoteFormats.toString());
+            DialogActivity.showDialog(aTalkApp.getGlobalContext(), R.string.call_audio,
+                    R.string.call_no_matching_format, remoteFormats.toString());
 
             ProtocolProviderServiceJabberImpl.throwOperationFailedException(
                     "Offer contained no media formats or no valid media descriptions.",

@@ -9,8 +9,6 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
-import android.net.NetworkInfo;
-import android.os.Build;
 import android.text.TextUtils;
 
 import net.java.sip.communicator.impl.certificate.CertificateServiceImpl;
@@ -72,16 +70,16 @@ import net.java.sip.communicator.util.NetworkUtils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.atalk.crypto.omemo.AndroidOmemoService;
-import org.atalk.hmos.BuildConfig;
-import org.atalk.hmos.R;
-import org.atalk.hmos.aTalkApp;
-import org.atalk.hmos.gui.aTalk;
-import org.atalk.hmos.gui.account.settings.BoshProxyDialog;
-import org.atalk.hmos.gui.call.JingleMessageSessionImpl;
-import org.atalk.hmos.gui.dialogs.DialogActivity;
-import org.atalk.hmos.gui.login.LoginSynchronizationPoint;
-import org.atalk.hmos.gui.util.LocaleHelper;
-import org.atalk.hmos.plugin.timberlog.TimberLog;
+import org.atalk.ohos.BuildConfig;
+import org.atalk.ohos.R;
+import org.atalk.ohos.aTalkApp;
+import org.atalk.ohos.gui.aTalk;
+import org.atalk.ohos.gui.account.settings.BoshProxyDialog;
+import org.atalk.ohos.gui.call.JingleMessageSessionImpl;
+import org.atalk.ohos.gui.dialogs.DialogActivity;
+import org.atalk.ohos.gui.login.LoginSynchronizationPoint;
+import org.atalk.ohos.gui.util.LocaleHelper;
+import org.atalk.ohos.plugin.timberlog.TimberLog;
 import org.atalk.service.configuration.ConfigurationService;
 import org.atalk.service.neomedia.SrtpControlType;
 import org.atalk.util.OSUtils;
@@ -1230,7 +1228,7 @@ public class ProtocolProviderServiceJabberImpl extends AbstractProtocolProviderS
 //            if (ex.getCause() instanceof SSLHandshakeException) {
 //                Timber.e(ex.getCause());
 //            }
-            String errMsg = aTalkApp.getResString(R.string.service_gui_XMPP_EXCEPTION, ex.getMessage());
+            String errMsg = aTalkApp.getResString(R.string.xmpp_connection_error, ex.getMessage());
             Timber.e("%s", errMsg);
             StanzaError stanzaError = StanzaError.from(Condition.remote_server_timeout, errMsg).build();
             throw new XMPPErrorException(null, stanzaError);
@@ -1314,7 +1312,7 @@ public class ProtocolProviderServiceJabberImpl extends AbstractProtocolProviderS
 
                         errMsg = err.getMessage();
                         if (StringUtils.isNotEmpty(errMsg) && !errMsg.contains("registration-required")) {
-                            errMsg = aTalkApp.getResString(R.string.service_gui_REGISTRATION_REQUIRED, errMsg);
+                            errMsg = aTalkApp.getResString(R.string.registration_required, errMsg);
                             Timber.e("%s", errMsg);
                             StanzaError stanzaError = StanzaError.from(Condition.forbidden, errMsg).build();
                             throw new XMPPErrorException(null, stanzaError);
@@ -1330,7 +1328,7 @@ public class ProtocolProviderServiceJabberImpl extends AbstractProtocolProviderS
                     if (el instanceof SASLErrorException) {
                         errMsg += ": " + ((SASLErrorException) el).getSASLFailure().getDescriptiveText();
                     }
-                    errMsg = aTalkApp.getResString(R.string.service_gui_NOT_AUTHORIZED_HINT, errMsg);
+                    errMsg = aTalkApp.getResString(R.string.not_authorized_hint, errMsg);
                     StanzaError stanzaError = StanzaError.from(Condition.not_authorized, errMsg).build();
                     throw new XMPPErrorException(null, stanzaError);
                 }
@@ -1829,7 +1827,7 @@ public class ProtocolProviderServiceJabberImpl extends AbstractProtocolProviderS
                 msg = aTalkApp.getResString(R.string.password_change_on_server_failed, e.getMessage());
                 passwordChange = false;
             }
-            DialogActivity.showDialog(aTalkApp.getInstance(), aTalkApp.getResString(R.string.service_gui_PASSWORD), msg);
+            DialogActivity.showDialog(aTalkApp.getInstance(), aTalkApp.getResString(R.string.password_), msg);
         }
         return passwordChange;
     }
@@ -2165,7 +2163,7 @@ public class ProtocolProviderServiceJabberImpl extends AbstractProtocolProviderS
          * The CapsExtension reply to be included in the caps <Identity/>
          */
         String category = "client";
-        String appName = aTalkApp.getResString(R.string.APPLICATION_NAME);
+        String appName = aTalkApp.getResString(R.string.application_name);
         String type = "android";
 
         DiscoverInfo.Identity identity = new DiscoverInfo.Identity(category, appName, type);
@@ -2564,7 +2562,7 @@ public class ProtocolProviderServiceJabberImpl extends AbstractProtocolProviderS
             contactId = contactId.trim();
             // no suggestion for an empty id
             if (contactId.length() == 0) {
-                result.add(aTalkApp.getResString(R.string.service_gui_INVALID_ADDRESS, contactId));
+                result.add(aTalkApp.getResString(R.string.invalid_address, contactId));
                 return false;
             }
 
@@ -2595,14 +2593,14 @@ public class ProtocolProviderServiceJabberImpl extends AbstractProtocolProviderS
                 }
             }
             if (!valid) {
-                result.add(aTalkApp.getResString(R.string.service_gui_INVALID_ADDRESS, contactId));
+                result.add(aTalkApp.getResString(R.string.invalid_address, contactId));
                 result.add(suggestion + remainder);
                 return false;
             }
 
             return true;
         } catch (Exception ex) {
-            result.add(aTalkApp.getResString(R.string.service_gui_INVALID_ADDRESS, contactId));
+            result.add(aTalkApp.getResString(R.string.invalid_address, contactId));
         }
         return false;
     }
@@ -2737,7 +2735,7 @@ public class ProtocolProviderServiceJabberImpl extends AbstractProtocolProviderS
             if (TextUtils.isEmpty(reason) && (ex.getCause() != null))
                 reason = ex.getCause().getMessage();
             DialogActivity.showDialog(aTalkApp.getGlobalContext(),
-                    aTalkApp.getResString(R.string.service_gui_ERROR), reason);
+                    aTalkApp.getResString(R.string.error), reason);
         }
         else {
             // Try re-register and ask user for new credentials giving detail reason description.
@@ -3195,18 +3193,18 @@ public class ProtocolProviderServiceJabberImpl extends AbstractProtocolProviderS
         String authId = confirmExt.getId();
 
         if (StringUtils.isEmpty(instruction)) {
-            instruction = aTalkApp.getResString(R.string.service_gui_HTTP_REQUEST_INSTRUCTION,
+            instruction = aTalkApp.getResString(R.string.http_authorization_request_instruction,
                     confirmExt.getMethod(), confirmExt.getUrl(), authId, mAccountID.getAccountJid());
 
             // Show an headsUp notification for incoming IQ auth request when device is in locked state to alert user
             if (aTalkApp.isDeviceLocked()) {
                 NotificationManager.fireChatNotification(from, NotificationManager.INCOMING_MESSAGE,
-                        aTalkApp.getResString(R.string.service_gui_HTTP_REQUEST_TITLE), instruction, null);
+                        aTalkApp.getResString(R.string.http_authorization_request), instruction, null);
             }
         }
 
         long listenerId = DialogActivity.showConfirmDialog(aTalkApp.getGlobalContext(),
-                aTalkApp.getResString(R.string.service_gui_HTTP_REQUEST_TITLE), instruction, aTalkApp.getResString(R.string.service_gui_ACCEPT),
+                aTalkApp.getResString(R.string.http_authorization_request), instruction, aTalkApp.getResString(R.string.accept),
                 new DialogActivity.DialogListener() {
                     @Override
                     public boolean onConfirmClicked(DialogActivity dialog) {

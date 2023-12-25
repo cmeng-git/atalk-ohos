@@ -1,6 +1,6 @@
 package javax.swing.text;
 
-import org.atalk.hmos.gui.util.event.EventListenerList;
+import org.atalk.ohos.gui.util.event.EventListenerList;
 import org.jivesoftware.smackx.colibri.ColibriConferenceIQ.Content;
 
 import java.util.Dictionary;

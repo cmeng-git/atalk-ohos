@@ -28,10 +28,10 @@ import android.view.SurfaceHolder;
 
 import androidx.annotation.NonNull;
 
-import org.atalk.hmos.R;
-import org.atalk.hmos.aTalkApp;
-import org.atalk.hmos.gui.call.VideoCallActivity;
-import org.atalk.hmos.gui.call.VideoHandlerFragment;
+import org.atalk.ohos.R;
+import org.atalk.ohos.aTalkApp;
+import org.atalk.ohos.gui.call.VideoCallActivity;
+import org.atalk.ohos.gui.call.VideoHandlerFragment;
 import org.atalk.impl.neomedia.codec.FFmpeg;
 import org.atalk.impl.neomedia.codec.video.h264.H264;
 import org.atalk.impl.neomedia.device.util.AndroidCamera;
@@ -432,7 +432,7 @@ public class DataSource extends AbstractPushBufferCaptureDevice
                     errMessage = "UnKnown";
             }
             Timber.e("Set camera preview failed: %s", errMessage);
-            aTalkApp.showGenericError(R.string.service_gui_DEVICE_VIDEO_FORMAT_NOT_SUPPORTED, "", errMessage);
+            aTalkApp.showGenericError(R.string.video_format_not_supported, "", errMessage);
 
             mediaRecorder.release();
             mediaRecorder = null;
@@ -448,7 +448,7 @@ public class DataSource extends AbstractPushBufferCaptureDevice
      * Must use H264/RTP for video encoder
      *
      * After API 23, android doesn't allow non seekable file descriptors i.e. mOutputFile = null
-     * org.atalk.hmos E/(DataSource.java:294)#startVideoRecording: IllegalStateException (media recorder) in configuring data source: : null
+     * org.atalk.ohos E/(DataSource.java:294)#startVideoRecording: IllegalStateException (media recorder) in configuring data source: : null
      *     java.lang.IllegalStateException
      *         at android.media.MediaRecorder._start(Native Method)
      *         at android.media.MediaRecorder.start(MediaRecorder.java:1340)

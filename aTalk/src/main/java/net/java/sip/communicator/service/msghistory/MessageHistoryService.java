@@ -12,8 +12,8 @@ import net.java.sip.communicator.service.protocol.AccountID;
 import net.java.sip.communicator.service.protocol.ChatRoom;
 import net.java.sip.communicator.service.protocol.Contact;
 
-import org.atalk.hmos.gui.chat.ChatSession;
-import org.atalk.hmos.gui.chat.chatsession.ChatSessionRecord;
+import org.atalk.ohos.gui.chat.ChatSession;
+import org.atalk.ohos.gui.chat.chatsession.ChatSessionRecord;
 
 import java.util.Collection;
 import java.util.Date;

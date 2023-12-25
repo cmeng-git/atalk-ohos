@@ -8,8 +8,8 @@ package net.java.sip.communicator.impl.protocol.jabber;
 import net.java.sip.communicator.impl.protocol.jabber.caps.UserCapsNodeListener;
 import net.java.sip.communicator.service.protocol.OperationSetContactCapabilities;
 
-import org.atalk.hmos.aTalkApp;
-import org.atalk.hmos.plugin.timberlog.TimberLog;
+import org.atalk.ohos.aTalkApp;
+import org.atalk.ohos.plugin.timberlog.TimberLog;
 import org.atalk.persistance.ServerPersistentStoresRefreshDialog;
 import org.jivesoftware.smack.SmackException.NoResponseException;
 import org.jivesoftware.smack.SmackException.NotConnectedException;

@@ -14,8 +14,8 @@ import net.java.sip.communicator.service.contactsource.AbstractContactQuery;
 import net.java.sip.communicator.service.contactsource.ContactQuery;
 import net.java.sip.communicator.service.contactsource.SourceContact;
 
-import org.atalk.hmos.R;
-import org.atalk.hmos.aTalkApp;
+import org.atalk.ohos.R;
+import org.atalk.ohos.aTalkApp;
 
 import java.util.ArrayList;
 import java.util.List;

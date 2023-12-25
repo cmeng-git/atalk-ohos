@@ -9,8 +9,8 @@ import android.text.TextUtils;
 import net.java.sip.communicator.impl.configuration.SQLiteConfigurationStore;
 import net.java.sip.communicator.util.ConfigurationUtils;
 
-import org.atalk.hmos.aTalkApp;
-import org.atalk.hmos.gui.LauncherActivity;
+import org.atalk.ohos.aTalkApp;
+import org.atalk.ohos.gui.LauncherActivity;
 import org.atalk.persistance.DatabaseBackend;
 
 import timber.log.Timber;

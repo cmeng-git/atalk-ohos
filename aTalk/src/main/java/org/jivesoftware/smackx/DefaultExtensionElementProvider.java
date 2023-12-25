@@ -5,7 +5,7 @@
  */
 package org.jivesoftware.smackx;
 
-import org.atalk.hmos.plugin.timberlog.TimberLog;
+import org.atalk.ohos.plugin.timberlog.TimberLog;
 import org.jivesoftware.smack.packet.ExtensionElement;
 import org.jivesoftware.smack.packet.XmlEnvironment;
 import org.jivesoftware.smack.parsing.SmackParsingException;

@@ -27,7 +27,7 @@ import net.java.sip.communicator.service.protocol.ProtocolProviderService;
 import net.java.sip.communicator.util.ConfigurationUtils;
 
 import org.apache.commons.lang3.StringUtils;
-import org.atalk.hmos.gui.AndroidGUIActivator;
+import org.atalk.ohos.gui.AndroidGUIActivator;
 import org.atalk.util.event.PropertyChangeNotifier;
 import org.jxmpp.jid.BareJid;
 import org.jxmpp.jid.EntityBareJid;

@@ -11,7 +11,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 
-import org.atalk.hmos.aTalkApp;
+import org.atalk.ohos.aTalkApp;
 import org.atalk.impl.androidresources.AndroidResourceServiceImpl;
 
 import java.util.concurrent.Callable;

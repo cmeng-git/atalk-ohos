@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.atalk.hmos.gui.widgets.CheckableLinearLayout
+<org.atalk.ohos.gui.widgets.CheckableLinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/SpinnerItem.DropDownItem" >
@@ -21,4 +21,4 @@
         android:paddingStart="5dp"
         android:text="AccountName"
         tools:ignore="RtlHardcoded" />
-</org.atalk.hmos.gui.widgets.CheckableLinearLayout>
+</org.atalk.ohos.gui.widgets.CheckableLinearLayout>

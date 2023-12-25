@@ -13,7 +13,7 @@ import android.content.IntentFilter;
 
 import net.java.sip.communicator.service.sysactivity.event.SystemActivityEvent;
 
-import org.atalk.hmos.aTalkApp;
+import org.atalk.ohos.aTalkApp;
 
 /**
  * Listens for broadcasts from ConnectivityManager to get notified for network changes.

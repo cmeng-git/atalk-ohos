@@ -32,11 +32,11 @@ import android.os.Build;
 import net.java.sip.communicator.service.update.UpdateService;
 import net.java.sip.communicator.util.ServiceUtils;
 
-import org.atalk.hmos.BuildConfig;
-import org.atalk.hmos.R;
-import org.atalk.hmos.aTalkApp;
-import org.atalk.hmos.gui.aTalk;
-import org.atalk.hmos.gui.dialogs.DialogActivity;
+import org.atalk.ohos.BuildConfig;
+import org.atalk.ohos.R;
+import org.atalk.ohos.aTalkApp;
+import org.atalk.ohos.gui.aTalk;
+import org.atalk.ohos.gui.dialogs.DialogActivity;
 import org.atalk.persistance.FileBackend;
 import org.atalk.persistance.FilePathHelper;
 import org.atalk.service.version.Version;
@@ -64,8 +64,8 @@ public class UpdateServiceImpl implements UpdateService
 {
     // Default update link; path is case-sensitive.
     private static final String[] updateLinks = {
-            "https://raw.githubusercontent.com/cmeng-git/atalk-hmos/master/aTalk/release/version.properties",
-            "https://atalk.sytes.net/releases/atalk-hmos/version.properties"
+            "https://raw.githubusercontent.com/cmeng-git/atalk-ohos/master/aTalk/release/version.properties",
+            "https://atalk.sytes.net/releases/atalk-ohos/version.properties"
     };
 
     /**
@@ -125,9 +125,9 @@ public class UpdateServiceImpl implements UpdateService
                     return;
 
                 DialogActivity.showConfirmDialog(aTalkApp.getGlobalContext(),
-                        R.string.plugin_update_Install_Update,
-                        R.string.plugin_update_Update_Available,
-                        R.string.plugin_update_Download,
+                        R.string.update_install_update,
+                        R.string.update_update_available,
+                        R.string.update_download,
                         new DialogActivity.DialogListener()
                         {
                             @Override
@@ -141,15 +141,15 @@ public class UpdateServiceImpl implements UpdateService
                             public void onDialogCancelled(@NotNull DialogActivity dialog)
                             {
                             }
-                        }, latestVersion, Long.toString(latestVersionCode), aTalkApp.getResString(R.string.APPLICATION_NAME), currentVersion
+                        }, latestVersion, Long.toString(latestVersionCode), aTalkApp.getResString(R.string.application_name), currentVersion
                 );
             }
             else {
                 // Notify that running version is up to date
                 DialogActivity.showConfirmDialog(aTalkApp.getGlobalContext(),
-                        R.string.plugin_update_New_Version_None,
-                        R.string.plugin_update_UpToDate,
-                        R.string.plugin_update_Download,
+                        R.string.update_new_version_none,
+                        R.string.update_up_to_date,
+                        R.string.update_download,
                         new DialogActivity.DialogListener()
                         {
                             @Override
@@ -171,7 +171,7 @@ public class UpdateServiceImpl implements UpdateService
                 );
             }
         } else {
-            aTalkApp.showToastMessage(R.string.plugin_update_New_Version_None);
+            aTalkApp.showToastMessage(R.string.update_new_version_none);
         }
     }
 
@@ -202,14 +202,14 @@ public class UpdateServiceImpl implements UpdateService
             else if (lastJobStatus != DownloadManager.STATUS_FAILED) {
                 // Download is in progress or scheduled for retry
                 DialogActivity.showDialog(aTalkApp.getGlobalContext(),
-                        R.string.plugin_update_InProgress,
-                        R.string.plugin_update_Download_InProgress);
+                        R.string.update_in_progress,
+                        R.string.update_download_in_progress);
             }
             else {
                 // Download id return failed status, remove failed id and retry
                 removeOldDownloads();
                 DialogActivity.showDialog(aTalkApp.getGlobalContext(),
-                        R.string.plugin_update_Install_Update, R.string.plugin_update_Download_failed);
+                        R.string.update_install_update, R.string.update_download_failed);
             }
         }
         return lastJobStatus;
@@ -223,9 +223,9 @@ public class UpdateServiceImpl implements UpdateService
     private void askInstallDownloadedApk(Uri fileUri)
     {
         DialogActivity.showConfirmDialog(aTalkApp.getGlobalContext(),
-                R.string.plugin_update_Download_Completed,
-                R.string.plugin_update_Download_Ready,
-                mIsLatest ? R.string.plugin_update_ReInstall : R.string.plugin_update_Install,
+                R.string.update_download_completed,
+                R.string.update_download_ready,
+                mIsLatest ? R.string.update_reInstall : R.string.update_install,
                 new DialogActivity.DialogListener()
                 {
                     @Override
@@ -384,7 +384,7 @@ public class UpdateServiceImpl implements UpdateService
 
                 isValid = (versionCode == apkVersionCode);
                 if (!isValid) {
-                    aTalkApp.showToastMessage(R.string.plugin_update_Version_Invalid, apkVersionCode, versionCode);
+                    aTalkApp.showToastMessage(R.string.update_version_invalid, apkVersionCode, versionCode);
                     Timber.d("Downloaded apk actual version code: %s (%s)", apkVersionCode, versionCode);
                 }
             }

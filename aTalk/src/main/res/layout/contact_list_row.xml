@@ -64,7 +64,7 @@
             android:textColor="@color/list_details_selection_color" />
     </LinearLayout>
 
-    <org.atalk.hmos.gui.widgets.UnreadCountCustomView
+    <org.atalk.ohos.gui.widgets.UnreadCountCustomView
         android:id="@+id/unread_count"
         android:layout_width="@dimen/IconSize"
         android:layout_height="@dimen/IconSize"
@@ -94,7 +94,7 @@
             android:layout_gravity="center_vertical"
             android:padding="10dp"
             android:clickable="true"
-            android:contentDescription="@string/service_gui_CALL"
+            android:contentDescription="@string/call_audio"
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:minHeight="@dimen/min_button_height"
@@ -117,7 +117,7 @@
             android:layout_gravity="center_vertical"
             android:padding="10dp"
             android:clickable="true"
-            android:contentDescription="@string/service_gui_CALL_VIDEO"
+            android:contentDescription="@string/call_video"
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:minHeight="@dimen/min_button_height"

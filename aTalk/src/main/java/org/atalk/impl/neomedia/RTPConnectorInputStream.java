@@ -7,7 +7,7 @@ package org.atalk.impl.neomedia;
 
 import net.sf.fmj.media.util.MediaThread;
 
-import org.atalk.hmos.plugin.timberlog.TimberLog;
+import org.atalk.ohos.plugin.timberlog.TimberLog;
 import org.atalk.impl.neomedia.jmfext.media.protocol.AbstractPushBufferStream;
 import org.atalk.impl.neomedia.protocol.PushBufferStreamAdapter;
 import org.atalk.service.libjitsi.LibJitsi;

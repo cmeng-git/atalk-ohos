@@ -30,8 +30,8 @@ import android.view.Surface;
 import net.java.sip.communicator.util.UtilActivator;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.atalk.hmos.R;
-import org.atalk.hmos.aTalkApp;
+import org.atalk.ohos.R;
+import org.atalk.ohos.aTalkApp;
 import org.atalk.impl.neomedia.codec.video.AndroidEncoder;
 import org.atalk.impl.neomedia.device.util.AndroidCamera;
 import org.atalk.impl.neomedia.device.util.CameraUtils;
@@ -220,8 +220,8 @@ public class AndroidCameraSystem extends DeviceSystem {
 
                 // Construct display name
                 String name = (facing == CameraCharacteristics.LENS_FACING_FRONT)
-                        ? aTalkApp.getResString(R.string.service_gui_settings_CAMERA_FRONT)
-                        : aTalkApp.getResString(R.string.service_gui_settings_CAMERA_BACK);
+                        ? aTalkApp.getResString(R.string.settings_camera_front)
+                        : aTalkApp.getResString(R.string.settings_camera_back);
                 name += " (AndroidCamera#" + cameraId + ")";
                 if (formats.isEmpty()) {
                     Timber.e("No supported formats reported by camera: %s", locator);

@@ -19,8 +19,10 @@ import net.java.sip.communicator.service.protocol.ServerStoredDetails.MobilePhon
 import net.java.sip.communicator.service.protocol.ServerStoredDetails.VideoDetail;
 import net.java.sip.communicator.service.protocol.ServerStoredDetails.WorkPhoneDetail;
 import net.java.sip.communicator.util.ConfigurationUtils;
-import net.java.sip.communicator.util.UtilActivator;
 import net.java.sip.communicator.util.account.AccountUtils;
+
+import org.atalk.ohos.R;
+import org.atalk.ohos.aTalkApp;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -474,16 +476,16 @@ public class MetaContactPhoneUtil
     protected String getLocalizedPhoneNumber(GenericDetail d)
     {
         if (d instanceof WorkPhoneDetail) {
-            return UtilActivator.getResources().getI18NString("service.gui.WORK_PHONE");
+            return aTalkApp.getResString(R.string.work);
         }
         else if (d instanceof MobilePhoneDetail) {
-            return UtilActivator.getResources().getI18NString("service.gui.MOBILE_PHONE");
+            return aTalkApp.getResString(R.string.mobile);
         }
         else if (d instanceof VideoDetail) {
-            return UtilActivator.getResources().getI18NString("service.gui.VIDEO_PHONE");
+            return aTalkApp.getResString(R.string.video);
         }
         else {
-            return UtilActivator.getResources().getI18NString("service.gui.HOME");
+            return aTalkApp.getResString(R.string.home);
         }
     }
 }

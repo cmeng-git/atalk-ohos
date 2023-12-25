@@ -33,7 +33,7 @@ import net.java.sip.communicator.service.protocol.event.RegistrationStateChangeE
 import net.java.sip.communicator.service.protocol.event.RegistrationStateChangeListener;
 import net.java.sip.communicator.util.ConfigurationUtils;
 
-import org.atalk.hmos.gui.chat.ChatSession;
+import org.atalk.ohos.gui.chat.ChatSession;
 import org.atalk.persistance.DatabaseBackend;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;

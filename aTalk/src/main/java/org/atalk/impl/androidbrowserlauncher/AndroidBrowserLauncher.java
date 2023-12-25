@@ -10,7 +10,7 @@ import android.net.Uri;
 
 import net.java.sip.communicator.service.browserlauncher.BrowserLauncherService;
 
-import org.atalk.hmos.aTalkApp;
+import org.atalk.ohos.aTalkApp;
 
 import timber.log.Timber;
 

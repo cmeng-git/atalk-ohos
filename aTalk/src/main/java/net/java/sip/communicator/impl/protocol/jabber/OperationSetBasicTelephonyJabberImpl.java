@@ -33,11 +33,11 @@ import net.java.sip.communicator.service.protocol.jabber.JabberAccountID;
 import net.java.sip.communicator.service.protocol.media.AbstractOperationSetBasicTelephony;
 import net.java.sip.communicator.service.protocol.media.MediaAwareCallPeer;
 
-import org.atalk.hmos.R;
-import org.atalk.hmos.aTalkApp;
-import org.atalk.hmos.gui.aTalk;
-import org.atalk.hmos.gui.call.JingleMessageSessionImpl;
-import org.atalk.hmos.plugin.timberlog.TimberLog;
+import org.atalk.ohos.R;
+import org.atalk.ohos.aTalkApp;
+import org.atalk.ohos.gui.aTalk;
+import org.atalk.ohos.gui.call.JingleMessageSessionImpl;
+import org.atalk.ohos.plugin.timberlog.TimberLog;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.SmackException.NoResponseException;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
@@ -366,7 +366,7 @@ public class OperationSetBasicTelephonyJabberImpl
         // Throw exception if the call is none of the above criteria check
         if ((!Roster.getInstanceFor(mConnection).contains(calleeJid.asBareJid())
                 && !isPrivateMessagingContact) && !alwaysCallGtalk && !isTelephonyCall) {
-            throw new OperationFailedException(aTalkApp.getResString(R.string.service_gui_NOT_IN_CALLGROUP,
+            throw new OperationFailedException(aTalkApp.getResString(R.string.not_in_call_group,
                     calleeAddress), OperationFailedException.FORBIDDEN);
         }
 
@@ -389,7 +389,7 @@ public class OperationSetBasicTelephonyJabberImpl
                 }
 
                 if (discoInfoJid == null) {
-                    throw new OperationFailedException(aTalkApp.getResString(R.string.service_gui_NOT_IN_ROSTER,
+                    throw new OperationFailedException(aTalkApp.getResString(R.string.domain_not_in_roster,
                             telephonyDomain), OperationFailedException.ILLEGAL_ARGUMENT);
                 }
             }
@@ -402,10 +402,10 @@ public class OperationSetBasicTelephonyJabberImpl
                 }
                 else {
                     if (telephonyDomain != null)
-                        throw new OperationFailedException(aTalkApp.getResString(R.string.service_gui_NOT_IN_ROSTER,
+                        throw new OperationFailedException(aTalkApp.getResString(R.string.domain_not_in_roster,
                                 telephonyDomain), OperationFailedException.ILLEGAL_ARGUMENT);
                     else
-                        throw new OperationFailedException(aTalkApp.getResString(R.string.service_gui_INVALID_ADDRESS,
+                        throw new OperationFailedException(aTalkApp.getResString(R.string.invalid_address,
                                 fullCalleeJid), OperationFailedException.ILLEGAL_ARGUMENT);
                 }
             }
@@ -421,7 +421,7 @@ public class OperationSetBasicTelephonyJabberImpl
 
         if (di == null) {
             Timber.i("%s: jingle not supported?", discoInfoJid);
-            throw new OperationFailedException(aTalkApp.getResString(R.string.service_gui_NO_JINGLE_SUPPORT,
+            throw new OperationFailedException(aTalkApp.getResString(R.string.jingle_not_supported,
                     discoInfoJid), OperationFailedException.NOT_SUPPORTED_OPERATION);
         }
 
@@ -446,7 +446,7 @@ public class OperationSetBasicTelephonyJabberImpl
                 throw (ThreadDeath) t;
             else {
                 if (telephonyDomain != null)
-                    throw new OperationFailedException(aTalkApp.getResString(R.string.service_gui_NOT_IN_ROSTER,
+                    throw new OperationFailedException(aTalkApp.getResString(R.string.domain_not_in_roster,
                             telephonyDomain), OperationFailedException.ILLEGAL_ARGUMENT);
                 else {
                     String message = null;
@@ -757,7 +757,7 @@ public class OperationSetBasicTelephonyJabberImpl
     @Override
     public void processStanza(Stanza stanza) throws NotConnectedException, InterruptedException, SmackException.NotLoggedInException {
         StanzaError err = stanza.getError();
-        String message = aTalkApp.getResString(R.string.service_gui_CALL_ERROR, (err != null) ? err.getCondition() : "Unknown");
+        String message = aTalkApp.getResString(R.string.call_error, (err != null) ? err.getCondition() : "Unknown");
         Timber.e(message);
 
         if (getActiveCalls().hasNext()) {

@@ -33,12 +33,12 @@ import net.java.sip.communicator.util.ConfigurationUtils;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.atalk.crypto.omemo.OmemoAuthenticateDialog;
-import org.atalk.hmos.R;
-import org.atalk.hmos.aTalkApp;
-import org.atalk.hmos.gui.chat.ChatMessage;
-import org.atalk.hmos.gui.chat.ChatSessionManager;
-import org.atalk.hmos.gui.util.XhtmlUtil;
-import org.atalk.hmos.plugin.timberlog.TimberLog;
+import org.atalk.ohos.R;
+import org.atalk.ohos.aTalkApp;
+import org.atalk.ohos.gui.chat.ChatMessage;
+import org.atalk.ohos.gui.chat.ChatSessionManager;
+import org.atalk.ohos.gui.util.XhtmlUtil;
+import org.atalk.ohos.plugin.timberlog.TimberLog;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.SmackException.NoResponseException;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
@@ -598,9 +598,9 @@ public class OperationSetBasicInstantMessagingJabberImpl extends AbstractOperati
             return;
         } catch (CryptoFailedException | InterruptedException | NotConnectedException | NoResponseException |
                  IOException e) {
-            errMessage = aTalkApp.getResString(R.string.crypto_msg_OMEMO_SESSION_SETUP_FAILED, e.getMessage());
+            errMessage = aTalkApp.getResString(R.string.crypto_msg_omemo_session_setup_failed, e.getMessage());
         } catch (SmackException.NotLoggedInException e) {
-            errMessage = aTalkApp.getResString(R.string.service_gui_MSG_SEND_CONNECTION_PROBLEM);
+            errMessage = aTalkApp.getResString(R.string.message_delivery_not_registered);
         }
 
         if (!TextUtils.isEmpty(errMessage)) {

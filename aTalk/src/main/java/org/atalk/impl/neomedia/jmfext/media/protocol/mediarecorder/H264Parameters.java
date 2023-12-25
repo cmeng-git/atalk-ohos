@@ -9,7 +9,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Base64;
 
-import org.atalk.hmos.aTalkApp;
+import org.atalk.ohos.aTalkApp;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;

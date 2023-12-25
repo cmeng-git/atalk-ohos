@@ -71,16 +71,16 @@ import net.java.sip.communicator.util.UtilActivator;
 import net.java.sip.communicator.util.account.AccountUtils;
 
 import org.apache.commons.lang3.StringUtils;
-import org.atalk.hmos.R;
-import org.atalk.hmos.aTalkApp;
-import org.atalk.hmos.gui.chat.ChatFragment;
-import org.atalk.hmos.gui.chat.ChatMessage;
-import org.atalk.hmos.gui.chat.ChatMessageImpl;
-import org.atalk.hmos.gui.chat.ChatPanel;
-import org.atalk.hmos.gui.chat.ChatSession;
-import org.atalk.hmos.gui.chat.chatsession.ChatSessionFragment;
-import org.atalk.hmos.gui.chat.chatsession.ChatSessionRecord;
-import org.atalk.hmos.plugin.timberlog.TimberLog;
+import org.atalk.ohos.R;
+import org.atalk.ohos.aTalkApp;
+import org.atalk.ohos.gui.chat.ChatFragment;
+import org.atalk.ohos.gui.chat.ChatMessage;
+import org.atalk.ohos.gui.chat.ChatMessageImpl;
+import org.atalk.ohos.gui.chat.ChatPanel;
+import org.atalk.ohos.gui.chat.ChatSession;
+import org.atalk.ohos.gui.chat.chatsession.ChatSessionFragment;
+import org.atalk.ohos.gui.chat.chatsession.ChatSessionRecord;
+import org.atalk.ohos.plugin.timberlog.TimberLog;
 import org.atalk.persistance.DatabaseBackend;
 import org.atalk.service.configuration.ConfigurationService;
 import org.jivesoftware.smack.SmackException;
@@ -1216,7 +1216,7 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
         String entityJid = chatSession.getChatEntity();
         AccountID accountUid = chatSession.getCurrentChatTransport().getProtocolProvider().getAccountID();
 
-        if (StringUtils.isEmpty(entityJid) || entityJid.equals(aTalkApp.getResString(R.string.service_gui_UNKNOWN))
+        if (StringUtils.isEmpty(entityJid) || entityJid.equals(aTalkApp.getResString(R.string.unknown))
                 || (accountUid == null))
             return 0;
 

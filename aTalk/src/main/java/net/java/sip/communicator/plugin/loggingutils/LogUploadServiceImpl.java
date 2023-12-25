@@ -11,8 +11,8 @@ import android.net.Uri;
 
 import net.java.sip.communicator.impl.protocol.jabber.JabberActivator;
 
-import org.atalk.hmos.R;
-import org.atalk.hmos.aTalkApp;
+import org.atalk.ohos.R;
+import org.atalk.ohos.aTalkApp;
 import org.atalk.persistance.FileBackend;
 import org.atalk.persistance.ServerPersistentStoresRefreshDialog;
 import org.atalk.service.fileaccess.FileCategory;
@@ -76,7 +76,7 @@ public class LogUploadServiceImpl implements LogUploadService
             sendIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
             sendIntent.setType("application/zip");
             sendIntent.putExtra(Intent.EXTRA_STREAM, logsUri);
-            sendIntent.putExtra(Intent.EXTRA_TEXT, ctx.getString(R.string.service_gui_SEND_LOGS_INFO));
+            sendIntent.putExtra(Intent.EXTRA_TEXT, ctx.getString(R.string.send_log_info));
 
             Intent chooserIntent = Intent.createChooser(sendIntent, title);
             // List<ResolveInfo> resInfoList = ctx.getPackageManager().queryIntentActivities(chooserIntent, PackageManager.MATCH_DEFAULT_ONLY);

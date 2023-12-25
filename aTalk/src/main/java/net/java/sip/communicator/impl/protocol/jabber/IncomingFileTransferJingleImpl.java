@@ -21,8 +21,8 @@ import net.java.sip.communicator.service.protocol.Contact;
 import net.java.sip.communicator.service.protocol.OperationFailedException;
 import net.java.sip.communicator.service.protocol.event.FileTransferStatusChangeEvent;
 
-import org.atalk.hmos.R;
-import org.atalk.hmos.aTalkApp;
+import org.atalk.ohos.R;
+import org.atalk.ohos.aTalkApp;
 import org.jivesoftware.smackx.jingle.component.JingleSessionImpl;
 import org.jivesoftware.smackx.jingle.component.JingleSessionImpl.SessionState;
 import org.jivesoftware.smackx.jingle.element.JingleReason;
@@ -84,7 +84,7 @@ public class IncomingFileTransferJingleImpl extends AbstractFileTransfer {
     }
 
     private void onCanceled() {
-        String reason = aTalkApp.getResString(R.string.xFile_FILE_TRANSFER_CANCELED);
+        String reason = aTalkApp.getResString(R.string.file_transfer_canceled);
         fireStatusChangeEvent(FileTransferStatusChangeEvent.CANCELED, reason);
     }
 

@@ -16,7 +16,7 @@
  */
 package org.atalk.crypto;
 
-import static org.atalk.hmos.R.id.fingerprint;
+import static org.atalk.ohos.R.id.fingerprint;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -40,10 +40,10 @@ import net.java.sip.communicator.util.account.AccountUtils;
 
 import org.atalk.crypto.omemo.FingerprintStatus;
 import org.atalk.crypto.omemo.SQLiteOmemoStore;
-import org.atalk.hmos.R;
-import org.atalk.hmos.gui.util.ThemeHelper;
-import org.atalk.hmos.gui.util.ThemeHelper.Theme;
-import org.atalk.hmos.gui.util.ViewUtil;
+import org.atalk.ohos.R;
+import org.atalk.ohos.gui.util.ThemeHelper;
+import org.atalk.ohos.gui.util.ThemeHelper.Theme;
+import org.atalk.ohos.gui.util.ViewUtil;
 import org.atalk.persistance.DatabaseBackend;
 import org.atalk.service.osgi.OSGiActivity;
 import org.atalk.util.CryptoHelper;
@@ -176,7 +176,7 @@ public class CryptoDeviceFingerPrints extends OSGiActivity {
             case R.id.trust:
                 if (bareJid.startsWith(OMEMO)) {
                     trustOmemoFingerPrint(bareJid, remoteFingerprint);
-                    String msg = getString(R.string.crypto_toast_OMEMO_TRUST_MESSAGE_RESUME, bareJid);
+                    String msg = getString(R.string.crypto_omemo_trust_messaging_resume, bareJid);
                     Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
                 }
                 fpListAdapter.notifyDataSetChanged();
@@ -185,7 +185,7 @@ public class CryptoDeviceFingerPrints extends OSGiActivity {
             case R.id.distrust:
                 if (bareJid.startsWith(OMEMO)) {
                     distrustOmemoFingerPrint(bareJid, remoteFingerprint);
-                    String msg = getString(R.string.crypto_toast_OMEMO_DISTRUST_MESSAGE_STOP, bareJid);
+                    String msg = getString(R.string.crypto_omemo_distrust_messaging_stop, bareJid);
                     Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
                 }
                 fpListAdapter.notifyDataSetChanged();
@@ -196,7 +196,7 @@ public class CryptoDeviceFingerPrints extends OSGiActivity {
                 if (cbManager != null) {
                     cbManager.setPrimaryClip(ClipData.newPlainText(null,
                             CryptoHelper.prettifyFingerprint(remoteFingerprint)));
-                    Toast.makeText(this, R.string.crypto_toast_FINGERPRINT_COPY, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.crypto_fingerprint_copy, Toast.LENGTH_SHORT).show();
                 }
                 return true;
             case R.id.cancel:
@@ -354,8 +354,8 @@ public class CryptoDeviceFingerPrints extends OSGiActivity {
                 isVerified = isOmemoFPVerified(bareJid, remoteFingerprint);
             }
 
-            int status = isVerified ? R.string.crypto_FINGERPRINT_VERIFIED : R.string.crypto_FINGERPRINT_NOT_VERIFIED;
-            String verifyStatus = getString(R.string.crypto_FINGERPRINT_STATUS, getString(status));
+            int status = isVerified ? R.string.yes : R.string.no;
+            String verifyStatus = getString(R.string.crypto_fingerprint_status, getString(status));
             ViewUtil.setTextViewValue(rowView, R.id.fingerprint_status, verifyStatus);
             ViewUtil.setTextViewColor(rowView, R.id.fingerprint_status, isVerified ?
                     (ThemeHelper.isAppTheme(Theme.DARK) ? R.color.textColorWhite : R.color.textColorBlack)

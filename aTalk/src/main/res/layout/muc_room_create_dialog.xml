@@ -17,7 +17,7 @@
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:text="@string/service_gui_ACCOUNT" />
+            android:text="@string/account" />
 
         <Spinner
             android:id="@+id/jid_Accounts_Spinner"
@@ -38,7 +38,7 @@
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:text="@string/service_gui_NICKNAME_LABEL" />
+            android:text="@string/nickname" />
 
         <EditText
             android:id="@+id/NickName_Edit"
@@ -58,7 +58,7 @@
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:text="@string/service_gui_PASSWORD" />
+            android:text="@string/password_" />
 
         <RelativeLayout
             android:id="@+id/pwdTypingArea"
@@ -100,7 +100,7 @@
             android:id="@+id/store_password"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/store_password" />
+            android:text="@string/save_password" />
     </LinearLayout>
 
     <LinearLayout
@@ -115,12 +115,12 @@
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:text="@string/chatRoom_Subject" />
+            android:text="@string/subject" />
 
         <EditText
             android:id="@+id/chatRoom_Subject_Edit"
             style="@style/EntryTextView"
-            android:hint="@string/service_gui_GROUP_CHAT"
+            android:hint="@string/group_chat"
             android:layout_width="match_parent" />
     </LinearLayout>
 
@@ -129,9 +129,9 @@
         style="@style/MediumFont"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/service_gui_CHATROOM" />
+        android:text="@string/chatroom" />
 
-    <org.atalk.hmos.gui.util.ComboBox
+    <org.atalk.ohos.gui.util.ComboBox
         android:id="@+id/chatRoom_Combo"
         style="@style/SpinnerView" />
 
@@ -144,13 +144,13 @@
         <Button
             android:id="@+id/button_Cancel"
             style="@style/ButtonTop"
-            android:text="@string/service_gui_CANCEL" />
+            android:text="@string/cancel" />
 
         <Button
             android:id="@+id/button_Join"
             style="@style/ButtonTop"
             android:layout_marginStart="4dp"
             android:enabled="false"
-            android:text="@string/service_gui_JOIN" />
+            android:text="@string/join" />
     </LinearLayout>
 </LinearLayout>

@@ -14,19 +14,19 @@ import androidx.core.app.NotificationCompat;
 import net.java.sip.communicator.service.update.UpdateService;
 import net.java.sip.communicator.util.ServiceUtils;
 
-import org.atalk.hmos.R;
-import org.atalk.hmos.gui.AndroidGUIActivator;
-import org.atalk.hmos.gui.settings.SettingsFragment;
+import org.atalk.ohos.R;
+import org.atalk.ohos.gui.AndroidGUIActivator;
+import org.atalk.ohos.gui.settings.SettingsFragment;
 import org.atalk.impl.androidnotification.AndroidNotifications;
 import org.atalk.service.configuration.ConfigurationService;
 
 import java.util.Calendar;
 public class OnlineUpdateService extends IntentService
 {
-    public static final String ACTION_AUTO_UPDATE_APP = "org.atalk.hmos.ACTION_AUTO_UPDATE_APP";
-    public static final String ACTION_AUTO_UPDATE_START = "org.atalk.hmos.ACTION_AUTO_UPDATE_START";
-    public static final String ACTION_AUTO_UPDATE_STOP = "org.atalk.hmos.ACTION_AUTO_UPDATE_STOP";
-    private static final String ACTION_UPDATE_AVAILABLE = "org.atalk.hmos.ACTION_UPDATE_AVAILABLE";
+    public static final String ACTION_AUTO_UPDATE_APP = "org.atalk.ohos.ACTION_AUTO_UPDATE_APP";
+    public static final String ACTION_AUTO_UPDATE_START = "org.atalk.ohos.ACTION_AUTO_UPDATE_START";
+    public static final String ACTION_AUTO_UPDATE_STOP = "org.atalk.ohos.ACTION_AUTO_UPDATE_STOP";
+    private static final String ACTION_UPDATE_AVAILABLE = "org.atalk.ohos.ACTION_UPDATE_AVAILABLE";
     private static final String ONLINE_UPDATE_SERVICE = "OnlineUpdateService";
     private static final String UPDATE_AVAIL_TAG = "aTalk Update Available";
 
@@ -92,13 +92,13 @@ public class OnlineUpdateService extends IntentService
                 NotificationCompat.Builder nBuilder;
                 nBuilder = new NotificationCompat.Builder(this, AndroidNotifications.DEFAULT_GROUP);
 
-                String msgString = getString(R.string.plugin_update_New_Version_Available,
+                String msgString = getString(R.string.update_vew_version_available,
                         updateService.getLatestVersion());
                 nBuilder.setSmallIcon(R.drawable.ic_notification);
                 nBuilder.setWhen(System.currentTimeMillis());
                 nBuilder.setAutoCancel(true);
                 nBuilder.setTicker(msgString);
-                nBuilder.setContentTitle(getString(R.string.APPLICATION_NAME));
+                nBuilder.setContentTitle(getString(R.string.application_name));
                 nBuilder.setContentText(msgString);
 
                 Intent intent = new Intent(this.getApplicationContext(), OnlineUpdateService.class);

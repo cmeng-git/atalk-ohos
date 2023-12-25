@@ -1,9 +1,7 @@
 package org.atalk.service.httputil;
 
-import android.os.Build;
-
 import org.apache.http.conn.ssl.StrictHostnameVerifier;
-import org.atalk.hmos.BuildConfig;
+import org.atalk.ohos.BuildConfig;
 
 import java.io.IOException;
 import java.io.InputStream;

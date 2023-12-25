@@ -37,9 +37,9 @@ import net.java.sip.communicator.util.account.AccountUtils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.atalk.crypto.omemo.SQLiteOmemoStore;
-import org.atalk.hmos.R;
-import org.atalk.hmos.aTalkApp;
-import org.atalk.hmos.gui.util.ViewUtil;
+import org.atalk.ohos.R;
+import org.atalk.ohos.aTalkApp;
+import org.atalk.ohos.gui.util.ViewUtil;
 import org.atalk.service.osgi.OSGiActivity;
 import org.atalk.util.CryptoHelper;
 import org.jivesoftware.smack.SmackException;
@@ -130,7 +130,7 @@ public class CryptoPrivateKeys extends OSGiActivity
             accountList.put(deviceJid, accountId);
         }
         if (deviceFingerprints.isEmpty())
-            deviceFingerprints.put(aTalkApp.getResString(R.string.service_gui_settings_CRYPTO_PRIV_KEYS_EMPTY), "");
+            deviceFingerprints.put(aTalkApp.getResString(R.string.settings_crypto_priv_key_empty), "");
         return deviceFingerprints;
     }
 
@@ -178,7 +178,7 @@ public class CryptoPrivateKeys extends OSGiActivity
                 String privateKey = accountsAdapter.getOwnKeyFromRow(pos);
                 ClipboardManager cbManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
                 cbManager.setPrimaryClip(ClipData.newPlainText(null, CryptoHelper.prettifyFingerprint(privateKey)));
-                Toast.makeText(this, R.string.crypto_toast_FINGERPRINT_COPY, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.crypto_fingerprint_copy, Toast.LENGTH_SHORT).show();
                 return true;
         }
         return super.onContextItemSelected(item);
@@ -193,23 +193,23 @@ public class CryptoPrivateKeys extends OSGiActivity
     private void showGenerateKeyAlert(final String bareJid, boolean isKeyExist)
     {
         final AccountID accountId = accountList.get(bareJid);
-        int getResStrId = isKeyExist ? R.string.crypto_dialog_KEY_REGENERATE_QUESTION
-                : R.string.crypto_dialog_KEY_GENERATE_QUESTION;
+        int getResStrId = isKeyExist ? R.string.crypto_key_regenerate_prompt
+                : R.string.crypto_key_generate_prompt;
 
         String warnMsg = bareJid.startsWith(OMEMO)
-                ? getString(R.string.pref_omemo_regenerate_identities_summary) : "";
+                ? getString(R.string.omemo_regenerate_identities_summary) : "";
         String message = getString(getResStrId, bareJid, warnMsg);
 
         AlertDialog.Builder b = new AlertDialog.Builder(this);
-        b.setTitle(R.string.crypto_dialog_KEY_GENERATE_TITLE)
+        b.setTitle(R.string.crypto_key_generate_title)
                 .setMessage(message)
-                .setPositiveButton(R.string.service_gui_PROCEED, (dialog, which) -> {
+                .setPositiveButton(R.string.proceed, (dialog, which) -> {
                     if (accountId != null && bareJid.startsWith(OMEMO)) {
                             regenerate(accountId);
                     }
                     accountsAdapter.notifyDataSetChanged();
                 })
-                .setNegativeButton(R.string.service_gui_CANCEL, (dialog, which) -> dialog.dismiss()).show();
+                .setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss()).show();
     }
 
     /**
@@ -287,7 +287,7 @@ public class CryptoPrivateKeys extends OSGiActivity
             String fingerprint = getOwnKeyFromRow(position);
             String fingerprintStr = fingerprint;
             if (StringUtils.isEmpty(fingerprint)) {
-                fingerprintStr = getString(R.string.crypto_NO_KEY_PRESENT);
+                fingerprintStr = getString(R.string.crypto_no_key_present);
             }
             ViewUtil.setTextViewValue(rowView, R.id.fingerprint, CryptoHelper.prettifyFingerprint(fingerprintStr));
             return rowView;

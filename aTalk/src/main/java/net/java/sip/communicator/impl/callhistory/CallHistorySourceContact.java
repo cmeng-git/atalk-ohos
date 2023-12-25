@@ -34,8 +34,8 @@ import net.java.sip.communicator.service.protocol.event.CallPeerChangeEvent;
 import net.java.sip.communicator.util.DataObject;
 import net.java.sip.communicator.util.GuiUtils;
 
-import org.atalk.hmos.R;
-import org.atalk.hmos.aTalkApp;
+import org.atalk.ohos.R;
+import org.atalk.ohos.aTalkApp;
 
 import java.util.Date;
 import java.util.Hashtable;
@@ -115,9 +115,9 @@ public class CallHistorySourceContact extends DataObject implements SourceContac
         this.initPeerDetails();
 
         this.displayDetails
-                = aTalkApp.getResString(R.string.service_gui_AT) + ": "
+                = aTalkApp.getResString(R.string.at) + ": "
                 + getDateString(callRecord.getStartTime().getTime())
-                + " " + aTalkApp.getResString(R.string.service_gui_DURATION) + ": "
+                + " " + aTalkApp.getResString(R.string.duration) + ": "
                 + GuiUtils.formatTime(callRecord.getStartTime(), callRecord.getEndTime());
     }
 

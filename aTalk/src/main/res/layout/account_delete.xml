@@ -9,7 +9,7 @@
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/service_gui_HISTORY_REMOVE_PER_CONTACT_WARNING"
+        android:text="@string/history_purge_for_contact_warning"
         android:textAppearance="@style/MediumFont" />
 
     <CheckBox

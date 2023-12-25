@@ -5,10 +5,10 @@
  */
 package net.java.sip.communicator.util;
 
-import static org.atalk.hmos.gui.settings.QuietTimeFragment.P_KEY_QUIET_HOURS_ENABLE;
-import static org.atalk.hmos.gui.settings.QuietTimeFragment.P_KEY_QUIET_HOURS_END;
-import static org.atalk.hmos.gui.settings.QuietTimeFragment.P_KEY_QUIET_HOURS_START;
-import static org.atalk.hmos.gui.settings.SettingsFragment.P_KEY_HEADS_UP_ENABLE;
+import static org.atalk.ohos.gui.settings.QuietTimeFragment.P_KEY_QUIET_HOURS_ENABLE;
+import static org.atalk.ohos.gui.settings.QuietTimeFragment.P_KEY_QUIET_HOURS_END;
+import static org.atalk.ohos.gui.settings.QuietTimeFragment.P_KEY_QUIET_HOURS_START;
+import static org.atalk.ohos.gui.settings.SettingsFragment.P_KEY_HEADS_UP_ENABLE;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -26,15 +26,15 @@ import net.java.sip.communicator.service.protocol.ProtocolProviderService;
 import net.java.sip.communicator.util.account.AccountUtils;
 
 import org.apache.commons.lang3.StringUtils;
-import org.atalk.hmos.R;
-import org.atalk.hmos.aTalkApp;
-import org.atalk.hmos.gui.chat.ChatFragment;
-import org.atalk.hmos.gui.chat.ChatSession;
-import org.atalk.hmos.gui.settings.SettingsFragment;
-import org.atalk.hmos.gui.settings.TimePreference;
-import org.atalk.hmos.gui.util.ThemeHelper;
-import org.atalk.hmos.gui.util.ThemeHelper.Theme;
-import org.atalk.hmos.gui.webview.WebViewFragment;
+import org.atalk.ohos.R;
+import org.atalk.ohos.aTalkApp;
+import org.atalk.ohos.gui.chat.ChatFragment;
+import org.atalk.ohos.gui.chat.ChatSession;
+import org.atalk.ohos.gui.settings.SettingsFragment;
+import org.atalk.ohos.gui.settings.TimePreference;
+import org.atalk.ohos.gui.util.ThemeHelper;
+import org.atalk.ohos.gui.util.ThemeHelper.Theme;
+import org.atalk.ohos.gui.webview.WebViewFragment;
 import org.atalk.persistance.DatabaseBackend;
 import org.atalk.service.configuration.ConfigurationService;
 import org.atalk.service.neomedia.codec.EncodingConfiguration;
@@ -524,7 +524,7 @@ public class ConfigurationUtils {
         // Load the "webPage" property.
         mWebPage = mConfigService.getString(pWebPage);
         if (StringUtils.isEmpty(mWebPage))
-            mWebPage = aTalkApp.getResString(R.string.service_gui_settings_WEBVIEW_SUMMARY);
+            mWebPage = aTalkApp.getResString(R.string.settings_webView_summary);
 
         // Load the "auPopupNewMessage" property.
         String autoPopup = mConfigService.getString(pAutoPopupNewMessage);
@@ -627,7 +627,7 @@ public class ConfigurationUtils {
         // .PNAME_IS_RECENT_MESSAGES_DISABLED, !isRecentMessagesShown);
 
         // Load the "acceptFileSize" property.
-        String fileSize = mConfigService.getString(pAcceptFileSize, aTalkApp.getResString(R.string.auto_accept_filesize));
+        String fileSize = mConfigService.getString(pAcceptFileSize, aTalkApp.getResString(R.string.auto_accept_fileSize));
         acceptFileSize = Integer.parseInt(fileSize);
 
         // Load the "chatHistorySize" property.
@@ -1508,7 +1508,7 @@ public class ConfigurationUtils {
     public static String getWebPage() {
         WebViewFragment.initWebView();
         return StringUtils.isBlank(mWebPage)
-                ? aTalkApp.getResString(R.string.service_gui_settings_WEBVIEW_SUMMARY) : mWebPage;
+                ? aTalkApp.getResString(R.string.settings_webView_summary) : mWebPage;
     }
 
     /**

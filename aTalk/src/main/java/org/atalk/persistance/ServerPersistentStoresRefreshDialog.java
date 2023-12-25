@@ -17,14 +17,14 @@
 package org.atalk.persistance;
 
 import static net.java.sip.communicator.plugin.loggingutils.LogsCollector.LOGGING_DIR_NAME;
-import static org.atalk.hmos.R.id.cb_avatar;
-import static org.atalk.hmos.R.id.cb_caps;
-import static org.atalk.hmos.R.id.cb_debug_log;
-import static org.atalk.hmos.R.id.cb_del_database;
-import static org.atalk.hmos.R.id.cb_discoInfo;
-import static org.atalk.hmos.R.id.cb_export_database;
-import static org.atalk.hmos.R.id.cb_omemo;
-import static org.atalk.hmos.R.id.cb_roster;
+import static org.atalk.ohos.R.id.cb_avatar;
+import static org.atalk.ohos.R.id.cb_caps;
+import static org.atalk.ohos.R.id.cb_debug_log;
+import static org.atalk.ohos.R.id.cb_del_database;
+import static org.atalk.ohos.R.id.cb_discoInfo;
+import static org.atalk.ohos.R.id.cb_export_database;
+import static org.atalk.ohos.R.id.cb_omemo;
+import static org.atalk.ohos.R.id.cb_roster;
 
 import android.app.Activity;
 import android.content.Context;
@@ -42,10 +42,10 @@ import net.java.sip.communicator.service.protocol.RegistrationState;
 import net.java.sip.communicator.util.account.AccountUtils;
 
 import org.atalk.crypto.omemo.SQLiteOmemoStore;
-import org.atalk.hmos.BuildConfig;
-import org.atalk.hmos.R;
-import org.atalk.hmos.aTalkApp;
-import org.atalk.hmos.gui.dialogs.DialogActivity;
+import org.atalk.ohos.BuildConfig;
+import org.atalk.ohos.R;
+import org.atalk.ohos.aTalkApp;
+import org.atalk.ohos.gui.dialogs.DialogActivity;
 import org.atalk.persistance.migrations.OmemoDBCreate;
 import org.atalk.service.fileaccess.FileCategory;
 import org.atalk.service.libjitsi.LibJitsi;
@@ -91,9 +91,9 @@ public class ServerPersistentStoresRefreshDialog extends OSGiFragment
     public void show(Activity parent)
     {
         DialogActivity.showCustomDialog(parent,
-                parent.getString(R.string.service_gui_REFRESH_STORES),
+                parent.getString(R.string.refresh_store),
                 ServerPersistentStoresRefreshDialog.class.getName(), null,
-                parent.getString(R.string.service_gui_REFRESH_APPLY),
+                parent.getString(R.string.refresh_apply),
                 new DialogListenerImpl(), null);
     }
 
@@ -163,7 +163,7 @@ public class ServerPersistentStoresRefreshDialog extends OSGiFragment
                 try {
                     FileBackend.deleteRecursive(rosterStoreDirectory);
                 } catch (IOException e) {
-                    Timber.e("Failed to purge store for: %s", R.string.service_gui_REFRESH_STORES_ROSTER);
+                    Timber.e("Failed to purge store for: %s", R.string.refresh_store_roster);
                 }
                 jabberProvider.initRosterStore();
             }
@@ -185,7 +185,7 @@ public class ServerPersistentStoresRefreshDialog extends OSGiFragment
             try {
                 FileBackend.deleteRecursive(entityStoreDirectory);
             } catch (IOException e) {
-                Timber.e("Failed to purchase store for: %s", R.string.service_gui_REFRESH_STORES_CAPS);
+                Timber.e("Failed to purchase store for: %s", R.string.refresh_store_caps);
             }
             ScServiceDiscoveryManager.initEntityPersistentStore();
         }
@@ -218,7 +218,7 @@ public class ServerPersistentStoresRefreshDialog extends OSGiFragment
                 try {
                     FileBackend.deleteRecursive(discoInfoStoreDirectory);
                 } catch (IOException e) {
-                    Timber.e("Failed to purchase store for: %s", R.string.service_gui_REFRESH_STORES_DISCINFO);
+                    Timber.e("Failed to purchase store for: %s", R.string.refresh_store_disc_info);
                 }
                 discoveryInfoManager.initDiscoInfoPersistentStore();
             }

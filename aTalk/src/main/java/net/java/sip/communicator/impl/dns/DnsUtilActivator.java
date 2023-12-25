@@ -17,8 +17,8 @@
 
 package net.java.sip.communicator.impl.dns;
 
-import org.atalk.hmos.aTalkApp;
-import org.atalk.hmos.util.AndroidUsingLinkProperties;
+import org.atalk.ohos.aTalkApp;
+import org.atalk.ohos.util.AndroidUsingLinkProperties;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 

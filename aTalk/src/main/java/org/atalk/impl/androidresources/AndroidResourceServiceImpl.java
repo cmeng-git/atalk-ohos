@@ -14,7 +14,7 @@ import android.view.WindowManager;
 
 import net.java.sip.communicator.service.resources.AbstractResourcesService;
 
-import org.atalk.hmos.plugin.timberlog.TimberLog;
+import org.atalk.ohos.plugin.timberlog.TimberLog;
 import org.atalk.service.osgi.OSGiService;
 import org.atalk.service.resources.ResourceManagementService;
 import org.osgi.framework.BundleContext;
@@ -89,7 +89,7 @@ public class AndroidResourceServiceImpl extends AbstractResourcesService
     private static Resources resources = null;
 
     /**
-     * The application package name(org.atalk.hmos)
+     * The application package name(org.atalk.ohos)
      */
     private String packageName;
 

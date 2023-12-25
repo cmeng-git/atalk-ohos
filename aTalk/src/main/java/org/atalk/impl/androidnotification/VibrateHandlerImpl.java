@@ -12,7 +12,7 @@ import net.java.sip.communicator.service.notification.NotificationAction;
 import net.java.sip.communicator.service.notification.VibrateNotificationAction;
 import net.java.sip.communicator.service.notification.VibrateNotificationHandler;
 
-import org.atalk.hmos.aTalkApp;
+import org.atalk.ohos.aTalkApp;
 
 /**
  * Android implementation of {@link VibrateNotificationHandler}.

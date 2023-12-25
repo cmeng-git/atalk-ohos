@@ -18,7 +18,7 @@
  */
 package org.dhcp4java;
 
-import org.atalk.hmos.plugin.timberlog.TimberLog;
+import org.atalk.ohos.plugin.timberlog.TimberLog;
 
 import java.io.IOException;
 import java.io.InputStream;

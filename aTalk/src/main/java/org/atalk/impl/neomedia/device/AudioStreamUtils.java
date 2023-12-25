@@ -8,7 +8,7 @@ package org.atalk.impl.neomedia.device;
 import android.content.Context;
 import android.net.Uri;
 
-import org.atalk.hmos.aTalkApp;
+import org.atalk.ohos.aTalkApp;
 import org.atalk.impl.androidresources.AndroidResourceServiceImpl;
 
 import java.io.FileNotFoundException;

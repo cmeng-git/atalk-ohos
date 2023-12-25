@@ -1,6 +1,6 @@
 package javax.swing;
 
-import org.atalk.hmos.gui.util.event.EventListenerList;
+import org.atalk.ohos.gui.util.event.EventListenerList;
 
 import java.awt.Color;
 import java.awt.Component;

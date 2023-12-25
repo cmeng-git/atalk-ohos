@@ -13,9 +13,9 @@ import android.os.IBinder;
 
 import androidx.core.app.NotificationCompat;
 
-import org.atalk.hmos.R;
-import org.atalk.hmos.aTalkApp;
-import org.atalk.hmos.gui.util.AndroidUtils;
+import org.atalk.ohos.R;
+import org.atalk.ohos.aTalkApp;
+import org.atalk.ohos.gui.util.AndroidUtils;
 import org.atalk.impl.androidnotification.AndroidNotifications;
 import org.atalk.impl.osgi.OSGiServiceImpl;
 
@@ -32,7 +32,7 @@ public class OSGiService extends Service
     /**
      * The ID of aTalk notification icon
      */
-    private static int GENERAL_NOTIFICATION_ID = R.string.APPLICATION_NAME;
+    private static int GENERAL_NOTIFICATION_ID = R.string.application_name;
 
     /**
      * Indicates that aTalk is running in foreground mode and its icon is being displayed on android notification tray.
@@ -140,7 +140,7 @@ public class OSGiService extends Service
      */
     private void showIcon()
     {
-        String title = getResources().getString(R.string.APPLICATION_NAME);
+        String title = getResources().getString(R.string.application_name);
         // The intent to launch when the user clicks the expanded notification
         PendingIntent pendIntent = aTalkApp.getaTalkIconIntent();
 

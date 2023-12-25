@@ -20,8 +20,8 @@ import net.java.sip.communicator.service.protocol.event.DTMFReceivedEvent;
 import net.java.sip.communicator.service.protocol.media.MediaAwareCall;
 import net.java.sip.communicator.service.protocol.media.MediaHandler;
 
-import org.atalk.hmos.R;
-import org.atalk.hmos.aTalkApp;
+import org.atalk.ohos.R;
+import org.atalk.ohos.aTalkApp;
 import org.atalk.impl.neomedia.transform.dtls.DtlsControlImpl;
 import org.atalk.service.neomedia.DtlsControl;
 import org.atalk.service.neomedia.MediaDirection;
@@ -773,7 +773,7 @@ public class CallJabberImpl extends MediaAwareCall<CallPeerJabberImpl,
                 && callPeer.getMediaHandler().getAdvertisedEncryptionMethods().length == 0) {
 
             // send an error response;
-            String reasonText = aTalkApp.getResString(R.string.service_gui_security_ENCRYPTION_REQUIRED);
+            String reasonText = aTalkApp.getResString(R.string.security_encryption_required);
             callPeer.setState(CallPeerState.FAILED, reasonText);
             session.terminateSessionAndUnregister(JingleReason.Reason.security_error, reasonText);
             return;

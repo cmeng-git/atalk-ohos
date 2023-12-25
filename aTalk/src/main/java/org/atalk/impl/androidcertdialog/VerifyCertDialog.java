@@ -10,7 +10,7 @@ import android.content.Intent;
 
 import net.java.sip.communicator.service.certificate.VerifyCertificateDialogService;
 
-import org.atalk.hmos.aTalkApp;
+import org.atalk.ohos.aTalkApp;
 
 import java.security.cert.Certificate;
 

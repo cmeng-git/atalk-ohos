@@ -10,8 +10,8 @@ import net.java.sip.communicator.service.protocol.event.FileTransferProgressList
 import net.java.sip.communicator.service.protocol.event.FileTransferStatusChangeEvent;
 import net.java.sip.communicator.service.protocol.event.FileTransferStatusListener;
 
-import org.atalk.hmos.R;
-import org.atalk.hmos.aTalkApp;
+import org.atalk.ohos.R;
+import org.atalk.ohos.aTalkApp;
 import org.jivesoftware.smackx.jingle.element.JingleReason;
 
 import java.util.ArrayList;
@@ -146,7 +146,7 @@ public abstract class AbstractFileTransfer implements FileTransfer {
                 fireStatusChangeEvent(FileTransferStatusChangeEvent.COMPLETED, reasonText);
                 break;
             default: {
-                reasonText = aTalkApp.getResString(R.string.service_gui_FILE_SEND_CLIENT_ERROR, reasonText);
+                reasonText = aTalkApp.getResString(R.string.file_send_client_error, reasonText);
                 fireStatusChangeEvent(FileTransferStatusChangeEvent.FAILED, reasonText);
             }
         }

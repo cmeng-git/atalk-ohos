@@ -28,7 +28,7 @@ import net.sf.fmj.media.rtp.SSRCInfo;
 import net.sf.fmj.media.rtp.util.BadFormatException;
 import net.sf.fmj.utility.ByteBufferOutputStream;
 
-import org.atalk.hmos.plugin.timberlog.TimberLog;
+import org.atalk.ohos.plugin.timberlog.TimberLog;
 import org.atalk.impl.neomedia.MediaStreamImpl;
 import org.atalk.impl.neomedia.MediaStreamStatsImpl;
 import org.atalk.impl.neomedia.RTCPPacketPredicate;

@@ -15,8 +15,8 @@ import android.media.audiofx.AutomaticGainControl;
 import android.media.audiofx.NoiseSuppressor;
 import android.os.Process;
 
-import org.atalk.hmos.aTalkApp;
-import org.atalk.hmos.gui.util.AndroidUtils;
+import org.atalk.ohos.aTalkApp;
+import org.atalk.ohos.gui.util.AndroidUtils;
 import org.atalk.impl.neomedia.MediaServiceImpl;
 import org.atalk.impl.neomedia.NeomediaActivator;
 import org.atalk.impl.neomedia.device.AudioSystem;

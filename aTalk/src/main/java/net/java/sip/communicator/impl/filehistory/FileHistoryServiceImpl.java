@@ -39,11 +39,11 @@ import net.java.sip.communicator.service.protocol.event.ScFileTransferListener;
 import net.java.sip.communicator.util.ServiceUtils;
 
 import org.apache.commons.lang3.StringUtils;
-import org.atalk.hmos.gui.chat.ChatMessage;
-import org.atalk.hmos.gui.chat.ChatSession;
-import org.atalk.hmos.gui.chat.filetransfer.FileReceiveConversation;
-import org.atalk.hmos.gui.chat.filetransfer.FileSendConversation;
-import org.atalk.hmos.plugin.timberlog.TimberLog;
+import org.atalk.ohos.gui.chat.ChatMessage;
+import org.atalk.ohos.gui.chat.ChatSession;
+import org.atalk.ohos.gui.chat.filetransfer.FileReceiveConversation;
+import org.atalk.ohos.gui.chat.filetransfer.FileSendConversation;
+import org.atalk.ohos.plugin.timberlog.TimberLog;
 import org.atalk.persistance.DatabaseBackend;
 import org.jxmpp.util.XmppStringUtils;
 import org.osgi.framework.BundleContext;

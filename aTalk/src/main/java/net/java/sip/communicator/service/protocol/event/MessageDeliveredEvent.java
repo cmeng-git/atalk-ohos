@@ -9,7 +9,7 @@ import net.java.sip.communicator.service.protocol.Contact;
 import net.java.sip.communicator.service.protocol.ContactResource;
 import net.java.sip.communicator.service.protocol.IMessage;
 
-import org.atalk.hmos.gui.chat.ChatMessage;
+import org.atalk.ohos.gui.chat.ChatMessage;
 
 import java.util.Date;
 import java.util.EventObject;

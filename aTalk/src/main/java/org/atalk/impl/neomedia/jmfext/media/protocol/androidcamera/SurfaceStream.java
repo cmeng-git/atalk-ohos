@@ -16,8 +16,8 @@ import android.view.Surface;
 
 import androidx.annotation.NonNull;
 
-import org.atalk.hmos.gui.call.VideoCallActivity;
-import org.atalk.hmos.gui.call.VideoHandlerFragment;
+import org.atalk.ohos.gui.call.VideoCallActivity;
+import org.atalk.ohos.gui.call.VideoHandlerFragment;
 import org.atalk.impl.neomedia.NeomediaServiceUtils;
 import org.atalk.impl.neomedia.codec.video.AndroidEncoder;
 import org.atalk.impl.neomedia.device.DeviceConfiguration;

@@ -13,7 +13,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceFragmentCompat;
 
-import org.atalk.hmos.R;
+import org.atalk.ohos.R;
 import org.osgi.framework.BundleContext;
 
 /**

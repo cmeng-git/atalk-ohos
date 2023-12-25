@@ -5,7 +5,7 @@
  */
 package org.atalk.impl.neomedia.transform.dtls;
 
-import org.atalk.hmos.aTalkApp;
+import org.atalk.ohos.aTalkApp;
 import org.atalk.impl.neomedia.AbstractRTPConnector;
 import org.atalk.impl.neomedia.RTCPPacketPredicate;
 import org.atalk.impl.neomedia.RTPConnectorOutputStream;

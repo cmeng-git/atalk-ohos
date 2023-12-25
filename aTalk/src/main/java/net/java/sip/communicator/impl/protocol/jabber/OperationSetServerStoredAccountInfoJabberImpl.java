@@ -37,8 +37,8 @@ import net.java.sip.communicator.service.protocol.ServerStoredDetails.WorkPhoneD
 import net.java.sip.communicator.service.protocol.ServerStoredDetails.WorkVideoDetail;
 import net.java.sip.communicator.service.protocol.event.ServerStoredDetailsChangeEvent;
 
-import org.atalk.hmos.R;
-import org.atalk.hmos.aTalkApp;
+import org.atalk.ohos.R;
+import org.atalk.ohos.aTalkApp;
 import org.jivesoftware.smack.SmackException.NoResponseException;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.XMPPConnection;
@@ -463,7 +463,7 @@ public class OperationSetServerStoredAccountInfoJabberImpl extends AbstractOpera
     private boolean assertConnected()
     {
         if (((jabberProvider == null) || !jabberProvider.isRegistered())) {
-            Timber.w(aTalkApp.getResString(R.string.service_gui_NETOWRK_ASSERTION_ERROR));
+            Timber.w(aTalkApp.getResString(R.string.network_assert_error));
             return false;
         }
         return true;

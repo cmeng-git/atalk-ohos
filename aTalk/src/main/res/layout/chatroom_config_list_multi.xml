@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <org.atalk.hmos.gui.util.MultiSelectionSpinner
+    <org.atalk.ohos.gui.util.MultiSelectionSpinner
         android:id="@+id/cr_Spinner"
         style="@style/SpinnerView" />
 </LinearLayout>

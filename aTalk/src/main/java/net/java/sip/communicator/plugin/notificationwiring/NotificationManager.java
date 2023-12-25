@@ -81,18 +81,18 @@ import net.java.sip.communicator.service.protocol.event.ScFileTransferListener;
 import net.java.sip.communicator.service.systray.SystrayService;
 
 import org.apache.commons.text.StringEscapeUtils;
-import org.atalk.hmos.R;
-import org.atalk.hmos.aTalkApp;
-import org.atalk.hmos.gui.AndroidGUIActivator;
-import org.atalk.hmos.gui.AndroidUIServiceImpl;
-import org.atalk.hmos.gui.aTalk;
-import org.atalk.hmos.gui.chat.ChatMessage;
-import org.atalk.hmos.gui.chat.ChatPanel;
-import org.atalk.hmos.gui.chat.ChatTransport;
-import org.atalk.hmos.gui.chat.conference.ConferenceChatManager;
-import org.atalk.hmos.gui.chatroomslist.ChatRoomListFragment;
-import org.atalk.hmos.gui.contactlist.ContactListFragment;
-import org.atalk.hmos.gui.util.AndroidImageUtil;
+import org.atalk.ohos.R;
+import org.atalk.ohos.aTalkApp;
+import org.atalk.ohos.gui.AndroidGUIActivator;
+import org.atalk.ohos.gui.AndroidUIServiceImpl;
+import org.atalk.ohos.gui.aTalk;
+import org.atalk.ohos.gui.chat.ChatMessage;
+import org.atalk.ohos.gui.chat.ChatPanel;
+import org.atalk.ohos.gui.chat.ChatTransport;
+import org.atalk.ohos.gui.chat.conference.ConferenceChatManager;
+import org.atalk.ohos.gui.chatroomslist.ChatRoomListFragment;
+import org.atalk.ohos.gui.contactlist.ContactListFragment;
+import org.atalk.ohos.gui.util.AndroidImageUtil;
 import org.atalk.service.neomedia.MediaService;
 import org.atalk.service.neomedia.SrtpControl;
 import org.atalk.service.neomedia.event.SrtpListener;
@@ -618,7 +618,7 @@ public class NotificationManager implements CallChangeListener, CallListener, Ca
             Contact sourceContact = request.getSender();
 
             // Fire notification
-            String title = aTalkApp.getResString(R.string.xFile_FILE_RECEIVING_FROM,
+            String title = aTalkApp.getResString(R.string.file_receive_from,
                     sourceContact.getDisplayName());
             fireChatNotification(sourceContact, INCOMING_FILE, title, message, request.getID());
         } catch (Throwable t) {
@@ -800,7 +800,7 @@ public class NotificationManager implements CallChangeListener, CallListener, Ca
             final WeakReference<Call> weakCall = new WeakReference<>(call);
 
             NotificationData notification = fireNotification(INCOMING_CALL, "",
-                    aTalkApp.getResString(R.string.service_gui_CALL_INCOMING, peerName), peerInfo, () -> {
+                    aTalkApp.getResString(R.string.call_incoming, peerName), peerInfo, () -> {
                         Call call1 = weakCall.get();
                         if (call1 == null)
                             return false;
@@ -986,7 +986,7 @@ public class NotificationManager implements CallChangeListener, CallListener, Ca
             String filePath = msgBody.split("#")[0];
             String fileName = filePath.substring(filePath.lastIndexOf('/') + 1);
 
-            String title = aTalkApp.getResString(R.string.xFile_FILE_RECEIVING_FROM, sourceParticipant);
+            String title = aTalkApp.getResString(R.string.file_receive_from, sourceParticipant);
             fireChatNotification(chatRoom, INCOMING_FILE, title, fileName, msgUid);
         } else {
             boolean fireChatNotification;
@@ -994,7 +994,7 @@ public class NotificationManager implements CallChangeListener, CallListener, Ca
 
             fireChatNotification = (nickname == null) || msgBody.toLowerCase().contains(nickname.toLowerCase());
             if (fireChatNotification) {
-                String title = aTalkApp.getResString(R.string.service_gui_MSG_RECEIVED, sourceParticipant);
+                String title = aTalkApp.getResString(R.string.message_received, sourceParticipant);
                 if (!(IMessage.ENCODE_HTML == evt.getMessage().getMimeType())) {
                     msgBody = StringEscapeUtils.escapeHtml4(msgBody);
                 }
@@ -1021,7 +1021,7 @@ public class NotificationManager implements CallChangeListener, CallListener, Ca
             String filePath = msgBody.split("#")[0];
             String fileName = filePath.substring(filePath.lastIndexOf('/') + 1);
 
-            String title = aTalkApp.getResString(R.string.xFile_FILE_RECEIVING_FROM, nickName);
+            String title = aTalkApp.getResString(R.string.file_receive_from, nickName);
             fireChatNotification(chatRoom, INCOMING_FILE, title, fileName, msgUid);
         } else {
             boolean fireChatNotification;
@@ -1039,7 +1039,7 @@ public class NotificationManager implements CallChangeListener, CallListener, Ca
             if (fireChatNotification) {
                 // Block notification event if isHistoryMessage() and from autoJoined chatRoom
                 if (!(evt.isHistoryMessage() && evt.isAutoJoin())) {
-                    String title = aTalkApp.getResString(R.string.service_gui_MSG_RECEIVED, nickName);
+                    String title = aTalkApp.getResString(R.string.message_received, nickName);
                     // cmeng - extract only the msg body for notification display
                     if (!(IMessage.ENCODE_HTML == message.getMimeType())) {
                         msgBody = StringEscapeUtils.escapeHtml4(msgBody);
@@ -1080,11 +1080,11 @@ public class NotificationManager implements CallChangeListener, CallListener, Ca
             String filePath = msgBody.split("#")[0];
             String fileName = filePath.substring(filePath.lastIndexOf('/') + 1);
 
-            String title = aTalkApp.getResString(R.string.xFile_FILE_RECEIVING_FROM, contact.getAddress());
+            String title = aTalkApp.getResString(R.string.file_receive_from, contact.getAddress());
             fireChatNotification(contact, INCOMING_FILE, title, fileName, msgUid);
         } else {
             // Fire as message notification
-            String title = aTalkApp.getResString(R.string.service_gui_MSG_RECEIVED, contact.getAddress());
+            String title = aTalkApp.getResString(R.string.message_received, contact.getAddress());
 
             // cmeng - extract only the msg body for notification display
             if (!(IMessage.ENCODE_HTML == message.getMimeType())) {
@@ -1249,8 +1249,8 @@ public class NotificationManager implements CallChangeListener, CallListener, Ca
         try {
             ResourceManagementService resources = NotificationWiringActivator.getResources();
             fireNotification(CALL_SAVED, SystrayService.NONE_MESSAGE_TYPE,
-                    aTalkApp.getResString(R.string.plugin_callrecordingconfig_CALL_SAVED),
-                    aTalkApp.getResString(R.string.plugin_callrecordingconfig_CALL_SAVED_TO, recorder.getFilename()));
+                    aTalkApp.getResString(R.string.callrecordingconfig_call_saved),
+                    aTalkApp.getResString(R.string.callrecordingconfig_call_saved_to, recorder.getFilename()));
         } catch (Throwable t) {
             if (t instanceof ThreadDeath)
                 throw (ThreadDeath) t;
@@ -1338,37 +1338,37 @@ public class NotificationManager implements CallChangeListener, CallListener, Ca
      */
     public void securityMessageReceived(CallPeerSecurityMessageEvent evt) {
         try {
-            String messageTitleKey;
+            int messageTitleKey;
             // Android notification cannot support html tags
             String message = Html.fromHtml(evt.getI18nMessage()).toString();
 
             switch (evt.getEventSeverity()) {
                 // Don't play alert sound for Info or warning.
                 case SrtpListener.INFORMATION:
-                    messageTitleKey = "service.gui.SECURITY_INFO";
+                    messageTitleKey = R.string.security_info;
                     aTalkApp.showToastMessage(message);
                     return;
 
                 case SrtpListener.WARNING:
-                    messageTitleKey = "service.gui.SECURITY_WARNING";
+                    messageTitleKey = R.string.security_warning;
                     break;
 
                 // Security cannot be established! Play an alert sound and popup message
                 case SrtpListener.SEVERE:
                 case SrtpListener.ERROR:
-                    messageTitleKey = "service.gui.SECURITY_ERROR";
+                    messageTitleKey = R.string.security_error;
                     fireNotification(CALL_SECURITY_ERROR, SystrayService.WARNING_MESSAGE_TYPE,
-                            NotificationWiringActivator.getResources().getI18NString(messageTitleKey), message);
+                            aTalkApp.getResString(messageTitleKey), message);
                     return;
 
                 default:
                     // Whatever other severity there is or will be, we do not know how to react to it yet.
-                    messageTitleKey = null;
+                    messageTitleKey = -1;
             }
 
-            if (messageTitleKey != null) {
+            if (messageTitleKey != -1) {
                 fireNotification(SECURITY_MESSAGE, SystrayService.INFORMATION_MESSAGE_TYPE,
-                        NotificationWiringActivator.getResources().getI18NString(messageTitleKey), message);
+                        aTalkApp.getResString(messageTitleKey), message);
             }
         } catch (Throwable t) {
             if (t instanceof ThreadDeath)
@@ -1553,7 +1553,7 @@ public class NotificationManager implements CallChangeListener, CallListener, Ca
 
             proactiveTimer.put(chatDescriptor, currentTime);
             fireChatNotification(chatDescriptor, PROACTIVE_NOTIFICATION, fromJid,
-                    aTalkApp.getResString(R.string.service_gui_PROACTIVE_NOTIFICATION), null);
+                    aTalkApp.getResString(R.string.proactive_notification), null);
         } catch (Throwable t) {
             if (t instanceof ThreadDeath)
                 throw (ThreadDeath) t;

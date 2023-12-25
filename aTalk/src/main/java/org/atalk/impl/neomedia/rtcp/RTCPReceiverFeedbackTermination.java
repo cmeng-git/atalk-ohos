@@ -22,7 +22,7 @@ import net.sf.fmj.media.rtp.RTCPReportBlock;
 import net.sf.fmj.media.rtp.SSRCCache;
 import net.sf.fmj.media.rtp.SSRCInfo;
 
-import org.atalk.hmos.plugin.timberlog.TimberLog;
+import org.atalk.ohos.plugin.timberlog.TimberLog;
 import org.atalk.impl.neomedia.MediaStreamImpl;
 import org.atalk.impl.neomedia.RTCPPacketPredicate;
 import org.atalk.impl.neomedia.rtp.StreamRTPManager;

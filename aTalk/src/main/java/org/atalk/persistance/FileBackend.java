@@ -19,14 +19,13 @@ package org.atalk.persistance;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
 
 import androidx.core.content.FileProvider;
 
-import org.atalk.hmos.aTalkApp;
+import org.atalk.ohos.aTalkApp;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -59,7 +58,7 @@ public class FileBackend
      */
     private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
 
-    // android-Q accessible path to apk is: /storage/emulated/0/Android/data/org.atalk.hmos/files
+    // android-Q accessible path to apk is: /storage/emulated/0/Android/data/org.atalk.ohos/files
     public static String FP_aTALK = "/aTalk";
     public static String EXPROT_DB = "EXPORT_DB";
 

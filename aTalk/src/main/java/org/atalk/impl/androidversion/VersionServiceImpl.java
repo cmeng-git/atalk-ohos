@@ -10,7 +10,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 
-import org.atalk.hmos.aTalkApp;
+import org.atalk.ohos.aTalkApp;
 import org.atalk.service.version.Version;
 import org.atalk.service.version.util.AbstractVersionService;
 
@@ -55,10 +55,9 @@ public class VersionServiceImpl extends AbstractVersionService
             CURRENT_VERSION_NAME = versionName;
             CURRENT_VERSION_CODE = versionCode;
 
-            // cmeng - version must all be digits, otherwise no online update
+            // versionCode is used for online update comparison
             CURRENT_VERSION = (VersionImpl) parseVersionString(versionName);
-            Timber.i("Device installed with aTalk version: %s, version code: %s",
-                    CURRENT_VERSION, versionCode);
+            Timber.i("Device installed with aTalk version: %s, version code: %s", versionName, versionCode);
         } catch (PackageManager.NameNotFoundException e) {
             throw new RuntimeException(e);
         }

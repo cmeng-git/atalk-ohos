@@ -25,9 +25,9 @@ import net.java.sip.communicator.service.history.records.HistoryRecordStructure;
 import net.java.sip.communicator.service.protocol.Contact;
 import net.java.sip.communicator.util.ServiceUtils;
 
-import org.atalk.hmos.gui.chat.ChatMessage;
-import org.atalk.hmos.gui.chat.ChatSession;
-import org.atalk.hmos.plugin.timberlog.TimberLog;
+import org.atalk.ohos.gui.chat.ChatMessage;
+import org.atalk.ohos.gui.chat.ChatSession;
+import org.atalk.ohos.plugin.timberlog.TimberLog;
 import org.atalk.persistance.DatabaseBackend;
 import org.atalk.service.configuration.ConfigurationService;
 import org.atalk.service.fileaccess.FileAccessService;

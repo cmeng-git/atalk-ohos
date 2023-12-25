@@ -20,7 +20,7 @@ import net.java.sip.communicator.service.protocol.ChatRoom;
 import net.java.sip.communicator.service.protocol.ChatRoomMember;
 import net.java.sip.communicator.service.protocol.IMessage;
 
-import org.atalk.hmos.gui.chat.ChatMessage;
+import org.atalk.ohos.gui.chat.ChatMessage;
 import org.atalk.persistance.FileBackend;
 
 import java.util.Date;

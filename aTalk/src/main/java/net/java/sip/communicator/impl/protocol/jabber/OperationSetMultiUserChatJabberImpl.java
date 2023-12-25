@@ -26,8 +26,8 @@ import net.java.sip.communicator.service.protocol.event.SubscriptionEvent;
 import net.java.sip.communicator.service.protocol.event.SubscriptionListener;
 import net.java.sip.communicator.service.protocol.event.SubscriptionMovedEvent;
 
-import org.atalk.hmos.gui.chat.ChatMessage;
-import org.atalk.hmos.gui.util.XhtmlUtil;
+import org.atalk.ohos.gui.chat.ChatMessage;
+import org.atalk.ohos.gui.util.XhtmlUtil;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.SmackException.NoResponseException;
 import org.jivesoftware.smack.SmackException.NotConnectedException;

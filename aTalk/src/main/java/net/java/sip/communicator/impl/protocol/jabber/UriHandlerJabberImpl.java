@@ -35,9 +35,9 @@ import net.java.sip.communicator.service.protocol.event.AccountManagerListener;
 import net.java.sip.communicator.service.protocol.event.ProviderPresenceStatusChangeEvent;
 import net.java.sip.communicator.service.protocol.event.ProviderPresenceStatusListener;
 
-import org.atalk.hmos.aTalkApp;
-import org.atalk.hmos.gui.dialogs.DialogActivity;
-import org.atalk.hmos.plugin.timberlog.TimberLog;
+import org.atalk.ohos.aTalkApp;
+import org.atalk.ohos.gui.dialogs.DialogActivity;
+import org.atalk.ohos.plugin.timberlog.TimberLog;
 import org.jxmpp.stringprep.XmppStringprepException;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceEvent;

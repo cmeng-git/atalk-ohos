@@ -16,7 +16,7 @@
  */
 package org.atalk.crypto.omemo;
 
-import static org.atalk.hmos.R.id.fingerprint;
+import static org.atalk.ohos.R.id.fingerprint;
 
 import android.content.Context;
 import android.content.Intent;
@@ -27,8 +27,8 @@ import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.ListView;
 
-import org.atalk.hmos.R;
-import org.atalk.hmos.gui.util.ViewUtil;
+import org.atalk.ohos.R;
+import org.atalk.ohos.gui.util.ViewUtil;
 import org.atalk.service.osgi.OSGiActivity;
 import org.atalk.util.CryptoHelper;
 import org.jivesoftware.smack.SmackException;
@@ -108,7 +108,7 @@ public class OmemoAuthenticateDialog extends OSGiActivity
         }
 
         setContentView(R.layout.omemo_authenticate_dialog);
-        setTitle(R.string.omemo_authbuddydialog_AUTHENTICATE_BUDDY);
+        setTitle(R.string.omemo_authbuddy_authenticate_buddy);
 
         fpListAdapter = new FingerprintListAdapter(getBuddyFingerPrints());
         ListView fingerprintsList = findViewById(R.id.fp_list);
@@ -127,7 +127,7 @@ public class OmemoAuthenticateDialog extends OSGiActivity
 
         View content = findViewById(android.R.id.content);
         ViewUtil.setTextViewValue(content, R.id.localFingerprintLbl,
-                getString(R.string.omemo_authbuddydialog_LOCAL_FINGERPRINT, userJid,
+                getString(R.string.omemo_authbuddy_local_fingerprint, userJid,
                         CryptoHelper.prettifyFingerprint(localFingerprint)));
     }
 

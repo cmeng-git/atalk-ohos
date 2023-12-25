@@ -5,7 +5,7 @@
  */
 package net.java.sip.communicator.impl.globaldisplaydetails;
 
-import static org.atalk.hmos.gui.call.CallUIUtils.DEFAULT_PERSONAL_PHOTO;
+import static org.atalk.ohos.gui.call.CallUIUtils.DEFAULT_PERSONAL_PHOTO;
 
 import android.text.TextUtils;
 

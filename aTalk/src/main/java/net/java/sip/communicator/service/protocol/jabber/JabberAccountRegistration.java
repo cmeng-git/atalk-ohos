@@ -18,7 +18,7 @@ import net.java.sip.communicator.service.protocol.StunServerDescriptor;
 import net.java.sip.communicator.util.ServiceUtils;
 
 import org.apache.commons.lang3.StringUtils;
-import org.atalk.hmos.gui.aTalk;
+import org.atalk.ohos.gui.aTalk;
 import org.atalk.service.configuration.ConfigurationService;
 import org.atalk.service.neomedia.MediaService;
 import org.jxmpp.util.XmppStringUtils;

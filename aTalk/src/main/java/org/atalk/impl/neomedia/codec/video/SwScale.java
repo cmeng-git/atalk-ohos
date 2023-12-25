@@ -8,7 +8,7 @@ package org.atalk.impl.neomedia.codec.video;
 
 import net.sf.fmj.media.AbstractCodec;
 
-import org.atalk.hmos.plugin.timberlog.TimberLog;
+import org.atalk.ohos.plugin.timberlog.TimberLog;
 import org.atalk.impl.neomedia.codec.FFmpeg;
 import org.atalk.impl.neomedia.control.FrameProcessingControlImpl;
 

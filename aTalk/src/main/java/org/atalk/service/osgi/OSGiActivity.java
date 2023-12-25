@@ -28,13 +28,13 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NavUtils;
 
-import org.atalk.hmos.BaseActivity;
-import org.atalk.hmos.R;
-import org.atalk.hmos.aTalkApp;
-import org.atalk.hmos.gui.AndroidGUIActivator;
-import org.atalk.hmos.gui.LauncherActivity;
-import org.atalk.hmos.gui.actionbar.ActionBarUtil;
-import org.atalk.hmos.plugin.errorhandler.ExceptionHandler;
+import org.atalk.ohos.BaseActivity;
+import org.atalk.ohos.R;
+import org.atalk.ohos.aTalkApp;
+import org.atalk.ohos.gui.AndroidGUIActivator;
+import org.atalk.ohos.gui.LauncherActivity;
+import org.atalk.ohos.gui.actionbar.ActionBarUtil;
+import org.atalk.ohos.plugin.errorhandler.ExceptionHandler;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
@@ -193,13 +193,13 @@ public class OSGiActivity extends BaseActivity {
         // Clears the crash status and ask user to send debug log
         ExceptionHandler.resetCrashedStatus();
         AlertDialog.Builder question = new AlertDialog.Builder(this);
-        question.setTitle(R.string.service_gui_WARNING)
-                .setMessage(getString(R.string.service_gui_SEND_LOGS_QUESTION))
-                .setPositiveButton(R.string.service_gui_YES, (dialog, which) -> {
+        question.setTitle(R.string.warning)
+                .setMessage(getString(R.string.send_log_prompt))
+                .setPositiveButton(R.string.yes, (dialog, which) -> {
                     dialog.dismiss();
                     aTalkApp.showSendLogsDialog();
                 })
-                .setNegativeButton(R.string.service_gui_NO, (dialog, which) -> dialog.dismiss())
+                .setNegativeButton(R.string.no, (dialog, which) -> dialog.dismiss())
                 .create().show();
     }
 

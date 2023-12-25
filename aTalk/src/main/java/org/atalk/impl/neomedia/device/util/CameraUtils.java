@@ -6,16 +6,14 @@
 package org.atalk.impl.neomedia.device.util;
 
 import android.graphics.ImageFormat;
-import android.hardware.Camera;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraManager;
-import android.os.Build;
 import android.text.TextUtils;
 import android.util.Size;
 import android.view.Surface;
 
-import org.atalk.hmos.aTalkApp;
+import org.atalk.ohos.aTalkApp;
 import org.atalk.impl.neomedia.device.DeviceConfiguration;
 import org.atalk.impl.neomedia.jmfext.media.protocol.androidcamera.PreviewStream;
 

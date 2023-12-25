@@ -25,13 +25,13 @@ import net.java.sip.communicator.service.systray.PopupMessage;
 import net.java.sip.communicator.service.systray.SystrayService;
 import net.java.sip.communicator.util.ConfigurationUtils;
 
-import org.atalk.hmos.R;
-import org.atalk.hmos.aTalkApp;
-import org.atalk.hmos.gui.AndroidGUIActivator;
-import org.atalk.hmos.gui.chat.ChatPanel;
-import org.atalk.hmos.gui.chat.ChatSessionManager;
-import org.atalk.hmos.gui.dialogs.DialogActivity;
-import org.atalk.hmos.gui.util.AndroidImageUtil;
+import org.atalk.ohos.R;
+import org.atalk.ohos.aTalkApp;
+import org.atalk.ohos.gui.AndroidGUIActivator;
+import org.atalk.ohos.gui.chat.ChatPanel;
+import org.atalk.ohos.gui.chat.ChatSessionManager;
+import org.atalk.ohos.gui.dialogs.DialogActivity;
+import org.atalk.ohos.gui.util.AndroidImageUtil;
 import org.atalk.impl.androidnotification.AndroidNotifications;
 
 import java.util.Hashtable;

@@ -17,14 +17,14 @@ import java.util.regex.Pattern;
  *
  * @author Emil Ivov
  * @author Pawel Domas
+ * @author Eng Chong Meng
  */
 public abstract class AbstractVersionService implements VersionService
 {
     /**
      * The pattern that will parse strings to version object.
      */
-    private static final Pattern PARSE_VERSION_STRING_PATTERN
-            = Pattern.compile("(\\d+)\\.(\\d+)\\.([\\d.]+)");
+    private static final Pattern PARSE_VERSION_STRING_PATTERN = Pattern.compile("(\\d+)\\.(\\d+)\\.([\\d.]+)");
 
     /**
      * Returns a Version instance corresponding to the <code>version</code> string.

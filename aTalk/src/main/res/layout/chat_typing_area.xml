@@ -51,7 +51,7 @@
         android:layout_toStartOf="@+id/sendMessageButton"
         android:background="@drawable/white_rounded"/>
 
-    <org.atalk.hmos.gui.util.ContentEditText
+    <org.atalk.ohos.gui.util.ContentEditText
         android:id="@+id/chatWriteText"
         style="@style/MediumFont"
         android:layout_width="match_parent"
@@ -90,7 +90,7 @@
             android:minWidth="32dp"
             android:src="@drawable/ic_record"/>
 
-        <view class="org.atalk.hmos.plugin.audioservice.SoundMeter"
+        <view class="org.atalk.ohos.plugin.audioservice.SoundMeter"
               android:id="@+id/sound_meter"
               android:animateLayoutChanges="false"
               android:layout_width="match_parent"
@@ -128,7 +128,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end|center_vertical"
             android:gravity="end"
-            android:text="@string/chat_RecordCancel"
+            android:text="@string/chat_audio_cancel"
             android:textColor="@color/blue"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"/>

@@ -85,9 +85,9 @@ android {
     buildToolsVersion rootProject.buildTools
 
     defaultConfig {
-        applicationId "org.atalk.hmos"
-        versionCode 1000
-        versionName "0.1.0"
+        applicationId "org.atalk.ohos"
+        versionCode 2000
+        versionName "00.02.000"
 
         minSdkVersion rootProject.minSdk
         targetSdkVersion rootProject.compileSdk
@@ -424,7 +424,7 @@ dependencies {
         destinationName "sde4j-1.1.4.jar"
 
         // v1.1.5 uses java.util.Base64 was only added in API level 26
-        // classRename 'java.util.Base64', 'org.atalk.hmos.util.java.util.Base64'
+        // classRename 'java.util.Base64', 'org.atalk.ohos.util.java.util.Base64'
 
         // v1.1.4 uses binary.Base64
         classRename 'org.apache.commons.codec.binary.Base64', 'org.apache.commons.codec.binary.ApacheBase64'

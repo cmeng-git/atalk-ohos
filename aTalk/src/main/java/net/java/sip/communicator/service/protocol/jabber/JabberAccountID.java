@@ -11,7 +11,7 @@ import net.java.sip.communicator.service.protocol.ProtocolNames;
 import net.java.sip.communicator.service.protocol.ProtocolProviderActivator;
 import net.java.sip.communicator.service.protocol.ProtocolProviderFactory;
 
-import org.atalk.hmos.gui.account.settings.BoshProxyDialog;
+import org.atalk.ohos.gui.account.settings.BoshProxyDialog;
 import org.atalk.service.configuration.ConfigurationService;
 import org.jivesoftware.smack.util.TLSUtils;
 import org.jxmpp.jid.impl.JidCreate;

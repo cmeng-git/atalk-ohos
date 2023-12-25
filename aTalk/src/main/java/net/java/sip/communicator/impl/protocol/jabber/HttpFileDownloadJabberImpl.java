@@ -30,8 +30,8 @@ import net.java.sip.communicator.service.protocol.Contact;
 import net.java.sip.communicator.service.protocol.IMessage;
 import net.java.sip.communicator.service.protocol.event.FileTransferStatusChangeEvent;
 
-import org.atalk.hmos.R;
-import org.atalk.hmos.aTalkApp;
+import org.atalk.ohos.R;
+import org.atalk.ohos.aTalkApp;
 import org.atalk.persistance.FileBackend;
 import org.atalk.persistance.FilePathHelper;
 import org.jivesoftware.smackx.omemo_media_sharing.AesgcmUrl;
@@ -285,7 +285,7 @@ public class HttpFileDownloadJabberImpl extends AbstractFileTransfer {
         } catch (SecurityException e) {
             aTalkApp.showToastMessage(e.getMessage());
         } catch (Exception e) {
-            aTalkApp.showToastMessage(R.string.service_gui_FILE_DOES_NOT_EXIST);
+            aTalkApp.showToastMessage(R.string.file_does_not_exist);
         }
     }
 

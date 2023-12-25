@@ -18,14 +18,14 @@ public interface Version extends Comparable<Version>
 	 * {@link #getApplicationName()}. Expected to be set by implementers of the
 	 * <code>VersionService</code> and <code>Version</code> interfaces.
 	 */
-	public static final String PNAME_APPLICATION_NAME = "sip-communicator.application.name";
+	String PNAME_APPLICATION_NAME = "sip-communicator.application.name";
 
 	/**
 	 * The name of the <code>System</code> property the value of which is equal to the value of
 	 * {@link #toString()}. Expected to be set by implementers of the <code>VersionService</code> and
 	 * <code>Version</code>  interfaces.
 	 */
-	public static final String PNAME_APPLICATION_VERSION = "sip-communicator.version";
+	String PNAME_APPLICATION_VERSION = "sip-communicator.version";
 
 	/**
 	 * Returns the version major of the current Jitsi version. In an example 2.3.1 version string
@@ -34,7 +34,7 @@ public interface Version extends Comparable<Version>
 	 *
 	 * @return the version major integer.
 	 */
-	public int getVersionMajor();
+	int getVersionMajor();
 
 	/**
 	 * Returns the version minor of the current Jitsi version. In an example 2.3.1 version string
@@ -43,7 +43,7 @@ public interface Version extends Comparable<Version>
 	 *
 	 * @return the version minor integer.
 	 */
-	public int getVersionMinor();
+	int getVersionMinor();
 
 	/**
 	 * Indicates if this Jitsi version corresponds to a nightly build of a repository snapshot or
@@ -52,15 +52,15 @@ public interface Version extends Comparable<Version>
 	 * @return true if this is a build of a nightly repository snapshot and false if this is an
 	 * official Jitsi release.
 	 */
-	public boolean isNightly();
+	boolean isNightly();
 
 	/**
-	 * If this is a nightly build, returns the build identifies (e.g. nightly-2007.12.07-06.45.17)
-	 * . If this is not a nightly build Jitsi version, the method returns null.
+	 * If this is a nightly build, returns the build identifies (e.g. nightly-2007.12.07-06.45.17).
+	 * If this is not a nightly build Jitsi version, the method returns null.
 	 *
 	 * @return a String containing a nightly build identifier or null if
 	 */
-	public String getNightlyBuildID();
+	String getNightlyBuildID();
 
 	/**
 	 * Indicates whether this version represents a pre-release (i.e. a non-complete release like an
@@ -68,7 +68,7 @@ public interface Version extends Comparable<Version>
 	 *
 	 * @return true if this version represents a pre-release and false otherwise.
 	 */
-	public boolean isPreRelease();
+	boolean isPreRelease();
 
 	/**
 	 * Returns the version pre-release ID of the current Jitsi version and null if this version is
@@ -78,38 +78,36 @@ public interface Version extends Comparable<Version>
 	 *
 	 * @return a String containing the version pre-release ID.
 	 */
-	public String getPreReleaseID();
+	String getPreReleaseID();
 
 	/**
 	 * Compares another <code>Version</code> object to this one and returns a negative, zero or a
 	 * positive integer if this version instance represents respectively an earlier, same, or
 	 * later version as the one indicated by the <code>version</code> parameter.
 	 *
-	 * @param version
-	 * 		the <code>Version</code> instance that we'd like to compare to this one.
+	 * @param version the <code>Version</code> instance that we'd like to compare to this one.
 	 * @return a negative integer, zero, or a positive integer as this object represents a version
 	 * that is earlier, same, or more recent than the one referenced by the <code>version</code>
 	 * parameter.
 	 */
-	public int compareTo(Version version);
+	int compareTo(Version version);
 
 	/**
 	 * Compares the <code>version</code> parameter to this version and returns true if and only if
 	 * both reference the same Jitsi version and false otherwise.
 	 *
-	 * @param version
-	 * 		the version instance that we'd like to compare with this one.
+	 * @param version the version instance that we'd like to compare with this one.
 	 * @return true if and only the version param references the same Jitsi version as this
 	 * Version instance and false otherwise.
 	 */
-	public boolean equals(Object version);
+	boolean equals(Object version);
 
 	/**
 	 * Returns the name of the application that we're currently running. Default MUST be aTalk.
 	 *
 	 * @return the name of the application that we're currently running. Default MUST be aTalk.
 	 */
-	public String getApplicationName();
+	String getApplicationName();
 
 	/**
 	 * Returns a String representation of this Version instance. If you'd just like to obtain the
@@ -118,5 +116,5 @@ public interface Version extends Comparable<Version>
 	 *
 	 * @return a major.minor[.build] String containing the complete Jitsi version.
 	 */
-	public String toString();
+	String toString();
 }

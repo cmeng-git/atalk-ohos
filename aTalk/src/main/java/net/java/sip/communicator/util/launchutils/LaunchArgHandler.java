@@ -8,7 +8,7 @@ package net.java.sip.communicator.util.launchutils;
 
 import net.java.sip.communicator.util.ScStdOut;
 
-import org.atalk.hmos.plugin.timberlog.TimberLog;
+import org.atalk.ohos.plugin.timberlog.TimberLog;
 import org.atalk.service.configuration.ConfigurationService;
 
 import java.io.File;

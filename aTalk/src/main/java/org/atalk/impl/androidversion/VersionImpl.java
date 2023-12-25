@@ -7,8 +7,8 @@ package org.atalk.impl.androidversion;
 
 import net.java.sip.communicator.util.ServiceUtils;
 
-import org.atalk.hmos.R;
-import org.atalk.hmos.aTalkApp;
+import org.atalk.ohos.R;
+import org.atalk.ohos.aTalkApp;
 import org.atalk.service.resources.ResourceManagementService;
 import org.atalk.service.version.util.AbstractVersion;
 
@@ -23,7 +23,7 @@ public class VersionImpl extends AbstractVersion
     /**
      * Default application name.
      */
-    private static final String DEFAULT_APPLICATION_NAME = aTalkApp.getResString(R.string.APPLICATION_NAME);
+    private static final String DEFAULT_APPLICATION_NAME = aTalkApp.getResString(R.string.application_name);
 
     /**
      * The name of this application.

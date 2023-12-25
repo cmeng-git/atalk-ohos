@@ -19,8 +19,8 @@ import net.java.sip.communicator.service.protocol.SecurityAuthority;
 import net.java.sip.communicator.service.protocol.UserCredentials;
 import net.java.sip.communicator.service.protocol.event.RegistrationStateChangeEvent;
 
-import org.atalk.hmos.aTalkApp;
-import org.atalk.hmos.gui.login.IBRCaptchaProcessDialog;
+import org.atalk.ohos.aTalkApp;
+import org.atalk.ohos.gui.login.IBRCaptchaProcessDialog;
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.SmackException;

@@ -27,7 +27,7 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 
-import org.atalk.hmos.gui.share.Attachment;
+import org.atalk.ohos.gui.share.Attachment;
 
 import java.io.File;
 import java.io.FileOutputStream;

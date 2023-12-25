@@ -11,8 +11,8 @@ import android.widget.Toast;
 import net.java.sip.communicator.service.systray.AbstractPopupMessageHandler;
 import net.java.sip.communicator.service.systray.PopupMessage;
 
-import org.atalk.hmos.aTalkApp;
-import org.atalk.hmos.gui.widgets.ClickableToastController;
+import org.atalk.ohos.aTalkApp;
+import org.atalk.ohos.gui.widgets.ClickableToastController;
 
 /**
  * TODO: Toast popup handler stub. It should be registered by displayed Activity as we need to hold the UI thread to

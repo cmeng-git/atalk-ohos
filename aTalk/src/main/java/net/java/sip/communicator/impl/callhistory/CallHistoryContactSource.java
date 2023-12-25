@@ -27,8 +27,8 @@ import net.java.sip.communicator.service.contactsource.ContactReceivedEvent;
 import net.java.sip.communicator.service.contactsource.ContactSourceService;
 import net.java.sip.communicator.service.contactsource.SourceContact;
 
-import org.atalk.hmos.R;
-import org.atalk.hmos.aTalkApp;
+import org.atalk.ohos.R;
+import org.atalk.ohos.aTalkApp;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -52,7 +52,7 @@ public class CallHistoryContactSource implements ContactSourceService
      */
     public String getDisplayName()
     {
-        return aTalkApp.getResString(R.string.service_gui_CALL_HISTORY_GROUP_NAME);
+        return aTalkApp.getResString(R.string.call_history_name);
     }
 
     /**

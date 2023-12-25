@@ -7,7 +7,6 @@ package net.java.sip.communicator.plugin.provisioning;
 
 import net.java.sip.communicator.service.credentialsstorage.CredentialsStorageService;
 import net.java.sip.communicator.service.gui.ConfigurationForm;
-import net.java.sip.communicator.service.gui.LazyConfigurationForm;
 import net.java.sip.communicator.service.gui.UIService;
 import net.java.sip.communicator.service.netaddr.NetworkAddressManagerService;
 import net.java.sip.communicator.service.provdisc.ProvisioningDiscoveryService;

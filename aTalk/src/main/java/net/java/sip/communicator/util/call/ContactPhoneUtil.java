@@ -17,8 +17,8 @@ import net.java.sip.communicator.service.protocol.ServerStoredDetails.PhoneNumbe
 import net.java.sip.communicator.service.protocol.ServerStoredDetails.VideoDetail;
 import net.java.sip.communicator.service.protocol.ServerStoredDetails.WorkPhoneDetail;
 
-import org.atalk.hmos.R;
-import org.atalk.hmos.aTalkApp;
+import org.atalk.ohos.R;
+import org.atalk.ohos.aTalkApp;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -112,16 +112,16 @@ public class ContactPhoneUtil
     protected static String getLocalizedPhoneNumber(GenericDetail d)
     {
         if (d instanceof WorkPhoneDetail) {
-            return aTalkApp.getResString(R.string.service_gui_WORK_PHONE);
+            return aTalkApp.getResString(R.string.work);
         }
         else if (d instanceof MobilePhoneDetail) {
-            return aTalkApp.getResString(R.string.service_gui_MOBILE_PHONE);
+            return aTalkApp.getResString(R.string.mobile);
         }
         else if (d instanceof VideoDetail) {
-            return aTalkApp.getResString(R.string.service_gui_VIDEO_PHONE);
+            return aTalkApp.getResString(R.string.video);
         }
         else {
-            return aTalkApp.getResString(R.string.service_gui_HOME);
+            return aTalkApp.getResString(R.string.home);
         }
     }
 }

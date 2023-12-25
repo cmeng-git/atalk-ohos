@@ -12,7 +12,7 @@ import android.media.MediaCodecInfo;
 import android.media.MediaFormat;
 import android.view.Surface;
 
-import org.atalk.hmos.aTalkApp;
+import org.atalk.ohos.aTalkApp;
 import org.atalk.impl.neomedia.MediaServiceImpl;
 import org.atalk.impl.neomedia.VideoMediaStreamImpl;
 import org.atalk.impl.neomedia.format.ParameterizedVideoFormat;

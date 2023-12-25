@@ -18,8 +18,8 @@ package org.atalk.service.osgi;
 
 import androidx.appcompat.app.ActionBar;
 
-import org.atalk.hmos.aTalkApp;
-import org.atalk.hmos.gui.actionbar.ActionBarUtil;
+import org.atalk.ohos.aTalkApp;
+import org.atalk.ohos.gui.actionbar.ActionBarUtil;
 
 /**
  * Copy of <code>OSGiActivity</code> that extends <code>PreferenceActivity</code>.

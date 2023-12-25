@@ -13,8 +13,8 @@ import android.content.res.AssetManager;
 import android.os.IBinder;
 import android.text.TextUtils;
 
-import org.atalk.hmos.R;
-import org.atalk.hmos.aTalkApp;
+import org.atalk.ohos.R;
+import org.atalk.ohos.aTalkApp;
 import org.atalk.impl.osgi.framework.AsyncExecutor;
 import org.atalk.impl.osgi.framework.launch.FrameworkFactoryImpl;
 import org.atalk.service.configuration.ConfigurationService;
@@ -172,7 +172,7 @@ public class OSGiServiceImpl
                 ApplicationInfo info = service.getApplicationInfo();
                 name = info.name;
                 if (TextUtils.isEmpty(name))
-                    name = aTalkApp.getResString(R.string.APPLICATION_NAME);
+                    name = aTalkApp.getResString(R.string.application_name);
             }
             System.setProperty(ConfigurationService.PNAME_SC_HOME_DIR_NAME, name);
         }

@@ -127,7 +127,7 @@ public class VP9Encoder extends AbstractCodec2
     {
         Timber.d("Closing encoder");
         if (vpctx != 0) {
-            // /data/app/org.atalk.hmos-GeVNob40TxcTyYuV2rXATA==/lib/arm/libjnvpx.so (vp9_remove_compressor+224)
+            // /data/app/org.atalk.ohos-GeVNob40TxcTyYuV2rXATA==/lib/arm/libjnvpx.so (vp9_remove_compressor+224)
             VPX.codec_destroy(vpctx);
             VPX.free(vpctx);
             vpctx = 0;
@@ -379,8 +379,8 @@ public class VP9Encoder extends AbstractCodec2
         flags |= VPX.EFLAG_FORCE_KF;
 
         // vpx_jni: [0705/123845.503533:ERROR:scoped_ptrace_attach.cc(27)] ptrace: Operation not permitted (1)
-        // org.atalk.hmos A/libc: Fatal signal 11 (SIGSEGV), code 1 (SEGV_MAPERR), fault addr 0x2 in tid 5868 (Loop thread: ne), pid 2084 (g.atalk.android)
-        // org.atalk.hmos A/libc: crash_dump helper failed to exec
+        // org.atalk.ohos A/libc: Fatal signal 11 (SIGSEGV), code 1 (SEGV_MAPERR), fault addr 0x2 in tid 5868 (Loop thread: ne), pid 2084 (g.atalk.android)
+        // org.atalk.ohos A/libc: crash_dump helper failed to exec
         // if (vpctx != 0) {
         //     VPX.codec_destroy(vpctx);
         //

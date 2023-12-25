@@ -12,7 +12,7 @@ import android.text.Html;
 import android.view.View;
 import android.widget.TextView;
 
-import org.atalk.hmos.R;
+import org.atalk.ohos.R;
 import org.atalk.service.osgi.OSGiActivity;
 
 import timber.log.Timber;

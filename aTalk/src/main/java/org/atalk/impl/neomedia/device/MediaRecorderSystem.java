@@ -31,8 +31,8 @@ import androidx.core.content.ContextCompat;
 
 import net.java.sip.communicator.util.UtilActivator;
 
-import org.atalk.hmos.R;
-import org.atalk.hmos.aTalkApp;
+import org.atalk.ohos.R;
+import org.atalk.ohos.aTalkApp;
 import org.atalk.impl.neomedia.device.util.AndroidCamera;
 import org.atalk.impl.neomedia.device.util.CameraUtils;
 import org.atalk.impl.neomedia.format.ParameterizedVideoFormat;
@@ -183,8 +183,8 @@ public class MediaRecorderSystem extends DeviceSystem
 
                 // Create display name
                 String name = (facing == CameraCharacteristics.LENS_FACING_FRONT)
-                        ? aTalkApp.getResString(R.string.service_gui_settings_CAMERA_FRONT)
-                        : aTalkApp.getResString(R.string.service_gui_settings_CAMERA_BACK);
+                        ? aTalkApp.getResString(R.string.settings_camera_front)
+                        : aTalkApp.getResString(R.string.settings_camera_back);
                 name += " (MediaRecoder#" + cameraId + ")";
 
                 // XXX Prefer the front-facing camera over the back-facing one.

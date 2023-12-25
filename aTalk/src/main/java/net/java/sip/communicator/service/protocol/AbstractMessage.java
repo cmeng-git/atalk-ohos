@@ -7,7 +7,7 @@ package net.java.sip.communicator.service.protocol;
 
 import net.java.sip.communicator.service.filehistory.FileRecord;
 
-import org.atalk.hmos.gui.chat.ChatMessage;
+import org.atalk.ohos.gui.chat.ChatMessage;
 
 import java.util.Objects;
 

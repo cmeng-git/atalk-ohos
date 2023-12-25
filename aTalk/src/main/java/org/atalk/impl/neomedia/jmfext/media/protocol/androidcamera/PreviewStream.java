@@ -28,9 +28,9 @@ import android.view.SurfaceHolder;
 
 import androidx.annotation.NonNull;
 
-import org.atalk.hmos.gui.call.VideoCallActivity;
-import org.atalk.hmos.gui.call.VideoHandlerFragment;
-import org.atalk.hmos.plugin.timberlog.TimberLog;
+import org.atalk.ohos.gui.call.VideoCallActivity;
+import org.atalk.ohos.gui.call.VideoHandlerFragment;
+import org.atalk.ohos.plugin.timberlog.TimberLog;
 import org.atalk.impl.neomedia.codec.AbstractCodec2;
 import org.atalk.impl.neomedia.device.util.PreviewSurfaceProvider;
 
