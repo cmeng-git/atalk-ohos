@@ -113,7 +113,7 @@ import org.atalk.ohos.gui.util.HtmlImageGetter;
 import org.atalk.ohos.gui.util.XhtmlImageParser;
 import org.atalk.ohos.gui.util.event.EventListener;
 import org.atalk.ohos.plugin.geolocation.SvpApiImpl;
-import org.atalk.ohos.plugin.timberlog.TimberLog;
+import org.atalk.impl.timberlog.TimberLog;
 import org.atalk.persistance.FileBackend;
 import org.atalk.service.osgi.OSGiFragment;
 import org.jivesoftware.smack.packet.Stanza;

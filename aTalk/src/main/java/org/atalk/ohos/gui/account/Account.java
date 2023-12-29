@@ -31,7 +31,7 @@ import org.atalk.ohos.gui.util.AccountUtil;
 import org.atalk.ohos.gui.util.AndroidImageUtil;
 import org.atalk.ohos.gui.util.event.EventListener;
 import org.atalk.ohos.gui.util.event.EventListenerList;
-import org.atalk.ohos.plugin.timberlog.TimberLog;
+import org.atalk.impl.timberlog.TimberLog;
 import org.atalk.service.osgi.OSGiActivity;
 import org.atalk.service.resources.ResourceManagementService;
 import org.jxmpp.jid.Jid;

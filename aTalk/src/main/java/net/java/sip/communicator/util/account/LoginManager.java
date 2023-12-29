@@ -20,7 +20,7 @@ import net.java.sip.communicator.util.UtilActivator;
 import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.dialogs.DialogActivity;
-import org.atalk.ohos.plugin.timberlog.TimberLog;
+import org.atalk.impl.timberlog.TimberLog;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.ServiceEvent;
 import org.osgi.framework.ServiceListener;

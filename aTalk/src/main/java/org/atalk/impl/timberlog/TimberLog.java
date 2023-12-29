@@ -1,4 +1,4 @@
-package org.atalk.ohos.plugin.timberlog;
+package org.atalk.impl.timberlog;
 
 public class TimberLog
 {

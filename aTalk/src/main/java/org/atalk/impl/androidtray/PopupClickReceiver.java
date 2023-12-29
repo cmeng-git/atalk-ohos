@@ -10,6 +10,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 
+import androidx.core.content.ContextCompat;
+
 import org.atalk.ohos.aTalkApp;
 
 import timber.log.Timber;
@@ -82,8 +84,8 @@ public class PopupClickReceiver extends BroadcastReceiver
         filter.addAction(ACTION_SNOOZE);
         filter.addAction(ACTION_CALL_ANSWER);
         filter.addAction(ACTION_CALL_DISMISS);
-
-        aTalkApp.getGlobalContext().registerReceiver(this, filter);
+        ContextCompat.registerReceiver(aTalkApp.getGlobalContext(), this,
+                filter, ContextCompat.RECEIVER_NOT_EXPORTED);
     }
 
     /**

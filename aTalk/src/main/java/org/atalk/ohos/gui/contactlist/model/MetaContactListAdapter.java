@@ -28,7 +28,7 @@ import org.atalk.ohos.gui.AndroidGUIActivator;
 import org.atalk.ohos.gui.chat.ChatSessionManager;
 import org.atalk.ohos.gui.contactlist.ContactListFragment;
 import org.atalk.ohos.gui.contactlist.PresenceFilter;
-import org.atalk.ohos.plugin.timberlog.TimberLog;
+import org.atalk.impl.timberlog.TimberLog;
 
 import java.util.Iterator;
 import java.util.LinkedList;

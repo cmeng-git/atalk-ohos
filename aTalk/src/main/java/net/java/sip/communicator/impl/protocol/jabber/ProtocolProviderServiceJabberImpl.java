@@ -79,7 +79,7 @@ import org.atalk.ohos.gui.call.JingleMessageSessionImpl;
 import org.atalk.ohos.gui.dialogs.DialogActivity;
 import org.atalk.ohos.gui.login.LoginSynchronizationPoint;
 import org.atalk.ohos.gui.util.LocaleHelper;
-import org.atalk.ohos.plugin.timberlog.TimberLog;
+import org.atalk.impl.timberlog.TimberLog;
 import org.atalk.service.configuration.ConfigurationService;
 import org.atalk.service.neomedia.SrtpControlType;
 import org.atalk.util.OSUtils;

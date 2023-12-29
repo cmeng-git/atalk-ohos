@@ -42,7 +42,7 @@ import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.AndroidGUIActivator;
 import org.atalk.ohos.gui.chat.ChatSessionManager;
 import org.atalk.ohos.gui.dialogs.DialogActivity;
-import org.atalk.ohos.plugin.timberlog.TimberLog;
+import org.atalk.impl.timberlog.TimberLog;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
 import org.jxmpp.jid.EntityBareJid;

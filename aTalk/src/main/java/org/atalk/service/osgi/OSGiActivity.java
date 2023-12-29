@@ -27,6 +27,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NavUtils;
+import androidx.core.content.ContextCompat;
 
 import org.atalk.ohos.BaseActivity;
 import org.atalk.ohos.R;
@@ -111,7 +112,8 @@ public class OSGiActivity extends BaseActivity {
                 this.serviceConnection = null;
         }
         // Registers exit action listener
-        this.registerReceiver(exitListener, new IntentFilter(aTalkApp.ACTION_EXIT));
+        ContextCompat.registerReceiver(this, exitListener,
+                new IntentFilter(aTalkApp.ACTION_EXIT), ContextCompat.RECEIVER_NOT_EXPORTED);
     }
 
     protected void onNewIntent(Intent intent) {

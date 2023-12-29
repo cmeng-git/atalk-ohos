@@ -27,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -424,7 +425,8 @@ public class VideoCallActivity extends OSGiActivity implements CallPeerRenderer,
         if (mCall.getCallState() != CallState.CALL_ENDED) {
             mBackToChat = true;
             callNotificationControl = new CallControl();
-            aTalkApp.getGlobalContext().registerReceiver(callNotificationControl, new IntentFilter("org.atalk.call.control"));
+            ContextCompat.registerReceiver(aTalkApp.getGlobalContext(), callNotificationControl,
+                    new IntentFilter("org.atalk.call.control"), ContextCompat.RECEIVER_NOT_EXPORTED);
             leaveNotification();
             Timber.d("callNotificationControl registered: %s: %s", mCallIdentifier, callNotificationControl);
         }

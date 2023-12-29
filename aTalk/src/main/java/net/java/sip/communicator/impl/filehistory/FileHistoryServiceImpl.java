@@ -43,7 +43,7 @@ import org.atalk.ohos.gui.chat.ChatMessage;
 import org.atalk.ohos.gui.chat.ChatSession;
 import org.atalk.ohos.gui.chat.filetransfer.FileReceiveConversation;
 import org.atalk.ohos.gui.chat.filetransfer.FileSendConversation;
-import org.atalk.ohos.plugin.timberlog.TimberLog;
+import org.atalk.impl.timberlog.TimberLog;
 import org.atalk.persistance.DatabaseBackend;
 import org.jxmpp.util.XmppStringUtils;
 import org.osgi.framework.BundleContext;

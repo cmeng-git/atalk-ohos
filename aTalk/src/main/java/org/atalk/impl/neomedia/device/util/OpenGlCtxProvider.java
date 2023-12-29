@@ -16,7 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.atalk.ohos.aTalkApp;
-import org.atalk.ohos.plugin.timberlog.TimberLog;
+import org.atalk.impl.timberlog.TimberLog;
 
 import timber.log.Timber;
 

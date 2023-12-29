@@ -60,7 +60,7 @@ import org.atalk.ohos.gui.chat.conference.CaptchaDialog;
 import org.atalk.ohos.gui.chat.conference.ConferenceChatManager;
 import org.atalk.ohos.gui.dialogs.DialogActivity;
 import org.atalk.ohos.gui.util.XhtmlUtil;
-import org.atalk.ohos.plugin.timberlog.TimberLog;
+import org.atalk.impl.timberlog.TimberLog;
 import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.PresenceListener;
 import org.jivesoftware.smack.SmackException;

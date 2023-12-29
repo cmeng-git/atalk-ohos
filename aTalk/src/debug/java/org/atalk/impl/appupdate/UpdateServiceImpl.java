@@ -29,6 +29,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 
+import androidx.core.content.ContextCompat;
+
 import net.java.sip.communicator.service.update.UpdateService;
 import net.java.sip.communicator.util.ServiceUtils;
 
@@ -280,8 +282,9 @@ public class UpdateServiceImpl implements UpdateService
 
         if (downloadReceiver == null) {
             downloadReceiver = new DownloadReceiver();
-            aTalkApp.getGlobalContext().registerReceiver(downloadReceiver,
-                    new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+            ContextCompat.registerReceiver(aTalkApp.getGlobalContext(), downloadReceiver,
+                    new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE), ContextCompat.RECEIVER_NOT_EXPORTED);
+
         }
 
         DownloadManager.Request request = new DownloadManager.Request(uri);

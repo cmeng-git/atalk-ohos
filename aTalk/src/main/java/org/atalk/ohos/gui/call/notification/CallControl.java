@@ -14,7 +14,7 @@ import net.java.sip.communicator.service.protocol.Call;
 
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.call.CallManager;
-import org.atalk.ohos.plugin.timberlog.TimberLog;
+import org.atalk.impl.timberlog.TimberLog;
 
 import timber.log.Timber;
 

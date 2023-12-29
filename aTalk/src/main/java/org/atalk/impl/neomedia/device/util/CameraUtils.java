@@ -215,7 +215,7 @@ public class CameraUtils
                         sFormats.add(ImageFormat.RAW_SENSOR);
                         break;
                     case "PRIVATE":
-                        sFormats.add(ImageFormat.PRIVATE); //API-23
+                        sFormats.add(ImageFormat.PRIVATE); // API-23
                         break;
                     case "YUV_420_888":
                         sFormats.add(ImageFormat.YUV_420_888);

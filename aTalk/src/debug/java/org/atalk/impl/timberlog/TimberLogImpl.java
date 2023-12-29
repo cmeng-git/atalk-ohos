@@ -1,4 +1,4 @@
-package org.atalk.ohos.plugin.timberlog;
+package org.atalk.impl.timberlog;
 import androidx.annotation.NonNull;
 
 import java.util.Locale;

@@ -6,7 +6,7 @@
 package org.atalk.impl.neomedia.device;
 
 import org.atalk.ohos.aTalkApp;
-import org.atalk.ohos.plugin.timberlog.TimberLog;
+import org.atalk.impl.timberlog.TimberLog;
 import org.atalk.impl.neomedia.MediaStreamImpl;
 import org.atalk.impl.neomedia.ProcessorUtility;
 import org.atalk.impl.neomedia.control.AbstractControls;

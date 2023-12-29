@@ -37,7 +37,7 @@ import net.java.sip.communicator.service.protocol.event.ProviderPresenceStatusLi
 
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.dialogs.DialogActivity;
-import org.atalk.ohos.plugin.timberlog.TimberLog;
+import org.atalk.impl.timberlog.TimberLog;
 import org.jxmpp.stringprep.XmppStringprepException;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceEvent;

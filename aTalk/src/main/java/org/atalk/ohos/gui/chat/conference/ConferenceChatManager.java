@@ -67,7 +67,7 @@ import org.atalk.ohos.gui.chatroomslist.AdHocChatRoomList;
 import org.atalk.ohos.gui.chatroomslist.AdHocChatRoomListChangeEvent;
 import org.atalk.ohos.gui.chatroomslist.AdHocChatRoomListChangeListener;
 import org.atalk.ohos.gui.dialogs.DialogActivity;
-import org.atalk.ohos.plugin.timberlog.TimberLog;
+import org.atalk.impl.timberlog.TimberLog;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.ServiceEvent;
 import org.osgi.framework.ServiceListener;

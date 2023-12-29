@@ -9,7 +9,7 @@ import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.view.View;
 
-import org.atalk.ohos.plugin.timberlog.TimberLog;
+import org.atalk.impl.timberlog.TimberLog;
 import org.atalk.service.neomedia.ViewAccessor;
 
 import java.awt.Component;

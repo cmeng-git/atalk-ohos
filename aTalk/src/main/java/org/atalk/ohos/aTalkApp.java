@@ -54,7 +54,7 @@ import org.atalk.ohos.gui.dialogs.DialogActivity;
 import org.atalk.ohos.gui.util.DrawableCache;
 import org.atalk.ohos.gui.util.LocaleHelper;
 import org.atalk.ohos.plugin.permissions.PermissionsActivity;
-import org.atalk.ohos.plugin.timberlog.TimberLogImpl;
+import org.atalk.impl.timberlog.TimberLogImpl;
 import org.atalk.impl.androidnotification.NotificationHelper;
 import org.atalk.impl.androidtray.NotificationPopupHandler;
 import org.atalk.persistance.DatabaseBackend;

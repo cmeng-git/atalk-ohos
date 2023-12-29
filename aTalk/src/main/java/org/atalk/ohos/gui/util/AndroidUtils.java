@@ -22,7 +22,7 @@ import androidx.core.app.NotificationCompat;
 import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.AndroidGUIActivator;
-import org.atalk.ohos.plugin.timberlog.TimberLog;
+import org.atalk.impl.timberlog.TimberLog;
 import org.atalk.impl.androidnotification.AndroidNotifications;
 import org.atalk.service.osgi.OSGiService;
 
