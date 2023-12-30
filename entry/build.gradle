@@ -75,20 +75,19 @@ configurations.all {
 
 android {
     compileOptions {
-        // Has problem with this Java version
-        // sourceCompatibility JavaVersion.VERSION_11
-        // targetCompatibility JavaVersion.VERSION_11
-
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    namespace 'org.atalk.ohos'
     compileSdk rootProject.compileSdk
-    // buildToolsVersion rootProject.buildTools
 
     defaultConfig {
+        versionCode 2020
+        versionName "00.02.020"
+
         applicationId "org.atalk.ohos"
-        versionCode 2010
-        versionName "00.02.010"
+        project.archivesBaseName = "aTalk"
 
         minSdkVersion rootProject.minSdk
         targetSdkVersion rootProject.compileSdk

@@ -1,9 +1,15 @@
-Project aTalk-Android Release Notes
+Project aTalk-ohos Release Notes
+=========================================================================
+Version:        00.02.020 (0002020)
+Release Date:   12/30/2023
+Author:         cmeng
+- Move directory 'aTalk' to 'entry', preparation for ohos porting
+
 =========================================================================
 Version:        00.02.010 (0002010)
 Release Date:   12/29/2023
 Author:         cmeng
-- Update aTalk-ohos for android API-34 support (needs master jarjar-gradle)
+- Update atalk-ohos for android API-34 support (needs master jarjar-gradle)
 - Use jarjar-gradle from github master i.e. '9a7eca7'(1.1.1); require gradle-8.2-bin.zip and precompiled smack jars
   * Gradle-8.x-bin.zip build without problem, but does not generate the smack jar files;
     Currently use this to build; and with previous generated smack jars;

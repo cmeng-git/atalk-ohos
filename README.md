@@ -203,14 +203,14 @@ Other contributors:
 
 ## aTalk apk build for android
 * Following development environment setups are used to build aTalk.apk<br/>
-  a. Android Studio Dolphin | 2021.3.1<br/>
+  a. Android Studio Giraffe | 2022.3.1<br/>
   b. Gradle version as specified in ./gradle/gradle-wrapper.properties<br/>
   c. Ubuntu 22.04 with proper environment setup for development<br>
   Note: all shell scripts in aTalk are written to run on linux OS only e.g. Ubuntu
 * aTalk uses native jni libraries, required to be built manually or downloaded prior to android NDK build.<br/>
   The static jni libraries must be built prior to android studio apk build process.
 * You must run the gradle task 'initJniLibs' to build all the jni libraries used in aTalk.<br/>
-  See aTalk/jni/static_library_build directory readme files for more information<br/>
+  See entry/jni/static_library_build directory readme files for more information<br/>
   on linux environment setup, and the execution of jni libraries build scripts.
 * You must run the gradle task 'getJniLibs' to fetch the jni libraries prior to android ndk build process.<br/>
   These libraries sources include: opus, speex and ogg

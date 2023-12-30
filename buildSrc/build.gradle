@@ -86,7 +86,7 @@ jarJarDeps.dependsOn(
             from("org.igniterealtime.smack:smack-experimental:$smackVersion") {
                 transitive = false
             }
-            destinationDir new File("${projectDir}/../aTalk/third_party/m2/org/igniterealtime/smack/smack-experimental-jarjar/${smackVersion}")
+            destinationDir new File("${projectDir}/../entry/third_party/m2/org/igniterealtime/smack/smack-experimental-jarjar/${smackVersion}")
             destinationName "smack-experimental-jarjar-${smackVersion}.jar"
 
             // Add support for media file sharing
@@ -99,7 +99,7 @@ jarJarDeps.dependsOn(
             from("org.igniterealtime.smack:smack-extensions:$smackVersion") {
                 transitive = false
             }
-            destinationDir new File("${projectDir}/../aTalk/third_party/m2/org/igniterealtime/smack/smack-extensions-jarjar/${smackVersion}")
+            destinationDir new File("${projectDir}/../entry/third_party/m2/org/igniterealtime/smack/smack-extensions-jarjar/${smackVersion}")
             destinationName "smack-extensions-jarjar-${smackVersion}.jar"
 
             // Do not send <close/> on an already closed InBandBytestream session
@@ -140,7 +140,7 @@ jarJarDeps.dependsOn(
             from("org.igniterealtime.smack:smack-omemo:$smackVersion") {
                 transitive = false
             }
-            destinationDir new File("${projectDir}/../aTalk/third_party/m2/org/igniterealtime/smack/smack-omemo-jarjar/${smackVersion}")
+            destinationDir new File("${projectDir}/../entry/third_party/m2/org/igniterealtime/smack/smack-omemo-jarjar/${smackVersion}")
             destinationName "smack-omemo-jarjar-${smackVersion}.jar"
 
             classDelete 'org.jivesoftware.smackx.omemo.OmemoManager**'

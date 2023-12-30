@@ -26,7 +26,7 @@ You should have two projects imported i.e. 'zrtp4j.git' and 'zrtp4j-light'
 * With configuration prompt enter 'compile' in 'Goals' entry => RUN
 * Repeat the above two steps but with 'package' in 'Goals' entry => RUN
 * Right-click on the project and perform 'refresh' to see the generated files
-* Upon build completed: copy './tartget/zrtp4j-light-4.1.0-jitsi-1-SNAPSHOT.jar' into '${projectDir}/aTalk/lib/bundles' 
+* Upon build completed: copy './tartget/zrtp4j-light-4.1.0-jitsi-1-SNAPSHOT.jar' into '${projectDir}/entry/lib/bundles' 
 
 #### b. fmj-1.0-SNAPSHOT.jar
 Manual build from source: <br/>
@@ -45,7 +45,7 @@ Manual build from source: <br/>
 * With configuration prompt enter 'compile' in 'Goals' entry => RUN
 * Repeat the above two steps but with 'package' in 'Goals' entry => RUN
 * Right-click on the project and perform 'refresh' to see the generated files
-* Upon build completed: copy './tartget/fmj-1.0-SNAPSHOT.jar' into '${projectDir}/aTalk/lib/bundles' 
+* Upon build completed: copy './tartget/fmj-1.0-SNAPSHOT.jar' into '${projectDir}/entry/lib/bundles' 
 
 #### c. ice4j-2.0.0-SNAPSHOT.jar
 Auto build by build.gradle with JitPack from online source repository

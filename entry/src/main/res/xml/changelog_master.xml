@@ -6,6 +6,10 @@
      They are automatically updated with "ant bump-version".
 -->
 <changelog>
+    <release version="00.02.020 (12/30/2023)" versioncode="0002020">
+        <change>Move directory 'aTalk' to 'entry', preparation for ohos porting</change>
+    </release>
+
     <release version="00.02.010 (12/29/2023)" versioncode="0002010">
         <change>Update aTalk-ohos for android API-34 support; needs jarjar-gradle (master)</change>
         <change>Use jarjar-gradle from github master i.e. '9a7eca7'(1.1.1); require gradle-8.2-bin.zip and precompiled smack jars</change>

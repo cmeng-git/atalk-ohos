@@ -1,5 +1,5 @@
 --- libvpx-1.10.0/vpx/vpx_encoder.h	2021-03-19 03:59:46.000000000
-+++ atalk-ohos/aTalk/jni/static_library_built/libvpx/libvpx/vpx/vpx_encoder.h	2021-07-03 09:46:07.000000000
++++ atalk-ohos/entry/jni/static_library_built/libvpx/libvpx/vpx/vpx_encoder.h	2021-07-03 09:46:07.000000000
 @@ -55,13 +55,13 @@
   * If this file is altered in any way that changes the ABI, this value
   * must be bumped.  Examples include, but are not limited to, changing
