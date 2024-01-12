@@ -6,6 +6,12 @@
      They are automatically updated with "ant bump-version".
 -->
 <changelog>
+    <release version="00.02.030 (12/30/2023)" versioncode="0002030">
+        <change>Revert gradle-wrapper.properties #distributionUrl to use gradle-7.6-bin.zip; gradle-8.x does not generate the required smack jarjar files at all</change>
+        <change>Use implementation jarjar.repackage("filename.jar") to ensure destinationName is set correctly</change>
+        <change>Bug fixes and enhancements</change>
+    </release>
+
     <release version="00.02.020 (12/30/2023)" versioncode="0002020">
         <change>Move directory 'aTalk' to 'entry', preparation for ohos porting</change>
     </release>

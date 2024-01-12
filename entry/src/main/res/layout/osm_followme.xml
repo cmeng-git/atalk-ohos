@@ -31,8 +31,8 @@
         android:background="#00ffffff"
         android:contentDescription="@string/btn_follow_me"
         android:cropToPadding="true"
-        android:layout_below="@+id/ic_center_map"
-        android:layout_alignStart="@+id/ic_center_map"
+        android:layout_below="@id/ic_center_map"
+        android:layout_alignStart="@id/ic_center_map"
         android:layout_marginTop="10dp" />
 
 </RelativeLayout>
