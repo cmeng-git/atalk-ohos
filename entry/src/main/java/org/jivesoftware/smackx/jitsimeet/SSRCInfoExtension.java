@@ -6,6 +6,7 @@
 package org.jivesoftware.smackx.jitsimeet;
 
 import org.jivesoftware.smackx.AbstractExtensionElement;
+
 import org.jxmpp.jid.Jid;
 import org.jxmpp.jid.impl.JidCreate;
 import org.jxmpp.stringprep.XmppStringprepException;

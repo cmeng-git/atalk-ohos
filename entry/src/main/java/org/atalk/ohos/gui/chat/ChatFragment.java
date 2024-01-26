@@ -612,6 +612,8 @@ public class ChatFragment extends OSGiFragment implements ChatSessionManager.Cur
         MenuItem mEdit;
         MenuItem mQuote;
         MenuItem mForward;
+        MenuItem mDelete;
+        MenuItem mShare;
         MenuItem mCopy;
         MenuItem mSelectAll;
 
@@ -657,20 +659,22 @@ public class ChatFragment extends OSGiFragment implements ChatSessionManager.Cur
                 }
 
                 mQuote.setVisible(true);
-                if (mEdit.isVisible())
+                if (mEdit.isVisible()) {
+                    mEdit.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
                     mForward.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-                else
+                } else {
                     mForward.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
-                mCopy.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-                mSelectAll.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+                }
+                mQuote.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                mDelete.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                mShare.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
             }
             else {
                 mEdit.setVisible(false);
                 mQuote.setVisible(false);
                 mForward.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-                mCopy.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-                mSelectAll.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                mDelete.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                mShare.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
             }
             mSelectAll.setVisible(chatListAdapter.getCount() > 1);
 
@@ -866,6 +870,8 @@ public class ChatFragment extends OSGiFragment implements ChatSessionManager.Cur
             mEdit = menu.findItem(R.id.chat_message_edit);
             mQuote = menu.findItem(R.id.chat_message_quote);
             mForward = menu.findItem(R.id.chat_message_forward);
+            mDelete = menu.findItem(R.id.chat_message_del);
+            mShare = menu.findItem(R.id.chat_message_share);
             mCopy = menu.findItem(R.id.chat_message_copy);
             mSelectAll = menu.findItem(R.id.select_all);
 

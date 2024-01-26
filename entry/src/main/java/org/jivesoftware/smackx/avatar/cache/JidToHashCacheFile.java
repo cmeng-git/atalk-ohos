@@ -17,20 +17,13 @@
 
 package org.jivesoftware.smackx.avatar.cache;
 
-import static android.R.attr.id;
-
-import org.jivesoftware.smack.util.stringencoder.Base32;
-import org.jivesoftware.smack.util.stringencoder.StringEncoder;
+import org.jivesoftware.smack.util.stringencoder.*;
 import org.jxmpp.jid.BareJid;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.io.*;
+import java.util.logging.*;
+
+import static android.R.attr.id;
 
 /**
  * An implementation of an JidToHashCache which store the data of the filesystem.

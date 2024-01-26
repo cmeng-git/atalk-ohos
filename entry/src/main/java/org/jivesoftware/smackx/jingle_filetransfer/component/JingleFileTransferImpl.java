@@ -16,6 +16,12 @@
  */
 package org.jivesoftware.smackx.jingle_filetransfer.component;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
@@ -28,12 +34,6 @@ import org.jivesoftware.smackx.jingle.element.JingleReason;
 import org.jivesoftware.smackx.jingle_filetransfer.controller.JingleFileTransferController;
 import org.jivesoftware.smackx.jingle_filetransfer.element.JingleFileTransfer;
 import org.jivesoftware.smackx.jingle_filetransfer.listener.ProgressListener;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * An abstract class implementation for JingleFileTransfer.

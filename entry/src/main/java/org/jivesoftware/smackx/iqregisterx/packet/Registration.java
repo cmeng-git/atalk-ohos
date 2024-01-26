@@ -17,9 +17,7 @@
 
 package org.jivesoftware.smackx.iqregisterx.packet;
 
-import org.jivesoftware.smack.packet.ExtensionElement;
-import org.jivesoftware.smack.packet.IQ;
-import org.jivesoftware.smack.packet.XmlEnvironment;
+import org.jivesoftware.smack.packet.*;
 import org.jivesoftware.smackx.bob.element.BoBDataExtension;
 import org.jivesoftware.smackx.xdata.packet.DataForm;
 

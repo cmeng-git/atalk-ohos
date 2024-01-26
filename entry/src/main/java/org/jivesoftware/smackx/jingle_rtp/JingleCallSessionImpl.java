@@ -16,6 +16,10 @@
  */
 package org.jivesoftware.smackx.jingle_rtp;
 
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
@@ -28,11 +32,8 @@ import org.jivesoftware.smackx.jingle.Role;
 import org.jivesoftware.smackx.jingle.element.Jingle;
 import org.jivesoftware.smackx.jingle.element.JingleContent;
 import org.jivesoftware.smackx.jingle.element.JingleReason;
-import org.jxmpp.jid.FullJid;
 
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.jxmpp.jid.FullJid;
 
 /**
  * Class that represents a Jingle session.

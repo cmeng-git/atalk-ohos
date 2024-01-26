@@ -6,13 +6,9 @@
 package org.jivesoftware.smackx.colibri;
 
 import org.atalk.service.neomedia.MediaDirection;
-import org.jivesoftware.smack.packet.ExtensionElement;
-import org.jivesoftware.smack.packet.IQ;
-import org.jivesoftware.smack.packet.XmlEnvironment;
+import org.jivesoftware.smack.packet.*;
 import org.jivesoftware.smack.parsing.SmackParsingException;
-import org.jivesoftware.smack.provider.ExtensionElementProvider;
-import org.jivesoftware.smack.provider.IQProvider;
-import org.jivesoftware.smack.provider.ProviderManager;
+import org.jivesoftware.smack.provider.*;
 import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.smack.xml.XmlPullParser;
 import org.jivesoftware.smack.xml.XmlPullParserException;
@@ -302,7 +298,7 @@ public class ColibriIQProvider extends IQProvider<ColibriConferenceIQ>
                             String direction = parser.getAttributeValue("",
                                     ColibriConferenceIQ.Channel.DIRECTION_ATTR_NAME);
                             if (StringUtils.isNotEmpty(direction)) {
-                                channel.setDirection(MediaDirection.valueOf(direction));
+                                channel.setDirection(MediaDirection.fromString(direction));
                             }
 
                             // endpoint

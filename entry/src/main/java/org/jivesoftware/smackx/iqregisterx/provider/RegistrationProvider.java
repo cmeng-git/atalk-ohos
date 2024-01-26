@@ -22,17 +22,14 @@ import org.jivesoftware.smack.packet.XmlEnvironment;
 import org.jivesoftware.smack.parsing.SmackParsingException;
 import org.jivesoftware.smack.provider.IQProvider;
 import org.jivesoftware.smack.util.PacketParserUtils;
-import org.jivesoftware.smack.xml.XmlPullParser;
-import org.jivesoftware.smack.xml.XmlPullParserException;
 import org.jivesoftware.smackx.bob.element.BoBDataExtension;
 import org.jivesoftware.smackx.iqregisterx.packet.Registration;
 import org.jivesoftware.smackx.xdata.packet.DataForm;
+import org.jivesoftware.smack.xml.XmlPullParser;
+import org.jivesoftware.smack.xml.XmlPullParserException;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * XEP-0077: In-Band Registration Implementation with fields elements and DataForm

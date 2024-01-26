@@ -17,26 +17,18 @@
 
 package org.jivesoftware.smackx.iqregisterx;
 
-import org.jivesoftware.smack.Manager;
-import org.jivesoftware.smack.SmackException.NoResponseException;
-import org.jivesoftware.smack.SmackException.NotConnectedException;
-import org.jivesoftware.smack.StanzaCollector;
-import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smack.*;
+import org.jivesoftware.smack.SmackException.*;
 import org.jivesoftware.smack.XMPPException.XMPPErrorException;
 import org.jivesoftware.smack.filter.StanzaIdFilter;
-import org.jivesoftware.smack.packet.ExtensionElement;
-import org.jivesoftware.smack.packet.IQ;
+import org.jivesoftware.smack.packet.*;
 import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.smackx.disco.ServiceDiscoveryManager;
 import org.jivesoftware.smackx.iqregisterx.packet.Registration;
 import org.jivesoftware.smackx.xdata.packet.DataForm;
 import org.jxmpp.jid.parts.Localpart;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.WeakHashMap;
+import java.util.*;
 
 /**
  * Allows creation and management of accounts on an XMPP server.

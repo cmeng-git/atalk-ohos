@@ -22,6 +22,7 @@ import org.jivesoftware.smackx.jingle.callbacks.JingleSecurityCallback;
 import org.jivesoftware.smackx.jingle.element.Jingle;
 import org.jivesoftware.smackx.jingle.element.JingleContentSecurity;
 import org.jivesoftware.smackx.jingle.element.JingleContentSecurityInfo;
+
 import org.jxmpp.jid.FullJid;
 
 /**

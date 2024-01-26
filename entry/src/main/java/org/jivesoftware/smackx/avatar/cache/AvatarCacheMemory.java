@@ -19,9 +19,7 @@ package org.jivesoftware.smackx.avatar.cache;
 
 import org.jxmpp.util.cache.LruCache;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 
 /**
  * An avatar cache which store the avatars in memory.

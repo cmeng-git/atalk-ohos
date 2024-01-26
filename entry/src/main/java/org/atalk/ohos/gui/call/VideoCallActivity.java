@@ -475,10 +475,10 @@ public class VideoCallActivity extends OSGiActivity implements CallPeerRenderer,
                 // !!! below is not working in kotlin code; merged with this activity
                 // getSupportFragmentManager().beginTransaction().replace(android.R.id.content, new CallEnded()).commit();
 
-                // auto exit 3 seconds after call ended
+                // auto exit 3 seconds after call ended successfully
                 new Handler().postDelayed(() -> {
                     finish();
-                }, 3000);
+                }, 5000);
 
             });
         }).start();

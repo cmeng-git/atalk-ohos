@@ -18,6 +18,8 @@ package org.jivesoftware.smackx.jingle_rtp.provider;
 
 import static org.jivesoftware.smack.xml.XmlPullParser.Event.END_ELEMENT;
 
+import java.io.IOException;
+
 import org.jivesoftware.smack.packet.XmlEnvironment;
 import org.jivesoftware.smack.parsing.SmackParsingException;
 import org.jivesoftware.smack.provider.ExtensionElementProvider;
@@ -26,8 +28,6 @@ import org.jivesoftware.smack.xml.XmlPullParserException;
 import org.jivesoftware.smackx.jingle.element.JingleContent;
 import org.jivesoftware.smackx.jingle_rtp.DefaultXmlElementProvider;
 import org.jivesoftware.smackx.jingle_rtp.element.Grouping;
-
-import java.io.IOException;
 
 /**
  * A Grouping provider that parses incoming stanza extensions into instances of the

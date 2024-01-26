@@ -6,8 +6,8 @@
 package org.jivesoftware.smackx.colibri;
 
 import org.atalk.util.MediaType;
-import org.jivesoftware.smackx.jingle.element.JingleContent;
 import org.jivesoftware.smackx.jingle_rtp.JingleUtils;
+import org.jivesoftware.smackx.jingle.element.JingleContent;
 
 import java.util.HashSet;
 import java.util.List;

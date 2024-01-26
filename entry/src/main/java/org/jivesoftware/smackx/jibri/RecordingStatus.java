@@ -17,8 +17,8 @@ package org.jivesoftware.smackx.jibri;
 
 import org.jivesoftware.smack.packet.ExtensionElement;
 import org.jivesoftware.smack.packet.StanzaError;
-import org.jivesoftware.smackx.AbstractExtensionElement;
 import org.jxmpp.jid.Jid;
+import org.jivesoftware.smackx.AbstractExtensionElement;
 
 import java.util.List;
 

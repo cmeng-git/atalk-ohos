@@ -14,6 +14,7 @@ import org.jivesoftware.smack.xml.XmlPullParser;
 import org.jivesoftware.smack.xml.XmlPullParserException;
 
 import java.io.IOException;
+import java.text.ParseException;
 
 /**
  * Parser for RelayExtensionElement.

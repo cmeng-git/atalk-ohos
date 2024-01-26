@@ -16,15 +16,15 @@
  */
 package org.jivesoftware.smackx.jingle.transports.jingle_s5b;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jivesoftware.smackx.jingle.adapter.JingleTransportAdapter;
 import org.jivesoftware.smackx.jingle.component.JingleTransportCandidate;
 import org.jivesoftware.smackx.jingle.element.JingleContentTransport;
 import org.jivesoftware.smackx.jingle.element.JingleContentTransportCandidate;
 import org.jivesoftware.smackx.jingle.transports.jingle_s5b.elements.JingleS5BTransport;
 import org.jivesoftware.smackx.jingle.transports.jingle_s5b.elements.JingleS5BTransportCandidate;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Adapter for Jingle SOCKS5Bytestream components.

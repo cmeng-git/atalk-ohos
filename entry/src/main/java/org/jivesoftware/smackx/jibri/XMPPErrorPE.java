@@ -15,9 +15,7 @@
  */
 package org.jivesoftware.smackx.jibri;
 
-import org.jivesoftware.smack.packet.ExtensionElement;
-import org.jivesoftware.smack.packet.StanzaError;
-import org.jivesoftware.smack.packet.XmlEnvironment;
+import org.jivesoftware.smack.packet.*;
 import org.jivesoftware.smack.util.XmlStringBuilder;
 
 import java.util.Objects;

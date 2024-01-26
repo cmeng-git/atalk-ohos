@@ -16,6 +16,13 @@
  */
 package org.jivesoftware.smackx.jingle.transports.jingle_s5b;
 
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.TimeoutException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
@@ -38,14 +45,8 @@ import org.jivesoftware.smackx.jingle.exception.FailedTransportException;
 import org.jivesoftware.smackx.jingle.transports.jingle_s5b.elements.JingleS5BTransport;
 import org.jivesoftware.smackx.jingle.transports.jingle_s5b.elements.JingleS5BTransportCandidate;
 import org.jivesoftware.smackx.jingle.transports.jingle_s5b.elements.JingleS5BTransportInfo;
-import org.jxmpp.jid.FullJid;
 
-import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.TimeoutException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.jxmpp.jid.FullJid;
 
 /**
  * Jingle SOCKS5Bytestream transport component.

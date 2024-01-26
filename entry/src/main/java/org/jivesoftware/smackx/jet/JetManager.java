@@ -16,6 +16,17 @@
  */
 package org.jivesoftware.smackx.jet;
 
+import java.io.File;
+import java.io.InputStream;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.util.HashMap;
+import java.util.WeakHashMap;
+
+import javax.crypto.NoSuchPaddingException;
+
 import org.jivesoftware.smack.Manager;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
@@ -41,18 +52,8 @@ import org.jivesoftware.smackx.jingle_filetransfer.JingleFileTransferManager;
 import org.jivesoftware.smackx.jingle_filetransfer.component.JingleFile;
 import org.jivesoftware.smackx.jingle_filetransfer.component.JingleOutgoingFileOffer;
 import org.jivesoftware.smackx.jingle_filetransfer.controller.OutgoingFileOfferController;
+
 import org.jxmpp.jid.FullJid;
-
-import java.io.File;
-import java.io.InputStream;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.util.HashMap;
-import java.util.WeakHashMap;
-
-import javax.crypto.NoSuchPaddingException;
 
 /**
  * Manager for Jingle Encrypted Transfers (XEP-0391).

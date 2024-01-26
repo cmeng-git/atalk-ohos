@@ -16,9 +16,10 @@
 package org.jivesoftware.smackx.health;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jivesoftware.smack.provider.ProviderManager;
 import org.jivesoftware.smackx.AbstractExtensionElement;
 import org.jivesoftware.smackx.DefaultExtensionElementProvider;
+
+import org.jivesoftware.smack.provider.ProviderManager;
 
 /**
  * A generic extension for a component to represent its current health.

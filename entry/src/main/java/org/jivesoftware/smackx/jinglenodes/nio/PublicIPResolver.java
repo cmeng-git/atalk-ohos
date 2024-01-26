@@ -1,8 +1,7 @@
 package org.jivesoftware.smackx.jinglenodes.nio;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
+import java.net.*;
 import java.nio.ByteBuffer;
 import java.util.Random;
 

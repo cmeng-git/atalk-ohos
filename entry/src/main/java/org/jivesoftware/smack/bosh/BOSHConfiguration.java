@@ -17,13 +17,13 @@
 
 package org.jivesoftware.smack.bosh;
 
-import org.jivesoftware.smack.ConnectionConfiguration;
-import org.jivesoftware.smack.proxy.ProxyInfo;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.jivesoftware.smack.ConnectionConfiguration;
+import org.jivesoftware.smack.proxy.ProxyInfo;
 
 /**
  * Configuration to use while establishing the connection to the XMPP server via

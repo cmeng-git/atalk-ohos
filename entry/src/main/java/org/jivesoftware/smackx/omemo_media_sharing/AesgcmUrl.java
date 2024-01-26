@@ -16,18 +16,17 @@
  */
 package org.jivesoftware.smackx.omemo_media_sharing;
 
-import org.jivesoftware.smack.util.Objects;
-import org.jivesoftware.smack.util.StringUtils;
-import org.jivesoftware.smackx.httpfileupload.element.Slot;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-
 import javax.crypto.Cipher;
 import javax.crypto.NoSuchPaddingException;
+
+import org.jivesoftware.smack.util.Objects;
+import org.jivesoftware.smack.util.StringUtils;
+import org.jivesoftware.smackx.httpfileupload.element.Slot;
 
 /**
  * This class represents a aesgcm URL as described in XEP-XXXX: OMEMO Media Sharing.

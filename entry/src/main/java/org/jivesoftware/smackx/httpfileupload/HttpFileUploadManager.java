@@ -16,27 +16,6 @@
  */
 package org.jivesoftware.smackx.httpfileupload;
 
-import org.jivesoftware.smack.AbstractXMPPConnection;
-import org.jivesoftware.smack.ConnectionListener;
-import org.jivesoftware.smack.Manager;
-import org.jivesoftware.smack.SmackException;
-import org.jivesoftware.smack.XMPPConnection;
-import org.jivesoftware.smack.XMPPConnectionRegistry;
-import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smack.XMPPException.XMPPErrorException;
-import org.jivesoftware.smack.proxy.ProxyInfo;
-import org.jivesoftware.smackx.disco.ServiceDiscoveryManager;
-import org.jivesoftware.smackx.disco.packet.DiscoverInfo;
-import org.jivesoftware.smackx.httpfileupload.UploadService.Version;
-import org.jivesoftware.smackx.httpfileupload.element.Slot;
-import org.jivesoftware.smackx.httpfileupload.element.SlotRequest;
-import org.jivesoftware.smackx.httpfileupload.element.SlotRequest_V0_2;
-import org.jivesoftware.smackx.omemo_media_sharing.AesgcmUrl;
-import org.jivesoftware.smackx.omemo_media_sharing.OmemoMediaSharingUtils;
-import org.jivesoftware.smackx.xdata.FormField;
-import org.jivesoftware.smackx.xdata.packet.DataForm;
-import org.jxmpp.jid.DomainBareJid;
-
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -62,6 +41,28 @@ import javax.crypto.NoSuchPaddingException;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
+
+import org.jivesoftware.smack.AbstractXMPPConnection;
+import org.jivesoftware.smack.ConnectionListener;
+import org.jivesoftware.smack.Manager;
+import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smack.XMPPConnectionRegistry;
+import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.XMPPException.XMPPErrorException;
+import org.jivesoftware.smack.proxy.ProxyInfo;
+import org.jivesoftware.smackx.disco.ServiceDiscoveryManager;
+import org.jivesoftware.smackx.disco.packet.DiscoverInfo;
+import org.jivesoftware.smackx.httpfileupload.UploadService.Version;
+import org.jivesoftware.smackx.httpfileupload.element.Slot;
+import org.jivesoftware.smackx.httpfileupload.element.SlotRequest;
+import org.jivesoftware.smackx.httpfileupload.element.SlotRequest_V0_2;
+import org.jivesoftware.smackx.omemo_media_sharing.AesgcmUrl;
+import org.jivesoftware.smackx.omemo_media_sharing.OmemoMediaSharingUtils;
+import org.jivesoftware.smackx.xdata.FormField;
+import org.jivesoftware.smackx.xdata.packet.DataForm;
+
+import org.jxmpp.jid.DomainBareJid;
 
 /**
  * A manager for XEP-0363: HTTP File Upload.
@@ -357,10 +358,10 @@ public final class HttpFileUploadManager extends Manager {
      * then uploaded to the server.
      * The URL that is returned has a modified scheme (aesgcm:// instead of https://) and has the IV and key attached
      * as ref part.
-     *
+     * <p>
      * Note: The URL contains the used key and IV in plain text. Keep in mind to only share this URL though a secured
      * channel (i.e. end-to-end encrypted message), as anybody who can read the URL can also decrypt the file.
-     *
+     * <p>
      * Note: This method uses a IV of length 16 instead of 12. Although not specified in the ProtoXEP, 16 byte IVs are
      * currently used by most implementations. This implementation also supports 12 byte IVs when decrypting.
      *
@@ -424,7 +425,7 @@ public final class HttpFileUploadManager extends Manager {
 
     /**
      * Request a new upload slot with optional content type from default upload service (if discovered).
-     *
+     * <p>
      * When you get slot you should upload file to PUT URL and share GET URL.
      * Note that this is a synchronous call -- Smack must wait for the server response.
      *
@@ -447,7 +448,7 @@ public final class HttpFileUploadManager extends Manager {
 
     /**
      * Request a new upload slot with optional content type from custom upload service.
-     *
+     * <p>
      * When you get slot you should upload file to PUT URL and share GET URL.
      * Note that this is a synchronous call -- Smack must wait for the server response.
      *

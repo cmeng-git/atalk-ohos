@@ -17,6 +17,7 @@
 package org.jivesoftware.smackx.httpauthorizationrequest;
 
 import org.jivesoftware.smackx.httpauthorizationrequest.element.ConfirmExtension;
+
 import org.jxmpp.jid.DomainBareJid;
 
 /**

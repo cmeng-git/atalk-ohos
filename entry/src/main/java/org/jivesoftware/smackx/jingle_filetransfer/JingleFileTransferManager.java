@@ -16,6 +16,18 @@
  */
 package org.jivesoftware.smackx.jingle_filetransfer;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.WeakHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.jivesoftware.smack.Manager;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
@@ -45,19 +57,8 @@ import org.jivesoftware.smackx.jingle_filetransfer.controller.OutgoingFileReques
 import org.jivesoftware.smackx.jingle_filetransfer.listener.IncomingFileOfferListener;
 import org.jivesoftware.smackx.jingle_filetransfer.listener.IncomingFileRequestListener;
 import org.jivesoftware.smackx.jingle_filetransfer.provider.JingleFileTransferProvider;
-import org.jxmpp.jid.FullJid;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.WeakHashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.jxmpp.jid.FullJid;
 
 /**
  * Manager for JingleFileTransfer (XEP-0234).

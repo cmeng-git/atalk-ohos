@@ -5,12 +5,11 @@
  */
 package org.jivesoftware.smackx.inputevt;
 
+import java.awt.Dimension;
+import java.awt.event.ComponentEvent;
 import org.jivesoftware.smack.packet.ExtensionElement;
 import org.jivesoftware.smack.packet.XmlEnvironment;
 import org.jivesoftware.smack.util.XmlStringBuilder;
-
-import java.awt.Dimension;
-import java.awt.event.ComponentEvent;
 
 /**
  * This class implements input event extension.

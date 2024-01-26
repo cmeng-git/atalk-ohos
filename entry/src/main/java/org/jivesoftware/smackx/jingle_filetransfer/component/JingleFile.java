@@ -16,11 +16,6 @@
  */
 package org.jivesoftware.smackx.jingle_filetransfer.component;
 
-import org.jivesoftware.smackx.hashes.HashManager;
-import org.jivesoftware.smackx.hashes.element.HashElement;
-import org.jivesoftware.smackx.jingle_filetransfer.element.JingleFileTransferChild;
-import org.jivesoftware.smackx.jingle_filetransfer.element.Range;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -28,6 +23,11 @@ import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
+
+import org.jivesoftware.smackx.hashes.HashManager;
+import org.jivesoftware.smackx.hashes.element.HashElement;
+import org.jivesoftware.smackx.jingle_filetransfer.element.JingleFileTransferChild;
+import org.jivesoftware.smackx.jingle_filetransfer.element.Range;
 
 /**
  * Represent a file sent in a file transfer.

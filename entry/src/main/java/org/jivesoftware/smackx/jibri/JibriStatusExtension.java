@@ -5,10 +5,11 @@
  */
 package org.jivesoftware.smackx.jibri;
 
-import org.jivesoftware.smack.provider.ProviderManager;
 import org.jivesoftware.smackx.AbstractExtensionElement;
 import org.jivesoftware.smackx.DefaultExtensionElementProvider;
 import org.jivesoftware.smackx.health.HealthStatusExtension;
+
+import org.jivesoftware.smack.provider.ProviderManager;
 
 import javax.xml.namespace.QName;
 

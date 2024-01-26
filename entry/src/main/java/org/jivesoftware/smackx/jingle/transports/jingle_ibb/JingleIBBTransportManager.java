@@ -16,7 +16,10 @@
  */
 package org.jivesoftware.smackx.jingle.transports.jingle_ibb;
 
+import java.util.WeakHashMap;
+
 import org.jivesoftware.smack.XMPPConnection;
+
 import org.jivesoftware.smackx.jingle.JingleSession;
 import org.jivesoftware.smackx.jingle.component.JingleContentImpl;
 import org.jivesoftware.smackx.jingle.component.JingleTransport;
@@ -26,8 +29,6 @@ import org.jivesoftware.smackx.jingle.transports.JingleTransportManager;
 import org.jivesoftware.smackx.jingle.transports.JingleTransportSession;
 import org.jivesoftware.smackx.jingle.transports.jingle_ibb.element.JingleIBBTransport;
 import org.jivesoftware.smackx.jingle.transports.jingle_ibb.provider.JingleIBBTransportProvider;
-
-import java.util.WeakHashMap;
 
 /**
  * Manager for Jingle InBandBytestream transports (XEP-0261).

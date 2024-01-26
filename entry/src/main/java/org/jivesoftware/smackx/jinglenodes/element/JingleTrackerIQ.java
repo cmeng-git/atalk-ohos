@@ -1,8 +1,8 @@
 package org.jivesoftware.smackx.jinglenodes.element;
 
 import org.jivesoftware.smack.packet.IQ;
-import org.jivesoftware.smackx.jinglenodes.TrackerEntry;
 import org.jxmpp.jid.Jid;
+import org.jivesoftware.smackx.jinglenodes.TrackerEntry;
 
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;

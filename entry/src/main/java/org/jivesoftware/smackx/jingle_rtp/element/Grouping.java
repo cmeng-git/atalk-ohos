@@ -16,12 +16,12 @@
  */
 package org.jivesoftware.smackx.jingle_rtp.element;
 
-import org.jivesoftware.smackx.jingle.element.JingleContent;
-import org.jivesoftware.smackx.jingle_rtp.AbstractXmlElement;
-
 import java.util.List;
 
 import javax.xml.namespace.QName;
+
+import org.jivesoftware.smackx.jingle.element.JingleContent;
+import org.jivesoftware.smackx.jingle_rtp.AbstractXmlElement;
 
 /**
  * Jingle group packet extension.

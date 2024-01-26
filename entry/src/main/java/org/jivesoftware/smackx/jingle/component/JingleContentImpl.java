@@ -16,6 +16,12 @@
  */
 package org.jivesoftware.smackx.jingle.component;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
@@ -38,12 +44,6 @@ import org.jivesoftware.smackx.jingle.element.JingleContentSecurity;
 import org.jivesoftware.smackx.jingle.element.JingleContentTransport;
 import org.jivesoftware.smackx.jingle.provider.JingleContentProviderManager;
 import org.jivesoftware.smackx.jingle.transports.JingleTransportManager;
-
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Internal class that holds the state of a content in a modifiable form.

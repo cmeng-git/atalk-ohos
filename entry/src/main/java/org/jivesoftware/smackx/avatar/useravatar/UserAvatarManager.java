@@ -21,10 +21,7 @@ import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
 
-import org.jivesoftware.smack.SmackException;
-import org.jivesoftware.smack.XMPPConnection;
-import org.jivesoftware.smack.XMPPConnectionRegistry;
-import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.*;
 import org.jivesoftware.smack.packet.ExtensionElement;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smackx.avatar.AvatarManager;
@@ -34,14 +31,7 @@ import org.jivesoftware.smackx.avatar.useravatar.packet.AvatarMetadata;
 import org.jivesoftware.smackx.avatar.useravatar.packet.AvatarMetadata.Info;
 import org.jivesoftware.smackx.pep.PepListener;
 import org.jivesoftware.smackx.pep.PepManager;
-import org.jivesoftware.smackx.pubsub.EventElement;
-import org.jivesoftware.smackx.pubsub.EventElementType;
-import org.jivesoftware.smackx.pubsub.Item;
-import org.jivesoftware.smackx.pubsub.ItemsExtension;
-import org.jivesoftware.smackx.pubsub.LeafNode;
-import org.jivesoftware.smackx.pubsub.PayloadItem;
-import org.jivesoftware.smackx.pubsub.PubSubException;
-import org.jivesoftware.smackx.pubsub.PubSubManager;
+import org.jivesoftware.smackx.pubsub.*;
 import org.jivesoftware.smackx.pubsub.packet.PubSubNamespace;
 import org.jxmpp.jid.EntityBareJid;
 
@@ -49,10 +39,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.WeakHashMap;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -89,7 +76,7 @@ public class UserAvatarManager extends AvatarManager
      */
     public static final String AVATAR_METADATA_NODE = AvatarMetadata.NAMESPACE;
 
-    private static final Map<XMPPConnection, UserAvatarManager> instances = new WeakHashMap<>();
+    private static Map<XMPPConnection, UserAvatarManager> instances = new WeakHashMap<>();
 
     /*
      * Listeners to be informed if there is new avatar updated.
@@ -99,7 +86,7 @@ public class UserAvatarManager extends AvatarManager
     /*
      * The PEPManager associated with tis connection.
      */
-    private final PepManager mPepManager;
+    private PepManager mPepManager;
 
     static {
         XMPPConnectionRegistry.addConnectionCreationListener(UserAvatarManager::getInstanceFor);

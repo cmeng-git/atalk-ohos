@@ -9,14 +9,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.atalk.service.neomedia.MediaDirection;
 import org.atalk.util.MediaType;
 import org.jivesoftware.smack.packet.IQ;
-import org.jivesoftware.smackx.jingle.element.JingleContent;
-import org.jivesoftware.smackx.jingle_rtp.JingleUtils;
 import org.jivesoftware.smackx.jingle_rtp.element.IceUdpTransport;
+import org.jivesoftware.smackx.jingle_rtp.JingleUtils;
 import org.jivesoftware.smackx.jingle_rtp.element.PayloadType;
 import org.jivesoftware.smackx.jingle_rtp.element.RtpDescription;
 import org.jivesoftware.smackx.jingle_rtp.element.RtpHeader;
 import org.jivesoftware.smackx.jingle_rtp.element.SdpSource;
 import org.jivesoftware.smackx.jingle_rtp.element.SdpSourceGroup;
+import org.jivesoftware.smackx.jingle.element.JingleContent;
 import org.jxmpp.jid.Jid;
 
 import java.util.List;

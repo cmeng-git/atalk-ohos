@@ -18,6 +18,7 @@ package org.jivesoftware.smackx.jingle.transports;
 
 import org.jivesoftware.smack.ConnectionListener;
 import org.jivesoftware.smack.XMPPConnection;
+
 import org.jivesoftware.smackx.jingle.JingleSession;
 import org.jivesoftware.smackx.jingle.component.JingleContentImpl;
 import org.jivesoftware.smackx.jingle.component.JingleTransport;

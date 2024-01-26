@@ -16,6 +16,9 @@
  */
 package org.jivesoftware.smackx.jingle.component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.packet.IQ;
@@ -24,9 +27,6 @@ import org.jivesoftware.smackx.jingle.callbacks.JingleTransportCallback;
 import org.jivesoftware.smackx.jingle.element.Jingle;
 import org.jivesoftware.smackx.jingle.element.JingleContentTransport;
 import org.jivesoftware.smackx.jingle.element.JingleContentTransportInfo;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Class that represents a contents transport component.

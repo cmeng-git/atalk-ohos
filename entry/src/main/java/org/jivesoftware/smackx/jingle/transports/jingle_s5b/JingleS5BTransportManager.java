@@ -16,6 +16,14 @@
  */
 package org.jivesoftware.smackx.jingle.transports.jingle_s5b;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.WeakHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
@@ -40,16 +48,9 @@ import org.jivesoftware.smackx.jingle.transports.jingle_s5b.elements.JingleS5BTr
 import org.jivesoftware.smackx.jingle.transports.jingle_s5b.elements.JingleS5BTransportCandidate;
 import org.jivesoftware.smackx.jingle.transports.jingle_s5b.elements.JingleS5BTransportInfo;
 import org.jivesoftware.smackx.jingle.transports.jingle_s5b.provider.JingleS5BTransportProvider;
+
 import org.jxmpp.jid.FullJid;
 import org.jxmpp.jid.Jid;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.WeakHashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Manager for Jingle SOCKS5 Bytestream transports (XEP-0260).

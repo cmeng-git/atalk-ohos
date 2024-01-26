@@ -17,20 +17,12 @@
 
 package org.jivesoftware.smackx.avatar.useravatar;
 
-import org.jivesoftware.smack.SmackException;
-import org.jivesoftware.smack.XMPPConnection;
-import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.*;
 import org.jivesoftware.smackx.avatar.useravatar.packet.AvatarData;
-import org.jivesoftware.smackx.pubsub.Item;
-import org.jivesoftware.smackx.pubsub.LeafNode;
-import org.jivesoftware.smackx.pubsub.PayloadItem;
-import org.jivesoftware.smackx.pubsub.PubSubException;
-import org.jivesoftware.smackx.pubsub.PubSubManager;
+import org.jivesoftware.smackx.pubsub.*;
 import org.jxmpp.jid.BareJid;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

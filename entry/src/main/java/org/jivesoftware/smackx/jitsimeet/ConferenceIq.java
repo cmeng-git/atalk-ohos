@@ -16,12 +16,10 @@
 package org.jivesoftware.smackx.jitsimeet;
 
 import org.jivesoftware.smack.packet.IQ;
-import org.jivesoftware.smackx.AbstractExtensionElement;
 import org.jxmpp.jid.EntityBareJid;
+import org.jivesoftware.smackx.AbstractExtensionElement;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * FIXME: move to Jitsi or shared lib eventually

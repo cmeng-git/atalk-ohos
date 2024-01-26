@@ -13,14 +13,13 @@
  */
 package org.jivesoftware.smackx.health;
 
+import java.io.IOException;
+
 import org.jivesoftware.smack.packet.XmlEnvironment;
 import org.jivesoftware.smack.parsing.SmackParsingException;
-import org.jivesoftware.smack.provider.IQProvider;
-import org.jivesoftware.smack.provider.ProviderManager;
+import org.jivesoftware.smack.provider.*;
 import org.jivesoftware.smack.xml.XmlPullParser;
 import org.jivesoftware.smack.xml.XmlPullParserException;
-
-import java.io.IOException;
 
 /**
  * The <code>IQProvider</code> for {@link HealthCheckIQ}.

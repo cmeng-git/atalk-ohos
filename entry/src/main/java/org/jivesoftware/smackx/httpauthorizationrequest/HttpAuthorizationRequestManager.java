@@ -16,6 +16,14 @@
  */
 package org.jivesoftware.smackx.httpauthorizationrequest;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.WeakHashMap;
+import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.jivesoftware.smack.Manager;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
@@ -34,16 +42,9 @@ import org.jivesoftware.smack.packet.StanzaBuilder;
 import org.jivesoftware.smack.packet.StanzaError;
 import org.jivesoftware.smackx.httpauthorizationrequest.element.ConfirmExtension;
 import org.jivesoftware.smackx.httpauthorizationrequest.packet.ConfirmIQ;
+
 import org.jxmpp.jid.DomainBareJid;
 import org.jxmpp.jid.Jid;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.WeakHashMap;
-import java.util.concurrent.CopyOnWriteArraySet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * The HTTP Request manager for HTTP Request. The manager handles both the HTTP Request via:

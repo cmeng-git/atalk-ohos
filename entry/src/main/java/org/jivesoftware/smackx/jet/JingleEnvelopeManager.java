@@ -16,12 +16,13 @@
  */
 package org.jivesoftware.smackx.jet;
 
+import java.security.NoSuchAlgorithmException;
+
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.ExtensionElement;
-import org.jxmpp.jid.FullJid;
 
-import java.security.NoSuchAlgorithmException;
+import org.jxmpp.jid.FullJid;
 
 /**
  * Classes that implement this interface can be used to encrypt Jingle File Transfers.

@@ -16,6 +16,14 @@
  */
 package org.jivesoftware.smackx.jet.component;
 
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.crypto.NoSuchPaddingException;
+
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
@@ -29,16 +37,8 @@ import org.jivesoftware.smackx.jingle.callbacks.JingleSecurityCallback;
 import org.jivesoftware.smackx.jingle.component.JingleSecurity;
 import org.jivesoftware.smackx.jingle.element.Jingle;
 import org.jivesoftware.smackx.jingle.element.JingleContentSecurityInfo;
+
 import org.jxmpp.jid.FullJid;
-
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.crypto.NoSuchPaddingException;
 
 /**
  * Created by vanitas on 22.07.17.

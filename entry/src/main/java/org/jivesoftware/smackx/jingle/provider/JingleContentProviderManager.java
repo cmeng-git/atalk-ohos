@@ -16,16 +16,16 @@
  */
 package org.jivesoftware.smackx.jingle.provider;
 
+import java.util.Map;
+import java.util.WeakHashMap;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.jivesoftware.smackx.jingle.JingleDescriptionManager;
 import org.jivesoftware.smackx.jingle.JingleSecurityManager;
 import org.jivesoftware.smackx.jingle.adapter.JingleDescriptionAdapter;
 import org.jivesoftware.smackx.jingle.adapter.JingleSecurityAdapter;
 import org.jivesoftware.smackx.jingle.adapter.JingleTransportAdapter;
 import org.jivesoftware.smackx.jingle.transports.JingleTransportManager;
-
-import java.util.Map;
-import java.util.WeakHashMap;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class JingleContentProviderManager {
 

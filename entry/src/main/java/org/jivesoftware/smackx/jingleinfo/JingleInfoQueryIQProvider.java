@@ -5,14 +5,13 @@
  */
 package org.jivesoftware.smackx.jingleinfo;
 
-import org.jivesoftware.smack.packet.XmlEnvironment;
-import org.jivesoftware.smack.parsing.SmackParsingException;
-import org.jivesoftware.smack.provider.ExtensionElementProvider;
-import org.jivesoftware.smack.provider.IQProvider;
-import org.jivesoftware.smack.provider.ProviderManager;
 import org.jivesoftware.smack.xml.XmlPullParser;
 import org.jivesoftware.smack.xml.XmlPullParserException;
 import org.jivesoftware.smackx.DefaultExtensionElementProvider;
+
+import org.jivesoftware.smack.packet.XmlEnvironment;
+import org.jivesoftware.smack.parsing.SmackParsingException;
+import org.jivesoftware.smack.provider.*;
 
 import java.io.IOException;
 

@@ -16,11 +16,11 @@
  */
 package org.jivesoftware.smackx.httpauthorizationrequest.element;
 
+import javax.xml.namespace.QName;
+
 import org.jivesoftware.smack.packet.ExtensionElement;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.util.XmlStringBuilder;
-
-import javax.xml.namespace.QName;
 
 /**
  * ExtensionElement <code>Conform</code> for HTTP Request.

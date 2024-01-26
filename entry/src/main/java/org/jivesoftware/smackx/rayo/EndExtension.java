@@ -15,8 +15,9 @@
 package org.jivesoftware.smackx.rayo;
 
 import org.jivesoftware.smack.XMPPConnection;
-import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smackx.AbstractExtensionElement;
+
+import org.jivesoftware.smack.packet.Presence;
 import org.jxmpp.jid.Jid;
 
 /**

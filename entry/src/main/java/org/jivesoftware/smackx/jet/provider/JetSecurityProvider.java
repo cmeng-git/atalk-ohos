@@ -16,6 +16,10 @@
  */
 package org.jivesoftware.smackx.jet.provider;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.jivesoftware.smack.packet.ExtensionElement;
 import org.jivesoftware.smack.packet.XmlEnvironment;
 import org.jivesoftware.smack.parsing.SmackParsingException;
@@ -27,10 +31,6 @@ import org.jivesoftware.smackx.jet.JetManager;
 import org.jivesoftware.smackx.jet.component.JetSecurityImpl;
 import org.jivesoftware.smackx.jet.element.JetSecurity;
 import org.jivesoftware.smackx.jingle.provider.JingleContentSecurityProvider;
-
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Provider for the Jingle security element for XEP-0391.

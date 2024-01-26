@@ -16,6 +16,9 @@
  */
 package org.jivesoftware.smackx.jingle.transports.jingle_ibb;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
@@ -33,9 +36,6 @@ import org.jivesoftware.smackx.jingle.element.Jingle;
 import org.jivesoftware.smackx.jingle.element.JingleContentTransport;
 import org.jivesoftware.smackx.jingle.element.JingleContentTransportInfo;
 import org.jivesoftware.smackx.jingle.transports.jingle_ibb.element.JingleIBBTransport;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Jingle InBandBytestream Transport component.

@@ -5,10 +5,11 @@
  */
 package org.jivesoftware.smackx.jingleinfo;
 
+import org.jivesoftware.smackx.AbstractExtensionElement;
+
 import org.jivesoftware.smack.packet.ExtensionElement;
 import org.jivesoftware.smack.packet.XmlEnvironment;
 import org.jivesoftware.smack.util.XmlStringBuilder;
-import org.jivesoftware.smackx.AbstractExtensionElement;
 
 import javax.xml.namespace.QName;
 

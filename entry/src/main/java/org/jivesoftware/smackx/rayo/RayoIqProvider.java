@@ -14,14 +14,13 @@
 package org.jivesoftware.smackx.rayo;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jivesoftware.smack.packet.ExtensionElement;
-import org.jivesoftware.smack.packet.IQ;
-import org.jivesoftware.smack.packet.XmlEnvironment;
-import org.jivesoftware.smack.provider.IQProvider;
-import org.jivesoftware.smack.provider.ProviderManager;
 import org.jivesoftware.smack.xml.XmlPullParser;
 import org.jivesoftware.smack.xml.XmlPullParserException;
 import org.jivesoftware.smackx.DefaultExtensionElementProvider;
+
+import org.jivesoftware.smack.packet.*;
+import org.jivesoftware.smack.provider.IQProvider;
+import org.jivesoftware.smack.provider.ProviderManager;
 import org.jxmpp.jid.Jid;
 
 import java.io.IOException;

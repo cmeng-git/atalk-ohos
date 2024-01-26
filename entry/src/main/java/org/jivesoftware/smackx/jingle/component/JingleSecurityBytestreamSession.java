@@ -16,9 +16,9 @@
  */
 package org.jivesoftware.smackx.jingle.component;
 
-import org.jivesoftware.smackx.bytestreams.BytestreamSession;
-
 import java.io.IOException;
+
+import org.jivesoftware.smackx.bytestreams.BytestreamSession;
 
 /**
  * Jingle Session to handle Security ByteStream session.

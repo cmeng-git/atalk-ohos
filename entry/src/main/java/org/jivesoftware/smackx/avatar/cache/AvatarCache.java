@@ -17,7 +17,7 @@
 
 package org.jivesoftware.smackx.avatar.cache;
 
-import java.io.InputStream;
+import java.io.*;
 
 /**
  * Interface for an VCardAvatarCache.

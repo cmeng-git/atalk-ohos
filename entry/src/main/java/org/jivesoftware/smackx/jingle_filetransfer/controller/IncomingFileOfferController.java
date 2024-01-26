@@ -16,13 +16,13 @@
  */
 package org.jivesoftware.smackx.jingle_filetransfer.controller;
 
-import org.jivesoftware.smack.SmackException;
-import org.jivesoftware.smack.XMPPConnection;
-import org.jivesoftware.smack.XMPPException;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+
+import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smack.XMPPException;
 
 /**
  * User interface for an incoming Jingle file offer.

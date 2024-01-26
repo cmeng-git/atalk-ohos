@@ -16,6 +16,11 @@
  */
 package org.jivesoftware.smackx.jingle_rtp;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.jivesoftware.smack.packet.ExtensionElement;
 import org.jivesoftware.smack.packet.XmlEnvironment;
 import org.jivesoftware.smack.parsing.SmackParsingException;
@@ -24,11 +29,6 @@ import org.jivesoftware.smack.provider.ProviderManager;
 import org.jivesoftware.smack.xml.XmlPullParser;
 import org.jivesoftware.smack.xml.XmlPullParserException;
 import org.jivesoftware.smackx.AbstractExtensionElement;
-
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * A provider that parses incoming stanza extensions into instances of the {@link Class} that it has

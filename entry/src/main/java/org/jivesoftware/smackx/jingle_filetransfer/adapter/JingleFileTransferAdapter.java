@@ -16,6 +16,10 @@
  */
 package org.jivesoftware.smackx.jingle_filetransfer.adapter;
 
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.jivesoftware.smack.packet.ExtensionElement;
 import org.jivesoftware.smackx.jingle.adapter.JingleDescriptionAdapter;
 import org.jivesoftware.smackx.jingle.element.JingleContent;
@@ -25,10 +29,6 @@ import org.jivesoftware.smackx.jingle_filetransfer.component.JingleIncomingFileO
 import org.jivesoftware.smackx.jingle_filetransfer.component.JingleIncomingFileRequest;
 import org.jivesoftware.smackx.jingle_filetransfer.element.JingleFileTransfer;
 import org.jivesoftware.smackx.jingle_filetransfer.element.JingleFileTransferChild;
-
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Adapter that extends the JingleDescriptionAdapter.

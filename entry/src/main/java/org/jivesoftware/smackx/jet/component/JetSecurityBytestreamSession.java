@@ -16,16 +16,15 @@
  */
 package org.jivesoftware.smackx.jet.component;
 
-import org.jivesoftware.smackx.bytestreams.BytestreamSession;
-import org.jivesoftware.smackx.jingle.component.JingleSecurityBytestreamSession;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
+
+import org.jivesoftware.smackx.bytestreams.BytestreamSession;
+import org.jivesoftware.smackx.jingle.component.JingleSecurityBytestreamSession;
 
 public class JetSecurityBytestreamSession extends JingleSecurityBytestreamSession {
     private final Cipher cipher;

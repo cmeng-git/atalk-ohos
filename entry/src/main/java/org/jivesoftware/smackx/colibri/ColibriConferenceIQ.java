@@ -7,12 +7,11 @@ package org.jivesoftware.smackx.colibri;
 
 import androidx.annotation.NonNull;
 
-import org.atalk.service.neomedia.MediaDirection;
-import org.jivesoftware.smack.packet.IQ;
-import org.jivesoftware.smack.packet.StanzaError;
-import org.jivesoftware.smack.packet.StanzaError.Condition;
-import org.jivesoftware.smack.packet.XmlEnvironment;
 import org.jivesoftware.smackx.AbstractExtensionElement;
+
+import org.atalk.service.neomedia.MediaDirection;
+import org.jivesoftware.smack.packet.*;
+import org.jivesoftware.smack.packet.StanzaError.Condition;
 import org.jivesoftware.smackx.jingle_rtp.element.IceUdpTransport;
 import org.jivesoftware.smackx.jingle_rtp.element.PayloadType;
 import org.jivesoftware.smackx.jingle_rtp.element.RtpHeader;
@@ -20,14 +19,7 @@ import org.jivesoftware.smackx.jingle_rtp.element.SdpSource;
 import org.jivesoftware.smackx.jingle_rtp.element.SdpSourceGroup;
 import org.jxmpp.jid.parts.Localpart;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.xml.namespace.QName;

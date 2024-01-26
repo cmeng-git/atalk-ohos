@@ -17,17 +17,14 @@
 
 package org.jivesoftware.smack.bosh;
 
-import org.igniterealtime.jbosh.AbstractBody;
-import org.igniterealtime.jbosh.BOSHClient;
-import org.igniterealtime.jbosh.BOSHClientConfig;
-import org.igniterealtime.jbosh.BOSHClientConnEvent;
-import org.igniterealtime.jbosh.BOSHClientConnListener;
-import org.igniterealtime.jbosh.BOSHClientRequestListener;
-import org.igniterealtime.jbosh.BOSHClientResponseListener;
-import org.igniterealtime.jbosh.BOSHException;
-import org.igniterealtime.jbosh.BOSHMessageEvent;
-import org.igniterealtime.jbosh.BodyQName;
-import org.igniterealtime.jbosh.ComposableBody;
+import java.io.IOException;
+import java.io.PipedReader;
+import java.io.PipedWriter;
+import java.io.Writer;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.SmackException.GenericConnectionException;
@@ -47,16 +44,20 @@ import org.jivesoftware.smack.util.CloseableUtil;
 import org.jivesoftware.smack.util.PacketParserUtils;
 import org.jivesoftware.smack.xml.XmlPullParser;
 import org.jivesoftware.smack.xml.XmlPullParserException;
+
+import org.igniterealtime.jbosh.AbstractBody;
+import org.igniterealtime.jbosh.BOSHClient;
+import org.igniterealtime.jbosh.BOSHClientConfig;
+import org.igniterealtime.jbosh.BOSHClientConnEvent;
+import org.igniterealtime.jbosh.BOSHClientConnListener;
+import org.igniterealtime.jbosh.BOSHClientRequestListener;
+import org.igniterealtime.jbosh.BOSHClientResponseListener;
+import org.igniterealtime.jbosh.BOSHException;
+import org.igniterealtime.jbosh.BOSHMessageEvent;
+import org.igniterealtime.jbosh.BodyQName;
+import org.igniterealtime.jbosh.ComposableBody;
 import org.jxmpp.jid.DomainBareJid;
 import org.jxmpp.jid.parts.Resourcepart;
-
-import java.io.IOException;
-import java.io.PipedReader;
-import java.io.PipedWriter;
-import java.io.Writer;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Creates a connection to an XMPP server via HTTP binding.

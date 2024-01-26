@@ -5,14 +5,13 @@
  */
 package org.jivesoftware.smackx.coin;
 
+import org.jivesoftware.smackx.AbstractExtensionElement;
+
 import org.jivesoftware.smack.packet.ExtensionElement;
 import org.jivesoftware.smack.packet.XmlEnvironment;
 import org.jivesoftware.smack.util.XmlStringBuilder;
-import org.jivesoftware.smackx.AbstractExtensionElement;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.xml.namespace.QName;
 
