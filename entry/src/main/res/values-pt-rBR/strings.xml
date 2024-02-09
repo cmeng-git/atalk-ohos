@@ -565,7 +565,7 @@
     <string name="mic_control_title">Nível do microfone</string>
     <string name="btn_mute_tooltip">Ajustar o som do microfone</string>
     <string name="presence_not_supported">Presença não é suportada por %1$s</string>
-    <string name="proactive_notification">está escrevendo uma mensagem</string>
+    <string name="proactive_notification">está escrevendo uma mensagem (%1$s)</string>
     <string name="recent_messages">Últimas conversas</string>
     <string name="received_">%1$s recebeu</string>
     <string name="referred">Indicou</string>
@@ -800,8 +800,8 @@
     <string name="update_download_ready">A atualização (%1$s) foi baixada e está pronta para ser instalada.</string>
     <string name="update_in_progress">Em andamento</string>
     <string name="update_download_in_progress">O download de atualização está em andamento.</string>
-    <string name="update_update_available">Uma nova versão lançada (%1$s-%2$s) para %3$s está disponível. Versão instalada atual: %4$s.</string>
-    <string name="update_up_to_date">Sua versão instalada atual: (%1$s-%2$s) está atualizada. Versão disponível online: %3$s.</string>
+    <string name="update_update_available">Uma nova versão lançada (%1$s-%2$s) para %3$s está disponível. Versão instalada atual: (%4$s-%5$s).</string>
+    <string name="update_up_to_date">Sua versão instalada atual: (%1$s-%2$s) está atualizada. Versão disponível online: (%3$s-%4$s).</string>
     <string name="update_new_version_none">Não há atualizações</string>
     <string name="update_install_update">Instalar atualização</string>
     <string name="update_download_failed">Falha ao baixar a nova atualização!</string>

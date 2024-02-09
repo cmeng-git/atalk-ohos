@@ -673,7 +673,7 @@ public class CryptoFragment extends OSGiFragment
         public void chatLinkClicked(URI uri) {
             if (uri.getPath().equals("/showHistoryPopupMenu")) {
                 // Display settings
-                Context ctx = aTalkApp.getGlobalContext();
+                Context ctx = aTalkApp.getInstance();
                 Intent settings = new Intent(ctx, SettingsActivity.class);
                 settings.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 ctx.startActivity(settings);

@@ -66,7 +66,7 @@ public class UpdateServiceImpl implements UpdateService
 {
     // Default update link; path is case-sensitive.
     private static final String[] updateLinks = {
-            "https://raw.githubusercontent.com/cmeng-git/atalk-ohos/master/aTalk/release/version.properties",
+            "https://raw.githubusercontent.com/cmeng-git/atalk-ohos/main/entry/release/version.properties",
             "https://atalk.sytes.net/releases/atalk-ohos/version.properties"
     };
 
@@ -126,7 +126,7 @@ public class UpdateServiceImpl implements UpdateService
                 if (checkLastDLFileAction() < DownloadManager.ERROR_UNKNOWN)
                     return;
 
-                DialogActivity.showConfirmDialog(aTalkApp.getGlobalContext(),
+                DialogActivity.showConfirmDialog(aTalkApp.getInstance(),
                         R.string.update_install_update,
                         R.string.update_update_available,
                         R.string.update_download,
@@ -143,12 +143,12 @@ public class UpdateServiceImpl implements UpdateService
                             public void onDialogCancelled(@NotNull DialogActivity dialog)
                             {
                             }
-                        }, latestVersion, Long.toString(latestVersionCode), aTalkApp.getResString(R.string.application_name), currentVersion
+                        }, latestVersion, latestVersionCode, fileNameApk, currentVersion, currentVersionCode
                 );
             }
             else {
                 // Notify that running version is up to date
-                DialogActivity.showConfirmDialog(aTalkApp.getGlobalContext(),
+                DialogActivity.showConfirmDialog(aTalkApp.getInstance(),
                         R.string.update_new_version_none,
                         R.string.update_up_to_date,
                         R.string.update_download,
@@ -169,7 +169,7 @@ public class UpdateServiceImpl implements UpdateService
                             public void onDialogCancelled(@NotNull DialogActivity dialog)
                             {
                             }
-                        }, currentVersion, currentVersionCode, latestVersion
+                        }, currentVersion, currentVersionCode, latestVersion, latestVersionCode
                 );
             }
         } else {
@@ -203,14 +203,14 @@ public class UpdateServiceImpl implements UpdateService
             }
             else if (lastJobStatus != DownloadManager.STATUS_FAILED) {
                 // Download is in progress or scheduled for retry
-                DialogActivity.showDialog(aTalkApp.getGlobalContext(),
+                DialogActivity.showDialog(aTalkApp.getInstance(),
                         R.string.update_in_progress,
                         R.string.update_download_in_progress);
             }
             else {
                 // Download id return failed status, remove failed id and retry
                 removeOldDownloads();
-                DialogActivity.showDialog(aTalkApp.getGlobalContext(),
+                DialogActivity.showDialog(aTalkApp.getInstance(),
                         R.string.update_install_update, R.string.update_download_failed);
             }
         }
@@ -224,7 +224,7 @@ public class UpdateServiceImpl implements UpdateService
      */
     private void askInstallDownloadedApk(Uri fileUri)
     {
-        DialogActivity.showConfirmDialog(aTalkApp.getGlobalContext(),
+        DialogActivity.showConfirmDialog(aTalkApp.getInstance(),
                 R.string.update_download_completed,
                 R.string.update_download_ready,
                 mIsLatest ? R.string.update_reInstall : R.string.update_install,
@@ -239,7 +239,7 @@ public class UpdateServiceImpl implements UpdateService
                         intent.setDataAndType(fileUri, APK_MIME_TYPE);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                        aTalkApp.getGlobalContext().startActivity(intent);
+                        aTalkApp.getInstance().startActivity(intent);
                         return true;
                     }
 
@@ -282,9 +282,8 @@ public class UpdateServiceImpl implements UpdateService
 
         if (downloadReceiver == null) {
             downloadReceiver = new DownloadReceiver();
-            ContextCompat.registerReceiver(aTalkApp.getGlobalContext(), downloadReceiver,
-                    new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE), ContextCompat.RECEIVER_NOT_EXPORTED);
-
+            ContextCompat.registerReceiver(aTalkApp.getInstance(), downloadReceiver,
+                    new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE), ContextCompat.RECEIVER_EXPORTED);
         }
 
         DownloadManager.Request request = new DownloadManager.Request(uri);
@@ -308,7 +307,7 @@ public class UpdateServiceImpl implements UpdateService
 
             // unregistered downloadReceiver
             if (downloadReceiver != null) {
-                aTalkApp.getGlobalContext().unregisterReceiver(downloadReceiver);
+                aTalkApp.getInstance().unregisterReceiver(downloadReceiver);
                 downloadReceiver = null;
             }
         }
@@ -317,7 +316,7 @@ public class UpdateServiceImpl implements UpdateService
     private SharedPreferences getStore()
     {
         if (store == null) {
-            store = aTalkApp.getGlobalContext().getSharedPreferences("store", Context.MODE_PRIVATE);
+            store = aTalkApp.getInstance().getSharedPreferences("store", Context.MODE_PRIVATE);
         }
         return store;
     }
@@ -371,11 +370,11 @@ public class UpdateServiceImpl implements UpdateService
     {
         // Default to valid as getPackageArchiveInfo() always return null; but sometimes OK
         boolean isValid = true;
-        File apkFile = new File(FilePathHelper.getFilePath(aTalkApp.getGlobalContext(), fileUri));
+        File apkFile = new File(FilePathHelper.getFilePath(aTalkApp.getInstance(), fileUri));
 
         if (apkFile.exists()) {
             // Get downloaded apk actual versionCode and check its versionCode validity
-            PackageManager pm = aTalkApp.getGlobalContext().getPackageManager();
+            PackageManager pm = aTalkApp.getInstance().getPackageManager();
             PackageInfo pckgInfo = pm.getPackageArchiveInfo(apkFile.getAbsolutePath(), 0);
 
             if (pckgInfo != null) {
@@ -472,7 +471,7 @@ public class UpdateServiceImpl implements UpdateService
             }
         }
 
-        // return true if all failed.
+        // return true if all failed to force update.
         return true;
     }
 

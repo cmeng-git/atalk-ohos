@@ -549,7 +549,7 @@
     <string name="mic_control_title">Mikrofon-Lautstärke</string>
     <string name="btn_mute_tooltip">Anpassen des Mikrofonklangs</string>
     <string name="presence_not_supported">Wird von %1$s nicht unterstützt</string>
-    <string name="proactive_notification">schreibt eine Nachricht</string>
+    <string name="proactive_notification">schreibt eine Nachricht (%1$s)</string>
     <string name="recent_messages">Letzte Nachrichten</string>
     <string name="received_">%1$s empfangen</string>
     <string name="referred">Weitergeleitet</string>
@@ -781,8 +781,8 @@
     <string name="update_download_ready">Das Update (%1$s) wurde heruntergeladen und kann jetzt installiert werden.</string>
     <string name="update_in_progress">In Bearbeitung</string>
     <string name="update_download_in_progress">Beim Herunterladen</string>
-    <string name="update_update_available">Eine neu veröffentlichte Version (%1$s-%2$s) für %3$s ist verfügbar. Aktuell installierte Version: %4$s.</string>
-    <string name="update_up_to_date">Die installierte Version: (%1$s-%2$s) ist aktuell. Online verfügbare Version: %3$s.</string>
+    <string name="update_update_available">Eine neu veröffentlichte Version (%1$s-%2$s) für %3$s ist verfügbar. Aktuell installierte Version: (%4$s-%5$s).</string>
+    <string name="update_up_to_date">Die installierte Version: (%1$s-%2$s) ist aktuell. Online verfügbare Version: (%3$s-%4$s).</string>
     <string name="update_new_version_none">Keine neue Version</string>
     <string name="update_install_update">Updates installieren</string>
     <string name="update_download_failed">Fehler beim Herunterladen des neuen Updates!</string>

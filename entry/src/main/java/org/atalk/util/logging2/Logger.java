@@ -21,8 +21,7 @@ import java.util.function.Supplier;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 
-public interface Logger
-{
+public interface Logger {
     /**
      * Create a 'child' logger which derives from this one.  The child logger
      * will share the same log level setting as this one and its

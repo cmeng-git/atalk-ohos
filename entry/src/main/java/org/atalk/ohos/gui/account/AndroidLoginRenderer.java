@@ -202,7 +202,7 @@ public class AndroidLoginRenderer implements LoginRenderer
             final LoginManager loginManagerCallback)
     {
         AccountID accountID = protocolProvider.getAccountID();
-        DialogActivity.showConfirmDialog(aTalkApp.getGlobalContext(),
+        DialogActivity.showConfirmDialog(aTalkApp.getInstance(),
                 R.string.error,
                 R.string.connection_failed_message,
                 R.string.retry,
@@ -253,7 +253,7 @@ public class AndroidLoginRenderer implements LoginRenderer
             return;
         }
 
-        AndroidUtils.updateGeneralNotification(aTalkApp.getGlobalContext(), notificationID,
+        AndroidUtils.updateGeneralNotification(aTalkApp.getInstance(), notificationID,
                 aTalkApp.getResString(R.string.application_name), status, System.currentTimeMillis());
     }
 

@@ -347,7 +347,7 @@ public class MainMenuActivity extends ExitMenuActivity implements ServiceListene
 
         /**
          * Creates an instance of <code>VideoBridgeProviderMenuItem</code>
-         *
+         * <p>
          * // @param preselectedProvider the <code>ProtocolProviderService</code> that provides the video bridge
          */
         public VideoBridgeProviderMenuItem() {

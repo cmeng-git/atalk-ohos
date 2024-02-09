@@ -17,7 +17,6 @@ package net.java.sip.communicator.impl.contactlist;
 import androidx.annotation.NonNull;
 
 import net.java.sip.communicator.impl.protocol.jabber.ProtocolProviderServiceJabberImpl;
-import net.java.sip.communicator.impl.protocol.jabber.ScServiceDiscoveryManager;
 import net.java.sip.communicator.service.contactlist.MetaContact;
 import net.java.sip.communicator.service.contactlist.MetaContactGroup;
 import net.java.sip.communicator.service.contactlist.event.MetaContactModifiedEvent;
@@ -32,6 +31,7 @@ import net.java.sip.communicator.util.DataObject;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smackx.avatar.AvatarManager;
+import org.jivesoftware.smackx.caps.EntityCapsManager;
 import org.jivesoftware.smackx.disco.packet.DiscoverInfo;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -56,8 +56,7 @@ import timber.log.Timber;
  * @author Lubomir Marinov
  * @author Eng Chong Meng
  */
-public class MetaContactImpl extends DataObject implements MetaContact
-{
+public class MetaContactImpl extends DataObject implements MetaContact {
     /**
      * A vector containing all protocol specific contacts merged in this MetaContact.
      */
@@ -134,8 +133,7 @@ public class MetaContactImpl extends DataObject implements MetaContact
     /**
      * Creates new meta contact with a newly generated meta contact UID.
      */
-    MetaContactImpl()
-    {
+    MetaContactImpl() {
         // create the uid
         this.uid = String.valueOf(System.currentTimeMillis()) + hashCode();
         this.details = new JSONObject();
@@ -148,8 +146,7 @@ public class MetaContactImpl extends DataObject implements MetaContact
      * @param metaUID the meta uid that this meta contact should have.
      * @param details the already stored details for the contact.
      */
-    MetaContactImpl(String metaUID, JSONObject details)
-    {
+    MetaContactImpl(String metaUID, JSONObject details) {
         this.uid = metaUID;
         this.details = details;
     }
@@ -159,8 +156,7 @@ public class MetaContactImpl extends DataObject implements MetaContact
      *
      * @return an int indicating the number of protocol specific contacts merged in this <code>MetaContact</code>
      */
-    public int getContactCount()
-    {
+    public int getContactCount() {
         return protoContacts.size();
     }
 
@@ -171,10 +167,10 @@ public class MetaContactImpl extends DataObject implements MetaContact
      * returned by this method is not be over the actual list of contacts but over a copy of that list.
      *
      * @param provider a reference to the <code>ProtocolProviderService</code> that we'd like to get a <code>Contact</code> for.
+     *
      * @return a <code>Contact</code> encapsulated in this <code>MetaContact</code> nd originating from the specified provider.
      */
-    public Iterator<Contact> getContactsForProvider(ProtocolProviderService provider)
-    {
+    public Iterator<Contact> getContactsForProvider(ProtocolProviderService provider) {
         LinkedList<Contact> providerContacts = new LinkedList<>();
         for (Contact contact : protoContacts) {
             if (contact.getProtocolProvider() == provider)
@@ -189,11 +185,11 @@ public class MetaContactImpl extends DataObject implements MetaContact
      * supporting the specified <code>OperationSet</code> class then an empty iterator is returned.
      *
      * @param opSetClass the operation for which the default contact is needed
+     *
      * @return a <code>List</code> over all contacts encapsulated in this <code>MetaContact</code> and
      * supporting the specified <code>OperationSet</code>
      */
-    public List<Contact> getContactsForOperationSet(Class<? extends OperationSet> opSetClass)
-    {
+    public List<Contact> getContactsForOperationSet(Class<? extends OperationSet> opSetClass) {
         LinkedList<Contact> opSetContacts = new LinkedList<>();
         for (Contact contact : protoContacts) {
             ProtocolProviderService contactProvider = contact.getProtocolProvider();
@@ -218,22 +214,19 @@ public class MetaContactImpl extends DataObject implements MetaContact
      * Determines if the given <code>feature</code> is supported by this metaContact for all presence contact.
      *
      * @param feature the feature to check for
+     *
      * @return <code>true</code> if the required feature is supported; otherwise, <code>false</code>
      */
-    public boolean isFeatureSupported(String feature)
-    {
+    public boolean isFeatureSupported(String feature) {
         Contact contact = getDefaultContact();
         ProtocolProviderServiceJabberImpl pps = (ProtocolProviderServiceJabberImpl) contact.getProtocolProvider();
-
-        ScServiceDiscoveryManager discoveryManager = pps.getDiscoveryManager();
-        if (discoveryManager == null)
-            return  false;
 
         // Proceed only for presence with Type.available
         List<Presence> presences = Roster.getInstanceFor(pps.getConnection()).getPresences(contact.getJid().asBareJid());
         for (Presence presence : presences) {
             if (presence.isAvailable()) {
-                DiscoverInfo featureInfo = discoveryManager.discoverInfoNonBlocking(presence.getFrom());
+                // DiscoverInfo featureInfo = discoveryManager.discoverInfoNonBlocking(presence.getFrom());
+                DiscoverInfo featureInfo = pps.getScHelper().discoverInfo(presence.getFrom());
                 if ((featureInfo != null) && featureInfo.containsFeature(feature)) {
                     return true;
                 }
@@ -244,16 +237,15 @@ public class MetaContactImpl extends DataObject implements MetaContact
 
     /**
      * Returns contacts, encapsulated by this MetaContact and belonging to the specified protocol ContactGroup.
-     *
      * In order to prevent problems with concurrency, the <code>Iterator</code> returned by
      * this method is not be over the actual list of contacts but over a copy of that list.
      *
      * @param parentProtoGroup
+     *
      * @return an Iterator over all <code>Contact</code>s encapsulated in this
      * <code>MetaContact</code> and belonging to the specified proto ContactGroup.
      */
-    public Iterator<Contact> getContactsForContactGroup(ContactGroup parentProtoGroup)
-    {
+    public Iterator<Contact> getContactsForContactGroup(ContactGroup parentProtoGroup) {
         List<Contact> providerContacts = new LinkedList<>();
         for (Contact contact : protoContacts) {
             if (contact.getParentContactGroup() == parentProtoGroup)
@@ -269,11 +261,11 @@ public class MetaContactImpl extends DataObject implements MetaContact
      * @param contactAddress the address of the contact who we're looking for.
      * @param ownerProvider a reference to the ProtocolProviderService that the contact we're looking for belongs
      * to.
+     *
      * @return a reference to a <code>Contact</code>, encapsulated by this MetaContact, carrying
      * the specified address and originating from the specified ownerProvider or null if no such contact exists..
      */
-    public Contact getContact(String contactAddress, ProtocolProviderService ownerProvider)
-    {
+    public Contact getContact(String contactAddress, ProtocolProviderService ownerProvider) {
         for (Contact contact : protoContacts) {
             if ((contact.getProtocolProvider() == ownerProvider)
                     && (contact.getAddress().equals(contactAddress)
@@ -290,11 +282,11 @@ public class MetaContactImpl extends DataObject implements MetaContact
      *
      * @param contactAddress the address of the contact who we're looking for.
      * @param accountID the identifier of the provider that the contact we're looking for must belong to.
+     *
      * @return a reference to a <code>Contact</code>, encapsulated by this MetaContact, carrying the
      * specified address and originating from the ownerProvider carrying <code>accountID</code>.
      */
-    public Contact getContact(String contactAddress, String accountID)
-    {
+    public Contact getContact(String contactAddress, String accountID) {
         for (Contact contact : protoContacts) {
             if (contact.getProtocolProvider().getAccountID().getAccountUniqueID().equals(accountID)
                     && contact.getAddress().equals(contactAddress))
@@ -308,11 +300,11 @@ public class MetaContactImpl extends DataObject implements MetaContact
      * this <code>MetaContact</code>, otherwise - returns <code>false</code>.
      *
      * @param protocolContact the <code>Contact</code> we're looking for
+     *
      * @return <code>true</code> if the given <code>protocolContact</code> is contained in
      * this <code>MetaContact</code>, otherwise - returns <code>false</code>
      */
-    public boolean containsContact(Contact protocolContact)
-    {
+    public boolean containsContact(Contact protocolContact) {
         return protoContacts.contains(protocolContact);
     }
 
@@ -326,8 +318,7 @@ public class MetaContactImpl extends DataObject implements MetaContact
      * @return a <code>java.util.Iterator</code> over all protocol specific <code>Contact</code>s
      * that were registered as subContacts for this <code>MetaContact</code>
      */
-    public Iterator<Contact> getContacts()
-    {
+    public Iterator<Contact> getContacts() {
         return new LinkedList<>(protoContacts).iterator();
     }
 
@@ -337,8 +328,7 @@ public class MetaContactImpl extends DataObject implements MetaContact
      *
      * @return the default <code>Contact</code> to use when communicating with this <code>MetaContact</code>
      */
-    public Contact getDefaultContact()
-    {
+    public Contact getDefaultContact() {
         if (defaultContact == null) {
             PresenceStatus currentStatus = null;
             for (Contact protoContact : protoContacts) {
@@ -364,10 +354,10 @@ public class MetaContactImpl extends DataObject implements MetaContact
      * cmeng may possibly replaced by getOpSetSupportedContact()
      *
      * @param operationSet the operation for which the default contact is needed
+     *
      * @return the default contact for the specified operation.
      */
-    public Contact getDefaultContact(Class<? extends OperationSet> operationSet)
-    {
+    public Contact getDefaultContact(Class<? extends OperationSet> operationSet) {
         Contact defaultOpSetContact = null;
         Contact defaultContact = getDefaultContact();
 
@@ -435,10 +425,10 @@ public class MetaContactImpl extends DataObject implements MetaContact
      * Note: this is currently used for showing the video/call buttons; and protoContacts.size() == 1
      *
      * @param operationSet the operation for which the contact is needed
+     *
      * @return a contact that supports the specified operation.
      */
-    public Contact getOpSetSupportedContact(Class<? extends OperationSet> operationSet)
-    {
+    public Contact getOpSetSupportedContact(Class<? extends OperationSet> operationSet) {
         for (Contact opSetContact : protoContacts) {
             Jid jid = opSetContact.getJid();  // always a BareJid
 
@@ -471,8 +461,7 @@ public class MetaContactImpl extends DataObject implements MetaContact
      *
      * @return a String uniquely identifying this meta contact.
      */
-    public String getMetaUID()
-    {
+    public String getMetaUID() {
         return uid;
     }
 
@@ -481,8 +470,7 @@ public class MetaContactImpl extends DataObject implements MetaContact
      *
      * @param count unread message count
      */
-    public void setUnreadCount(int count)
-    {
+    public void setUnreadCount(int count) {
         unreadCount = count;
     }
 
@@ -491,8 +479,7 @@ public class MetaContactImpl extends DataObject implements MetaContact
      *
      * @return the unread message count
      */
-    public int getUnreadCount()
-    {
+    public int getUnreadCount() {
         return unreadCount;
     }
 
@@ -511,12 +498,12 @@ public class MetaContactImpl extends DataObject implements MetaContact
      * finally (in order to avoid then display name equalities) be the fairly random meta contact metaUID.
      *
      * @param o the <code>MetaContact</code> to be compared.
+     *
      * @return a negative integer, zero, or a positive integer as this object
      * is less than, equal to, or greater than the specified object.
      * @throws ClassCastException if the specified object is not a MetaContactListImpl
      */
-    public int compareTo(@NonNull MetaContact o)
-    {
+    public int compareTo(@NonNull MetaContact o) {
         MetaContactImpl target = (MetaContactImpl) o;
 
         int isOnline = (contactsOnline > 0) ? 1 : 0;
@@ -534,8 +521,7 @@ public class MetaContactImpl extends DataObject implements MetaContact
      */
     @NonNull
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "MetaContact[ DisplayName=" + getDisplayName() + "]";
     }
 
@@ -545,8 +531,7 @@ public class MetaContactImpl extends DataObject implements MetaContact
      *
      * @return a human readable String that represents this meta contact.
      */
-    public String getDisplayName()
-    {
+    public String getDisplayName() {
         return displayName;
     }
 
@@ -555,8 +540,7 @@ public class MetaContactImpl extends DataObject implements MetaContact
      *
      * @return whether display name was changed by user.
      */
-    boolean isDisplayNameUserDefined()
-    {
+    boolean isDisplayNameUserDefined() {
         return isDisplayNameUserDefined;
     }
 
@@ -565,8 +549,7 @@ public class MetaContactImpl extends DataObject implements MetaContact
      *
      * @param value control whether display name is user defined
      */
-    public void setDisplayNameUserDefined(boolean value)
-    {
+    public void setDisplayNameUserDefined(boolean value) {
         this.isDisplayNameUserDefined = value;
     }
 
@@ -575,12 +558,12 @@ public class MetaContactImpl extends DataObject implements MetaContact
      * could cause multiple network operations. Use with caution.
      *
      * @param contact the protocol <code>Contact</code> to query for its avatar
+     *
      * @return an array of <code>byte</code>s representing the avatar returned by the
      * specified <code>Contact</code> or <code>null</code> if the
      * specified <code>Contact</code> did not or failed to return an avatar
      */
-    private byte[] queryProtoContactAvatar(Contact contact)
-    {
+    private byte[] queryProtoContactAvatar(Contact contact) {
         try {
             byte[] contactImage = contact.getImage();
 
@@ -600,10 +583,10 @@ public class MetaContactImpl extends DataObject implements MetaContact
      *
      * @param isLazy Indicates if this method should return the locally stored avatar or it should
      * obtain the avatar right from the server.
+     *
      * @return an avatar (e.g. user photo) of this contact.
      */
-    public byte[] getAvatar(boolean isLazy)
-    {
+    public byte[] getAvatar(boolean isLazy) {
         byte[] result;
         if (!isLazy) {
             // the caller is willing to perform a lengthy operation so let's
@@ -661,8 +644,7 @@ public class MetaContactImpl extends DataObject implements MetaContact
      *
      * @return an avatar (e.g. user photo) of this contact.
      */
-    public byte[] getAvatar()
-    {
+    public byte[] getAvatar() {
         return getAvatar(false);
     }
 
@@ -671,8 +653,7 @@ public class MetaContactImpl extends DataObject implements MetaContact
      *
      * @param displayName a human readable String representing this <code>MetaContact</code>
      */
-    void setDisplayName(String displayName)
-    {
+    void setDisplayName(String displayName) {
         synchronized (getParentGroupModLock()) {
             if (parentGroup != null)
                 parentGroup.lightRemoveMetaContact(this);
@@ -690,8 +671,7 @@ public class MetaContactImpl extends DataObject implements MetaContact
      *
      * @param contact the protocol specific Contact to add.
      */
-    void addProtoContact(Contact contact)
-    {
+    void addProtoContact(Contact contact) {
         synchronized (getParentGroupModLock()) {
             if (parentGroup != null)
                 parentGroup.lightRemoveMetaContact(this);
@@ -734,8 +714,7 @@ public class MetaContactImpl extends DataObject implements MetaContact
      *
      * @return the new index at which the contact was added.
      */
-    int reevalContact()
-    {
+    int reevalContact() {
         synchronized (getParentGroupModLock()) {
             // first lightremove or otherwise we won't be able to get hold of the contact
             if (parentGroup != null) {
@@ -773,8 +752,7 @@ public class MetaContactImpl extends DataObject implements MetaContact
      *
      * @param contact the contact to remove
      */
-    void removeProtoContact(Contact contact)
-    {
+    void removeProtoContact(Contact contact) {
         synchronized (getParentGroupModLock()) {
             if (parentGroup != null)
                 parentGroup.lightRemoveMetaContact(this);
@@ -809,10 +787,10 @@ public class MetaContactImpl extends DataObject implements MetaContact
      * Removes all proto contacts that belong to the specified provider.
      *
      * @param provider the provider whose contacts we want removed.
+     *
      * @return true if this <code>MetaContact</code> was modified and false otherwise.
      */
-    boolean removeContactsForProvider(ProtocolProviderService provider)
-    {
+    boolean removeContactsForProvider(ProtocolProviderService provider) {
         boolean modified = false;
         Iterator<Contact> contactsIter = protoContacts.iterator();
 
@@ -835,10 +813,10 @@ public class MetaContactImpl extends DataObject implements MetaContact
      * Removes all proto contacts that belong to the specified protocol group.
      *
      * @param protoGroup the group whose children we want removed.
+     *
      * @return true if this <code>MetaContact</code> was modified and false otherwise.
      */
-    boolean removeContactsForGroup(ContactGroup protoGroup)
-    {
+    boolean removeContactsForGroup(ContactGroup protoGroup) {
         boolean modified = false;
         Iterator<Contact> contacts = protoContacts.iterator();
 
@@ -863,10 +841,10 @@ public class MetaContactImpl extends DataObject implements MetaContact
      * removing it). Use unsetParentGroup instead.
      *
      * @param parentGroup the <code>MetaContactGroupImpl</code> that is currently a parent of this meta contact.
+     *
      * @throws NullPointerException if <code>parentGroup</code> is null.
      */
-    void setParentGroup(MetaContactGroupImpl parentGroup)
-    {
+    void setParentGroup(MetaContactGroupImpl parentGroup) {
         if (parentGroup == null)
             throw new NullPointerException("Do not call this method with a "
                     + "null argument even if a group is removing this contact "
@@ -886,8 +864,7 @@ public class MetaContactImpl extends DataObject implements MetaContact
      * @param parentGrp the <code>MetaContactGroupImpl</code> that we don't want considered as a parent of this
      * contact any more.
      */
-    void unsetParentGroup(MetaContactGroupImpl parentGrp)
-    {
+    void unsetParentGroup(MetaContactGroupImpl parentGrp) {
         synchronized (getParentGroupModLock()) {
             if (parentGroup == parentGrp)
                 parentGroup = null;
@@ -899,8 +876,7 @@ public class MetaContactImpl extends DataObject implements MetaContact
      *
      * @return the group that is currently holding this meta contact.
      */
-    MetaContactGroupImpl getParentGroup()
-    {
+    MetaContactGroupImpl getParentGroup() {
         return parentGroup;
     }
 
@@ -909,8 +885,7 @@ public class MetaContactImpl extends DataObject implements MetaContact
      *
      * @return a reference to the MetaContactGroup currently containing this meta contact.
      */
-    public MetaContactGroup getParentMetaContactGroup()
-    {
+    public MetaContactGroup getParentMetaContactGroup() {
         return getParentGroup();
     }
 
@@ -920,8 +895,7 @@ public class MetaContactImpl extends DataObject implements MetaContact
      * @param name name of the detail.
      * @param value the value of the detail.
      */
-    public void addDetail(String name, String value)
-    {
+    public void addDetail(String name, String value) {
         try {
             JSONArray jsonArray = (JSONArray) details.get(name);
             if (jsonArray == null) {
@@ -941,8 +915,7 @@ public class MetaContactImpl extends DataObject implements MetaContact
      * @param name of the detail to be removed.
      * @param value value of the detail to be removed.
      */
-    public void removeDetail(String name, String value)
-    {
+    public void removeDetail(String name, String value) {
         try {
             JSONArray jsonArray = (JSONArray) details.get(name);
             if ((jsonArray != null) && (jsonArray.length() != 0)) {
@@ -964,8 +937,7 @@ public class MetaContactImpl extends DataObject implements MetaContact
      *
      * @param name of the details to be removed.
      */
-    public void removeDetails(String name)
-    {
+    public void removeDetails(String name) {
         Object itemRemoved = details.remove(name);
         if (itemRemoved != null)
             fireMetaContactModified(name, itemRemoved, null);
@@ -978,8 +950,7 @@ public class MetaContactImpl extends DataObject implements MetaContact
      * @param oldValue the old value of the detail.
      * @param newValue the new value of the detail.
      */
-    public void changeDetail(String name, String oldValue, String newValue)
-    {
+    public void changeDetail(String name, String oldValue, String newValue) {
         try {
             JSONArray jsonArray = (JSONArray) details.get(name);
             if (jsonArray == null)
@@ -1002,8 +973,7 @@ public class MetaContactImpl extends DataObject implements MetaContact
      *
      * @return the JSONObject which represent the details of the metaContactImpl
      */
-    public JSONObject getDetails()
-    {
+    public JSONObject getDetails() {
         return details;
     }
 
@@ -1011,11 +981,11 @@ public class MetaContactImpl extends DataObject implements MetaContact
      * Gets all details with a given name.
      *
      * @param name the name of the details we are searching for
+     *
      * @return a JSONArray which represent the details with the specified
      * <code>name</code>
      */
-    public JSONArray getDetails(String name)
-    {
+    public JSONArray getDetails(String name) {
         JSONArray jsonArray = new JSONArray();
         try {
             jsonArray = (JSONArray) details.get(name);
@@ -1036,8 +1006,7 @@ public class MetaContactImpl extends DataObject implements MetaContact
      * @param newValue the value of the property after the modification
      */
     private void fireMetaContactModified(String modificationName, Object oldValue,
-            Object newValue)
-    {
+            Object newValue) {
         MetaContactGroupImpl parentGroup = getParentGroup();
         if (parentGroup != null)
             parentGroup.getMclServiceImpl().fireMetaContactEvent(
@@ -1050,8 +1019,7 @@ public class MetaContactImpl extends DataObject implements MetaContact
      * @param protoContact The contact in which we store the avatar.
      * @param avatarBytes The avatar image bytes.
      */
-    public void cacheAvatar(Contact protoContact, byte[] avatarBytes)
-    {
+    public void cacheAvatar(Contact protoContact, byte[] avatarBytes) {
         this.mCachedAvatar = avatarBytes;
         this.avatarFileCacheAlreadyQueried = true;
 
@@ -1066,8 +1034,7 @@ public class MetaContactImpl extends DataObject implements MetaContact
      * @param contact the <code>Contact</code>, which capabilities have changed
      * @param opSets the new updated set of operation sets
      */
-    public void updateCapabilities(Contact contact, Jid jid, Map<String, ? extends OperationSet> opSets)
-    {
+    public void updateCapabilities(Contact contact, Jid jid, Map<String, ? extends OperationSet> opSets) {
         OperationSetContactCapabilities capOpSet
                 = contact.getProtocolProvider().getOperationSet(OperationSetContactCapabilities.class);
 
@@ -1091,8 +1058,7 @@ public class MetaContactImpl extends DataObject implements MetaContact
      * @param contact the <code>Contact</code>, which capabilities we remove
      * @param opSets the new updated set of operation sets
      */
-    private void removeCapabilities(Contact contact, Map<String, ? extends OperationSet> opSets)
-    {
+    private void removeCapabilities(Contact contact, Map<String, ? extends OperationSet> opSets) {
         synchronized (capabilities) {
             Iterator<Map.Entry<String, List<Contact>>> caps = capabilities.entrySet().iterator();
             Set<String> contactNewCaps = opSets.keySet();
@@ -1119,8 +1085,7 @@ public class MetaContactImpl extends DataObject implements MetaContact
      * @param contact the <code>Contact</code>, which capabilities we add
      * @param opSets the map of operation sets supported by the contact
      */
-    private void addCapabilities(Contact contact, Map<String, ? extends OperationSet> opSets)
-    {
+    private void addCapabilities(Contact contact, Map<String, ? extends OperationSet> opSets) {
         synchronized (capabilities) {
             for (String newCap : opSets.keySet()) {
                 List<Contact> capContacts;
@@ -1145,8 +1110,7 @@ public class MetaContactImpl extends DataObject implements MetaContact
      * @param jid the FullJid of the <code>Contact</code>, whom capabilities we remove. Null applies to all resources
      * @param opSets the new updated set of operation sets.
      */
-    private void removeCapabilities(Jid jid, Map<String, ? extends OperationSet> opSets)
-    {
+    private void removeCapabilities(Jid jid, Map<String, ? extends OperationSet> opSets) {
         Timber.d("Opset capability removal started: %s", jid);
         synchronized (capabilityJid) {
             Iterator<Map.Entry<String, List<Jid>>> capJids = capabilityJid.entrySet().iterator();
@@ -1177,8 +1141,7 @@ public class MetaContactImpl extends DataObject implements MetaContact
      * @param jid the FullJid of the <code>Contact</code>, whom capabilities we remove. Null applies to all resources
      * @param opSets the map of operation sets supported by the contact.
      */
-    private void addCapabilities(Jid jid, Map<String, ? extends OperationSet> opSets)
-    {
+    private void addCapabilities(Jid jid, Map<String, ? extends OperationSet> opSets) {
         Timber.d("Opset capability adding started: %s", jid);
         synchronized (capabilityJid) {
             for (String newCap : opSets.keySet()) {
@@ -1204,8 +1167,7 @@ public class MetaContactImpl extends DataObject implements MetaContact
      *
      * @return the sync lock for use when modifying {@link #parentGroup}
      */
-    private Object getParentGroupModLock()
-    {
+    private Object getParentGroupModLock() {
         /*
          * XXX The use of uid as parentGroupModLock is a bit unusual but a dedicated lock enlarges
          * the shallow runtime size of this instance and having hundreds of MetaContactImpl

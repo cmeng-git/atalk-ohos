@@ -547,7 +547,7 @@ public class ContactListFragment extends OSGiFragment implements OnGroupClickLis
                 try {
                     authOpSet.reRequestAuthorization(request, contact);
                 } catch (OperationFailedException e) {
-                    Context ctx = aTalkApp.getGlobalContext();
+                    Context ctx = aTalkApp.getInstance();
                     DialogActivity.showConfirmDialog(ctx, ctx.getString(R.string.request_authorization),
                             e.getMessage(), null, null);
                 }

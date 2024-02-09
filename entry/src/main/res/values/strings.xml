@@ -566,7 +566,7 @@
     <string name="mic_control_title">Microphone gain level</string>
     <string name="btn_mute_tooltip">Adjust microphone sound</string>
     <string name="presence_not_supported">Presence is not supported by %1$s</string>
-    <string name="proactive_notification">is writing a message</string>
+    <string name="proactive_notification">is writing a message (%1$s)</string>
     <string name="recent_messages">Recent conversations</string>
     <string name="received_">%1$s received</string>
     <string name="referred">Referred</string>
@@ -801,8 +801,8 @@
     <string name="update_download_ready">Update (%1$s) is downloaded and ready to be installed.</string>
     <string name="update_in_progress">In progress</string>
     <string name="update_download_in_progress">Downloading update is in progress.</string>
-    <string name="update_update_available">A new released version (%1$s-%2$s) for %3$s is available. Current installed version: %4$s.</string>
-    <string name="update_up_to_date">Your current installed version: (%1$s-%2$s) is up to date. Online available version: %3$s.</string>
+    <string name="update_update_available">A new released version (%1$s-%2$s) for %3$s is available. Current installed version: (%4$s-%5$s).</string>
+    <string name="update_up_to_date">Your current installed version: (%1$s-%2$s) is up to date. Online available version: (%3$s-%4$s).</string>
     <string name="update_new_version_none">No new version</string>
     <string name="update_install_update">Install Updates</string>
     <string name="update_download_failed">Failed to download new update!</string>

@@ -238,7 +238,7 @@ public class NotificationManager implements CallChangeListener, CallListener, Ca
 
             contactIcon = contact.getImage();
             if (contactIcon == null) {
-                contactIcon = AndroidImageUtil.getImageBytes(aTalkApp.getGlobalContext(), R.drawable.person_photo);
+                contactIcon = AndroidImageUtil.getImageBytes(aTalkApp.getInstance(), R.drawable.person_photo);
             }
         } else if (chatDescriptor instanceof ChatRoom) {
             ChatRoom chatRoom = (ChatRoom) chatDescriptor;
@@ -273,7 +273,7 @@ public class NotificationManager implements CallChangeListener, CallListener, Ca
     /**
      * Fires a notification for the given event type through the <code>NotificationService</code>. The
      * event type is one of the static constants defined in the <code>NotificationManager</code> class.
-     *
+     * <p>
      * <b>Note</b>: The uses of the method at the time of this writing do not take measures to stop looping sounds
      * if the respective notifications use them i.e. there is implicit agreement that the notifications fired through
      * the method do not loop sounds. Consequently, the method passes arguments to <code>NotificationService</code>
@@ -304,7 +304,7 @@ public class NotificationManager implements CallChangeListener, CallListener, Ca
     /**
      * Fires a notification through the <code>NotificationService</code> with a specific event type, a
      * specific message title and a specific message.
-     *
+     * <p>
      * <b>Note</b>: The uses of the method at the time of this writing do not take measures to
      * stop looping sounds if the respective notifications use them i.e. there is implicit
      * agreement that the notifications fired through the method do not loop sounds. Consequently,
@@ -1552,8 +1552,8 @@ public class NotificationManager implements CallChangeListener, CallListener, Ca
             }
 
             proactiveTimer.put(chatDescriptor, currentTime);
-            fireChatNotification(chatDescriptor, PROACTIVE_NOTIFICATION, fromJid,
-                    aTalkApp.getResString(R.string.proactive_notification), null);
+            String chatState = aTalkApp.getResString(R.string.proactive_notification, evt.getChatState());
+            fireChatNotification(chatDescriptor, PROACTIVE_NOTIFICATION, fromJid, chatState, null);
         } catch (Throwable t) {
             if (t instanceof ThreadDeath)
                 throw (ThreadDeath) t;

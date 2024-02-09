@@ -25,6 +25,7 @@ import net.java.sip.communicator.util.ConfigurationUtils;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smackx.chatstates.ChatStateManager;
+import org.jivesoftware.smackx.disco.ServiceDiscoveryManager;
 import org.jivesoftware.smackx.message_correct.element.MessageCorrectExtension;
 import org.jxmpp.jid.Jid;
 
@@ -47,8 +48,7 @@ import timber.log.Timber;
  */
 public class OperationSetContactCapabilitiesJabberImpl
         extends AbstractOperationSetContactCapabilities<ProtocolProviderServiceJabberImpl>
-        implements UserCapsNodeListener, ContactPresenceStatusListener
-{
+        implements UserCapsNodeListener, ContactPresenceStatusListener {
     /**
      * The list of <code>OperationSet</code> capabilities presumed to be supported by a
      * <code>Contact</code> when it is offline.
@@ -89,7 +89,7 @@ public class OperationSetContactCapabilitiesJabberImpl
     /**
      * The <code>discoveryManager</code> of {@link #parentProvider}.
      */
-    private ScServiceDiscoveryManager discoveryManager;
+    private ServiceDiscoveryManager discoveryManager;
 
     /**
      * Initializes a new <code>OperationSetContactCapabilitiesJabberImpl</code> instance which is to be
@@ -97,8 +97,7 @@ public class OperationSetContactCapabilitiesJabberImpl
      *
      * @param parentProvider the <code>ProtocolProviderServiceJabberImpl</code> which will provide the new instance
      */
-    public OperationSetContactCapabilitiesJabberImpl(ProtocolProviderServiceJabberImpl parentProvider)
-    {
+    public OperationSetContactCapabilitiesJabberImpl(ProtocolProviderServiceJabberImpl parentProvider) {
         super(parentProvider);
         OperationSetPresence presenceOpSet = parentProvider.getOperationSet(OperationSetPresence.class);
 
@@ -107,8 +106,7 @@ public class OperationSetContactCapabilitiesJabberImpl
         setOperationSetChatStateFeatures(ConfigurationUtils.isSendChatStateNotifications());
     }
 
-    public static void setOperationSetChatStateFeatures(boolean isEnable)
-    {
+    public static void setOperationSetChatStateFeatures(boolean isEnable) {
         if (OPERATION_SETS_TO_FEATURES.containsKey(OperationSetChatStateNotifications.class)) {
             if (!isEnable)
                 OPERATION_SETS_TO_FEATURES.remove(OperationSetChatStateNotifications.class);
@@ -132,14 +130,14 @@ public class OperationSetContactCapabilitiesJabberImpl
      * @param opsetClass the <code>OperationSet</code> <code>Class</code> for which the specified <code>contact</code> is
      * to be checked whether it possesses it as a capability
      * @param online <code>true</code> if <code>contact</code> is online; otherwise, <code>false</code>
+     *
      * @return the <code>OperationSet</code> corresponding to the specified <code>opsetClass</code>
      * which is considered by the associated protocol provider to be possessed as a capability by
      * the specified <code>contact</code>; otherwise, <code>null</code>
      * @see AbstractOperationSetContactCapabilities#getOperationSet(Contact, Class)
      */
     @Override
-    protected <U extends OperationSet> U getOperationSet(Contact contact, Class<U> opsetClass, boolean online)
-    {
+    protected <U extends OperationSet> U getOperationSet(Contact contact, Class<U> opsetClass, boolean online) {
         Jid jid = parentProvider.getFullJidIfPossible(contact);
         return getOperationSet(jid, opsetClass, online);
     }
@@ -152,6 +150,7 @@ public class OperationSetContactCapabilitiesJabberImpl
      * @param contact the <code>Contact</code> for which the supported <code>OperationSet</code> capabilities are to
      * be retrieved
      * @param online <code>true</code> if <code>contact</code> is online; otherwise, <code>false</code>
+     *
      * @return a <code>Map</code> listing the <code>OperationSet</code>s considered by the associated
      * protocol provider to be supported by the specified <code>contact</code> (i.e. to be
      * possessed as capabilities). Each supported <code>OperationSet</code> capability is
@@ -160,8 +159,7 @@ public class OperationSetContactCapabilitiesJabberImpl
      * @see AbstractOperationSetContactCapabilities#getSupportedOperationSets(Contact)
      */
     @Override
-    protected Map<String, OperationSet> getSupportedOperationSets(Contact contact, boolean online)
-    {
+    protected Map<String, OperationSet> getSupportedOperationSets(Contact contact, boolean online) {
         Jid jid = parentProvider.getFullJidIfPossible(contact);
         return getSupportedOperationSets(jid, online);
     }
@@ -173,6 +171,7 @@ public class OperationSetContactCapabilitiesJabberImpl
      *
      * @param jid the <code>Contact</code> for which the supported <code>OperationSet</code> capabilities are to be retrieved
      * @param online <code>true</code> if <code>contact</code> is online; otherwise, <code>false</code>
+     *
      * @return a <code>Map</code> listing the <code>OperationSet</code>s considered by the associated
      * protocol provider to be supported by the specified <code>contact</code> (i.e. to be
      * possessed as capabilities). Each supported <code>OperationSet</code> capability is
@@ -181,8 +180,7 @@ public class OperationSetContactCapabilitiesJabberImpl
      * @see AbstractOperationSetContactCapabilities#getSupportedOperationSets(Contact)
      */
     @SuppressWarnings("unchecked")
-    private Map<String, OperationSet> getSupportedOperationSets(Jid jid, boolean online)
-    {
+    private Map<String, OperationSet> getSupportedOperationSets(Jid jid, boolean online) {
         Map<String, OperationSet> supportedOperationSets = parentProvider.getSupportedOperationSets();
         int supportedOperationSetCount = supportedOperationSets.size();
         Map<String, OperationSet> contactSupportedOperationSets = new HashMap<>(supportedOperationSetCount);
@@ -223,13 +221,13 @@ public class OperationSetContactCapabilitiesJabberImpl
      * @param opsetClass the <code>OperationSet</code> <code>Class</code> for which the specified <code>contact</code> is
      * to be checked whether it possesses it as a capability
      * @param online <code>true</code> if <code>contact</code> is online; otherwise, <code>false</code>
+     *
      * @return the <code>OperationSet</code> corresponding to the specified <code>opsetClass</code>
      * which is considered by the associated protocol provider to be possessed as a capability by
      * the specified <code>contact</code>; otherwise, <code>null</code>
      * @see AbstractOperationSetContactCapabilities#getOperationSet(Contact, Class)
      */
-    private <U extends OperationSet> U getOperationSet(Jid jid, Class<U> opsetClass, boolean online)
-    {
+    private <U extends OperationSet> U getOperationSet(Jid jid, Class<U> opsetClass, boolean online) {
         U opset = parentProvider.getOperationSet(opsetClass);
         if (opset == null)
             return null;
@@ -260,20 +258,19 @@ public class OperationSetContactCapabilitiesJabberImpl
     }
 
     /**
-     * Sets the <code>ScServiceDiscoveryManager</code> which is the <code>discoveryManager</code> of {@link #parentProvider}.
+     * Sets the <code>ServiceDiscoveryManager</code> which is the <code>discoveryManager</code> of {@link #parentProvider}.
      * Remove the existing one before replaced with the new request
      *
-     * @param discManager the <code>ScServiceDiscoveryManager</code> which is the <code>discoveryManager</code> of
+     * @param discManager the <code>ServiceDiscoveryManager</code> which is the <code>discoveryManager</code> of
      * {@link #parentProvider}
      */
-    void setDiscoveryManager(ScServiceDiscoveryManager discManager)
-    {
+    void setDiscoveryManager(ServiceDiscoveryManager discManager) {
         if ((discManager != null) && (discManager != discoveryManager)) {
             if (discoveryManager != null)
-                discoveryManager.removeUserCapsNodeListener(this);
+                ServiceDiscoveryHelper.removeUserCapsNodeListener(this);
 
             discoveryManager = discManager;
-            discoveryManager.addUserCapsNodeListener(this);
+            ServiceDiscoveryHelper.addUserCapsNodeListener(this);
         }
     }
 
@@ -285,8 +282,8 @@ public class OperationSetContactCapabilitiesJabberImpl
      * @param online indicates if the user is currently online
      * @see UserCapsNodeListener#userCapsNodeNotify(Jid, boolean)
      */
-    public void userCapsNodeNotify(Jid user, boolean online)
-    {
+    @Override
+    public void userCapsNodeNotify(Jid user, boolean online) {
         /*
          * It doesn't matter to us whether a caps node has been added or removed for the specified
          * user because we report all changes.
@@ -302,7 +299,7 @@ public class OperationSetContactCapabilitiesJabberImpl
                 if (online) {
                     // when going online we have received a presence and make sure we discover
                     // this particular jid for getSupportedOperationSets
-                    fireContactCapabilitiesEvent(contact, user, getSupportedOperationSets(user, online));
+                    fireContactCapabilitiesEvent(contact, user, getSupportedOperationSets(user, true));
                 }
                 else {
                     // Need to wait a while before getSupportedOperationSets(); otherwise non-updated values
@@ -323,8 +320,7 @@ public class OperationSetContactCapabilitiesJabberImpl
      *
      * @param evt the <code>ContactPresenceStatusChangeEvent</code> that notified us
      */
-    public void contactPresenceStatusChanged(ContactPresenceStatusChangeEvent evt)
-    {
+    public void contactPresenceStatusChanged(ContactPresenceStatusChangeEvent evt) {
         if (evt.getNewStatus().getStatus() < PresenceStatus.ONLINE_THRESHOLD) {
             userCapsNodeNotify(evt.getJid(), false);
         }
@@ -335,8 +331,7 @@ public class OperationSetContactCapabilitiesJabberImpl
      *
      * @param user the user Jid to search for its contact.
      */
-    public void fireContactCapabilitiesChanged(Jid user)
-    {
+    public void fireContactCapabilitiesChanged(Jid user) {
         OperationSetPresence opsetPresence = parentProvider.getOperationSet(OperationSetPresence.class);
 
         if (opsetPresence != null) {

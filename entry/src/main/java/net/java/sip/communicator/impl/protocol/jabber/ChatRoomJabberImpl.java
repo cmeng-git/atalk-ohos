@@ -923,7 +923,7 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
         try {
             mMultiUserChat.destroy(reason, roomName);
         } catch (NoResponseException | NotConnectedException | InterruptedException e) {
-            DialogActivity.showDialog(aTalkApp.getGlobalContext(), R.string.error,
+            DialogActivity.showDialog(aTalkApp.getInstance(), R.string.error,
                     R.string.chatroom_destroy_exception, e.getMessage());
             return false;
         }
@@ -1125,7 +1125,7 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
             fireMessageEvent(msgDeliveredEvt);
         } catch (UndecidedOmemoIdentityException e) {
             OmemoAuthenticateListener omemoAuthListener = new OmemoAuthenticateListener(message, omemoManager);
-            Context ctx = aTalkApp.getGlobalContext();
+            Context ctx = aTalkApp.getInstance();
             ctx.startActivity(OmemoAuthenticateDialog.createIntent(ctx, omemoManager, e.getUndecidedDevices(), omemoAuthListener));
             return;
         } catch (NoOmemoSupportException e) {
@@ -2762,17 +2762,24 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
                 // if status 201 is available means that room is created and locked till we send the configuration
                 if ((mucUser.getStatus() != null)
                         && mucUser.getStatus().contains(MUCUser.Status.ROOM_CREATED_201)) {
-                    try {
-                        TextSingleFormField formField
-                                = FormField.buildHiddenFormType("http://jabber.org/protocol/muc#roomconfig");
-                        DataForm dataForm = DataForm.builder(DataForm.Type.form).addField(formField).build();
-                        mMultiUserChat.sendConfigurationForm(new FillableForm(dataForm));
+                    // Must execute in new Thread; else failed with NoResponseException.
+                    new Thread() {
+                        @Override
+                        public void run() {
+                            try {
+                                TextSingleFormField formField
+                                        = FormField.buildHiddenFormType("http://jabber.org/protocol/muc#roomconfig");
+                                DataForm dataForm = DataForm.builder(DataForm.Type.form).addField(formField).build();
+                                mMultiUserChat.sendConfigurationForm(new FillableForm(dataForm));
 
-                        // Sending null also picked up the options OperationSetMultiUserChatJabberImpl#createChatRoom and sent
-                        // mMultiUserChat.sendConfigurationForm(null);
-                    } catch (XMPPException | NoResponseException | NotConnectedException | InterruptedException e) {
-                        Timber.e(e, "Failed to send config form.");
-                    }
+                                // Sending null also picked up the options OperationSetMultiUserChatJabberImpl#createChatRoom and sent
+                                // mMultiUserChat.sendConfigurationForm(null);
+                            } catch (XMPPException | NoResponseException | NotConnectedException |
+                                     InterruptedException e) {
+                                Timber.e("Send config form error: %s", e.getMessage());
+                            }
+                        }
+                    }.start();
 
                     // Update mNickName here as it is used in fireLocalUserRoleEvent before joinAs() is triggered.
                     EntityFullJid from = presence.getFrom().asEntityFullJidIfPossible();
@@ -2782,8 +2789,9 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
                     if (affiliation == MUCAffiliation.owner) {
                         setLocalUserRole(ChatRoomMemberRole.OWNER, true);
                     }
-                    else
+                    else {
                         setLocalUserRole(ChatRoomMemberRole.MODERATOR, true);
+                    }
                 }
                 else {
                     // this is the presence for our own initial mRole and affiliation,

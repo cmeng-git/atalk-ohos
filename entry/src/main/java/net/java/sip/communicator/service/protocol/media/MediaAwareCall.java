@@ -116,7 +116,8 @@ public abstract class MediaAwareCall<
      * we would be able to use for even dispatching.
      * @param sid the Jingle session-initiate id if provided.
      */
-    protected MediaAwareCall(U parentOpSet, String sid) {
+    protected MediaAwareCall(U parentOpSet, String sid)
+    {
         super(parentOpSet.getProtocolProvider(), sid);
         this.parentOpSet = parentOpSet;
     }
@@ -127,7 +128,8 @@ public abstract class MediaAwareCall<
      *
      * @param callPeer the new <code>CallPeer</code>
      */
-    public void addCallPeer(T callPeer) {
+    public void addCallPeer(T callPeer)
+    {
         if (!doAddCallPeer(callPeer))
             return;
 
@@ -153,7 +155,8 @@ public abstract class MediaAwareCall<
      * @param evt the event containing the <code>CallPeer</code> leaving the call and the reason (if any)
      * for the <code>CallPeerChangeEvent</code>. Use the event as the cause for the call state change event.
      */
-    private void removeCallPeer(CallPeerChangeEvent evt) {
+    private void removeCallPeer(CallPeerChangeEvent evt)
+    {
         @SuppressWarnings("unchecked")
         T callPeer = (T) evt.getSourceCallPeer();
 
@@ -192,7 +195,8 @@ public abstract class MediaAwareCall<
      *
      * @param evt unused.
      */
-    public void peerImageChanged(CallPeerChangeEvent evt) {
+    public void peerImageChanged(CallPeerChangeEvent evt)
+    {
         // does not concern us
     }
 
@@ -201,7 +205,8 @@ public abstract class MediaAwareCall<
      *
      * @param evt unused.
      */
-    public void peerAddressChanged(CallPeerChangeEvent evt) {
+    public void peerAddressChanged(CallPeerChangeEvent evt)
+    {
         // does not concern us
     }
 
@@ -210,7 +215,8 @@ public abstract class MediaAwareCall<
      *
      * @param evt unused.
      */
-    public void peerTransportAddressChanged(CallPeerChangeEvent evt) {
+    public void peerTransportAddressChanged(CallPeerChangeEvent evt)
+    {
         // does not concern us
     }
 
@@ -219,7 +225,8 @@ public abstract class MediaAwareCall<
      *
      * @param evt unused.
      */
-    public void peerDisplayNameChanged(CallPeerChangeEvent evt) {
+    public void peerDisplayNameChanged(CallPeerChangeEvent evt)
+    {
         // does not concern us
     }
 
@@ -229,7 +236,8 @@ public abstract class MediaAwareCall<
      * @param evt The <code>CallPeerChangeEvent</code> instance containing the source event as well as its
      * previous and its new status.
      */
-    public void peerStateChanged(CallPeerChangeEvent evt) {
+    public void peerStateChanged(CallPeerChangeEvent evt)
+    {
         Object newState = evt.getNewValue();
 
         if (CallPeerState.DISCONNECTED.equals(newState) || CallPeerState.FAILED.equals(newState)) {
@@ -249,7 +257,8 @@ public abstract class MediaAwareCall<
      *
      * @return a reference to the <code>OperationSetBasicTelephony</code> instance that created this call.
      */
-    public U getParentOperationSet() {
+    public U getParentOperationSet()
+    {
         return parentOpSet;
     }
 
@@ -265,7 +274,8 @@ public abstract class MediaAwareCall<
      * <code>CallPeer</code>s of this <code>Call</code> when the local peer represented by this
      * <code>Call</code> is acting as a conference focus
      */
-    public RTPTranslator getRTPTranslator(MediaType mediaType) {
+    public RTPTranslator getRTPTranslator(MediaType mediaType)
+    {
         return getConference().getRTPTranslator(mediaType);
     }
 
@@ -278,7 +288,8 @@ public abstract class MediaAwareCall<
      * conference focus; otherwise, <code>false</code>
      */
     @Override
-    public boolean isConferenceFocus() {
+    public boolean isConferenceFocus()
+    {
         return getConference().isConferenceFocus();
     }
 
@@ -293,13 +304,13 @@ public abstract class MediaAwareCall<
      *
      * @param mediaType the <code>MediaType</code> in which the retrieved <code>MediaDevice</code> is to capture
      * and/or play back media
-     *
      * @return a <code>MediaDevice</code> which is capable of capture and/or playback of media of the
      * specified <code>mediaType</code>, is the default choice of the user for a
      * <code>MediaDevice</code> with the specified <code>mediaType</code> and is appropriate for the
      * current state of this <code>Call</code>
      */
-    public MediaDevice getDefaultDevice(MediaType mediaType) {
+    public MediaDevice getDefaultDevice(MediaType mediaType)
+    {
         return getConference().getDefaultDevice(mediaType, mediaUseCase);
     }
 
@@ -313,7 +324,8 @@ public abstract class MediaAwareCall<
      * @param l the <code>SoundLevelListener</code> to add
      */
     @Override
-    public void addLocalUserSoundLevelListener(SoundLevelListener l) {
+    public void addLocalUserSoundLevelListener(SoundLevelListener l)
+    {
         synchronized (localUserAudioLevelListenersSyncRoot) {
             if ((localUserAudioLevelListeners == null) || localUserAudioLevelListeners.isEmpty()) {
                 /*
@@ -346,7 +358,8 @@ public abstract class MediaAwareCall<
      * @param l the <code>SoundLevelListener</code> to remove
      */
     @Override
-    public void removeLocalUserSoundLevelListener(SoundLevelListener l) {
+    public void removeLocalUserSoundLevelListener(SoundLevelListener l)
+    {
         synchronized (localUserAudioLevelListenersSyncRoot) {
             /*
              * Implement localUserAudioLevelListeners as a copy-on-write storage so that iterators
@@ -379,7 +392,8 @@ public abstract class MediaAwareCall<
      *
      * @param newLevel the new audio level of the local user.
      */
-    private void fireLocalUserAudioLevelChangeEvent(int newLevel) {
+    private void fireLocalUserAudioLevelChangeEvent(int newLevel)
+    {
         List<SoundLevelListener> localUserAudioLevelListeners;
 
         synchronized (localUserAudioLevelListenersSyncRoot) {
@@ -409,7 +423,8 @@ public abstract class MediaAwareCall<
      * @return <code>true</code> if an audio streams being sent to the call peers are currently muted;
      * <code>false</code>, otherwise
      */
-    public boolean isMute() {
+    public boolean isMute()
+    {
         return this.mute;
     }
 
@@ -418,7 +433,8 @@ public abstract class MediaAwareCall<
      *
      * @param mute the new value of the mute property for this call
      */
-    public void setMute(boolean mute) {
+    public void setMute(boolean mute)
+    {
         if (this.mute != mute) {
             this.mute = mute;
 
@@ -439,7 +455,8 @@ public abstract class MediaAwareCall<
      * @throws OperationFailedException if video initialization fails.
      */
     public void setLocalVideoAllowed(boolean allowed, MediaUseCase useCase)
-            throws OperationFailedException {
+            throws OperationFailedException
+    {
         /*
          * If the use case changes and we don't change the device, calls to getDefaultDevice() will
          * return the device for the old use case ( because it cached in MediaAwareCallConference)
@@ -461,7 +478,8 @@ public abstract class MediaAwareCall<
      *
      * @return media use case
      */
-    public MediaUseCase getMediaUseCase() {
+    public MediaUseCase getMediaUseCase()
+    {
         return mediaUseCase;
     }
 
@@ -476,7 +494,8 @@ public abstract class MediaAwareCall<
      * @return <code>true</code> if the streaming of local video for this <code>Call</code> is allowed;
      * otherwise, <code>false</code>
      */
-    public boolean isLocalVideoAllowed(MediaUseCase useCase) {
+    public boolean isLocalVideoAllowed(MediaUseCase useCase)
+    {
         return mediaUseCase.equals(useCase) && localVideoAllowed;
     }
 
@@ -486,7 +505,8 @@ public abstract class MediaAwareCall<
      * @return <code>true</code> if we are currently streaming video toward at least one of the peers in
      * this call and <code>false</code> otherwise.
      */
-    public boolean isLocalVideoStreaming() {
+    public boolean isLocalVideoStreaming()
+    {
         Iterator<T> callPeers = getCallPeers();
         while (callPeers.hasNext()) {
             if (callPeers.next().isLocalVideoStreaming())
@@ -503,7 +523,8 @@ public abstract class MediaAwareCall<
      * @param listener the <code>PropertyChangeListener</code> to be notified when the properties associated with
      * member <code>CallPeer</code>s change their values.
      */
-    public void addVideoPropertyChangeListener(PropertyChangeListener listener) {
+    public void addVideoPropertyChangeListener(PropertyChangeListener listener)
+    {
         Iterator<T> callPeers = getCallPeers();
         while (callPeers.hasNext())
             callPeers.next().addVideoPropertyChangeListener(listener);
@@ -517,7 +538,8 @@ public abstract class MediaAwareCall<
      * @param listener the <code>PropertyChangeListener</code> to unregister from member <code>CallPeer</code>s
      * change their values.
      */
-    public void removeVideoPropertyChangeListener(PropertyChangeListener listener) {
+    public void removeVideoPropertyChangeListener(PropertyChangeListener listener)
+    {
         Iterator<T> callPeers = getCallPeers();
         while (callPeers.hasNext())
             callPeers.next().removeVideoPropertyChangeListener(listener);
@@ -533,7 +555,8 @@ public abstract class MediaAwareCall<
      * <code>Call</code>
      */
     public Recorder createRecorder()
-            throws OperationFailedException {
+            throws OperationFailedException
+    {
         final Recorder recorder
                 = ProtocolMediaActivator.getMediaService().createRecorder(getDefaultDevice(MediaType.AUDIO));
 
@@ -546,13 +569,15 @@ public abstract class MediaAwareCall<
             };
 
             // Make sure the recorder is stopped when this call ends.
-            final CallChangeListener callChangeListener = new CallChangeListener() {
+            final CallChangeListener callChangeListener = new CallChangeListener()
+            {
                 /**
                  * When call ends we stop recording.
                  *
                  * @param evt the <code>CallChangeEvent</code> instance containing the source
                  */
-                public void callStateChanged(CallChangeEvent evt) {
+                public void callStateChanged(CallChangeEvent evt)
+                {
                     if (!CallChangeEvent.CALL_STATE_CHANGE.equals(evt.getPropertyName()))
                         return;
 
@@ -565,7 +590,8 @@ public abstract class MediaAwareCall<
                  *
                  * @param evt the <code>CallPeerEvent</code> containing the source call
                  */
-                public void callPeerAdded(CallPeerEvent evt) {
+                public void callPeerAdded(CallPeerEvent evt)
+                {
                     updateRecorderMuteState(recorder);
                     evt.getSourceCallPeer().addPropertyChangeListener(muteListener);
                 }
@@ -575,7 +601,8 @@ public abstract class MediaAwareCall<
                  *
                  * @param evt he <code>CallPeerEvent</code> containing the source call
                  */
-                public void callPeerRemoved(CallPeerEvent evt) {
+                public void callPeerRemoved(CallPeerEvent evt)
+                {
                     updateRecorderMuteState(recorder);
                     evt.getSourceCallPeer().removePropertyChangeListener(muteListener);
                 }
@@ -614,7 +641,8 @@ public abstract class MediaAwareCall<
      *
      * @param recorder the recorder we are operating on.
      */
-    private void updateRecorderMuteState(Recorder recorder) {
+    private void updateRecorderMuteState(Recorder recorder)
+    {
         Iterator<T> callPeers = getCallPeers();
         while (callPeers.hasNext()) {
             if (!callPeers.next().isMute()) {
@@ -632,7 +660,8 @@ public abstract class MediaAwareCall<
      *
      * @param audioDevice the <code>MediaDevice</code> to be used by this <code>Call</code> for audio capture and/or playback
      */
-    public void setAudioDevice(MediaDevice audioDevice) {
+    public void setAudioDevice(MediaDevice audioDevice)
+    {
         getConference().setDevice(MediaType.AUDIO, audioDevice);
     }
 
@@ -644,7 +673,8 @@ public abstract class MediaAwareCall<
      * @param useCase the use case of the video streaming to be set on this <code>MediaAwareCall</code> such as
      * webcam capture or desktop sharing/streaming
      */
-    public void setVideoDevice(MediaDevice videoDevice, MediaUseCase useCase) {
+    public void setVideoDevice(MediaDevice videoDevice, MediaUseCase useCase)
+    {
         /*
          * XXX If the mediaUseCase is changing, it is important to realize the change prior to
          * setting the specified videoDevice on the associated conference because the method
@@ -665,7 +695,8 @@ public abstract class MediaAwareCall<
      * @see Call#setCallState(CallState, CallPeerChangeEvent)
      */
     @Override
-    protected void setCallState(CallState newState, CallPeerChangeEvent cause) {
+    protected void setCallState(CallState newState, CallPeerChangeEvent cause)
+    {
         try {
             super.setCallState(newState, cause);
         } finally {
@@ -681,7 +712,8 @@ public abstract class MediaAwareCall<
      * @param ev a <code>PropertyChangeEvent</code> which specifies the name of the property which has its
      * value changed and the old and new values
      */
-    public void propertyChange(PropertyChangeEvent ev) {
+    public void propertyChange(PropertyChangeEvent ev)
+    {
         /*
          * Forward PropertyChangeEvents notifying about changes in the values of MediaAwareCall
          * properties which are delegated to MediaAwareCallConference.
@@ -710,7 +742,8 @@ public abstract class MediaAwareCall<
      * @param oldValue the value of the property <code>CONFERENCE_FOCUS</code> before the change
      * @param newValue the value of the property <code>CONFERENCE_FOCUS</code> after the change
      */
-    protected void conferenceFocusChanged(boolean oldValue, boolean newValue) {
+    protected void conferenceFocusChanged(boolean oldValue, boolean newValue)
+    {
         firePropertyChange(CONFERENCE_FOCUS, oldValue, newValue);
     }
 
@@ -721,7 +754,8 @@ public abstract class MediaAwareCall<
      * associated with the telephony conference-related state of this <code>MediaAwareCall</code>.
      */
     @Override
-    protected CallConference createConference() {
+    protected CallConference createConference()
+    {
         return new MediaAwareCallConference(false, this.useTranslator);
     }
 
@@ -732,7 +766,8 @@ public abstract class MediaAwareCall<
      * represented by a <code>MediaAwareCallConference</code> instance.
      */
     @Override
-    public MediaAwareCallConference getConference() {
+    public MediaAwareCallConference getConference()
+    {
         return (MediaAwareCallConference) super.getConference();
     }
 
@@ -742,7 +777,8 @@ public abstract class MediaAwareCall<
      * Listens to the changes in the values of the properties of this <code>Call</code>.
      */
     @Override
-    protected void firePropertyChange(String property, Object oldValue, Object newValue) {
+    protected void firePropertyChange(String property, Object oldValue, Object newValue)
+    {
         if (oldValue != newValue) {
             /*
              * Listen to the changes in the values of the properties of the telephony
@@ -771,7 +807,8 @@ public abstract class MediaAwareCall<
      * represented by a <code>MediaAwareCallConference</code> instance.
      */
     @Override
-    public void setConference(CallConference conference) {
+    public void setConference(CallConference conference)
+    {
         super.setConference(conference);
     }
 
@@ -782,7 +819,8 @@ public abstract class MediaAwareCall<
      * {@link DTMFListener#toneReceived(net.java.sip.communicator.service.protocol.event.DTMFReceivedEvent)}
      */
     @Override
-    public void toneReceived(DTMFReceivedEvent evt) {
+    public void toneReceived(DTMFReceivedEvent evt)
+    {
         // Stub
     }
 }

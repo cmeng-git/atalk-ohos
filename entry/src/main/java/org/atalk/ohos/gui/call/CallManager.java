@@ -438,7 +438,7 @@ public class CallManager
                 String error = aTalkApp.getResString(R.string.call_transfer_failed,
                         peer.getAddress(), target.getAddress(), ex.getMessage());
                 Timber.w("%s", error);
-                DialogActivity.showDialog(aTalkApp.getGlobalContext(),
+                DialogActivity.showDialog(aTalkApp.getInstance(),
                         aTalkApp.getResString(R.string.call_transfer_call), error);
             }
         }
@@ -462,7 +462,7 @@ public class CallManager
                 String error = aTalkApp.getResString(R.string.call_transfer_failed,
                         peer.getAddress(), target, ex.getMessage());
                 Timber.w("%s", error);
-                DialogActivity.showDialog(aTalkApp.getGlobalContext(),
+                DialogActivity.showDialog(aTalkApp.getInstance(),
                         aTalkApp.getResString(R.string.call_transfer_call), error);
             }
         }
@@ -802,7 +802,7 @@ public class CallManager
                     errMsg = aTalkApp.getResString(R.string.call_no_audio_codec);
                 }
                 if (errMsg != null) {
-                    DialogActivity.showDialog(aTalkApp.getGlobalContext(),
+                    DialogActivity.showDialog(aTalkApp.getInstance(),
                             R.string.call_audio, R.string.call_no_device_codec_H, errMsg);
                     return;
                 }
@@ -842,7 +842,7 @@ public class CallManager
 
                 if (t.getMessage() != null)
                     message += "\n" + t.getMessage();
-                DialogActivity.showDialog(aTalkApp.getGlobalContext(), aTalkApp.getResString(R.string.error), message);
+                DialogActivity.showDialog(aTalkApp.getInstance(), aTalkApp.getResString(R.string.error), message);
             }
         }
     }
@@ -1034,7 +1034,7 @@ public class CallManager
             }
             if (exception != null) {
                 Timber.e("The call could not be created: %s", exception.getMessage());
-                DialogActivity.showDialog(aTalkApp.getGlobalContext(),
+                DialogActivity.showDialog(aTalkApp.getInstance(),
                         aTalkApp.getResString(R.string.error), exception.getMessage());
             }
 
@@ -1245,7 +1245,7 @@ public class CallManager
                     }
                 } catch (Exception e) {
                     Timber.e(e, "Failed to invite callee: %s", Arrays.toString(contactArray));
-                    DialogActivity.showDialog(aTalkApp.getGlobalContext(),
+                    DialogActivity.showDialog(aTalkApp.getInstance(),
                             aTalkApp.getResString(R.string.error), e.getMessage());
                 }
             }
@@ -1292,7 +1292,7 @@ public class CallManager
                 }
             } catch (Exception e) {
                 Timber.e(e, "Failed to invite callee: %s", Arrays.toString(callees));
-                DialogActivity.showDialog(aTalkApp.getGlobalContext(),
+                DialogActivity.showDialog(aTalkApp.getInstance(),
                         aTalkApp.getResString(R.string.error), e.getMessage());
             }
         }

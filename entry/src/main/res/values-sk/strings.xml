@@ -564,7 +564,7 @@
     <string name="mic_control_title">Úroveň zisku mikrofónu</string>
     <string name="btn_mute_tooltip">Upravte zvuk mikrofónu</string>
     <string name="presence_not_supported">%1$s nepodporuje prítomnosť</string>
-    <string name="proactive_notification">píše správu</string>
+    <string name="proactive_notification">píše správu (%1$s)</string>
     <string name="recent_messages">Posledné konverzácie</string>
     <string name="received_">Prijaté: %1$s</string>
     <string name="referred">Uvedené</string>
@@ -799,8 +799,8 @@
     <string name="update_download_ready">Aktualizácia (%1$s) sa stiahne a je pripravená na inštaláciu.</string>
     <string name="update_in_progress">Prebieha</string>
     <string name="update_download_in_progress">Prebieha sťahovanie aktualizácií.</string>
-    <string name="update_update_available">K dispozícii je nová vydaná verzia (%1$s-%2$s) pre %3$s. Aktuálna nainštalovaná verzia: %4$s.</string>
-    <string name="update_up_to_date">Vaša aktuálna nainštalovaná verzia: (%1$s-%2$s) je aktuálna. Online dostupná verzia: %3$s.</string>
+    <string name="update_update_available">K dispozícii je nová vydaná verzia (%1$s-%2$s) pre %3$s. Aktuálna nainštalovaná verzia: (%4$s-%5$s).</string>
+    <string name="update_up_to_date">Vaša aktuálna nainštalovaná verzia: (%1$s-%2$s) je aktuálna. Online dostupná verzia: (%3$s-%4$s).</string>
     <string name="update_new_version_none">Žiadna nová verzia</string>
     <string name="update_install_update">Nainštalujte aktualizácie</string>
     <string name="update_download_failed">Nepodarilo sa stiahnuť novú aktualizáciu!</string>

@@ -552,7 +552,7 @@
     <string name="mic_control_title">Tingkat penguatan mikrofon</string>
     <string name="btn_mute_tooltip">Sesuaikan suara mikrofon</string>
     <string name="presence_not_supported">Keberadaan tidak didukung oleh %1$s</string>
-    <string name="proactive_notification">sedang menulis pesan</string>
+    <string name="proactive_notification">sedang menulis pesan (%1$s)</string>
     <string name="recent_messages">Percakapan terbaru</string>
 	<string name="received_">%1$s diterima</string>
     <string name="referred">Disebutkan</string>
@@ -791,8 +791,8 @@
     <string name="update_download_ready">Pembaruan (%1$s) diunduh dan siap untuk dipasang.</string>
     <string name="update_in_progress">Sedang berlangsung</string>
     <string name="update_download_in_progress">Mengunduh pembaruan sedang berlangsung.</string>
-    <string name="update_update_available">Versi baru yang dirilis (%1$s-%2$s) untuk %3$s telah tersedia. Versi terpasang saat ini: %4$s.</string>
-    <string name="update_up_to_date">Versi terinstal yang saat ini: (%1$s-%2$s) adalah yang terbaru. Versi online yang tersedia: %3$s.</string>
+    <string name="update_update_available">Versi baru yang dirilis (%1$s-%2$s) untuk %3$s telah tersedia. Versi terpasang saat ini: (%4$s-%5$s).</string>
+    <string name="update_up_to_date">Versi terinstal yang saat ini: (%1$s-%2$s) adalah yang terbaru. Versi online yang tersedia: (%3$s-%4$s).</string>
     <string name="update_new_version_none">Tidak ada versi baru</string>
     <string name="update_install_update">Instal Pembaruan</string>
     <string name="update_download_failed">Gagal mengunduh pembaruan baru!</string>

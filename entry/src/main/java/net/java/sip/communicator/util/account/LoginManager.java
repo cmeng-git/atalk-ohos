@@ -183,7 +183,7 @@ public class LoginManager implements ServiceListener, RegistrationStateChangeLis
 //                }
 //            }
 //            if (msgText != null)
-//                DialogActivity.showDialog(aTalkApp.getGlobalContext(), aTalkApp.getResString(R.string.error), msgText);
+//                DialogActivity.showDialog(aTalkApp.getInstance(), aTalkApp.getResString(R.string.error), msgText);
 //        }
     }
 
@@ -346,7 +346,7 @@ public class LoginManager implements ServiceListener, RegistrationStateChangeLis
 //				else if (errorCode == OperationFailedException.NETWORK_FAILURE) {
 //					Timber.e(alertMsg + "network failure: " + ex);
 //				}
-                DialogActivity.showDialog(aTalkApp.getGlobalContext(),
+                DialogActivity.showDialog(aTalkApp.getInstance(),
                         R.string.error, R.string.logoff_failed,
                         protocolProvider.getAccountID().getUserID(),
                         protocolProvider.getAccountID().getService());

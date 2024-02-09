@@ -25,12 +25,6 @@
         android:text="@string/refresh_store_caps" />
 
     <CheckBox
-        android:id="@+id/cb_discoInfo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/refresh_store_disc_info" />
-
-    <CheckBox
         android:id="@+id/cb_avatar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -6,15 +6,47 @@
      They are automatically updated with "ant bump-version".
 -->
 <changelog>
-    <release version="00.02.040 (01/26/2024)" versioncode="0002040">
+    <release version="00.02.050 (02/09/2024)" versioncode="0002050">
         <change>Please read &lt;a href='https://cmeng-git.github.io/atalk/faq.html#ui_01'&gt;aTalk UI design &amp; Implementation&lt;/a&gt; before using aTalk</change>
+        <change>Fix incorrect derive of the chatSession Uuid for conference chat messages in saveMamIfNotExit()</change>
+        <change>Extend smack reply timeout to 10S for MamManager.MamQuery() to take care for slow server response</change>
+        <change>Drop non-null subject field as prerequisite in create/join a chatRoom; user may not have the right to change subject</change>
+        <change>Default bookmark creation but with auto-join disabled for newly created chatRoom</change>
+        <change>Default "Enable Room Status" to false on entry to newly created chatRoom</change>
+        <change>Block room status caching in ChatPanel#msgCache if RoomStatus Enable == false; else they will appear in chatSession when open</change>
+        <change>Limit conference subject to single line with auto scroll horizontally</change>
+        <change>Fix chatRoom status icon indicator not being updated on entry</change>
+        <change>Send muc#roomconfig stanza on new thread; else always failed with NoResponseException</change>
+        <change>Fix deletion of room status messages crashes aTalk</change>
+        <change>Drop aTalk ScServiceDiscovery class; use smack ServiceDiscoveryManager and local ServiceDiscoveryHelper implementations</change>
+        <change>Cleanup and improve ServerPersistentStoresRefreshDialog class implementation</change>
+        <change>Drop butterknife-compiler:10.2.3 dependency and remove jdk-15 max restriction; use android View binding class instead</change>
+        <change>Change file transfer protocol priority to: a. httpFileUpload; b. jingleFileSend (Secure JET or Plain); c. Legacy byteStream transfer protocol</change>
+        <change>Fix Smack 4.4.7: ByteStream Sock5 implementation does not take care of the host address with zone id</change>
+        <change>Enable webView cache mode</change>
+        <change>Upgrade to android studio Hedgehog; update all associated changes required with gradle 8.x</change>
+        <change>JingleFile transfer AbstractMethodError remained; disabled for aTalk release. Awaiting Google time solution feedback</change>
+        <change>Bug fixes and enhancements</change>
+        <change>Fix ContextCompat.registerReceiver flag setting to ensure proper callbacks for android API-34 device:</change>
+        <change>a. Fix Http File Download, Connectivity Manager Listener and Update Service</change>
+        <change>b. Fix main menu Exit option</change>
+        <change>c. Fix CallControl Notification with proper callback</change>
+        <change>d. Fix message received popup with proper callback</change>
+        <change>Temporary disable 'Jingle Outgoing File Offer', use only HTTP file upload instead; Android Studio release built throws runtime AbstractMethodError</change>
+        <change>Fix Option 'StreetViews &amp; Map' crashes in API-34: Layout &lt;frame /> cannot accept fraction value in android:layout_weight</change>
+        <change>Fix correct downloadable fileNameApk creation, for debug version only</change>
+        <change>Make UpdateService shows both version/code for installed and latest available apk</change>
+        <change>Bug fixes and enhancements</change>
+    </release>
+
+    <release version="00.02.040 (01/26/2024)" versioncode="0002040">
         <change>Rebuild for API-34 release fixing user login problem arise from Android Studio weird behaviour</change>
         <change>Change chat session action options on user single and multiple items selection</change>
         <change>Change auto return to contactList UI timer to 5 seconds after call has ended; allow user more time to view error messages</change>
         <change>JingleFile send still having problem, AS throws AbstractMethodError exception unexpectedly. See &lt;a href='https://issuetracker.google.com/issues/321988935'&gt;Bug Report&lt;/a&gt;</change>
         <change>Bug fixes and enhancements</change>
     </release>
-    
+
     <release version="00.02.030 (12/30/2023)" versioncode="0002030">
         <change>Revert gradle-wrapper.properties #distributionUrl to use gradle-7.6-bin.zip; gradle-8.x does not generate the required smack jarjar files at all</change>
         <change>Use implementation jarjar.repackage("filename.jar") to ensure destinationName is set correctly</change>

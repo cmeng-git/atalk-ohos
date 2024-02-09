@@ -565,7 +565,7 @@
     <string name="mic_control_title">麦克风增益级别</string>
     <string name="btn_mute_tooltip">调整麦克风声音</string>
     <string name="presence_not_supported">%1$s 不支持在线状态</string>
-    <string name="proactive_notification">正在写短信</string>
+    <string name="proactive_notification">正在写短信 (%1$s)</string>
     <string name="recent_messages">最近对话</string>
     <string name="received_">%1$s 已收到</string>
     <string name="referred">推荐</string>
@@ -800,8 +800,8 @@
     <string name="update_download_ready">更新 (%1$s) 已下载并准备安装。</string>
     <string name="update_in_progress">进行中</string>
     <string name="update_download_in_progress">正在下载更新。</string>
-    <string name="update_update_available">%3$s 的新发布版本 (%1$s-%2$s) 可用。当前安装的版本：%4$s.</string>
-    <string name="update_up_to_date">您当前安装的版本：(%1$s-%2$s) 是最新的。\n在线版本：%3$s.</string>
+    <string name="update_update_available">%3$s 的新发布版本 (%1$s-%2$s) 可用。当前安装的版本：(%4$s-%5$s).</string>
+    <string name="update_up_to_date">您当前安装的版本：(%1$s-%2$s) 是最新的。\n在线版本： (%3$s-%4$s).</string>
     <string name="update_new_version_none">没有新版本</string>
     <string name="update_install_update">安装更新</string>
     <string name="update_download_failed">无法下载新更新！</string>

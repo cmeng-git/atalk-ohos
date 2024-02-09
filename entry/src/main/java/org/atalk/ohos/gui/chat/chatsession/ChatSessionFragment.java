@@ -613,7 +613,7 @@ public class ChatSessionFragment extends OSGiFragment implements View.OnClickLis
 
                     case R.id.callVideoButton:
                         boolean isVideoCall = viewHolder.callVideoButton.isPressed();
-                        AndroidCallUtil.createAndroidCall(aTalkApp.getGlobalContext(), jid,
+                        AndroidCallUtil.createAndroidCall(aTalkApp.getInstance(), jid,
                                 viewHolder.callVideoButton, isVideoCall);
                         break;
 
@@ -698,7 +698,7 @@ public class ChatSessionFragment extends OSGiFragment implements View.OnClickLis
                     if (evt.getPropertyName().equals(ChatRoomWrapper.JOIN_SUCCESS_PROP))
                         return;
 
-                    // if we failed for some , then close and remove the room
+                    // if we failed for some reason, then close and remove the room
                     AndroidGUIActivator.getUIService().closeChatRoomWindow(crWrapper);
                     MUCActivator.getMUCService().removeChatRoom(crWrapper);
                 });

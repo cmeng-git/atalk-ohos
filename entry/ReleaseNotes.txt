@@ -1,5 +1,68 @@
 Project aTalk-ohos Release Notes
 =========================================================================
+Version:        00.02.050 (0002050)
+Release Date:   02/09/2024
+Author:         cmeng
+- Fix incorrect derive of the chatSession Uuid for conference chat messages in saveMamIfNotExit()
+- Extend smack reply timeout to 10S for MamManager.MamQuery() to take care for slow server response
+- Drop non-null subject field as prerequisite in create/join a chatRoom; user may not have the right to change subject.
+  * Instead use chatRoomId for bookmark name if subject is null.
+- Default bookmark creation but with auto-join disabled for newly created chatRoom.
+- Default "Enable Room Status" to false on entry to newly created chatRoom.
+- Block room status caching in ChatPanel#msgCache if !isRoomStatusEnable(); else they will appear in chatSession when open.
+- Limit conference subject to single line with ellipsize="marquee" and auto scroll horizontally
+- Fix chatRoom status icon indicator not being updated on entry.
+- Fix muc#roomconfig stanza sending always failed with NoResponseException, if Send within
+  PresenceListener#processOwnPresence() thread; must send in new Thread() to resolve the problem.
+- Fix deletion of room status messages crashes aTalk
+- Drop aTalk ScServiceDiscovery class; use smack ServiceDiscoveryManager and local ServiceDiscoveryHelper implementations.
+  * Simplify implementation, and resolve endless disco#info requests at times.
+- Remove unused class EntityCapsDatabase()
+- Rename SimpleDirectoryPersistentCache entityStore to entityCapsStore
+- Cleanup and improve ServerPersistentStoresRefreshDialog class implementation
+
+- Drop com.jakewharton:butterknife-compiler:10.2.3 dependency and remove jdk-15 max restriction;
+  use android View binding class instead.
+- Change file transfer protocol priority to:
+  * The file transport is selected with the following priority order if contact is online:
+  * a. httpFileUpload (for OMEMO and plain chat session: chatType)
+  * b. jingleFileSend (Secure JET or Plain) (NAT not supported)
+  * c. Legacy byteStream transfer protocol for SOCK5 with fallback on IBB on user retry
+- Fix Smack 4.4.7: ByteStream Sock5 implementation does not take care of the host address with zone id
+- Enable webView cache mode
+- JingleFile transfer AbstractMethodError remained; disabled for aTalk release. Awaiting Google time solution feedback
+- API-34 overrides aTalk message Snooze pending intent; actual implementation depends on manufacturers i.e.
+  auto enable after 3 notifications (pixel) or show user snooze option (Notes 10) with timer etc.
+
+- Update gradle build environment to with gradle 8.0.0 and above:
+  a. Use Android Studio Hedgehog | 2023.1.1 Patch
+  b. distributionUrl=https://services.gradle.org/distributions/gradle-8.5-bin.zip
+  c. classpath 'com.android.tools.build:gradle:8.2.2'
+  d. Add to buildFeatures: viewBinding true; buildConfig true
+  e. Add namespace to aTalk and YoutubePlayer modules
+  f. YoutubePlayer: kotlinOptions { jvmTarget = '1.8'}
+  g. Update gradle.properties to include:
+     # Gradle >=8.0.0: Library project resource identifiers are not constant static final ints, just static ints.
+     android.nonFinalResIds=false
+     # Gradle >=8.0.0: Allow transitive resource identifiers use in aTalk.
+     android.nonTransitiveRClass=false
+
+- Fix ContextCompat.registerReceiver flag setting: If this receiver is listening for broadcasts sent from the system
+  or from other apps—even other apps that you own—use the RECEIVER_EXPORTED flag. If instead this receiver is listening
+  only for broadcasts sent by your app, use the RECEIVER_NOT_EXPORTED flag; and broadcaster must setPackage(getPackageName()).
+  * Use RECEIVER_EXPORTED for HttpFileDownloadJabberImpl(), UpdateServiceImpl(), and ConnectivityManagerListenerImpl()
+  * Use RECEIVER_NOT_EXPORTED and required to setPackage(getPackageName()) in sendBroadcast for:
+  a. Fix option Exit not working in android API-34
+  b. Fix CallControl Notification with proper callback.
+  c. Fix message received popup with proper callback.
+- Temporary disable 'Jingle Outgoing File Offer', use HTTP file upload instead; Android Studio release build throws runtime AbstractMethodError.
+- Fix Option 'StreetViews & Map' crashes in API-34: Layout <frame /> cannot accept fraction value in android:layout_weight
+- Fix Correct downloadable fileNameApk =String.format("aTalk-%s-%s.apk", BuildConfig.FLAVOR, BuildConfig.BUILD_TYPE);
+- Make UpdateServiceImpl() shows both version/code for installed and latest available apk.
+- Move shutdownApplication() function into ExitMenuActivity i.e. non-static
+- Add missing method in JComponent#setDoubleBuffered(boolean)
+
+=========================================================================
 Version:        00.02.040 (0002040)
 Release Date:   01/26/2024
 Author:         cmeng

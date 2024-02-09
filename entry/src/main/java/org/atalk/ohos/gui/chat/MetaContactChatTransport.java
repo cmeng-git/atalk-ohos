@@ -31,6 +31,7 @@ import net.java.sip.communicator.service.protocol.event.MessageListener;
 import net.java.sip.communicator.util.ConfigurationUtils;
 
 import org.atalk.crypto.omemo.OmemoAuthenticateDialog;
+import org.atalk.ohos.BuildConfig;
 import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.chat.filetransfer.FileSendConversation;
@@ -304,7 +305,8 @@ public class MetaContactChatTransport implements ChatTransport, ContactPresenceS
         if (mContactResource != null) {
             PresenceStatus resourceStatus = mContactResource.getPresenceStatus();
             return (resourceStatus.compareTo(contactStatus) < 0) ? contactStatus : resourceStatus;
-        } else {
+        }
+        else {
             return contactStatus;
         }
     }
@@ -334,7 +336,8 @@ public class MetaContactChatTransport implements ChatTransport, ContactPresenceS
                 return false;
             }
             return capOpSet.getOperationSet(mContact, OperationSetBasicInstantMessaging.class) != null;
-        } else
+        }
+        else
             return mPPS.getOperationSet(OperationSetBasicInstantMessaging.class) != null;
 
     }
@@ -349,7 +352,8 @@ public class MetaContactChatTransport implements ChatTransport, ContactPresenceS
                 = getProtocolProvider().getOperationSet(OperationSetContactCapabilities.class);
         if (capOpSet != null) {
             return capOpSet.getOperationSet(mContact, OperationSetMessageCorrection.class) != null;
-        } else {
+        }
+        else {
             return mPPS.getOperationSet(OperationSetMessageCorrection.class) != null;
         }
     }
@@ -367,7 +371,8 @@ public class MetaContactChatTransport implements ChatTransport, ContactPresenceS
                 = getProtocolProvider().getOperationSet(OperationSetContactCapabilities.class);
         if (capOpSet != null) {
             return capOpSet.getOperationSet(mContact, OperationSetSmsMessaging.class) != null;
-        } else
+        }
+        else
             return mPPS.getOperationSet(OperationSetSmsMessaging.class) != null;
     }
 
@@ -441,7 +446,8 @@ public class MetaContactChatTransport implements ChatTransport, ContactPresenceS
         if (IMessage.ENCRYPTION_OMEMO == (encType & IMessage.ENCRYPTION_MASK)) {
             OmemoManager omemoManager = OmemoManager.getInstanceFor(mPPS.getConnection());
             imOpSet.sendInstantMessage(mContact, toResource, msg, null, omemoManager);
-        } else {
+        }
+        else {
             imOpSet.sendInstantMessage(mContact, toResource, msg);
         }
     }
@@ -468,7 +474,8 @@ public class MetaContactChatTransport implements ChatTransport, ContactPresenceS
         if (IMessage.ENCRYPTION_OMEMO == (encType & IMessage.ENCRYPTION_MASK)) {
             OmemoManager omemoManager = OmemoManager.getInstanceFor(mPPS.getConnection());
             mcOpSet.sendInstantMessage(mContact, toResource, msg, correctedMessageUID, omemoManager);
-        } else {
+        }
+        else {
             mcOpSet.correctMessage(mContact, toResource, msg, correctedMessageUID);
         }
     }
@@ -632,7 +639,8 @@ public class MetaContactChatTransport implements ChatTransport, ContactPresenceS
             if (smsOpSet == null)
                 return null;
             return smsOpSet.sendMultimediaFile(mContact, file);
-        } else {
+        }
+        else {
             return getFileTransferTransport(file, chatType, xferCon);
         }
     }
@@ -644,10 +652,10 @@ public class MetaContactChatTransport implements ChatTransport, ContactPresenceS
      * c. current active session i.e. chatType,
      * d. server httpFileUpload service support
      * e. fallback on failure for legacy byteStream transfer protocol.
-     *
+     * <p>
      * The file transport is selected with the following priority order if contact is online:
-     * a. jingleFileSend (Secure JET or Plain)
-     * b. httpFileUpload (for OMEMO and plain chat session: chatType)
+     * a. httpFileUpload (for OMEMO and plain chat session: chatType)
+     * b. jingleFileSend (Secure JET or Plain) (NAT not supported)
      * c. Legacy byteStream transfer protocol for SOCK5 with fallback on IBB on user retry
      * #see <a href="https://xmpp.org/extensions/xep-0096.html"></a>XEP-0096: SI File Transfer 1.3.1 (2022-03-22)</a>
      *
@@ -662,22 +670,23 @@ public class MetaContactChatTransport implements ChatTransport, ContactPresenceS
             throws Exception {
         if (getStatus().isOnline()) {
             try {
-                // Try jingle file transfer protocol as first attempt if supported by buddy
-                return jingleFileSend(file, chatType, xferCon);
+                // Use http file upload if available.
+                return httpFileUpload(file, chatType, xferCon);
 
-                /* ==== For testing Bytestream or httpFileUpload only ==== */
-                // return httpFileUpload(file, chatType, xferCon);
+                /* ==== For testing of JingleFileSend or ByteStream transfer only ==== */
+                // return jingleFileSend(file, chatType, xferCon);
                 // return ftOpSet.sendFile(mContact, file, xferCon.getMessageUuid());
             } catch (OperationNotSupportedException ex) {
-                // Use http file upload if available.
                 try {
-                    return httpFileUpload(file, chatType, xferCon);
+                    // Use jingle file transfer protocol as second attempt if supported by buddy
+                    return jingleFileSend(file, chatType, xferCon);
                 } catch (OperationNotSupportedException ex2) {
                     // Use legacy FileTransfer starting with SOCKS5, fallback to IBB ByteStream transfer.
                     return ftOpSet.sendFile(mContact, file, xferCon.getMessageUuid());
                 }
             }
-        } else {
+        }
+        else {
             // Use http file upload for all media file sharing for offline user
             return httpFileUpload(file, chatType, xferCon);
         }
@@ -695,11 +704,16 @@ public class MetaContactChatTransport implements ChatTransport, ContactPresenceS
      */
     private OutgoingFileOfferJingleImpl jingleFileSend(File file, int chatType, FileSendConversation xferCon)
             throws Exception {
+        if (!BuildConfig.DEBUG) {
+            throw new OperationNotSupportedException("JFT temporary disabled for release; AS throws AbstractMethodError");
+        }
+
         // toJid is not null if contact is online and supports the jet/jingle file transfer
         FullJid recipient;
         if (ChatFragment.MSGTYPE_OMEMO == chatType) {
             recipient = ftOpSet.getFullJid(mContact, JetSecurityImpl.NAMESPACE, JingleFileTransferImpl.NAMESPACE);
-        } else {
+        }
+        else {
             recipient = ftOpSet.getFullJid(mContact, JingleFileTransferImpl.NAMESPACE);
         }
 
@@ -710,7 +724,7 @@ public class MetaContactChatTransport implements ChatTransport, ContactPresenceS
             OutgoingFileOfferController ofoController;
             int encType = IMessage.ENCRYPTION_NONE;
             String msgUuid = xferCon.getMessageUuid();
-            Context ctx = aTalkApp.getGlobalContext();
+            Context ctx = aTalkApp.getInstance();
             JingleFile jingleFile = createJingleFile(ctx, file);
             OmemoManager omemoManager = OmemoManager.getInstanceFor(mPPS.getConnection());
 
@@ -718,7 +732,8 @@ public class MetaContactChatTransport implements ChatTransport, ContactPresenceS
                 if (ChatFragment.MSGTYPE_OMEMO == chatType) {
                     encType = IMessage.ENCRYPTION_OMEMO;
                     ofoController = jetManager.sendEncryptedFile(file, jingleFile, recipient, omemoManager);
-                } else {
+                }
+                else {
                     // For testing only: forced to use next in priority file transfer
                     // throw new OperationNotSupportedException("Use next available File Transfer");
                     ofoController = jingleFTManager.sendFile(file, jingleFile, recipient);
@@ -738,7 +753,8 @@ public class MetaContactChatTransport implements ChatTransport, ContactPresenceS
             } catch (InterruptedException | XMPPException.XMPPErrorException | SmackException | IOException e) {
                 throw new OperationNotSupportedException(e.getMessage());
             }
-        } else {
+        }
+        else {
             throw new OperationNotSupportedException(aTalkApp.getResString(R.string.file_transfer_not_supported));
         }
     }
@@ -802,7 +818,8 @@ public class MetaContactChatTransport implements ChatTransport, ContactPresenceS
                 if (ChatFragment.MSGTYPE_OMEMO == chatType) {
                     encType = IMessage.ENCRYPTION_OMEMO;
                     url = httpFileUploadManager.uploadFileEncrypted(file, xferCon);
-                } else {
+                }
+                else {
                     url = httpFileUploadManager.uploadFile(file, xferCon);
                 }
                 xferCon.setStatus(FileTransferStatusChangeEvent.IN_PROGRESS, mContact, encType, "HTTP File Upload");
@@ -814,7 +831,8 @@ public class MetaContactChatTransport implements ChatTransport, ContactPresenceS
             catch (InterruptedException | XMPPException.XMPPErrorException | SmackException | IOException e) {
                 throw new OperationNotSupportedException(e.getMessage());
             }
-        } else
+        }
+        else
             throw new OperationNotSupportedException(aTalkApp.getResString(R.string.file_transfer_not_supported));
     }
 

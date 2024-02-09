@@ -551,7 +551,7 @@
     <string name="mic_control_title">Уровень усиления микрофона</string>
     <string name="btn_mute_tooltip">Отрегулировать звук микрофона</string>
     <string name="presence_not_supported">Присутствие не поддерживается %1$s</string>
-    <string name="proactive_notification">Записывает сообщение</string>
+    <string name="proactive_notification">Записывает сообщение (%1$s)</string>
     <string name="recent_messages">Недавние разговоры</string>
 	<string name="received_">%1$s получено</string>
     <string name="referred">Отправлено</string>
@@ -782,8 +782,8 @@
     <string name="update_download_ready">Обновление (%1$s) загружается и готово к установке.</string>
     <string name="update_in_progress">Выполняется</string>
     <string name="update_download_in_progress">Выполняется обновление загрузки.</string>
-    <string name="update_update_available">Доступна новая выпущенная версия (%1$s-%2$s) для %3$s. Текущая установленная версия: %4$s.</string>
-    <string name="update_up_to_date">Ваша текущая установленная версия: (%1$s-%2$s) обновлена. Доступная онлайн-версия: %3$s.</string>
+    <string name="update_update_available">Доступна новая выпущенная версия (%1$s-%2$s) для %3$s. Текущая установленная версия: (%4$s-%5$s).</string>
+    <string name="update_up_to_date">Ваша текущая установленная версия: (%1$s-%2$s) обновлена. Доступная онлайн-версия: (%3$s-%4$s).</string>
     <string name="update_new_version_none">Нет новой версии</string>
     <string name="update_install_update">Установить обновления</string>
     <string name="update_download_failed">Не удалось загрузить новое обновление!</string>

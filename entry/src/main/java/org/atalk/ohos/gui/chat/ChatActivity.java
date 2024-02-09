@@ -307,7 +307,7 @@ public class ChatActivity extends OSGiActivity
     /**
      * Called when the fragment is visible to the user and actively running. This is generally
      * tied to {@link android.app.Activity#onResume() Activity.onResume} of the containing Activity's lifecycle.
-     *
+     * <p>
      * Set lastSelectedIdx = -1 so {@link #updateSelectedChatInfo(int)} is always executed on onResume
      */
     @Override
@@ -362,7 +362,7 @@ public class ChatActivity extends OSGiActivity
         }
 
         // Clear last chat intent
-        AndroidUtils.clearGeneralNotification(aTalkApp.getGlobalContext());
+        AndroidUtils.clearGeneralNotification(aTalkApp.getInstance());
     }
 
     /**
@@ -403,7 +403,7 @@ public class ChatActivity extends OSGiActivity
         }
 
         // Leave last chat intent by updating general notification
-        AndroidUtils.clearGeneralNotification(aTalkApp.getGlobalContext());
+        AndroidUtils.clearGeneralNotification(aTalkApp.getInstance());
     }
 
     /**
@@ -547,11 +547,11 @@ public class ChatActivity extends OSGiActivity
                     ? R.string.tts_disable : R.string.tts_enable);
 
             mStatusEnable.setVisible(true);
-            mStatusEnable.setTitle(chatRoomWrapper.isRoomStatusEnable()
+            boolean roomStatusEnable = chatRoomWrapper.isRoomStatusEnable();
+            mStatusEnable.setTitle(roomStatusEnable
                     ? R.string.chatroom_status_disable : R.string.chatroom_status_enable);
 
             mChatRoomNickSubject.setVisible(isJoined);
-
             mHistoryErase.setTitle(R.string.chatroom_history_erase_per);
             mChatRoomInfo.setVisible(true);
             mChatRoomMember.setVisible(true);
@@ -559,6 +559,10 @@ public class ChatActivity extends OSGiActivity
             // not available in chatRoom
             mCallAudioContact.setVisible(false);
             mCallVideoContact.setVisible(false);
+
+            ConferenceChatSession ccSession = (ConferenceChatSession) chatSession;
+            ActionBarUtil.setStatusIcon(this, ccSession.getChatStatusIcon());
+            ActionBarUtil.setSubtitle(this, ccSession.getChatSubject());
         }
     }
 
@@ -879,10 +883,11 @@ public class ChatActivity extends OSGiActivity
 
     public void sendAttachment(AttachOptionItem attachOptionItem) {
         Uri fileUri;
+        String contentType;
 
         switch (attachOptionItem) {
             case pic:
-                String contentType = "image/*";
+                contentType = "image/*";
                 mGetContents.launch(contentType);
                 break;
 
@@ -1182,7 +1187,7 @@ public class ChatActivity extends OSGiActivity
 
     /**
      * Construct media url share with thumbnail and title via URL_EMBBED which supports with JSONObject:
-     *
+     * <p>
      * {"width":480,"provider_name":"YouTube","url":"https://www.youtube.com/watch?v=dQw4w9WgXcQ",
      * "title":"Rick Astley - Never Gonna Give You Up (Video)","author_name":"RickAstleyVEVO",
      * "thumbnail_width":480,"height":270,"thumbnail_url":"https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg",

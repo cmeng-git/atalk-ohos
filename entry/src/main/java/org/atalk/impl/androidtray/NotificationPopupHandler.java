@@ -62,11 +62,10 @@ import timber.log.Timber;
  * @author Eng Chong Meng
  */
 public class NotificationPopupHandler extends AbstractPopupMessageHandler
-        implements ChatSessionManager.CurrentChatListener
-{
+        implements ChatSessionManager.CurrentChatListener {
     private static final String KEY_TEXT_REPLY = "key_text_reply";
 
-    private final Context mContext = aTalkApp.getGlobalContext();
+    private final Context mContext = aTalkApp.getInstance();
 
     /**
      * Map of currently displayed <code>AndroidPopup</code>s. Value is removed when
@@ -79,26 +78,27 @@ public class NotificationPopupHandler extends AbstractPopupMessageHandler
      */
     private static final Map<String, Integer> callNotificationMap = new HashMap<>();
 
+    private boolean mIsUpdate = false;
 
     /**
      * Creates new instance of <code>NotificationPopupHandler</code>. Registers as active chat listener.
      */
-    public NotificationPopupHandler()
-    {
+    public NotificationPopupHandler() {
         ChatSessionManager.addCurrentChatListener(this);
     }
 
     /**
      * {@inheritDoc}
      */
-    public void showPopupMessage(PopupMessage popupMessage)
-    {
+    public void showPopupMessage(PopupMessage popupMessage) {
         AndroidPopup newPopup = null;
-        // Check for existing notifications and create mergePopUp else create new
+        mIsUpdate = false;
+        // Check for existing notifications and mergePopUp else create new
         for (AndroidPopup popup : notificationMap.values()) {
             AndroidPopup merge = popup.tryMerge(popupMessage);
             if (merge != null) {
                 newPopup = merge;
+                mIsUpdate = true;
                 break;
             }
         }
@@ -108,6 +108,8 @@ public class NotificationPopupHandler extends AbstractPopupMessageHandler
 
         // Create the notification base view
         int nId = newPopup.getId();
+        // Timber.d("#### PopUp message: %s <= %s '%s'", mIsUpdate, nId, popupMessage.getMessage());
+
         NotificationCompat.Builder mBuilder = newPopup.buildNotification(nId);
 
         // Create and register the content intent for click action
@@ -152,7 +154,7 @@ public class NotificationPopupHandler extends AbstractPopupMessageHandler
                                 .putExtra(CallManager.AUTO_ACCEPT, SystrayService.HEADS_UP_INCOMING_CALL == msgType);
                     }
 
-                    PendingIntent fullScreenPendingIntent = PendingIntent.getActivity(aTalkApp.getGlobalContext(),
+                    PendingIntent fullScreenPendingIntent = PendingIntent.getActivity(aTalkApp.getInstance(),
                             0, fullScreenIntent, getPendingIntentFlag(false, true));
 
                     mBuilder.setPriority(NotificationCompat.PRIORITY_HIGH)
@@ -188,7 +190,7 @@ public class NotificationPopupHandler extends AbstractPopupMessageHandler
                             aTalkApp.getResString(R.string.mark_as_read),
                             createReadPendingIntent(nId))
                             .setSemanticAction(NotificationCompat.Action.SEMANTIC_ACTION_MARK_AS_READ)
-                            .setShowsUserInterface(false)
+                            // .setShowsUserInterface(true)
                             .build();
                     mBuilder.addAction(markReadAction);
 
@@ -202,7 +204,7 @@ public class NotificationPopupHandler extends AbstractPopupMessageHandler
                             aTalkApp.getResString(R.string.reply),
                             createReplyIntent(nId))
                             .setSemanticAction(NotificationCompat.Action.SEMANTIC_ACTION_REPLY)
-                            .setShowsUserInterface(false)
+                          // .setShowsUserInterface(true)
                             .addRemoteInput(remoteInput)
                             .build();
                     mBuilder.addAction(replyAction);
@@ -213,7 +215,8 @@ public class NotificationPopupHandler extends AbstractPopupMessageHandler
                             NotificationCompat.Action snoozeAction = new NotificationCompat.Action.Builder(
                                     R.drawable.ic_notifications_paused_dark,
                                     aTalkApp.getResString(R.string.snooze),
-                                    createSnoozeIntent(nId)).build();
+                                    createSnoozeIntent(nId))
+                                    .build();
                             mBuilder.addAction(snoozeAction);
                         }
                     }
@@ -233,60 +236,60 @@ public class NotificationPopupHandler extends AbstractPopupMessageHandler
      * Create a pending intent onDelete
      *
      * @param id Must be unique for each, so use notification id as request code
+     *
      * @return Delete PendingIntent
      */
-    private PendingIntent createDeleteIntent(int id)
-    {
+    private PendingIntent createDeleteIntent(int id) {
         final Intent intent = PopupClickReceiver.createDeleteIntent(id);
-        return PendingIntent.getBroadcast(mContext, id, intent, getPendingIntentFlag(false, true));
+        return PendingIntent.getBroadcast(mContext, id, intent, getPendingIntentFlag(false, mIsUpdate));
     }
 
     /**
      * Create a pending intent onReply
      *
      * @param id Must be unique for each, so use notification id as request code
+     *
      * @return Delete PendingIntent
      */
-    private PendingIntent createReplyIntent(int id)
-    {
+    private PendingIntent createReplyIntent(int id) {
         final Intent intent = PopupClickReceiver.createReplyIntent(id);
-        return PendingIntent.getBroadcast(mContext, id, intent, getPendingIntentFlag(true, false));
+        return PendingIntent.getBroadcast(mContext, id, intent, getPendingIntentFlag(true, mIsUpdate));
     }
 
     /**
      * Create a pending intent on message readPending
      *
      * @param id Must be unique for each, so use notification id as request code
+     *
      * @return Delete PendingIntent
      */
-    private PendingIntent createReadPendingIntent(int id)
-    {
+    private PendingIntent createReadPendingIntent(int id) {
         final Intent intent = PopupClickReceiver.createMarkAsReadIntent(id);
-        return PendingIntent.getBroadcast(mContext, id, intent, getPendingIntentFlag(true, true));
+        return PendingIntent.getBroadcast(mContext, id, intent, getPendingIntentFlag(true, mIsUpdate));
     }
 
     /**
      * Create a pending intent onSnooze
      *
      * @param id Must be unique for each, so use notification id as request code
+     *
      * @return Delete PendingIntent
      */
-    private PendingIntent createSnoozeIntent(int id)
-    {
+    private PendingIntent createSnoozeIntent(int id) {
         final Intent intent = PopupClickReceiver.createSnoozeIntent(id);
-        return PendingIntent.getBroadcast(mContext, id, intent, getPendingIntentFlag(true, true));
+        return PendingIntent.getBroadcast(mContext, id, intent, getPendingIntentFlag(true, mIsUpdate));
     }
 
     /**
      * Create a pending intent onDismiss call
      *
      * @param id Must be unique for each, so use notification id as request code
+     *
      * @return Delete PendingIntent
      */
-    private PendingIntent createDismissIntent(int id)
-    {
+    private PendingIntent createDismissIntent(int id) {
         final Intent intent = PopupClickReceiver.createCallDismiss(id);
-        return PendingIntent.getBroadcast(mContext, id, intent, getPendingIntentFlag(false, true));
+        return PendingIntent.getBroadcast(mContext, id, intent, getPendingIntentFlag(false, mIsUpdate));
     }
 
     /**
@@ -295,11 +298,11 @@ public class NotificationPopupHandler extends AbstractPopupMessageHandler
      *
      * @return Pending Intent Flag based on API
      */
-    public static int getPendingIntentFlag(boolean isMutable, boolean isUpdate)
-    {
+    public static int getPendingIntentFlag(boolean isMutable, boolean isUpdate) {
         int flag = isUpdate ? PendingIntent.FLAG_UPDATE_CURRENT : PendingIntent.FLAG_CANCEL_CURRENT;
         if (isMutable && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             flag |= PendingIntent.FLAG_MUTABLE;
+            flag |= isUpdate ? PendingIntent.FLAG_NO_CREATE : 0;
         }
         else if (!isMutable) {
             flag |= PendingIntent.FLAG_IMMUTABLE;
@@ -312,8 +315,7 @@ public class NotificationPopupHandler extends AbstractPopupMessageHandler
      *
      * @param notificationId the id of clicked notification.
      */
-    void fireNotificationClicked(int notificationId)
-    {
+    void fireNotificationClicked(int notificationId) {
         AndroidPopup popup = notificationMap.get(notificationId);
         if (popup == null) {
             Timber.e("No valid notification exists for %s", notificationId);
@@ -334,8 +336,7 @@ public class NotificationPopupHandler extends AbstractPopupMessageHandler
      *
      * @param notificationId the id of clicked notification.
      */
-    void fireNotificationClicked(int notificationId, Intent intent)
-    {
+    void fireNotificationClicked(int notificationId, Intent intent) {
         AndroidPopup popup = notificationMap.get(notificationId);
         if (popup == null) {
             Timber.e("No valid notification exists for %s", notificationId);
@@ -396,8 +397,7 @@ public class NotificationPopupHandler extends AbstractPopupMessageHandler
      * @param notificationId the id of clicked notification.
      * @param action the action to be perform of clicked notification.
      */
-    void fireNotificationClicked(int notificationId, String action)
-    {
+    void fireNotificationClicked(int notificationId, String action) {
         AndroidPopup popup = notificationMap.get(notificationId);
         if (popup == null) {
             Timber.e("No valid notification exists for %s", notificationId);
@@ -477,10 +477,9 @@ public class NotificationPopupHandler extends AbstractPopupMessageHandler
      *
      * @param notificationId the id of notification to remove.
      */
-    private static void removeNotification(int notificationId)
-    {
+    private static void removeNotification(int notificationId) {
         if (notificationId == OSGiService.getGeneralNotificationId()) {
-            AndroidUtils.clearGeneralNotification(aTalkApp.getGlobalContext());
+            AndroidUtils.clearGeneralNotification(aTalkApp.getInstance());
         }
         AndroidPopup popup = notificationMap.get(notificationId);
         if (popup == null) {
@@ -498,11 +497,11 @@ public class NotificationPopupHandler extends AbstractPopupMessageHandler
      * The callNotificationMap entry for the callId must be cleared, so the Ring tone will stop
      *
      * @param callId call Id / Jingle Sid
-     * @see JingleMessageSessionImpl#onCallProposed(Jid, String)
+     *
+     * @see JingleMessageSessionImpl#onJingleMessageProceed(XMPPConnection, JingleMessage, Message)
      * @see #getCallNotificationId(String)
      */
-    public static void removeCallNotification(String callId)
-    {
+    public static void removeCallNotification(String callId) {
         Integer notificationId = callNotificationMap.get(callId);
         Timber.d("Removing notification for callId: %s => %s", callId, notificationId);
         if (notificationId != null) {
@@ -515,18 +514,17 @@ public class NotificationPopupHandler extends AbstractPopupMessageHandler
      * Use by phone ring Tone to check if the call notification has been dismissed, hence to stop the ring tone
      *
      * @param callId call Id / Jingle Sid
+     *
      * @return the notificationId for the specified callId
      */
-    public static Integer getCallNotificationId(String callId)
-    {
+    public static Integer getCallNotificationId(String callId) {
         return callNotificationMap.get(callId);
     }
 
     /**
      * Removes all currently registered notifications from the status bar.
      */
-    void dispose()
-    {
+    void dispose() {
         // Removes active chat listener
         ChatSessionManager.removeCurrentChatListener(this);
 
@@ -544,15 +542,13 @@ public class NotificationPopupHandler extends AbstractPopupMessageHandler
      * +1 using a native popup mechanism <br/>
      */
     @Override
-    public int getPreferenceIndex()
-    {
+    public int getPreferenceIndex() {
         return 3;
     }
 
     @NonNull
     @Override
-    public String toString()
-    {
+    public String toString() {
         // return aTalkApp.getResString(R.string.impl_popup_status_bar);
         return getClass().getName();
     }
@@ -562,8 +558,7 @@ public class NotificationPopupHandler extends AbstractPopupMessageHandler
      *
      * @param popup <code>AndroidPopup</code> on which timeout event has occurred.
      */
-    public void onTimeout(AndroidPopup popup)
-    {
+    public void onTimeout(AndroidPopup popup) {
         removeNotification(popup.getId());
     }
 
@@ -571,8 +566,7 @@ public class NotificationPopupHandler extends AbstractPopupMessageHandler
      * {@inheritDoc}
      */
     @Override
-    public void onCurrentChatChanged(String chatId)
-    {
+    public void onCurrentChatChanged(String chatId) {
         // Clears chat notification related to currently opened chat for incomingMessage & incomingFile
         ChatPanel openChat = ChatSessionManager.getActiveChat(chatId);
 

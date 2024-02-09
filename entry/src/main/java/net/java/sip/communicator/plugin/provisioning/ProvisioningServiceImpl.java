@@ -440,7 +440,7 @@ public class ProvisioningServiceImpl implements ProvisioningService
                     else
                         errorMsg = "";
 
-                    DialogActivity.showDialog(aTalkApp.getGlobalContext(), R.string.provisioning_failed,
+                    DialogActivity.showDialog(aTalkApp.getInstance(), R.string.provisioning_failed,
                             R.string.provisioning_failed_message, errorMsg);
 
                     // as shutdown service is not started and other bundles are scheduled to start, stop all of them

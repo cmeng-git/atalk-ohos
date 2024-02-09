@@ -210,7 +210,7 @@ public class HttpFileDownloadJabberImpl extends AbstractFileTransfer {
     // Routines supporting HTTP File Download
 
     /**
-     * Method fired when the chat message is clicked. {@inheritDoc} rigger from @see ChatFragment#
+     * Method fired when the chat message is clicked. {@inheritDoc} Trigger from @see ChatFragment#
      */
     public void initHttpFileDownload() {
         if (previousDownloads.contains(dnLink))
@@ -219,8 +219,8 @@ public class HttpFileDownloadJabberImpl extends AbstractFileTransfer {
         // queryFileSize will also trigger onReceived; just ignore
         if (downloadReceiver == null) {
             downloadReceiver = new DownloadReceiver();
-            ContextCompat.registerReceiver(aTalkApp.getGlobalContext(), downloadReceiver,
-                    new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE), ContextCompat.RECEIVER_NOT_EXPORTED);
+            ContextCompat.registerReceiver(aTalkApp.getInstance(), downloadReceiver,
+                    new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE), ContextCompat.RECEIVER_EXPORTED);
         }
         if (mFileSize == -1) {
             mFileSize = queryFileSize();
@@ -413,7 +413,7 @@ public class HttpFileDownloadJabberImpl extends AbstractFileTransfer {
         // Receiver not registered exception - may occur if window is refreshed while download is in progress?
         if (downloadReceiver != null) {
             try {
-                aTalkApp.getGlobalContext().unregisterReceiver(downloadReceiver);
+                aTalkApp.getInstance().unregisterReceiver(downloadReceiver);
             } catch (IllegalArgumentException ie) {
                 Timber.w("Unregister download receiver exception: %s", ie.getMessage());
             }
@@ -478,6 +478,7 @@ public class HttpFileDownloadJabberImpl extends AbstractFileTransfer {
 
     /**
      * Starts watching download progress.
+     *
      * This method is safe to call multiple times. Starting an already running progress checker is a no-op.
      */
     private void startProgressChecker() {

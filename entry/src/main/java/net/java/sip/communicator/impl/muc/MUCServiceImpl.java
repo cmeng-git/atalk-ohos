@@ -132,7 +132,7 @@ public class MUCServiceImpl extends MUCService {
             boolean rememberPassword, boolean isFirstAttempt, String subject) {
         ChatRoom chatRoom = chatRoomWrapper.getChatRoom();
         if (chatRoom == null) {
-            DialogActivity.showDialog(aTalkApp.getGlobalContext(), R.string.warning,
+            DialogActivity.showDialog(aTalkApp.getInstance(), R.string.warning,
                     R.string.chatroom_not_connected, chatRoomWrapper.getChatRoomName());
             return;
         }
@@ -155,7 +155,7 @@ public class MUCServiceImpl extends MUCService {
 
         ChatRoom chatRoom = chatRoomWrapper.getChatRoom();
         if (chatRoom == null) {
-            DialogActivity.showDialog(aTalkApp.getGlobalContext(), R.string.warning,
+            DialogActivity.showDialog(aTalkApp.getInstance(), R.string.warning,
                     R.string.chatroom_not_connected, chatRoomWrapper.getChatRoomName());
             return;
         }
@@ -181,7 +181,7 @@ public class MUCServiceImpl extends MUCService {
         }
 
         if (chatRoom == null) {
-            DialogActivity.showDialog(aTalkApp.getGlobalContext(), R.string.warning,
+            DialogActivity.showDialog(aTalkApp.getInstance(), R.string.warning,
                     R.string.chatroom_not_connected, chatRoom);
             return;
         }
@@ -202,7 +202,7 @@ public class MUCServiceImpl extends MUCService {
 
         ChatRoom chatRoom = chatRoomWrapper.getChatRoom();
         if (chatRoom == null) {
-            DialogActivity.showDialog(aTalkApp.getGlobalContext(), R.string.warning,
+            DialogActivity.showDialog(aTalkApp.getInstance(), R.string.warning,
                     R.string.chatroom_not_connected, chatRoomWrapper.getChatRoomName());
             return;
         }
@@ -253,7 +253,7 @@ public class MUCServiceImpl extends MUCService {
             joinChatRoom(chatRoomWrapper);
         }
         else
-            DialogActivity.showDialog(aTalkApp.getGlobalContext(), R.string.error,
+            DialogActivity.showDialog(aTalkApp.getInstance(), R.string.error,
                     R.string.chatroom_not_exist,
                     chatRoomName, chatRoomProvider.getProtocolProvider().getAccountID().getService());
     }
@@ -318,7 +318,7 @@ public class MUCServiceImpl extends MUCService {
         } catch (OperationFailedException | OperationNotSupportedException | XmppStringprepException
                  | SmackException.NotConnectedException | InterruptedException ex) {
             Timber.e(ex, "Failed to create chat room.");
-            DialogActivity.showDialog(aTalkApp.getGlobalContext(), R.string.error,
+            DialogActivity.showDialog(aTalkApp.getInstance(), R.string.error,
                     R.string.chatroom_create_error,
                     protocolProvider.getAccountID() + "\n" + ex.getMessage());
         }
@@ -417,7 +417,7 @@ public class MUCServiceImpl extends MUCService {
     public ChatRoomWrapper leaveChatRoom(ChatRoomWrapper chatRoomWrapper) {
         ChatRoom chatRoom = chatRoomWrapper.getChatRoom();
         if (chatRoom == null) {
-            DialogActivity.showDialog(aTalkApp.getGlobalContext(), R.string.warning,
+            DialogActivity.showDialog(aTalkApp.getInstance(), R.string.warning,
                     R.string.chatroom_leave_not_connected);
             return null;
         }
@@ -549,7 +549,7 @@ public class MUCServiceImpl extends MUCService {
         private void startChatActivity(Object descriptor) {
             Intent chatIntent = ChatSessionManager.getChatIntent(descriptor);
             if (chatIntent != null) {
-                aTalkApp.getGlobalContext().startActivity(chatIntent);
+                aTalkApp.getInstance().startActivity(chatIntent);
             }
             else {
                 Timber.w("Failed to start chat with %s", descriptor);
@@ -622,7 +622,7 @@ public class MUCServiceImpl extends MUCService {
             }
 
             if (errMsg != null) {
-                DialogActivity.showDialog(aTalkApp.getGlobalContext(),
+                DialogActivity.showDialog(aTalkApp.getInstance(),
                         aTalkApp.getResString(R.string.error), errMsg);
             }
             chatRoomWrapper.firePropertyChange(returnCode);
@@ -737,7 +737,7 @@ public class MUCServiceImpl extends MUCService {
             }
             // Allow user to purge local stored chatRoom on XMPPException
         } catch (XMPPException e) {
-            DialogActivity.showConfirmDialog(aTalkApp.getGlobalContext(),
+            DialogActivity.showConfirmDialog(aTalkApp.getInstance(),
                     R.string.chatroom_destroy_title,
                     R.string.chatroom_destroy_error,
                     R.string.purge,

@@ -113,7 +113,7 @@ public class OSGiActivity extends BaseActivity {
         }
         // Registers exit action listener
         ContextCompat.registerReceiver(this, exitListener,
-                new IntentFilter(aTalkApp.ACTION_EXIT), ContextCompat.RECEIVER_NOT_EXPORTED);
+                new IntentFilter(ACTION_EXIT), ContextCompat.RECEIVER_NOT_EXPORTED);
     }
 
     protected void onNewIntent(Intent intent) {
@@ -433,7 +433,7 @@ public class OSGiActivity extends BaseActivity {
     protected boolean postRestoreIntent() {
         // Restore after OSGi startup
         if (AndroidGUIActivator.bundleContext == null) {
-            Intent intent = new Intent(aTalkApp.getGlobalContext(), LauncherActivity.class);
+            Intent intent = new Intent(aTalkApp.getInstance(), LauncherActivity.class);
             intent.putExtra(LauncherActivity.ARG_RESTORE_INTENT, getIntent());
             startActivity(intent);
             finish();
@@ -443,7 +443,7 @@ public class OSGiActivity extends BaseActivity {
     }
 
     /**
-     * Broadcast listener that listens for {@link aTalkApp#ACTION_EXIT} and then finishes this <code>Activity</code>
+     * Broadcast listener that listens for {@link ACTION_EXIT} and then finishes this <code>Activity</code>
      */
     class ExitActionListener extends BroadcastReceiver {
         @Override
