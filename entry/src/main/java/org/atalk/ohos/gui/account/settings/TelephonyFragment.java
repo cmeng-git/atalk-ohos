@@ -52,24 +52,21 @@ public class TelephonyFragment extends OSGiPreferenceFragment
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey)
     {
-        setPreferencesFromResource(R.xml.telephony_preference, rootKey);
-        setPrefTitle(R.string.jbr_telephony_voip_pbx);
-
         String accountID = getArguments().getString(AccountPreferenceFragment.EXTRA_ACCOUNT_ID);
         AccountID account = AccountUtils.getAccountIDForUID(accountID);
-
         ProtocolProviderService pps = AccountUtils.getRegisteredProviderForAccount(account);
         if (pps == null) {
             Timber.w("No protocol provider registered for %s", account);
             return;
         }
-        jbrReg = JabberPreferenceFragment.jbrReg;
 
-        shPrefs = getPreferenceManager().getSharedPreferences();
+        initPreferences();
+        setPreferencesFromResource(R.xml.telephony_preference, rootKey);
+        setPrefTitle(R.string.jbr_telephony_voip_pbx);
+
         shPrefs.registerOnSharedPreferenceChangeListener(this);
         shPrefs.registerOnSharedPreferenceChangeListener(summaryMapper);
 
-        initPreferences();
         mapSummaries(summaryMapper);
     }
 
@@ -78,6 +75,8 @@ public class TelephonyFragment extends OSGiPreferenceFragment
      */
     protected void initPreferences()
     {
+        jbrReg = JabberPreferenceFragment.jbrReg;
+        shPrefs = getPreferenceManager().getSharedPreferences();
         SharedPreferences.Editor editor = shPrefs.edit();
 
         // Telephony

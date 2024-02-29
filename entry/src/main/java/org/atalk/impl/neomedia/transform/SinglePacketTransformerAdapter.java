@@ -13,12 +13,10 @@
  */
 package org.atalk.impl.neomedia.transform;
 
-import org.atalk.service.neomedia.RawPacket;
-import org.atalk.util.ByteArrayBuffer;
-
 import java.util.function.Predicate;
 
-// import java.util.function.Predicate;  // cmeng: required API-24
+import org.atalk.service.neomedia.RawPacket;
+import org.atalk.util.ByteArrayBuffer;
 
 /**
  * @author Lyubomir Marinov

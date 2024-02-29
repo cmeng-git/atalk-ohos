@@ -111,7 +111,7 @@ public class PermissionsActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         // Always request permission on first apk launch for android.M
-        if (aTalkApp.permissionFirstRequest && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
+        if (aTalkApp.permissionFirstRequest) {
 
             // see if we should show the splash screen and wait for it to complete before continue
             if (Splash.isFirstRun()) {
@@ -123,6 +123,7 @@ public class PermissionsActivity extends BaseActivity {
             View view = mBinding.getRoot();
             setContentView(view);
             initView();
+
             Timber.i("Launching dynamic permission request for aTalk.");
             aTalkApp.permissionFirstRequest = false;
 

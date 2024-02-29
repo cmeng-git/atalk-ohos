@@ -21,6 +21,24 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.EventObject;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
 import net.java.sip.communicator.impl.protocol.jabber.ChatRoomJabberImpl;
 import net.java.sip.communicator.impl.protocol.jabber.ChatRoomMemberJabberImpl;
 import net.java.sip.communicator.impl.protocol.jabber.MessageJabberImpl;
@@ -71,6 +89,7 @@ import net.java.sip.communicator.util.UtilActivator;
 import net.java.sip.communicator.util.account.AccountUtils;
 
 import org.apache.commons.lang3.StringUtils;
+import org.atalk.impl.timberlog.TimberLog;
 import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.chat.ChatFragment;
@@ -80,7 +99,6 @@ import org.atalk.ohos.gui.chat.ChatPanel;
 import org.atalk.ohos.gui.chat.ChatSession;
 import org.atalk.ohos.gui.chat.chatsession.ChatSessionFragment;
 import org.atalk.ohos.gui.chat.chatsession.ChatSessionRecord;
-import org.atalk.impl.timberlog.TimberLog;
 import org.atalk.persistance.DatabaseBackend;
 import org.atalk.service.configuration.ConfigurationService;
 import org.jivesoftware.smack.SmackException;
@@ -110,24 +128,6 @@ import org.osgi.framework.ServiceEvent;
 import org.osgi.framework.ServiceListener;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
-
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.EventObject;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 import timber.log.Timber;
 
@@ -780,7 +780,7 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
         else {
             chatId = getSessionUuidByJid(((MetaContact) descriptor).getDefaultContact());
         }
-        EntityFullJid userJid = chatPanel.getProtocolProvider().getConnection().getUser();
+        EntityFullJid userJid = chatPanel.getProtocolProvider().getOurJid();
 
         Date timeStamp = new Date();
         for (Forwarded<Message> forwarded : forwardedList) {

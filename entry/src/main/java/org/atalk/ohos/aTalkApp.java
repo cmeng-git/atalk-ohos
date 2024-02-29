@@ -136,7 +136,9 @@ public class aTalkApp extends Application implements LifecycleEventObserver {
         // ServerPersistentStoresRefreshDialog.deleteDB();  // purge sql database
 
         // Trigger the aTalk database upgrade or creation if none exist
-        DatabaseBackend.getInstance(this);
+        DatabaseBackend mDB = DatabaseBackend.getInstance(this);
+        // MigrationTo6.updateChatSessionTable(DatabaseBackend.getInstance(this).getWritableDatabase());
+        // mDB.getWritableDatabase().execSQL(DatabaseBackend.CREATE_ENTITY_CAPS_STATEMENT);
 
         // Do this after WebView(this).destroy(); Set up contextWrapper to use aTalk user selected Language
         super.onCreate();
@@ -258,15 +260,6 @@ public class aTalkApp extends Application implements LifecycleEventObserver {
      */
     public static CameraManager getCameraManager() {
         return (CameraManager) mInstance.getSystemService(Context.CAMERA_SERVICE);
-    }
-
-    /**
-     * Retrieves <code>PowerManager</code> instance using application context.
-     *
-     * @return <code>PowerManager</code> service instance.
-     */
-    public static PowerManager getPowerManager() {
-        return (PowerManager) mInstance.getSystemService(Context.POWER_SERVICE);
     }
 
     /**

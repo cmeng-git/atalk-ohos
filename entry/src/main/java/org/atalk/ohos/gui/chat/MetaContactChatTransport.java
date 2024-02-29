@@ -704,10 +704,6 @@ public class MetaContactChatTransport implements ChatTransport, ContactPresenceS
      */
     private OutgoingFileOfferJingleImpl jingleFileSend(File file, int chatType, FileSendConversation xferCon)
             throws Exception {
-        if (!BuildConfig.DEBUG) {
-            throw new OperationNotSupportedException("JFT temporary disabled for release; AS throws AbstractMethodError");
-        }
-
         // toJid is not null if contact is online and supports the jet/jingle file transfer
         FullJid recipient;
         if (ChatFragment.MSGTYPE_OMEMO == chatType) {
@@ -920,6 +916,7 @@ public class MetaContactChatTransport implements ChatTransport, ContactPresenceS
      *
      * @param evt The presence event containing information about the contact status change.
      */
+    @Override
     public void contactPresenceStatusChanged(ContactPresenceStatusChangeEvent evt) {
         // If the contactResource is set then the status will be updated from the MetaContactChatSession.
         // cmeng: contactResource condition removed to fix contact goes offline<->online // && (contactResource == null)

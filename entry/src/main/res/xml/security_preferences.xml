@@ -17,7 +17,9 @@
         <PreferenceScreen
             android:summary="@string/omemo_purge_devices_summary"
             android:title="@string/omemo_purge_device_unused">
-            <intent android:action=".crypto.omemo.OmemoDeviceDeleteDialog"/>
+            <intent
+                android:action="org.atalk.crypto.omemo.OmemoDeviceDeleteDialog"
+                android:targetPackage="org.atalk.ohos" />
         </PreferenceScreen>
     </PreferenceCategory>
 
@@ -26,12 +28,16 @@
         <PreferenceScreen
             android:summary="@string/settings_crypto_priv_key_summary"
             android:title="@string/settings_crypto_priv_key">
-            <intent android:action=".crypto.CryptoPrivateKeys"/>
+            <intent
+                android:action="org.atalk.crypto.CryptoPrivateKeys"
+                android:targetPackage="org.atalk.ohos" />
         </PreferenceScreen>
         <PreferenceScreen
             android:summary="@string/settings_fingerprint_summary"
             android:title="@string/settings_fingerprint_title">
-            <intent android:action=".crypto.CryptoDeviceFingerPrints"/>
+            <intent
+                android:action="org.atalk.crypto.CryptoDeviceFingerPrints"
+                android:targetPackage="org.atalk.ohos" />
         </PreferenceScreen>
 
     </PreferenceCategory>

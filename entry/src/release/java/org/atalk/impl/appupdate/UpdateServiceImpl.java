@@ -16,9 +16,9 @@
  */
 package org.atalk.impl.appupdate;
 
-import com.codetroopers.betterpickers.BuildConfig;
-
 import net.java.sip.communicator.service.update.UpdateService;
+
+import org.atalk.ohos.BuildConfig;
 
 /**
  * Dummy UpdateServiceImpl class for aTalk release version

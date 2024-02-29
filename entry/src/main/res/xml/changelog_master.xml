@@ -6,8 +6,32 @@
      They are automatically updated with "ant bump-version".
 -->
 <changelog>
-    <release version="00.02.050 (02/09/2024)" versioncode="0002050">
+    <release version="00.03.000 (02/29/2024)" versioncode="0003000">
         <change>Please read &lt;a href='https://cmeng-git.github.io/atalk/faq.html#ui_01'&gt;aTalk UI design &amp; Implementation&lt;/a&gt; before using aTalk</change>
+        <change>Fix AndroidOmemoService#initOmemoDevice always failed with NoResponseException due to asynchronous execution even with setReplyTimeout = 15s</change>
+        <change>Fix smack OmemoManager handle of Pubsub#event in PepEventListener has NoResponseException; end in endless loop and smack crashes</change>
+        <change>Add support for XEP-0191: Blocking Command to block communications with a specific contact and domain</change>
+        <change>Add/Remove of ContactPresence and ContactBlocking Status Listeners in MetaContactListAdapter should be per registered ProtocolProvider</change>
+        <change>Include check for contact blocking state when showing AudioCall and VideoCall options</change>
+        <change>Allow user removal of a DomainJid from the contact list UI</change>
+        <change>Allow user moving of contact not in the Roster</change>
+        <change>Drop dependency and replace betterpickers library with android DatePicker-spinner mode (API-24)</change>
+        <change>Improve call history deletion UI for all call records prior to user set date</change>
+        <change>Improve account preference birth date setting UI</change>
+        <change>Alert dialog drawable/background_alert_dialog must use ?attr/colorBackground, to align with text font theme color</change>
+        <change>Implement EntityCapsPersistentCache using mySQLite DB instead of file system</change>
+        <change>Fix erased contact/chatroom history messages reappear after return to chatSession due to msgCache not cleared</change>
+        <change>Disable 'Contact Info' option when user is offline, as the info is invalid when user is offline</change>
+        <change>Fix Telephony UI Cancel button not working; Fragment Tag not set</change>
+        <change>Set android:exported to true for all activities launch via preference intent, else aTalk crashes in API-34</change>
+        <change>Must initialize all preferences values for all settings before 'set Preferences From Resource', to ensure the updated values are reflected in preference UI</change>
+        <change>JingleFile transfer AbstractMethodError resolved with aTalk source patches; Google team is unable to offer any solution in gradle release built</change>
+        <change>Fix call notification control ui partial cropping of buttons</change>
+        <change>Remove MapsInitializer.initialize(), no further required; default to use Renderer.LATEST</change>
+        <change>Bug fixes and enhancements</change>
+    </release>
+
+    <release version="00.02.050 (02/09/2024)" versioncode="0002050">
         <change>Fix incorrect derive of the chatSession Uuid for conference chat messages in saveMamIfNotExit()</change>
         <change>Extend smack reply timeout to 10S for MamManager.MamQuery() to take care for slow server response</change>
         <change>Drop non-null subject field as prerequisite in create/join a chatRoom; user may not have the right to change subject</change>
@@ -20,6 +44,7 @@
         <change>Fix deletion of room status messages crashes aTalk</change>
         <change>Drop aTalk ScServiceDiscovery class; use smack ServiceDiscoveryManager and local ServiceDiscoveryHelper implementations</change>
         <change>Cleanup and improve ServerPersistentStoresRefreshDialog class implementation</change>
+        <change>JingleFile transfer AbstractMethodError remained; disabled for aTalk release. Awaiting Google time solution feedback</change>
         <change>Drop butterknife-compiler:10.2.3 dependency and remove jdk-15 max restriction; use android View binding class instead</change>
         <change>Change file transfer protocol priority to: a. httpFileUpload; b. jingleFileSend (Secure JET or Plain); c. Legacy byteStream transfer protocol</change>
         <change>Fix Smack 4.4.7: ByteStream Sock5 implementation does not take care of the host address with zone id</change>

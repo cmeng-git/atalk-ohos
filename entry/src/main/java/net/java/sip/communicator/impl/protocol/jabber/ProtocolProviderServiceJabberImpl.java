@@ -391,7 +391,8 @@ public class ProtocolProviderServiceJabberImpl extends AbstractProtocolProviderS
     // File transfer e.g. IBB across server can take more than 5 seconds
     public static final int SMACK_REPLY_EXTENDED_TIMEOUT_10 = 10000;  // 10 seconds
 
-    public static final int SMACK_REPLY_OMEMO_INIT_TIMEOUT = 15000;  // 15 seconds
+    // Must implemented in OmemoManager and OmemoService directory due to Async.go()
+    // public static final int SMACK_REPLY_OMEMO_INIT_TIMEOUT = 15000;  // 15 seconds
 
     /**
      * aTalk Smack packet reply default timeout - use Smack default instead of 10s (starting v2.1.8).
@@ -1146,7 +1147,7 @@ public class ProtocolProviderServiceJabberImpl extends AbstractProtocolProviderS
 
                     config.setSslContextFactory(sslContextFactory);
                     config.setCustomX509TrustManager(sslTrustManager);
-                    config.setAuthzid(mAccountID.getBareJid().asEntityBareJidIfPossible());
+                    config.setAuthzid(mAccountID.getEntityBareJid());
 
                 } catch (GeneralSecurityException e) {
                     Timber.e(e, "Error creating custom trust manager");
@@ -1561,7 +1562,7 @@ public class ProtocolProviderServiceJabberImpl extends AbstractProtocolProviderS
              * Must initialize omemoManager on every new connected connection, to ensure both pps and omemoManager is referred
              * to same instance of xmppConnection.  Perform only after connection is connected to ensure the user is defined
              */
-            // androidOmemoService = new AndroidOmemoService(ProtocolProviderServiceJabberImpl.this);
+            androidOmemoService = new AndroidOmemoService(ProtocolProviderServiceJabberImpl.this);
 
             /*
              * Must only initialize omemoDevice after user authenticated
@@ -1936,7 +1937,7 @@ public class ProtocolProviderServiceJabberImpl extends AbstractProtocolProviderS
          * Move to authenticated stage?
          * Perform here to ensure only one androidOmemoService is created; otherwise onResume may create multiple instances
          */
-        androidOmemoService = new AndroidOmemoService(this);
+        // androidOmemoService = new AndroidOmemoService(this);
 
         /*
          * add SupportedFeatures only prior to registerServiceDiscoveryManager. Otherwise found
@@ -1954,7 +1955,6 @@ public class ProtocolProviderServiceJabberImpl extends AbstractProtocolProviderS
     /**
      * Defined all the entity capabilities for the EntityCapsManager to advertise in
      * disco#info query from other entities. Some features support are user selectable
-     *
      * Note: Do not need to mention if there are already included in Smack Library and have been activated.
      */
     private void addSupportedCapsFeatures() {
@@ -2771,7 +2771,6 @@ public class ProtocolProviderServiceJabberImpl extends AbstractProtocolProviderS
      * @return <code>true</code> if the list of features is supported; otherwise, <code>false</code>
      */
     public boolean isFeatureListSupported(Jid jid, String... features) {
-        // DiscoverInfo featureInfo = discoveryManager.discoverInfoNonBlocking(jid);
         DiscoverInfo featureInfo = scHelper.discoverInfo(jid);
         if (featureInfo == null)
             return false;
@@ -2945,14 +2944,14 @@ public class ProtocolProviderServiceJabberImpl extends AbstractProtocolProviderS
     }
 
     /**
-     * Return the EntityFullJid associate with this protocol provider.
-     * <p>
-     * Build our own EntityJid if not connected. May not be full compliant - For explanation
+     * Return the user EntityFullJid associate with this protocol provider.
+     * Build our own EntityJid if user is offline. May not be fully compliant
      *
      * @return the Jabber EntityFullJid
      * @see AbstractXMPPConnection #user
      */
-    public EntityFullJid getOurJID() {
+    @Override
+    public EntityFullJid getOurJid() {
         EntityFullJid fullJid;
         if (mConnection != null) {
             fullJid = mConnection.getUser();
@@ -2960,7 +2959,7 @@ public class ProtocolProviderServiceJabberImpl extends AbstractProtocolProviderS
         else {
             // mResource can be null if user is not registered, so use default
             loadResource();
-            fullJid = JidCreate.entityFullFrom(mAccountID.getBareJid().asEntityBareJidIfPossible(), mResource);
+            fullJid = JidCreate.entityFullFrom(mAccountID.getEntityBareJid().asEntityBareJidIfPossible(), mResource);
         }
         return fullJid;
     }
@@ -3172,7 +3171,6 @@ public class ProtocolProviderServiceJabberImpl extends AbstractProtocolProviderS
 
     /**
      * ============== HTTP Authorization Request received ===============.
-     *
      * Handler for the incoming HttpAuthorizationRequest received. Generate a HeadsUp notification to alert user
      * if the request is via IQ and the device is in locked state; user must exit device locked state to handle
      * the next incoming request; the current request dialog launch may have been ignored by android if aTalk
@@ -3266,7 +3264,7 @@ public class ProtocolProviderServiceJabberImpl extends AbstractProtocolProviderS
      * Retrieve the XMPP connection socket used by the protocolProvider (by reflection)
      *
      * @return the socket which is used for this connection.
-     * @see XMPPTCPConnection#socket.
+     * @see XMPPTCPConnection#socket
      */
     public Socket getSocket() {
         Socket socket = null;

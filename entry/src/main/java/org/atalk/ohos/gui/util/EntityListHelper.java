@@ -16,15 +16,20 @@
  */
 package org.atalk.ohos.gui.util;
 
-import static org.atalk.ohos.R.id.cb_media_delete;
-
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.CheckBox;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+
 import net.java.sip.communicator.impl.callhistory.CallHistoryActivator;
 import net.java.sip.communicator.impl.msghistory.MessageHistoryActivator;
+import net.java.sip.communicator.impl.protocol.jabber.OperationSetPersistentPresenceJabberImpl;
 import net.java.sip.communicator.service.callhistory.CallHistoryService;
 import net.java.sip.communicator.service.contactlist.MetaContact;
 import net.java.sip.communicator.service.contactlist.MetaContactGroup;
@@ -41,15 +46,12 @@ import org.atalk.ohos.gui.call.CallHistoryFragment;
 import org.atalk.ohos.gui.chat.ChatPanel;
 import org.atalk.ohos.gui.chat.ChatSession;
 import org.atalk.ohos.gui.chat.ChatSessionManager;
+import org.atalk.ohos.gui.dialogs.CustomDialogCbox;
 import org.atalk.ohos.gui.dialogs.DialogActivity;
-import org.jxmpp.jid.DomainBareJid;
+import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smackx.blocking.BlockingCommandManager;
 import org.jxmpp.jid.Jid;
 import org.jxmpp.util.XmppStringUtils;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 import timber.log.Timber;
 
@@ -66,10 +68,65 @@ public class EntityListHelper {
     public static final int ALL_ENTITIES = 2;
 
     /**
+     * Set the contact blocking status with option apply to all contacts on domain
+     *
+     * @param context Context
+     * @param contact Contact
+     * @param setBlock ture to block contact
+     *
+     * @see OperationSetPersistentPresenceJabberImpl#onJidsBlocked(List) etc
+     */
+    public static void setEntityBlockState(final Context context, final Contact contact, boolean setBlock) {
+        Jid contactJid = contact.getJid();
+
+        // Disable Domain Block option if user is on the same Domain
+        boolean cbEnable = !contactJid.asDomainBareJid().isParentOf(contact.getProtocolProvider().getOurJid());
+
+        String title = context.getString(setBlock ? R.string.contact_block : R.string.contact_unblock);
+        String message = context.getString(setBlock ?
+                R.string.contact_block_text : R.string.contact_unblock_text, contactJid);
+        String cbMessage = context.getString(R.string.domain_blocking, contactJid.asDomainBareJid());
+        String btnText = context.getString(setBlock ? R.string.block : R.string.unblock);
+
+        Bundle args = new Bundle();
+        args.putString(CustomDialogCbox.ARG_MESSAGE, message);
+        args.putString(CustomDialogCbox.ARG_CB_MESSAGE, cbMessage);
+        args.putBoolean(CustomDialogCbox.ARG_CB_CHECK, false);
+        args.putBoolean(CustomDialogCbox.ARG_CB_ENABLE, cbEnable);
+
+        // Displays the history delete dialog and waits for user confirmation
+        DialogActivity.showCustomDialog(aTalkApp.getInstance(), title, CustomDialogCbox.class.getName(),
+                args, btnText, new DialogActivity.DialogListener() {
+                    public boolean onConfirmClicked(DialogActivity dialog) {
+                        CheckBox cbDomain = dialog.findViewById(R.id.cb_option);
+                        final Jid entityJid = cbEnable && cbDomain.isChecked() ?
+                                contactJid.asDomainBareJid() : contactJid;
+
+                        XMPPConnection connection = contact.getProtocolProvider().getConnection();
+                        BlockingCommandManager blockManager = BlockingCommandManager.getInstanceFor(connection);
+                        try {
+                            if (setBlock) {
+                                blockManager.blockContacts(Collections.singletonList(entityJid));
+                            }
+                            else {
+                                blockManager.unblockContacts(Collections.singletonList(entityJid));
+                            }
+                        } catch (Exception e) {
+                            Timber.w("Block Entity %s failed: %s", contactJid, e.getMessage());
+                        }
+                        return true;
+                    }
+
+                    @Override
+                    public void onDialogCancelled(DialogActivity dialog) {
+                    }
+                }, null);
+    }
+
+    /**
      * Removes given <code>metaContact</code> from the contact list. Asks the user for confirmation before proceed.
      * a. Remove all the chat messages and chatSession records from the database.
      * b. Remove metaContact from the roster etc in DB via MclStorageManager#fireMetaContactEvent.
-     *
      * Note: DomainJid will not be removed.
      *
      * @param metaContact the contact to be removed from the list.
@@ -81,10 +138,13 @@ public class EntityListHelper {
         title = context.getString(R.string.remove_contact);
         Contact contact = metaContact.getDefaultContact();
         Jid contactJid = contact.getJid();
-        if (!(contactJid instanceof DomainBareJid)) {
-            Jid userJid = contact.getProtocolProvider().getAccountID().getBareJid();
+
+		// Allow both contact or DomainBareJid to be remove		
+        if (contactJid != null) {
+            Jid userJid = contact.getProtocolProvider().getAccountID().getEntityBareJid();
             message = context.getString(R.string.remove_contact_prompt, userJid, contactJid);
-        } else {
+        }
+        else {
             aTalkApp.showToastMessage(R.string.contact_invalid, contactJid);
             return;
         }
@@ -103,7 +163,8 @@ public class EntityListHelper {
                     @Override
                     public void onDialogCancelled(DialogActivity dialog) {
                     }
-                });
+                }
+        );
     }
 
     /**
@@ -117,7 +178,6 @@ public class EntityListHelper {
             MetaContactListService metaContactListService = AndroidGUIActivator.getContactListService();
             try {
                 metaContactListService.removeMetaContact(metaContact);
-
             } catch (Exception ex) {
                 DialogActivity.showDialog(ctx, ctx.getString(R.string.remove_contact), ex.getMessage());
             }
@@ -183,16 +243,22 @@ public class EntityListHelper {
         else
             return;
 
+        String title = caller.getString(R.string.history_contact, entityJid);
+        String message = caller.getString(R.string.history_purge_for_contact_warning, entityJid);
+        String cbMessage = caller.getString(R.string.history_purge_media);
+        String btnText = caller.getString(R.string.purge);
+
         Bundle args = new Bundle();
-        args.putString(ChatMessageDeleteFragment.ARG_MESSAGE,
-                aTalkApp.getResString(R.string.history_purge_for_contact_warning, entityJid));
-        String title = aTalkApp.getResString(R.string.history_contact, entityJid);
+        args.putString(CustomDialogCbox.ARG_MESSAGE, message);
+        args.putString(CustomDialogCbox.ARG_CB_MESSAGE, cbMessage);
+        args.putBoolean(CustomDialogCbox.ARG_CB_CHECK, true);
+        args.putBoolean(CustomDialogCbox.ARG_CB_ENABLE, true);
 
         // Displays the history delete dialog and waits for user confirmation
-        DialogActivity.showCustomDialog(aTalkApp.getInstance(), title, ChatMessageDeleteFragment.class.getName(),
-                args, aTalkApp.getResString(R.string.purge), new DialogActivity.DialogListener() {
+        DialogActivity.showCustomDialog(aTalkApp.getInstance(), title, CustomDialogCbox.class.getName(),
+                args, btnText, new DialogActivity.DialogListener() {
                     public boolean onConfirmClicked(DialogActivity dialog) {
-                        CheckBox cbMediaDelete = dialog.findViewById(R.id.cb_media_delete);
+                        CheckBox cbMediaDelete = dialog.findViewById(R.id.cb_option);
                         boolean mediaDelete = cbMediaDelete.isChecked();
 
                         // EntityListHelper mErase = new EntityListHelper();
@@ -209,7 +275,6 @@ public class EntityListHelper {
     /**
      * Perform history message deletion in background.
      * Purge all history messages for the descriptor if messageUUIDs is null
-     *
      * Note: if the sender deletes the media content immediately after sending, only the tmp copy is deleted
      */
     private static class doEraseEntityChatHistory extends AsyncTask<Object, Void, Integer> {
@@ -254,11 +319,13 @@ public class EntityListHelper {
                 if (desc instanceof MetaContact) {
                     MetaContact metaContact = (MetaContact) desc;
                     mhs.eraseLocallyStoredChatHistory(metaContact, msgUUIDs);
-                } else {
+                }
+                else {
                     ChatRoom chatRoom = ((ChatRoomWrapper) desc).getChatRoom();
                     mhs.eraseLocallyStoredChatHistory(chatRoom, msgUUIDs);
                 }
-            } else {
+            }
+            else {
                 return ZERO_ENTITY;
             }
             return CURRENT_ENTITY;
@@ -291,7 +358,7 @@ public class EntityListHelper {
                 new DialogActivity.DialogListener() {
                     @Override
                     public boolean onConfirmClicked(DialogActivity dialog) {
-                        CheckBox cbMediaDelete = dialog.findViewById(cb_media_delete);
+                        CheckBox cbMediaDelete = dialog.findViewById(R.id.cb_option);
                         boolean mediaDelete = cbMediaDelete.isChecked();
 
                         // EntityListHelper mErase = new EntityListHelper();
@@ -375,20 +442,21 @@ public class EntityListHelper {
 
     public static void eraseEntityCallHistory(final CallHistoryFragment caller, final Date endDate) {
         // Displays the call history delete dialog and waits for user
-        DialogActivity.showConfirmDialog(caller.getContext(), R.string.call_history_name,
-                R.string.call_history_remove_before_date_warning, R.string.purge,
-                new DialogActivity.DialogListener() {
-
-                    public boolean onConfirmClicked(DialogActivity dialog) {
-                        new doEraseEntityCallHistory(caller, null, endDate).execute();
-                        return true;
-                    }
-
-                    @Override
-                    public void onDialogCancelled(DialogActivity dialog) {
-                    }
-                }, endDate
-        );
+//        DialogActivity.showConfirmDialog(caller.getContext(), R.string.service_gui_CALL_HISTORY_GROUP_NAME,
+//                R.string.service_gui_CALL_HISTORY_REMOVE_BEFORE_DATE_WARNING, R.string.service_gui_PURGE,
+//                new DialogActivity.DialogListener() {
+//
+//                    public boolean onConfirmClicked(DialogActivity dialog) {
+//                        new doEraseEntityCallHistory(caller, null, endDate).execute();
+//                        return true;
+//                    }
+//
+//                    @Override
+//                    public void onDialogCancelled(DialogActivity dialog) {
+//                    }
+//                }, endDate
+//        );
+        new doEraseEntityCallHistory(caller, null, endDate).execute();
     }
 
     /**
@@ -424,7 +492,8 @@ public class EntityListHelper {
             if (mEndDate == null) {
                 CHS.eraseLocallyStoredHistory(callUUIDs);
                 return callUUIDs.size();
-            } else {
+            }
+            else {
                 return CHS.eraseLocallyStoredHistoryBefore(mEndDate);
             }
         }

@@ -707,8 +707,9 @@ public class ServerStoredContactListJabberImpl
             throws OperationFailedException
     {
         // Allow direct removal of any VolatileContactJabberImpl if it is not DomainBareJid
-        if (contactToRemove.getJid() instanceof DomainBareJid)
-            return;
+		// Allow removal of DomainBareJid contact 
+        // if (contactToRemove.getJid() instanceof DomainBareJid)
+        //    return;
 
         // aTalk implementation is ContactGroup.VOLATILE_GROUP is equivalent to "VolatileContactJabberImpl"
         if ((contactToRemove instanceof VolatileContactJabberImpl) || ((contactToRemove.getParentContactGroup() != null)
@@ -794,7 +795,8 @@ public class ServerStoredContactListJabberImpl
         xmppConnection.setReplyTimeout(ProtocolProviderServiceJabberImpl.SMACK_REPLY_EXTENDED_TIMEOUT_30);
 
         try {
-            mRoster.createItemAndRequestSubscription(contact.getSourceEntry().getJid(), contact.getDisplayName(),
+            // Do not use getSourceEntry() to getJid(); may be null if contact is not in roster.
+            mRoster.createItemAndRequestSubscription(contact.getJid().asBareJid(), contact.getDisplayName(),
                     new String[]{newParent.getGroupName()});
             newParent.addContact(contact);
         } catch (XMPPException ex) {
@@ -846,7 +848,7 @@ public class ServerStoredContactListJabberImpl
     /**
      * Sends the initial presence to server. RFC 6121 says: a client SHOULD request the roster
      * before sending initial presence We extend this and send it after we have dispatched the roster.
-     *
+     * <p>
      * Note: Ensure only <x xmlns='vcard-temp:x:update'/> extension without the <photo/> element is
      * added if avatar photo has yet to be downloaded from server. Refer to XEP-0153: vCard-Based
      * Avatars section Example 6. User Is Not Ready to Advertise an Image

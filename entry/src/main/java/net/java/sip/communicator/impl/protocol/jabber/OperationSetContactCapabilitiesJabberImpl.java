@@ -234,8 +234,10 @@ public class OperationSetContactCapabilitiesJabberImpl
         /*
          * If the specified contact is offline, don't query its features (they should fail anyway).
          */
-        if (!online)
+        if (!online) {
             return OFFLINE_OPERATION_SETS.contains(opsetClass) ? opset : null;
+        }
+
         /*
          * If we know the features required for the support of opsetClass, check whether the
          * contact supports them. Otherwise, presume the contact possesses the opsetClass
@@ -320,6 +322,7 @@ public class OperationSetContactCapabilitiesJabberImpl
      *
      * @param evt the <code>ContactPresenceStatusChangeEvent</code> that notified us
      */
+    @Override
     public void contactPresenceStatusChanged(ContactPresenceStatusChangeEvent evt) {
         if (evt.getNewStatus().getStatus() < PresenceStatus.ONLINE_THRESHOLD) {
             userCapsNodeNotify(evt.getJid(), false);

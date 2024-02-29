@@ -77,9 +77,6 @@ import timber.log.Timber;
  */
 
 public class SQLiteOmemoStore extends SignalOmemoStore {
-//        extends OmemoStore<IdentityKeyPair, IdentityKey, PreKeyRecord, SignedPreKeyRecord, SessionRecord,
-//        SignalProtocolAddress, ECPublicKey, PreKeyBundle, SessionCipher> {
-
     // omemoDevices Table
     public static final String OMEMO_DEVICES_TABLE_NAME = "omemo_devices";
     public static final String OMEMO_JID = "omemoJid"; // account user
@@ -136,13 +133,6 @@ public class SQLiteOmemoStore extends SignalOmemoStore {
         super();
         mDB = DatabaseBackend.getInstance(aTalkApp.getInstance());
     }
-
-//    private final SignalOmemoKeyUtil signalKeyUtil = new SignalOmemoKeyUtil();
-//
-//    @Override
-//    public OmemoKeyUtil<IdentityKeyPair, IdentityKey, PreKeyRecord, SignedPreKeyRecord, SessionRecord, ECPublicKey, PreKeyBundle> keyUtil() {
-//        return signalKeyUtil;
-//    }
 
     /**
      * Cache of a map fingerPrint string to FingerprintStatus
@@ -847,7 +837,7 @@ public class SQLiteOmemoStore extends SignalOmemoStore {
         if (pps != null) {
             XMPPConnection connection = pps.getConnection();
             if ((connection != null) && connection.isAuthenticated()) {
-                BareJid userJid = accountId.getBareJid();
+                BareJid userJid = accountId.getEntityBareJid();
                 OmemoManager omemoManager = OmemoManager.getInstanceFor(connection);
                 // stop old omemo manager to update cached data
                 omemoManager.stopStanzaAndPEPListeners();
@@ -947,7 +937,7 @@ public class SQLiteOmemoStore extends SignalOmemoStore {
      */
     public void purgeUserOmemoData(AccountID accountId) {
         // Retain a copy of the old device to purge data on server
-        BareJid userJid = accountId.getBareJid();
+        BareJid userJid = accountId.getEntityBareJid();
         SortedSet<Integer> deviceIds = localDeviceIdsOf(userJid);
         if (deviceIds.size() == 0)
             return;

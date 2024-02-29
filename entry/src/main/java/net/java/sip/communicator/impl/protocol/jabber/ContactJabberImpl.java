@@ -5,6 +5,14 @@
  */
 package net.java.sip.communicator.impl.protocol.jabber;
 
+import android.text.TextUtils;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Locale;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import net.java.sip.communicator.service.protocol.AbstractContact;
 import net.java.sip.communicator.service.protocol.ContactGroup;
 import net.java.sip.communicator.service.protocol.ContactResource;
@@ -16,17 +24,12 @@ import net.java.sip.communicator.util.ConfigurationUtils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jivesoftware.smack.roster.RosterEntry;
+import org.jivesoftware.smackx.blocking.BlockingCommandManager;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jxmpp.jid.FullJid;
 import org.jxmpp.jid.Jid;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Locale;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import timber.log.Timber;
 
@@ -37,11 +40,12 @@ import timber.log.Timber;
  * @author Lubomir Marinov
  * @author Eng Chong Meng
  */
-public class ContactJabberImpl extends AbstractContact
-{
+public class ContactJabberImpl extends AbstractContact {
     private static final String PGP_KEY_ID = "pgp_keyid";
 
-    private static final String TTS_ENABLE = "tts_Enable";
+    private static final String TTS_ENABLE = "tts_enable";
+
+    private Boolean isContactBlock = false;
 
     private Boolean isTtsEnable = null;
 
@@ -122,15 +126,13 @@ public class ContactJabberImpl extends AbstractContact
      * @param isResolved specifies whether the contact has been resolved against the server contact list
      */
     ContactJabberImpl(RosterEntry rosterEntry, ServerStoredContactListJabberImpl ssclCallback,
-            boolean isPersistent, boolean isResolved)
-    {
+            boolean isPersistent, boolean isResolved) {
         // rosterEntry can be null when creating volatile contact
         if (rosterEntry != null) {
             // RosterEntry contains only BareJid
             contactJid = rosterEntry.getJid();
             this.serverDisplayName = rosterEntry.getName();
         }
-
         this.tempId = null;
         this.ssclCallback = ssclCallback;
         this.isPersistent = isPersistent;
@@ -147,8 +149,7 @@ public class ContactJabberImpl extends AbstractContact
      * @param ssclCallback the contact list handler that creates us.
      * @param isPersistent is the contact persistent.
      */
-    ContactJabberImpl(Jid id, ServerStoredContactListJabberImpl ssclCallback, boolean isPersistent)
-    {
+    ContactJabberImpl(Jid id, ServerStoredContactListJabberImpl ssclCallback, boolean isPersistent) {
         this.tempId = id;
         this.ssclCallback = ssclCallback;
         this.isPersistent = isPersistent;
@@ -163,8 +164,7 @@ public class ContactJabberImpl extends AbstractContact
      *
      * @return the Jabber UserId of this contact
      */
-    public String getAddress()
-    {
+    public String getAddress() {
         if (isResolved && (contactJid != null))
             return contactJid.toString();
         else
@@ -177,8 +177,7 @@ public class ContactJabberImpl extends AbstractContact
      *
      * @return Either return the bareJid of contact as retrieved from the Roster Entry Or The VolatileContact Jid
      */
-    public Jid getJid()
-    {
+    public Jid getJid() {
         if (isResolved && (contactJid != null))
             return contactJid;
         else {
@@ -192,8 +191,7 @@ public class ContactJabberImpl extends AbstractContact
      *
      * @return true if this Contact represents us (the local user) and false otherwise.
      */
-    public boolean isLocal()
-    {
+    public boolean isLocal() {
         return isLocal;
     }
 
@@ -203,23 +201,21 @@ public class ContactJabberImpl extends AbstractContact
      *
      * @return the avatar of this contact or <code>null</code> if no avatar is currently available.
      */
-    public byte[] getImage()
-    {
+    public byte[] getImage() {
         return getImage(true);
     }
 
     /**
      * Returns a reference to the image assigned to this contact. If (image == null) and the
      * retrieveIfNecessary flag is true, we schedule the image for retrieval from the server.
-     *
      * (image.length == 0) indicates it has been retrieved before, so to avoid avatar retrieval in endless loop
      *
      * @param retrieveIfNecessary specifies whether the method should queue this contact for avatar update from the server.
+     *
      * @return a reference to the image currently stored by this contact.
      * @see ServerStoredContactListJabberImpl.ImageRetriever#run()
      */
-    public byte[] getImage(boolean retrieveIfNecessary)
-    {
+    public byte[] getImage(boolean retrieveIfNecessary) {
         if ((image == null) && retrieveIfNecessary)
             ssclCallback.addContactForImageUpdate(this);
         return image;
@@ -231,8 +227,7 @@ public class ContactJabberImpl extends AbstractContact
      *
      * @param retrieveOnStart force to download from server if avatar is null
      */
-    public void getAvatar(boolean retrieveOnStart)
-    {
+    public void getAvatar(boolean retrieveOnStart) {
         ssclCallback.setRetrieveOnStart(retrieveOnStart);
         ssclCallback.addContactForImageUpdate(this);
     }
@@ -242,8 +237,7 @@ public class ContactJabberImpl extends AbstractContact
      *
      * @param imgBytes the bytes of the image that we'd like to set.
      */
-    public void setImage(byte[] imgBytes)
-    {
+    public void setImage(byte[] imgBytes) {
         this.image = imgBytes;
     }
 
@@ -253,8 +247,7 @@ public class ContactJabberImpl extends AbstractContact
      * @return the hashcode of this Contact
      */
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         return getAddress().toLowerCase(Locale.US).hashCode();
     }
 
@@ -262,11 +255,11 @@ public class ContactJabberImpl extends AbstractContact
      * Indicates whether some other object is "equal to" this one.
      *
      * @param obj the reference object with which to compare.
+     *
      * @return <code>true</code> if this object is the same as the obj argument; <code>false</code> otherwise.
      */
     @Override
-    public boolean equals(Object obj)
-    {
+    public boolean equals(Object obj) {
         if (!(obj instanceof String || (obj instanceof ContactJabberImpl)))
             return false;
 
@@ -294,8 +287,7 @@ public class ContactJabberImpl extends AbstractContact
      * @return a string representation of this contact.
      */
     @Override
-    public String toString()
-    {
+    public String toString() {
         StringBuilder buff = new StringBuilder()
                 .append("JabberContact[id=").append(getAddress())
                 .append(", isPersistent=").append(isPersistent)
@@ -309,8 +301,7 @@ public class ContactJabberImpl extends AbstractContact
      *
      * @param status the JabberStatusEnum that this contact is currently in.
      */
-    public void updatePresenceStatus(PresenceStatus status)
-    {
+    public void updatePresenceStatus(PresenceStatus status) {
         this.status = status;
     }
 
@@ -322,8 +313,7 @@ public class ContactJabberImpl extends AbstractContact
      *
      * @return the PresenceStatus that we've received in the last status update pertaining to this contact.
      */
-    public PresenceStatus getPresenceStatus()
-    {
+    public PresenceStatus getPresenceStatus() {
         return status;
     }
 
@@ -333,8 +323,7 @@ public class ContactJabberImpl extends AbstractContact
      *
      * @return a String that can be used for referring to this contact when interacting with the user.
      */
-    public String getDisplayName()
-    {
+    public String getDisplayName() {
         if (isResolved) {
             RosterEntry entry = ssclCallback.getRosterEntry(contactJid.asBareJid());
             String name = null;
@@ -353,8 +342,7 @@ public class ContactJabberImpl extends AbstractContact
      *
      * @return the display name.
      */
-    String getServerDisplayName()
-    {
+    String getServerDisplayName() {
         return serverDisplayName;
     }
 
@@ -363,8 +351,7 @@ public class ContactJabberImpl extends AbstractContact
      *
      * @param newValue new display name
      */
-    void setServerDisplayName(String newValue)
-    {
+    void setServerDisplayName(String newValue) {
         this.serverDisplayName = newValue;
     }
 
@@ -375,8 +362,7 @@ public class ContactJabberImpl extends AbstractContact
      * @return a reference to the contact group that this contact is currently a child of or
      * null if the underlying protocol does not support persistent presence.
      */
-    public ContactGroup getParentContactGroup()
-    {
+    public ContactGroup getParentContactGroup() {
         return ssclCallback.findContactGroup(this);
     }
 
@@ -385,8 +371,7 @@ public class ContactJabberImpl extends AbstractContact
      *
      * @return a reference to an instance of the ProtocolProviderService
      */
-    public ProtocolProviderService getProtocolProvider()
-    {
+    public ProtocolProviderService getProtocolProvider() {
         return ssclCallback.getParentProvider();
     }
 
@@ -400,8 +385,7 @@ public class ContactJabberImpl extends AbstractContact
      *
      * @return true if the contact is persistent and false otherwise.
      */
-    public boolean isPersistent()
-    {
+    public boolean isPersistent() {
         return isPersistent;
     }
 
@@ -412,8 +396,7 @@ public class ContactJabberImpl extends AbstractContact
      *
      * @param persistent true if the buddy is to be considered persistent and false for volatile.
      */
-    void setPersistent(boolean persistent)
-    {
+    void setPersistent(boolean persistent) {
         this.isPersistent = persistent;
     }
 
@@ -422,8 +405,7 @@ public class ContactJabberImpl extends AbstractContact
      *
      * @return the persistent data
      */
-    public String getPersistentData()
-    {
+    public String getPersistentData() {
         return null;
     }
 
@@ -435,8 +417,7 @@ public class ContactJabberImpl extends AbstractContact
      *
      * @return true if the contact has been resolved (mapped against a buddy) and false otherwise.
      */
-    public boolean isResolved()
-    {
+    public boolean isResolved() {
         return isResolved;
     }
 
@@ -445,8 +426,7 @@ public class ContactJabberImpl extends AbstractContact
      *
      * @param entry the server stored entry
      */
-    void setResolved(RosterEntry entry)
-    {
+    void setResolved(RosterEntry entry) {
         if (isResolved)
             return;
 
@@ -461,8 +441,7 @@ public class ContactJabberImpl extends AbstractContact
      *
      * @return RosterEntry
      */
-    RosterEntry getSourceEntry()
-    {
+    RosterEntry getSourceEntry() {
         return (contactJid == null) ? null : ssclCallback.getRosterEntry(contactJid.asBareJid());
     }
 
@@ -471,8 +450,7 @@ public class ContactJabberImpl extends AbstractContact
      *
      * @return the current status message
      */
-    public String getStatusMessage()
-    {
+    public String getStatusMessage() {
         return statusMessage;
     }
 
@@ -481,8 +459,7 @@ public class ContactJabberImpl extends AbstractContact
      *
      * @param statusMessage the message
      */
-    protected void setStatusMessage(String statusMessage)
-    {
+    protected void setStatusMessage(String statusMessage) {
         this.statusMessage = statusMessage;
     }
 
@@ -492,8 +469,7 @@ public class ContactJabberImpl extends AbstractContact
      * @return <code>false</code> to indicate that this contact doesn't support resources
      */
     @Override
-    public boolean supportResources()
-    {
+    public boolean supportResources() {
         return true;
     }
 
@@ -503,8 +479,7 @@ public class ContactJabberImpl extends AbstractContact
      * @return null, as this contact doesn't support resources
      */
     @Override
-    public Collection<ContactResource> getResources()
-    {
+    public Collection<ContactResource> getResources() {
         if (resources != null) {
             Timber.d("Contact: %s resources %s", getDisplayName(), resources.size());
             return new ArrayList<>(resources.values());
@@ -516,15 +491,14 @@ public class ContactJabberImpl extends AbstractContact
      * Finds the <code>ContactResource</code> corresponding to the given bareJid.
      *
      * @param jid the fullJid for which we're looking for a resource
+     *
      * @return the <code>ContactResource</code> corresponding to the given bareJid.
      */
-    ContactResource getResourceFromJid(FullJid jid)
-    {
+    ContactResource getResourceFromJid(FullJid jid) {
         return ((resources == null) || (jid == null)) ? null : resources.get(jid);
     }
 
-    Map<FullJid, ContactResourceJabberImpl> getResourcesMap()
-    {
+    Map<FullJid, ContactResourceJabberImpl> getResourcesMap() {
         if (resources == null) {
             resources = new ConcurrentHashMap<>();
         }
@@ -536,8 +510,7 @@ public class ContactJabberImpl extends AbstractContact
      *
      * @param event the <code>ContactResourceEvent</code> to fire notification for
      */
-    public void fireContactResourceEvent(ContactResourceEvent event)
-    {
+    public void fireContactResourceEvent(ContactResourceEvent event) {
         super.fireContactResourceEvent(event);
     }
 
@@ -548,8 +521,7 @@ public class ContactJabberImpl extends AbstractContact
      *
      * @param fullJid the fullJid of the volatile contact.
      */
-    protected void setJid(Jid fullJid)
-    {
+    protected void setJid(Jid fullJid) {
         contactJid = fullJid;
         if (resources == null)
             resources = new ConcurrentHashMap<>();
@@ -560,8 +532,7 @@ public class ContactJabberImpl extends AbstractContact
      *
      * @return whether contact is mobile one.
      */
-    public boolean isMobile()
-    {
+    public boolean isMobile() {
         return getPresenceStatus().isOnline() && mobile;
     }
 
@@ -570,8 +541,7 @@ public class ContactJabberImpl extends AbstractContact
      *
      * @param mobile is mobile
      */
-    void setMobile(boolean mobile)
-    {
+    void setMobile(boolean mobile) {
         this.mobile = mobile;
     }
 
@@ -580,13 +550,11 @@ public class ContactJabberImpl extends AbstractContact
      *
      * @param isLocal the new value.
      */
-    void setLocal(boolean isLocal)
-    {
+    void setLocal(boolean isLocal) {
         this.isLocal = isLocal;
     }
 
-    public boolean setPhotoUri(String uri)
-    {
+    public boolean setPhotoUri(String uri) {
         if (uri != null && !uri.equals(this.photoUri)) {
             this.photoUri = uri;
             return true;
@@ -600,8 +568,7 @@ public class ContactJabberImpl extends AbstractContact
         }
     }
 
-    public long getPgpKeyId()
-    {
+    public long getPgpKeyId() {
         synchronized (this.keys) {
             if (this.keys.has(PGP_KEY_ID)) {
                 try {
@@ -616,8 +583,7 @@ public class ContactJabberImpl extends AbstractContact
         }
     }
 
-    public void setPgpKeyId(long keyId)
-    {
+    public void setPgpKeyId(long keyId) {
         synchronized (this.keys) {
             try {
                 this.keys.put(PGP_KEY_ID, keyId);
@@ -628,37 +594,48 @@ public class ContactJabberImpl extends AbstractContact
     }
 
     /**
+     * Check this contact blocking status
+     *
+     * @return true if contact is blocked.
+     */
+    public boolean isContactBlock() {
+        return isContactBlock;
+    }
+
+    /**
+     * Set contact blocking status.
+     * @see OperationSetPersistentPresenceJabberImpl#initContactBlockStatus(BlockingCommandManager)
+     *
+     * @param value contact block state.
+     */
+    public void setContactBlock(boolean value) {
+        isContactBlock = value;
+    }
+
+    /**
      * When access on start-up, return ttsEnable may be null.
-     * Use getJid() to ensure unresolved contact (contactJid == null) returns a valid values.
      *
      * @return true if contact tts is enabled.
      */
-    public boolean isTtsEnable()
-    {
+    public boolean isTtsEnable() {
         if (isTtsEnable == null) {
             String val = ConfigurationUtils.getContactProperty(getJid(), TTS_ENABLE);
-            isTtsEnable = StringUtils.isEmpty(val) ? false : Boolean.valueOf(val);
+            // Null value in DB is considered as false
+            isTtsEnable = !TextUtils.isEmpty(val) && Boolean.parseBoolean(val);
         }
         return isTtsEnable;
     }
 
     /**
      * Change contact tts enable value in configuration service.
-     * Null value in DB is considered as false
+     * Use getJid() to ensure unresolved contact (contactJid == null) returns a valid values.
      *
      * @param value change of tts enable property.
      */
-    public void setTtsEnable(boolean value)
-    {
-        if (isTtsEnable() == value)
-            return;
-
-        isTtsEnable = value;
-        if (value) {
-            ConfigurationUtils.updateContactProperty(contactJid, TTS_ENABLE, Boolean.toString(isTtsEnable));
-        }
-        else {
-            ConfigurationUtils.updateContactProperty(contactJid, TTS_ENABLE, null);
+    public void setTtsEnable(boolean value) {
+        if (isTtsEnable != value) {
+            isTtsEnable = value;
+            ConfigurationUtils.updateContactProperty(getJid(), TTS_ENABLE, Boolean.toString(isTtsEnable));
         }
     }
 
@@ -667,23 +644,19 @@ public class ContactJabberImpl extends AbstractContact
      *
      * @param option
      */
-    public void setOption(int option)
-    {
+    public void setOption(int option) {
         this.subscription |= 1 << option;
     }
 
-    public void resetOption(int option)
-    {
+    public void resetOption(int option) {
         this.subscription &= ~(1 << option);
     }
 
-    public boolean getOption(int option)
-    {
+    public boolean getOption(int option) {
         return ((this.subscription & (1 << option)) != 0);
     }
 
-    public final class Options
-    {
+public final class Options {
         public static final int TO = 0;
         public static final int FROM = 1;
         public static final int ASKING = 2;

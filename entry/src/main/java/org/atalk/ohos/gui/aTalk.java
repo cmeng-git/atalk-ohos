@@ -35,6 +35,11 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import net.java.sip.communicator.service.contactlist.MetaContact;
 
 import org.atalk.ohos.R;
@@ -52,11 +57,6 @@ import org.atalk.ohos.gui.util.EntityListHelper;
 import org.atalk.ohos.gui.webview.WebViewFragment;
 import org.jetbrains.annotations.NotNull;
 import org.osgi.framework.BundleContext;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import de.cketti.library.changelog.ChangeLog;
 import timber.log.Timber;

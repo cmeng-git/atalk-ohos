@@ -18,6 +18,11 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.RemoteInput;
 import androidx.fragment.app.Fragment;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import net.java.sip.communicator.impl.muc.MUCActivator;
 import net.java.sip.communicator.impl.protocol.jabber.ChatRoomJabberImpl;
 import net.java.sip.communicator.plugin.notificationwiring.NotificationManager;
@@ -31,6 +36,7 @@ import net.java.sip.communicator.service.systray.PopupMessage;
 import net.java.sip.communicator.service.systray.SystrayService;
 import net.java.sip.communicator.service.systray.event.SystrayPopupMessageEvent;
 
+import org.atalk.impl.androidnotification.AndroidNotifications;
 import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.AndroidGUIActivator;
@@ -44,14 +50,10 @@ import org.atalk.ohos.gui.chat.ChatSessionManager;
 import org.atalk.ohos.gui.chatroomslist.ChatRoomListFragment;
 import org.atalk.ohos.gui.contactlist.ContactListFragment;
 import org.atalk.ohos.gui.util.AndroidUtils;
-import org.atalk.impl.androidnotification.AndroidNotifications;
 import org.atalk.service.osgi.OSGiService;
-import org.jxmpp.jid.Jid;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smackx.jinglemessage.element.JingleMessage;
 
 import timber.log.Timber;
 
@@ -204,7 +206,7 @@ public class NotificationPopupHandler extends AbstractPopupMessageHandler
                             aTalkApp.getResString(R.string.reply),
                             createReplyIntent(nId))
                             .setSemanticAction(NotificationCompat.Action.SEMANTIC_ACTION_REPLY)
-                          // .setShowsUserInterface(true)
+                            // .setShowsUserInterface(true)
                             .addRemoteInput(remoteInput)
                             .build();
                     mBuilder.addAction(replyAction);

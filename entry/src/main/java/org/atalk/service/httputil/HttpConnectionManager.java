@@ -1,8 +1,5 @@
 package org.atalk.service.httputil;
 
-import org.apache.http.conn.ssl.StrictHostnameVerifier;
-import org.atalk.ohos.BuildConfig;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
@@ -16,6 +13,9 @@ import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.X509TrustManager;
+
+import org.apache.http.conn.ssl.StrictHostnameVerifier;
+import org.atalk.ohos.BuildConfig;
 
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;

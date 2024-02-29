@@ -66,7 +66,8 @@ import timber.log.Timber;
 public class OperationSetTelephonyConferencingJabberImpl
         extends AbstractOperationSetTelephonyConferencing<ProtocolProviderServiceJabberImpl,
         OperationSetBasicTelephonyJabberImpl, CallJabberImpl, CallPeerJabberImpl, String>
-        implements RegistrationStateChangeListener, StanzaFilter {
+        implements RegistrationStateChangeListener, StanzaFilter
+{
     /**
      * The Jabber Incoming Conference Call IQRequest Handler.
      */
@@ -265,7 +266,7 @@ public class OperationSetTelephonyConferencingJabberImpl
         };
 
         CallJabberImpl call = callPeer.getCall();
-        coinIQ.setFrom(call.getProtocolProvider().getOurJID());
+        coinIQ.setFrom(call.getProtocolProvider().getOurJid());
         coinIQ.setTo(callPeer.getPeerJid());
         coinIQ.setType(Type.set);
 
@@ -299,8 +300,8 @@ public class OperationSetTelephonyConferencingJabberImpl
         return getBasicTelephony().createOutgoingCall(call, calleeAddress,
                 Arrays.asList(new ExtensionElement[]{
                         CoinExtension.getBuilder()
-                                .setFocus(true)
-                                .build()
+                        .setFocus(true)
+                        .build()
                 }));
     }
 
@@ -467,7 +468,7 @@ public class OperationSetTelephonyConferencingJabberImpl
             if (room != null)
                 return "xmpp:" + chatRoomName + "/" + room.getUserNickname();
         }
-        return "xmpp:" + parentProvider.getOurJID();
+        return "xmpp:" + parentProvider.getOurJid();
     }
 
     /**

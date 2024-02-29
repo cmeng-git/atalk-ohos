@@ -1173,6 +1173,7 @@ public class ChatFragment extends OSGiFragment implements ChatSessionManager.Cur
             if (deletedUUIDs == null) {
                 messages.clear();
                 msgUuid2Idx.clear();
+                chatPanel.msgCacheClear();
             }
             else {
                 // int msgSize = messages.size();

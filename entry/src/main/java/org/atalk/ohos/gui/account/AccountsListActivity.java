@@ -36,7 +36,7 @@ import org.atalk.ohos.gui.AndroidGUIActivator;
 import org.atalk.ohos.gui.account.settings.AccountPreferenceActivity;
 import org.atalk.ohos.gui.contactlist.AddGroupDialog;
 import org.atalk.ohos.gui.dialogs.DialogActivity;
-import org.atalk.ohos.gui.dialogs.ProgressDialogFragment;
+import org.atalk.ohos.gui.dialogs.ProgressDialog;
 import org.atalk.ohos.plugin.certconfig.TLS_Configuration;
 import org.atalk.persistance.FileBackend;
 import org.atalk.persistance.ServerPersistentStoresRefreshDialog;
@@ -260,7 +260,7 @@ public class AccountsListActivity extends OSGiActivity
             ProtocolProviderServiceJabberImpl jabberProvider = (ProtocolProviderServiceJabberImpl) pps;
 
             // Purge avatarHash and avatarImages of all contacts belong to the account roster
-            BareJid userJid = accountId.getBareJid();
+            BareJid userJid = accountId.getEntityBareJid();
             try {
                 VCardAvatarManager.clearPersistentStorage(userJid);
             } catch (XmppStringprepException e) {
@@ -358,7 +358,7 @@ public class AccountsListActivity extends OSGiActivity
                 accEnableThread = new AccountEnableThread(account.getAccountID(), enable);
                 String message = enable ? getString(R.string.connecting_, account.getAccountName())
                         : getString(R.string.disconnecting_, account.getAccountName());
-                progressDialog = ProgressDialogFragment.showProgressDialog(getString(R.string.info), message);
+                progressDialog = ProgressDialog.showProgressDialog(getString(R.string.info), message);
                 accEnableThread.start();
             });
             return rowView;

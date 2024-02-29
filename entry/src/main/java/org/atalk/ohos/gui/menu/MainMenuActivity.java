@@ -52,6 +52,7 @@ import org.atalk.ohos.gui.chatroomslist.ChatRoomBookmarksDialog;
 import org.atalk.ohos.gui.chatroomslist.ChatRoomCreateDialog;
 import org.atalk.ohos.gui.contactlist.AddContactActivity;
 import org.atalk.ohos.gui.contactlist.ContactListFragment;
+import org.atalk.ohos.gui.contactlist.ContactBlockListActivity;
 import org.atalk.ohos.gui.contactlist.model.MetaContactListAdapter;
 import org.atalk.ohos.gui.settings.SettingsActivity;
 import org.atalk.ohos.plugin.geolocation.GeoLocationActivity;
@@ -293,6 +294,9 @@ public class MainMenuActivity extends ExitMenuActivity implements ServiceListene
                 break;
             case R.id.add_contact:
                 startActivity(AddContactActivity.class);
+                break;
+            case R.id.block_list:
+                startActivity(ContactBlockListActivity.class);
                 break;
             case R.id.main_settings:
                 startActivity(SettingsActivity.class);
