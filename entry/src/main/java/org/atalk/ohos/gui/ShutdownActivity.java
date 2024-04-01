@@ -23,11 +23,11 @@ import org.atalk.service.osgi.OSGiService;
  * @author Pawel Domas
  * @author Eng Chong Meng
  */
-public class ShutdownActivity extends OSGiActivity
-{
+public class ShutdownActivity extends OSGiActivity {
+    private ProgressBar mProgressBar;
+
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (!OSGiService.hasStarted()) {
             startActivity(new Intent(this, LauncherActivity.class));
@@ -47,7 +47,14 @@ public class ShutdownActivity extends OSGiActivity
         TextView shutDown = findViewById(R.id.stateInfo);
         shutDown.setText(R.string.shutting_down);
 
-        ProgressBar mActionBarProgress = findViewById(R.id.actionbar_progress);
-        mActionBarProgress.setVisibility(ProgressBar.VISIBLE);
+        mProgressBar = findViewById(R.id.progressBar);
+        mProgressBar.setVisibility(ProgressBar.VISIBLE);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mProgressBar != null)
+            mProgressBar.clearAnimation();
     }
 }

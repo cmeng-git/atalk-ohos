@@ -18,17 +18,17 @@ public abstract class AbstractVersion implements Version {
     /**
      * The version major field.
      */
-    private int versionMajor;
+    private final int versionMajor;
 
     /**
      * The version minor field.
      */
-    private int versionMinor;
+    private final int versionMinor;
 
     /**
      * The nightly build id field.
      */
-    private String nightlyBuildID;
+    private final String nightlyBuildID;
 
     /**
      * Creates version object with custom major, minor and nightly build id.

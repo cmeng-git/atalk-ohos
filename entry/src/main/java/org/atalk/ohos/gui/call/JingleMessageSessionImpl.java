@@ -19,6 +19,13 @@ package org.atalk.ohos.gui.call;
 import android.content.Context;
 import android.content.Intent;
 
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.WeakHashMap;
+
+import net.java.sip.communicator.impl.protocol.jabber.CallPeerJabberImpl;
 import net.java.sip.communicator.impl.protocol.jabber.OperationSetBasicTelephonyJabberImpl;
 import net.java.sip.communicator.impl.protocol.jabber.ProtocolProviderServiceJabberImpl;
 import net.java.sip.communicator.plugin.notificationwiring.NotificationManager;
@@ -29,11 +36,11 @@ import net.java.sip.communicator.service.protocol.CallPeer;
 import net.java.sip.communicator.service.systray.SystrayService;
 import net.java.sip.communicator.util.GuiUtils;
 
+import org.atalk.impl.androidnotification.VibrateHandlerImpl;
+import org.atalk.impl.androidtray.NotificationPopupHandler;
 import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.aTalk;
-import org.atalk.impl.androidnotification.VibrateHandlerImpl;
-import org.atalk.impl.androidtray.NotificationPopupHandler;
 import org.atalk.util.MediaType;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
@@ -50,12 +57,6 @@ import org.jivesoftware.smackx.jinglemessage.JingleMessageType;
 import org.jivesoftware.smackx.jinglemessage.element.JingleMessage;
 import org.jxmpp.jid.FullJid;
 import org.jxmpp.jid.Jid;
-
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.WeakHashMap;
 
 import timber.log.Timber;
 
@@ -266,7 +267,7 @@ public final class JingleMessageSessionImpl implements JingleMessageListener {
      * On user accepted call, send an "accept: message to own bareJid; server will then forward to all our resources.
      * Cancel vibrate in progress; The ending of ring tone is handled by the caller
      * i.e. NotificationPopupHandler.removeCallNotification(id);
-     *
+     * <p>
      * Note: the attached message is with to/from reversed for sendJingleMessage requirements
      *
      * @param sid the intended Jingle Message call id

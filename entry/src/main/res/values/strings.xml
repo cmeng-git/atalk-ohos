@@ -159,7 +159,6 @@
     <string name="call_error">Remote party returns an error: %1$s</string>
     <string name="call_failed">Call failed</string>
     <string name="call_history_name">Call History</string>
-    <string name="call_history_remove_count">No of call history records deleted: %1$s</string>
     <string name="call_history_remove_before_date_warning">Are you sure you want to purge all call records before the date: %1$s?</string>
     <string name="call_history_remove_none">None record selected for delete</string>
     <string name="call_history_remove_warning">Are you sure you want to purge all selected call records?</string>
@@ -410,6 +409,7 @@
     <string name="history_erase_all">Erase all contacts chat history</string>
     <string name="history_purge_for_contact_warning">Are you sure you want to purge all selected messages for %1$s?</string>
     <string name="history_purge_all_warning">Are you sure you want to purge all messages for all the entities?</string>
+    <string name="history_purge_count">Number of history records deleted: %1$s</string>
     <string name="history_purge_error">Error removing locally stored messages for %1$s.</string>
     <string name="history_purge_media">Delete media from my phone</string>
     <string name="history_offline_warning">Close and open this chat session to view MAM and Offline messages when online</string>
@@ -677,7 +677,7 @@
     <string name="dec">Dec</string>
 
     <!-- Call info -->
-    <string name="service_protocol_ICE_FAILED">Could not establish connection (ICE failed and no relay found)</string>
+    <string name="protocol_ice_failed">Could not establish connection (ICE failed and no relay found)</string>
     <string name="callinfo_audio_info">Audio info</string>
     <string name="callinfo_bandwidth">Bandwidth:</string>
     <string name="callinfo_call_duration">Call duration:</string>

@@ -58,7 +58,7 @@ public class FileBackend
      */
     private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
 
-    // android-Q accessible path to apk is: /storage/emulated/0/Android/data/org.atalk.ohos/files
+    // android-Q accessible path to apk is: /storage/emulated/0/Android/data/org.atalk.android/files
     public static String FP_aTALK = "/aTalk";
     public static String EXPROT_DB = "EXPORT_DB";
 
@@ -202,7 +202,6 @@ public class FileBackend
 
     /**
      * Copy bytes from a large (over 2GB) <code>InputStream</code> to an <code>OutputStream</code>.
-     * <p>
      * This method buffers the input internally, so there is no need to use a <code>BufferedInputStream</code>.
      *
      * @param input the <code>InputStream</code> to read from
@@ -341,8 +340,8 @@ public class FileBackend
     /**
      * To guess the mime type of the given uri using the mimeMap or from path name
      * Unicode uri string must be urlEncoded for android getFileExtensionFromUrl(),
-     * else alwyas return ""
-     *
+     * else always return ""
+     * <p>
      * Note: android returns *.mp3 file as audio/mpeg. See https://tools.ietf.org/html/rfc3003;
      * and returns as video/mpeg on re-submission with *.mpeg
      *
@@ -426,10 +425,9 @@ public class FileBackend
 
     /**
      * cmeng: modified from URLConnection class
-     *
      * Try to determine the type of input stream based on the characters at the beginning of the input stream.
      * This method  be used by subclasses that override the {@code getContentType} method.
-     *
+     * <p>
      * Ideally, this routine would not be needed, but many {@code http} servers return the incorrect content type;
      * in addition, there are many nonstandard extensions. Direct inspection of the bytes to determine the content
      * type is often more accurate than believing the content type claimed by the {@code http} server.

@@ -18,7 +18,7 @@
         android:id="@+id/chat_message_forward"
         android:icon="@drawable/ic_forward_dark"
         android:title="@string/forward"
-        app:showAsAction="ifRoom">
+        app:showAsAction="always">
     </item>
     <item
         android:id="@+id/chat_message_del"
@@ -30,7 +30,7 @@
         android:id="@+id/chat_message_share"
         android:icon="@drawable/ic_share_dark"
         android:title="@string/share"
-        app:showAsAction="always">
+        app:showAsAction="ifRoom">
     </item>
     <item
         android:id="@+id/chat_message_copy"

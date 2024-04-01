@@ -529,6 +529,7 @@ public abstract class MediaAwareCall<
      *
      * @return a new <code>Recorder</code> which is to record this <code>Call</code> (into a file which is
      * to be specified when starting the returned <code>Recorder</code>)
+     *
      * @throws OperationFailedException if anything goes wrong while creating the new <code>Recorder</code> for this
      * <code>Call</code>
      */

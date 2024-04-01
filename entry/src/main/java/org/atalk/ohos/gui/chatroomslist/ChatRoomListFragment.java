@@ -36,6 +36,8 @@ import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import java.util.List;
+
 import net.java.sip.communicator.impl.muc.MUCActivator;
 import net.java.sip.communicator.service.gui.Chat;
 import net.java.sip.communicator.service.muc.ChatRoomProviderWrapper;
@@ -62,8 +64,6 @@ import org.atalk.service.osgi.OSGiFragment;
 import org.jetbrains.annotations.NotNull;
 import org.jxmpp.util.XmppStringUtils;
 
-import java.util.List;
-
 import timber.log.Timber;
 
 /**
@@ -71,8 +71,8 @@ import timber.log.Timber;
  *
  * @author Eng Chong Meng
  */
-public class ChatRoomListFragment extends OSGiFragment implements OnGroupClickListener
-{
+public class ChatRoomListFragment extends OSGiFragment
+        implements OnGroupClickListener, EntityListHelper.TaskCompleteListener {
     /**
      * Search options menu items.
      */
@@ -123,13 +123,14 @@ public class ChatRoomListFragment extends OSGiFragment implements OnGroupClickLi
      */
     private static int scrollTopPosition;
 
+    private int eraseMode = -1;
+
     private Context mContext = null;
 
     /**
      * Creates a new instance of <code>ContactListFragment</code>.
      */
-    public ChatRoomListFragment()
-    {
+    public ChatRoomListFragment() {
         super();
         // This fragment will create options menu.
         setHasOptionsMenu(true);
@@ -139,8 +140,7 @@ public class ChatRoomListFragment extends OSGiFragment implements OnGroupClickLi
      * {@inheritDoc}
      */
     @Override
-    public void onAttach(@NonNull Context context)
-    {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         mContext = context;
     }
@@ -149,8 +149,7 @@ public class ChatRoomListFragment extends OSGiFragment implements OnGroupClickLi
      * {@inheritDoc}
      */
     @Override
-    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (AndroidGUIActivator.bundleContext == null) {
             return null;
         }
@@ -167,8 +166,7 @@ public class ChatRoomListFragment extends OSGiFragment implements OnGroupClickLi
      * Initialize the chatRoom list adapter;
      * Leave invalidateViews() to BaseChatRoomListAdapter as data update is async in new thread
      */
-    private void initChatRoomListAdapter()
-    {
+    private void initChatRoomListAdapter() {
         chatRoomListView.setAdapter(getChatRoomListAdapter());
 
         // Attach ChatRoomProvider expand memory
@@ -194,8 +192,7 @@ public class ChatRoomListFragment extends OSGiFragment implements OnGroupClickLi
      * {@inheritDoc}
      */
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
 
         // Invalidate view to update read counter and expand groups (collapsed when access settings)
@@ -209,8 +206,7 @@ public class ChatRoomListFragment extends OSGiFragment implements OnGroupClickLi
      * {@inheritDoc}
      */
     @Override
-    public void onDestroy()
-    {
+    public void onDestroy() {
         // Unbind search listener
         if (mSearchItem != null) {
             SearchView searchView = (SearchView) mSearchItem.getActionView();
@@ -248,8 +244,7 @@ public class ChatRoomListFragment extends OSGiFragment implements OnGroupClickLi
      * @param menu the options menu
      */
     @Override
-    public void onCreateOptionsMenu(@NotNull Menu menu, @NotNull MenuInflater menuInflater)
-    {
+    public void onCreateOptionsMenu(@NotNull Menu menu, @NotNull MenuInflater menuInflater) {
         super.onCreateOptionsMenu(menu, menuInflater);
 
         // Get the SearchView MenuItem
@@ -257,25 +252,21 @@ public class ChatRoomListFragment extends OSGiFragment implements OnGroupClickLi
         if (mSearchItem == null)
             return;
 
-        mSearchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener()
-        {
+        mSearchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
-            public boolean onMenuItemActionCollapse(MenuItem item)
-            {
+            public boolean onMenuItemActionCollapse(MenuItem item) {
                 filterChatRoomWrapperList("");
                 return true; // Return true to collapse action view
             }
 
-            public boolean onMenuItemActionExpand(MenuItem item)
-            {
+            public boolean onMenuItemActionExpand(MenuItem item) {
                 return true; // Return true to expand action view
             }
         });
         bindSearchListener();
     }
 
-    private void bindSearchListener()
-    {
+    private void bindSearchListener() {
         if (mSearchItem != null) {
             SearchView searchView = (SearchView) mSearchItem.getActionView();
             SearchViewListener listener = new SearchViewListener();
@@ -284,8 +275,7 @@ public class ChatRoomListFragment extends OSGiFragment implements OnGroupClickLi
         }
     }
 
-    private ChatRoomListAdapter getChatRoomListAdapter()
-    {
+    private ChatRoomListAdapter getChatRoomListAdapter() {
         if (chatRoomListAdapter == null) {
             chatRoomListAdapter = new ChatRoomListAdapter(this);
             chatRoomListAdapter.initModelData();
@@ -293,8 +283,7 @@ public class ChatRoomListFragment extends OSGiFragment implements OnGroupClickLi
         return chatRoomListAdapter;
     }
 
-    private QueryChatRoomListAdapter getSourcesAdapter()
-    {
+    private QueryChatRoomListAdapter getSourcesAdapter() {
         if (sourcesAdapter == null) {
             sourcesAdapter = new QueryChatRoomListAdapter(this, getChatRoomListAdapter());
             sourcesAdapter.initModelData();
@@ -302,8 +291,7 @@ public class ChatRoomListFragment extends OSGiFragment implements OnGroupClickLi
         return sourcesAdapter;
     }
 
-    private void disposeSourcesAdapter()
-    {
+    private void disposeSourcesAdapter() {
         if (sourcesAdapter != null) {
             sourcesAdapter.dispose();
         }
@@ -317,8 +305,7 @@ public class ChatRoomListFragment extends OSGiFragment implements OnGroupClickLi
      * @param roomView click view.
      * @param crWrapper an instance of ChatRoomWrapper.
      */
-    public void showPopupMenu(View roomView, ChatRoomWrapper crWrapper)
-    {
+    public void showPopupMenu(View roomView, ChatRoomWrapper crWrapper) {
         // Inflate chatRoom list popup menu
         PopupMenu popup = new PopupMenu(mContext, roomView);
         Menu menu = popup.getMenu();
@@ -342,12 +329,12 @@ public class ChatRoomListFragment extends OSGiFragment implements OnGroupClickLi
 
         // Checks if close chat option should be visible for this chatRoom
         boolean closeChatVisible = ChatSessionManager.getActiveChat(mClickedChatRoom.getChatRoomID()) != null;
-        menu.findItem(R.id.close_chatroom).setVisible(closeChatVisible);
+        menu.findItem(R.id.close_current_chat).setVisible(closeChatVisible);
 
         // Close all chats option should be visible if chatList is not empty
         List<Chat> chatList = ChatSessionManager.getActiveChats();
         boolean visible = ((chatList.size() > 1) || ((chatList.size() == 1) && !closeChatVisible));
-        menu.findItem(R.id.close_all_chatrooms).setVisible(visible);
+        menu.findItem(R.id.close_all_active_chats).setVisible(visible);
 
         // may not want to offer erase all chatRooms chat history
         menu.findItem(R.id.erase_all_chatroom_history).setVisible(false);
@@ -358,18 +345,17 @@ public class ChatRoomListFragment extends OSGiFragment implements OnGroupClickLi
      * Interface responsible for receiving menu item click events if the items
      * themselves do not have individual item click listeners.
      */
-    private class PopupMenuItemClick implements OnMenuItemClickListener
-    {
+    private class PopupMenuItemClick implements OnMenuItemClickListener {
         /**
          * This method will be invoked when a menu item is clicked if the item
          * itself did not already handle the event.
          *
          * @param item the menu item that was clicked
+         *
          * @return {@code true} if the event was handled, {@code false} otherwise
          */
         @Override
-        public boolean onMenuItemClick(MenuItem item)
-        {
+        public boolean onMenuItemClick(MenuItem item) {
             ChatPanel chatPanel = ChatSessionManager.getActiveChat(mClickedChatRoom.getChatRoomID());
             switch (item.getItemId()) {
                 case R.id.chatroom_tts_enable:
@@ -384,22 +370,24 @@ public class ChatRoomListFragment extends OSGiFragment implements OnGroupClickLi
                     ChatSessionManager.getMultiChat(mClickedChatRoom, true).updateChatTtsOption();
                     return true;
 
-                case R.id.close_chatroom:
+                case R.id.close_current_chat:
                     if (chatPanel != null)
                         onCloseChat(chatPanel);
                     return true;
 
-                case R.id.close_all_chatrooms:
+                case R.id.close_all_active_chats:
                     onCloseAllChats();
                     return true;
 
                 case R.id.erase_chatroom_history:
-                    EntityListHelper.eraseEntityChatHistory(mContext, mClickedChatRoom, null, null);
+                    eraseMode = EntityListHelper.SINGLE_ENTITY;
+                    EntityListHelper.eraseEntityChatHistory(ChatRoomListFragment.this, mClickedChatRoom, null, null);
                     return true;
 
                 case R.id.erase_all_chatroom_history:
-                    // This opton is currently being disabled - not offer to user
-                    EntityListHelper.eraseAllEntityHistory(mContext);
+                    // This option is currently being disabled - not offer to user
+                    eraseMode = EntityListHelper.ALL_ENTITY;
+                    EntityListHelper.eraseAllEntityHistory(ChatRoomListFragment.this);
                     return true;
 
                 case R.id.destroy_chatroom:
@@ -427,8 +415,7 @@ public class ChatRoomListFragment extends OSGiFragment implements OnGroupClickLi
      *
      * @param closedChat closed <code>ChatPanel</code>.
      */
-    private void onCloseChat(ChatPanel closedChat)
-    {
+    private void onCloseChat(ChatPanel closedChat) {
         ChatSessionManager.removeActiveChat(closedChat);
         if (chatRoomListAdapter != null)
             chatRoomListAdapter.notifyDataSetChanged();
@@ -437,11 +424,28 @@ public class ChatRoomListFragment extends OSGiFragment implements OnGroupClickLi
     /**
      * Method fired when all chats are being closed.
      */
-    private void onCloseAllChats()
-    {
+    private void onCloseAllChats() {
         ChatSessionManager.removeAllActiveChats();
         if (chatRoomListAdapter != null)
             chatRoomListAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onTaskComplete(int msgCount, List<String> deletedUUIDs) {
+        aTalkApp.showToastMessage(R.string.history_purge_count, msgCount);
+        if (EntityListHelper.SINGLE_ENTITY == eraseMode) {
+            ChatPanel chatPanel = ChatSessionManager.getActiveChat(mClickedChatRoom.getChatRoomID());
+            if (chatPanel != null) {
+                onCloseChat(chatPanel);
+            }
+        }
+        else if (EntityListHelper.ALL_ENTITY == eraseMode) {
+            onCloseAllChats();
+        }
+        else { // failed
+            String errMsg = getString(R.string.history_purge_error, mClickedChatRoom.getChatRoomID());
+            aTalkApp.showToastMessage(errMsg);
+        }
     }
 
     /**
@@ -449,16 +453,14 @@ public class ChatRoomListFragment extends OSGiFragment implements OnGroupClickLi
      *
      * @return the chatRoom list view
      */
-    public ExpandableListView getChatRoomListView()
-    {
+    public ExpandableListView getChatRoomListView() {
         return chatRoomListView;
     }
 
     /**
      * Open and join chat conference for the given chatRoomWrapper.
      */
-    public void joinChatRoom(ChatRoomWrapper chatRoomWrapper)
-    {
+    public void joinChatRoom(ChatRoomWrapper chatRoomWrapper) {
         if (chatRoomWrapper != null) {
             ProtocolProviderService pps = chatRoomWrapper.getProtocolProvider();
             String nickName = XmppStringUtils.parseLocalpart(pps.getAccountID().getAccountJid());
@@ -485,10 +487,10 @@ public class ChatRoomListFragment extends OSGiFragment implements OnGroupClickLi
      * @param v the view
      * @param groupPosition the position of the group
      * @param id the identifier
+     *
      * @return <code>true</code> if the group click action has been performed
      */
-    public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id)
-    {
+    public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
         if (chatRoomListView.isGroupExpanded(groupPosition))
             chatRoomListView.collapseGroup(groupPosition);
         else {
@@ -502,8 +504,7 @@ public class ChatRoomListFragment extends OSGiFragment implements OnGroupClickLi
      *
      * @param query the query string that will be used for filtering chat rooms.
      */
-    private void filterChatRoomWrapperList(String query)
-    {
+    private void filterChatRoomWrapperList(String query) {
         // FFR: 2.1.5 Samsung Galaxy J2 Prime (grandpplte), Android 6.0, NPE for chatRoomListView; happen when offline?
         if (chatRoomListView == null)
             return;
@@ -541,25 +542,21 @@ public class ChatRoomListFragment extends OSGiFragment implements OnGroupClickLi
     /**
      * Class used to implement <code>SearchView</code> listeners for compatibility purposes.
      */
-    private class SearchViewListener implements SearchView.OnQueryTextListener, SearchView.OnCloseListener
-    {
+    private class SearchViewListener implements SearchView.OnQueryTextListener, SearchView.OnCloseListener {
         @Override
-        public boolean onQueryTextSubmit(String query)
-        {
+        public boolean onQueryTextSubmit(String query) {
             filterChatRoomWrapperList(query);
             return true;
         }
 
         @Override
-        public boolean onQueryTextChange(String query)
-        {
+        public boolean onQueryTextChange(String query) {
             filterChatRoomWrapperList(query);
             return true;
         }
 
         @Override
-        public boolean onClose()
-        {
+        public boolean onClose() {
             filterChatRoomWrapperList("");
             return true;
         }
@@ -571,8 +568,7 @@ public class ChatRoomListFragment extends OSGiFragment implements OnGroupClickLi
      *
      * @param crWrapper The ChatRoomWrapper to be updated
      */
-    public void updateUnreadCount(final ChatRoomWrapper crWrapper)
-    {
+    public void updateUnreadCount(final ChatRoomWrapper crWrapper) {
         runOnUiThread(() -> {
             if ((crWrapper != null) && (chatRoomListAdapter != null)) {
                 int unreadCount = crWrapper.getUnreadCount();

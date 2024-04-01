@@ -7,6 +7,9 @@ package org.atalk.ohos.gui.chat;
 
 import android.text.TextUtils;
 
+import java.io.File;
+import java.util.Date;
+
 import net.java.sip.communicator.impl.protocol.jabber.HttpFileDownloadJabberImpl;
 import net.java.sip.communicator.service.contactlist.MetaContact;
 import net.java.sip.communicator.service.filehistory.FileRecord;
@@ -27,9 +30,6 @@ import org.apache.commons.text.StringEscapeUtils;
 import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.AndroidGUIActivator;
-
-import java.io.File;
-import java.util.Date;
 
 import timber.log.Timber;
 
@@ -391,7 +391,7 @@ public class ChatMessageImpl implements ChatMessage {
      * @param fileName FileName
      * @param encType Message encode Type
      * @param recordType ChatMessage#Type
-     * @param direction File received or send
+     * @param dir File received or send
      *
      * @return True if found the a matching msgUuid for update
      */

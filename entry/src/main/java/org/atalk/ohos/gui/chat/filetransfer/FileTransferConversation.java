@@ -53,7 +53,6 @@ import com.bumptech.glide.load.resource.gif.GifDrawable;
 import com.bumptech.glide.request.target.CustomViewTarget;
 import com.bumptech.glide.request.transition.Transition;
 
-import net.java.sip.communicator.impl.protocol.jabber.ProtocolProviderServiceJabberImpl;
 import net.java.sip.communicator.service.filehistory.FileRecord;
 import net.java.sip.communicator.service.protocol.FileTransfer;
 import net.java.sip.communicator.service.protocol.IMessage;
@@ -304,7 +303,6 @@ public abstract class FileTransferConversation extends OSGiFragment
 
             case FileTransferStatusChangeEvent.IN_PROGRESS:
                 messageViewHolder.cancelButton.setVisibility(View.VISIBLE);
-                mConnection.setReplyTimeout(ProtocolProviderServiceJabberImpl.SMACK_REPLY_EXTENDED_TIMEOUT_10);
                 break;
 
             case FileTransferStatusChangeEvent.COMPLETED:
@@ -322,7 +320,6 @@ public abstract class FileTransferConversation extends OSGiFragment
                     fileSize = 100;
                 }
                 onUploadProgress(fileSize, fileSize);
-                mConnection.setReplyTimeout(ProtocolProviderServiceJabberImpl.SMACK_REPLY_TIMEOUT_DEFAULT);
                 break;
 
             case FileTransferStatusChangeEvent.FAILED:
@@ -334,7 +331,6 @@ public abstract class FileTransferConversation extends OSGiFragment
 
             case FileTransferStatusChangeEvent.DECLINED: // user reject the incoming file xfer
                 messageViewHolder.fileStatus.setTextColor(Color.RED);
-                mConnection.setReplyTimeout(ProtocolProviderServiceJabberImpl.SMACK_REPLY_TIMEOUT_DEFAULT);
                 break;
         }
 

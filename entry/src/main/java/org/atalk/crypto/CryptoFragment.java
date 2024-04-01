@@ -29,6 +29,14 @@ import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 
+import java.io.IOException;
+import java.net.URI;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
+
 import net.java.sip.communicator.impl.msghistory.MessageHistoryActivator;
 import net.java.sip.communicator.service.contactlist.MetaContact;
 import net.java.sip.communicator.service.gui.ChatLinkClickedListener;
@@ -76,14 +84,6 @@ import org.jxmpp.jid.DomainBareJid;
 import org.jxmpp.jid.EntityBareJid;
 import org.jxmpp.jid.EntityFullJid;
 import org.jxmpp.jid.Jid;
-
-import java.io.IOException;
-import java.net.URI;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
 
 import timber.log.Timber;
 
@@ -217,7 +217,6 @@ public class CryptoFragment extends OSGiFragment
                     mChatType = ChatFragment.MSGTYPE_NORMAL;
                 else
                     mChatType = ChatFragment.MSGTYPE_MUC_NORMAL;
-
                 hasChange = true;
                 doHandleOmemoPressed(false);
                 break;

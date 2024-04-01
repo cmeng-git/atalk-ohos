@@ -22,6 +22,10 @@ import android.widget.ToggleButton;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentTransaction;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Collection;
+
 import net.java.sip.communicator.impl.protocol.jabber.ProtocolProviderServiceJabberImpl;
 import net.java.sip.communicator.service.protocol.AccountID;
 import net.java.sip.communicator.service.protocol.AccountManager;
@@ -44,10 +48,6 @@ import org.atalk.service.osgi.OSGiActivity;
 import org.jivesoftware.smackx.avatar.vcardavatar.VCardAvatarManager;
 import org.jxmpp.jid.BareJid;
 import org.jxmpp.stringprep.XmppStringprepException;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Collection;
 
 import timber.log.Timber;
 
@@ -244,7 +244,7 @@ public class AccountsListActivity extends OSGiActivity
     {
         Intent statusIntent = new Intent(this, AccountInfoPresenceActivity.class);
         statusIntent.putExtra(AccountInfoPresenceActivity.INTENT_ACCOUNT_ID,
-                account.getAccountID().getAccountUniqueID());
+                account.getAccountID().getAccountUid());
         startActivity(statusIntent);
     }
 

@@ -13,6 +13,13 @@ import static org.jivesoftware.smack.roster.packet.RosterPacket.ItemType.to;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Vector;
+
 import net.java.sip.communicator.impl.protocol.jabber.OperationSetPersistentPresenceJabberImpl.ContactChangesListener;
 import net.java.sip.communicator.service.contactlist.MetaContactGroup;
 import net.java.sip.communicator.service.customavatar.CustomAvatarService;
@@ -50,7 +57,6 @@ import org.jivesoftware.smackx.avatar.AvatarManager;
 import org.jivesoftware.smackx.avatar.vcardavatar.VCardAvatarManager;
 import org.jivesoftware.smackx.nick.packet.Nick;
 import org.jxmpp.jid.BareJid;
-import org.jxmpp.jid.DomainBareJid;
 import org.jxmpp.jid.EntityBareJid;
 import org.jxmpp.jid.Jid;
 import org.jxmpp.jid.impl.JidCreate;
@@ -58,15 +64,7 @@ import org.jxmpp.jid.parts.Localpart;
 import org.jxmpp.stringprep.XmppStringprepException;
 import org.osgi.framework.ServiceReference;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Vector;
-
 import timber.log.Timber;
-
 
 /**
  * This class encapsulates the Roster class. Once created, it will register itself as a listener to
@@ -79,8 +77,7 @@ import timber.log.Timber;
  * @author Hristo Terezov
  * @author Eng Chong Meng
  */
-public class ServerStoredContactListJabberImpl
-{
+public class ServerStoredContactListJabberImpl {
     /**
      * The jabber list that we encapsulate
      */
@@ -125,13 +122,19 @@ public class ServerStoredContactListJabberImpl
     /**
      * Retrieve contact information.
      */
-    private InfoRetriever infoRetriever;
+    private final InfoRetriever infoRetriever;
 
     /*
-     * Disable info Retrieval on first login even when local cache is empty
+     * Disable info Retrieval on user first login even when local cache is empty; use XEP-0084 for update.
      * cmeng: 20190212seems ejabberd will send VCardTempXUpdate with photo attr in <presence/>
+     * 20240319: https://github.com/processone/ejabberd/issues/4182 has fixed the issue.
      */
     private boolean infoRetrieveOnStart = false;
+
+    /*
+     * Dynamic request to retrieve avatar from server if necessary.
+     */
+    private boolean retrieveIfNecessary = false;
 
     /**
      * Whether roster has been requested and dispatched.
@@ -164,8 +167,7 @@ public class ServerStoredContactListJabberImpl
      * @param infoRetriever retrieve contact information.
      */
     ServerStoredContactListJabberImpl(OperationSetPersistentPresenceJabberImpl parentOperationSet,
-            ProtocolProviderServiceJabberImpl provider, InfoRetriever infoRetriever)
-    {
+            ProtocolProviderServiceJabberImpl provider, InfoRetriever infoRetriever) {
         // We need to init these as early as possible to ensure that the provider and the
         // operationsSet would not be null in the incoming events.
         this.parentOperationSet = parentOperationSet;
@@ -179,8 +181,7 @@ public class ServerStoredContactListJabberImpl
      *
      * @return the root ContactGroup for the ContactList
      */
-    public ContactGroup getRootGroup()
-    {
+    public ContactGroup getRootGroup() {
         return rootGroup;
     }
 
@@ -190,10 +191,10 @@ public class ServerStoredContactListJabberImpl
      *
      * @param userJid the XMPP address of the user (e.g. "jsmith@example.com"). The address could be in any
      * valid format (e.g. "domain/resource", "user@domain" or "user@domain/resource").
+     *
      * @return the roster entry or <code>null</code> if it does not exist.
      */
-    RosterEntry getRosterEntry(BareJid userJid)
-    {
+    RosterEntry getRosterEntry(BareJid userJid) {
         return ((mRoster == null) || (userJid == null)) ? null : mRoster.getEntry(userJid);
     }
 
@@ -201,10 +202,10 @@ public class ServerStoredContactListJabberImpl
      * Returns the roster group with the specified name, or <code>null</code> if the group doesn't exist.
      *
      * @param name the name of the group.
+     *
      * @return the roster group with the specified name.
      */
-    RosterGroup getRosterGroup(String name)
-    {
+    RosterGroup getRosterGroup(String name) {
         return mRoster.getGroup(name);
     }
 
@@ -214,8 +215,7 @@ public class ServerStoredContactListJabberImpl
      *
      * @param listener the ServerStoredGroupListener to register for group events
      */
-    void addGroupListener(ServerStoredGroupListener listener)
-    {
+    void addGroupListener(ServerStoredGroupListener listener) {
         synchronized (serverStoredGroupListeners) {
             if (!serverStoredGroupListeners.contains(listener))
                 this.serverStoredGroupListeners.add(listener);
@@ -228,8 +228,7 @@ public class ServerStoredContactListJabberImpl
      *
      * @param listener the ServerStoredGroupListener to unregister
      */
-    void removeGroupListener(ServerStoredGroupListener listener)
-    {
+    void removeGroupListener(ServerStoredGroupListener listener) {
         synchronized (serverStoredGroupListeners) {
             this.serverStoredGroupListeners.remove(listener);
         }
@@ -243,8 +242,7 @@ public class ServerStoredContactListJabberImpl
      * i.e. RootContactGroupJabberImpl or ContactGroupJabberImpl
      * @param eventID the id of the event to generate.
      */
-    private void fireGroupEvent(ContactGroup group, int eventID)
-    {
+    private void fireGroupEvent(ContactGroup group, int eventID) {
         // bail out if no one's listening
         if (parentOperationSet == null) {
             Timber.d("No presence opSet available. Bailing out.");
@@ -295,8 +293,7 @@ public class ServerStoredContactListJabberImpl
      * @param parentGroup the group where that the removed contact belonged to.
      * @param contact the contact that was removed.
      */
-    void fireContactRemoved(ContactGroup parentGroup, ContactJabberImpl contact)
-    {
+    void fireContactRemoved(ContactGroup parentGroup, ContactJabberImpl contact) {
         // bail out if no one's listening
         if (parentOperationSet == null) {
             Timber.d("No presence opSet available. Bailing out.");
@@ -315,8 +312,7 @@ public class ServerStoredContactListJabberImpl
      * @param newParentGroup the group that the source contact is currently in.
      * @param contact the contact that was added
      */
-    private void fireContactMoved(ContactGroup oldParentGroup, ContactGroup newParentGroup, ContactJabberImpl contact)
-    {
+    private void fireContactMoved(ContactGroup oldParentGroup, ContactGroup newParentGroup, ContactJabberImpl contact) {
         // bail out if no one's listening
         if (parentOperationSet == null) {
             Timber.d("No presence opSet available. Bailing out.");
@@ -331,8 +327,7 @@ public class ServerStoredContactListJabberImpl
      *
      * @return a reference to a ProtocolProviderServiceImpl instance.
      */
-    ProtocolProviderServiceJabberImpl getParentProvider()
-    {
+    ProtocolProviderServiceJabberImpl getParentProvider() {
         return mPPS;
     }
 
@@ -340,10 +335,10 @@ public class ServerStoredContactListJabberImpl
      * Returns the ContactGroup with the specified name or null if no such group was found.
      *
      * @param groupName the name of the group we're looking for.
+     *
      * @return a reference to the ContactGroupJabberImpl instance we're looking for or null if no such group was found.
      */
-    public ContactGroupJabberImpl findContactGroup(String groupName)
-    {
+    public ContactGroupJabberImpl findContactGroup(String groupName) {
         // make sure we ignore any whitespaces
         groupName = groupName.trim();
 
@@ -360,10 +355,10 @@ public class ServerStoredContactListJabberImpl
      * Find a group with the specified Copy of Name. Used to track when a group name has changed
      *
      * @param groupName String
+     *
      * @return a reference to the ContactGroup instance we're looking for or null if no such group was found.
      */
-    private ContactGroupJabberImpl findContactGroupByNameCopy(String groupName)
-    {
+    private ContactGroupJabberImpl findContactGroupByNameCopy(String groupName) {
         // make sure we ignore any whitespaces
         groupName = groupName.trim();
 
@@ -380,11 +375,11 @@ public class ServerStoredContactListJabberImpl
      * Returns the Contact with the specified id or null if no such id was found.
      *
      * @param id the contactJid of the contact to find (BareJid in actual search).
+     *
      * @return the <code>Contact</code> carrying the specified <code>screenName</code> or <code>null</code> if
      * no such contact exits.
      */
-    public ContactJabberImpl findContactById(Jid id)
-    {
+    public ContactJabberImpl findContactById(Jid id) {
         if (id == null)
             return null;
 
@@ -414,11 +409,11 @@ public class ServerStoredContactListJabberImpl
      * Returns the ContactGroup containing the specified contact or null if no such group or contact exist.
      *
      * @param child the contact whose parent group we're looking for.
+     *
      * @return the <code>ContactGroup</code> containing the specified <code>contact</code> or <code>null</code>
      * if no such group or contact exist.
      */
-    public ContactGroup findContactGroup(ContactJabberImpl child)
-    {
+    public ContactGroup findContactGroup(ContactJabberImpl child) {
         Iterator<ContactGroup> contactGroups = rootGroup.subgroups();
         Jid contactJid = child.getJid();
 
@@ -441,11 +436,11 @@ public class ServerStoredContactListJabberImpl
      *
      * @param id the id of the contact to add.
      * @param pps the pps requesting for contact to add.
+     *
      * @throws OperationFailedException OperationFailedException, XmppStringprepException
      */
     public void addContact(ProtocolProviderService pps, String id)
-            throws OperationFailedException
-    {
+            throws OperationFailedException {
         rootGroupPPS = pps;
         addContact(getRootGroup(), id);
     }
@@ -457,11 +452,11 @@ public class ServerStoredContactListJabberImpl
      *
      * @param id the id of the contact to add.
      * @param parent the group under which we want the new contact placed.
+     *
      * @throws OperationFailedException if the contact already exist
      */
     public void addContact(final ContactGroup parent, String id)
-            throws OperationFailedException
-    {
+            throws OperationFailedException {
         Timber.log(TimberLog.FINER, "Adding contact %s to parent = %s", id, parent);
         final BareJid contactJid = parseAddressString(id);
 
@@ -545,10 +540,10 @@ public class ServerStoredContactListJabberImpl
      * @param id the address of the contact to create.
      * @param isPrivateMessagingContact indicates if the contact should be private messaging contact or not.
      * @param displayName the display name of the contact
+     *
      * @return the newly created volatile <code>ContactImpl</code>
      */
-    ContactJabberImpl createVolatileContact(Jid id, boolean isPrivateMessagingContact, String displayName)
-    {
+    ContactJabberImpl createVolatileContact(Jid id, boolean isPrivateMessagingContact, String displayName) {
         // Timber.w(new Exception(), "Create volatile contact: %s (%s)", id, displayName);
         VolatileContactJabberImpl newVolatileContact
                 = new VolatileContactJabberImpl(id, this, isPrivateMessagingContact, displayName);
@@ -575,10 +570,10 @@ public class ServerStoredContactListJabberImpl
      * Checks if the contact address is associated with private messaging contact or not.
      *
      * @param contactJid the address of the contact.
+     *
      * @return <code>true</code> the contact address is associated with private messaging contact and <code>false</code> if not.
      */
-    public boolean isPrivateMessagingContact(Jid contactJid)
-    {
+    public boolean isPrivateMessagingContact(Jid contactJid) {
         ContactGroupJabberImpl theVolatileGroup = getNonPersistentGroup();
         if (theVolatileGroup == null)
             return false;
@@ -596,10 +591,10 @@ public class ServerStoredContactListJabberImpl
      *
      * @param parentGroup the group where the unresolved contact is to be created
      * @param id the Address of the contact to create.
+     *
      * @return the newly created unresolved <code>ContactImpl</code>
      */
-    synchronized ContactJabberImpl createUnresolvedContact(ContactGroup parentGroup, Jid id)
-    {
+    synchronized ContactJabberImpl createUnresolvedContact(ContactGroup parentGroup, Jid id) {
         ContactJabberImpl existingContact = findContactById(id);
         if (existingContact != null) {
             return existingContact;
@@ -623,10 +618,10 @@ public class ServerStoredContactListJabberImpl
      * updated instead of creating the whole group again.
      *
      * @param groupName the name of the group to create.
+     *
      * @return the newly created unresolved <code>ContactGroupImpl</code>
      */
-    synchronized ContactGroupJabberImpl createUnresolvedContactGroup(String groupName)
-    {
+    synchronized ContactGroupJabberImpl createUnresolvedContactGroup(String groupName) {
         ContactGroupJabberImpl existingGroup = findContactGroup(groupName);
         if (existingGroup != null) {
             return existingGroup;
@@ -642,12 +637,12 @@ public class ServerStoredContactListJabberImpl
      * Creates the specified group on the server stored contact list.
      *
      * @param groupName a String containing the name of the new group.
+     *
      * @throws OperationFailedException with code CONTACT_GROUP_ALREADY_EXISTS if the group we're trying
      * to create is already in our contact list.
      */
     public void createGroup(String groupName)
-            throws OperationFailedException
-    {
+            throws OperationFailedException {
         Timber.d("Creating group: %s", groupName);
         ContactGroupJabberImpl existingGroup = findContactGroup(groupName);
 
@@ -672,8 +667,7 @@ public class ServerStoredContactListJabberImpl
      * @param groupToRemove the group that we'd like removed.
      */
     public void removeGroup(ContactGroupJabberImpl groupToRemove)
-            throws OperationFailedException
-    {
+            throws OperationFailedException {
         try {
             // first copy the item that will be removed when iterating over group contacts and
             // removing them concurrent exception occurs
@@ -704,10 +698,9 @@ public class ServerStoredContactListJabberImpl
      * @param contactToRemove ContactJabberImpl
      */
     void removeContact(ContactJabberImpl contactToRemove)
-            throws OperationFailedException
-    {
+            throws OperationFailedException {
         // Allow direct removal of any VolatileContactJabberImpl if it is not DomainBareJid
-		// Allow removal of DomainBareJid contact 
+        // Allow removal of DomainBareJid contact
         // if (contactToRemove.getJid() instanceof DomainBareJid)
         //    return;
 
@@ -750,8 +743,7 @@ public class ServerStoredContactListJabberImpl
      * @param groupToRename the group that we'd like removed.
      * @param newName the new name of the group
      */
-    public void renameGroup(ContactGroupJabberImpl groupToRename, String newName)
-    {
+    public void renameGroup(ContactGroupJabberImpl groupToRename, String newName) {
         try {
             groupToRename.getSourceGroup().setName(newName);
             groupToRename.setNameCopy(newName);
@@ -768,8 +760,7 @@ public class ServerStoredContactListJabberImpl
      * @param newParent the group where we'd like the parent placed.
      */
     public void moveContact(ContactJabberImpl contact, AbstractContactGroupJabberImpl newParent)
-            throws OperationFailedException
-    {
+            throws OperationFailedException {
         // when the contact is not persistent, coming from NotInContactList group, we need just
         // to add it to the list
         if (!contact.isPersistent()) {
@@ -793,7 +784,6 @@ public class ServerStoredContactListJabberImpl
         // create the entry with the new group so it can be removed from other groups if any.
         // modify our reply timeout because some XMPP may send "result" IQ late (> 5 seconds).
         xmppConnection.setReplyTimeout(ProtocolProviderServiceJabberImpl.SMACK_REPLY_EXTENDED_TIMEOUT_30);
-
         try {
             // Do not use getSourceEntry() to getJid(); may be null if contact is not in roster.
             mRoster.createItemAndRequestSubscription(contact.getJid().asBareJid(), contact.getDisplayName(),
@@ -806,7 +796,7 @@ public class ServerStoredContactListJabberImpl
             e.printStackTrace();
         } finally {
             // Reset to default
-            xmppConnection.setReplyTimeout(ProtocolProviderServiceJabberImpl.SMACK_REPLY_TIMEOUT_DEFAULT);
+            xmppConnection.setReplyTimeout(ProtocolProviderServiceJabberImpl.SMACK_DEFAULT_REPLY_TIMEOUT);
         }
     }
 
@@ -814,8 +804,7 @@ public class ServerStoredContactListJabberImpl
      * Sets a reference to the currently active and valid instance of roster that this list is to
      * be used for retrieving server stored information
      */
-    void init(ContactChangesListener presenceChangeListener)
-    {
+    void init(ContactChangesListener presenceChangeListener) {
         // FFR: v2.1.6 Huawei nova 3i/Y9 prime (HWINE) android-9, xmppConnection == null
         // This may be called when PPS is not-registered ???? called at RegistrationState.REGISTERED state
         xmppConnection = mPPS.getConnection();
@@ -853,8 +842,7 @@ public class ServerStoredContactListJabberImpl
      * added if avatar photo has yet to be downloaded from server. Refer to XEP-0153: vCard-Based
      * Avatars section Example 6. User Is Not Ready to Advertise an Image
      */
-    private void sendInitialStatus()
-    {
+    private void sendInitialStatus() {
         // if we have initial status saved then send it after roster has completed
         if (initialStatus != null) {
             try {
@@ -884,8 +872,7 @@ public class ServerStoredContactListJabberImpl
     /**
      * Cleanups references and listeners.
      */
-    void cleanup()
-    {
+    void cleanup() {
         if (imageRetriever != null) {
             imageRetriever.quit();
             imageRetriever = null;
@@ -906,8 +893,7 @@ public class ServerStoredContactListJabberImpl
      * When the protocol is online this method is used to Synchronous the current metaContactList
      * with the received roster
      */
-    private synchronized void initRoster()
-    {
+    private synchronized void initRoster() {
         // first if non-filed entries will move them in a group
         if (mRoster.getUnfiledEntryCount() > 0) {
             for (RosterEntry item : mRoster.getUnfiledEntries()) {
@@ -1056,8 +1042,7 @@ public class ServerStoredContactListJabberImpl
      *
      * @return ContactGroupJabberImpl
      */
-    ContactGroupJabberImpl getNonPersistentGroup()
-    {
+    ContactGroupJabberImpl getNonPersistentGroup() {
         for (int i = 0; i < getRootGroup().countSubgroups(); i++) {
             ContactGroupJabberImpl gr = (ContactGroupJabberImpl) getRootGroup().getGroup(i);
             if (ContactGroup.VOLATILE_GROUP.equals(gr.getGroupName()))
@@ -1072,8 +1057,7 @@ public class ServerStoredContactListJabberImpl
      * @param parentGroup the group where the new contact was added
      * @param contact the contact that was added
      */
-    public void fireContactAdded(ContactGroup parentGroup, ContactJabberImpl contact)
-    {
+    public void fireContactAdded(ContactGroup parentGroup, ContactJabberImpl contact) {
         // bail out if no one's listening
         if (parentOperationSet == null) {
             Timber.d("No presence op. set available. Bailing out.");
@@ -1096,8 +1080,7 @@ public class ServerStoredContactListJabberImpl
      * @param parentGroup the group the resolved contact belongs to.
      * @param contact the contact that was resolved
      */
-    public void fireContactResolved(ContactGroup parentGroup, ContactJabberImpl contact)
-    {
+    public void fireContactResolved(ContactGroup parentGroup, ContactJabberImpl contact) {
         // bail out if no one's listening
         if (parentOperationSet == null) {
             Timber.d("No presence op. set available. Bailing out.");
@@ -1119,14 +1102,15 @@ public class ServerStoredContactListJabberImpl
      * into contactsForUpdate arrayList for image update
      *
      * @param contact ContactJabberImpl
+     *
      * @see ImageRetriever#contactsForUpdate
      */
-    protected void addContactForImageUpdate(ContactJabberImpl contact)
-    {
+    protected void addContactForImageUpdate(ContactJabberImpl contact, boolean retrieveIfNecessary) {
         if (contact instanceof VolatileContactJabberImpl
                 && ((VolatileContactJabberImpl) contact).isPrivateMessagingContact())
             return;
 
+        this.retrieveIfNecessary = retrieveIfNecessary;
         if (imageRetriever == null) {
             imageRetriever = new ImageRetriever();
             imageRetriever.start();
@@ -1137,8 +1121,7 @@ public class ServerStoredContactListJabberImpl
     /**
      * @param enable if set enable the retrieval of avatar from server if null
      */
-    public void setRetrieveOnStart(boolean enable)
-    {
+    public void setRetrieveOnStart(boolean enable) {
         infoRetrieveOnStart = enable;
     }
 
@@ -1151,10 +1134,10 @@ public class ServerStoredContactListJabberImpl
      * - ((subscription='none' or subscription='from') and (name attribute or group child))
      *
      * @param entry the entry to check.
+     *
      * @return is item to be hidden/ignored.
      */
-    static boolean isEntryDisplayable(RosterEntry entry)
-    {
+    static boolean isEntryDisplayable(RosterEntry entry) {
         if (entry.getType() == both || entry.getType() == to) {
             return true;
         }
@@ -1171,8 +1154,7 @@ public class ServerStoredContactListJabberImpl
      *
      * @param contact the contact to be deleted.
      */
-    private void contactDeleted(ContactJabberImpl contact)
-    {
+    private void contactDeleted(ContactJabberImpl contact) {
         ContactGroup group = findContactGroup(contact);
         if (group == null) {
             Timber.log(TimberLog.FINER, "Could not find ParentGroup for deleted entry:%s", contact.getAddress());
@@ -1205,15 +1187,13 @@ public class ServerStoredContactListJabberImpl
     /**
      * Receive changes in the roster.
      */
-    private class ChangeListener implements RosterListener
-    {
+    private class ChangeListener implements RosterListener {
         /**
          * Received an event when entry is added to the server stored list
          *
          * @param addresses Collection of contact Jid
          */
-        public void entriesAdded(Collection<Jid> addresses)
-        {
+        public void entriesAdded(Collection<Jid> addresses) {
             Timber.log(TimberLog.FINER, "entries Added %s", addresses);
 
             for (Jid id : addresses) {
@@ -1228,10 +1208,10 @@ public class ServerStoredContactListJabberImpl
          * All entries must be displayable before we done anything with them.
          *
          * @param rosterEntryID the entry id.
+         *
          * @return the newly created contact.
          */
-        private ContactJabberImpl addEntryToContactList(Jid rosterEntryID)
-        {
+        private ContactJabberImpl addEntryToContactList(Jid rosterEntryID) {
             RosterEntry entry = mRoster.getEntry(rosterEntryID.asBareJid());
             if (!isEntryDisplayable(entry))
                 return null;
@@ -1295,10 +1275,10 @@ public class ServerStoredContactListJabberImpl
          * Finds private messaging contact by its jabber id.
          *
          * @param id the jabber id.
+         *
          * @return the contact or null if the contact is not found.
          */
-        private ContactJabberImpl findPrivateContactByRealId(Jid id)
-        {
+        private ContactJabberImpl findPrivateContactByRealId(Jid id) {
             ContactGroupJabberImpl volatileGroup = getNonPersistentGroup();
             if (volatileGroup == null)
                 return null;
@@ -1320,8 +1300,7 @@ public class ServerStoredContactListJabberImpl
          *
          * @param addresses Collection of Contact Jid's
          */
-        public void entriesUpdated(Collection<Jid> addresses)
-        {
+        public void entriesUpdated(Collection<Jid> addresses) {
             Timber.log(TimberLog.FINER, "entries Updated %s", addresses);
 
             // will search for group renamed
@@ -1346,9 +1325,9 @@ public class ServerStoredContactListJabberImpl
 
                     // Check for ROOT_GROUP_NAME if null
                     if (cgr == null) {
-                         // ROOT_GROUP_NAME (contacts) is not listed in subGroups() for search. Need special handle
+                        // ROOT_GROUP_NAME (contacts) is not listed in subGroups() for search. Need special handle
                         if (ContactGroup.ROOT_GROUP_NAME.equals(gr.getName())) {
-                            cgr =  getRootGroup();
+                            cgr = getRootGroup();
                         }
                         // Group does not exist. so it must be a renamed group
                         else {
@@ -1405,9 +1384,9 @@ public class ServerStoredContactListJabberImpl
                                     newParentGroup = new ContactGroupJabberImpl(gr, Collections.emptyIterator(),
                                             ServerStoredContactListJabberImpl.this, true);
 
-                                rootGroup.addSubGroup(newParentGroup);
-                                // tell listeners about the added group
-                                fireGroupEvent(newParentGroup, ServerStoredGroupEvent.GROUP_CREATED_EVENT);
+                                    rootGroup.addSubGroup(newParentGroup);
+                                    // tell listeners about the added group
+                                    fireGroupEvent(newParentGroup, ServerStoredGroupEvent.GROUP_CREATED_EVENT);
                                 }
                             }
                             contactMoved(contactGroup, newParentGroup, contact);
@@ -1427,8 +1406,7 @@ public class ServerStoredContactListJabberImpl
          * @param newValue new display name value
          * @param contact the contact to check
          */
-        private void checkForRename(String newValue, ContactJabberImpl contact)
-        {
+        private void checkForRename(String newValue, ContactJabberImpl contact) {
             // check for change in display name
             if (newValue != null && !newValue.equals(contact.getServerDisplayName())) {
                 String oldValue = contact.getServerDisplayName();
@@ -1444,8 +1422,7 @@ public class ServerStoredContactListJabberImpl
          * @param addresses Collection
          */
         @Override
-        public void entriesDeleted(Collection<Jid> addresses)
-        {
+        public void entriesDeleted(Collection<Jid> addresses) {
             for (Jid contactJid : addresses) {
                 Timber.log(TimberLog.FINER, "entry deleted %s", contactJid);
 
@@ -1463,16 +1440,14 @@ public class ServerStoredContactListJabberImpl
          *
          * @param presence the presence that changed.
          */
-        public void presenceChanged(Presence presence)
-        {
+        public void presenceChanged(Presence presence) {
         }
     }
 
     /**
      * Thread for retrieving contacts' images.
      */
-    private class ImageRetriever extends Thread
-    {
+    private class ImageRetriever extends Thread {
         /**
          * list with the accounts with missing image
          */
@@ -1486,8 +1461,7 @@ public class ServerStoredContactListJabberImpl
         /**
          * Creates image retrieving.
          */
-        ImageRetriever()
-        {
+        ImageRetriever() {
             setDaemon(true);
         }
 
@@ -1495,8 +1469,7 @@ public class ServerStoredContactListJabberImpl
          * Thread entry point.
          */
         @Override
-        public void run()
-        {
+        public void run() {
             try {
                 Collection<ContactJabberImpl> copyContactsForUpdate;
                 running = true;
@@ -1513,18 +1486,26 @@ public class ServerStoredContactListJabberImpl
                     }
 
                     for (ContactJabberImpl contact : copyContactsForUpdate) {
-                        byte[] imgBytes = getAvatar(contact);
+                        EntityBareJid userJid = contact.getJid().asEntityBareJidIfPossible();
+                        String oldAvatarId = VCardAvatarManager.getAvatarHashByJid(userJid);
+                        byte[] imgBytes = getAvatar(userJid);
                         if (imgBytes != null) {
-                            byte[] oldImage = contact.getImage(false);
-
                             contact.setImage(imgBytes);
+                            String newAvatarId = VCardAvatarManager.getAvatarHashByJid(userJid);
                             parentOperationSet.fireContactPropertyChangeEvent(contact,
-                                    ContactPropertyChangeEvent.PROPERTY_IMAGE, oldImage, imgBytes);
+                                    ContactPropertyChangeEvent.PROPERTY_IMAGE, oldAvatarId, newAvatarId);
                         }
-                        else
+                        else {
                             // set an empty image data so it would not be queried again
                             contact.setImage(new byte[0]);
+                            if (oldAvatarId != null) {
+                                parentOperationSet.fireContactPropertyChangeEvent(contact,
+                                        ContactPropertyChangeEvent.PROPERTY_IMAGE, oldAvatarId, null);
+                            }
+                        }
                     }
+                    if (contactsForUpdate.isEmpty())
+                        retrieveIfNecessary = false;
                 }
             } catch (InterruptedException ex) {
                 Timber.e(ex, "ImageRetriever error waiting will stop now!");
@@ -1538,8 +1519,7 @@ public class ServerStoredContactListJabberImpl
          *
          * @param contact ContactJabberImpl
          */
-        void addContact(ContactJabberImpl contact)
-        {
+        void addContact(ContactJabberImpl contact) {
             synchronized (contactsForUpdate) {
                 if (!contactsForUpdate.contains(contact)) {
                     contactsForUpdate.add(contact);
@@ -1551,8 +1531,7 @@ public class ServerStoredContactListJabberImpl
         /**
          * Stops this thread.
          */
-        void quit()
-        {
+        void quit() {
             synchronized (contactsForUpdate) {
                 running = false;
                 contactsForUpdate.notifyAll();
@@ -1560,20 +1539,18 @@ public class ServerStoredContactListJabberImpl
         }
 
         /**
-         * Retrieves the avatar. Use image from persistent storage if found. Otherwise proceed to
-         * load avatar from VCard.
+         * Retrieves the avatar for the specified userJid. Use image from persistent storage if found.
+         * Otherwise proceed to load avatar from VCard, in case where contact does not support XEP-0084;
+         * XEP-0084 is not used as it is a pubsub#event and should has been sent by server on login.
          *
-         * @param contact the contact.
+         * @param userJid user EntityBareJid contact.
+         *
          * @return the contact avatar.
          */
-        private byte[] getAvatar(ContactJabberImpl contact)
-        {
-            BareJid userJid = contact.getJid().asBareJid();
-            String userId = userJid.toString();
+        private byte[] getAvatar(EntityBareJid userJid) {
             byte[] result = VCardAvatarManager.getAvatarImageByJid(userJid);
-
-            if ((result == null) && infoRetrieveOnStart) {
-                Timber.i("Proceed to getAvatar for: %s", userId);
+            if ((result == null) && (retrieveIfNecessary || infoRetrieveOnStart)) {
+                Timber.i("Proceed to getAvatar for: %s %s", retrieveIfNecessary, userJid);
                 try {
                     Iterator<ServerStoredDetails.GenericDetail> iter
                             = infoRetriever.getDetails(userJid, ServerStoredDetails.ImageDetail.class);
@@ -1583,15 +1560,12 @@ public class ServerStoredContactListJabberImpl
                         result = imgDetail.getBytes();
                     }
                 } catch (Exception ex) {
-                    Timber.d(ex, "Cannot load image for contact %s: %s", contact, ex.getMessage());
+                    Timber.d(ex, "Cannot load image for contact %s: %s", userJid, ex.getMessage());
                 }
                 if (result == null) {
-                    result = searchForCustomAvatar(userId);
+                    result = searchForCustomAvatar(userJid.toString());
                 }
             }
-            if (result == null) // return no photo if null
-                result = new byte[0];
-
             return result;
         }
     }
@@ -1601,18 +1575,16 @@ public class ServerStoredContactListJabberImpl
      *
      * @return the found avatar if any.
      */
-    private byte[] searchForCustomAvatar(String address)
-    {
+    private byte[] searchForCustomAvatar(String address) {
         try {
-            ServiceReference[] refs
-                    = JabberActivator.bundleContext.getServiceReferences(CustomAvatarService.class.getName(), null);
+            ServiceReference<?>[] refs = JabberActivator.bundleContext
+                    .getServiceReferences(CustomAvatarService.class.getName(), null);
 
             if (refs == null)
                 return null;
 
-            for (ServiceReference r : refs) {
-                CustomAvatarService avatarService = (CustomAvatarService) JabberActivator.bundleContext.getService(r);
-
+            for (ServiceReference<?> ref : refs) {
+                CustomAvatarService avatarService = (CustomAvatarService) JabberActivator.bundleContext.getService(ref);
                 byte[] res = avatarService.getAvatar(address);
                 if (res != null)
                     return res;
@@ -1631,8 +1603,7 @@ public class ServerStoredContactListJabberImpl
      * @param contact contact to move
      */
     private void contactMoved(ContactGroup oldGroup, ContactGroup newGroup,
-            ContactJabberImpl contact)
-    {
+            ContactJabberImpl contact) {
         // The contact is moved to another group first, before removing it from the original one
         if (oldGroup instanceof ContactGroupJabberImpl)
             ((ContactGroupJabberImpl) oldGroup).removeContact(contact);
@@ -1659,8 +1630,7 @@ public class ServerStoredContactListJabberImpl
      * @param id the initial identifier as added by the user
      */
     private EntityBareJid parseAddressString(String id)
-            throws OperationFailedException
-    {
+            throws OperationFailedException {
         try {
             Jid temp = JidCreate.from(id);
             if (!temp.hasLocalpart()) {
@@ -1678,10 +1648,10 @@ public class ServerStoredContactListJabberImpl
      * Return all the presences for the user or an EMPTY_LIST.
      *
      * @param userJid the bareJid of the user to check for presences.
+     *
      * @return all the presences available for the user or an EMPTY_LIST.
      */
-    public List<Presence> getPresences(BareJid userJid)
-    {
+    public List<Presence> getPresences(BareJid userJid) {
         return ((mRoster == null) || (userJid == null)) ? Collections.EMPTY_LIST : mRoster.getPresences(userJid);
     }
 
@@ -1690,8 +1660,7 @@ public class ServerStoredContactListJabberImpl
      *
      * @return whether roster is initialized.
      */
-    public boolean isRosterInitialized()
-    {
+    public boolean isRosterInitialized() {
         return isRosterInitialized;
     }
 
@@ -1700,8 +1669,7 @@ public class ServerStoredContactListJabberImpl
      *
      * @return the lock around isRosterInitialized variable.
      */
-    Object getRosterInitLock()
-    {
+    Object getRosterInitLock() {
         return rosterInitLock;
     }
 
@@ -1710,8 +1678,7 @@ public class ServerStoredContactListJabberImpl
      *
      * @param initialStatus to be dispatched later.
      */
-    void setInitialStatus(PresenceStatus initialStatus)
-    {
+    void setInitialStatus(PresenceStatus initialStatus) {
         this.initialStatus = initialStatus;
     }
 
@@ -1720,8 +1687,7 @@ public class ServerStoredContactListJabberImpl
      *
      * @param initialStatusMessage to be dispatched later.
      */
-    void setInitialStatusMessage(String initialStatusMessage)
-    {
+    void setInitialStatusMessage(String initialStatusMessage) {
         this.initialStatusMessage = initialStatusMessage;
     }
 }

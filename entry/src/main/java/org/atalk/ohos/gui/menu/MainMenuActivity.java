@@ -31,6 +31,9 @@ import android.widget.TextView;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.java.sip.communicator.service.protocol.Contact;
 import net.java.sip.communicator.service.protocol.OperationSetVideoBridge;
 import net.java.sip.communicator.service.protocol.ProtocolProviderService;
@@ -41,6 +44,7 @@ import net.java.sip.communicator.service.protocol.globalstatus.GlobalStatusServi
 import net.java.sip.communicator.util.ConfigurationUtils;
 import net.java.sip.communicator.util.account.AccountUtils;
 
+import org.atalk.impl.osgi.framework.BundleImpl;
 import org.atalk.ohos.R;
 import org.atalk.ohos.gui.AndroidGUIActivator;
 import org.atalk.ohos.gui.aTalk;
@@ -51,24 +55,19 @@ import org.atalk.ohos.gui.chat.conference.ConferenceCallInviteDialog;
 import org.atalk.ohos.gui.chatroomslist.ChatRoomBookmarksDialog;
 import org.atalk.ohos.gui.chatroomslist.ChatRoomCreateDialog;
 import org.atalk.ohos.gui.contactlist.AddContactActivity;
-import org.atalk.ohos.gui.contactlist.ContactListFragment;
 import org.atalk.ohos.gui.contactlist.ContactBlockListActivity;
+import org.atalk.ohos.gui.contactlist.ContactListFragment;
 import org.atalk.ohos.gui.contactlist.model.MetaContactListAdapter;
 import org.atalk.ohos.gui.settings.SettingsActivity;
 import org.atalk.ohos.plugin.geolocation.GeoLocationActivity;
 import org.atalk.ohos.plugin.textspeech.TTSActivity;
-import org.atalk.impl.osgi.framework.BundleImpl;
 import org.osgi.framework.ServiceEvent;
 import org.osgi.framework.ServiceListener;
 import org.osgi.framework.ServiceReference;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * The main options menu. Every <code>Activity</code> that desires to have the general options menu
  * shown have to extend this class.
- *
  * The <code>MainMenuActivity</code> is an <code>OSGiActivity</code>.
  *
  * @author Eng Chong Meng
@@ -167,10 +166,10 @@ public class MainMenuActivity extends ExitMenuActivity implements ServiceListene
         mShowHideOffline.setTitle(itemId);
 
         mOnOffLine = menu.findItem(R.id.sign_in_off);
-        itemId = GlobalStatusEnum.OFFLINE_STATUS.equals(ActionBarUtil.getStatus(this))
-                ? R.string.sign_in
-                : R.string.sign_out;
+        boolean isOffline = GlobalStatusEnum.OFFLINE_STATUS.equals(ActionBarUtil.getStatus(this));
+        itemId = isOffline ? R.string.sign_in : R.string.sign_out;
         mOnOffLine.setTitle(itemId);
+        mOnOffLine.setVisible(isOffline);
 
         // Adds exit option from super class
         super.onCreateOptionsMenu(menu);
@@ -411,6 +410,7 @@ public class MainMenuActivity extends ExitMenuActivity implements ServiceListene
     public void serviceChanged(ServiceEvent event) {
         ServiceReference serviceRef = event.getServiceReference();
 
+        // Timber.d("Bundle State: %s: ", serviceRef.getBundle().getState());
         // if the event is caused by a bundle being stopped, we don't want to know
         if (serviceRef.getBundle().getState() == BundleImpl.STOPPING) {
             return;

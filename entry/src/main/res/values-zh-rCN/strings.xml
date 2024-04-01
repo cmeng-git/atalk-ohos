@@ -158,7 +158,6 @@
     <string name="call_error">远程方返回错误：%1$s</string>
     <string name="call_failed">调用失败</string>
     <string name="call_history_name">通话记录</string>
-    <string name="call_history_remove_count">删除的通话记录数：%1$s</string>
     <string name="call_history_remove_before_date_warning">您确定要删除日期之前的所有通话记录：%1$s？</string>
     <string name="call_history_remove_none">没有选择要删除的记录</string>
     <string name="call_history_remove_warning">您确定要删除所有选定的通话记录吗？</string>
@@ -409,6 +408,7 @@
     <string name="history_erase_all">删除所有联系人聊天记录</string>
     <string name="history_purge_for_contact_warning">您确定要删除 %1$s 的所有选定短信吗？</string>
     <string name="history_purge_all_warning">您确定要删除所有实体的所有短信吗？</string>
+    <string name="history_purge_count">删除历史记录条数：%1$s</string>
     <string name="history_purge_error">删除 %1$s 的本地存储短信时出错。</string>
     <string name="history_purge_media">从我的手机中删除媒体</string>
     <string name="history_offline_warning">在线时关闭并打开此聊天会话以查看 MAM 和离线短信</string>
@@ -676,7 +676,7 @@
     <string name="dec">十二月</string>
 
     <!-- Call info -->
-    <string name="service_protocol_ICE_FAILED">无法建立连接（ICE 失败且未找到中继）</string>
+    <string name="protocol_ice_failed">无法建立连接（ICE 失败且未找到中继）</string>
     <string name="callinfo_audio_info">音频信息</string>
     <string name="callinfo_bandwidth">带宽：</string>
     <string name="callinfo_call_duration">通话时长：</string>

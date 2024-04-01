@@ -159,7 +159,6 @@
     <string name="call_error">Удаленная сторона возвращает ошибку: %1$s</string>
     <string name="call_failed">Не удалось выполнить вызов</string>
     <string name="call_history_name">Журнал вызовов</string>
-    <string name="call_history_remove_count">Нет удаленных записей истории звонков: %1$s</string>
     <string name="call_history_remove_before_date_warning">Вы уверены, что хотите очистить все записи звонков до даты: %1$s?</string>
     <string name="call_history_remove_none">Ни одна запись не выбрана для удаления</string>
     <string name="call_history_remove_warning">Вы уверены, что хотите удалить все выбранные записи вызовов?</string>
@@ -409,6 +408,7 @@
 	<string name="history_erase_all">Удалить все истории чатов контактов</string>
 	<string name="history_purge_for_contact_warning">Вы уверены, что хотите удалить все выбранные сообщения для %1$s?</string>
 	<string name="history_purge_all_warning">Вы действительно хотите очистить все сообщения для всех юридические лица?</string>
+    <string name="history_purge_count">Количество удаленных записей истории: %1$s</string>
 	<string name="history_purge_error">Ошибка удаления локально сохраненных сообщений для %1$s.</string>
     <string name="history_purge_media">Удалить медиа с моего телефона</string>
     <string name="history_offline_warning">Закройте и откройте этот сеанс чата, чтобы просмотреть сообщения MAM и Offline в онлайн-режиме.</string>
@@ -662,7 +662,7 @@
     <string name="dec">Dec</string>
 
     <!-- Call info -->
-	<string name="service_protocol_ICE_FAILED">Не удалось установить соединение (ICE не удалось и не найдено)</string>
+	<string name="protocol_ice_failed">Не удалось установить соединение (ICE не удалось и не найдено)</string>
     <string name="callinfo_audio_info">Аудиоинформация</string>
     <string name="callinfo_bandwidth">Полоса пропускания:</string>
     <string name="callinfo_call_duration">Длительность звонка:</string>

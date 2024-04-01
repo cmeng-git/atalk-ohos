@@ -17,7 +17,6 @@
 
 package org.atalk.ohos.gui.share;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
@@ -58,7 +57,6 @@ public class ShareUtil {
      * @param msgContent text content for sharing
      * @param imageUris array of image uris for sharing
      */
-    @SuppressLint("NewApi")
     public static void share(final Activity activity, String msgContent, ArrayList<Uri> imageUris) {
         if (activity != null) {
             int timeDelay = 0;

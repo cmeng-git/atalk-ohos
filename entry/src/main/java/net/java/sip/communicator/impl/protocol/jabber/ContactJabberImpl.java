@@ -5,8 +5,6 @@
  */
 package net.java.sip.communicator.impl.protocol.jabber;
 
-import android.text.TextUtils;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Locale;
@@ -23,6 +21,7 @@ import net.java.sip.communicator.service.protocol.jabberconstants.JabberStatusEn
 import net.java.sip.communicator.util.ConfigurationUtils;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.util.TextUtils;
 import org.jivesoftware.smack.roster.RosterEntry;
 import org.jivesoftware.smackx.blocking.BlockingCommandManager;
 import org.json.JSONArray;
@@ -213,23 +212,23 @@ public class ContactJabberImpl extends AbstractContact {
      * @param retrieveIfNecessary specifies whether the method should queue this contact for avatar update from the server.
      *
      * @return a reference to the image currently stored by this contact.
+     *
      * @see ServerStoredContactListJabberImpl.ImageRetriever#run()
      */
     public byte[] getImage(boolean retrieveIfNecessary) {
         if ((image == null) && retrieveIfNecessary)
-            ssclCallback.addContactForImageUpdate(this);
+            ssclCallback.addContactForImageUpdate(this, true);
         return image;
     }
 
     /**
      * Retrieve avatar from server and update the contact avatar image
-     * For user manual download by long click on the avatar
+     * For user manual download by long click on the avatar if true
      *
-     * @param retrieveOnStart force to download from server if avatar is null
+     * @param retrieveIfNecessary force to retrieve avatar from server if it is null
      */
-    public void getAvatar(boolean retrieveOnStart) {
-        ssclCallback.setRetrieveOnStart(retrieveOnStart);
-        ssclCallback.addContactForImageUpdate(this);
+    public void getAvatar(boolean retrieveIfNecessary) {
+        ssclCallback.addContactForImageUpdate(this, retrieveIfNecessary);
     }
 
     /**
@@ -604,9 +603,10 @@ public class ContactJabberImpl extends AbstractContact {
 
     /**
      * Set contact blocking status.
-     * @see OperationSetPersistentPresenceJabberImpl#initContactBlockStatus(BlockingCommandManager)
      *
      * @param value contact block state.
+     *
+     * @see OperationSetPersistentPresenceJabberImpl#initContactBlockStatus(BlockingCommandManager)
      */
     public void setContactBlock(boolean value) {
         isContactBlock = value;
@@ -656,7 +656,7 @@ public class ContactJabberImpl extends AbstractContact {
         return ((this.subscription & (1 << option)) != 0);
     }
 
-public final class Options {
+    public final class Options {
         public static final int TO = 0;
         public static final int FROM = 1;
         public static final int ASKING = 2;

@@ -95,6 +95,7 @@ public abstract class AbstractSCAudioClip implements SCAudioClip
     {
         this.uri = uri;
         this.audioNotifier = audioNotifier;
+        // Timber.e(new Exception("AbstractSCAudioClip Init: " + uri));
     }
 
     /**

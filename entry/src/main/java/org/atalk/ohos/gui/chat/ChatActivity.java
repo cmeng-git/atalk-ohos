@@ -38,6 +38,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
+import net.java.sip.communicator.impl.muc.ChatRoomWrapperImpl;
 import net.java.sip.communicator.impl.muc.MUCActivator;
 import net.java.sip.communicator.impl.protocol.jabber.ChatRoomMemberJabberImpl;
 import net.java.sip.communicator.service.contactlist.MetaContact;
@@ -75,10 +87,9 @@ import org.atalk.ohos.gui.share.Attachment;
 import org.atalk.ohos.gui.share.MediaPreviewAdapter;
 import org.atalk.ohos.gui.util.AndroidUtils;
 import org.atalk.ohos.gui.util.EntityListHelper;
-import org.atalk.ohos.gui.util.EntityListHelper.TaskCompleted;
 import org.atalk.ohos.plugin.audioservice.AudioBgService;
-import org.atalk.ohos.plugin.geolocation.GeoLocationBase;
 import org.atalk.ohos.plugin.geolocation.GeoLocationActivity;
+import org.atalk.ohos.plugin.geolocation.GeoLocationBase;
 import org.atalk.ohos.plugin.mediaplayer.MediaExoPlayerFragment;
 import org.atalk.ohos.plugin.mediaplayer.YoutubePlayerFragment;
 import org.atalk.persistance.FileBackend;
@@ -94,17 +105,6 @@ import org.json.JSONObject;
 import org.jxmpp.jid.DomainBareJid;
 import org.jxmpp.jid.Jid;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.text.DateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
 import timber.log.Timber;
 
 /**
@@ -115,7 +115,7 @@ import timber.log.Timber;
  * @author Eng Chong Meng
  */
 public class ChatActivity extends OSGiActivity
-        implements OnPageChangeListener, TaskCompleted, GeoLocationBase.LocationListener,
+        implements OnPageChangeListener, EntityListHelper.TaskCompleteListener, GeoLocationBase.LocationListener,
         ChatRoomConfiguration.ChatRoomConfigListener, LocalUserChatRoomPresenceListener {
     private static final int REQUEST_CODE_OPEN_FILE = 105;
     private static final int REQUEST_CODE_SHARE_WITH = 200;
@@ -187,7 +187,7 @@ public class ChatActivity extends OSGiActivity
     private int currentChatMode;
     // Not implemented currently
     private int mCurrentChatType;
-
+    private int eraseMode = -1;
     private ChatPanel selectedChatPanel;
     private static Contact mRecipient;
 
@@ -597,6 +597,7 @@ public class ChatActivity extends OSGiActivity
                 return true;
 
             case R.id.erase_chat_history:
+                eraseMode = EntityListHelper.SINGLE_ENTITY;
                 EntityListHelper.eraseEntityChatHistory(this, descriptor, null, null);
                 return true;
 
@@ -730,13 +731,18 @@ public class ChatActivity extends OSGiActivity
         return super.onOptionsItemSelected(item);
     }
 
+    public void setEraseMode(int mode) {
+        eraseMode = mode;
+    }
+
     @Override
-    public void onTaskComplete(Integer result, List<String> deletedUUIDs) {
-        if (result == EntityListHelper.CURRENT_ENTITY) {
+    public void onTaskComplete(int msgCount, List<String> deletedUUIDs) {
+        aTalkApp.showToastMessage(R.string.history_purge_count, msgCount);
+        if (EntityListHelper.SINGLE_ENTITY == eraseMode) {
             chatPagerAdapter.getCurrentChatFragment().onClearCurrentEntityChatHistory(deletedUUIDs);
         }
-        else if (result == EntityListHelper.ALL_ENTITIES) {
-            onOptionsItemSelected(this.mMenu.findItem(R.id.close_all_chatrooms));
+        else if (EntityListHelper.ALL_ENTITY == eraseMode) {
+            onOptionsItemSelected(mMenu.findItem(R.id.close_all_active_chats));
             // selectedSession.msgListeners.notifyDataSetChanged(); // all registered contact chart
         }
         else {
@@ -809,7 +815,7 @@ public class ChatActivity extends OSGiActivity
             }
             else if (chatSession instanceof ConferenceChatSession) {
                 // Reset unread message count when user slides to view this chat session
-                ((ChatRoomWrapper) chatSession.getDescriptor()).setUnreadCount(0);
+                ((ChatRoomWrapperImpl) chatSession.getDescriptor()).setUnreadCount(0);
 
                 ConferenceChatSession ccSession = (ConferenceChatSession) chatSession;
                 ActionBarUtil.setAvatar(this, R.drawable.ic_chatroom);
@@ -845,7 +851,8 @@ public class ChatActivity extends OSGiActivity
                             lastActiveTime = (System.currentTimeMillis() - elapseTime * 1000L);
                             mRecipient.setLastActiveTime(lastActiveTime);
                         } catch (SmackException.NoResponseException | XMPPException.XMPPErrorException
-                                | SmackException.NotConnectedException | InterruptedException | IllegalArgumentException e) {
+                                 | SmackException.NotConnectedException | InterruptedException |
+                                 IllegalArgumentException e) {
                             Timber.w("Exception in getLastSeen %s", e.getMessage());
                         }
                     }

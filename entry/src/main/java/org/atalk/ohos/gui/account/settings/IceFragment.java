@@ -90,7 +90,6 @@ public class IceFragment extends OSGiPreferenceFragment
             getJingleNodeList();
             return true;
         });
-
     }
 
     /**

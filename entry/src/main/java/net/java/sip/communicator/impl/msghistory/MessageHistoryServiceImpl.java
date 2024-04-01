@@ -34,10 +34,12 @@ import java.util.EventObject;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 import net.java.sip.communicator.impl.protocol.jabber.ChatRoomJabberImpl;
 import net.java.sip.communicator.impl.protocol.jabber.ChatRoomMemberJabberImpl;
@@ -84,6 +86,7 @@ import net.java.sip.communicator.service.protocol.event.LocalUserChatRoomPresenc
 import net.java.sip.communicator.service.protocol.event.MessageDeliveredEvent;
 import net.java.sip.communicator.service.protocol.event.MessageDeliveryFailedEvent;
 import net.java.sip.communicator.service.protocol.event.MessageListener;
+import net.java.sip.communicator.service.protocol.event.MessageReceiptListener;
 import net.java.sip.communicator.service.protocol.event.MessageReceivedEvent;
 import net.java.sip.communicator.util.UtilActivator;
 import net.java.sip.communicator.util.account.AccountUtils;
@@ -161,6 +164,9 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
     private BundleContext bundleContext = null;
     private HistoryService historyService = null;
     private final Object syncRoot_HistoryService = new Object();
+
+    protected final Set<MessageReceiptListener> messageReceiptListeners = new LinkedHashSet<>();
+
     private final Hashtable<MessageHistorySearchProgressListener, HistorySearchProgressListener> progressListeners
             = new Hashtable<>();
     private ConfigurationService configService;
@@ -382,6 +388,24 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
     }
 
     /**
+     * Adds a message receipt listener to this MessageHistoryServiceImpl.
+     *
+     * @param listener The message receipt listener to add.
+     */
+    public void addMessageReceiptListener(MessageReceiptListener listener) {
+        messageReceiptListeners.add(listener);
+    }
+
+    /**
+     * Remove a message receipt listener to this MessageHistoryServiceImpl.
+     *
+     * @param listener The message receipt listener to remove.
+     */
+    public void removeMessageReceiptListener(MessageReceiptListener listener) {
+        messageReceiptListeners.remove(listener);
+    }
+
+    /**
      * Returns all the messages exchanged by all the contacts in the supplied metaContact
      * on and after the given date
      *
@@ -409,8 +433,8 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
     }
 
     /**
-     * Returns all the messages exchanged by all the contacts in the supplied metaContact before
-     * the given date
+     * Returns all the messages exchanged by all the contacts in the supplied metaContact
+     * before and include the given date
      *
      * @param metaContact MetaContact
      * @param endDate Date the end date of the conversations
@@ -529,7 +553,7 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
                 result.add(convertHistoryRecordToMessageEvent(cursor, contact));
             }
         }
-        Collections.sort(result, new MessageEventComparator<>());
+        result.sort(new MessageEventComparator<>());
         return result;
     }
 
@@ -561,7 +585,7 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
                 result.add(convertHistoryRecordToMessageEvent(cursor, contact));
             }
         }
-        Collections.sort(result, new MessageEventComparator<>());
+        result.sort(new MessageEventComparator<>());
         return result;
     }
 
@@ -595,7 +619,7 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
                 result.add(convertHistoryRecordToMessageEvent(cursor, contact));
             }
         }
-        Collections.sort(result, new MessageEventComparator<>());
+        result.sort(new MessageEventComparator<>());
         return result;
     }
 
@@ -762,13 +786,15 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
      *
      * @param sessionUuid the chat sessions record id to which to save the timestamp
      * @param date last mam message timestamp
+     *
+     * @return a value of 0 means there is no chatSession record associated with this sessionUuid
      */
-    public void setMamDate(String sessionUuid, Date date) {
+    public int setMamDate(String sessionUuid, Date date) {
         contentValues.clear();
         contentValues.put(ChatSession.MAM_DATE, Long.toString(date.getTime() + 10));
         String[] args = {sessionUuid};
 
-        mDB.update(ChatSession.TABLE_NAME, contentValues, ChatSession.SESSION_UUID + "=?", args);
+        return mDB.update(ChatSession.TABLE_NAME, contentValues, ChatSession.SESSION_UUID + "=?", args);
     }
 
     public void saveMamIfNotExit(OmemoManager omemoManager, ChatPanel chatPanel, List<Forwarded<Message>> forwardedList) {
@@ -804,6 +830,7 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
             if (TextUtils.isEmpty(msgId)) {
                 continue;
             }
+            // mam messages always sent as <delay/>
             timeStamp = forwarded.getDelayInformation().getStamp();
 
             String[] args = {msgId, chatId};
@@ -812,6 +839,7 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
             int msgCount = cursor.getCount();
             cursor.close();
 
+            // Proceed only if mam message is not found in database.
             if (msgCount == 0) {
                 IMessage iMessage = null;
 
@@ -938,7 +966,7 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
         }
 
         cursor.close();
-        Collections.sort(result, new MessageEventComparator<>());
+        result.sort(new MessageEventComparator<>());
         return result;
     }
 
@@ -1125,7 +1153,7 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
      */
     private String getSessionUuid(AccountID accountID, String entityJid, int mode) {
         String accountUuid = accountID.getAccountUuid();
-        String accountUid = accountID.getAccountUniqueID();
+        String accountUid = accountID.getAccountUid();
         String[] columns = {ChatSession.SESSION_UUID};
         String[] args = {accountUuid, entityJid};
 
@@ -1477,6 +1505,10 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
         contentValues.clear();
         contentValues.put(ChatMessage.READ, ChatMessage.MESSAGE_DELIVERY_RECEIPT);
         mDB.update(ChatMessage.TABLE_NAME, contentValues, ChatMessage.SERVER_MSG_ID + "=?", args);
+
+        for (MessageReceiptListener l : messageReceiptListeners) {
+            l.receiptReceived(fromJid, toJid, receiptId, receipt);
+        }
     }
 
     // //////////////////////////////////////////////////////////////////////////
@@ -2125,8 +2157,7 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
      *
      * @return Collection of MessageReceivedEvents or MessageDeliveredEvents
      */
-    public Collection<EventObject> findByKeywords(ChatRoom room, String[] keywords,
-            boolean caseSensitive) {
+    public Collection<EventObject> findByKeywords(ChatRoom room, String[] keywords, boolean caseSensitive) {
         HashSet<EventObject> result = new HashSet<>();
         String sessionUuid = getSessionUuidByJid(room);
         String[] args = {sessionUuid};
@@ -2165,7 +2196,7 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
             result.add(convertHistoryRecordToMessageEvent(cursor, room));
         }
 
-        Collections.sort(result, new MessageEventComparator<>());
+        result.sort(new MessageEventComparator<>());
         return result;
     }
 
@@ -2179,8 +2210,7 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
      *
      * @return Collection of MessageReceivedEvents or MessageDeliveredEvents
      */
-    public Collection<EventObject> findFirstMessagesAfter(ChatRoom room, Date startDate,
-            int count) {
+    public Collection<EventObject> findFirstMessagesAfter(ChatRoom room, Date startDate, int count) {
         LinkedList<EventObject> result = new LinkedList<>();
         String startTimeStamp = String.valueOf(startDate.getTime());
         String sessionUuid = getSessionUuidByJid(room);
@@ -2194,7 +2224,7 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
             result.add(convertHistoryRecordToMessageEvent(cursor, room));
         }
 
-        Collections.sort(result, new ChatRoomMessageEventComparator<>());
+        result.sort(new ChatRoomMessageEventComparator<>());
         return result;
     }
 
@@ -2222,7 +2252,7 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
             result.add(convertHistoryRecordToMessageEvent(cursor, room));
         }
 
-        Collections.sort(result, new ChatRoomMessageEventComparator<>());
+        result.sort(new ChatRoomMessageEventComparator<>());
         return result;
     }
 
@@ -2325,7 +2355,8 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
      * - Remove only chatMessages for metaContacts i.e. ChatSession.MODE_SINGLE
      * - Remove both chatMessage and chatSession info (no currently) for muc i.e. ChatSession.MODE_MULTI
      */
-    public void eraseLocallyStoredChatHistory(int chatMode) {
+    @Override
+    public int eraseLocallyStoredChatHistory(int chatMode) {
         String[] args = {String.valueOf(chatMode)};
         String[] columns = {ChatSession.SESSION_UUID};
         List<String> sessionUuids = new ArrayList<>();
@@ -2336,27 +2367,33 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
             sessionUuids.add(cursor.getString(0));
         }
         cursor.close();
-        purgeLocallyStoredHistory(sessionUuids, (ChatSession.MODE_SINGLE != chatMode));
+
+        return purgeLocallyStoredHistory(sessionUuids, true);
     }
 
     /**
      * Permanently removes locally stored message history as listed in msgUUIDs;
      * Or all the chat message for the metaContact if msgUUIDs is null.
+     * a. sessionUuid is deleted when a contact is deleted; otherwise same new contact created will inherited the incorrect sessionUuid.
+     * b. sessionUuid is also deleted when all its history messages are purged.
      *
      * @param metaContact metaContact
      * @param msgUUIDs Purge all the chat messages listed in the msgUUIDs.
      */
-    public void eraseLocallyStoredChatHistory(MetaContact metaContact, List<String> msgUUIDs) {
+    @Override
+    public int eraseLocallyStoredChatHistory(MetaContact metaContact, List<String> msgUUIDs) {
+        int msgCount = 0;
         if (msgUUIDs == null) {
             Iterator<Contact> contacts = metaContact.getContacts();
             while (contacts.hasNext()) {
                 Contact contact = contacts.next();
-                purgeLocallyStoredHistory(Collections.singletonList(getSessionUuidByJid(contact)), false);
+                msgCount += purgeLocallyStoredHistory(Collections.singletonList(getSessionUuidByJid(contact)), true);
             }
         }
         else {
-            purgeLocallyStoredHistory(msgUUIDs);
+            msgCount = purgeLocallyStoredHistory(msgUUIDs);
         }
+        return msgCount;
     }
 
     /**
@@ -2366,13 +2403,16 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
      * @param room ChatRoom
      * @param msgUUIDs Purge all the chat messages listed in the msgUUIDs.
      */
-    public void eraseLocallyStoredChatHistory(ChatRoom room, List<String> msgUUIDs) {
+    @Override
+    public int eraseLocallyStoredChatHistory(ChatRoom room, List<String> msgUUIDs) {
+        int msgCount;
         if (msgUUIDs == null) {
-            purgeLocallyStoredHistory(Collections.singletonList(getSessionUuidByJid(room)), true);
+            msgCount = purgeLocallyStoredHistory(Collections.singletonList(getSessionUuidByJid(room)), true);
         }
         else {
-            purgeLocallyStoredHistory(msgUUIDs);
+            msgCount =  purgeLocallyStoredHistory(msgUUIDs);
         }
+        return msgCount;
     }
 
     /**
@@ -2380,32 +2420,38 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
      *
      * @param msgUUIDs list of message Uuid to be erase
      */
-    private void purgeLocallyStoredHistory(List<String> msgUUIDs) {
+    private int purgeLocallyStoredHistory(List<String> msgUUIDs) {
+        int msgCount = 0;
         for (String uuid : msgUUIDs) {
             String[] args = {uuid};
-            mDB.delete(ChatMessage.TABLE_NAME, ChatMessage.UUID + "=?", args);
+            msgCount += mDB.delete(ChatMessage.TABLE_NAME, ChatMessage.UUID + "=?", args);
         }
+        return msgCount;
     }
 
     /**
      * Permanently removes locally stored message history for each sessionUuid listed in sessionUuids.
-     * - Remove only chatMessages for metaContacts
-     * - Remove both chatSessions and chatMessages for muc
+     * - Remove chatMessages for metaContacts, and chatSessions if eraseSid is true;
+     * - Remove chatMessages for muc, and chatSessions if eraseSid is true
      *
      * @param sessionUuids list of sessionUuids to be erased.
      * @param eraseSid erase also the item in ChatSession Table if true.
      */
-    public void purgeLocallyStoredHistory(List<String> sessionUuids, boolean eraseSid) {
+    public int purgeLocallyStoredHistory(List<String> sessionUuids, boolean eraseSid) {
+        int msgCount = 0;
         for (String uuid : sessionUuids) {
             String[] args = {uuid};
             // purged all messages with the same sessionUuid
-            mDB.delete(ChatMessage.TABLE_NAME, ChatMessage.SESSION_UUID + "=?", args);
+            msgCount += mDB.delete(ChatMessage.TABLE_NAME, ChatMessage.SESSION_UUID + "=?", args);
 
-            // Purge the sessionUuid in the ChatSession if true
-            if (eraseSid) {
+            // Purge the sessionUuid in the ChatSession if true and its messages count is zero
+            int count = getMessageCountForSessionUuid(uuid);
+            if (eraseSid && count == 0) {
                 mDB.delete(ChatSession.TABLE_NAME, ChatSession.SESSION_UUID + "=?", args);
+                msgCount++;
             }
         }
+        return msgCount;
     }
 
     // =============== End Erase chat history for entities for given message Uuids =====================
@@ -2418,36 +2464,47 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
      * @return List of media file Paths
      */
     public List<String> getLocallyStoredFilePath(Object descriptor) {
-        List<String> msgFilePathDel = new ArrayList<>();
-        String filePath;
         String sessionUuid = null;
-
         if (descriptor instanceof MetaContact) {
             Iterator<Contact> contacts = ((MetaContact) descriptor).getContacts();
             Contact contact = contacts.next();
             if (contact != null)
                 sessionUuid = getSessionUuidByJid(contact);
         }
-        else {
+        else if (descriptor instanceof ChatRoomWrapper){
             ChatRoom chatRoom = ((ChatRoomWrapper) descriptor).getChatRoom();
             if (chatRoom != null)
                 sessionUuid = getSessionUuidByJid(chatRoom);
+        } else {
+            sessionUuid = (String) descriptor;
+        }
+        return getLocallyStoredFilePath(sessionUuid);
+    }
+
+    /**
+     * Retrieve all locally stored media file paths for all the received messages
+     *
+     * @return List of media file Paths
+     */
+    public List<String> getLocallyStoredFilePath(String sessionUuid) {
+        List<String> msgFilePathDel = new ArrayList<>();
+        if (TextUtils.isEmpty(sessionUuid)) {
+            return msgFilePathDel;
         }
 
-        if (sessionUuid != null) {
-            String[] args = {sessionUuid};
-            String[] columns = {ChatMessage.FILE_PATH};
+        String filePath;
+        String[] args = {sessionUuid};
+        String[] columns = {ChatMessage.FILE_PATH};
 
-            Cursor cursor = mDB.query(ChatMessage.TABLE_NAME, columns, ChatMessage.SESSION_UUID + "=?",
-                    args, null, null, null);
-            while (cursor.moveToNext()) {
-                filePath = cursor.getString(0);
-                if (!TextUtils.isEmpty(filePath)) {
-                    msgFilePathDel.add(filePath);
-                }
+        Cursor cursor = mDB.query(ChatMessage.TABLE_NAME, columns, ChatMessage.SESSION_UUID + "=?",
+                args, null, null, null);
+        while (cursor.moveToNext()) {
+            filePath = cursor.getString(0);
+            if (!TextUtils.isEmpty(filePath)) {
+                msgFilePathDel.add(filePath);
             }
-            cursor.close();
         }
+        cursor.close();
         return msgFilePathDel;
     }
 

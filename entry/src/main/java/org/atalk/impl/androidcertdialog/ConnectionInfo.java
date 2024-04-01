@@ -239,7 +239,7 @@ public class ConnectionInfo extends OSGiActivity
         final OperationSetConnectionInfo opSetConnInfo = pps.getOperationSet(OperationSetConnectionInfo.class);
         if (opSetConnInfo != null) {
             InetSocketAddress ISAddress = opSetConnInfo.getServerAddress();
-            // buff.append(getItemString(getString(R.string.service_gui_settings_ADDRESS),
+            // buff.append(getItemString(getString(R.string.address),
             //      (ISAddress == null) ? "" : ISAddress.getHostName()));
             buff.append(getItemString(getString(R.string.address),
                     (ISAddress == null) ? "" : ISAddress.getHostString()));

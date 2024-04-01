@@ -68,7 +68,7 @@
     <string name="settings_webView_summary">file:///android_asset/movim/index.html</string>
 
     <!-- Auto accept downloadable max file size -->
-    <string name="auto_accept_fileSize">524288</string>
+    <string name="auto_accept_filesize">524288</string>
 
     <!-- Convert letters in phone numbers -->
     <string name="settings_phone_allow_alpha"><![CDATA[*e.g. +1–800–MYPHONE –>+1–800–694663]]></string>

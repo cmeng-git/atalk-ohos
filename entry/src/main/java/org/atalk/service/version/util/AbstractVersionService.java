@@ -5,11 +5,11 @@
  */
 package org.atalk.service.version.util;
 
-import org.atalk.service.version.Version;
-import org.atalk.service.version.VersionService;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.atalk.service.version.Version;
+import org.atalk.service.version.VersionService;
 
 /**
  * Base implementation of <code>VersionService</code> that uses major, minor and nightly build id

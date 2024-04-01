@@ -159,7 +159,6 @@
     <string name="call_error">A parte remota retorna um erro: %1$s</string>
     <string name="call_failed">Ligação falhou</string>
     <string name="call_history_name">Histórico de ligações</string>
-    <string name="call_history_remove_count">Número de registros do histórico de chamadas excluídos: %1$s</string>
     <string name="call_history_remove_before_date_warning">Tem certeza de que deseja limpar todos os registros de chamadas antes da data: %1$s?</string>
     <string name="call_history_remove_none">Nenhum registro selecionado para exclusão</string>
     <string name="call_history_remove_warning">Tem certeza de que quer excluir todos os registros de ligações selecionadas?</string>
@@ -409,6 +408,7 @@
     <string name="history_erase_all">Excluir histórico de conversa para todos os contatos</string>
     <string name="history_purge_for_contact_warning">Tem certeza de que deseja limpar todas as mensagens selecionadas para %1$s?</string>
     <string name="history_purge_all_warning">Tem certeza de que quer excluir todas as mensagens de todos?</string>
+    <string name="history_purge_count">Número de registros do histórico excluídos: %1$s</string>
     <string name="history_purge_error">Falha ao excluir mensagens armazenadas localmente para %1$s.</string>
     <string name="history_purge_media">Excluir mídia do meu aparelho</string>
     <string name="history_offline_warning">Feche e abra esta sessão de bate-papo para visualizar MAM e mensagens off-line quando estiver on-line</string>
@@ -676,7 +676,7 @@
     <string name="dec">Dez</string>
 
     <!-- Call info -->
-    <string name="service_protocol_ICE_FAILED">Não foi possível estabelecer a conexão (falha do ICE e nenhum relay encontrado)</string>
+    <string name="protocol_ice_failed">Não foi possível estabelecer a conexão (falha do ICE e nenhum relay encontrado)</string>
     <string name="callinfo_audio_info">Detalhes de áudio</string>
     <string name="callinfo_bandwidth">Banda larga:</string>
     <string name="callinfo_call_duration">Duração da ligação:</string>

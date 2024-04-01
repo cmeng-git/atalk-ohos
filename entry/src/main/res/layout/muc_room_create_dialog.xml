@@ -112,7 +112,7 @@
         <TextView
             android:id="@+id/chatRoom_Subject"
             style="@style/MediumFont"
-            android:layout_width="100dp"
+            android:layout_width="62dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:text="@string/subject" />
@@ -130,7 +130,7 @@
             style="@style/EntryTextView"
             android:layout_width="match_parent"
             android:singleLine="true"
-	    android:hint="@string/group_chat" />
+            android:hint="@string/group_chat" />
     </LinearLayout>
 
     <TextView

@@ -14,9 +14,9 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.atalk.impl.androidnotification.NotificationHelper;
 import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
-import org.atalk.impl.androidnotification.NotificationHelper;
 import org.atalk.service.SystemEventReceiver;
 import org.atalk.service.osgi.OSGiActivity;
 import org.atalk.service.osgi.OSGiService;
@@ -24,12 +24,12 @@ import org.osgi.framework.BundleContext;
 
 /**
  * The splash screen fragment displays animated aTalk logo and indeterminate progress indicators.
- *
+ * <p>
  * TODO: Eventually add exit option to the launcher Currently it's not possible to cancel OSGi
  * startup. Attempt to stop service during startup is causing immediate service restart after
  * shutdown even with synchronization of onCreate and OnDestroy commands. Maybe there is still
  * some reference to OSGI service being held at that time ?
- *
+ * <p>
  * TODO: Prevent from recreating this Activity on startup. On startup when this Activity is
  * recreated it will also destroy OSGiService which is currently not handled properly. Options
  * specified in AndroidManifest.xml should cover most cases for now:
@@ -38,8 +38,7 @@ import org.osgi.framework.BundleContext;
  * @author Pawel Domas
  * @author Eng Chong Meng
  */
-public class LauncherActivity extends OSGiActivity
-{
+public class LauncherActivity extends OSGiActivity {
     /**
      * Argument that holds an <code>Intent</code> that will be started once OSGi startup is finished.
      */
@@ -49,12 +48,12 @@ public class LauncherActivity extends OSGiActivity
      * Intent instance that will be called once OSGi startup is finished.
      */
     private Intent restoreIntent;
-
+    private ProgressBar mProgressBar;
+    private ImageView myImageView;
     private boolean startOnReboot = false;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         setupStrictMode();
         super.onCreate(savedInstanceState);
 
@@ -82,19 +81,18 @@ public class LauncherActivity extends OSGiActivity
         if (restoreIntent != null)
             stateText.setText(R.string.restoring_);
 
-        ProgressBar mActionBarProgress = findViewById(R.id.actionbar_progress);
-        mActionBarProgress.setVisibility(ProgressBar.VISIBLE);
+        mProgressBar = findViewById(R.id.progressBar);
+        mProgressBar.setVisibility(ProgressBar.VISIBLE);
 
         // Starts fade in animation
-        ImageView myImageView = findViewById(R.id.loadingImage);
+        myImageView = findViewById(R.id.loadingImage);
         Animation myFadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.fade_in);
         myImageView.startAnimation(myFadeInAnimation);
     }
 
     @Override
     protected void start(BundleContext osgiContext)
-            throws Exception
-    {
+            throws Exception {
         super.start(osgiContext);
         runOnUiThread(() -> {
             if (restoreIntent != null) {
@@ -115,8 +113,14 @@ public class LauncherActivity extends OSGiActivity
         });
     }
 
-    private void setupStrictMode()
-    {
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mProgressBar.clearAnimation();
+        myImageView.clearAnimation();
+    }
+
+    private void setupStrictMode() {
         // #TODO - change all disk access to using thread
         // cmeng - disable android.os.StrictMode$StrictModeDisk Access Violation
         StrictMode.ThreadPolicy old = StrictMode.getThreadPolicy();

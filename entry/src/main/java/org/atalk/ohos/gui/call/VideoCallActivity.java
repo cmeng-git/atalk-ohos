@@ -426,7 +426,7 @@ public class VideoCallActivity extends OSGiActivity implements CallPeerRenderer,
             mBackToChat = true;
             callNotificationControl = new CallControl();
             ContextCompat.registerReceiver(aTalkApp.getInstance(), callNotificationControl,
-                    new IntentFilter("org.atalk.call.control"), ContextCompat.RECEIVER_NOT_EXPORTED);
+                    new IntentFilter(CallControl.CALL_CTRL_ACTION), ContextCompat.RECEIVER_NOT_EXPORTED);
             leaveNotification();
             Timber.d("callNotificationControl registered: %s: %s", mCallIdentifier, callNotificationControl);
         }
@@ -479,7 +479,6 @@ public class VideoCallActivity extends OSGiActivity implements CallPeerRenderer,
                 new Handler().postDelayed(() -> {
                     finish();
                 }, 5000);
-
             });
         }).start();
     }

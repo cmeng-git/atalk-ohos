@@ -27,6 +27,15 @@ import android.os.Handler;
 
 import androidx.core.content.ContextCompat;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.util.Hashtable;
+import java.util.Map;
+
+import javax.crypto.Cipher;
+import javax.crypto.CipherOutputStream;
+
 import net.java.sip.communicator.service.protocol.AbstractFileTransfer;
 import net.java.sip.communicator.service.protocol.Contact;
 import net.java.sip.communicator.service.protocol.IMessage;
@@ -37,15 +46,6 @@ import org.atalk.ohos.aTalkApp;
 import org.atalk.persistance.FileBackend;
 import org.atalk.persistance.FilePathHelper;
 import org.jivesoftware.smackx.omemo_media_sharing.AesgcmUrl;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.util.Hashtable;
-import java.util.Map;
-
-import javax.crypto.Cipher;
-import javax.crypto.CipherOutputStream;
 
 import timber.log.Timber;
 
@@ -461,7 +461,8 @@ public class HttpFileDownloadJabberImpl extends AbstractFileTransfer {
 
         if (!cursor.moveToFirst()) {
             waitTime--;
-        } else {
+        }
+        else {
             do {
                 long progress = cursor.getLong(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
                 if (progress <= previousProgress)

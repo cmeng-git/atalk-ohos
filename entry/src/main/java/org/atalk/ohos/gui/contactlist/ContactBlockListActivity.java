@@ -47,7 +47,6 @@ import net.java.sip.communicator.util.account.AccountUtils;
 
 import org.atalk.ohos.R;
 import org.atalk.ohos.gui.AndroidGUIActivator;
-import org.atalk.ohos.gui.dialogs.DialogActivity;
 import org.atalk.ohos.gui.util.AndroidImageUtil;
 import org.atalk.ohos.gui.util.EntityListHelper;
 import org.atalk.service.osgi.OSGiActivity;

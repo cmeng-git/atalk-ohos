@@ -51,8 +51,8 @@ android {
         applicationId "org.atalk.ohos"
         archivesBaseName = "aTalk"
 
-        versionCode 3000
-        versionName "00.03.000"
+        versionCode 4000
+        versionName "00.04.000"
 
         minSdkVersion rootProject.minSdk
         targetSdkVersion rootProject.compileSdk
@@ -413,13 +413,15 @@ dependencies {
         }
 
         // Take care <streamhost/> host attribute tagged with zoneId
-        classDelete  'org.jivesoftware.smackx.bytestreams.socks5.packet.Bytestream**'
+        classDelete 'org.jivesoftware.smackx.bytestreams.socks5.packet.Bytestream**'
 
         // Do not send <close/> on an already closed InBandBytestream session
         classDelete 'org.jivesoftware.smackx.bytestreams.ibb.InBandBytestreamSession**'
 
         // Add support for chatStat in conference room
         classDelete 'org.jivesoftware.smackx.chatstates.ChatStateManager**'
+        // Stop duplicate <presence/> sending if Configuration.isSendPresence() is false
+        classDelete 'org.jivesoftware.smackx.disco.ServiceDiscoveryManager**'
 
         classDelete 'org.jivesoftware.smackx.jingle.JingleManager**'
         classDelete 'org.jivesoftware.smackx.jingle.JingleUtil**'

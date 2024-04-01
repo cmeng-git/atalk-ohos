@@ -112,7 +112,7 @@ import timber.log.Timber;
  * organization name, job title, about me, home/work email, home/work phone.
  * <p>
  * The {@link #mAccount} is retrieved from the {@link Intent} extra by it's
- * {@link AccountID#getAccountUniqueID()}
+ * {@link AccountID#getAccountUid()}
  *
  * @author Pawel Domas
  * @author Eng Chong Meng
@@ -566,6 +566,7 @@ public class AccountInfoPresenceActivity extends OSGiActivity
         finish();
     }
 
+    @Override
     public void onDateChanged(DatePicker datePicker, int year, int monthOfYear, int dayOfMonth) {
         Calendar mDate = Calendar.getInstance();
 
@@ -675,6 +676,7 @@ public class AccountInfoPresenceActivity extends OSGiActivity
     /**
      * Loads a single <code>GenericDetail</code> obtained from the
      * <code>OperationSetServerStoredAccountInfo</code> into this plugin.
+     * <p>
      * If VcardTemp contains <photo/>, it will be converted to XEP-0084 avatarData &
      * avatarMetadata, and remove it from VCardTemp.
      *

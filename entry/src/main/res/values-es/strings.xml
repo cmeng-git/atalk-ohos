@@ -162,7 +162,6 @@
     <string name="call_error">La parte remota devuelve un error: %1$s</string>
     <string name="call_failed">Llamada fallida</string>
     <string name="call_history_name">Histórico de Llamadas</string>
-    <string name="call_history_remove_count">número de registros del historial de llamadas eliminados: %1$s</string>
     <string name="call_history_remove_before_date_warning">¿Está seguro de que desea purgar todos los registros de llamadas antes de la fecha: %1$s?</string>
     <string name="call_history_remove_none">Ningún registro seleccionado para eliminar</string>
     <string name="call_history_remove_warning">¿Está seguro de que desea purgar todos los registros de llamadas seleccionados?</string>
@@ -412,6 +411,7 @@
     <string name="history_erase_all">Borrar el historial de chat de todos los contactos</string>
     <string name="history_purge_for_contact_warning">¿Está seguro de que desea purgar todos los mensajes seleccionados para %1$s?</string>
     <string name="history_purge_all_warning">¿Seguro que se quiere borrar todos los mensajes de todos los entidades?</string>
+    <string name="history_purge_count">Número de registros del historial eliminados: %1$s</string>
     <string name="history_purge_error">Error al eliminar mensajes almacenados localmente de %1$s</string>
     <string name="history_purge_media">Eliminar medios de mi teléfono</string>
     <string name="history_offline_warning">Cierre y abra esta sesión de chat para ver mensajes MAM y sin conexión cuando esté en línea</string>
@@ -680,7 +680,7 @@
     <string name="dec">Dic</string>
 
     <!-- Call info -->
-    <string name="service_protocol_ICE_FAILED">No se pudo establecer la conexión (fallo de ICE y no se encontró el relevador)</string>
+    <string name="protocol_ice_failed">No se pudo establecer la conexión (fallo de ICE y no se encontró el relevador)</string>
     <string name="callinfo_audio_info">Información del audio</string>
     <string name="callinfo_bandwidth">Ancho de banda:</string>
     <string name="callinfo_call_duration">Duración de la llamada:</string>
