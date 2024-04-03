@@ -22,6 +22,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.io.File;
+import java.util.Date;
+
 import net.java.sip.communicator.impl.filehistory.FileHistoryServiceImpl;
 import net.java.sip.communicator.impl.protocol.jabber.HttpFileDownloadJabberImpl;
 import net.java.sip.communicator.service.filehistory.FileRecord;
@@ -37,9 +40,6 @@ import org.atalk.ohos.gui.AndroidGUIActivator;
 import org.atalk.ohos.gui.chat.ChatFragment;
 import org.atalk.ohos.gui.chat.ChatMessage;
 import org.atalk.persistance.FileBackend;
-
-import java.io.File;
-import java.util.Date;
 
 /**
  * The <code>ReceiveFileConversationComponent</code> is the component shown in the conversation area

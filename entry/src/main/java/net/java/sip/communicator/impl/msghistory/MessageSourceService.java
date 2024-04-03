@@ -883,7 +883,7 @@ public class MessageSourceService extends MetaContactListAdapter implements Cont
     /**
      * Object used to cache recent messages.
      */
-    private class ComparableEvtObj implements Comparable<ComparableEvtObj> {
+    private static class ComparableEvtObj implements Comparable<ComparableEvtObj> {
         private EventObject eventObject;
 
         /**

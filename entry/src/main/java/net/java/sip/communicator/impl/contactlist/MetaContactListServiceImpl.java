@@ -2538,7 +2538,7 @@ public class MetaContactListServiceImpl implements MetaContactListService, Servi
          */
         public synchronized void subscriptionCreated(SubscriptionEvent event) {
             if (event.getSourceContact().getAddress().equals(mSubscriptionAddress)
-                    || event.getSourceContact().equals(mSubscriptionAddress)) {
+                    || event.getSourceContact().toString().equals(mSubscriptionAddress)) {
                 mEvent = event;
                 mSourceContact = event.getSourceContact();
                 notifyAll();

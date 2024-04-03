@@ -34,7 +34,7 @@ public class CodecSettingsActivity extends OSGiPreferenceActivity {
         try {
             ActivityInfo app = getPackageManager().getActivityInfo(getComponentName(), PackageManager.GET_META_DATA);
 
-            if(app.name.contains("Opus"))
+            if (app.name.contains("Opus"))
                 setMainTitle(R.string.opus);
             else
                 setMainTitle(R.string.silk);

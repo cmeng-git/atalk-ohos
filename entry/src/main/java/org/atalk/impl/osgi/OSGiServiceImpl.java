@@ -13,21 +13,6 @@ import android.content.res.AssetManager;
 import android.os.IBinder;
 import android.text.TextUtils;
 
-import org.atalk.ohos.R;
-import org.atalk.ohos.aTalkApp;
-import org.atalk.impl.osgi.framework.AsyncExecutor;
-import org.atalk.impl.osgi.framework.launch.FrameworkFactoryImpl;
-import org.atalk.service.configuration.ConfigurationService;
-import org.atalk.service.osgi.BundleContextHolder;
-import org.atalk.service.osgi.OSGiService;
-import org.atalk.util.OSUtils;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.BundleException;
-import org.osgi.framework.Constants;
-import org.osgi.framework.launch.Framework;
-import org.osgi.framework.launch.FrameworkFactory;
-import org.osgi.framework.startlevel.BundleStartLevel;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -41,14 +26,28 @@ import java.util.StringTokenizer;
 import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
 
+import org.atalk.impl.osgi.framework.AsyncExecutor;
+import org.atalk.impl.osgi.framework.launch.FrameworkFactoryImpl;
+import org.atalk.ohos.R;
+import org.atalk.ohos.aTalkApp;
+import org.atalk.service.configuration.ConfigurationService;
+import org.atalk.service.osgi.BundleContextHolder;
+import org.atalk.service.osgi.OSGiService;
+import org.atalk.util.OSUtils;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.BundleException;
+import org.osgi.framework.Constants;
+import org.osgi.framework.launch.Framework;
+import org.osgi.framework.launch.FrameworkFactory;
+import org.osgi.framework.startlevel.BundleStartLevel;
+
 /**
  * Implements the actual, internal functionality of {@link OSGiService}.
  *
  * @author Lyubomir Marinov
  * @author Eng Chong Meng
  */
-public class OSGiServiceImpl
-{
+public class OSGiServiceImpl {
     private final OSGiServiceBundleContextHolder bundleContextHolder = new OSGiServiceBundleContextHolder();
 
     private final AsyncExecutor<Runnable> executor = new AsyncExecutor<>(5, TimeUnit.MINUTES);
@@ -75,8 +74,7 @@ public class OSGiServiceImpl
      *
      * @param service the Android <code>OSGiService</code> which is to use the new instance as its very implementation
      */
-    public OSGiServiceImpl(OSGiService service)
-    {
+    public OSGiServiceImpl(OSGiService service) {
         this.service = service;
     }
 
@@ -86,11 +84,12 @@ public class OSGiServiceImpl
      * {@link BundleContextHolder} in the form of an {@link IBinder}.
      *
      * @param intent the <code>Intent</code> which was used to bind to <code>service</code>
+     *
      * @return an <code>IBinder</code> through which clients may call on to the public API of <code>OSGiService</code>
+     *
      * @see Service#onBind(Intent)
      */
-    public IBinder onBind(Intent intent)
-    {
+    public IBinder onBind(Intent intent) {
         return bundleContextHolder;
     }
 
@@ -100,8 +99,7 @@ public class OSGiServiceImpl
      *
      * @see Service#onCreate()
      */
-    public void onCreate()
-    {
+    public void onCreate() {
         try {
             setScHomeDir();
         } catch (Throwable t) {
@@ -124,8 +122,7 @@ public class OSGiServiceImpl
      *
      * @see Service#onDestroy()
      */
-    public void onDestroy()
-    {
+    public void onDestroy() {
         synchronized (executor) {
             executor.execute(new OnDestroyCommand());
             executor.shutdown();
@@ -139,12 +136,13 @@ public class OSGiServiceImpl
      * @param intent the <code>Intent</code> supplied to <code>Context.startService(Intent}</code>
      * @param flags additional data about the start request
      * @param startId a unique integer which represents this specific request to start
+     *
      * @return a value which indicates what semantics the Android system should use for
      * <code>service</code>'s current started state
+     *
      * @see Service#onStartCommand(Intent, int, int)
      */
-    public int onStartCommand(Intent intent, int flags, int startId)
-    {
+    public int onStartCommand(Intent intent, int flags, int startId) {
         return Service.START_STICKY;
     }
 
@@ -152,12 +150,10 @@ public class OSGiServiceImpl
      * Sets up <code>java.util.logging.LogManager</code> by assigning values to the system properties
      * which allow more control over reading the initial configuration.
      */
-    private void setJavaUtilLoggingConfigFile()
-    {
+    private void setJavaUtilLoggingConfigFile() {
     }
 
-    private void setScHomeDir()
-    {
+    private void setScHomeDir() {
         String name = null;
 
         if (System.getProperty(ConfigurationService.PNAME_SC_HOME_DIR_LOCATION) == null) {
@@ -206,10 +202,8 @@ public class OSGiServiceImpl
     /**
      * Asynchronously starts the OSGi framework (implementation) represented by this instance.
      */
-    private class OnCreateCommand implements Runnable
-    {
-        public void run()
-        {
+    private class OnCreateCommand implements Runnable {
+        public void run() {
             FrameworkFactory frameworkFactory = new FrameworkFactoryImpl();
             Map<String, String> configuration = new HashMap<>();
 
@@ -252,12 +246,12 @@ public class OSGiServiceImpl
          * Loads bundles configuration from the configured or default file name location.
          *
          * @param context the context to use
+         *
          * @return the locations of the OSGi bundles (or rather of the class files of their
          * <code>BundleActivator</code> implementations) comprising the Jitsi core/library and the
          * application which is currently using it. And the corresponding start levels.
          */
-        private TreeMap<Integer, List<String>> getBundlesConfig(Context context)
-        {
+        private TreeMap<Integer, List<String>> getBundlesConfig(Context context) {
             String fileName = System.getProperty("osgi.config.properties");
             if (fileName == null)
                 fileName = "lib/osgi.client.run.properties";
@@ -322,10 +316,8 @@ public class OSGiServiceImpl
     /**
      * Asynchronously stops the OSGi framework (implementation) represented by this instance.
      */
-    private class OnDestroyCommand implements Runnable
-    {
-        public void run()
-        {
+    private class OnDestroyCommand implements Runnable {
+        public void run() {
             Framework framework;
             synchronized (frameworkSyncRoot) {
                 framework = OSGiServiceImpl.this.framework;

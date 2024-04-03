@@ -33,8 +33,7 @@ import timber.log.Timber;
  * @author Eng Chong Meng
  */
 public class ContactRenameDialog extends OSGiDialogFragment
-        implements DialogInterface.OnClickListener
-{
+        implements DialogInterface.OnClickListener {
     /**
      * Meta UID arg key.
      */
@@ -58,8 +57,7 @@ public class ContactRenameDialog extends OSGiDialogFragment
     private MetaContact metaContact;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         getDialog().setTitle(R.string.contact_rename_title);
         this.metaContact = AndroidGUIActivator.getContactListService()
                 .findMetaContactByMetaUID(getArguments().getString(META_CONTACT_UID));
@@ -88,13 +86,10 @@ public class ContactRenameDialog extends OSGiDialogFragment
         return contentView;
     }
 
-    private void renameContact(final String newDisplayName)
-    {
-        new Thread()
-        {
+    private void renameContact(final String newDisplayName) {
+        new Thread() {
             @Override
-            public void run()
-            {
+            public void run() {
                 try {
                     AndroidGUIActivator.getContactListService().renameMetaContact(metaContact, newDisplayName);
                 } catch (MetaContactListException e) {
@@ -106,18 +101,17 @@ public class ContactRenameDialog extends OSGiDialogFragment
     }
 
     @Override
-    public void onClick(DialogInterface dialog, int which)
-    {
+    public void onClick(DialogInterface dialog, int which) {
     }
 
     /**
      * Creates new instance of <code>MoveToGroupDialog</code>.
      *
      * @param metaContact the contact that will be moved.
+     *
      * @return parametrized instance of <code>MoveToGroupDialog</code>.
      */
-    public static ContactRenameDialog getInstance(MetaContact metaContact)
-    {
+    public static ContactRenameDialog getInstance(MetaContact metaContact) {
         Bundle args = new Bundle();
         String userId = metaContact.getDefaultContact().getProtocolProvider().getAccountID().getUserID();
         args.putString(USER_ID, userId);
@@ -134,8 +128,7 @@ public class ContactRenameDialog extends OSGiDialogFragment
      *
      * @param errMessage the error message to show.
      */
-    private void showErrorMessage(String errMessage)
-    {
+    private void showErrorMessage(String errMessage) {
         DialogActivity.showDialog(aTalkApp.getInstance(),
                 aTalkApp.getResString(R.string.error), errMessage);
     }

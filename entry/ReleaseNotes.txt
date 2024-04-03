@@ -1,5 +1,11 @@
 Project aTalk-ohos Release Notes
 =========================================================================
+Version:        00.04.001 (0004001)
+Release Date:   04/03/2024
+Author:         cmeng
+- Source reformat and cleanup.
+
+=========================================================================
 Version:        00.04.000 (0004000)
 Release Date:   04/01/2024
 Author:         cmeng

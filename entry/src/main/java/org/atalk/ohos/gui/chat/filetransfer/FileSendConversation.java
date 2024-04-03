@@ -27,6 +27,10 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.util.Date;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
@@ -49,10 +53,6 @@ import org.atalk.ohos.gui.AndroidGUIActivator;
 import org.atalk.ohos.gui.chat.ChatFragment;
 import org.atalk.ohos.gui.chat.ChatMessage;
 import org.atalk.persistance.FileBackend;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.util.Date;
 
 import timber.log.Timber;
 

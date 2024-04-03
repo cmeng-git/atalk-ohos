@@ -22,6 +22,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.io.File;
+import java.util.Date;
+
 import net.java.sip.communicator.impl.filehistory.FileHistoryServiceImpl;
 import net.java.sip.communicator.service.filehistory.FileRecord;
 import net.java.sip.communicator.service.protocol.FileTransfer;
@@ -41,9 +44,6 @@ import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.AndroidGUIActivator;
 import org.atalk.ohos.gui.chat.ChatFragment;
 import org.atalk.ohos.gui.chat.ChatMessage;
-
-import java.io.File;
-import java.util.Date;
 
 import timber.log.Timber;
 

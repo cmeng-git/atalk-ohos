@@ -48,6 +48,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.gif.GifDrawable;
 import com.bumptech.glide.request.target.CustomViewTarget;
@@ -74,12 +80,6 @@ import org.atalk.service.osgi.OSGiFragment;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.smackx.httpfileupload.UploadProgressListener;
-
-import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 
 import timber.log.Timber;
 
@@ -338,7 +338,7 @@ public abstract class FileTransferConversation extends OSGiFragment
             messageViewHolder.fileStatus.setText(statusText);
         }
         messageViewHolder.timeView.setText(mDate);
-   }
+    }
 
     /**
      * Shows the given error message in the error area of this component.
@@ -773,7 +773,7 @@ public abstract class FileTransferConversation extends OSGiFragment
      * Toggle audio file playback states:
      * STOP -> PLAY -> PAUSE -> PLAY;
      * long press play button to STOP
-     *
+     * <p>
      * Proceed to open the file for VIEW if this is not an audio file
      */
     private void playStart() {
@@ -903,7 +903,7 @@ public abstract class FileTransferConversation extends OSGiFragment
 
     /**
      * OnSeekBarChangeListener callback interface during multimedia playback
-     *
+     * <p>
      * A SeekBar callback that notifies clients when the progress level has been
      * changed. This includes changes that were initiated by the user through a
      * touch gesture or arrow key/trackball as well as changes that were initiated

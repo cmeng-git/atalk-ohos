@@ -506,6 +506,7 @@ public abstract class BaseContactListAdapter extends BaseExpandableListAdapter
      * We keep one instance of view click listener to avoid unnecessary allocations.
      * Clicked positions are obtained from the view holder.
      */
+    @Override
     public void onClick(View view) {
         ContactViewHolder viewHolder = null;
 
@@ -566,6 +567,7 @@ public abstract class BaseContactListAdapter extends BaseExpandableListAdapter
      * Retrieve the contact avatar from server when user longClick on the avatar in contact list.
      * Clicked position/contact is derived from the view holder group/child positions.
      */
+    @Override
     public boolean onLongClick(View view) {
         Object clicked = view.getTag();
 

@@ -21,6 +21,12 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
+
 import net.java.sip.communicator.service.protocol.AccountID;
 import net.java.sip.communicator.service.protocol.ProtocolProviderService;
 import net.java.sip.communicator.util.account.AccountUtils;
@@ -29,26 +35,18 @@ import org.atalk.ohos.R;
 import org.atalk.service.osgi.OSGiActivity;
 import org.jivesoftware.smackx.omemo.OmemoService;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
-
 /**
  * In case your device list gets filled with old unused identities, you can clean it up. This will remove
  * all inactive devices from the device list and only publish the device that you are using right now.
  *
  * @author Eng Chong Meng
  */
-public class OmemoDeviceDeleteDialog extends OSGiActivity
-{
+public class OmemoDeviceDeleteDialog extends OSGiActivity {
     /**
      * {@inheritDoc}
      */
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         final Map<String, ProtocolProviderService> accountMap = new Hashtable<>();
         final List<CharSequence> accounts = new ArrayList<>();

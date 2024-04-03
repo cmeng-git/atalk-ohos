@@ -45,8 +45,7 @@ import org.jxmpp.stringprep.XmppStringprepException;
  *
  * @author Eng Chong Meng
  */
-public class ChatRoomDestroyDialog extends OSGiFragment
-{
+public class ChatRoomDestroyDialog extends OSGiFragment {
     private ChatRoomWrapper chatRoomWrapper;
     private ChatPanel chatPanel;
 
@@ -54,8 +53,7 @@ public class ChatRoomDestroyDialog extends OSGiFragment
      * {@inheritDoc}
      */
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.muc_room_destroy_dialog, container, false);
 
         Bundle bundle = getArguments();
@@ -73,8 +71,7 @@ public class ChatRoomDestroyDialog extends OSGiFragment
      * @param crWrapper chatRoom wrapper
      * @param cPanel the chatPanel to send message
      */
-    public void show(Context context, ChatRoomWrapper crWrapper, ChatPanel cPanel)
-    {
+    public void show(Context context, ChatRoomWrapper crWrapper, ChatPanel cPanel) {
         chatRoomWrapper = crWrapper;
         chatPanel = cPanel;
 
@@ -93,11 +90,9 @@ public class ChatRoomDestroyDialog extends OSGiFragment
     /**
      * Implements <code>DialogActivity.DialogListener</code> interface and handles refresh stores process.
      */
-    public class DialogListenerImpl implements DialogActivity.DialogListener
-    {
+    public class DialogListenerImpl implements DialogActivity.DialogListener {
         @Override
-        public boolean onConfirmClicked(DialogActivity dialog)
-        {
+        public boolean onConfirmClicked(DialogActivity dialog) {
             View view = dialog.getContentFragment().getView();
             String reason = ViewUtil.toString(view.findViewById(R.id.ReasonDestroy));
             String venue = ViewUtil.toString(view.findViewById(R.id.VenueAlternate));
@@ -125,8 +120,7 @@ public class ChatRoomDestroyDialog extends OSGiFragment
         }
 
         @Override
-        public void onDialogCancelled(DialogActivity dialog)
-        {
+        public void onDialogCancelled(DialogActivity dialog) {
         }
     }
 

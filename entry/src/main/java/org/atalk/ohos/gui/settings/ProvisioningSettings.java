@@ -27,22 +27,19 @@ import org.atalk.service.osgi.OSGiPreferenceActivity;
  * @author Pawel Domas
  * @author Eng Chong Meng
  */
-public class ProvisioningSettings extends OSGiPreferenceActivity
-{
+public class ProvisioningSettings extends OSGiPreferenceActivity {
     /**
      * {@inheritDoc}
      */
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setMainTitle(R.string.provisioning);
         getSupportFragmentManager().beginTransaction().replace(android.R.id.content, new MyPreferenceFragment()).commit();
     }
 
     public static class MyPreferenceFragment extends PreferenceFragmentCompat
-            implements SharedPreferences.OnSharedPreferenceChangeListener
-    {
+            implements SharedPreferences.OnSharedPreferenceChangeListener {
         /**
          * Used preference keys
          */
@@ -72,8 +69,7 @@ public class ProvisioningSettings extends OSGiPreferenceActivity
          * {@inheritDoc}
          */
         @Override
-        public void onCreatePreferences(Bundle savedInstanceState, String rootKey)
-        {
+        public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.provisioning_preferences, rootKey);
 
             // Load UUID
@@ -106,8 +102,7 @@ public class ProvisioningSettings extends OSGiPreferenceActivity
         /**
          * Asks the user for confirmation of password clearing and eventually clears it.
          */
-        private void askForgetPassword()
-        {
+        private void askForgetPassword() {
             AlertDialog.Builder askForget = new AlertDialog.Builder(getContext());
             askForget.setTitle(R.string.remove)
                     .setMessage(R.string.provisioning_remove_credentials_message)
@@ -124,8 +119,7 @@ public class ProvisioningSettings extends OSGiPreferenceActivity
          * {@inheritDoc}
          */
         @Override
-        public void onResume()
-        {
+        public void onResume() {
             super.onResume();
             getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
         }
@@ -134,8 +128,7 @@ public class ProvisioningSettings extends OSGiPreferenceActivity
          * {@inheritDoc}
          */
         @Override
-        public void onPause()
-        {
+        public void onPause() {
             getPreferenceManager().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
             super.onPause();
         }
@@ -144,8 +137,7 @@ public class ProvisioningSettings extends OSGiPreferenceActivity
          * {@inheritDoc}
          */
         @Override
-        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key)
-        {
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             if (key.equals(P_KEY_PROVISIONING_METHOD)) {
                 if ("NONE".equals(sharedPreferences.getString(P_KEY_PROVISIONING_METHOD, null))) {
                     AndroidGUIActivator.getConfigurationService().setProperty(P_KEY_URL, null);

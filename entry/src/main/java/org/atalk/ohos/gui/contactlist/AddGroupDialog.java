@@ -32,14 +32,12 @@ import timber.log.Timber;
  * @author Pawel Domas
  * @author Eng Chong Meng
  */
-public class AddGroupDialog extends OSGiFragment
-{
+public class AddGroupDialog extends OSGiFragment {
     /**
      * {@inheritDoc}
      */
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.create_group, container, false);
     }
 
@@ -51,8 +49,7 @@ public class AddGroupDialog extends OSGiFragment
      * @param createListener listener for contact group created event that will receive newly created instance of
      * the contact group or <code>null</code> in case user cancels the dialog.
      */
-    public static void showCreateGroupDialog(Activity parent, EventListener<MetaContactGroup> createListener)
-    {
+    public static void showCreateGroupDialog(Activity parent, EventListener<MetaContactGroup> createListener) {
         DialogActivity.showCustomDialog(parent,
                 parent.getString(R.string.create_group),
                 AddGroupDialog.class.getName(), null,
@@ -63,8 +60,7 @@ public class AddGroupDialog extends OSGiFragment
     /**
      * Implements <code>DialogActivity.DialogListener</code> interface and handles contact group creation process.
      */
-    static class DialogListenerImpl implements DialogActivity.DialogListener
-    {
+    static class DialogListenerImpl implements DialogActivity.DialogListener {
         /**
          * Contact created event listener.
          */
@@ -85,16 +81,14 @@ public class AddGroupDialog extends OSGiFragment
          *
          * @param createListener create group listener if any.
          */
-        public DialogListenerImpl(EventListener<MetaContactGroup> createListener)
-        {
+        public DialogListenerImpl(EventListener<MetaContactGroup> createListener) {
             this.listener = createListener;
         }
 
         // private ProgressDialog progressDialog;
 
         @Override
-        public boolean onConfirmClicked(DialogActivity dialog)
-        {
+        public boolean onConfirmClicked(DialogActivity dialog) {
             if (createThread != null)
                 return false;
 
@@ -130,22 +124,19 @@ public class AddGroupDialog extends OSGiFragment
          *
          * @param errorMessage the error message to show.
          */
-        private void showErrorMessage(String errorMessage)
-        {
+        private void showErrorMessage(String errorMessage) {
             Context ctx = aTalkApp.getInstance();
             DialogActivity.showDialog(ctx, ctx.getString(R.string.error), errorMessage);
         }
 
         @Override
-        public void onDialogCancelled(DialogActivity dialog)
-        {
+        public void onDialogCancelled(DialogActivity dialog) {
         }
 
         /**
          * Creates a new meta contact group in a separate thread.
          */
-        private class CreateGroup extends Thread
-        {
+        private class CreateGroup extends Thread {
             /**
              * Contact list instance.
              */
@@ -162,15 +153,13 @@ public class AddGroupDialog extends OSGiFragment
              * @param mcl contact list service instance.
              * @param groupName name of the contact group to create.
              */
-            CreateGroup(MetaContactListService mcl, String groupName)
-            {
+            CreateGroup(MetaContactListService mcl, String groupName) {
                 this.mcl = mcl;
                 this.groupName = groupName;
             }
 
             @Override
-            public void run()
-            {
+            public void run() {
                 try {
                     newMetaGroup = mcl.createMetaContactGroup(mcl.getRoot(), groupName);
                 } catch (MetaContactListException ex) {

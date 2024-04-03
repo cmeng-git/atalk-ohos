@@ -158,6 +158,7 @@ public class SQLiteOmemoStore extends SignalOmemoStore {
      * @param fingerprint fingerprint to check
      *
      * @return the fingerprint status for the specified device
+     *
      * @see LruCache#create(Object)
      */
     public FingerprintStatus getFingerprintStatus(OmemoDevice device, String fingerprint) {
@@ -347,6 +348,7 @@ public class SQLiteOmemoStore extends SignalOmemoStore {
      * @param userDevice our OmemoDevice.
      *
      * @return identityKeyPair Omemo identityKeyPair
+     *
      * @throws CorruptedOmemoKeyException Thrown, if the stored key is damaged (*hands up* not my fault!)
      */
     @Override
@@ -397,6 +399,7 @@ public class SQLiteOmemoStore extends SignalOmemoStore {
      * @param contactDevice the device of which we want to load the identityKey.
      *
      * @return identityKey - may be null
+     *
      * @throws CorruptedOmemoKeyException when the key in question is corrupted and cannot be deserialized.
      */
     @Override

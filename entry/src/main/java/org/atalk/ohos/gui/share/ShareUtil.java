@@ -31,9 +31,9 @@ import android.text.TextUtils;
 
 import java.util.ArrayList;
 
+import org.atalk.impl.androidtray.NotificationPopupHandler;
 import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
-import org.atalk.impl.androidtray.NotificationPopupHandler;
 import org.atalk.persistance.FileBackend;
 
 import timber.log.Timber;

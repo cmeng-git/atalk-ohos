@@ -1,6 +1,6 @@
 /*
  * Jitsi, the OpenSource Java VoIP and Instant Messaging client.
- * 
+ *
  * Distributable under LGPL license. See terms of license at gnu.org.
  */
 package org.atalk.ohos.gui.contactlist.model;
@@ -11,14 +11,13 @@ package org.atalk.ohos.gui.contactlist.model;
  *
  * @author Pawel Domas
  */
-public interface UIGroupRenderer
-{
-	/**
-	 * Returns the display name of the contact group identified by given implementation specific group object.
-	 * 
-	 * @param groupImpl
-	 *        implementation specific contact group instance.
-	 * @return the display name for given contact group instance.
-	 */
-	public String getDisplayName(Object groupImpl);
+public interface UIGroupRenderer {
+    /**
+     * Returns the display name of the contact group identified by given implementation specific group object.
+     *
+     * @param groupImpl implementation specific contact group instance.
+     *
+     * @return the display name for given contact group instance.
+     */
+    public String getDisplayName(Object groupImpl);
 }

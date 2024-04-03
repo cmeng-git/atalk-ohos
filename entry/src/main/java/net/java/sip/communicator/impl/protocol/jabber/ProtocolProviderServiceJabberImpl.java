@@ -1879,7 +1879,7 @@ public class ProtocolProviderServiceJabberImpl extends AbstractProtocolProviderS
      * Setup all the Smack Service Discovery and other features that can only be performed during
      * actual account registration stage (mConnection). For initial setup see:
      * {@link #initSmackDefaultSettings()} and {@link #initialize(EntityBareJid, JabberAccountID)}
-     *
+     * <p>
      * Note: For convenience, many of the OperationSets when supported will handle state and events changes on its own.
      */
     private void initServicesAndFeatures() {
@@ -2588,10 +2588,8 @@ public class ProtocolProviderServiceJabberImpl extends AbstractProtocolProviderS
 
     /**
      * Determines whether a specific <code>XMPPException</code> signals that attempted login has failed.
-     *
      * Calling method will trigger a re-login dialog if the return <code>failureMode</code> is not
      * <code>SecurityAuthority.REASON_UNKNOWN</code> etc
-     *
      * Add additional exMsg message if necessary to achieve this effect.
      *
      * @param ex the <code>Exception</code> which is to be determined whether it signals

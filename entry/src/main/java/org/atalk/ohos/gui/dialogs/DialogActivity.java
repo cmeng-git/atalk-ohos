@@ -17,16 +17,16 @@ import android.view.View;
 import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import org.atalk.ohos.R;
-import org.atalk.ohos.aTalkApp;
-import org.atalk.ohos.gui.util.ViewUtil;
-import org.atalk.service.osgi.OSGiActivity;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.atalk.ohos.R;
+import org.atalk.ohos.aTalkApp;
+import org.atalk.ohos.gui.util.ViewUtil;
+import org.atalk.service.osgi.OSGiActivity;
 
 /**
  * <code>DialogActivity</code> can be used to display alerts without having parent <code>Activity</code>

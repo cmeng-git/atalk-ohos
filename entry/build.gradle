@@ -51,8 +51,8 @@ android {
         applicationId "org.atalk.ohos"
         archivesBaseName = "aTalk"
 
-        versionCode 4000
-        versionName "00.04.000"
+        versionCode 4001
+        versionName "00.04.001"
 
         minSdkVersion rootProject.minSdk
         targetSdkVersion rootProject.compileSdk

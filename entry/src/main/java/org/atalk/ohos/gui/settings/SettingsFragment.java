@@ -18,6 +18,16 @@ import androidx.preference.ListPreference;
 import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceScreen;
 
+import java.awt.Dimension;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.media.MediaLocator;
+
 import net.java.sip.communicator.impl.msghistory.MessageHistoryActivator;
 import net.java.sip.communicator.impl.protocol.jabber.ProtocolProviderServiceJabberImpl;
 import net.java.sip.communicator.service.msghistory.MessageHistoryService;
@@ -29,6 +39,12 @@ import net.java.sip.communicator.util.ServiceUtils;
 import net.java.sip.communicator.util.UtilActivator;
 import net.java.sip.communicator.util.account.AccountUtils;
 
+import org.atalk.impl.neomedia.MediaServiceImpl;
+import org.atalk.impl.neomedia.NeomediaActivator;
+import org.atalk.impl.neomedia.device.AndroidCameraSystem;
+import org.atalk.impl.neomedia.device.DeviceConfiguration;
+import org.atalk.impl.neomedia.device.util.AndroidCamera;
+import org.atalk.impl.neomedia.device.util.CameraUtils;
 import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.AndroidGUIActivator;
@@ -38,26 +54,10 @@ import org.atalk.ohos.gui.util.LocaleHelper;
 import org.atalk.ohos.gui.util.PreferenceUtil;
 import org.atalk.ohos.gui.util.ThemeHelper;
 import org.atalk.ohos.gui.util.ThemeHelper.Theme;
-import org.atalk.impl.neomedia.MediaServiceImpl;
-import org.atalk.impl.neomedia.NeomediaActivator;
-import org.atalk.impl.neomedia.device.AndroidCameraSystem;
-import org.atalk.impl.neomedia.device.DeviceConfiguration;
-import org.atalk.impl.neomedia.device.util.AndroidCamera;
-import org.atalk.impl.neomedia.device.util.CameraUtils;
 import org.atalk.service.configuration.ConfigurationService;
 import org.atalk.service.osgi.OSGiPreferenceFragment;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
-
-import java.awt.Dimension;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.media.MediaLocator;
 
 import timber.log.Timber;
 
@@ -170,7 +170,8 @@ public class SettingsFragment extends OSGiPreferenceFragment
             MediaServiceImpl mediaServiceImpl = NeomediaActivator.getMediaServiceImpl();
             if (mediaServiceImpl != null) {
                 mDeviceConfig = mediaServiceImpl.getDeviceConfiguration();
-            } else {
+            }
+            else {
                 // Do not proceed if mediaServiceImpl == null; else system crashes on NPE
                 disableMediaOptions();
                 return;
@@ -181,7 +182,8 @@ public class SettingsFragment extends OSGiPreferenceFragment
 
             // Video section
             initVideoPreferences();
-        } else {
+        }
+        else {
             disableMediaOptions();
         }
     }
@@ -647,7 +649,8 @@ public class SettingsFragment extends OSGiPreferenceFragment
         for (ProtocolProviderService pps : providers) {
             if (pps.isRegistered()) {
                 ProtocolProviderServiceJabberImpl.enableMam(pps.getConnection(), enable);
-            } else {
+            }
+            else {
                 aTalkApp.showToastMessage(R.string.settings_history_mam_warning, pps.getAccountID().getEntityBareJid());
             }
         }

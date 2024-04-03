@@ -8,24 +8,23 @@ package org.atalk.ohos.gui.settings;
 import android.os.Bundle;
 import android.view.KeyEvent;
 
+import java.util.List;
+
+import org.atalk.impl.neomedia.MediaServiceImpl;
+import org.atalk.impl.neomedia.NeomediaActivator;
 import org.atalk.ohos.R;
 import org.atalk.ohos.gui.account.settings.MediaEncodingActivity;
 import org.atalk.ohos.gui.account.settings.MediaEncodingsFragment;
-import org.atalk.impl.neomedia.MediaServiceImpl;
-import org.atalk.impl.neomedia.NeomediaActivator;
 import org.atalk.service.neomedia.codec.EncodingConfiguration;
 import org.atalk.service.neomedia.format.MediaFormat;
 import org.atalk.service.osgi.OSGiActivity;
 import org.atalk.util.MediaType;
 
-import java.util.List;
-
 /**
  * @author Pawel Domas
  * @author Eng Chong Meng
  */
-public class EncodingSettings extends OSGiActivity
-{
+public class EncodingSettings extends OSGiActivity {
     public static final String EXTRA_MEDIA_TYPE = "media_type";
     public static final String MEDIA_TYPE_AUDIO = "media_type.AUDIO";
     public static final String MEDIA_TYPE_VIDEO = "media_type.VIDEO";
@@ -33,8 +32,7 @@ public class EncodingSettings extends OSGiActivity
     private MediaType mMediaType;
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         String mediaTypeStr = getIntent().getStringExtra(EXTRA_MEDIA_TYPE);
         if (MEDIA_TYPE_AUDIO.equals(mediaTypeStr)) {
@@ -68,8 +66,7 @@ public class EncodingSettings extends OSGiActivity
      * {@inheritDoc}
      */
     @Override
-    public boolean onKeyUp(int keyCode, KeyEvent event)
-    {
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
         MediaServiceImpl mediaSrvc = NeomediaActivator.getMediaServiceImpl();
 
         if ((keyCode == KeyEvent.KEYCODE_BACK) && (mediaSrvc != null)) {

@@ -21,8 +21,7 @@ import timber.log.Timber;
 /**
  * Class gathers utility methods for operations on contact list.
  */
-public class ContactListUtils
-{
+public class ContactListUtils {
     /**
      * Adds a new contact in separate <code>Thread</code>.
      *
@@ -31,13 +30,10 @@ public class ContactListUtils
      * @param contactAddress new contact address.
      */
     public static void addContact(final ProtocolProviderService protocolProvider, final MetaContactGroup group,
-            final String contactAddress)
-    {
-        new Thread()
-        {
+            final String contactAddress) {
+        new Thread() {
             @Override
-            public void run()
-            {
+            public void run() {
                 try {
                     AndroidGUIActivator.getContactListService().createMetaContact(protocolProvider, group, contactAddress);
                 } catch (MetaContactListException ex) {

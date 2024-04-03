@@ -127,6 +127,7 @@ public class OperationSetContactCapabilitiesJabberImpl
      * @return the <code>OperationSet</code> corresponding to the specified <code>opsetClass</code>
      * which is considered by the associated protocol provider to be possessed as a capability by
      * the specified <code>contact</code>; otherwise, <code>null</code>
+     *
      * @see AbstractOperationSetContactCapabilities#getOperationSet(Contact, Class)
      */
     @Override
@@ -149,6 +150,7 @@ public class OperationSetContactCapabilitiesJabberImpl
      * possessed as capabilities). Each supported <code>OperationSet</code> capability is
      * represented by a <code>Map.Entry</code> with key equal to the <code>OperationSet</code> class
      * name and value equal to the respective <code>OperationSet</code> instance
+     *
      * @see AbstractOperationSetContactCapabilities#getSupportedOperationSets(Contact)
      */
     @Override
@@ -170,6 +172,7 @@ public class OperationSetContactCapabilitiesJabberImpl
      * possessed as capabilities). Each supported <code>OperationSet</code> capability is
      * represented by a <code>Map.Entry</code> with key equal to the <code>OperationSet</code> class
      * name and value equal to the respective <code>OperationSet</code> instance
+     *
      * @see AbstractOperationSetContactCapabilities#getSupportedOperationSets(Contact)
      */
     @SuppressWarnings("unchecked")
@@ -218,6 +221,7 @@ public class OperationSetContactCapabilitiesJabberImpl
      * @return the <code>OperationSet</code> corresponding to the specified <code>opsetClass</code>
      * which is considered by the associated protocol provider to be possessed as a capability by
      * the specified <code>contact</code>; otherwise, <code>null</code>
+     *
      * @see AbstractOperationSetContactCapabilities#getOperationSet(Contact, Class)
      */
     private <U extends OperationSet> U getOperationSet(Jid jid, Class<U> opsetClass, boolean online) {
@@ -258,6 +262,7 @@ public class OperationSetContactCapabilitiesJabberImpl
      *
      * @param user the user (contact full Jid)
      * @param online indicates if the user is currently online
+     *
      * @see UserCapsNodeListener#userCapsNodeNotify(Jid, boolean)
      */
     @Override

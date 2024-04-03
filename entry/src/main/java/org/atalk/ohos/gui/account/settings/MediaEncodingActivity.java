@@ -11,20 +11,6 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Menu;
 
-import net.java.sip.communicator.service.protocol.EncodingsRegistrationUtil;
-import net.java.sip.communicator.service.protocol.ProtocolProviderFactory;
-
-import org.atalk.ohos.R;
-import org.atalk.ohos.gui.actionbar.ActionBarToggleFragment;
-import org.atalk.impl.neomedia.MediaServiceImpl;
-import org.atalk.impl.neomedia.MediaUtils;
-import org.atalk.impl.neomedia.NeomediaActivator;
-import org.atalk.service.neomedia.codec.EncodingConfiguration;
-import org.atalk.service.neomedia.format.MediaFormat;
-import org.atalk.service.osgi.OSGiActivity;
-import org.atalk.util.MediaType;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -32,6 +18,20 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import net.java.sip.communicator.service.protocol.EncodingsRegistrationUtil;
+import net.java.sip.communicator.service.protocol.ProtocolProviderFactory;
+
+import org.atalk.impl.neomedia.MediaServiceImpl;
+import org.atalk.impl.neomedia.MediaUtils;
+import org.atalk.impl.neomedia.NeomediaActivator;
+import org.atalk.ohos.R;
+import org.atalk.ohos.gui.actionbar.ActionBarToggleFragment;
+import org.atalk.service.neomedia.codec.EncodingConfiguration;
+import org.atalk.service.neomedia.format.MediaFormat;
+import org.atalk.service.osgi.OSGiActivity;
+import org.atalk.util.MediaType;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Activity allows user to edit audio or video encodings settings and set their priority.
@@ -47,8 +47,7 @@ import java.util.Map;
  * @author Eng Chong Meng
  */
 public class MediaEncodingActivity extends OSGiActivity
-        implements ActionBarToggleFragment.ActionBarToggleModel
-{
+        implements ActionBarToggleFragment.ActionBarToggleModel {
     /**
      * The intent's key for {@link MediaType}
      */
@@ -113,8 +112,7 @@ public class MediaEncodingActivity extends OSGiActivity
      * {@inheritDoc}
      */
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         loadEncodings(savedInstanceState);
 
@@ -133,8 +131,7 @@ public class MediaEncodingActivity extends OSGiActivity
      * @param savedInstanceState bundle that contains the state or <code>null</code> if the <code>Activity</code> was just
      * created.
      */
-    private void loadEncodings(Bundle savedInstanceState)
-    {
+    private void loadEncodings(Bundle savedInstanceState) {
         Intent intent = getIntent();
         if (savedInstanceState == null) {
             mEncReg = (EncodingsRegistrationUtil) intent.getSerializableExtra(EXTRA_KEY_ENC_REG);
@@ -172,18 +169,17 @@ public class MediaEncodingActivity extends OSGiActivity
      * Returns the string representing encoding on the list
      *
      * @param mf {@link MediaFormat} for encoding list row
+     *
      * @return the string representing encoding list item
      */
-    private static String getEncodingStr(MediaFormat mf)
-    {
+    private static String getEncodingStr(MediaFormat mf) {
         return mf.getEncoding() + "/" + mf.getClockRateString();
     }
 
     /**
      * Initializes encodings list
      */
-    public static List<MediaFormat> getEncodings(final EncodingConfiguration encodingConfig, MediaType mediaType)
-    {
+    public static List<MediaFormat> getEncodings(final EncodingConfiguration encodingConfig, MediaType mediaType) {
         MediaFormat[] availableEncodings = encodingConfig.getAllEncodings(mediaType);
         HashMap<String, MediaFormat> availableEncodingSet = new HashMap<>();
 
@@ -220,10 +216,10 @@ public class MediaEncodingActivity extends OSGiActivity
      * Creates string representation for given set of <code>MediaFormat</code>s.
      *
      * @param encodings the iterator with <code>MediaFormat</code> to be converted into strings.
+     *
      * @return string representation of given <code>MediaFormat</code>s.
      */
-    public static List<String> getEncodingsStr(Iterator<MediaFormat> encodings)
-    {
+    public static List<String> getEncodingsStr(Iterator<MediaFormat> encodings) {
         List<String> outList = new ArrayList<>();
         while (encodings.hasNext()) {
             outList.add(getEncodingStr(encodings.next()));
@@ -236,10 +232,10 @@ public class MediaEncodingActivity extends OSGiActivity
      *
      * @param encodings set of <code>MediaFormat</code>s from which the one will be selected.
      * @param str string representation of <code>MediaFormat</code>.
+     *
      * @return selected <code>MediaFormat</code> from the given set by matching string representation.
      */
-    public static MediaFormat getEncodingFromStr(Iterator<MediaFormat> encodings, String str)
-    {
+    public static MediaFormat getEncodingFromStr(Iterator<MediaFormat> encodings, String str) {
         while (encodings.hasNext()) {
             MediaFormat mf = encodings.next();
             if (getEncodingStr(mf).equals(str)) {
@@ -254,11 +250,11 @@ public class MediaEncodingActivity extends OSGiActivity
      *
      * @param encodings the set of encodings that will be used.
      * @param encodingConfig encodings configuration that stores priorities.
+     *
      * @return priorities list for given set of encodings.
      */
     public static List<Integer> getPriorities(List<MediaFormat> encodings,
-            EncodingConfiguration encodingConfig)
-    {
+            EncodingConfiguration encodingConfig) {
         int count = encodings.size();
         List<Integer> priorities = new ArrayList<>(count);
 
@@ -274,8 +270,7 @@ public class MediaEncodingActivity extends OSGiActivity
      * {@inheritDoc}
      */
     @Override
-    protected void onSaveInstanceState(@NotNull Bundle outState)
-    {
+    protected void onSaveInstanceState(@NotNull Bundle outState) {
         super.onSaveInstanceState(outState);
         commitChanges();
 
@@ -287,8 +282,7 @@ public class MediaEncodingActivity extends OSGiActivity
      * {@inheritDoc}
      */
     @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
+    public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         encodingsFragment.setEnabled(isOverrideEncodings);
 
@@ -300,8 +294,7 @@ public class MediaEncodingActivity extends OSGiActivity
      * {@inheritDoc}
      */
     @Override
-    public boolean onKeyUp(int keyCode, KeyEvent event)
-    {
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
         // Catch the back key code and store results
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             commitChanges();
@@ -329,8 +322,7 @@ public class MediaEncodingActivity extends OSGiActivity
      * @param encFragment the fragment which edited encodings priorities.
      */
     public static void commitPriorities(EncodingConfiguration encodingConf, MediaType mediaType,
-            MediaEncodingsFragment encFragment)
-    {
+            MediaEncodingsFragment encFragment) {
         if (!encFragment.hasChanges()) {
             return;
         }
@@ -346,8 +338,7 @@ public class MediaEncodingActivity extends OSGiActivity
     /**
      * Commits user changes.
      */
-    private void commitChanges()
-    {
+    private void commitChanges() {
         commitPriorities(encodingConfiguration, mediaType, encodingsFragment);
 
         encodingConfiguration.storeProperties(encodingProperties,
@@ -358,14 +349,12 @@ public class MediaEncodingActivity extends OSGiActivity
     }
 
     @Override
-    public boolean isChecked()
-    {
+    public boolean isChecked() {
         return isOverrideEncodings;
     }
 
     @Override
-    public void setChecked(boolean isChecked)
-    {
+    public void setChecked(boolean isChecked) {
         isOverrideEncodings = isChecked;
         encodingsFragment.setEnabled(isOverrideEncodings);
         hasChanges = true;

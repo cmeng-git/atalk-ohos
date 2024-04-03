@@ -31,8 +31,7 @@ import timber.log.Timber;
  * @author Pawel Domas
  * @author Eng Chong Meng
  */
-public class MoveToGroupDialog extends OSGiDialogFragment implements DialogInterface.OnClickListener
-{
+public class MoveToGroupDialog extends OSGiDialogFragment implements DialogInterface.OnClickListener {
     /**
      * Meta UID arg key.
      */
@@ -52,10 +51,10 @@ public class MoveToGroupDialog extends OSGiDialogFragment implements DialogInter
      * Creates a new instance of <code>MoveToGroupDialog</code>.
      *
      * @param metaContact the contact that will be moved.
+     *
      * @return parametrized instance of <code>MoveToGroupDialog</code>.
      */
-    public static MoveToGroupDialog getInstance(MetaContact metaContact)
-    {
+    public static MoveToGroupDialog getInstance(MetaContact metaContact) {
         MoveToGroupDialog dialog = new MoveToGroupDialog();
 
         Bundle args = new Bundle();
@@ -68,8 +67,7 @@ public class MoveToGroupDialog extends OSGiDialogFragment implements DialogInter
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View contentView = inflater.inflate(R.layout.move_to_group, container, false);
 
         getDialog().setTitle(R.string.move_contact);
@@ -97,13 +95,10 @@ public class MoveToGroupDialog extends OSGiDialogFragment implements DialogInter
         return contentView;
     }
 
-    private void moveContact(final MetaContactGroup selectedItem)
-    {
-        new Thread()
-        {
+    private void moveContact(final MetaContactGroup selectedItem) {
+        new Thread() {
             @Override
-            public void run()
-            {
+            public void run() {
                 try {
                     AndroidGUIActivator.getContactListService().moveMetaContact(metaContact, selectedItem);
                 } catch (MetaContactListException e) {
@@ -116,7 +111,6 @@ public class MoveToGroupDialog extends OSGiDialogFragment implements DialogInter
     }
 
     @Override
-    public void onClick(DialogInterface dialog, int which)
-    {
+    public void onClick(DialogInterface dialog, int which) {
     }
 }

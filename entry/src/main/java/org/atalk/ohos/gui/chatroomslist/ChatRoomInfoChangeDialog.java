@@ -38,8 +38,7 @@ import org.atalk.service.osgi.OSGiFragment;
  *
  * @author Eng Chong Meng
  */
-public class ChatRoomInfoChangeDialog extends OSGiFragment
-{
+public class ChatRoomInfoChangeDialog extends OSGiFragment {
     private static final String EXTRA_CHATROOM = "chatRoom";
     private static final String EXTRA_NICK = "nick";
     private static final String EXTRA_Subject = "subject";
@@ -51,8 +50,7 @@ public class ChatRoomInfoChangeDialog extends OSGiFragment
      * {@inheritDoc}
      */
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.muc_room_info_change_dialog, container, false);
 
         Bundle bundle = getArguments();
@@ -75,8 +73,7 @@ public class ChatRoomInfoChangeDialog extends OSGiFragment
      * @param context the parent <code>Context</code>
      * @param chatRoomWrapper chatRoom wrapper
      */
-    public void show(Context context, ChatRoomWrapper chatRoomWrapper)
-    {
+    public void show(Context context, ChatRoomWrapper chatRoomWrapper) {
         mContext = context;
         mChatRoomWrapper = chatRoomWrapper;
         ChatRoom chatRoom = chatRoomWrapper.getChatRoom();
@@ -99,11 +96,9 @@ public class ChatRoomInfoChangeDialog extends OSGiFragment
     /**
      * Implements <code>DialogActivity.DialogListener</code> interface and handles refresh stores process.
      */
-    public class DialogListenerImpl implements DialogActivity.DialogListener
-    {
+    public class DialogListenerImpl implements DialogActivity.DialogListener {
         @Override
-        public boolean onConfirmClicked(DialogActivity dialog)
-        {
+        public boolean onConfirmClicked(DialogActivity dialog) {
             // allow nickName to contain spaces
             View view = dialog.getContentFragment().getView();
             String nickName = ViewUtil.toString(view.findViewById(R.id.NickName_Edit));
@@ -121,8 +116,7 @@ public class ChatRoomInfoChangeDialog extends OSGiFragment
         }
 
         @Override
-        public void onDialogCancelled(DialogActivity dialog)
-        {
+        public void onDialogCancelled(DialogActivity dialog) {
         }
     }
 }

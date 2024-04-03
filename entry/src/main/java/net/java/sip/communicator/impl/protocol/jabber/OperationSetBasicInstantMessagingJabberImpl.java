@@ -723,7 +723,7 @@ public class OperationSetBasicInstantMessagingJabberImpl extends AbstractOperati
      * @param stanza the packet that we need to handle (if it is a message).
      *
      * @see #INCOMING_SVR_MESSAGE_FILTER filter settings
-     *
+     * <p>
      * Handles incoming messages and dispatches whatever events that are necessary.
      */
     @Override

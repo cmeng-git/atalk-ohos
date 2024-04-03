@@ -2608,7 +2608,7 @@ public class ChatFragment extends OSGiFragment implements ChatSessionManager.Cur
     /**
      * Sends the given file through the currently selected chat transport by using the given
      * fileComponent to visualize the transfer process in the chatFragment view.
-     *
+     * <p>
      * // @param mFile the file to send
      * // @param FileSendConversation send file component to use for file transfer & visualization
      * // @param msgId he view position on chatFragment

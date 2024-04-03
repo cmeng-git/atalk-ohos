@@ -204,7 +204,7 @@ public class MainMenuActivity extends ExitMenuActivity implements ServiceListene
             enableMenu = false;
 
         // runOnUiThread to update view
-        this.runOnUiThread(() -> {
+        runOnUiThread(() -> {
             // videoBridgeMenuItem is always enabled - allow user to re-trigger if earlier init failed
             videoBridgeMenuItem.setEnabled(true);
 

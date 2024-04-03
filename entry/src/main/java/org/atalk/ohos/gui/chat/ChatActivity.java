@@ -887,11 +887,10 @@ public class ChatActivity extends OSGiActivity
 
     public void sendAttachment(AttachOptionItem attachOptionItem) {
         Uri fileUri;
-        String contentType;
 
         switch (attachOptionItem) {
             case pic:
-                contentType = "image/*";
+                String contentType = "image/*";
                 mGetContents.launch(contentType);
                 break;
 

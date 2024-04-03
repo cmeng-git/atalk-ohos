@@ -43,8 +43,7 @@ import timber.log.Timber;
  * @author Eng Chong Meng
  * @author MilanKral
  */
-public class JabberPreferenceFragment extends AccountPreferenceFragment
-{
+public class JabberPreferenceFragment extends AccountPreferenceFragment {
     // PreferenceScreen and PreferenceCategories for Account Settings...
     private static final String P_KEY_TELEPHONY = "pref.screen.jbr.telephony";
     private static final String P_KEY_CALL_ENCRYPT = "pref_key_enable_encryption";
@@ -79,8 +78,7 @@ public class JabberPreferenceFragment extends AccountPreferenceFragment
     /**
      * Creates new instance of <code>JabberPreferenceFragment</code>
      */
-    public JabberPreferenceFragment()
-    {
+    public JabberPreferenceFragment() {
         super(R.xml.acc_jabber_preferences);
     }
 
@@ -89,8 +87,7 @@ public class JabberPreferenceFragment extends AccountPreferenceFragment
      *
      * @return jabber registration wizard.
      */
-    private AccountRegistrationImpl getJbrWizard()
-    {
+    private AccountRegistrationImpl getJbrWizard() {
         return (AccountRegistrationImpl) getWizard();
     }
 
@@ -98,8 +95,7 @@ public class JabberPreferenceFragment extends AccountPreferenceFragment
      * {@inheritDoc}
      */
     @Override
-    protected EncodingsRegistrationUtil getEncodingsRegistration()
-    {
+    protected EncodingsRegistrationUtil getEncodingsRegistration() {
         return jbrReg.getEncodingsRegistration();
     }
 
@@ -107,16 +103,14 @@ public class JabberPreferenceFragment extends AccountPreferenceFragment
      * {@inheritDoc}
      */
     @Override
-    protected SecurityAccountRegistration getSecurityRegistration()
-    {
+    protected SecurityAccountRegistration getSecurityRegistration() {
         return jbrReg.getSecurityRegistration();
     }
 
     /**
      * {@inheritDoc}
      */
-    protected void onInitPreferences()
-    {
+    protected void onInitPreferences() {
         AccountRegistrationImpl wizard = getJbrWizard();
         jbrReg = wizard.getAccountRegistration();
 
@@ -135,8 +129,7 @@ public class JabberPreferenceFragment extends AccountPreferenceFragment
      * {@inheritDoc}
      */
     @Override
-    protected void onPreferencesCreated()
-    {
+    protected void onPreferencesCreated() {
         dnssecModeLP = findPreference(P_KEY_DNSSEC_MODE);
 
         if (aTalk.disableMediaServiceOnFault) {
@@ -201,8 +194,7 @@ public class JabberPreferenceFragment extends AccountPreferenceFragment
     /**
      * Starts the {@link SecurityActivity} to edit account's security preferences
      */
-    private void startSecurityActivity()
-    {
+    private void startSecurityActivity() {
         Intent intent = new Intent(mActivity, SecurityActivity.class);
         SecurityAccountRegistration securityRegistration = getSecurityRegistration();
         if (securityRegistration == null)
@@ -246,8 +238,7 @@ public class JabberPreferenceFragment extends AccountPreferenceFragment
      *
      * @param mediaType indicates if AUDIO or VIDEO encodings will be edited
      */
-    private void startEncodingActivity(MediaType mediaType)
-    {
+    private void startEncodingActivity(MediaType mediaType) {
         Intent intent = new Intent(mActivity, MediaEncodingActivity.class);
         intent.putExtra(MediaEncodingActivity.ENC_MEDIA_TYPE_KEY, mediaType);
 
@@ -284,8 +275,7 @@ public class JabberPreferenceFragment extends AccountPreferenceFragment
     /**
      * {@inheritDoc}
      */
-    protected void mapSummaries(SummaryMapper summaryMapper)
-    {
+    protected void mapSummaries(SummaryMapper summaryMapper) {
         String emptyStr = getEmptyPreferenceStr();
 
         // User name and password
@@ -298,8 +288,7 @@ public class JabberPreferenceFragment extends AccountPreferenceFragment
      * {@inheritDoc}
      */
     @Override
-    public void onSharedPreferenceChanged(SharedPreferences shPrefs, String key)
-    {
+    public void onSharedPreferenceChanged(SharedPreferences shPrefs, String key) {
         // Check to ensure a valid key before proceed
         if (findPreference(key) == null)
             return;
@@ -325,8 +314,8 @@ public class JabberPreferenceFragment extends AccountPreferenceFragment
                 // Reset to old valid password if online change password failed;
                 // so actual valid login password is shown in next 'Account setting...' edit.
                 else {
-                     mEditor.putString(P_KEY_PASSWORD, jbrReg.getPassword());
-                     mEditor.apply();
+                    mEditor.putString(P_KEY_PASSWORD, jbrReg.getPassword());
+                    mEditor.apply();
                 }
                 break;
 
@@ -348,8 +337,7 @@ public class JabberPreferenceFragment extends AccountPreferenceFragment
      *
      * @param shPrefs SharedPreferences
      */
-    private void getUserConfirmation(SharedPreferences shPrefs)
-    {
+    private void getUserConfirmation(SharedPreferences shPrefs) {
         final String userName = shPrefs.getString(P_KEY_USER_ID, null);
         if (!TextUtils.isEmpty(userName) && userName.contains("@")) {
             String editedAccUid = jbrReg.getAccountUid();
@@ -365,19 +353,16 @@ public class JabberPreferenceFragment extends AccountPreferenceFragment
                             userName, msgCount, userNameEdited);
                     DialogActivity.showConfirmDialog(aTalkApp.getInstance(),
                             aTalkApp.getResString(R.string.warning), msgPrompt,
-                            aTalkApp.getResString(R.string.proceed), new DialogActivity.DialogListener()
-                            {
+                            aTalkApp.getResString(R.string.proceed), new DialogActivity.DialogListener() {
                                 @Override
-                                public boolean onConfirmClicked(DialogActivity dialog)
-                                {
+                                public boolean onConfirmClicked(DialogActivity dialog) {
                                     jbrReg.setUserID(userName);
                                     userNameLastEdited = userName;
                                     return true;
                                 }
 
                                 @Override
-                                public void onDialogCancelled(DialogActivity dialog)
-                                {
+                                public void onDialogCancelled(DialogActivity dialog) {
                                     jbrReg.setUserID(userNameEdited);
                                     userNameLastEdited = userNameEdited;
                                     mEditor.putString(P_KEY_USER_ID, jbrReg.getUserID());
@@ -403,8 +388,7 @@ public class JabberPreferenceFragment extends AccountPreferenceFragment
      * i.e jbrReg.getAccountProperties() with the accountID mAccountProperties before saving to SQL database
      */
     @Override
-    protected void doCommitChanges()
-    {
+    protected void doCommitChanges() {
         try {
             AccountRegistrationImpl accWizard = getJbrWizard();
             accWizard.setModification(true);

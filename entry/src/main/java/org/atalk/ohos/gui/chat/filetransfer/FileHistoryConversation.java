@@ -21,6 +21,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.io.File;
+
 import net.java.sip.communicator.service.filehistory.FileRecord;
 import net.java.sip.communicator.service.protocol.event.FileTransferStatusChangeEvent;
 import net.java.sip.communicator.util.GuiUtils;
@@ -30,25 +32,20 @@ import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.chat.ChatFragment;
 import org.atalk.ohos.gui.chat.ChatMessage;
 
-import java.io.File;
-
 /**
  * The component used to show a file transfer history record in the chat window.
  *
  * @author Eng Chong Meng
  */
-public class FileHistoryConversation extends FileTransferConversation
-{
+public class FileHistoryConversation extends FileTransferConversation {
     private FileRecord fileRecord;
     private ChatMessage chatMessage;
 
-    private FileHistoryConversation(ChatFragment cPanel, String dir)
-    {
+    private FileHistoryConversation(ChatFragment cPanel, String dir) {
         super(cPanel, dir);
     }
 
-    public static FileHistoryConversation newInstance(ChatFragment cPanel, FileRecord fileRecord, ChatMessage msg)
-    {
+    public static FileHistoryConversation newInstance(ChatFragment cPanel, FileRecord fileRecord, ChatMessage msg) {
         FileHistoryConversation fragmentFHC = new FileHistoryConversation(cPanel, fileRecord.getDirection());
         fragmentFHC.fileRecord = fileRecord;
         fragmentFHC.chatMessage = msg;
@@ -56,8 +53,7 @@ public class FileHistoryConversation extends FileTransferConversation
     }
 
     public View FileHistoryConversationForm(LayoutInflater inflater, ChatFragment.MessageViewHolder msgViewHolder,
-            ViewGroup container, boolean init)
-    {
+            ViewGroup container, boolean init) {
         View convertView = inflateViewForFileTransfer(inflater, msgViewHolder, container, init);
         // Assume history file transfer is completed with all button hidden
         updateXferFileViewState(FileTransferStatusChangeEvent.COMPLETED, null);
@@ -103,10 +99,10 @@ public class FileHistoryConversation extends FileTransferConversation
      * @param entityJid file transfer initiator
      * @param dir file send or received
      * @param status file transfer status
+     *
      * @return the status message to display
      */
-    private String getStatusMessage(String entityJid, String dir, int status)
-    {
+    private String getStatusMessage(String entityJid, String dir, int status) {
         String statusMsg = "";
         String statusText = FileRecord.statusMap.get(status);
 
@@ -169,8 +165,7 @@ public class FileHistoryConversation extends FileTransferConversation
      * @return empty string
      */
     @Override
-    protected String getProgressLabel(long bytesString)
-    {
+    protected String getProgressLabel(long bytesString) {
         return "";
     }
 

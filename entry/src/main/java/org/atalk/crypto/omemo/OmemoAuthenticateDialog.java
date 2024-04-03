@@ -27,6 +27,12 @@ import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.ListView;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
+
 import org.atalk.ohos.R;
 import org.atalk.ohos.gui.util.ViewUtil;
 import org.atalk.service.osgi.OSGiActivity;
@@ -41,12 +47,6 @@ import org.jivesoftware.smackx.omemo.trust.OmemoFingerprint;
 import org.jivesoftware.smackx.omemo.trust.TrustState;
 import org.jxmpp.jid.BareJid;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
-
 import timber.log.Timber;
 
 /**
@@ -54,8 +54,7 @@ import timber.log.Timber;
  *
  * @author Eng Chong Meng
  */
-public class OmemoAuthenticateDialog extends OSGiActivity
-{
+public class OmemoAuthenticateDialog extends OSGiActivity {
     public final static String Corrupted_OmemoKey = "Corrupted OmemoKey, purge?";
 
     private static OmemoManager mOmemoManager;
@@ -77,11 +76,11 @@ public class OmemoAuthenticateDialog extends OSGiActivity
      * Creates parametrized <code>Intent</code> of buddy authenticate dialog.
      *
      * @param omemoManager the omemoManager to handle the session.
+     *
      * @return buddy authenticate dialog parametrized for omemo.
      */
     public static Intent createIntent(Context context, OmemoManager omemoManager, Set<OmemoDevice> omemoDevices,
-            AuthenticateListener listener)
-    {
+            AuthenticateListener listener) {
         Intent intent = new Intent(context, OmemoAuthenticateDialog.class);
 
         mOmemoManager = omemoManager;
@@ -97,8 +96,7 @@ public class OmemoAuthenticateDialog extends OSGiActivity
      * {@inheritDoc}
      */
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
             mOmemoStore = (SQLiteOmemoStore) SignalOmemoService.getInstance().getOmemoStoreBackend();
@@ -121,7 +119,8 @@ public class OmemoAuthenticateDialog extends OSGiActivity
         try {
             userJid = mOmemoManager.getOwnJid();
             localFingerprint = mOmemoManager.getOwnFingerprint().toString();
-        } catch (SmackException.NotLoggedInException | CorruptedOmemoKeyException | IOException | NullPointerException e) {
+        } catch (SmackException.NotLoggedInException | CorruptedOmemoKeyException | IOException |
+                 NullPointerException e) {
             Timber.w("Get own fingerprint exception: %s", e.getMessage());
         }
 
@@ -134,10 +133,9 @@ public class OmemoAuthenticateDialog extends OSGiActivity
     /**
      * Gets the list of all known buddyFPs.
      *
-     * @return the list of all known buddyFPs.
+     * @return the mao of all known buddyFPs.
      */
-    Map<OmemoDevice, String> getBuddyFingerPrints()
-    {
+    Map<OmemoDevice, String> getBuddyFingerPrints() {
         String fingerprint;
         FingerprintStatus fpStatus;
 
@@ -155,7 +153,7 @@ public class OmemoAuthenticateDialog extends OSGiActivity
                     buddyFingerprints.put(device, Corrupted_OmemoKey);
                     deviceFPStatus.put(device, null);
                 } catch (SmackException.NotLoggedInException | SmackException.NotConnectedException
-                        | SmackException.NoResponseException | InterruptedException | IOException e) {
+                         | SmackException.NoResponseException | InterruptedException | IOException e) {
                     Timber.w("Smack exception in fingerPrint fetch for omemo device: %s", device);
                 }
             }
@@ -168,8 +166,7 @@ public class OmemoAuthenticateDialog extends OSGiActivity
      *
      * @param v ok button's <code>View</code>.
      */
-    public void onOkClicked(View v)
-    {
+    public void onOkClicked(View v) {
         boolean allTrusted = true;
         String fingerprint;
 
@@ -203,16 +200,14 @@ public class OmemoAuthenticateDialog extends OSGiActivity
      *
      * @param v the cancel button's <code>View</code>
      */
-    public void onCancelClicked(View v)
-    {
+    public void onCancelClicked(View v) {
         if (mListener != null)
             mListener.onAuthenticate(false, mOmemoDevices);
         finish();
     }
 
     // ============== OMEMO Buddy FingerPrints Handlers ================== //
-    private boolean isOmemoFPVerified(OmemoDevice omemoDevice, String fingerprint)
-    {
+    private boolean isOmemoFPVerified(OmemoDevice omemoDevice, String fingerprint) {
         FingerprintStatus fpStatus = mOmemoStore.getFingerprintStatus(omemoDevice, fingerprint);
         return ((fpStatus != null) && fpStatus.isTrusted());
     }
@@ -223,8 +218,7 @@ public class OmemoAuthenticateDialog extends OSGiActivity
      * @param omemoDevice OmemoDevice
      * @param remoteFingerprint fingerprint.
      */
-    private void trustOmemoFingerPrint(OmemoDevice omemoDevice, String remoteFingerprint)
-    {
+    private void trustOmemoFingerPrint(OmemoDevice omemoDevice, String remoteFingerprint) {
         OmemoFingerprint omemoFingerprint = new OmemoFingerprint(remoteFingerprint);
         mOmemoStore.getTrustCallBack().setTrust(omemoDevice, omemoFingerprint, TrustState.trusted);
     }
@@ -232,8 +226,7 @@ public class OmemoAuthenticateDialog extends OSGiActivity
     /**
      * Adapter displays fingerprints for given list of <code>Contact</code>s.
      */
-    private class FingerprintListAdapter extends BaseAdapter
-    {
+    private class FingerprintListAdapter extends BaseAdapter {
         /**
          * The list of currently displayed buddy FingerPrints.
          */
@@ -244,8 +237,7 @@ public class OmemoAuthenticateDialog extends OSGiActivity
          *
          * @param linkedHashMap list of <code>Contact</code> for which OMEMO fingerprints will be displayed.
          */
-        FingerprintListAdapter(Map<OmemoDevice, String> linkedHashMap)
-        {
+        FingerprintListAdapter(Map<OmemoDevice, String> linkedHashMap) {
             buddyFPs = linkedHashMap;
         }
 
@@ -253,8 +245,7 @@ public class OmemoAuthenticateDialog extends OSGiActivity
          * {@inheritDoc}
          */
         @Override
-        public int getCount()
-        {
+        public int getCount() {
             return buddyFPs.size();
         }
 
@@ -262,8 +253,7 @@ public class OmemoAuthenticateDialog extends OSGiActivity
          * {@inheritDoc}
          */
         @Override
-        public Object getItem(int position)
-        {
+        public Object getItem(int position) {
             return getOmemoDeviceFromRow(position);
         }
 
@@ -271,8 +261,7 @@ public class OmemoAuthenticateDialog extends OSGiActivity
          * {@inheritDoc}
          */
         @Override
-        public long getItemId(int position)
-        {
+        public long getItemId(int position) {
             return position;
         }
 
@@ -280,8 +269,7 @@ public class OmemoAuthenticateDialog extends OSGiActivity
          * {@inheritDoc}
          */
         @Override
-        public View getView(int position, View rowView, ViewGroup parent)
-        {
+        public View getView(int position, View rowView, ViewGroup parent) {
             if (rowView == null)
                 rowView = getLayoutInflater().inflate(R.layout.omemo_fingerprint_row, parent, false);
 
@@ -299,8 +287,7 @@ public class OmemoAuthenticateDialog extends OSGiActivity
             return rowView;
         }
 
-        OmemoDevice getOmemoDeviceFromRow(int row)
-        {
+        OmemoDevice getOmemoDeviceFromRow(int row) {
             int index = -1;
             for (OmemoDevice device : buddyFingerprints.keySet()) {
                 index++;
@@ -311,8 +298,7 @@ public class OmemoAuthenticateDialog extends OSGiActivity
             return null;
         }
 
-        String getFingerprintFromRow(int row)
-        {
+        String getFingerprintFromRow(int row) {
             int index = -1;
             for (String fingerprint : buddyFingerprints.values()) {
                 index++;
@@ -327,8 +313,7 @@ public class OmemoAuthenticateDialog extends OSGiActivity
     /**
      * The listener that will be notified when user clicks the confirm button or dismisses the dialog.
      */
-    public interface AuthenticateListener
-    {
+    public interface AuthenticateListener {
         /**
          * Fired when user clicks the dialog's confirm/cancel button.
          *
