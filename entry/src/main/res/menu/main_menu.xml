@@ -31,6 +31,9 @@
         android:id="@+id/muc_bookmarks"
         android:title="@string/chatroom_bookmark_title" />
     <item
+        android:id="@+id/app_info"
+        android:title="@string/app_info" />
+    <item
         android:id="@+id/main_settings"
         android:title="@string/system_settings" />
     <item

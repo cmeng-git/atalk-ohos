@@ -868,7 +868,7 @@
     <string name="contactinfo_user_pictures">Benutzerbilder</string>
     <string name="contactinfo_status_message">Statusmeldung</string>
 
-    <!-- Notification strings -->
+    <!-- Notification strings (do not change; getI18NString(NotificationSettings.NOTICE_PREFIX + eventType))-->
     <string name="notificationconfig_event_BusyCall">Besetzter Anruf</string>
     <string name="notificationconfig_event_BusyCall_description">Besetzter Anruf Info</string>
     <string name="notificationconfig_event_CallSaved">Anruf gespeichert</string>
@@ -1185,7 +1185,7 @@
     <string name="settings_presence_subscribe_approval_manual">Presence manuell bestätigen</string>
 
     <!-- Bring chat window to front(not sure if this makes sense on Android, so omitted) -->
-    <!-- Use task bar / dock alerts on incoming calls and chats -->
+    <!-- Use task bar/dock alerts on incoming calls and chats -->
     <string name="settings_chat_notifications">Statusleistenbenachrichtigungen anzeigen</string>
 
     <!-- Leave chat rooms when closing window(omitted on Android for now) -->
@@ -1402,14 +1402,17 @@
     <string name="next">Weiter</string>
 
     <!-- Android Permissions -->
+    <string name="app_info">App Zugriffsrechte…</string>
     <string name="permission_app_info">App Zugriffsrechte</string>
     <string name="permission_request_all">Alle Rechte anfordern</string>
-    <string name="permission_audio">Audio</string>
     <string name="permission_camera">Kamera</string>
     <string name="permission_contacts">Kontakte</string>
     <string name="permission_location">Standort</string>
+    <string name="permission_microphone">Audio</string>
+    <string name="permission_music">Musik und Audio</string>
     <string name="permission_notifications">Benachrichtigungen</string>
     <string name="permission_phone">Telefon</string>
+    <string name="permission_video">Foto und Video</string>
     <string name="permission_storage">Speicher</string>
     <string name="permission_hint">Für das maximale Ausnutzen aller Anwendungsfunktionalitäten müsst du in aTalk Berechtigungen für die folgenden Dienste erteilen. Ohne sie funktioniert aTalk möglicherweise nicht oder verhält sich unsachgemäß.</string>
 
@@ -1418,14 +1421,17 @@
     <string name="permission_denied_permanently">PERMANENTLY DENIED</string>
     <string name="permission_unknown">UNBEKANNT</string>
 
-    <string name="audio_permission_denied_dialog_title">Audio-Erlaubnisanforderung</string>
-    <string name="audio_permission_denied_feedback">Audioanrufe sind erst verfügbar, wenn du die Berechtigungsanforderung erteilst</string>
+    <string name="mic_permission_denied_dialog_title">Bitte um Erlaubnis zur Audioaufnahme</string>
+    <string name="mic_permission_denied_feedback">Audioanrufe sind erst verfügbar, wenn du die Berechtigungsanforderung erteilst</string>
 
     <string name="camera_permission_denied_dialog_title">Kameraerlaubnisanforderung</string>
     <string name="camera_permission_denied_feedback">Alle mit der Kamera verbundenen Aktivitäten sind erst verfügbar, wenn Sie die Berechtigungsanforderung erteilen</string>
 
     <string name="contacts_permission_denied_dialog_title">Kontaktberechtigungsanforderung</string>
     <string name="contacts_permission_denied_feedback">Die Zugriffsrechte für Kontakte sind für den Zugriff auf den Telefonstatus und die Anrufkonfiguration erforderlich</string>
+
+    <string name="music_permission_denied_dialog_title">Bitte um Genehmigung für Musik und Audio</string>
+    <string name="music_permission_denied_feedback">Auf die Medien-Audiodatei kann erst zugegriffen werden, wenn Sie der Berechtigungsanfrage stattgeben</string>
 
     <string name="location_permission_denied_dialog_title">Standortberechtigungsanforderung</string>
     <string name="location_permission_denied_feedback">GPS-Ortungsfunktionen sind erst verfügbar, wenn du die Berechtigung erteilt hast.</string>
@@ -1435,6 +1441,9 @@
 
     <string name="phone_permission_denied_dialog_title">Leseberechtigung für Telefonstatus</string>
     <string name="phone_permission_denied_feedback">Telefonfunktionen sind erst verfügbar, wenn du die Berechtigung erteilt hast.</string>
+
+    <string name="video_permission_denied_dialog_title">Bitte um Foto- und Videogenehmigung</string>
+    <string name="video_permission_denied_feedback">Der Zugriff auf Medienfoto- und Videodateien ist erst möglich, wenn Sie der Genehmigungsanfrage stattgeben</string>
 
     <string name="storage_permission_denied_dialog_title">Speichererlaubnisanforderung</string>
     <string name="storage_permission_denied_feedback">Das Speichern von gesendeten und empfangenen Inhalten im Speicher ist erst zulässig, nachdem du die Berechtigung erteilt hast.</string>

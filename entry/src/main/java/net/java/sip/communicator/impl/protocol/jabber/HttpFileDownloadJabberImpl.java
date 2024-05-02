@@ -238,7 +238,7 @@ public class HttpFileDownloadJabberImpl extends AbstractFileTransfer {
         DownloadManager.Query query = new DownloadManager.Query();
         query.setFilterById(id);
 
-        // allow loop for 3 seconds for slow server. Server can return size == 0 ?
+        // allow loop for 3 seconds for slow server. Server may return size == 0 ?
         int wait = 3;
         while ((wait-- > 0) && (mFileSize <= 0)) {
             try {

@@ -869,7 +869,7 @@
     <string name="contactinfo_user_pictures">Пользовательские изображения</string>
     <string name="contactinfo_status_message">Сообщение о статусе</string>
 
-    <!-- Notification strings -->
+    <!-- Notification strings (do not change; getI18NString(NotificationSettings.NOTICE_PREFIX + eventType))-->
     <string name="notificationconfig_event_BusyCall">Занятый вызов</string>
     <string name="notificationconfig_event_BusyCall_description">Описание занятого вызова</string>
     <string name="notificationconfig_event_CallSaved">Сохраненный вызов</string>
@@ -1410,14 +1410,17 @@
     <string name="next">Далее</string>
 
     <!-- Android Permissions -->
-	<string name="permission_app_info">Информация о приложении</string>
-    <string name="permission_request_all">Запрос всех разрешений</string>
-    <string name="permission_audio">Аудио</string>
+    <string name="app_info">Информация о приложении…</string>
+    <string name="permission_app_info">Информация о приложении</string>
+    <string name="permission_microphone">Аудио</string>
     <string name="permission_camera">Камера</string>
     <string name="permission_contacts">Контакты</string>
     <string name="permission_location">Местоположение</string>
+    <string name="permission_request_all">Запрос всех разрешений</string>
+    <string name="permission_music">Музыка и аудио</string>
     <string name="permission_notifications">Уведомления</string>
     <string name="permission_phone">Телефон</string>
+    <string name="permission_video">Фото и видео</string>
     <string name="permission_storage">Хранение</string>
     <string name="permission_hint">Для максимальной производительности и полной поддержки приложений, aTalk требует предоставления разрешений для следующих служб. Без них aTalk может не работать или может иметь неожиданное поведение!</string>
 
@@ -1426,14 +1429,17 @@
     <string name="permission_denied_permanently">ПОСТОЯННО ЗАЩИЩЕН</string>
     <string name="permission_unknown">UNKNOWN</string>
 
-    <string name="audio_permission_denied_dialog_title">Запрос разрешения звука</string>
-    <string name="audio_permission_denied_feedback">Звуковой вызов не будет доступен, пока вы не предоставите запрос на разрешение</string>
+    <string name="mic_permission_denied_dialog_title">Запрос разрешения на запись аудио</string>
+    <string name="mic_permission_denied_feedback">Звуковой вызов не будет доступен, пока вы не предоставите запрос на разрешение</string>
 
     <string name="camera_permission_denied_dialog_title">Запрос разрешения камеры</string>
     <string name="camera_permission_denied_feedback">все связанные с камерой действия не будут доступны, пока вы не предоставите запрос на разрешение</string>
 
     <string name="contacts_permission_denied_dialog_title">Запрос на доступ к контактам</string>
     <string name="contacts_permission_denied_feedback">Требуется разрешение для доступа к телефону и настройки вызова</string>
+
+    <string name="music_permission_denied_dialog_title">Запрос разрешения на музыку и аудио</string>
+    <string name="music_permission_denied_feedback">Мультимедийный аудиофайл недоступен, пока вы не предоставите запрос на разрешение.</string>
 
     <string name="location_permission_denied_dialog_title">Запрос разрешения на размещение</string>
     <string name="location_permission_denied_feedback">Функции GPS-Location не будут доступны, пока вы не предоставите запрос на разрешение</string>
@@ -1443,6 +1449,9 @@
 
     <string name="phone_permission_denied_dialog_title">Прочитать запрос разрешения состояния телефона</string>
     <string name="phone_permission_denied_feedback">Функции телефона не будут доступны, пока вы не предоставите запрос на разрешение</string>
+
+    <string name="video_permission_denied_dialog_title">Запрос разрешения на фото и видео</string>
+    <string name="video_permission_denied_feedback">Медиа-фото и видеофайлы недоступны, пока вы не предоставите запрос на разрешение.</string>
 
     <string name="storage_permission_denied_dialog_title">Запрос разрешения на хранение</string>
     <string name="storage_permission_denied_feedback">Сохранение отправленного и полученного содержимого в хранилище не будет разрешено, пока вы не предоставите запрос на разрешение</string>

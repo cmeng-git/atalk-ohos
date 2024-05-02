@@ -119,8 +119,7 @@ public class OmemoAuthenticateDialog extends OSGiActivity {
         try {
             userJid = mOmemoManager.getOwnJid();
             localFingerprint = mOmemoManager.getOwnFingerprint().toString();
-        } catch (SmackException.NotLoggedInException | CorruptedOmemoKeyException | IOException |
-                 NullPointerException e) {
+        } catch (SmackException.NotLoggedInException | CorruptedOmemoKeyException | IOException | NullPointerException e) {
             Timber.w("Get own fingerprint exception: %s", e.getMessage());
         }
 
@@ -133,7 +132,7 @@ public class OmemoAuthenticateDialog extends OSGiActivity {
     /**
      * Gets the list of all known buddyFPs.
      *
-     * @return the mao of all known buddyFPs.
+     * @return the map of all known buddyFPs.
      */
     Map<OmemoDevice, String> getBuddyFingerPrints() {
         String fingerprint;
@@ -153,7 +152,7 @@ public class OmemoAuthenticateDialog extends OSGiActivity {
                     buddyFingerprints.put(device, Corrupted_OmemoKey);
                     deviceFPStatus.put(device, null);
                 } catch (SmackException.NotLoggedInException | SmackException.NotConnectedException
-                         | SmackException.NoResponseException | InterruptedException | IOException e) {
+                        | SmackException.NoResponseException | InterruptedException | IOException e) {
                     Timber.w("Smack exception in fingerPrint fetch for omemo device: %s", device);
                 }
             }

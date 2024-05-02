@@ -257,8 +257,7 @@ public class MessageSourceContact extends DataObject
     }
 
     /**
-     * We will the details for this source contact. Will skip OperationSetBasicInstantMessaging
-     * for chat rooms.
+     * We will the details for this source contact. Will skip OperationSetBasicInstantMessaging for chat rooms.
      *
      * @param isChatRoom is current source contact a chat room.
      */
@@ -279,11 +278,9 @@ public class MessageSourceContact extends DataObject
                 opsetCapabilities = capOpSet.getSupportedOperationSets(contact);
 
             preferredProviders = new Hashtable<>();
-
             LinkedList<Class<? extends OperationSet>> supportedOpSets = new LinkedList<>();
 
-            for (Class<? extends OperationSet> opset
-                    : preferredProvider.getSupportedOperationSetClasses()) {
+            for (Class<? extends OperationSet> opset : preferredProvider.getSupportedOperationSetClasses()) {
                 // skip opset IM as we want explicitly muc support
                 if (opset.equals(OperationSetPresence.class)
                         || opset.equals(OperationSetPersistentPresence.class)

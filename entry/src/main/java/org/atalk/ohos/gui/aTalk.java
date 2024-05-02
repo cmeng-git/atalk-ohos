@@ -388,7 +388,7 @@ public class aTalk extends MainMenuActivity {
 
     public static void showHintMessage(int requestCode, String permission) {
         if (requestCode == PRC_RECORD_AUDIO) {
-            aTalkApp.showToastMessage(R.string.audio_permission_denied_feedback);
+            aTalkApp.showToastMessage(R.string.mic_permission_denied_feedback);
         }
         else if (requestCode == PRC_CAMERA) {
             aTalkApp.showToastMessage(R.string.camera_permission_denied_feedback);
@@ -404,7 +404,7 @@ public class aTalk extends MainMenuActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == PRC_RECORD_AUDIO) {
             if ((grantResults.length != 0) && (PackageManager.PERMISSION_GRANTED != grantResults[0])) {
-                aTalkApp.showToastMessage(R.string.audio_permission_denied_feedback);
+                aTalkApp.showToastMessage(R.string.mic_permission_denied_feedback);
             }
         }
         else if (requestCode == PRC_CAMERA) {

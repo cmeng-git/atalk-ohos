@@ -215,15 +215,14 @@ public class FileSendConversation extends FileTransferConversation implements Fi
      * is true; update also the msgCache (and ChatSession UI) to ensure the file send request will not
      * get trigger again. The msgCache record will be used for view display on chat session resume.
      *
-     * @param msgUuid The message UUID
      * @param status File transfer status
      */
     private void updateFTStatus(int status) {
         String fileName = mXferFile.getPath();
-//        if (mUpdateDB) {
-//            Timber.e("updateFTStatusToDB on status: %s; row count: %s", status,
-//                    mFHS.updateFTStatusToDB(msgUuid, status, fileName, mEncryption, ChatMessage.MESSAGE_FILE_TRANSFER_HISTORY));
-//        }
+        if (mUpdateDB) {
+            int count = mFHS.updateFTStatusToDB(msgUuid, status, fileName, mEncryption, ChatMessage.MESSAGE_FILE_TRANSFER_HISTORY);
+            Timber.d("updateFTStatusToDB on status: %s; row count: %s", status, count);
+        }
         mChatFragment.updateFTStatus(msgUuid, status, fileName, mEncryption, ChatMessage.MESSAGE_FILE_TRANSFER_HISTORY);
     }
 

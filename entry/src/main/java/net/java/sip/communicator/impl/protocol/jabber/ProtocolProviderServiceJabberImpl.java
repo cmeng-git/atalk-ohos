@@ -1600,25 +1600,29 @@ public class ProtocolProviderServiceJabberImpl extends AbstractProtocolProviderS
 
     /**
      * Enable or disable MAM service according per the give enable setting.
+     * Execute in new Thread to avoid ANR.
      *
      * @param connection XMPPConnection to act upon
      * @param enable set MAM service per the given value
      */
     public static void enableMam(XMPPConnection connection, boolean enable) {
-        MamManager mamManager = MamManager.getInstanceFor(connection, null);
-        try {
-            if (mamManager.isSupported()) {
-                if (enable) {
-                    mamManager.enableMamForAllMessages();
+        new Thread(() -> {
+            MamManager mamManager = MamManager.getInstanceFor(connection, null);
+            try {
+                if (mamManager.isSupported()) {
+                    if (enable) {
+                        mamManager.enableMamForAllMessages();
+                    }
+                    else {
+                        mamManager.setDefaultBehavior(MamPrefsIQ.DefaultBehavior.never);
+                    }
                 }
-                else {
-                    mamManager.setDefaultBehavior(MamPrefsIQ.DefaultBehavior.never);
-                }
+            } catch (NoResponseException | XMPPErrorException | NotConnectedException
+                     | SmackException.NotLoggedInException | InterruptedException e) {
+                Timber.e("Enable Mam For All Messages: %s", e.getMessage());
             }
-        } catch (NoResponseException | XMPPErrorException | NotConnectedException
-                 | SmackException.NotLoggedInException | InterruptedException e) {
-            Timber.e("Enable Mam For All Messages: %s", e.getMessage());
         }
+        ).start();
     }
 
     /**
@@ -2103,7 +2107,7 @@ public class ProtocolProviderServiceJabberImpl extends AbstractProtocolProviderS
         String[] featuresToRemove = new String[]{"http://jabber.org/protocol/commands"};
         String[] featuresToAdd = supportedFeatures.toArray(new String[0]);
 
-        scHelper = new ServiceDiscoveryHelper(mConnection, featuresToRemove, featuresToAdd);
+        scHelper = new ServiceDiscoveryHelper(this, mConnection, featuresToRemove, featuresToAdd);
         discoveryManager = ServiceDiscoveryManager.getInstanceFor(mConnection);
     }
 
@@ -2745,7 +2749,7 @@ public class ProtocolProviderServiceJabberImpl extends AbstractProtocolProviderS
      * @return <code>true</code> if the list of features is supported; otherwise, <code>false</code>
      */
     public boolean isFeatureListSupported(Jid jid, String... features) {
-        DiscoverInfo featureInfo = scHelper.discoverInfo(jid);
+        DiscoverInfo featureInfo = scHelper.discoverInfoNonBlocking(jid);
         if (featureInfo == null)
             return false;
 
@@ -3097,8 +3101,7 @@ public class ProtocolProviderServiceJabberImpl extends AbstractProtocolProviderS
 
             try {
                 discoverItems = discoveryManager.discoverItems(serviceName);
-            } catch (NoResponseException | NotConnectedException | XMPPException
-                     | InterruptedException ex) {
+            } catch (NoResponseException | NotConnectedException | XMPPException | InterruptedException ex) {
                 Timber.d(ex, "Failed to discover the items associated with Jabber entity: %s", serviceName);
             }
 

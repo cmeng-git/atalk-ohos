@@ -886,7 +886,7 @@
     <string name="contactinfo_user_pictures">Obrázky používateľov</string>
     <string name="contactinfo_status_message">Správa o stave</string>
 
-    <!-- Notification strings -->
+    <!-- Notification strings (do not change; getI18NString(NotificationSettings.NOTICE_PREFIX + eventType))-->
     <string name="notificationconfig_event_BusyCall">Obsadené volanie</string>
     <string name="notificationconfig_event_BusyCall_description">Popis obsadeného hovoru</string>
     <string name="notificationconfig_event_CallSaved">Hovor bol uložený</string>
@@ -1424,14 +1424,17 @@
     <string name="next">Ďalšie</string>
 
     <!-- Android Permissions -->
+    <string name="app_info">Info o aplikácii…</string>
     <string name="permission_app_info">Info o aplikácii</string>
     <string name="permission_request_all">Vyžiadať všetky</string>
-    <string name="permission_audio">Mikrofón</string>
     <string name="permission_camera">Kamera</string>
     <string name="permission_contacts">Kontakty</string>
     <string name="permission_location">Poloha</string>
+    <string name="permission_microphone">Mikrofón</string>
+    <string name="permission_music">Hudba a zvuk</string>
     <string name="permission_notifications">Upozornenia</string>
     <string name="permission_phone">Telefonovanie</string>
+    <string name="permission_video">Foto a video</string>
     <string name="permission_storage">Ukladovanie</string>
     <string name="permission_hint">Na podporu všetkých funkcií aTalk sa vyžaduje, aby ste udelili povolenia pre nasledujúce služby. Bez nich nemusia funkcie aTalk fungovať alebo môžu mať neočakávané správanie!</string>
 
@@ -1440,14 +1443,17 @@
     <string name="permission_denied_permanently">TRVALO ZAMIETNUTÉ</string>
     <string name="permission_unknown">NEZNÁMY STAV</string>
 
-    <string name="audio_permission_denied_dialog_title">Žiadosť o povolenie zvuku</string>
-    <string name="audio_permission_denied_feedback">Zvukový hovor nebude k dispozícii, kým nevyhoviete žiadosti o povolenie</string>
+    <string name="mic_permission_denied_dialog_title">Žiadosť o povolenie na nahrávanie zvuku</string>
+    <string name="mic_permission_denied_feedback">Zvukový hovor nebude k dispozícii, kým nevyhoviete žiadosti o povolenie</string>
 
     <string name="camera_permission_denied_dialog_title">Žiadosť o povolenie kamery</string>
     <string name="camera_permission_denied_feedback">Všetky aktivity súvisiace s kamerou nebudú k dispozícii, kým nevydáte žiadosť o povolenie</string>
 
     <string name="contacts_permission_denied_dialog_title">Žiadosť o povolenie kontaktov</string>
     <string name="contacts_permission_denied_feedback">Na prístup do stavu telefónu a nastavenie hovoru je potrebné povolenie kontaktov</string>
+
+    <string name="music_permission_denied_dialog_title">Žiadosť o povolenie pre hudbu a zvuk</string>
+    <string name="music_permission_denied_feedback">Mediálny zvukový súbor nebude prístupný, kým neschválite žiadosť o povolenie</string>
 
     <string name="location_permission_denied_dialog_title">Žiadosť o povolenie polohy</string>
     <string name="location_permission_denied_feedback">Funkcie GPS-Polohy nebudú k dispozícii, kým neudelíte žiadosť o povolenie</string>
@@ -1457,6 +1463,9 @@
 
     <string name="phone_permission_denied_dialog_title">Prečítajte si žiadosť o povolenie štátneho telefónu</string>
     <string name="phone_permission_denied_feedback">Telefónne funkcie nebudú k dispozícii, kým neudelíte žiadosť o povolenie</string>
+
+    <string name="video_permission_denied_dialog_title">Žiadosť o povolenie na fotografie a videá</string>
+    <string name="video_permission_denied_feedback">Mediálny súbor fotografií a videa nebude prístupný, kým neschválite žiadosť o povolenie</string>
 
     <string name="storage_permission_denied_dialog_title">Žiadosť o povolenie na ukladanie</string>
     <string name="storage_permission_denied_feedback">Ukladanie odoslaného a prijatého obsahu do úložiska nebude povolené, kým nevyhoviete žiadosti o povolenie</string>
@@ -1474,5 +1483,4 @@
     <string name="location_permission_dialog_message">Povoliť zisťovanie polohy?</string>
     <string name="location_services_off">Služba určovania polohy je VYPNUTÁ</string>
     <string name="open_location_settings">Povoliť služby určovania polohy?</string>
-
 </resources>

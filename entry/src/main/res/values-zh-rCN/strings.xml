@@ -887,7 +887,7 @@
     <string name="contactinfo_user_pictures">用户图片</string>
     <string name="contactinfo_status_message">状态短信</string>
 
-    <!-- Notification strings -->
+    <!-- Notification strings (do not change; getI18NString(NotificationSettings.NOTICE_PREFIX + eventType))-->
     <string name="notificationconfig_event_BusyCall">通话忙</string>
     <string name="notificationconfig_event_BusyCall_description">忙线说明</string>
     <string name="notificationconfig_event_CallSaved">通话已保存</string>
@@ -1427,14 +1427,17 @@
     <string name="next">下一步</string>
 
     <!-- Android Permissions -->
+    <string name="app_info">应用信息…</string>
     <string name="permission_app_info">应用信息</string>
     <string name="permission_request_all">请求所有</string>
-    <string name="permission_audio">音频</string>
     <string name="permission_camera">相机</string>
     <string name="permission_contacts">联系人</string>
     <string name="permission_location">位置</string>
+    <string name="permission_microphone">音频</string>
+    <string name="permission_music">音乐与音频</string>
     <string name="permission_notifications">通知</string>
     <string name="permission_phone">电话</string>
+    <string name="permission_video">照片和视频</string>
     <string name="permission_storage">存储空间</string>
     <string name="permission_hint">为了应用程序的最佳性能和完整的功能支持，aTalk 需要您授予以下服务的权限。没有它们，aTalk 可能无法工作或出现意外行为！</string>
 
@@ -1443,14 +1446,17 @@
     <string name="permission_denied_permanently">永久拒绝</string>
     <string name="permission_unknown">未知</string>
 
-    <string name="audio_permission_denied_dialog_title">音频权限请求</string>
-    <string name="audio_permission_denied_feedback">在您授予权限请求之前，音频通话将不可用</string>
+    <string name="mic_permission_denied_dialog_title">录音许可请求</string>
+    <string name="mic_permission_denied_feedback">在您授予权限请求之前，音频通话将不可用</string>
 
     <string name="camera_permission_denied_dialog_title">相机权限请求</string>
     <string name="camera_permission_denied_feedback">在您授予权限请求之前，所有与相机相关的活动都将不可用</string>
 
     <string name="contacts_permission_denied_dialog_title">联系人权限请求</string>
     <string name="contacts_permission_denied_feedback">电话状态访问和通话设置需要联系人权限</string>
+
+    <string name="music_permission_denied_dialog_title">音乐和音频许可请求</string>
+    <string name="music_permission_denied_feedback">在您授予权限请求之前，无法访问媒体音频文件</string>
 
     <string name="location_permission_denied_dialog_title">位置权限请求</string>
     <string name="location_permission_denied_feedback">在您授予权限请求之前，GPS 定位功能将不可用</string>
@@ -1460,6 +1466,9 @@
 
     <string name="phone_permission_denied_dialog_title">读取手机状态权限请求</string>
     <string name="phone_permission_denied_feedback">在您授予权限请求之前，手机功能将不可用</string>
+
+    <string name="video_permission_denied_dialog_title">照片和视频许可请求</string>
+    <string name="video_permission_denied_feedback">在您授予权限请求之前，无法访问媒体照片和视频文件</string>
 
     <string name="storage_permission_denied_dialog_title">存储权限请求</string>
     <string name="storage_permission_denied_feedback">在您授予权限请求之前，不允许将发送和接收的内容保存在存储中</string>
@@ -1477,5 +1486,4 @@
     <string name="location_permission_dialog_message">现在启用位置权限吗？</string>
     <string name="location_services_off">定位服务关闭</string>
     <string name="open_location_settings">现在启用定位服务吗？</string>
-
 </resources>

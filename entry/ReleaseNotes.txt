@@ -1,9 +1,24 @@
 Project aTalk-ohos Release Notes
 =========================================================================
-Version:        00.04.001 (0004001)
-Release Date:   04/03/2024
+Version:        00.04.010 (0004010)
+Release Date:   05/02/2024
 Author:         cmeng
-- Source reformat and cleanup.
+- Add new permissions required for API-34 and change UI to support.
+- Add 'App Info' option in main menu to view/change aTalk permission settings; different android devices have own implementations.
+- Check and skip process for duplicated presence with caps sent from server; OperationSetPersistentPresenceJabberImpl#userCapsNodeNotify() process.
+- Add CapExtension flag in ContactPresenceStatusChangeEvent, and remove unused constructor.
+- Must handle userCapsNode Notify for presence goes offline for fullJid; else call options on UI are not updated.
+- ReImplement ServiceDiscoveryHelper#discoverInfoNonBlocking() to minimize device ANR.
+- Fix send file status not being updated to DB, and remain at STATUS_WAITING; accidentally commented out since v3.2.2.
+- Http Download to proceed with auto-download only if the file size from server is known.
+- In API-34, a file selected via picker for sending may be a url link temporary created by android system for file sharing;
+  this url link is invalid and not accessible to aTalk when user returns to the chat UI again. The url link is
+  i.e. /storage/emulated/0/.transforms/synthetic/picker/0/com.android.providers.media.photopicker/media/1000000043.jpg
+- Execute purgeCorruptedOmemoKey() in new Thread to avoid ANR.
+- Upgrade smack libraries to 4.4.8.
+- Migrate com.google.android.exoplayer:exoplayer:2.19.1 to androidx.media3:media3-exoplayer:1.3.1.
+- Simplify String parameter names and clean up unused resources.
+- Add aTalk.doap file.
 
 =========================================================================
 Version:        00.04.000 (0004000)

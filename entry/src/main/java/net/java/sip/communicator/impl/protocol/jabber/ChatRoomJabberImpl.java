@@ -2522,7 +2522,7 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
         EntityBareJid room = mMultiUserChat.getRoom();
         try {
             // Do not use getRoomInfo, as it has bug and throws NPE
-//            DiscoverInfo info = ServiceDiscoveryManager.getInstanceFor(mProvider.getConnection()).discoverInfo(room);
+//            DiscoverInfo info = mPPS.getScHelper().discoverInfo(room);
 //            if (info != null)
 //                persistent = info.containsFeature("muc_persistent");
 
@@ -2995,6 +2995,6 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
         // When status changes this may be related to a change in the available resources.
         ((ContactJabberImpl) contact).updatePresenceStatus(offlineStatus);
         presenceOpSet.fireContactPresenceStatusChangeEvent(contact, contact.getJid(), contact.getParentContactGroup(),
-                oldContactStatus, offlineStatus, false);
+                oldContactStatus, offlineStatus, false, false);
     }
 }

@@ -417,7 +417,6 @@ public class ChatActivity extends OSGiActivity
                 chatRoomConfig.onBackPressed();
             }
             else if (mPlayerContainer.getVisibility() == View.VISIBLE) {
-                mPlayerContainer.setVisibility(View.GONE);
                 releasePlayer();
             }
             else {
@@ -1158,11 +1157,12 @@ public class ChatActivity extends OSGiActivity
     /**
      * Release the exoPlayer resource on end
      */
-    private void releasePlayer() {
+    public void releasePlayer() {
         // remove the existing player view
         Fragment playerView = getSupportFragmentManager().findFragmentById(R.id.player_container);
         if (playerView != null)
             getSupportFragmentManager().beginTransaction().remove(playerView).commit();
+        mPlayerContainer.setVisibility(View.GONE);
 
         if (mExoPlayer != null) {
             mExoPlayer.releasePlayer();

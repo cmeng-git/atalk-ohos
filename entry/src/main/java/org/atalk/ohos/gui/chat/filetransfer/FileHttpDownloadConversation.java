@@ -265,10 +265,8 @@ public class FileHttpDownloadConversation extends FileTransferConversation
         setFileTransfer(httpFileTransferJabber, fileSize);
         messageViewHolder.fileLabel.setText(getFileLabel(fileName, fileSize));
 
-        if (fileSize <= 0) {
-            aTalkApp.showToastMessage(R.string.file_does_not_exist);
-        }
-        else if (ConfigurationUtils.isAutoAcceptFile(fileSize)) {
+        // Check for auto-download only if the file size is not zero
+        if (fileSize > 0 && ConfigurationUtils.isAutoAcceptFile(fileSize)) {
             startDownload();
         }
     }

@@ -1266,7 +1266,7 @@ public class ChatFragment extends OSGiFragment implements ChatSessionManager.Cur
                     // Update MessageDisplay to take care when view is refresh e.g. new message arrived or scroll
                     ChatMessage chatMessage = message.updateDeliveryStatus(msgId, receiptStatus);
 
-                    Timber.e("new Message Receipt: %s", msgId);
+                    // Timber.d("new Message Receipt: %s", msgId);
                     MessageViewHolder viewHolder = viewHolders.get(index);
                     runOnUiThread(() -> {
                         if (viewHolder != null) {

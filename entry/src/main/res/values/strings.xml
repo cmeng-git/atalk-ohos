@@ -1086,7 +1086,7 @@
     <string name="security_encryption_protocols">Encryption protocols</string>
     <string name="security_rtp_savp">RTP/SAVP indication</string>
     <string name="security_rtp_savp_title">RTP/SAVP indication method</string>
-    <string name="security_sdes">SDes options</string>
+    <string name="security_sdes">SDES options</string>
     <string name="security_sdes_dlg_title">Select desired cipher suites</string>
     <string name="security_sdes_title">SDES cipher suites</string>
     <string name="security_zrtp_options">ZRTP options</string>
@@ -1428,14 +1428,17 @@
     <string name="next">Next</string>
 
     <!-- Android Permissions -->
+    <string name="app_info">App Info…</string>
     <string name="permission_app_info">App Info</string>
     <string name="permission_request_all">Request all</string>
-    <string name="permission_audio">Audio</string>
     <string name="permission_camera">Camera</string>
     <string name="permission_contacts">Contacts</string>
     <string name="permission_location">Location</string>
+    <string name="permission_microphone">Microphone</string>
+    <string name="permission_music">Music &amp; Audio</string>
     <string name="permission_notifications">Notifications</string>
     <string name="permission_phone">Phone</string>
+    <string name="permission_video">Photo &amp; Video</string>
     <string name="permission_storage">Storage</string>
     <string name="permission_hint">For application maximum performance and full features support, aTalk requires you to grant permissions for the following services. Without them, aTalk may not work or may have unexpected behavior!</string>
 
@@ -1444,14 +1447,17 @@
     <string name="permission_denied_permanently">PERMANENTLY DENIED</string>
     <string name="permission_unknown">UNKNOWN</string>
 
-    <string name="audio_permission_denied_dialog_title">Audio permission request</string>
-    <string name="audio_permission_denied_feedback">Audio call will not be available until you grant the permission request</string>
+    <string name="mic_permission_denied_dialog_title">Audio recording permission request</string>
+    <string name="mic_permission_denied_feedback">Audio call will not be available until you grant the permission request</string>
 
     <string name="camera_permission_denied_dialog_title">Camera permission request</string>
     <string name="camera_permission_denied_feedback">All camera associated activities will not be available until you grant the permission request</string>
 
     <string name="contacts_permission_denied_dialog_title">Contacts permission request</string>
     <string name="contacts_permission_denied_feedback">Contacts permission is needed for phone state access and call setup</string>
+
+    <string name="music_permission_denied_dialog_title">Music and audio permission request</string>
+    <string name="music_permission_denied_feedback">Media audio file is not accessible until you grant the permission request</string>
 
     <string name="location_permission_denied_dialog_title">Location permission request</string>
     <string name="location_permission_denied_feedback">GPS-Location features will not be available until you grant the permission request</string>
@@ -1461,6 +1467,9 @@
 
     <string name="phone_permission_denied_dialog_title">Read Phone State permission request</string>
     <string name="phone_permission_denied_feedback">Phone features will not be available until you grant the permission request</string>
+
+    <string name="video_permission_denied_dialog_title">Photo and video permission request</string>
+    <string name="video_permission_denied_feedback">Media photo and video file is not accessible until you grant the permission request</string>
 
     <string name="storage_permission_denied_dialog_title">Storage permission request</string>
     <string name="storage_permission_denied_feedback">Saving of sent and received contents in storage will not be allowed until you grant the permission request</string>
@@ -1473,10 +1482,9 @@
     <string name="permission_rationale_settings_button_text">SETTINGS</string>
     <string name="permission_rationale_title">aTalk needs permissions</string>
 
-	<!--Location string constant -->
+    <!--Location string constant -->
     <string name="location_permission_dialog_title">Location permission needed</string>
     <string name="location_permission_dialog_message">Enable Location permission now?</string>
     <string name="location_services_off">Location services OFF</string>
     <string name="open_location_settings">Enable location services now?</string>
-
 </resources>

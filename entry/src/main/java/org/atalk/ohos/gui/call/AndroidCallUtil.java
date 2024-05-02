@@ -111,6 +111,11 @@ public class AndroidCallUtil {
         Contact contact = metaContact.getDefaultContact();
         Jid callee = contact.getJid();
         ProtocolProviderService pps = contact.getProtocolProvider();
+        if (!pps.isRegistered()) {
+            aTalkApp.showToastMessage(R.string.create_call_failed);
+            return;
+        }
+
         boolean isJmSupported = metaContact.isFeatureSupported(JingleMessage.NAMESPACE);
         if (isJmSupported) {
             JingleMessageSessionImpl.sendJingleMessagePropose(pps.getConnection(), callee, isVideoCall);

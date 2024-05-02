@@ -60,6 +60,7 @@ import org.atalk.ohos.gui.contactlist.ContactListFragment;
 import org.atalk.ohos.gui.contactlist.model.MetaContactListAdapter;
 import org.atalk.ohos.gui.settings.SettingsActivity;
 import org.atalk.ohos.plugin.geolocation.GeoLocationActivity;
+import org.atalk.ohos.plugin.permissions.PermissionsActivity;
 import org.atalk.ohos.plugin.textspeech.TTSActivity;
 import org.osgi.framework.ServiceEvent;
 import org.osgi.framework.ServiceListener;
@@ -149,8 +150,8 @@ public class MainMenuActivity extends ExitMenuActivity implements ServiceListene
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
         TextView textView = searchView.findViewById(R.id.search_src_text);
-        textView.setTextColor(getResources().getColor(R.color.white));
-        textView.setHintTextColor(getResources().getColor(R.color.white));
+        textView.setTextColor(getResources().getColor(R.color.white, null));
+        textView.setHintTextColor(getResources().getColor(R.color.white, null));
         textView.setHint(R.string.enter_name_or_number);
 
         // cmeng: 20191220 <= disable videoBridge until implementation
@@ -302,6 +303,9 @@ public class MainMenuActivity extends ExitMenuActivity implements ServiceListene
                 break;
             case R.id.account_settings:
                 startActivity(AccountsListActivity.class);
+                break;
+            case R.id.app_info:
+                PermissionsActivity.onInfoButtonClicked(this);
                 break;
             case R.id.tts_settings:
                 Intent ttsIntent = new Intent(this, TTSActivity.class);

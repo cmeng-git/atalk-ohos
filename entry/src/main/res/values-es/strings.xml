@@ -896,7 +896,7 @@
     <string name="contactinfo_user_pictures">Imágenes de usuario</string>
     <string name="contactinfo_status_message">Mensaje de estado</string>
 
-    <!-- Notification strings -->
+    <!-- Notification strings (do not change; getI18NString(NotificationSettings.NOTICE_PREFIX + eventType))-->
     <string name="notificationconfig_event_BusyCall">Llamada Ocupada</string>
     <string name="notificationconfig_event_BusyCall_description">Descripción de la llamada ocupada</string>
     <string name="notificationconfig_event_CallSaved">Llamada guardada</string>
@@ -1437,14 +1437,17 @@
     <string name="next">Siguiente</string>
 
     <!-- Android Permissions -->
-    <string name="permission_app_info">Información de la App</string>
+    <string name="app_info">Información de la App</string>
+    <string name="permission_app_info">Información de la App…</string>
     <string name="permission_request_all">Todos</string>
-    <string name="permission_audio">Audio</string>
     <string name="permission_camera">Cámara</string>
     <string name="permission_contacts">Contactos</string>
     <string name="permission_location">Localización</string>
+    <string name="permission_microphone">Audio</string>
+    <string name="permission_music">Música y audio</string>
     <string name="permission_notifications">Notificaciones</string>
     <string name="permission_phone">Teléfono</string>
+    <string name="permission_video">Foto y vídeo</string>
     <string name="permission_storage">Almacenamiento</string>
     <string name="permission_hint">¡Para obtener el máximo rendimiento de la aplicación y compatibilidad con todas las funciones, aTalk requiere que otorgues los permisos para los siguientes servicios. Sin ellos, aTalk puede no funcionar o tener un comportamiento inesperado!</string>
 
@@ -1453,14 +1456,17 @@
     <string name="permission_denied_permanently">DENEGADO PERMANENTEMENTE</string>
     <string name="permission_unknown">DESCONOCIDO</string>
 
-    <string name="audio_permission_denied_dialog_title">Solicitud de permiso de audio</string>
-    <string name="audio_permission_denied_feedback">La llamada de audio no estará disponible hasta que concedas la solicitud de permiso</string>
+    <string name="mic_permission_denied_dialog_title">Solicitud de permiso de grabación de audio</string>
+    <string name="mic_permission_denied_feedback">La llamada de audio no estará disponible hasta que concedas la solicitud de permiso</string>
 
     <string name="camera_permission_denied_dialog_title">Solicitud de permiso de cámara</string>
     <string name="camera_permission_denied_feedback">Ninguna actividad asociada a la cámara estará disponible hasta que otorgues la solicitud de permiso</string>
 
     <string name="contacts_permission_denied_dialog_title">Solicitud de permiso de contactos</string>
     <string name="contacts_permission_denied_feedback">El permiso de los contactos es necesario para el acceso al estado del teléfono y la configuración de llamadas.</string>
+
+    <string name="music_permission_denied_dialog_title">Solicitud de permiso de música y audio.</string>
+    <string name="music_permission_denied_feedback">No se puede acceder al archivo de audio multimedia hasta que usted conceda la solicitud de permiso</string>
 
     <string name="location_permission_denied_dialog_title">Solicitud de permiso de ubicación</string>
     <string name="location_permission_denied_feedback">Las funciones de localización GPS no estarán disponibles hasta que concedas la solicitud de permiso.</string>
@@ -1470,6 +1476,9 @@
 
     <string name="phone_permission_denied_dialog_title">Solicitud de permiso para leer estado del teléfono</string>
     <string name="phone_permission_denied_feedback">Las funciones del teléfono no estarán disponibles hasta que otorgues la solicitud de permiso</string>
+
+    <string name="video_permission_denied_dialog_title">Solicitud de permiso de fotografía y vídeo.</string>
+    <string name="video_permission_denied_feedback">No se puede acceder al archivo multimedia de fotografía y vídeo hasta que usted conceda la solicitud de permiso</string>
 
     <string name="storage_permission_denied_dialog_title">Solicitud de permiso de almacenamiento</string>
     <string name="storage_permission_denied_feedback">No se permitirá guardar el contenido enviado y recibido en un almacenamiento hasta que concedas la solicitud de permiso.</string>

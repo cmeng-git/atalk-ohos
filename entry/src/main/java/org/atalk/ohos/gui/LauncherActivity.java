@@ -116,8 +116,11 @@ public class LauncherActivity extends OSGiActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mProgressBar.clearAnimation();
-        myImageView.clearAnimation();
+        // Null if user re-launch aTalk while it is in shutting down cycle.
+        if (mProgressBar != null)
+            mProgressBar.clearAnimation();
+        if (myImageView != null)
+            myImageView.clearAnimation();
     }
 
     private void setupStrictMode() {
