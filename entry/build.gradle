@@ -51,8 +51,8 @@ android {
         applicationId "org.atalk.ohos"
         archivesBaseName = "aTalk"
 
-        versionCode 4010
-        versionName "00.04.010"
+        versionCode 5000
+        versionName "00.05.000"
 
         minSdkVersion rootProject.minSdk
         targetSdkVersion rootProject.compileSdk
@@ -198,12 +198,12 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     // 1.12.0 is only compatible with API-34
-    implementation 'androidx.core:core-ktx:1.13.0'
+    implementation 'androidx.core:core-ktx:1.13.1'
 
     implementation 'androidx.activity:activity-ktx:1.9.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'androidx.fragment:fragment-ktx:1.6.2'
+    implementation 'androidx.fragment:fragment-ktx:1.7.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.legacy:legacy-support-v13:1.0.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
@@ -230,7 +230,7 @@ dependencies {
 
     implementation 'com.github.yalantis:ucrop:2.2.8'
     // Do not update to 1.7.x or higher; has problem and reported need to use gradle 7 which is not compatible with aTalk.
-    implementation 'com.google.android.material:material:1.11.0'
+    implementation 'com.google.android.material:material:1.12.0'
 
     implementation 'com.googlecode.libphonenumber:libphonenumber:8.12.29'
     implementation 'com.jakewharton.threetenabp:threetenabp:1.4.2'
@@ -406,6 +406,9 @@ dependencies {
 
         // Fix AbstractMethodError: source in aTalk local directory and with in file QNAME defined
         classDelete 'org.jivesoftware.smackx.jingle_filetransfer.element.JingleFileTransferChild**'
+
+        // Support Thumbnail parsing.
+        classDelete 'org.jivesoftware.smackx.jingle_filetransfer.provider.JingleFileTransferProvider**'
     }
 
     // smack-extensions
@@ -421,6 +424,14 @@ dependencies {
         classDelete 'org.jivesoftware.smackx.chatstates.ChatStateManager**'
         // Stop duplicate <presence/> sending if Configuration.isSendPresence() is false
         classDelete 'org.jivesoftware.smackx.disco.ServiceDiscoveryManager**'
+
+        // Support XEP-0264: Jingle Content Thumbnails in XEP-0096: SI File Transfer
+        classDelete 'org.jivesoftware.smackx.filetransfer.FileTransferNegotiator**'
+        classDelete 'org.jivesoftware.smackx.filetransfer.FileTransferRequest**'
+        classDelete 'org.jivesoftware.smackx.filetransfer.OutgoingFileTransfer**'
+        // Custom smack classes that handle the XEP-0264 <File/> element
+        classDelete 'org.jivesoftware.smackx.si.packet.StreamInitiation**'
+        classDelete 'org.jivesoftware.smackx.si.provider.StreamInitiationProvider**'
 
         classDelete 'org.jivesoftware.smackx.jingle.JingleManager**'
         classDelete 'org.jivesoftware.smackx.jingle.JingleUtil**'
