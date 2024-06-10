@@ -123,7 +123,7 @@ It supports the following XEP's, standards for XMPP clients.
 * [XEP-0260: Jingle SOCKS5 Bytestreams Transport Method 1.0.3](https://xmpp.org/extensions/xep-0260.html)
 * [XEP-0261: Jingle In-Band Bytestreams Transport Method 1.0](https://xmpp.org/extensions/xep-0261.html)
 * [XEP-0262: Use of ZRTP in Jingle RTP Sessions 1.0](https://xmpp.org/extensions/xep-0262.html)
-* [XEP-0264: File Transfer Thumbnails 0.4](https://xmpp.org/extensions/xep-0264.html)
+* [XEP-0264: Jingle Content Thumbnails 0.4.1](https://xmpp.org/extensions/xep-0264.html)
 * [XEP-0278: Jingle Relay Nodes 0.4.1](https://xmpp.org/extensions/xep-0278.html)
 * [XEP-0280: Message Carbons 1.0.1](https://xmpp.org/extensions/xep-0280.html)
 * [XEP-0293: Jingle RTP Feedback Negotiation 1.0.2](https://xmpp.org/extensions/xep-0293.html)
