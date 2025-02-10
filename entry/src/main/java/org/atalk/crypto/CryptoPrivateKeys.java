@@ -44,10 +44,10 @@ import net.java.sip.communicator.util.account.AccountUtils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.atalk.crypto.omemo.SQLiteOmemoStore;
+import org.atalk.ohos.BaseActivity;
 import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.util.ViewUtil;
-import org.atalk.service.osgi.OSGiActivity;
 import org.atalk.util.CryptoHelper;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smackx.omemo.OmemoManager;
@@ -64,7 +64,7 @@ import timber.log.Timber;
  *
  * @author Eng Chong Meng
  */
-public class CryptoPrivateKeys extends OSGiActivity {
+public class CryptoPrivateKeys extends BaseActivity {
     private static final String OMEMO = "OMEMO:";
 
     /**

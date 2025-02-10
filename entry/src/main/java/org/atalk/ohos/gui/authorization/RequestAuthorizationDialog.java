@@ -10,10 +10,10 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 
+import org.atalk.ohos.BaseActivity;
 import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.util.ViewUtil;
-import org.atalk.service.osgi.OSGiActivity;
 
 /**
  * This dialog is displayed in order to prepare the authorization request that has to be sent to
@@ -22,7 +22,7 @@ import org.atalk.service.osgi.OSGiActivity;
  * @author Pawel Domas
  * @author Eng Chong Meng
  */
-public class RequestAuthorizationDialog extends OSGiActivity {
+public class RequestAuthorizationDialog extends BaseActivity {
     /**
      * Request identifier extra key.
      */

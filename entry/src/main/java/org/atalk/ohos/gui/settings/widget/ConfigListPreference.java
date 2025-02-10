@@ -13,7 +13,7 @@ import androidx.preference.ListPreference;
 import androidx.preference.PreferenceManager;
 
 import org.atalk.ohos.R;
-import org.atalk.ohos.gui.AndroidGUIActivator;
+import org.atalk.ohos.gui.AppGUIActivator;
 import org.atalk.service.configuration.ConfigurationService;
 
 /**
@@ -86,7 +86,7 @@ public class ConfigListPreference extends ListPreference {
      */
     @Override
     protected String getPersistedString(String defaultReturnValue) {
-        ConfigurationService configService = AndroidGUIActivator.getConfigurationService();
+        ConfigurationService configService = AppGUIActivator.getConfigurationService();
         if (configService == null)
             return defaultReturnValue;
 
@@ -100,7 +100,7 @@ public class ConfigListPreference extends ListPreference {
     protected boolean persistString(String value) {
         super.persistString(value);
 
-        ConfigurationService configService = AndroidGUIActivator.getConfigurationService();
+        ConfigurationService configService = AppGUIActivator.getConfigurationService();
         if (configService == null)
             return false;
 

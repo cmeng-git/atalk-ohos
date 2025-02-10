@@ -33,9 +33,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.atalk.ohos.BaseActivity;
 import org.atalk.ohos.R;
 import org.atalk.ohos.gui.util.ViewUtil;
-import org.atalk.service.osgi.OSGiActivity;
 import org.atalk.util.CryptoHelper;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smackx.omemo.OmemoManager;
@@ -54,7 +54,7 @@ import timber.log.Timber;
  *
  * @author Eng Chong Meng
  */
-public class OmemoAuthenticateDialog extends OSGiActivity {
+public class OmemoAuthenticateDialog extends BaseActivity {
     public final static String Corrupted_OmemoKey = "Corrupted OmemoKey, purge?";
 
     private static OmemoManager mOmemoManager;

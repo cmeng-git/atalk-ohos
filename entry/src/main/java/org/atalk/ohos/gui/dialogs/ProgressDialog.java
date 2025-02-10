@@ -14,10 +14,10 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.atalk.ohos.BaseFragment;
 import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.util.ViewUtil;
-import org.atalk.service.osgi.OSGiFragment;
 
 /**
  * Fragment can be used to display indeterminate progress dialogs.
@@ -25,7 +25,7 @@ import org.atalk.service.osgi.OSGiFragment;
  * @author Pawel Domas
  * @author Eng Chong Meng
  */
-public class ProgressDialog extends OSGiFragment {
+public class ProgressDialog extends BaseFragment {
     /**
      * Argument used to retrieve the message that will be displayed next to the progress bar.
      */

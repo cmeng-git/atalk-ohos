@@ -17,8 +17,6 @@
 
 package org.jivesoftware.smackx.avatar.vcardavatar;
 
-import android.text.TextUtils;
-
 import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.logging.Level;
@@ -29,6 +27,7 @@ import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.SmackException.NoResponseException;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.StanzaListener;
+import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPConnectionRegistry;
 import org.jivesoftware.smack.XMPPException;
@@ -186,7 +185,7 @@ public class VCardAvatarManager extends AvatarManager {
 
                 // save if new image to persistent cache and get its avatarHash
                 String newAvatarId = addAvatarImage(avatarImage);
-                if (!newAvatarId.equals(oldAvatarId)) {
+                if (newAvatarId != null && !newAvatarId.equals(oldAvatarId)) {
                     // add an index hash for the jid
                     addJidToAvatarHashIndex(from, newAvatarId);
                     /*
@@ -196,7 +195,7 @@ public class VCardAvatarManager extends AvatarManager {
                      * - skip if currentAvatarHash.equals(avatarId)
                      *	   => cache and persistent not sync (pre-checked)
                      */
-                    if (!TextUtils.isEmpty(oldAvatarId)
+                    if (!StringUtils.isNullOrEmpty(oldAvatarId)
                             && !isHashMultipleOwner(from, oldAvatarId))
                         persistentAvatarCache.purgeItemFor(oldAvatarId);
 
@@ -269,7 +268,7 @@ public class VCardAvatarManager extends AvatarManager {
         // Timber.d("Received vcard-temp: %s %s '%s'", from, oldAvatarId, newAvatarId);
 
         /* acts if only avatarId is received. null => client not ready so no action */
-        if (!TextUtils.isEmpty(newAvatarId) && isAvatarNew(from, newAvatarId)) {
+        if (!StringUtils.isEmpty(newAvatarId) && isAvatarNew(from, newAvatarId)) {
             /*
              * If autoDownload is enabled, download VCard and it will also update all
              * relevant avatar information if download is successful
@@ -298,7 +297,7 @@ public class VCardAvatarManager extends AvatarManager {
         }
 
         // i.e. photo element without avatar id specified. null => not ready so not process
-        else if (newAvatarId != null && newAvatarId.length() == 0 && getAvatarHashByJid(from) != null) {
+        else if (newAvatarId != null && newAvatarId.isEmpty() && getAvatarHashByJid(from) != null) {
             purgeAvatarImageByJid(from);
             fireListeners(from, oldAvatarId, null);
             // LOGGER.log(Level.WARNING, "Disable process vcard-temp for photo without hash; send by ejabberd server"

@@ -5,7 +5,7 @@
  */
 package org.atalk.ohos.gui.call.notification;
 
-import static org.atalk.impl.androidtray.NotificationPopupHandler.getPendingIntentFlag;
+import static org.atalk.impl.appstray.NotificationPopupHandler.getPendingIntentFlag;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -22,12 +22,12 @@ import net.java.sip.communicator.service.protocol.event.CallChangeEvent;
 import net.java.sip.communicator.service.protocol.event.CallChangeListener;
 import net.java.sip.communicator.service.protocol.event.CallPeerEvent;
 
+import org.atalk.impl.appnotification.AppNotifications;
 import org.atalk.ohos.R;
 import org.atalk.ohos.gui.call.CallManager;
 import org.atalk.ohos.gui.call.CallUIUtils;
 import org.atalk.ohos.gui.call.VideoCallActivity;
-import org.atalk.ohos.gui.util.AndroidImageUtil;
-import org.atalk.impl.androidnotification.AndroidNotifications;
+import org.atalk.ohos.util.AppImageUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -117,7 +117,7 @@ public class CallNotificationManager
         CallPeer callPeer = call.getCallPeers().next();
         byte[] avatar = CallUIUtils.getCalleeAvatar(call);
         if (avatar != null) {
-            contentView.setImageViewBitmap(R.id.avatarView, AndroidImageUtil.bitmapFromBytes(avatar));
+            contentView.setImageViewBitmap(R.id.avatarView, AppImageUtil.bitmapFromBytes(avatar));
         }
         contentView.setTextViewText(R.id.calleeDisplayName, callPeer.getDisplayName());
 
@@ -126,7 +126,7 @@ public class CallNotificationManager
         requestCodes.put(mCallId, requestCodeBase);
         setIntents(context, contentView, requestCodeBase);
 
-        Notification notification = new NotificationCompat.Builder(context, AndroidNotifications.CALL_GROUP)
+        Notification notification = new NotificationCompat.Builder(context, AppNotifications.CALL_GROUP)
                 .setWhen(System.currentTimeMillis())
                 .setSmallIcon(R.drawable.missed_call)
                 .setStyle(new NotificationCompat.DecoratedCustomViewStyle())

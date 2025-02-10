@@ -54,7 +54,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.atalk.crypto.omemo.OmemoAuthenticateDialog;
 import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
-import org.atalk.ohos.gui.AndroidGUIActivator;
+import org.atalk.ohos.gui.AppGUIActivator;
 import org.atalk.ohos.gui.chat.ChatMessage;
 import org.atalk.ohos.gui.chat.conference.CaptchaDialog;
 import org.atalk.ohos.gui.chat.conference.ConferenceChatManager;
@@ -325,7 +325,7 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
         invitationRejectionListeners = new InvitationRejectionListeners();
         multiUserChat.addInvitationRejectionListener(invitationRejectionListeners);
 
-        ConferenceChatManager conferenceChatManager = AndroidGUIActivator.getUIService().getConferenceChatManager();
+        ConferenceChatManager conferenceChatManager = AppGUIActivator.getUIService().getConferenceChatManager();
         addMessageListener(conferenceChatManager);
     }
 

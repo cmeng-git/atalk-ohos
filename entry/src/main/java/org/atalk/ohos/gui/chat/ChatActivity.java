@@ -5,15 +5,12 @@
  */
 package org.atalk.ohos.gui.chat;
 
-import static org.atalk.persistance.FileBackend.getMimeType;
-
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.location.Location;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
@@ -27,7 +24,6 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -48,6 +44,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.Executors;
 
 import net.java.sip.communicator.impl.muc.ChatRoomWrapperImpl;
 import net.java.sip.communicator.impl.muc.MUCActivator;
@@ -68,11 +65,12 @@ import net.sf.fmj.utility.IOUtils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.atalk.crypto.CryptoFragment;
+import org.atalk.ohos.BaseActivity;
 import org.atalk.ohos.MyGlideApp;
 import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.actionbar.ActionBarUtil;
-import org.atalk.ohos.gui.call.AndroidCallUtil;
+import org.atalk.ohos.gui.call.AppCallUtil;
 import org.atalk.ohos.gui.call.telephony.TelephonyFragment;
 import org.atalk.ohos.gui.chat.conference.ChatInviteDialog;
 import org.atalk.ohos.gui.chat.conference.ConferenceChatSession;
@@ -85,7 +83,7 @@ import org.atalk.ohos.gui.dialogs.AttachOptionDialog;
 import org.atalk.ohos.gui.dialogs.AttachOptionItem;
 import org.atalk.ohos.gui.share.Attachment;
 import org.atalk.ohos.gui.share.MediaPreviewAdapter;
-import org.atalk.ohos.gui.util.AndroidUtils;
+import org.atalk.ohos.gui.util.AppUtils;
 import org.atalk.ohos.gui.util.EntityListHelper;
 import org.atalk.ohos.plugin.audioservice.AudioBgService;
 import org.atalk.ohos.plugin.geolocation.GeoLocationActivity;
@@ -94,7 +92,6 @@ import org.atalk.ohos.plugin.mediaplayer.MediaExoPlayerFragment;
 import org.atalk.ohos.plugin.mediaplayer.YoutubePlayerFragment;
 import org.atalk.persistance.FileBackend;
 import org.atalk.persistance.FilePathHelper;
-import org.atalk.service.osgi.OSGiActivity;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
@@ -114,7 +111,7 @@ import timber.log.Timber;
  * @author Pawel Domas
  * @author Eng Chong Meng
  */
-public class ChatActivity extends OSGiActivity
+public class ChatActivity extends BaseActivity
         implements OnPageChangeListener, EntityListHelper.TaskCompleteListener, GeoLocationBase.LocationListener,
         ChatRoomConfiguration.ChatRoomConfigListener, LocalUserChatRoomPresenceListener {
     private static final int REQUEST_CODE_OPEN_FILE = 105;
@@ -223,9 +220,10 @@ public class ChatActivity extends OSGiActivity
 
         // If chat notification has been clicked and OSGi service has been killed in the meantime,
         // then we have to start it and restore this activity
-        if (postRestoreIntent()) {
-            return;
-        }
+//        if (postRestoreIntent()) {
+//            return;
+//        }
+
         // Add fragment for crypto padLock for OMEMO before start pager
         cryptoFragment = new CryptoFragment();
         getSupportFragmentManager().beginTransaction().add(cryptoFragment, CRYPTO_FRAGMENT).commit();
@@ -362,7 +360,7 @@ public class ChatActivity extends OSGiActivity
         }
 
         // Clear last chat intent
-        AndroidUtils.clearGeneralNotification(aTalkApp.getInstance());
+        AppUtils.clearGeneralNotification(aTalkApp.getInstance());
     }
 
     /**
@@ -403,7 +401,7 @@ public class ChatActivity extends OSGiActivity
         }
 
         // Leave last chat intent by updating general notification
-        AndroidUtils.clearGeneralNotification(aTalkApp.getInstance());
+        AppUtils.clearGeneralNotification(aTalkApp.getInstance());
     }
 
     /**
@@ -414,7 +412,7 @@ public class ChatActivity extends OSGiActivity
         // Close the activity when back button is pressed
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (chatRoomConfig != null) {
-                chatRoomConfig.onBackPressed();
+                chatRoomConfig.handleBackPressed();
             }
             else if (mPlayerContainer.getVisibility() == View.VISIBLE) {
                 releasePlayer();
@@ -651,7 +649,7 @@ public class ChatActivity extends OSGiActivity
                     return true;
 
                 case R.id.chatroom_info_change:
-                    new ChatRoomInfoChangeDialog().show(this, chatRoomWrapper);
+                    new ChatRoomInfoChangeDialog().show(chatRoomWrapper);
                     return true;
 
                 case R.id.chatroom_config:
@@ -673,7 +671,7 @@ public class ChatActivity extends OSGiActivity
                 case R.id.show_chatroom_occupant:
                     StringBuilder memberList = new StringBuilder();
                     List<ChatRoomMember> occupants = chatRoom.getMembers();
-                    if (occupants.size() > 0) {
+                    if (!occupants.isEmpty()) {
                         for (ChatRoomMember member : occupants) {
                             ChatRoomMemberJabberImpl occupant = (ChatRoomMemberJabberImpl) member;
                             memberList.append(occupant.getNickName())
@@ -722,7 +720,7 @@ public class ChatActivity extends OSGiActivity
                     isAudioCall = true;  // fall through to start either audio / video call
 
                 case R.id.call_contact_video:
-                    AndroidCallUtil.createCall(this, selectedChatPanel.getMetaContact(),
+                    AppCallUtil.createCall(this, selectedChatPanel.getMetaContact(),
                             (isAudioCall == null), null);
                     return true;
             }
@@ -745,7 +743,7 @@ public class ChatActivity extends OSGiActivity
             // selectedSession.msgListeners.notifyDataSetChanged(); // all registered contact chart
         }
         else {
-            showToastMessage(R.string.history_purge_error);
+            aTalkApp.showToastMessage(R.string.history_purge_error);
         }
     }
 
@@ -886,10 +884,11 @@ public class ChatActivity extends OSGiActivity
 
     public void sendAttachment(AttachOptionItem attachOptionItem) {
         Uri fileUri;
+        String contentType;
 
         switch (attachOptionItem) {
             case pic:
-                String contentType = "image/*";
+                contentType = "image/*";
                 mGetContents.launch(contentType);
                 break;
 
@@ -963,7 +962,7 @@ public class ChatActivity extends OSGiActivity
      * Callback from camera capture a video with return thumbnail
      */
     private ActivityResultLauncher<Uri> takeVideo() {
-        return registerForActivityResult(new ActivityResultContracts.TakeVideo(), thumbnail -> {
+        return registerForActivityResult(new ActivityResultContracts.CaptureVideo(), thumbnail -> {
             if (mCameraFilePath.length() != 0) {
                 Uri uri = FileBackend.getUriForFile(this, mCameraFilePath);
                 List<Attachment> attachments = Attachment.of(this, uri, Attachment.Type.IMAGE);
@@ -1003,7 +1002,7 @@ public class ChatActivity extends OSGiActivity
                         String text = intent.getStringExtra(Intent.EXTRA_TEXT);
                         if (!TextUtils.isEmpty(text)) {
                             if (FileBackend.isHttpFileDnLink(text)) {
-                                MediaShareAsynTask msTask = new MediaShareAsynTask();
+                                MediaShareTask msTask = new MediaShareTask();
                                 msTask.execute(text);
                                 break;
                             }
@@ -1062,7 +1061,7 @@ public class ChatActivity extends OSGiActivity
      */
     public void openDownloadable(File file, View view) {
         if ((file == null) || !file.exists()) {
-            showToastMessage(R.string.file_does_not_exist);
+            aTalkApp.showToastMessage(R.string.file_does_not_exist);
             return;
         }
 
@@ -1071,11 +1070,11 @@ public class ChatActivity extends OSGiActivity
             uri = FileBackend.getUriForFile(this, file);
         } catch (SecurityException e) {
             Timber.i("No permission to access %s: %s", file.getAbsolutePath(), e.getMessage());
-            showToastMessage(R.string.file_open_no_permission);
+            aTalkApp.showToastMessage(R.string.file_open_no_permission);
             return;
         }
 
-        String mimeType = getMimeType(this, uri);
+        String mimeType = FileBackend.getMimeType(this, uri);
         if ((mimeType == null) || mimeType.contains("application")) {
             mimeType = "*/*";
         }
@@ -1116,7 +1115,7 @@ public class ChatActivity extends OSGiActivity
 
             PackageManager manager = getPackageManager();
             List<ResolveInfo> info = manager.queryIntentActivities(openIntent, 0);
-            if (info.size() == 0) {
+            if (info.isEmpty()) {
                 openIntent.setDataAndType(videoUrl, "*/*");
             }
             try {
@@ -1177,7 +1176,7 @@ public class ChatActivity extends OSGiActivity
 
     /**
      * Call back from ChatRoomConfiguration when it has completed the task.
-     * 1. Stop all future onBackPressed call to ChatRoomConfiguration
+     * 1. Stop all future handleBackPressed call to ChatRoomConfiguration
      * 2. Re-init OMEMO support option after room properties changed.
      *
      * @param configUpdates room configuration user selected fields for update
@@ -1189,45 +1188,46 @@ public class ChatActivity extends OSGiActivity
     }
 
     /**
-     * Construct media url share with thumbnail and title via URL_EMBBED which supports with JSONObject:
+     * Construct media url share with thumbnail and title via URL_EMBEDDED which supports with JSONObject:
      */
-    private class MediaShareAsynTask extends AsyncTask<String, Void, String> {
+    private class MediaShareTask {
         private String mUrl;
 
-        @Override
-        protected String doInBackground(String... params) {
-            mUrl = params[0];
-            // mUrl = "https://vimeo.com/45196609";  // invalid link
-            return getUrlInfo(mUrl);
-        }
+        public void execute(String... params) {
+            Executors.newSingleThreadExecutor().execute(() -> {
+                // mUrl = "https://vimeo.com/45196609";  // invalid link
+                mUrl = params[0];
+                final String result = getUrlInfo(mUrl);
 
-        @Override
-        protected void onPostExecute(String result) {
-            String urlInfo = null;
-            if (!TextUtils.isEmpty(result)) {
-                try {
-                    final JSONObject attributes = new JSONObject(result);
-                    String title = attributes.getString("title");
-                    String imageUrl = attributes.getString("thumbnail_url");
+                runOnUiThread(() -> {
+                            String urlInfo = null;
+                            if (!TextUtils.isEmpty(result)) {
+                                try {
+                                    final JSONObject attributes = new JSONObject(result);
+                                    String title = attributes.getString("title");
+                                    String imageUrl = attributes.getString("thumbnail_url");
 
-                    urlInfo = getString(R.string.url_media_share, imageUrl, title, mUrl);
-                    selectedChatPanel.sendMessage(urlInfo, IMessage.ENCODE_HTML);
-                } catch (JSONException e) {
-                    Timber.w("Exception in JSONObject access: %s", result);
-                }
-            }
+                                    urlInfo = getString(R.string.url_media_share, imageUrl, title, mUrl);
+                                    selectedChatPanel.sendMessage(urlInfo, IMessage.ENCODE_HTML);
+                                } catch (JSONException e) {
+                                    Timber.w("Exception in JSONObject access: %s", result);
+                                }
+                            }
 
-            // send mUrl instead fetch urlInfo failed
-            if (urlInfo == null) {
-                // selectedChatPanel.setEditedText(mUrl); too late as controller msgEdit is already initialized
-                selectedChatPanel.sendMessage(mUrl, IMessage.ENCODE_PLAIN);
-            }
+                            // send mUrl instead fetch urlInfo failed
+                            if (urlInfo == null) {
+                                // selectedChatPanel.setEditedText(mUrl); too late as controller msgEdit is already initialized
+                                selectedChatPanel.sendMessage(mUrl, IMessage.ENCODE_PLAIN);
+                            }
+                        }
+                );
+            });
         }
 
         /***
          * Get the Drawable from the given URL (change to secure https if necessary)
          * aTalk/android supports only secure https connection
-         * https://noembed.com/embed?url=https://www.youtube.com/watch?v=dQw4w9WgXcQ
+         * <a href="https://noembed.com/embed?url=https://www.youtube.com/watch?v=dQw4w9WgXcQ">...</a>
          *
          * @param urlString url string
          * @return Jason String
@@ -1258,15 +1258,6 @@ public class ChatActivity extends OSGiActivity
             }
             return null;
         }
-    }
-
-    /**
-     * Shows the given error message in the error area of this component.
-     *
-     * @param resId the Id of the message to show
-     */
-    private void showToastMessage(int resId) {
-        Toast.makeText(this, resId, Toast.LENGTH_SHORT).show();
     }
 
     /*

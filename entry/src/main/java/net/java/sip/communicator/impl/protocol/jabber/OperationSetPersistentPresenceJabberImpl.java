@@ -47,7 +47,7 @@ import net.java.sip.communicator.service.protocol.jabberconstants.JabberStatusEn
 import net.java.sip.communicator.util.ConfigurationUtils;
 
 import org.atalk.impl.timberlog.TimberLog;
-import org.atalk.ohos.gui.AndroidGUIActivator;
+import org.atalk.ohos.gui.AppGUIActivator;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.SmackException.NoResponseException;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
@@ -1676,7 +1676,7 @@ public class OperationSetPersistentPresenceJabberImpl
     }
 
     private void setAllContactsBlockingState(Jid domainJid, boolean blockState) {
-        MetaContactListService mclService = AndroidGUIActivator.getContactListService();
+        MetaContactListService mclService = AppGUIActivator.getContactListService();
         Iterator<MetaContact> metaContacts = mclService.findAllMetaContactsForProvider(mPPS);
         while (metaContacts.hasNext()) {
             MetaContact metaContact = metaContacts.next();

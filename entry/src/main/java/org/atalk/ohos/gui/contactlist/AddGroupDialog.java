@@ -16,13 +16,13 @@ import net.java.sip.communicator.service.contactlist.MetaContactGroup;
 import net.java.sip.communicator.service.contactlist.MetaContactListException;
 import net.java.sip.communicator.service.contactlist.MetaContactListService;
 
+import org.atalk.ohos.BaseFragment;
 import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
-import org.atalk.ohos.gui.AndroidGUIActivator;
+import org.atalk.ohos.gui.AppGUIActivator;
 import org.atalk.ohos.gui.dialogs.DialogActivity;
 import org.atalk.ohos.gui.util.ViewUtil;
 import org.atalk.ohos.gui.util.event.EventListener;
-import org.atalk.service.osgi.OSGiFragment;
 
 import timber.log.Timber;
 
@@ -32,7 +32,7 @@ import timber.log.Timber;
  * @author Pawel Domas
  * @author Eng Chong Meng
  */
-public class AddGroupDialog extends OSGiFragment {
+public class AddGroupDialog extends BaseFragment {
     /**
      * {@inheritDoc}
      */
@@ -103,7 +103,7 @@ public class AddGroupDialog extends OSGiFragment {
                 // Add it here if operation will be taking too much time (seems to finish fast for now)
                 // displayOperationInProgressDialog(dialog);
 
-                this.createThread = new CreateGroup(AndroidGUIActivator.getContactListService(), groupName);
+                this.createThread = new CreateGroup(AppGUIActivator.getContactListService(), groupName);
                 createThread.start();
 
                 try {

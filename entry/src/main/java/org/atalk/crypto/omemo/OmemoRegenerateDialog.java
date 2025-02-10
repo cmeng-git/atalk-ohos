@@ -31,8 +31,8 @@ import net.java.sip.communicator.service.protocol.AccountID;
 import net.java.sip.communicator.service.protocol.ProtocolProviderService;
 import net.java.sip.communicator.util.account.AccountUtils;
 
+import org.atalk.ohos.BaseActivity;
 import org.atalk.ohos.R;
-import org.atalk.service.osgi.OSGiActivity;
 import org.jivesoftware.smackx.omemo.OmemoService;
 import org.jivesoftware.smackx.omemo.OmemoStore;
 
@@ -43,7 +43,7 @@ import timber.log.Timber;
  *
  * @author Eng Chong Meng
  */
-public class OmemoRegenerateDialog extends OSGiActivity {
+public class OmemoRegenerateDialog extends BaseActivity {
     /**
      * {@inheritDoc}
      */

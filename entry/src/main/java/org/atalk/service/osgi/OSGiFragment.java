@@ -6,11 +6,11 @@
 package org.atalk.service.osgi;
 
 import android.content.Context;
-import android.os.Looper;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import org.atalk.ohos.BaseFragment;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -19,7 +19,7 @@ import org.osgi.framework.BundleContext;
  * @author Pawel Domas
  * @author Eng Chong Meng
  */
-public class OSGiFragment extends Fragment implements OSGiUiPart {
+public class OSGiFragment extends BaseFragment implements OSGiUiPart {
     private OSGiActivity osGiActivity;
 
     /**
@@ -54,21 +54,5 @@ public class OSGiFragment extends Fragment implements OSGiUiPart {
      */
     public void stop(BundleContext bundleContext)
             throws Exception {
-    }
-
-    /**
-     * Convenience method for running code on UI thread looper(instead of getActivity().runOnUIThread()). It is never
-     * guaranteed that <code>getActivity()</code> will return not <code>null</code> value, hence it must be checked in the
-     * <code>action</code>.
-     *
-     * @param action <code>Runnable</code> action to execute on UI thread.
-     */
-    public void runOnUiThread(Runnable action) {
-        if (Looper.myLooper() == Looper.getMainLooper()) {
-            action.run();
-            return;
-        }
-        // Post action to the ui looper
-        OSGiActivity.uiHandler.post(action);
     }
 }

@@ -168,7 +168,7 @@ public class OSGiServiceImpl {
                 ApplicationInfo info = service.getApplicationInfo();
                 name = info.name;
                 if (TextUtils.isEmpty(name))
-                    name = aTalkApp.getResString(R.string.application_name);
+                    name = aTalkApp.getResString(R.string.app_name);
             }
             System.setProperty(ConfigurationService.PNAME_SC_HOME_DIR_NAME, name);
         }
@@ -191,9 +191,9 @@ public class OSGiServiceImpl {
          */
         String location = System.getProperty(ConfigurationService.PNAME_SC_HOME_DIR_LOCATION);
 
-        if ((location != null) && (location.length() != 0)) {
+        if ((location != null) && (!location.isEmpty())) {
             name = System.getProperty(ConfigurationService.PNAME_SC_HOME_DIR_NAME);
-            if ((name != null) && (name.length() != 0)) {
+            if ((name != null) && (!name.isEmpty())) {
                 System.setProperty("user.home", new File(location, name).getAbsolutePath());
             }
         }

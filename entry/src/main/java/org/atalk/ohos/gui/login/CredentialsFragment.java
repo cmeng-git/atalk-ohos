@@ -31,12 +31,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 
 import java.util.Arrays;
 
 import net.java.sip.communicator.service.certificate.CertificateConfigEntry;
 
+import org.atalk.ohos.BaseFragment;
 import org.atalk.ohos.R;
 import org.atalk.ohos.gui.util.ViewUtil;
 
@@ -57,7 +57,7 @@ import org.atalk.ohos.gui.util.ViewUtil;
  *
  * @author Eng Chong Meng
  */
-public class CredentialsFragment extends Fragment {
+public class CredentialsFragment extends BaseFragment {
     /**
      * Pre-entered login argument.
      */

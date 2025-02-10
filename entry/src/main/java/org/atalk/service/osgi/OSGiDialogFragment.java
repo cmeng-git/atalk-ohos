@@ -10,6 +10,7 @@ import android.os.Looper;
 
 import androidx.fragment.app.DialogFragment;
 
+import org.atalk.ohos.BaseActivity;
 import org.jetbrains.annotations.NotNull;
 import org.osgi.framework.BundleContext;
 
@@ -75,6 +76,6 @@ public class OSGiDialogFragment extends DialogFragment implements OSGiUiPart
             return;
         }
         // Post action to the ui looper
-        OSGiActivity.uiHandler.post(action);
+        BaseActivity.uiHandler.post(action);
     }
 }

@@ -25,13 +25,13 @@ import net.java.sip.communicator.service.protocol.OperationSetPresence;
 import net.java.sip.communicator.service.protocol.ProtocolProviderService;
 import net.java.sip.communicator.util.account.AccountUtils;
 
+import org.atalk.ohos.BaseActivity;
 import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
-import org.atalk.ohos.gui.AndroidGUIActivator;
+import org.atalk.ohos.gui.AppGUIActivator;
 import org.atalk.ohos.gui.account.Account;
 import org.atalk.ohos.gui.account.AccountsListAdapter;
 import org.atalk.ohos.gui.util.ViewUtil;
-import org.atalk.service.osgi.OSGiActivity;
 
 import timber.log.Timber;
 
@@ -41,7 +41,7 @@ import timber.log.Timber;
  * @author Pawel Domas
  * @author Eng Chong Meng
  */
-public class AddContactActivity extends OSGiActivity {
+public class AddContactActivity extends BaseActivity {
     /**
      * {@inheritDoc}
      */
@@ -156,7 +156,7 @@ public class AddContactActivity extends OSGiActivity {
      */
     private void addRenameListener(final ProtocolProviderService protocolProvider, final MetaContact metaContact,
             final String contactAddress, final String displayName) {
-        AndroidGUIActivator.getContactListService().addMetaContactListListener(
+        AppGUIActivator.getContactListService().addMetaContactListListener(
                 new MetaContactListAdapter() {
                     @Override
                     public void metaContactAdded(MetaContactEvent evt) {
@@ -184,7 +184,7 @@ public class AddContactActivity extends OSGiActivity {
         new Thread() {
             @Override
             public void run() {
-                AndroidGUIActivator.getContactListService().renameMetaContact(metaContact, displayName);
+                AppGUIActivator.getContactListService().renameMetaContact(metaContact, displayName);
             }
         }.start();
     }

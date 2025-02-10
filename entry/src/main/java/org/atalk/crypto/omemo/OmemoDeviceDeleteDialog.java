@@ -31,8 +31,8 @@ import net.java.sip.communicator.service.protocol.AccountID;
 import net.java.sip.communicator.service.protocol.ProtocolProviderService;
 import net.java.sip.communicator.util.account.AccountUtils;
 
+import org.atalk.ohos.BaseActivity;
 import org.atalk.ohos.R;
-import org.atalk.service.osgi.OSGiActivity;
 import org.jivesoftware.smackx.omemo.OmemoService;
 
 /**
@@ -41,7 +41,7 @@ import org.jivesoftware.smackx.omemo.OmemoService;
  *
  * @author Eng Chong Meng
  */
-public class OmemoDeviceDeleteDialog extends OSGiActivity {
+public class OmemoDeviceDeleteDialog extends BaseActivity {
     /**
      * {@inheritDoc}
      */

@@ -32,7 +32,7 @@ import androidx.core.content.ContextCompat;
 import org.atalk.ohos.BaseActivity;
 import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
-import org.atalk.ohos.gui.AndroidGUIActivator;
+import org.atalk.ohos.gui.AppGUIActivator;
 import org.atalk.ohos.gui.LauncherActivity;
 import org.atalk.ohos.gui.actionbar.ActionBarUtil;
 import org.atalk.ohos.plugin.errorhandler.ExceptionHandler;
@@ -336,53 +336,6 @@ public class OSGiActivity extends BaseActivity {
     }
 
     /**
-     * Convenience method which starts a new activity for given <code>activityClass</code> class
-     *
-     * @param activityClass the activity class
-     */
-    protected void startActivity(Class<?> activityClass) {
-        Intent intent = new Intent(this, activityClass);
-        // intent.setPackage(getPackageName());
-        startActivity(intent);
-    }
-
-    /**
-     * Start the application notification settings page
-     */
-    public void openNotificationSettings() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            Intent intent = new Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
-            intent.putExtra(Settings.EXTRA_APP_PACKAGE, getPackageName());
-            startActivity(intent);
-        }
-        else {
-            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-            intent.setData(Uri.parse("package:" + getPackageName()));
-            startActivity(intent);
-        }
-    }
-
-    /**
-     * Convenience method that switches from one activity to another.
-     *
-     * @param activityClass the activity class
-     */
-    protected void switchActivity(Class<?> activityClass) {
-        startActivity(activityClass);
-        finish();
-    }
-
-    /**
-     * Convenience method that switches from one activity to another.
-     *
-     * @param activityIntent the next activity <code>Intent</code>
-     */
-    protected void switchActivity(Intent activityIntent) {
-        startActivity(activityIntent);
-        finish();
-    }
-
-    /**
      * Handler for home navigator. Use upIntent if parentActivityName defined. Otherwise execute onBackKeyPressed.
      * Account setting must back to its previous menu (BackKey) to properly save changes
      */
@@ -396,7 +349,7 @@ public class OSGiActivity extends BaseActivity {
             }
             else {
                 Timber.w("Replace Up with BackKeyPress for: %s", this.getLocalClassName());
-                super.onBackPressed();
+                finish();
                 // Class<?> homeActivity = aTalkApp.getHomeScreenActivityClass();
                 // if (!this.getClass().equals(homeActivity)) {
                 //    switchActivity(homeActivity);
@@ -417,15 +370,6 @@ public class OSGiActivity extends BaseActivity {
     }
 
     /**
-     * Returns the content <code>View</code>.
-     *
-     * @return the content <code>View</code>.
-     */
-    protected View getContentView() {
-        return findViewById(android.R.id.content);
-    }
-
-    /**
      * Checks if the OSGi is started and if not eventually triggers <code>LauncherActivity</code>
      * that will restore current activity from its <code>Intent</code>.
      *
@@ -433,7 +377,7 @@ public class OSGiActivity extends BaseActivity {
      */
     protected boolean postRestoreIntent() {
         // Restore after OSGi startup
-        if (AndroidGUIActivator.bundleContext == null) {
+        if (AppGUIActivator.bundleContext == null) {
             Intent intent = new Intent(aTalkApp.getInstance(), LauncherActivity.class);
             intent.putExtra(LauncherActivity.ARG_RESTORE_INTENT, getIntent());
             startActivity(intent);
@@ -444,7 +388,7 @@ public class OSGiActivity extends BaseActivity {
     }
 
     /**
-     * Broadcast listener that listens for {@link ACTION_EXIT} and then finishes this <code>Activity</code>
+     * Broadcast listener that listens for {@link #ACTION_EXIT} and then finishes this <code>Activity</code>
      */
     class ExitActionListener extends BroadcastReceiver {
         @Override

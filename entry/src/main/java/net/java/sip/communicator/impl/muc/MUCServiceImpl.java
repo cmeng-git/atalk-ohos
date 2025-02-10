@@ -39,7 +39,7 @@ import net.java.sip.communicator.util.ServiceUtils;
 
 import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
-import org.atalk.ohos.gui.AndroidGUIActivator;
+import org.atalk.ohos.gui.AppGUIActivator;
 import org.atalk.ohos.gui.chat.ChatSessionManager;
 import org.atalk.ohos.gui.dialogs.DialogActivity;
 import org.atalk.impl.timberlog.TimberLog;
@@ -84,7 +84,7 @@ public class MUCServiceImpl extends MUCService {
             // String[] joinOptions = ChatRoomJoinOptionsDialog.getJoinOptions(true, chatRoom.getParentProvider(), chatRoom.getIdentifier(),
             // MUCActivator.getGlobalDisplayDetailsService().getDisplayName(chatRoom.getParentProvider()));
             // nickName = joinOptions[0];
-            nickName = AndroidGUIActivator.getGlobalDisplayDetailsService().getDisplayName(chatRoom.getParentProvider());
+            nickName = AppGUIActivator.getGlobalDisplayDetailsService().getDisplayName(chatRoom.getParentProvider());
         }
         joinChatRoom(chatRoom, nickName, password);
     }

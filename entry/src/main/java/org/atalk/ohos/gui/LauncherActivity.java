@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import org.atalk.impl.androidnotification.NotificationHelper;
+import org.atalk.impl.appnotification.NotificationHelper;
 import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.service.SystemEventReceiver;

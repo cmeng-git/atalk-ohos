@@ -2149,7 +2149,7 @@ public class ProtocolProviderServiceJabberImpl extends AbstractProtocolProviderS
          * The CapsExtension reply to be included in the caps <Identity/>
          */
         String category = "client";
-        String appName = aTalkApp.getResString(R.string.application_name);
+        String appName = aTalkApp.getResString(R.string.app_name);
         String type = "android";
 
         DiscoverInfo.Identity identity = new DiscoverInfo.Identity(category, appName, type);

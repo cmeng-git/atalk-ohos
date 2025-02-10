@@ -44,10 +44,10 @@ import net.java.sip.communicator.service.protocol.AccountManager;
 import net.java.sip.communicator.util.ConfigurationUtils;
 import net.java.sip.communicator.util.ServiceUtils;
 
-import org.atalk.impl.androidnotification.NotificationHelper;
-import org.atalk.impl.androidtray.NotificationPopupHandler;
+import org.atalk.impl.appnotification.NotificationHelper;
+import org.atalk.impl.appstray.NotificationPopupHandler;
 import org.atalk.impl.timberlog.TimberLogImpl;
-import org.atalk.ohos.gui.AndroidGUIActivator;
+import org.atalk.ohos.gui.AppGUIActivator;
 import org.atalk.ohos.gui.LauncherActivity;
 import org.atalk.ohos.gui.Splash;
 import org.atalk.ohos.gui.aTalk;
@@ -379,7 +379,7 @@ public class aTalkApp extends Application implements LifecycleEventObserver {
      * @return Returns home <code>Activity</code> class.
      */
     public static Class<?> getHomeScreenActivityClass() {
-        BundleContext osgiContext = AndroidGUIActivator.bundleContext;
+        BundleContext osgiContext = AppGUIActivator.bundleContext;
         if (osgiContext == null) {
             // If OSGI has not started show splash screen as home
             return LauncherActivity.class;
@@ -434,7 +434,7 @@ public class aTalkApp extends Application implements LifecycleEventObserver {
      * @return <code>ConfigurationService</code> instance.
      */
     public static ConfigurationService getConfig() {
-        return ServiceUtils.getService(AndroidGUIActivator.bundleContext, ConfigurationService.class);
+        return ServiceUtils.getService(AppGUIActivator.bundleContext, ConfigurationService.class);
     }
 
     /**
@@ -511,7 +511,7 @@ public class aTalkApp extends Application implements LifecycleEventObserver {
      * Displays the send logs dialog.
      */
     public static void showSendLogsDialog() {
-        LogUploadService logUpload = ServiceUtils.getService(AndroidGUIActivator.bundleContext, LogUploadService.class);
+        LogUploadService logUpload = ServiceUtils.getService(AppGUIActivator.bundleContext, LogUploadService.class);
         String defaultEmail = getConfig().getString("org.atalk.ohos.LOG_REPORT_EMAIL");
 
         if (logUpload != null) {
@@ -527,7 +527,7 @@ public class aTalkApp extends Application implements LifecycleEventObserver {
      * Otherwise the dialog will be obscured by these activities; max wait = 5 waits of 1000ms each
      */
     public static Activity waitForFocus() {
-        // if (AndroidGUIActivator.bundleContext == null) { #false on first application installation
+        // if (AppGUIActivator.bundleContext == null) { #false on first application installation
         synchronized (currentActivityMonitor) {
             int wait = 6; // 5 waits each lasting max of 1000ms
             while (wait-- > 0) {

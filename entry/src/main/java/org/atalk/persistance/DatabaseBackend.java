@@ -1130,6 +1130,7 @@ public class DatabaseBackend extends SQLiteOpenHelper {
         return status;
     }
 
+
     public long numTrustedKeys(String bareJid) {
         SQLiteDatabase db = getReadableDatabase();
         String[] args = {bareJid,

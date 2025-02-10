@@ -29,9 +29,9 @@ import androidx.appcompat.app.ActionBar;
 import java.util.ArrayList;
 import java.util.Set;
 
+import org.atalk.ohos.BaseActivity;
 import org.atalk.ohos.R;
 import org.atalk.ohos.gui.contactlist.ContactListFragment;
-import org.atalk.service.osgi.OSGiActivity;
 
 /**
  * ShareActivity is defined as SingleTask, to avoid multiple instances being created if user does not exit
@@ -43,7 +43,7 @@ import org.atalk.service.osgi.OSGiActivity;
  *
  * @author Eng Chong Meng
  */
-public class ShareActivity extends OSGiActivity {
+public class ShareActivity extends BaseActivity {
     /**
      * A reference of the share object
      */
@@ -84,7 +84,7 @@ public class ShareActivity extends OSGiActivity {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             TextView tv = findViewById(R.id.actionBarTitle);
-            tv.setText(R.string.application_name);
+            tv.setText(R.string.app_name);
 
             tv = findViewById(R.id.actionBarStatus);
             tv.setText(R.string.share);

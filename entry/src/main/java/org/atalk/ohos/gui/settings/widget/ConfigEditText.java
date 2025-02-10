@@ -15,7 +15,7 @@ import androidx.preference.PreferenceManager;
 
 import org.apache.commons.lang3.StringUtils;
 import org.atalk.ohos.R;
-import org.atalk.ohos.gui.AndroidGUIActivator;
+import org.atalk.ohos.gui.AppGUIActivator;
 import org.atalk.service.configuration.ConfigurationService;
 
 /**
@@ -131,7 +131,7 @@ public class ConfigEditText extends EditTextPreference implements Preference.OnP
      */
     @Override
     protected String getPersistedString(String defaultReturnValue) {
-        ConfigurationService configService = AndroidGUIActivator.getConfigurationService();
+        ConfigurationService configService = AppGUIActivator.getConfigurationService();
         if (configService == null)
             return defaultReturnValue;
 

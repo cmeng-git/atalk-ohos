@@ -37,6 +37,7 @@ import net.java.sip.communicator.service.protocol.ProtocolProviderService;
 import net.java.sip.communicator.util.account.AccountUtils;
 
 import org.atalk.crypto.omemo.SQLiteOmemoStore;
+import org.atalk.ohos.BaseFragment;
 import org.atalk.ohos.BuildConfig;
 import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
@@ -44,7 +45,6 @@ import org.atalk.ohos.gui.dialogs.DialogActivity;
 import org.atalk.persistance.migrations.OmemoDBCreate;
 import org.atalk.service.fileaccess.FileCategory;
 import org.atalk.service.libjitsi.LibJitsi;
-import org.atalk.service.osgi.OSGiFragment;
 import org.jivesoftware.smackx.avatar.vcardavatar.VCardAvatarManager;
 import org.jivesoftware.smackx.omemo.OmemoService;
 import org.jivesoftware.smackx.omemo.OmemoStore;
@@ -56,7 +56,7 @@ import timber.log.Timber;
  *
  * @author Eng Chong Meng
  */
-public class ServerPersistentStoresRefreshDialog extends OSGiFragment {
+public class ServerPersistentStoresRefreshDialog extends BaseFragment {
     /**
      * {@inheritDoc}
      */
@@ -199,7 +199,7 @@ public class ServerPersistentStoresRefreshDialog extends OSGiFragment {
                 try {
                     FileBackend.deleteRecursive(omemoDir);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Timber.w("Exception %s", e.getMessage());
                 }
             }
         }

@@ -6,8 +6,10 @@
 package org.atalk.service.osgi;
 
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 
@@ -15,8 +17,7 @@ import androidx.core.app.NotificationCompat;
 
 import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
-import org.atalk.ohos.gui.util.AndroidUtils;
-import org.atalk.impl.androidnotification.AndroidNotifications;
+import org.atalk.impl.appnotification.AppNotifications;
 import org.atalk.impl.osgi.OSGiServiceImpl;
 
 import java.security.Security;
@@ -27,23 +28,28 @@ import java.security.Security;
  * @author Lyubomir Marinov
  * @author Eng Chong Meng
  */
-public class OSGiService extends Service
-{
+public class OSGiService extends Service {
     /**
      * The ID of aTalk notification icon
      */
-    private static final int GENERAL_NOTIFICATION_ID = R.string.application_name;
+    private static final int GENERAL_NOTIFICATION_ID = R.string.app_name;
+
+    private NotificationManager mNotificationManager;
 
     /**
-     * Indicates that aTalk is running in foreground mode and its icon is being displayed on android notification tray.
-     * If user disable show aTalk icon, then running_foreground = false
+     * Indicates that aTalk icon is being displayed on android notification tray.
      */
-    private static boolean running_foreground = false;
+    private static boolean appIcon_shown = false;
 
     /**
      * Indicates if the service has been started and general notification icon is available
      */
     private static boolean serviceStarted;
+
+    /**
+     * This field will be cleared by System.exit() called after shutdown completes.
+     */
+    private static boolean isShuttingDown;
 
     /**
      * The very implementation of this Android <code>Service</code> which is split out of the class <code>OSGiService</code> so
@@ -56,70 +62,59 @@ public class OSGiService extends Service
     /**
      * Initializes a new <code>OSGiService</code> implementation.
      */
-    public OSGiService()
-    {
+    public OSGiService() {
         impl = new OSGiServiceImpl(this);
     }
 
-    public IBinder onBind(Intent intent)
-    {
+    public IBinder onBind(Intent intent) {
         return impl.onBind(intent);
     }
 
     /**
      * Protects against starting next OSGi service while the previous one has not completed it's shutdown procedure.
-     *
      * This field will be cleared by System.exit() called after shutdown completes.
      */
     private static boolean started;
 
-    public static boolean hasStarted()
-    {
+    public static boolean hasStarted() {
         return started;
     }
 
-    /**
-     * This field will be cleared by System.exit() called after shutdown completes.
-     */
-    private static boolean shuttingdown;
-
-    public static boolean isShuttingDown()
-    {
-        return shuttingdown;
+    public static boolean isShuttingDown() {
+        return isShuttingDown;
     }
 
     @Override
-    public void onCreate()
-    {
+    public void onCreate() {
+        // We are still running
         if (started) {
-            // We are still running
             return;
         }
+        mNotificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
         started = true;
         impl.onCreate();
     }
 
     @Override
-    public void onDestroy()
-    {
-        if (shuttingdown) {
+    public void onDestroy() {
+        if (isShuttingDown) {
             return;
         }
-        shuttingdown = true;
+        isShuttingDown = true;
         impl.onDestroy();
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId)
-    {
+    public int onStartCommand(Intent intent, int flags, int startId) {
         return impl.onStartCommand(intent, flags, startId);
     }
 
     /**
      * Method called by OSGi impl when start command completes.
      */
-    public void onOSGiStarted()
-    {
+    public void onOSGiStarted() {
+        serviceStarted = true;
+
         if (aTalkApp.isIconEnabled()) {
             showIcon();
         }
@@ -132,19 +127,17 @@ public class OSGiService extends Service
                 hideIcon();
             }
         });
-        serviceStarted = true;
     }
 
     /**
      * Start the service in foreground and creates shows general notification icon.
      */
-    private void showIcon()
-    {
-        String title = getResources().getString(R.string.application_name);
+    private void showIcon() {
+        String title = getResources().getString(R.string.app_name);
         // The intent to launch when the user clicks the expanded notification
         PendingIntent pendIntent = aTalkApp.getaTalkIconIntent();
 
-        NotificationCompat.Builder nBuilder = new NotificationCompat.Builder(this, AndroidNotifications.DEFAULT_GROUP);
+        NotificationCompat.Builder nBuilder = new NotificationCompat.Builder(this, AppNotifications.DEFAULT_GROUP);
         nBuilder.setContentTitle(title)
                 .setWhen(System.currentTimeMillis())
                 .setSmallIcon(R.drawable.ic_notification)
@@ -152,28 +145,23 @@ public class OSGiService extends Service
                 .setContentIntent(pendIntent);
 
         Notification notice = nBuilder.build();
-        notice.flags |= Notification.FLAG_NO_CLEAR;
+        notice.flags |= Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT;
 
-        this.startForeground(GENERAL_NOTIFICATION_ID, notice);
-        running_foreground = true;
+        mNotificationManager.notify(GENERAL_NOTIFICATION_ID, notice);
+        appIcon_shown = true;
     }
 
     /**
      * Stops the foreground service and hides general notification icon
      */
-    public void stopForegroundService()
-    {
-        serviceStarted = false;
+    public void stopForegroundService() {
         hideIcon();
+        serviceStarted = false;
     }
 
-    private void hideIcon()
-    {
-        if (running_foreground) {
-            stopForeground(true);
-            running_foreground = false;
-            AndroidUtils.generalNotificationInvalidated();
-        }
+    private void hideIcon() {
+        mNotificationManager.cancel(GENERAL_NOTIFICATION_ID);
+        appIcon_shown = false;
     }
 
     /**
@@ -182,9 +170,8 @@ public class OSGiService extends Service
      *
      * @return the notification ID greater than 0 or -1 if service is not running
      */
-    public static int getGeneralNotificationId()
-    {
-        if (serviceStarted && running_foreground) {
+    public static int getGeneralNotificationId() {
+        if (serviceStarted && appIcon_shown) {
             return GENERAL_NOTIFICATION_ID;
         }
         return -1;

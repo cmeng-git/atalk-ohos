@@ -25,7 +25,6 @@ import net.java.sip.communicator.impl.msghistory.MessageHistoryActivator;
 import net.java.sip.communicator.impl.msghistory.MessageHistoryServiceImpl;
 import net.java.sip.communicator.impl.muc.MUCActivator;
 import net.java.sip.communicator.impl.protocol.jabber.ChatRoomMemberJabberImpl;
-import net.java.sip.communicator.impl.protocol.jabber.ProtocolProviderServiceJabberImpl;
 import net.java.sip.communicator.service.contactlist.MetaContact;
 import net.java.sip.communicator.service.filehistory.FileRecord;
 import net.java.sip.communicator.service.gui.Chat;
@@ -59,7 +58,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.atalk.impl.timberlog.TimberLog;
 import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
-import org.atalk.ohos.gui.AndroidGUIActivator;
+import org.atalk.ohos.gui.AppGUIActivator;
 import org.atalk.ohos.gui.actionbar.ActionBarUtil;
 import org.atalk.ohos.gui.chat.conference.AdHocChatRoomWrapper;
 import org.atalk.ohos.gui.chat.conference.ConferenceChatManager;
@@ -473,7 +472,7 @@ public class ChatPanel implements Chat, MessageListener, MessageReceiptListener 
 
         // If the MetaHistoryService is not registered we have nothing to do here.
         // The history store could be "disabled" by the user via Chat History Logging option.
-        final MetaHistoryService metaHistory = AndroidGUIActivator.getMetaHistoryService();
+        final MetaHistoryService metaHistory = AppGUIActivator.getMetaHistoryService();
         if (metaHistory == null)
             return msgCache;
 
@@ -1021,11 +1020,7 @@ public class ChatPanel implements Chat, MessageListener, MessageReceiptListener 
      */
     public boolean isMessageNew(ChatMessageImpl chatMessage) {
         long messageTS = chatMessage.getDate().getTime();
-        if (messageTS <= mamDateTS) {
-            return false;
-        }
-        // mamDateTS = messageTS;
-        return true;
+        return messageTS > mamDateTS;
     }
 
     /**
@@ -1100,8 +1095,7 @@ public class ChatPanel implements Chat, MessageListener, MessageReceiptListener 
 
         switch (evt.getErrorCode()) {
             case MessageDeliveryFailedEvent.OFFLINE_MESSAGES_NOT_SUPPORTED:
-                errorMsg = aTalkApp.getResString(
-                        R.string.message_delivery_not_supported, contactJid);
+                errorMsg = aTalkApp.getResString(R.string.message_delivery_not_supported, contactJid);
                 break;
             case MessageDeliveryFailedEvent.NETWORK_FAILURE:
                 errorMsg = aTalkApp.getResString(R.string.message_delivery_network_error);
@@ -1275,7 +1269,7 @@ public class ChatPanel implements Chat, MessageListener, MessageReceiptListener 
         ProtocolProviderService pps = inviteChatTransport.getProtocolProvider();
 
         if (mChatSession instanceof MetaContactChatSession) {
-            ConferenceChatManager conferenceChatManager = AndroidGUIActivator.getUIService().getConferenceChatManager();
+            ConferenceChatManager conferenceChatManager = AppGUIActivator.getUIService().getConferenceChatManager();
 
             // the chat session is set regarding to which OpSet is used for MUC
             if (pps.getOperationSet(OperationSetMultiUserChat.class) != null) {

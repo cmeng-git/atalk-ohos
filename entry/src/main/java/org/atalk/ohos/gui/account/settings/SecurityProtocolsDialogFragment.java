@@ -19,7 +19,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.DialogFragment;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -28,13 +27,14 @@ import java.util.Map;
 import net.java.sip.communicator.service.protocol.SecurityAccountRegistration;
 
 import org.atalk.ohos.R;
+import org.atalk.ohos.gui.dialogs.BaseDialogFragment;
 import org.atalk.ohos.gui.widgets.TouchInterceptor;
 
 /**
  * The dialog that displays a list of security protocols in {@link SecurityActivity}.
  * It allows user to enable/disable each protocol and set their priority.
  */
-public class SecurityProtocolsDialogFragment extends DialogFragment {
+public class SecurityProtocolsDialogFragment extends BaseDialogFragment {
     /**
      * The encryption protocols managed by this dialog.
      */
@@ -67,7 +67,7 @@ public class SecurityProtocolsDialogFragment extends DialogFragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        mActivity = (AppCompatActivity) context;
+        mActivity = (AppCompatActivity) mFragmentActivity;
         mListener = (DialogClosedListener) context;
     }
 
@@ -229,7 +229,7 @@ public class SecurityProtocolsDialogFragment extends DialogFragment {
             mEncryption[to] = mEncryption[from];
             mEncryption[from] = swap;
 
-            mActivity.runOnUiThread(this::notifyDataSetChanged);
+            runOnUiThread(this::notifyDataSetChanged);
         }
     }
 }

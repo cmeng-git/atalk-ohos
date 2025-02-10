@@ -26,11 +26,11 @@ import android.widget.TextView;
 
 import net.java.sip.communicator.plugin.notificationwiring.NotificationManager;
 
+import org.atalk.impl.appstray.NotificationPopupHandler;
+import org.atalk.ohos.BaseActivity;
 import org.atalk.ohos.R;
 import org.atalk.ohos.gui.aTalk;
-import org.atalk.ohos.gui.util.AndroidImageUtil;
-import org.atalk.impl.androidtray.NotificationPopupHandler;
-import org.atalk.service.osgi.OSGiActivity;
+import org.atalk.ohos.util.AppImageUtil;
 import org.jivesoftware.smackx.avatar.AvatarManager;
 import org.jxmpp.jid.Jid;
 
@@ -47,7 +47,7 @@ import org.jxmpp.jid.Jid;
  *
  * @author Eng Chong Meng
  */
-public class JingleMessageCallActivity extends OSGiActivity implements JingleMessageSessionImpl.JmEndListener {
+public class JingleMessageCallActivity extends BaseActivity implements JingleMessageSessionImpl.JmEndListener {
     private ImageView peerAvatar;
     private String mSid;
 
@@ -163,7 +163,7 @@ public class JingleMessageCallActivity extends OSGiActivity implements JingleMes
 
         byte[] avatar = AvatarManager.getAvatarImageByJid(callee.asBareJid());
         if ((avatar != null) && (avatar.length != 0)) {
-            peerAvatar.setImageBitmap(AndroidImageUtil.bitmapFromBytes(avatar));
+            peerAvatar.setImageBitmap(AppImageUtil.bitmapFromBytes(avatar));
         }
     }
 }

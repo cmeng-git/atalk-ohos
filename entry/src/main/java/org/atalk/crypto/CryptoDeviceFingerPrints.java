@@ -48,12 +48,12 @@ import net.java.sip.communicator.util.account.AccountUtils;
 
 import org.atalk.crypto.omemo.FingerprintStatus;
 import org.atalk.crypto.omemo.SQLiteOmemoStore;
+import org.atalk.ohos.BaseActivity;
 import org.atalk.ohos.R;
 import org.atalk.ohos.gui.util.ThemeHelper;
 import org.atalk.ohos.gui.util.ThemeHelper.Theme;
 import org.atalk.ohos.gui.util.ViewUtil;
 import org.atalk.persistance.DatabaseBackend;
-import org.atalk.service.osgi.OSGiActivity;
 import org.atalk.util.CryptoHelper;
 import org.jivesoftware.smackx.omemo.OmemoManager;
 import org.jivesoftware.smackx.omemo.internal.OmemoDevice;
@@ -66,7 +66,7 @@ import org.jivesoftware.smackx.omemo.trust.TrustState;
  *
  * @author Eng Chong Meng
  */
-public class CryptoDeviceFingerPrints extends OSGiActivity {
+public class CryptoDeviceFingerPrints extends BaseActivity {
     private static final String OMEMO = "OMEMO:";
 
     private SQLiteDatabase mDB;

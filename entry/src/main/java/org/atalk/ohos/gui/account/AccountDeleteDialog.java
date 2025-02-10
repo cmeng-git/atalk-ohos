@@ -1,6 +1,6 @@
 /*
  * aTalk, android VoIP and Instant Messaging client
- * Copyright 2014 Eng Chong Meng
+ * Copyright 2014~2024 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import net.java.sip.communicator.util.account.AccountUtils;
 
 import org.atalk.crypto.omemo.SQLiteOmemoStore;
 import org.atalk.ohos.R;
-import org.atalk.ohos.gui.AndroidGUIActivator;
+import org.atalk.ohos.gui.AppGUIActivator;
 import org.atalk.ohos.gui.dialogs.CustomDialogCbox;
 import org.atalk.ohos.gui.dialogs.DialogActivity;
 import org.jivesoftware.smackx.omemo.OmemoService;
@@ -114,7 +114,7 @@ public class AccountDeleteDialog {
     private static void removeAccount(AccountID accountId) {
         ProtocolProviderFactory providerFactory = AccountUtils.getProtocolProviderFactory(accountId.getProtocolName());
         String accountUuid = accountId.getAccountUuid();
-        AndroidGUIActivator.getConfigurationService().setProperty(accountUuid, null);
+        AppGUIActivator.getConfigurationService().setProperty(accountUuid, null);
 
         boolean isUninstalled = providerFactory.uninstallAccount(accountId);
         if (!isUninstalled)

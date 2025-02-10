@@ -30,7 +30,7 @@ import net.java.sip.communicator.util.ConfigurationUtils;
 
 import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
-import org.atalk.ohos.gui.AndroidGUIActivator;
+import org.atalk.ohos.gui.AppGUIActivator;
 import org.atalk.ohos.gui.chat.ChatContact;
 import org.atalk.ohos.gui.chat.ChatPanel;
 import org.atalk.ohos.gui.chat.ChatSession;
@@ -160,7 +160,7 @@ public class AdHocConferenceChatSession extends ChatSession implements AdHocChat
     @Override
     public Collection<Object> getHistory(int count)
     {
-        final MetaHistoryService metaHistory = AndroidGUIActivator.getMetaHistoryService();
+        final MetaHistoryService metaHistory = AppGUIActivator.getMetaHistoryService();
 
         // If the MetaHistoryService is not registered we have nothing to do here. The history
         // could be "disabled" from the user through one of the configuration forms.
@@ -180,7 +180,7 @@ public class AdHocConferenceChatSession extends ChatSession implements AdHocChat
     @Override
     public Collection<Object> getHistoryBeforeDate(Date date, int count)
     {
-        final MetaHistoryService metaHistory = AndroidGUIActivator.getMetaHistoryService();
+        final MetaHistoryService metaHistory = AppGUIActivator.getMetaHistoryService();
 
         // If the MetaHistoryService is not registered we have nothing to do here. The history
         // could be "disabled" from the user through one of the configuration forms.
@@ -201,7 +201,7 @@ public class AdHocConferenceChatSession extends ChatSession implements AdHocChat
     @Override
     public Collection<Object> getHistoryAfterDate(Date date, int count)
     {
-        final MetaHistoryService metaHistory = AndroidGUIActivator.getMetaHistoryService();
+        final MetaHistoryService metaHistory = AppGUIActivator.getMetaHistoryService();
 
         // If the MetaHistoryService is not registered we have nothing to do here. The history
         // could be "disabled" from the user through one of the configuration forms.
@@ -220,7 +220,7 @@ public class AdHocConferenceChatSession extends ChatSession implements AdHocChat
     @Override
     public Date getHistoryStartDate()
     {
-        MetaHistoryService metaHistory = AndroidGUIActivator.getMetaHistoryService();
+        MetaHistoryService metaHistory = AppGUIActivator.getMetaHistoryService();
 
         // If the MetaHistoryService is not registered we have nothing to do here. The history
         // could be "disabled" from the user through one of the configuration forms.
@@ -254,7 +254,7 @@ public class AdHocConferenceChatSession extends ChatSession implements AdHocChat
     @Override
     public Date getHistoryEndDate()
     {
-        MetaHistoryService metaHistory = AndroidGUIActivator.getMetaHistoryService();
+        MetaHistoryService metaHistory = AppGUIActivator.getMetaHistoryService();
 
         // If the MetaHistoryService is not registered we have nothing to do here. The history
         // could be "disabled" from the user through one of the configuration forms.

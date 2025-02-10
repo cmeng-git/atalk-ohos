@@ -53,7 +53,7 @@ import net.java.sip.communicator.util.ConfigurationUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
-import org.atalk.ohos.gui.AndroidGUIActivator;
+import org.atalk.ohos.gui.AppGUIActivator;
 import org.atalk.ohos.gui.aTalk;
 import org.atalk.ohos.gui.call.CallManager;
 import org.atalk.ohos.gui.call.notification.CallNotificationManager;
@@ -996,7 +996,7 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
     }
 
     private void sendSticker(String filePath) {
-        UIService uiService = AndroidGUIActivator.getUIService();
+        UIService uiService = AppGUIActivator.getUIService();
         if (uiService != null) {
             chatPanel.addFTSendRequest(filePath, ChatMessage.MESSAGE_STICKER_SEND);
         }

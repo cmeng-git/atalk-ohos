@@ -16,7 +16,7 @@ import net.java.sip.communicator.service.protocol.AdHocChatRoom;
 import net.java.sip.communicator.service.protocol.OperationSetAdHocMultiUserChat;
 import net.java.sip.communicator.service.protocol.ProtocolProviderService;
 
-import org.atalk.ohos.gui.AndroidGUIActivator;
+import org.atalk.ohos.gui.AppGUIActivator;
 import org.atalk.ohos.gui.chat.ChatSession;
 import org.atalk.ohos.gui.chat.conference.AdHocChatRoomProviderWrapper;
 import org.atalk.ohos.gui.chat.conference.AdHocChatRoomWrapper;
@@ -43,7 +43,7 @@ public class AdHocChatRoomList {
      * Initializes the list of ad-hoc chat rooms.
      */
     public void loadList() {
-        BundleContext bundleContext = AndroidGUIActivator.bundleContext;
+        BundleContext bundleContext = AppGUIActivator.bundleContext;
         mDB = DatabaseBackend.getWritableDB();
 
         ServiceReference[] serRefs = null;
@@ -57,7 +57,7 @@ public class AdHocChatRoomList {
         if (serRefs != null) {
             for (ServiceReference<ProtocolProviderService> serRef : serRefs) {
                 ProtocolProviderService protocolProvider
-                        = AndroidGUIActivator.bundleContext.getService(serRef);
+                        = AppGUIActivator.bundleContext.getService(serRef);
                 OperationSetAdHocMultiUserChat adHocMultiUserChatOpSet
                         = protocolProvider.getOperationSet(OperationSetAdHocMultiUserChat.class);
                 if (adHocMultiUserChatOpSet != null) {

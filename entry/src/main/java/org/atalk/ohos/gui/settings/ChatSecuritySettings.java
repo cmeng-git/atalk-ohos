@@ -12,11 +12,10 @@ import androidx.preference.PreferenceScreen;
 
 import net.java.sip.communicator.util.UtilActivator;
 
+import org.atalk.ohos.BaseActivity;
 import org.atalk.ohos.R;
 import org.atalk.ohos.gui.util.PreferenceUtil;
 import org.atalk.service.configuration.ConfigurationService;
-import org.atalk.service.osgi.OSGiActivity;
-import org.atalk.service.osgi.OSGiPreferenceFragment;
 
 /**
  * Chat security settings screen with Omemo preferences - modified for aTalk
@@ -24,7 +23,7 @@ import org.atalk.service.osgi.OSGiPreferenceFragment;
  * @author Pawel Domas
  * @author Eng Chong Meng
  */
-public class ChatSecuritySettings extends OSGiActivity {
+public class ChatSecuritySettings extends BaseActivity {
     // OMEMO Security section
     static private final String P_KEY_OMEMO_KEY_BLIND_TRUST = "pref.key.omemo.key.blind.trust";
 
@@ -46,14 +45,13 @@ public class ChatSecuritySettings extends OSGiActivity {
     /**
      * The preferences fragment implements Omemo settings.
      */
-    public static class SettingsFragment extends OSGiPreferenceFragment
+    public static class SettingsFragment extends BasePreferenceFragment
             implements SharedPreferences.OnSharedPreferenceChangeListener {
         /**
          * {@inheritDoc}
          */
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-            super.onCreatePreferences(savedInstanceState, rootKey);
             addPreferencesFromResource(R.xml.security_preferences);
         }
 

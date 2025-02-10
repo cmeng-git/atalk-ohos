@@ -12,19 +12,19 @@ import java.util.List;
 
 import org.atalk.impl.neomedia.MediaServiceImpl;
 import org.atalk.impl.neomedia.NeomediaActivator;
+import org.atalk.ohos.BaseActivity;
 import org.atalk.ohos.R;
 import org.atalk.ohos.gui.account.settings.MediaEncodingActivity;
 import org.atalk.ohos.gui.account.settings.MediaEncodingsFragment;
 import org.atalk.service.neomedia.codec.EncodingConfiguration;
 import org.atalk.service.neomedia.format.MediaFormat;
-import org.atalk.service.osgi.OSGiActivity;
 import org.atalk.util.MediaType;
 
 /**
  * @author Pawel Domas
  * @author Eng Chong Meng
  */
-public class EncodingSettings extends OSGiActivity {
+public class EncodingSettings extends BaseActivity {
     public static final String EXTRA_MEDIA_TYPE = "media_type";
     public static final String MEDIA_TYPE_AUDIO = "media_type.AUDIO";
     public static final String MEDIA_TYPE_VIDEO = "media_type.VIDEO";

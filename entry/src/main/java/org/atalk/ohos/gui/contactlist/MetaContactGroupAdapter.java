@@ -20,7 +20,7 @@ import net.java.sip.communicator.service.contactlist.MetaContactGroup;
 import net.java.sip.communicator.service.contactlist.MetaContactListService;
 
 import org.atalk.ohos.R;
-import org.atalk.ohos.gui.AndroidGUIActivator;
+import org.atalk.ohos.gui.AppGUIActivator;
 import org.atalk.ohos.gui.util.CollectionAdapter;
 
 /**
@@ -120,7 +120,7 @@ public class MetaContactGroupAdapter extends CollectionAdapter<Object> {
      * @return the list of all currently available <code>MetaContactGroup</code>.
      */
     private static List<Object> getAllContactGroups(boolean includeRoot, boolean includeCreateNew) {
-        MetaContactListService contactListService = AndroidGUIActivator.getContactListService();
+        MetaContactListService contactListService = AppGUIActivator.getContactListService();
 
         MetaContactGroup root = contactListService.getRoot();
         ArrayList<Object> groupList = new ArrayList<>();
@@ -152,7 +152,7 @@ public class MetaContactGroupAdapter extends CollectionAdapter<Object> {
         if (item.equals(ADD_NEW_OBJECT)) {
             tv.setText(R.string.create_group);
         }
-        else if (item.equals(AndroidGUIActivator.getContactListService().getRoot())) {
+        else if (item.equals(AppGUIActivator.getContactListService().getRoot())) {
             // Root - Contacts
             tv.setText(R.string.no_group);
         }

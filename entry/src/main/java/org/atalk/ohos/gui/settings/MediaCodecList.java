@@ -18,10 +18,10 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import org.atalk.impl.neomedia.codec.video.CodecInfo;
+import org.atalk.ohos.BaseActivity;
 import org.atalk.ohos.R;
 import org.atalk.ohos.gui.util.ThemeHelper;
 import org.atalk.ohos.gui.util.ThemeHelper.Theme;
-import org.atalk.service.osgi.OSGiActivity;
 
 /**
  * Activity that lists video <code>MediaCodec</code>s available in the system.
@@ -38,7 +38,7 @@ import org.atalk.service.osgi.OSGiActivity;
  * @author Pawel Domas
  * @author Eng Chong Meng
  */
-public class MediaCodecList extends OSGiActivity implements AdapterView.OnItemClickListener {
+public class MediaCodecList extends BaseActivity implements AdapterView.OnItemClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

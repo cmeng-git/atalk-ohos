@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.preference.Preference;
@@ -19,9 +20,9 @@ import net.java.sip.communicator.service.protocol.AccountID;
 import net.java.sip.communicator.service.protocol.ProtocolNames;
 import net.java.sip.communicator.util.account.AccountUtils;
 
+import org.atalk.ohos.BaseActivity;
 import org.atalk.ohos.aTalkApp;
-import org.atalk.ohos.gui.call.AndroidCallUtil;
-import org.atalk.service.osgi.OSGiActivity;
+import org.atalk.ohos.gui.call.AppCallUtil;
 
 import java.util.List;
 
@@ -31,7 +32,7 @@ import java.util.List;
  * @author Pawel Domas
  * @author Eng Chong Meng
  */
-public class AccountPreferenceActivity extends OSGiActivity
+public class AccountPreferenceActivity extends BaseActivity
         implements PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
     /**
      * Extra key used to pass the unique user ID using {@link android.content.Intent}
@@ -69,7 +70,7 @@ public class AccountPreferenceActivity extends OSGiActivity
         super.onCreate(savedInstanceState);
 
         // Settings cannot be opened during a call
-        if (AndroidCallUtil.checkCallInProgress(this))
+        if (AppCallUtil.checkCallInProgress(this))
             return;
 
         userUniqueID = getIntent().getStringExtra(EXTRA_USER_ID);
@@ -158,7 +159,7 @@ public class AccountPreferenceActivity extends OSGiActivity
      * @return true always
      */
     @Override
-    public boolean onPreferenceStartFragment(PreferenceFragmentCompat caller, Preference pref) {
+    public boolean onPreferenceStartFragment(@NonNull PreferenceFragmentCompat caller, Preference pref) {
         // Instantiate the new Fragment
         final Bundle args = pref.getExtras();
         args.putString(AccountPreferenceFragment.EXTRA_ACCOUNT_ID, userUniqueID);

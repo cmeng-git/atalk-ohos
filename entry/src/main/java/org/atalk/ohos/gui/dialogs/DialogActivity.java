@@ -23,10 +23,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.atalk.ohos.BaseActivity;
 import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.util.ViewUtil;
-import org.atalk.service.osgi.OSGiActivity;
 
 /**
  * <code>DialogActivity</code> can be used to display alerts without having parent <code>Activity</code>
@@ -40,7 +40,7 @@ import org.atalk.service.osgi.OSGiActivity;
  * @author Pawel Domas
  * @author Eng Chong Meng
  */
-public class DialogActivity extends OSGiActivity {
+public class DialogActivity extends BaseActivity {
     /**
      * Dialog title extra.
      */
@@ -461,31 +461,31 @@ public class DialogActivity extends OSGiActivity {
     public static long showCustomDialog(Context context, String title, String fragmentClass,
             Bundle fragmentArguments, String confirmTxt,
             DialogListener listener, Map<String, Serializable> extraArguments) {
-        Intent alert = new Intent(context, DialogActivity.class);
+        Intent intent = new Intent(context, DialogActivity.class);
         long dialogId = System.currentTimeMillis();
 
-        alert.putExtra(EXTRA_DIALOG_ID, dialogId);
+        intent.putExtra(EXTRA_DIALOG_ID, dialogId);
 
         if (listener != null) {
             listenersMap.put(dialogId, listener);
-            alert.putExtra(EXTRA_LISTENER_ID, dialogId);
+            intent.putExtra(EXTRA_LISTENER_ID, dialogId);
         }
 
-        alert.putExtra(EXTRA_TITLE, title);
-        alert.putExtra(EXTRA_CONFIRM_TXT, confirmTxt);
+        intent.putExtra(EXTRA_TITLE, title);
+        intent.putExtra(EXTRA_CONFIRM_TXT, confirmTxt);
 
-        alert.putExtra(EXTRA_CONTENT_FRAGMENT, fragmentClass);
-        alert.putExtra(EXTRA_CONTENT_ARGS, fragmentArguments);
+        intent.putExtra(EXTRA_CONTENT_FRAGMENT, fragmentClass);
+        intent.putExtra(EXTRA_CONTENT_ARGS, fragmentArguments);
 
         if (extraArguments != null) {
             for (String key : extraArguments.keySet()) {
-                alert.putExtra(key, extraArguments.get(key));
+                intent.putExtra(key, extraArguments.get(key));
             }
         }
-        alert.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        alert.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
 
-        context.startActivity(alert);
+        context.startActivity(intent);
         return dialogId;
     }
 
