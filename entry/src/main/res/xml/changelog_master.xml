@@ -6,7 +6,7 @@
      They are automatically updated with "ant bump-version".
 -->
 <changelog>
-    <release version="0.6.0 (02/10/2025)" versioncode="0006000">
+    <release version="0.6.0 (02/13/2025)" versioncode="0006000">
         <change>Reimplement deprecated classes/methods i.e. onBackPressed and AsyncTask with new functions</change>
         <change>Fix show aTalk icon MissingForegroundServiceTypeException; use NotificationManager.notify() instead</change>
         <change>Need to add READ_EXTERNAL_STORAGE permission (Files and Media) request for android API-32</change>
@@ -16,6 +16,11 @@
         <change>UpdateServiceImpl#isLatestVersion need to close inputStream after access end</change>
         <change>Add BaseActivity, BaseFragment, BaseDialogFragment and BasePreferenceFragment classes, and subclass OSGi unrelated classes to these instead; Remove unused OSGi classes</change>
         <change>Remove all imageStreaming classes, aTalk does not support desktop sharing</change>
+        <change>Change default thumbnail size to 128x96 with jpeg compress 80% quality; better visibility and converse bandwidth</change>
+        <change>CryptoFragment: Skip if previous check has omemo supported. The OmemoManager.contactSupportsOmemo can cause ANR in OmemoManager.encrypt</change>
+        <change>Check for ConfigurationUtils#mConfigService not null before proceed to handle any setting changes</change>
+        <change>Back key during call will exit screen block if UI is not responding due to proximity sensor problem</change>
+        <change>Consolidate and move all si file transfer classes into smack directory</change>
         <change>Clean up app sources and rename some packages names</change>
         <change>Update all app used libraries to the latest compatible releases</change>
         <change>Bug fixes and enhancements</change>

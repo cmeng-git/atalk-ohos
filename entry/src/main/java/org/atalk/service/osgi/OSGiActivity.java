@@ -314,7 +314,7 @@ public class OSGiActivity extends BaseActivity {
             try {
                 fragment.start(bundleContext);
             } catch (Exception e) {
-                Timber.e(e, "Error starting OSGiFragment");
+                Timber.e(e, "Error starting OSGi Fragment");
             }
         }
     }
@@ -329,7 +329,7 @@ public class OSGiActivity extends BaseActivity {
             try {
                 fragment.stop(bundleContext);
             } catch (Exception e) {
-                Timber.e(e, "Error while trying to stop OSGiFragment");
+                Timber.e(e, "Error while trying to stop OSGi Fragment");
             }
         }
         osgiFragments.remove(fragment);
