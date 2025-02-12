@@ -6,7 +6,7 @@
      They are automatically updated with "ant bump-version".
 -->
 <changelog>
-    <release version="0.6.0 (02/13/2025)" versioncode="0006000">
+    <release version="00.06.000 (02/13/2025)" versioncode="0006000">
         <change>Reimplement deprecated classes/methods i.e. onBackPressed and AsyncTask with new functions</change>
         <change>Fix show aTalk icon MissingForegroundServiceTypeException; use NotificationManager.notify() instead</change>
         <change>Need to add READ_EXTERNAL_STORAGE permission (Files and Media) request for android API-32</change>
