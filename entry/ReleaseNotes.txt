@@ -1,5 +1,13 @@
 Project aTalk-ohos Release Notes
 =========================================================================
+Version:        00.06.010 (0006010)
+Release Date:   02/19/2025
+Author:         cmeng
+- BaseActivity#configureToolBar must handle and enable custom actionBar setup; else ShareActivity crash.
+- Update German and Russian string.xml files.
+- Remove unused classes/files.
+
+=========================================================================
 Version:        00.06.000 (0006000)
 Release Date:   02/13/2025
 Author:         cmeng

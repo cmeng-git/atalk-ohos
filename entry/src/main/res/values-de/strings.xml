@@ -273,13 +273,13 @@
     <string name="create_group_first_wizard">Ihre Kontaktliste enthält keine Gruppen. Bitte erstelle zuerst eine Gruppe. (Datei/Gruppe erstellen).</string>
 
     <!-- About Dialog -->
-    <string name="aboutDialog_help"><a href="https://cmeng-git.github.io/atalk">Online hilfe</a></string>
+    <string name="aboutDialog_help"><a href="https://cmeng-git.github.io/atalk">Onlinehilfe</a></string>
     <string name="About">Über uns</string>
     <string name="version_">Version %1$s</string>
     <string name="help">Hilfe</string>
     <string name="check_new_version">Auf Updates prüfen</string>
     <string name="show_history_log">Verlauf zeigen</string>
-    <string name="online_help">Online hilfe</string>
+    <string name="online_help">Onlinehilfe</string>
 
     <!-- HTTP Authorization Request Dialog -->
     <string name="http_authorization_request">HTTP-Autorisierungsanforderung</string>
@@ -1445,7 +1445,7 @@
     <string name="phone_permission_denied_feedback">Telefonfunktionen sind erst verfügbar, wenn du die Berechtigung erteilt hast.</string>
 
     <string name="video_permission_denied_dialog_title">Bitte um Foto- und Videogenehmigung</string>
-    <string name="video_permission_denied_feedback">Bitte um Foto- und Videogenehmigung</string>
+    <string name="video_permission_denied_feedback">Der Zugriff auf Medienfoto- und Videodateien ist erst möglich, wenn Sie der Genehmigungsanfrage stattgeben</string>
 
     <string name="storage_permission_denied_dialog_title">Speichererlaubnisanforderung</string>
     <string name="storage_permission_denied_feedback">Das Speichern von gesendeten und empfangenen Inhalten im Speicher ist erst zulässig, nachdem du die Berechtigung erteilt hast.</string>

@@ -142,6 +142,7 @@ It supports the following XEP's, standards for XMPP clients.
 * [XEP-0371: Jingle ICE Transport Method 0.3.1](https://xmpp.org/extensions/xep-0371.html)
 * [XEP-0384: OMEMO Encryption 0.8.3](https://xmpp.org/extensions/xep-0384.html)
 * [XEP-0391: Jingle Encrypted Transports 0.1.2](https://xmpp.org/extensions/xep-0391.html)
+* [XEP-0396: Jingle Encrypted Transports - OMEMO 0.2.0](https://xmpp.org/extensions/xep-0396.html)
 * [XEP-0441: Message Archive Management Preferences 0.2.0](https://xmpp.org/extensions/xep-0441.html)
 * [XEP-0453: DOAP usage in XMPP 0.1.2](https://xmpp.org/extensions/xep-0453.html)
 * [XEP-0454: OMEMO Media sharing 0.1.0](https://xmpp.org/extensions/xep-0454.html)
@@ -218,7 +219,9 @@ Other contributors:
   These libraries sources include: opus, speex and ogg
 
 ## Feedback and Contributions
-Cannot found an UI language and would like to help; translate the content in [strings.xml](https://github.com/cmeng-git/atalk-ohos/blob/master/art/values-xlate/strings.xml).<br/>Create a pull request or forward the file to the developer.
+If you can't find your language in UI and would like to help then translate the app on https://toolate.othing.xyz/projects/atalk/.
+Or copy the [strings.xml](./aTalk/src/main/res/values/strings.xml) to `values-LOCALE` where the `LOCALE` is language-COUNTRY e.g. `pt-rBR`. 
+Then create a pull request or forward the file to the developer.
 
 If you have found bug, wish for new feature, or have other questions, [file an issue](https://github.com/cmeng-git/atalk-ohos/issues).
 
