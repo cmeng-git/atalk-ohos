@@ -360,7 +360,7 @@ public class NotificationManager implements CallChangeListener, CallListener, Ca
      * @return all <code>ProtocolProviderFactory</code>s obtained from the bundle context
      */
     public static Map<Object, ProtocolProviderFactory> getProtocolProviderFactories() {
-        ServiceReference[] serRefs = null;
+        ServiceReference<?>[] serRefs = null;
         try {
             // get all registered provider factories
             serRefs = NotificationWiringActivator.bundleContext
@@ -371,7 +371,7 @@ public class NotificationManager implements CallChangeListener, CallListener, Ca
 
         Map<Object, ProtocolProviderFactory> providerFactoriesMap = new Hashtable<>();
         if (serRefs != null) {
-            for (ServiceReference serRef : serRefs) {
+            for (ServiceReference<?> serRef : serRefs) {
                 ProtocolProviderFactory providerFactory
                         = (ProtocolProviderFactory) NotificationWiringActivator.bundleContext.getService(serRef);
                 providerFactoriesMap.put(serRef.getProperty(ProtocolProviderFactory.PROTOCOL), providerFactory);
@@ -386,7 +386,7 @@ public class NotificationManager implements CallChangeListener, CallListener, Ca
      * @return all protocol providers currently registered.
      */
     public static List<ProtocolProviderService> getProtocolProviders() {
-        ServiceReference[] serRefs = null;
+        ServiceReference<?>[] serRefs = null;
         try {
             // get all registered provider factories
             serRefs = NotificationWiringActivator.bundleContext
@@ -397,7 +397,7 @@ public class NotificationManager implements CallChangeListener, CallListener, Ca
 
         List<ProtocolProviderService> providersList = new ArrayList<>();
         if (serRefs != null) {
-            for (ServiceReference serRef : serRefs) {
+            for (ServiceReference<?> serRef : serRefs) {
                 ProtocolProviderService pp
                         = (ProtocolProviderService) NotificationWiringActivator.bundleContext.getService(serRef);
                 providersList.add(pp);

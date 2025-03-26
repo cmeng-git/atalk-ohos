@@ -349,7 +349,7 @@ public class NeomediaActivator implements BundleActivator {
          * Registers or unregister as a popup message listener to detect when a user click on
          * notification saying that the device configuration has changed.
          *
-         * @param enable True to register to the popup message notifcation handler. False to unregister.
+         * @param enable True to register to the popup message notification handler. False to unregister.
          */
         public void managePopupMessageListenerRegistration(boolean enable) {
             Iterator<NotificationHandler> notificationHandlers

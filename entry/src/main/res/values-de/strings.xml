@@ -56,7 +56,7 @@
     <string name="encrypt_choices">Verschlüsselungsmethoden</string>
     <string name="encrypt_unencrypted">Unverschlüsselt</string>
     <string name="network">Netzwerk</string>
-    <string name="notification_setting">Benachrichtigungseinstellungen&#8230;</string>
+    <string name="notification_setting">Benachrichtigungseinstellungen…</string>
     <string name="open_file_no_application">Keine Anwendung zum Öffnen der Datei gefunden</string>
     <string name="password">Passwort</string>
     <string name="password_change_on_server_failed">Passwortänderung auf Server fehlgeschlagen:\n%1$s</string>
@@ -67,7 +67,7 @@
     <string name="call_info_zrtp">Anruf ZRTP Info</string>
     <string name="osgi_framework_stop">OSGi-Unterstützung beenden</string>
     <string name="save_password">Passwort speichern</string>
-    <string name="system_settings">Einstellungen&#8230;</string>
+    <string name="system_settings">Einstellungen…</string>
     <string name="username_hint">benutzername@servername.de</string>
     <string name="username_">Benutzername:</string>
 
@@ -77,9 +77,9 @@
     <string name="call_max_transfer">Es sind maximal 2 Anrufe für die überwachte Gesprächsübergabe erlaubt!</string>
     <string name="call_transfer_call">Anruf weiterleiten</string>
     <string name="call_transfer">Übertragung</string>
-    <string name="call_transfer_failed">Weiterleitung des Anrufs fehlgeschlagen: %1$s &#8674; %2$s\n%3$s</string>
+    <string name="call_transfer_failed">Weiterleitung des Anrufs fehlgeschlagen: %1$s ⇢ %2$s\n%3$s</string>
     <string name="call_transfer_hint">Wählen Sie den Kontakt aus, an den Sie das Gespräch weiterleiten möchten.</string>
-    <string name="call_transfer_msg">%1$s Anruf weiterleiten an&#8230; %2$s</string>
+    <string name="call_transfer_msg">%1$s Anruf weiterleiten an… %2$s</string>
 
     <string name="attach_picture">Bilder</string>
     <string name="attach_take_picture">Bild aufnehmen</string>
@@ -113,7 +113,7 @@
     <string name="accept">Akzeptieren</string>
     <string name="account">Konto</string>
     <string name="account_me">Ich</string>
-    <string name="account_settings">Kontoeinstellungen&#8230;</string>
+    <string name="account_settings">Kontoeinstellungen…</string>
     <string name="account_unregistered">%1$s ist nicht angemeldet</string>
     <string name="add">Hinzufügen</string>
     <string name="add_contact">Kontakt hinzufügen</string>
@@ -132,9 +132,9 @@
     <string name="add_group_error_empty_name">Der Gruppenname darf nicht leer sein.</string>
     <string name="add_group_create">Gruppe anlegen</string>
     <string name="add_group_name">Gruppenname eingeben</string>
-    <string name="answer">Antworten&#8230;</string>
+    <string name="answer">Antworten…</string>
     <string name="apply">Übernehmen</string>
-    <string name="apply_changes">Kontoeinstellungen übernehmen (~60S) &#8230;</string>
+    <string name="apply_changes">Kontoeinstellungen übernehmen (~60S) …</string>
     <string name="at">at</string>
     <string name="authentication_failed">Autoriesierung für %1$s fehlgeschlagen. Das angegebene Passwort ist nicht korrekt.</string>
     <string name="authentication_requested">Autorisierung angefordert</string>
@@ -175,7 +175,7 @@
     <string name="call_no_device_codec_Q">Soll der Anruf fortgesetzt werden?</string>
     <string name="call_no_matching_format">Es wurden keine passenden Mediaformate zum eigehenden Anruf %1$s gefunden. Bitte überprüfe das Gerät und dessen Codecs unter \'Einstellungen…\'.</string>
     <string name="call_outgoing">Ausgehender Anruf</string>
-    <string name="call_outgoing_with">Gespräch mit %1$s&#8230;</string>
+    <string name="call_outgoing_with">Gespräch mit %1$s…</string>
     <string name="call_via_">Anruf über: %1$s</string>
 
     <string name="cancel">Zurück</string>
@@ -186,56 +186,56 @@
     <string name="reason">Grund:</string>
     <string name="set">einstellen</string>
     <string name="share">Teilen…</string>
-    <string name="share_text">Text teilen&#8230;</string>
-    <string name="share_file">Datei teilen&#8230;</string>
+    <string name="share_text">Text teilen…</string>
+    <string name="share_file">Datei teilen…</string>
     <string name="snooze">Schlummer</string>
 
     <!-- ExoPlayer -->
     <string name="playback_error">Es können keine Medieninhalte für die Wiedergabe gefunden werden</string>
-    <string name="playback_buffering">Pufferung&#8230;</string>
+    <string name="playback_buffering">Pufferung…</string>
     <string name="playback_completed">Ende der Medienwiedergabe</string>
     <string name="playback_rate">GrößeWiedergaberate: %1$s</string>
 
     <!-- Conference Chat -->
     <string name="auto_join">Automatische Teilnahme</string>
-	<string name="change_nickname">Spitznamen wechseln</string>
-	<string name="change_nickname_">Ändern des Spitznamens&#8230;</string>
+    <string name="change_nickname">Spitznamen wechseln</string>
+    <string name="change_nickname_">Ändern des Spitznamens…</string>
     <string name="change_nickname_error_conflict">Spitzname existiert bereits</string>
-	<string name="change_nickname_error">Fehler beim Ändern des Kurznamens für %1$s: %2$s</string>
+    <string name="change_nickname_error">Fehler beim Ändern des Kurznamens für %1$s: %2$s</string>
     <string name="change_nickname_label">Untenstehend kannst du deinen Spitznamen ändern.</string>
     <string name="change_nickname_null">Der Feldinhalt für den Spitznamen darf nicht null sein</string>
     <string name="chatroom_change_info">Informationen zum Chatraum ändern</string>
     <string name="chatroom_change_subject">IIm Feld unten können Sie das neue Thema für diesen Raum eingeben.</string>
-	<string name="change_video_remote_quality">Ändern der Videoauflösung auf der Gegenseite.</string>
+    <string name="change_video_remote_quality">Ändern der Videoauflösung auf der Gegenseite.</string>
     <string name="chatroom_conference_item">%1$s\'s Konferenz</string>
-	<string name="chatroom_conference">Konferenzen</string>
+    <string name="chatroom_conference">Konferenzen</string>
     <string name="chatroom">Chatraum</string>
     <string name="chatroom_already_joined">Du befindest dich bereits im %1$s Chatraum.</string>
     <string name="chatroom_configuration">Chatraum Konfiguration</string>
-	<string name="chatroom_configuration_failed">Fehler beim Abrufen des Chatraum-Konfigurationsformulars %1$s.</string>
-	<string name="chatroom_configuration_forbidden">Das Chatraum-Konfigurationsformular %1$s konnte nicht abgerufen werden. Nur Besitzer des Chatraums können das Konfigurationsformular sehen und ändern.</string>
+    <string name="chatroom_configuration_failed">Fehler beim Abrufen des Chatraum-Konfigurationsformulars %1$s.</string>
+    <string name="chatroom_configuration_forbidden">Das Chatraum-Konfigurationsformular %1$s konnte nicht abgerufen werden. Nur Besitzer des Chatraums können das Konfigurationsformular sehen und ändern.</string>
     <string name="chatroom_configuration_members_edit_description">Die Liste auf der rechten Seite enthält Benutzer mit einer Mitgliedsrolle in diesem Chatraum. Wenn der Chatraum\'Nur für Mitglieder\'  ist, sind dies die Benutzer, die sich anmelden dürfen.</string>
     <string name="chatroom_configuration_members_edit_title">Mitgliederliste bearbeiten</string>
-	<string name="chatroom_configuration_submit_failed">Fehler beim Übermitteln des Chatraum-Konfigurationsformulars für Chatraum %1$s.</string>
+    <string name="chatroom_configuration_submit_failed">Fehler beim Übermitteln des Chatraum-Konfigurationsformulars für Chatraum %1$s.</string>
     <string name="chatroom_remove_tooltip">Entfernt den markierten Chatraum aus der Liste mit den gespeicherten Chaträumen.</string>
     <string name="chatroom_save_tooltip">Speichert den Chatraum in einer Liste</string>
     <string name="chatroom_send_message_forbidden">Nachrichtenübermittlung nicht erlaubt (voice revoked)</string>
-	<string name="chatroom_user_joined">ist %1$s beigetreten</string>
+    <string name="chatroom_user_joined">ist %1$s beigetreten</string>
     <string name="chatroom_user_kicked">wurde aus %1$s herausgeworfen</string>
-	<string name="chatroom_user_left">hat %1$s verlassen</string>
-	<string name="chatroom_user_quit">hat %1$s beendet</string>
-	<string name="chatroom_name">Chatraum Name</string>
-	<string name="chatroom_name_info">Bitte gebe untenstehend den Namen des neuen Chatraums ein.</string>
-	<string name="chatroom_not_exist">Der Chatraum %1$s wurde auf Server %2$s nicht gefunden. Bitte überprüfe die Schreibweise.</string>
-	<string name="chatroom_not_connected">Du musst online sein um dem Chatraum  %1$s beitreten zu können.</string>
-	<string name="chatroom_leave_not_connected">Du musst online sein um einen Chatraum verlassen zu können.</string>
-	<string name="chatroom_not_joined">Du musst einen Chatraum betreten haben bevor du weitere Handlungen mit ihm vornehmen kannst.</string>
-	<string name="chatroom_options">Chatraum Optionen</string>
-	<string name="chatroom_required_password">Der %1$s Chatraum fragt nach einem Passwort.</string>
+    <string name="chatroom_user_left">hat %1$s verlassen</string>
+    <string name="chatroom_user_quit">hat %1$s beendet</string>
+    <string name="chatroom_name">Chatraum Name</string>
+    <string name="chatroom_name_info">Bitte gebe untenstehend den Namen des neuen Chatraums ein.</string>
+    <string name="chatroom_not_exist">Der Chatraum %1$s wurde auf Server %2$s nicht gefunden. Bitte überprüfe die Schreibweise.</string>
+    <string name="chatroom_not_connected">Du musst online sein um dem Chatraum  %1$s beitreten zu können.</string>
+    <string name="chatroom_leave_not_connected">Du musst online sein um einen Chatraum verlassen zu können.</string>
+    <string name="chatroom_not_joined">Du musst einen Chatraum betreten haben bevor du weitere Handlungen mit ihm vornehmen kannst.</string>
+    <string name="chatroom_options">Chatraum Optionen</string>
+    <string name="chatroom_required_password">Der %1$s Chatraum fragt nach einem Passwort.</string>
     <string name="chatroom_status_disable">Raumstatus deaktivieren</string>
     <string name="chatroom_status_enable">Raumstatus aktivieren</string>
-	<string name="chatroom_subject_changed">Raumthema geändert: \'%1$s\' => \'%2$s\'</string>
-	<string name="chatroom_nickname_changed">%1$s heißt nun %2$s</string>
+    <string name="chatroom_subject_changed">Raumthema geändert: \'%1$s\' =&gt; \'%2$s\'</string>
+    <string name="chatroom_nickname_changed">%1$s heißt nun %2$s</string>
     <string name="clear_custom_messages">Meldungen entfernen</string>
     <string name="close">Schließen</string>
     <string name="close_all_active_chats">Alle aktiven Chats schließen</string>
@@ -265,9 +265,9 @@
 
     <string name="create">Erstellen</string>
     <string name="create_call_failed">Kann Anruf nicht aufbauen.</string>
-    <string name="create_conference_call">Eine Konferenzschaltung erstellen.&#8230;</string>
-    <string name="create_conference_chat">Erstellen eines Konferenz-Chats&#8230;</string>
-    <string name="create_group">Gruppen erstellen&#8230;</string>
+    <string name="create_conference_call">Eine Konferenzschaltung erstellen.…</string>
+    <string name="create_conference_chat">Erstellen eines Konferenz-Chats…</string>
+    <string name="create_group">Gruppen erstellen…</string>
     <string name="create_group_name_invalid">Ungültiger Gruppenname: %1$s</string>
     <string name="create_group_name">Bitte gebe untenstehend den Namen der zu erstellenden Gruppe ein.</string>
     <string name="create_group_first_wizard">Ihre Kontaktliste enthält keine Gruppen. Bitte erstelle zuerst eine Gruppe. (Datei/Gruppe erstellen).</string>
@@ -329,7 +329,7 @@
     <string name="purge_debug_log">aTalk Debug Logdatei leeren</string>
     <string name="purge_sql_db">aTalk SQL Datenbank löschen - Vorsicht!</string>
     <string name="refresh_apply">Anwenden</string>
-    <string name="refresh_store">Persistente Speicherwerte erneuern.&#8230;</string>
+    <string name="refresh_store">Persistente Speicherwerte erneuern.…</string>
     <string name="refresh_store_avatar">XEP-0084/XEP-0153: Avatar</string>
     <string name="refresh_store_caps">XEP-0115: Unterstützungen dieser Entität</string>
     <string name="refresh_store_disc_info">XEP-0030: Diensterkennung</string>
@@ -338,7 +338,7 @@
     <string name="refresh_store_omemo">XEP-0384: OMEMO Verschlüsselung</string>
 
     <string name="unregistered_message">Anmeldung zum Konto fehlgeschlagen:\nBenutzer: %1$s\nServer: %2$s\nDas Konto ist offline.</string>
-    <string name="create_videoBridge">Eine Videobrücke erstellen&#8230;</string>
+    <string name="create_videoBridge">Eine Videobrücke erstellen…</string>
     <string name="create_videoBridge_menu">Eine Videobrücke erstellen</string>
     <string name="create_join_video_conference">Videokonferenzschaltung erzeugen/beitreten.</string>
     <string name="create_video_conference">Eine neue Videokonferenz für diesen Chatraum einrichten.</string>
@@ -356,7 +356,7 @@
     <string name="enter_name_or_number">Namen oder Nummer eingeben</string>
     <string name="error">Error</string>
     <string name="error_was_">Error war: %1$s</string>
-	<string name="exit">Abbrechen</string>
+    <string name="exit">Abbrechen</string>
     <string name="extended_away">Abwesend (erweitert)</string>
     <string name="free_for_chat">Für Chats verfügbar</string>
 
@@ -369,14 +369,14 @@
     <string name="file_send_declined">%1$s hat diese Datei abgelehnt.</string>
     <string name="file_sending_to">Sende Datei an %1$s</string>
     <string name="file_transfer_canceled">Dateitransfer wurde abgebrochen</string>
-    <string name="file_transfer_preparing">Bereite Dateitransfer mit %1$s vor. Bitte warten&#8230;</string>
+    <string name="file_transfer_preparing">Bereite Dateitransfer mit %1$s vor. Bitte warten…</string>
     <string name="file_transfer_declined">Dateitransfer wurde zurückgegangen.</string>
     <string name="file_transfer_request_received">%1$s möchte Dir eine Datei senden</string>
     <string name="file_transfer_send_error">Es gab ein Problem beim Sender einer Datei an %1$s</string>
     <string name="file_transfer_waiting_acceptance">Warte auf %1$s zur Bestätigung des Transfers.</string>
 
     <string name="purge">Purge</string>
-	<string name="estimated_time_">Geschätzte Zeit: %1$s</string>
+    <string name="estimated_time_">Geschätzte Zeit: %1$s</string>
     <string name="file">Datei</string>
     <string name="file_delivery_error">Konnte Datei nicht senden: %1$s</string>
     <string name="file_does_not_exist">Die Datei wurde nicht gefunden. Sie wurde anscheinend gelöscht</string>
@@ -393,23 +393,23 @@
     <string name="file_transfer_not_secure">XEP-0096: Das SI File Transfer-Protokoll unterstützt den verschlüsselten Dateiversand nicht!</string>
     <string name="file_transfer_not_supported">Contact Client oder Server unterstützt keine Dateiübertragung oder erforderliche Protokolle</string>
 
-	<string name="finish">Beenden</string>
-	<string name="folder_not_exist">Das Verzeichnis zu dieser Datei wurde nicht gefunden. Es wurde anscheinend gelöscht.</string>
-	<string name="folder_open_failed">Kann Verzeichnis nicht öffnen.</string>
-	<string name="folder_open_no_permission">Du hast keine Berechtigungen dieses Verzeichnis zu öffnen. Bitte überprüfen die Zugriffsrechte und versuche es erneut.</string>
-	<string name="folder_open_no_application">Wir konnten keine Anwendung finden um dieses Verzeichnis zu öffnen.</string>
+    <string name="finish">Beenden</string>
+    <string name="folder_not_exist">Das Verzeichnis zu dieser Datei wurde nicht gefunden. Es wurde anscheinend gelöscht.</string>
+    <string name="folder_open_failed">Kann Verzeichnis nicht öffnen.</string>
+    <string name="folder_open_no_permission">Du hast keine Berechtigungen dieses Verzeichnis zu öffnen. Bitte überprüfen die Zugriffsrechte und versuche es erneut.</string>
+    <string name="folder_open_no_application">Wir konnten keine Anwendung finden um dieses Verzeichnis zu öffnen.</string>
     <string name="group_chat">Gruppenchat</string>
-	<string name="hide">Verbergen</string>
-	<string name="history">Chatverlauf</string>
-	<string name="history_contact">Chatverlauf - %1$s</string>
-	<string name="history_off_for_contact">Den Chatverlauf für diesen Kontakt ausschalten.</string>
-	<string name="history_off_all">Den Chatverlauf für alle Kontakte und Chats ausschalten.</string>
-	<string name="history_erase_for_contact">Den Chatverlauf löschen</string>
-	<string name="history_erase_all">Alle Chatverlaufe löschen</string>
-	<string name="history_purge_for_contact_warning">Möchten Sie wirklich alle ausgewählten Nachrichten für %1$s löschen?</string>
-	<string name="history_purge_all_warning">Willst du wirklich alle Nachrichten von allen Kontakten Entitäten?</string>
+    <string name="hide">Verbergen</string>
+    <string name="history">Chatverlauf</string>
+    <string name="history_contact">Chatverlauf - %1$s</string>
+    <string name="history_off_for_contact">Den Chatverlauf für diesen Kontakt ausschalten.</string>
+    <string name="history_off_all">Den Chatverlauf für alle Kontakte und Chats ausschalten.</string>
+    <string name="history_erase_for_contact">Den Chatverlauf löschen</string>
+    <string name="history_erase_all">Alle Chatverlaufe löschen</string>
+    <string name="history_purge_for_contact_warning">Möchten Sie wirklich alle ausgewählten Nachrichten für %1$s löschen?</string>
+    <string name="history_purge_all_warning">Willst du wirklich alle Nachrichten von allen Kontakten Entitäten?</string>
     <string name="history_purge_count">Anzahl der gelöschten Verlaufsdatensätze: %1$s</string>
-	<string name="history_purge_error">Fehler beim Löschen der Nachrichten von %1$s.</string>
+    <string name="history_purge_error">Fehler beim Löschen der Nachrichten von %1$s.</string>
     <string name="history_purge_media">Löschen Sie Medien von meinem Telefon</string>
     <string name="history_offline_warning">Schließen und öffnen Sie diese Chatsitzung, um MAM- und Offline-Nachrichten anzuzeigen, wenn Sie online sind</string>
 
@@ -426,7 +426,7 @@
     <string name="chatroom_history_off_per">Chatverlauf-Aufzeichnung für diesen Chatraum auschalten.</string>
     <string name="chatroom_info">Chatraum Info</string>
 
-    <string name="chatroom_create">Chatraum erstellen&#8230;</string>
+    <string name="chatroom_create">Chatraum erstellen…</string>
     <string name="chatroom_create_error">Kann Chatraum nicht erstellen:\n%1$s</string>
     <string name="chatroom_create_join">Chatraum beitreten / beitreten</string>
     <string name="chatroom_create_wizard">Chatraum Erstellen Assistent</string>
@@ -456,14 +456,14 @@
     <string name="cr_member_kick">Aus Gruppenchat entfernen</string>
 
     <string name="invitation_message">Einladungsnachricht:</string>
-	<string name="invitation_received">Einladung empfangen</string>
-	<string name="invitation_received_message">%1$s hat dich eingeladen dem Chatraum %2$s beizutreten. Du kannst zustimmen, ablehnen oder ignorieren.</string>
-	<string name="invitation_rejected">%1$s hat deine Einladung zum Chatraum abgelehnt. Begründung: %2$s.</string>
-	<string name="invite">Einladen</string>
-	<string name="invite_contact_message">Wähle alle Kontakte aus, die du zu diesem Chat einladen möchten.</string>
-	<string name="invite_contact_to_call">Kontakte zum Gespräch einladen</string>
+    <string name="invitation_received">Einladung empfangen</string>
+    <string name="invitation_received_message">%1$s hat dich eingeladen dem Chatraum %2$s beizutreten. Du kannst zustimmen, ablehnen oder ignorieren.</string>
+    <string name="invitation_rejected">%1$s hat deine Einladung zum Chatraum abgelehnt. Begründung: %2$s.</string>
+    <string name="invite">Einladen</string>
+    <string name="invite_contact_message">Wähle alle Kontakte aus, die du zu diesem Chat einladen möchten.</string>
+    <string name="invite_contact_to_call">Kontakte zum Gespräch einladen</string>
     <string name="invite_contact_to_chat">Kontakte zum Chatten einladen</string>
-	<string name="invite_contact_to_videoBridge">Kontakte zur Videokonferenz einladen</string>
+    <string name="invite_contact_to_videoBridge">Kontakte zur Videokonferenz einladen</string>
     <string name="invite_group_chat">Gruppenchat Einladung</string>
     <string name="invite_reason">Einladungsgrund:</string>
     <string name="invite_reject_reason">Grund der Ablehnung:</string>
@@ -480,24 +480,24 @@
     <string name="home">Telefon</string>
     <string name="home_page">Website</string>
     <string name="invalid_address">Ungültige Adresse: %1$s</string>
-	<string name="join">Beitreten</string>
-	<string name="join_as">Beitreten als</string>
-	<string name="join_existing_video_conference">Einer bestehenden Videokonferenz beitreten</string>
-	<string name="join_video">Video beitreten</string>
-	<string name="job_title">Beruf</string>
+    <string name="join">Beitreten</string>
+    <string name="join_as">Beitreten als</string>
+    <string name="join_existing_video_conference">Einer bestehenden Videokonferenz beitreten</string>
+    <string name="join_video">Video beitreten</string>
+    <string name="job_title">Beruf</string>
 
-	<string name="join_automatically">Automatisch beitreten</string>
-	<string name="do_not_join_automatically">Nicht automatisch beitreten</string>
-	<string name="kick">Herauswerfen</string>
-	<string name="kick_failed">Herauswurf gescheitert</string>
-	<string name="kick_failed_general_error">Kann %1$s nicht herauswerfen. Der Server antwortet mit einem Fehler.</string>
-	<string name="kick_failed_not_allowed">Herauswurf gescheitert: %1$s. Der Chatraumbesitzer oder -administrator kann nicht herausgeworfen werden.</string>
-	<string name="kick_failed_not_enough_permission">Herauswurf von %1$s gescheitert: du hast nicht genügend Rechte.</string>
-	<string name="last">Letzter</string>
+    <string name="join_automatically">Automatisch beitreten</string>
+    <string name="do_not_join_automatically">Nicht automatisch beitreten</string>
+    <string name="kick">Herauswerfen</string>
+    <string name="kick_failed">Herauswurf gescheitert</string>
+    <string name="kick_failed_general_error">Kann %1$s nicht herauswerfen. Der Server antwortet mit einem Fehler.</string>
+    <string name="kick_failed_not_allowed">Herauswurf gescheitert: %1$s. Der Chatraumbesitzer oder -administrator kann nicht herausgeworfen werden.</string>
+    <string name="kick_failed_not_enough_permission">Herauswurf von %1$s gescheitert: du hast nicht genügend Rechte.</string>
+    <string name="last">Letzter</string>
     <string name="last_message_correction">Letzte Nachrichtenkorrektur</string>
-	<string name="last_name">Letzter Name</string>
+    <string name="last_name">Letzter Name</string>
     <string name="last_seen">Heute: %s</string>
-	<string name="leave">Verlassen</string>
+    <string name="leave">Verlassen</string>
     <string name="leave_chat_room">Chatraum verlassen</string>
     <string name="locally_on_hold">Lokal auf Abruf</string>
     <string name="login_credential">Login Benutzerdaten</string>
@@ -567,7 +567,7 @@
     <string name="recent_messages">Letzte Nachrichten</string>
     <string name="received_">%1$s empfangen</string>
     <string name="referred">Weitergeleitet</string>
-    <string name="restoring_">Wiederherstellen&#8230;</string>
+    <string name="restoring_">Wiederherstellen…</string>
 
     <string name="decline">Ablehnen</string>
     <string name="remove">Entfernen</string>
@@ -587,7 +587,7 @@
     <string name="request_authorization_prompt">Kontaktbesitzer %1$s\n\nDu benötigst eine Autorisierung von\'%2$s\', um ihn/sie zu deiner Kontaktliste hinzuzufügen. Bitte starten deine Anfrage erneut.</string>
     <string name="retry">Wiederholen</string>
     <string name="search">Suche</string>
-    <string name="search_contact">Kontaktsuche</string >>
+    <string name="search_contact">Kontaktsuche</string>&gt;
     <string name="phonebook">Telefonbuch</string>
     <string name="security">Sicherheit</string>
     <string name="select_account_owner">Kontoinhaber wählen</string>
@@ -612,7 +612,7 @@
     <string name="send_via">Senden über</string>
     <string name="sent">gesendet</string>
     <string name="server_chatroom">Server-Chaträume</string>
-    <string name="shutting_down">Herunterfahren&#8230;</string>
+    <string name="shutting_down">Herunterfahren…</string>
     <string name="status">Status</string>
     <string name="type_your_request_reason">Gebe den Anfragegrund ein</string>
     <string name="unknown">Unbekannt</string>
@@ -624,7 +624,7 @@
     <string name="volume_gain_level">Lautstärke: %1$d%%</string>
     <string name="waiting_for_authorization">Warten auf Autorisierung</string>
     <string name="warning">Warnung</string>
-	<string name="call_in_progress_warning">Kann dies während eines Anrufs nicht ausführen</string>
+    <string name="call_in_progress_warning">Kann dies während eines Anrufs nicht ausführen</string>
     <string name="yes">Ja</string>
 
     <!-- Sign in -->
@@ -717,41 +717,41 @@
     <!-- Security certificates -->
     <string name="trust_always">Immer diesem Zertifikat vertrauen</string>
     <string name="cert_dialog_title">Zertifikatsüberprüfung</string>
-    <string name="cert_dialog_description">&lt;html>%1$s kann die Identität des Servers beim Verbinden mit&lt;br/><b>%2$s</b>&lt;br/>nicht überprüfen&lt;br/>Das Zertifikat ist nicht vertrauenswürdig (ein selbstsigniertes Zertifikat).&lt;br/>&lt;br/>Mit dieser Verbindung fortfahren?&lt;br/>Klicke für weitere Optionen und Informationen auf "Zertifikat anzeigen".&lt;/html></string>
-    <string name="cert_dialog_description_no_host">&lt;html>%1$s kann die
-      Identität des Zertifikats des Servers.&lt;br/> nicht überprüfen&lt;br/>
-      Das Zertifikat ist nicht vertrauenswürdig (ein selbstsigniertes Zertifikat).&lt;br/>&lt;br/>
-      Mit dieser Verbindung fortfahren?&lt;br/>
-      Klicke Für weitere Optionen und Informationen auf "Zertifikat anzeigen".&lt;/html></string>
-    <string name="cert_dialog_client_description">&lt;html>%1$s kann die
-        Identität des verbindenden Clients nicht überprüfen.&lt;br/>&lt;br/>
-        Das Zertifikat ist nicht vertrauenswürdig (ein selbstsigniertes Zertifikat).&lt;br/>&lt;br/>
-        Mit dieser Verbindung fortfahren?&lt;br/>
-        Klicke für weitere Optionen und Informationen auf "Zertifikat anzeigen".&lt;/html></string>not in
-    <string name="cert_dialog_peer_description">&lt;html>%1$s kann die
-        Identität des Peers%2$s nicht überprüfen.&lt;br/>&lt;br/>
-        Das Zertifikat ist nicht vertrauenswürdig (ein selbstsigniertes Zertifikat).&lt;br/>&lt;br/>
-        Mit dieser Verbindung fortfahren?&lt;br/>
-        Klicke für weitere Optionen und Informationen auf "Zertifikat anzeigen".&lt;/html></string>
+    <string name="cert_dialog_description">&lt;html&gt;%1$s kann die Identität des Servers beim Verbinden mit&lt;br/&gt;<b>%2$s</b>&lt;br/&gt;nicht überprüfen&lt;br/&gt;Das Zertifikat ist nicht vertrauenswürdig (ein selbstsigniertes Zertifikat).&lt;br/&gt;&lt;br/&gt;Mit dieser Verbindung fortfahren?&lt;br/&gt;Klicke für weitere Optionen und Informationen auf "Zertifikat anzeigen".&lt;/html&gt;</string>
+    <string name="cert_dialog_description_no_host">&lt;html&gt;%1$s kann die
+      Identität des Zertifikats des Servers.&lt;br/&gt; nicht überprüfen&lt;br/&gt;
+      Das Zertifikat ist nicht vertrauenswürdig (ein selbstsigniertes Zertifikat).&lt;br/&gt;&lt;br/&gt;
+      Mit dieser Verbindung fortfahren?&lt;br/&gt;
+      Klicke Für weitere Optionen und Informationen auf "Zertifikat anzeigen".&lt;/html&gt;</string>
+    <string name="cert_dialog_client_description">&lt;html&gt;%1$s kann die
+        Identität des verbindenden Clients nicht überprüfen.&lt;br/&gt;&lt;br/&gt;
+        Das Zertifikat ist nicht vertrauenswürdig (ein selbstsigniertes Zertifikat).&lt;br/&gt;&lt;br/&gt;
+        Mit dieser Verbindung fortfahren?&lt;br/&gt;
+        Klicke für weitere Optionen und Informationen auf "Zertifikat anzeigen".&lt;/html&gt;</string>not in
+    <string name="cert_dialog_peer_description">&lt;html&gt;%1$s kann die
+        Identität des Peers%2$s nicht überprüfen.&lt;br/&gt;&lt;br/&gt;
+        Das Zertifikat ist nicht vertrauenswürdig (ein selbstsigniertes Zertifikat).&lt;br/&gt;&lt;br/&gt;
+        Mit dieser Verbindung fortfahren?&lt;br/&gt;
+        Klicke für weitere Optionen und Informationen auf "Zertifikat anzeigen".&lt;/html&gt;</string>
     <string name="proceed">Fortfahren</string>
-    <string name="cert_info_issued_to">&lt;b>Ausgestellt für&lt;/b></string>
+    <string name="cert_info_issued_to">&lt;b&gt;Ausgestellt für&lt;/b&gt;</string>
     <string name="cert_info_chain">Zertifikatsdaten:</string>
     <string name="cert_info_cn">Name:</string>
     <string name="cert_info_O">Organisation:</string>
     <string name="cert_info_C">Ländername:</string>
     <string name="cert_info_ST">Bundesstaat oder Provinzname:</string>
     <string name="cert_info_L">Stadt:</string>
-    <string name="cert_info_issued_by">&lt;b>Ausgestellt von&lt;/b></string>
+    <string name="cert_info_issued_by">&lt;b&gt;Ausgestellt von&lt;/b&gt;</string>
     <string name="cert_info_OU">Organisationseinheit:</string>
-    <string name="cert_info_validity">&lt;b>Gültigkeit&lt;/b></string>
+    <string name="cert_info_validity">&lt;b&gt;Gültigkeit&lt;/b&gt;</string>
     <string name="cert_info_issued_on">Ausgestellt am:</string>
     <string name="cert_info_expires_on">Läuft ab am:</string>
-    <string name="cert_info_fingerprints">&lt;b>Fingerprints&lt;/b></string>
-    <string name="cert_info_details">&lt;b>Zertifikat-Info&lt;/b></string>
+    <string name="cert_info_fingerprints">&lt;b&gt;Fingerprints&lt;/b&gt;</string>
+    <string name="cert_info_details">&lt;b&gt;Zertifikat-Info&lt;/b&gt;</string>
     <string name="cert_info_SN">Seriennummer:</string>
     <string name="cert_info_version">Version:</string>
     <string name="cert_info_sign_algo">Signatur-Verschlüsselung:</string>
-    <string name="cert_info_pubkey_info">&lt;b>Öffentliche Schlüsselinformationen&lt;/b></string>
+    <string name="cert_info_pubkey_info">&lt;b&gt;Öffentliche Schlüsselinformationen&lt;/b&gt;</string>
     <string name="cert_info_algo">Algorithmus:</string>
     <string name="cert_info_pubkey">Öffentlicher Schlüssel:</string>
     <string name="cert_info_key_bytes">%1$s Bytes:%2$s</string>
@@ -764,8 +764,8 @@
     <string name="certificate_hide">Zertifikat ausblenden</string>
     <string name="unsaved_changes">Du hast ungespeicherte Änderungen. Speichern oder Abbrechen und beenden.</string>
     <string name="unsaved_changes_title">Nicht gespeicherte Änderungen</string>
-    <string name="please_wait">Bitte warten&#8230;</string>
-    <string name="server_info_fetching">Abruf des Server-Features/info&#8230;</string>
+    <string name="please_wait">Bitte warten…</string>
+    <string name="server_info_fetching">Abruf des Server-Features/info…</string>
 
     <!-- Security info -->
     <string name="security_audio_not_secure">Sprache nicht sicher</string>
@@ -912,17 +912,17 @@
     <string name="media_configform_audio_device_config_changed">Audiogerätekonfiguration geändert</string>
     <string name="media_configform_audio_device_config_management_click">Klicke hier für die Geräteverwaltung</string>
     <string name="media_configform_preview">Vorschau</string>
-    <string name="media_security_checksum_mismatch">&lt;html>Interne ZRTP-Paketprüfsummenabweichung.&lt;br/>Wenn du diese Nachricht siehst, kann dies eine Denial-of-Service-Attacke bedeuten!&lt;/html></string>
-    <string name="media_security_data_send_failed">&lt;html>Fehler beim Senden der Verschlüsselungsdaten. Internetdatenverbindung oder Peer ist inaktiv.&lt;br/>&lt;b>Ihr Anruf läuft unverschlüsselt&lt;br>&lt;br/>&gt; Fehlercode: %1$s&lt;/html></string>
-    <string name="imedia_security_retry_rate_exceeded">&lt;html>Zu viele Versuche während der Sicherheitsaushandlung. Dies kann bedeuten, dass der andere Teilnehmer Probleme mit der Internetverbindung hat.&lt;br/>&lt;b>Dein Anruf ist unverschlüsselt&lt;br>&lt;br/>Fehlercode: %1$s&lt;/html></string>
-    <string name="media_security_internal_protocol_error">&lt;html>Interner Protokollfehler aufgetreten.&lt;br/>&lt;b>Ihr Anruf läuft unverschlüsselt.&lt;/b>&lt;br/>Fehlercode: %1$s&lt;/html></string>
+    <string name="media_security_checksum_mismatch">&lt;html&gt;Interne ZRTP-Paketprüfsummenabweichung.&lt;br/&gt;Wenn du diese Nachricht siehst, kann dies eine Denial-of-Service-Attacke bedeuten!&lt;/html&gt;</string>
+    <string name="media_security_data_send_failed">&lt;html&gt;Fehler beim Senden der Verschlüsselungsdaten. Internetdatenverbindung oder Peer ist inaktiv.&lt;br/&gt;&lt;b&gt;Ihr Anruf läuft unverschlüsselt&lt;br&gt;&lt;br/&gt;&gt; Fehlercode: %1$s&lt;/html&gt;</string>
+    <string name="imedia_security_retry_rate_exceeded">&lt;html&gt;Zu viele Versuche während der Sicherheitsaushandlung. Dies kann bedeuten, dass der andere Teilnehmer Probleme mit der Internetverbindung hat.&lt;br/&gt;&lt;b&gt;Dein Anruf ist unverschlüsselt&lt;br&gt;&lt;br/&gt;Fehlercode: %1$s&lt;/html&gt;</string>
+    <string name="media_security_internal_protocol_error">&lt;html&gt;Interner Protokollfehler aufgetreten.&lt;br/&gt;&lt;b&gt;Ihr Anruf läuft unverschlüsselt.&lt;/b&gt;&lt;br/&gt;Fehlercode: %1$s&lt;/html&gt;</string>
     <string name="media_security_off">Anrufverschlüsselungsunterstützung aus</string>
     <string name="media_security_on">Anrufverschlüsselungsunterstützung für</string>
-    <string name="media_security_severe_generic_message">&lt;html>Ein schwerwiegendes Sicherheitsproblem wurde erkannt.&lt;br/>&lt;b>Ihr Anruf ist unverschlüsselt&lt;/b>&lt;br/>Fehlercode: %1$s&lt;/html></string>
-    <string name="media_security_warning_no_rs_match">&lt;html>Kein gemeinsames Passwort verfügbar.&lt;br/>&lt;b>SAS-Verifizierung wird empfohlen&lt;/b>&lt;/html></string>
-    <string name="media_security_warning_no_expected_rs_match">&lt;html>Ein erwartetes gemeinsames Passwort
-    fehlt.&lt;br/>&lt;b>SAS-Verifikation ist erforderlich.&lt;/b>&lt;br/>Wenn SAS-Codes nicht übereinstimmen, dann auflegen und neu versuchen.&lt;/html></string>
-    <string name="media_security_zrtp_generic_message">&lt;html>Ein schwerwiegendes ZRTP-Problem wurde erkannt.&lt;br/>&lt;b>Ihr Anruf läuft unverschlüsselt.&lt;br>&lt;br/>Fehlercode: %1$s&lt;/html></string>
+    <string name="media_security_severe_generic_message">&lt;html&gt;Ein schwerwiegendes Sicherheitsproblem wurde erkannt.&lt;br/&gt;&lt;b&gt;Ihr Anruf ist unverschlüsselt&lt;/b&gt;&lt;br/&gt;Fehlercode: %1$s&lt;/html&gt;</string>
+    <string name="media_security_warning_no_rs_match">&lt;html&gt;Kein gemeinsames Passwort verfügbar.&lt;br/&gt;&lt;b&gt;SAS-Verifizierung wird empfohlen&lt;/b&gt;&lt;/html&gt;</string>
+    <string name="media_security_warning_no_expected_rs_match">&lt;html&gt;Ein erwartetes gemeinsames Passwort
+    fehlt.&lt;br/&gt;&lt;b&gt;SAS-Verifikation ist erforderlich.&lt;/b&gt;&lt;br/&gt;Wenn SAS-Codes nicht übereinstimmen, dann auflegen und neu versuchen.&lt;/html&gt;</string>
+    <string name="media_security_zrtp_generic_message">&lt;html&gt;Ein schwerwiegendes ZRTP-Problem wurde erkannt.&lt;br/&gt;&lt;b&gt;Ihr Anruf läuft unverschlüsselt.&lt;br&gt;&lt;br/&gt;Fehlercode: %1$s&lt;/html&gt;</string>
     <string name="media_security_zrtp_handshake_timeout">Der Anruf ist nicht sicher; RTP-Handshake-Timeout: %s</string>
 
     <!-- DTLS-SRTP Securing -->
@@ -972,7 +972,7 @@
     <string name="provisioning_manual">Gebe manuell eine Provisioning-URI ein</string>ein
     <string name="provisioning_method">Provisionings-Methode</string>
     <string name="provisioning_failed">Provisioning fehlgeschlagen</string>
-    <string name="provisioning_failed_message">&lt;html>Provisioning fehlgeschlagen. %1$s!&lt;br/>Bitte versuche es später erneut oder wende dich an deinen Administrator.&lt;/html></string>
+    <string name="provisioning_failed_message">&lt;html&gt;Provisioning fehlgeschlagen. %1$s!&lt;br/&gt;Bitte versuche es später erneut oder wende dich an deinen Administrator.&lt;/html&gt;</string>
     <string name="provisioning">Provisioning</string>
     <string name="provisioning_summary">Provisionierungs-Einstellungen</string>
     <string name="provisioning_remove_credentials_message">Möchtest du das Provisioning-Kennwort wirklich entfernen?</string>
@@ -987,23 +987,23 @@
     <string name="dnsconfig_dnssec_enable_failed">Statusänderung fehlgeschlagen</string>
     <string name="dnsconfig_dnssec_enable_failed_message">Änderung des DNSSEC-aktivierten Status ist fehlgeschlagen.</string>
     <string name="dnsconfig_dnssec_mode">Verhalten</string>
-    <string name="dnsconfig_dnssec_restart_alert">&lt;html>Beachte, dass das Aktivieren oder Deaktivieren von DNSSEC den parallelen Resolver deaktiviert und erst beim nächsten Start von aTalk wirksam wird.&lt;/html></string>
+    <string name="dnsconfig_dnssec_restart_alert">&lt;html&gt;Beachte, dass das Aktivieren oder Deaktivieren von DNSSEC den parallelen Resolver deaktiviert und erst beim nächsten Start von aTalk wirksam wird.&lt;/html&gt;</string>
     <string name="dnsconfig_dnssec_title">Backup-Resolver</string>
     <string name="dnsconfig_dnssec_check_absolute">Behandle alle Domain-Namen als absolut</string>
     <string name="dnsconfig_dnssec_check_enable">DNSSEC-Resolver aktivieren</string>
     <string name="dnsconfig_dnssec_label_default">Standardverhalten</string>
     <string name="dnsconfig_dnssec_label_name_servers">Benutzerdefinierte Nameserver</string>
-    <string name="dnsconfig_dnssec_label_name_servers_hint">&lt;html>Mehrere Server können mit einem Komma getrennt werden, z. 149.20.64.20, 149.20.64.21 (Offener DNSSEC-Validierungs-Resolver von OARC)&lt;/html></string>
+    <string name="dnsconfig_dnssec_label_name_servers_hint">&lt;html&gt;Mehrere Server können mit einem Komma getrennt werden, z. 149.20.64.20, 149.20.64.21 (Offener DNSSEC-Validierungs-Resolver von OARC)&lt;/html&gt;</string>
 
     <string name="dns_insecure_answer_title">DNSSEC-Fehler</string>
     <string name="dns_insecure_answer_message_insecure">DNS-Antwort für %1$s ist unverschlüsselt.</string>
     <string name="dns_insecure_answer_message_reason">DNS-Antwort für %1$s ist unverschlüsselt.\n Grund: %2$s</string>
     <string name="dns_dnssec_advanced_options">Erweiterte Optionen anzeigen</string>
-    <string name="dns_dnssec_advanced_reason_invalid">&lt;html>Die von DNSSEC signierte Zone %1$s hat ungültige Daten zurückgegeben.&lt;br/>%2$s&lt;/html></string>
+    <string name="dns_dnssec_advanced_reason_invalid">&lt;html&gt;Die von DNSSEC signierte Zone %1$s hat ungültige Daten zurückgegeben.&lt;br/&gt;%2$s&lt;/html&gt;</string>
     <string name="dns_dnssec_advanced_reason_unsigned">%1$s-Abfrage für %2$s ist unsigniert.</string>
-    <string name="dns_dnssec_warning">&lt;html>&lt;div width="600">%1$s hat versucht,eine Verbindung zum Server &lt;b>%2$s&lt;&lt;/b>herzustellen. Diese Domain ist mit DNSSEC geschützt. Die Information, die %1$s vom DNS-Server erhalten hat entspricht nicht den Informationen, die DNSSEC über diese Domain bereitstellt.&lt;br/>&lt;br/>&lt;br/>
-      Dies sollte normalerweise nicht passieren, es sei denn Seitens %2$s wurde ein schwerwiegender Fehler begangen. Es ist daher ein starkes Anzeichen dafür, dass etwas in Bezug auf die Vertrauenswürdigkeit deiner Netzwerkverbindung nicht stimmt.&lt;br/>&lt;br/>&lt;br/>
-      &lt;/div>&lt;/html></string>
+    <string name="dns_dnssec_warning">&lt;html&gt;&lt;div width="600"&gt;%1$s hat versucht,eine Verbindung zum Server &lt;b&gt;%2$s&lt;&lt;/b&gt;herzustellen. Diese Domain ist mit DNSSEC geschützt. Die Information, die %1$s vom DNS-Server erhalten hat entspricht nicht den Informationen, die DNSSEC über diese Domain bereitstellt.&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;
+      Dies sollte normalerweise nicht passieren, es sei denn Seitens %2$s wurde ein schwerwiegender Fehler begangen. Es ist daher ein starkes Anzeichen dafür, dass etwas in Bezug auf die Vertrauenswürdigkeit deiner Netzwerkverbindung nicht stimmt.&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;
+      &lt;/div&gt;&lt;/html&gt;</string>
 
     <!-- SSL Certificates -->
     <string name="settings_ssl_certificate">SSL-Zertifikat</string>
@@ -1022,8 +1022,8 @@
     <string name="zid_reset_done">ZID wurde zurückgesetzt</string>
 
     <!-- Settings -->
-    <string name="commit_progress_message">Speichern von Kontoänderungen, bitte warten&#8230;</string>
-    <string name="commit_progress_title">"Übertrage Daten&#8230;"</string>
+    <string name="commit_progress_message">Speichern von Kontoänderungen, bitte warten…</string>
+    <string name="commit_progress_title">"Übertrage Daten…"</string>
     <string name="settings_not_set">(Nicht definiert)</string>
 
     <!-- Encoding settings -->
@@ -1042,7 +1042,7 @@
 
     <!-- STUN/Jingle Nodes list -->
     <string name="service_gui_SERVERS_LIST_ADD_SERVER">Server hinzufügen</string>
-    <string name="service_gui_SERVERS_LIST_EMPTY">Die Liste ist leer. Klicke, um einen neuen Eintrag hinzuzufügen&#8230;</string>
+    <string name="service_gui_SERVERS_LIST_EMPTY">Die Liste ist leer. Klicke, um einen neuen Eintrag hinzuzufügen…</string>
 
     <!-- Jingle Nodes edit -->
     <string name="service_gui_JINGLE_EDIT_JID">JID-Adresse</string>
@@ -1079,7 +1079,7 @@
     <!-- Jabber preferences -->
     <string name="jbr_auto_sign_in">Beim Start verbinden</string>
     <string name="jbr_auto_stun_discovery">STUN/TURN-Server automatisch erkennen</string>
-    <string name="jbr_connection_summary">Verbindungsdetails festlegen&#8230;</string>
+    <string name="jbr_connection_summary">Verbindungsdetails festlegen…</string>
     <string name="jbr_connection">Verbindungseinstellungen</string>
     <string name="jbr_jingle_disable">Anrufe deaktivieren (Jingle)</string>
     <string name="jbr_jingle_summary">(Audio- und Videoanrufe mit XMPP)</string>
@@ -1088,9 +1088,9 @@
     <string name="jbr_gmail_notifications">Gmail-Benachrichtigungen für neue Nachrichten</string>
     <string name="jbr_google_contact_search">Google-Kontaktsuche</string>
     <string name="jbr_gtalk_domain">Domäne, die den GTalk-Aufruf verwendet</string>
-    <string name="jbr_ice_summary">Konfiguriere ICE-Optionen&#8230;</string>
+    <string name="jbr_ice_summary">Konfiguriere ICE-Optionen…</string>
     <string name="jbr_jingle_auto">Jingle-Nodes Relais automatisch erkennen</string>
-    <string name="jbr_jingle_list">Zusätzliche Jingle-Nodes&#8230;</string>
+    <string name="jbr_jingle_list">Zusätzliche Jingle-Nodes…</string>
     <string name="jbr_jingle_list_summary">Benutzerdefinierte zusätzliche Jingle-Nodes</string>
     <string name="jbr_jingle_nodes">Jingle-Nodes</string>
     <string name="jbr_jingle_use">Jingle-Nodes verwenden</string>
@@ -1116,11 +1116,11 @@
     <string name="jbr_server_options">Serveroptionen</string>
     <string name="jbr_store_password">Passwort merken</string>
     <string name="jbr_store_password_summary">Passwort für die automatische Anmeldung beim Start der Anwendung speichern</string>
-    <string name="jbr_stun_list">Zusätzliche STUN/TURN-Server&#8230;</string>
+    <string name="jbr_stun_list">Zusätzliche STUN/TURN-Server…</string>
     <string name="jbr_stun_list_summary">Benutzerdefinierte zusätzliche STUN/TURN-Server</string>
     <string name="jbr_telephony_domain">Telefon-Domain</string>
     <string name="jbr_telephony_voip_pbx">Telefonie VoIP-PBX</string>
-    <string name="jbr_telephony_summary">Telefonie-Optionen einstellen&#8230;</string>
+    <string name="jbr_telephony_summary">Telefonie-Optionen einstellen…</string>
     <string name="jbr_use_default_stun">Jitsi STUN-Server verwenden (Fallback)</string>
     <string name="jbr_use_ice">ICE verwenden</string>
     <string name="jbr_use_google_ice">Google Jingle/ICE verwenden (experimentell)</string>
@@ -1137,7 +1137,7 @@
     <string name="not_in_call_group">%1$s gehört nicht zur definierten Anrufgruppe</string>
     <string name="jingle_not_supported">%1$s\nunterstützt kein Jingle-Protokoll</string>
     <string name="recipient_error_parse_failed">Fehler beim Parsen der Adresse!</string>
-    <string name="unknown_recipient">&lt;![CDATA[&lt;Unbekannter Empfänger>]></string>
+    <string name="unknown_recipient">&lt;![CDATA[&lt;Unbekannter Empfänger&gt;]&gt;</string>
 
     <!-- General settings -->
     <string name="disabled">Deaktiviert</string>
@@ -1241,9 +1241,9 @@
 
     <!-- TTS Language -->
     <string name="tts_delay">Nachrichtentext zur Sprachverzögerung (ms)</string>
-    <string name="tts_settings">Allgemeine TTS-Einstellungen&#8230;</string>
-    <string name="tts_disable">Deaktivieren Sie Text &#x27A1; Speech</string>
-    <string name="tts_enable">Aktivieren Sie Text &#x27A1; Sprache</string>
+    <string name="tts_settings">Allgemeine TTS-Einstellungen…</string>
+    <string name="tts_disable">Deaktivieren Sie Text ➡ Speech</string>
+    <string name="tts_enable">Aktivieren Sie Text ➡ Sprache</string>
     <string name="tts_synthesis">Geben Sie Text zum Sprechen oder Synthetisieren ein und speichern Sie ihn in einer Datei:</string>
     <string name="tts_voice">Standard-TTS-Stimme:</string>
 
@@ -1288,9 +1288,10 @@
 
     <!-- Camera used -->
     <string name="settings_camera">Kamera</string>
-    <string name="settings_no_camera">Kein Kameragerät gefunden</string>
+    <string name="settings_no_camera">Kein kompatibles Kameragerät gefunden</string>
     <string name="settings_use_back_camera">Rückkamera verwenden</string>
     <string name="settings_use_front_camera">Frontkamera verwenden</string>
+    <string name="settings_use_match_camera_resolution">Verwenden Sie die Kameraauflösung, die der am nächsten kommt: %1$s</string>
 
     <!-- Video codecs -->
     <string name="settings_direct_surface_decode">Direct Surface Decoding verwenden</string>
@@ -1451,14 +1452,14 @@
     <string name="storage_permission_denied_feedback">Das Speichern von gesendeten und empfangenen Inhalten im Speicher ist erst zulässig, nachdem du die Berechtigung erteilt hast.</string>
 
     <string name="all_permission_denied_dialog_title">Alle Berechtigungsanforderungen</string>
-    <string name="all_permissions_denied_feedback">aTalk funktioniert möglicherweise nicht richtig oder zeigt ein unsachgemäßes Verhalten da einige Dienste abgelehnt wurden.\nWenn du die Option\"Nicht erneut nachfragen\" gewählt hast, musst du dich zu den Android-Einstellungen begeben: -> APP INFO für aTalk, zum Aktivieren der Ressourcenzugriffsberechtigungen</string>
-    <string name="permission_denied_all_alert">aTalk würde nicht richtig funktionieren. Du hast aTalk alle Berechtigungen verweigert!\nDu kannst zu Android-Einstellungen -> APP INFO für aTalk gehen, um die Ressourcenzugriffsberechtigung zu aktivieren.</string>
+    <string name="all_permissions_denied_feedback">aTalk funktioniert möglicherweise nicht richtig oder zeigt ein unsachgemäßes Verhalten da einige Dienste abgelehnt wurden.\nWenn du die Option\"Nicht erneut nachfragen\" gewählt hast, musst du dich zu den Android-Einstellungen begeben: -&gt; APP INFO für aTalk, zum Aktivieren der Ressourcenzugriffsberechtigungen</string>
+    <string name="permission_denied_all_alert">aTalk würde nicht richtig funktionieren. Du hast aTalk alle Berechtigungen verweigert!\nDu kannst zu Android-Einstellungen -&gt; APP INFO für aTalk gehen, um die Ressourcenzugriffsberechtigung zu aktivieren.</string>
 
     <string name="permission_rationale_message">Du wirst nun nach jedem von aTalk benötigten Dienst gefragt; Bitte erlaube aTalk auf diese Dienste zuzugreifen um alle unterstützten Funktionalitäten nutzen zu können.</string>
     <string name="permission_rationale_settings_button_text">EINSTELLUNGEN</string>
     <string name="permission_rationale_title">aTalk benötigt Berechtigungen</string>
 
-	<!--Location string constant -->
+    <!--Location string constant -->
     <string name="location_permission_dialog_title">Standortgenehmigung erforderlich</string>
     <string name="location_permission_dialog_message">Jetzt Standortberechtigung aktivieren?</string>
     <string name="location_services_off">Standortdienste AUS</string>

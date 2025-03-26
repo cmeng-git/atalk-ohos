@@ -33,17 +33,6 @@ import android.util.Size;
 
 import androidx.annotation.NonNull;
 
-import org.atalk.ohos.R;
-import org.atalk.ohos.aTalkApp;
-import org.atalk.ohos.gui.call.VideoCallActivity;
-import org.atalk.ohos.gui.call.VideoHandlerFragment;
-import org.atalk.impl.timberlog.TimberLog;
-import org.atalk.impl.neomedia.NeomediaServiceUtils;
-import org.atalk.impl.neomedia.device.DeviceConfiguration;
-import org.atalk.impl.neomedia.device.util.AndroidCamera;
-import org.atalk.impl.neomedia.device.util.CameraUtils;
-import org.atalk.impl.neomedia.jmfext.media.protocol.AbstractPushBufferStream;
-
 import java.awt.Dimension;
 import java.io.IOException;
 import java.util.concurrent.Semaphore;
@@ -53,6 +42,17 @@ import javax.media.Format;
 import javax.media.MediaLocator;
 import javax.media.control.FormatControl;
 import javax.media.format.VideoFormat;
+
+import org.atalk.impl.neomedia.NeomediaServiceUtils;
+import org.atalk.impl.neomedia.device.DeviceConfiguration;
+import org.atalk.impl.neomedia.device.util.AndroidCamera;
+import org.atalk.impl.neomedia.device.util.CameraUtils;
+import org.atalk.impl.neomedia.jmfext.media.protocol.AbstractPushBufferStream;
+import org.atalk.impl.timberlog.TimberLog;
+import org.atalk.ohos.R;
+import org.atalk.ohos.aTalkApp;
+import org.atalk.ohos.gui.call.VideoCallActivity;
+import org.atalk.ohos.gui.call.VideoHandlerFragment;
 
 import timber.log.Timber;
 
@@ -80,11 +80,6 @@ public abstract class CameraStreamBase extends AbstractPushBufferStream<DataSour
      * with CameraManager.getCameraCharacteristics.
      */
     protected CameraCharacteristics mCameraCharacteristics;
-
-    /**
-     * In use camera rotation, adjusted for camera lens facing direction  - for video streaming
-     */
-    protected int mSensorOrientation;
 
     /**
      * In use camera rotation, adjusted for camera lens facing direction  and device orientation - for video streaming

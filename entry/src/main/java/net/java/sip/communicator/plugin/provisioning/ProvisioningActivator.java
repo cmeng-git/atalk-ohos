@@ -103,8 +103,8 @@ public class ProvisioningActivator implements BundleActivator {
         if (StringUtils.isBlank(method) || method.equals("NONE")) {
             return;
         }
-        ServiceReference<?>[] serviceReferences = bundleContext.getServiceReferences(
-                ProvisioningDiscoveryService.class.getName(), null);
+        ServiceReference<?>[] serviceReferences
+                = bundleContext.getServiceReferences(ProvisioningDiscoveryService.class.getName(), null);
 
         /*
          * search the provisioning discovery implementation that correspond to the method name

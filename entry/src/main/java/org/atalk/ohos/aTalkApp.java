@@ -136,9 +136,8 @@ public class aTalkApp extends Application implements LifecycleEventObserver {
         // ServerPersistentStoresRefreshDialog.deleteDB();  // purge sql database
 
         // Trigger the aTalk database upgrade or creation if none exist
-        DatabaseBackend mDB = DatabaseBackend.getInstance(this);
+        DatabaseBackend.getInstance(this);
         // MigrationTo6.updateChatSessionTable(DatabaseBackend.getInstance(this).getWritableDatabase());
-        // mDB.getWritableDatabase().execSQL(DatabaseBackend.CREATE_ENTITY_CAPS_STATEMENT);
 
         // Do this after WebView(this).destroy(); Set up contextWrapper to use aTalk user selected Language
         super.onCreate();

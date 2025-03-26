@@ -51,8 +51,8 @@ android {
         applicationId "org.atalk.ohos"
         archivesBaseName = "aTalk"
 
-        versionCode 6010
-        versionName "00.06.010"
+        versionCode 6020
+        versionName "00.06.020"
 
         minSdkVersion rootProject.minSdk
         targetSdkVersion rootProject.compileSdk
@@ -200,7 +200,7 @@ dependencies {
     // 1.10.0 only compatible with API-35
     implementation 'androidx.activity:activity-ktx:1.9.3'
     implementation 'androidx.appcompat:appcompat:1.7.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.2.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
     implementation 'androidx.fragment:fragment-ktx:1.8.6'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.legacy:legacy-support-v13:1.0.0'

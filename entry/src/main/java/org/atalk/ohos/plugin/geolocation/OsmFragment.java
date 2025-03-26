@@ -436,7 +436,7 @@ public class OsmFragment extends BaseFragment implements LocationListenerCompat,
             for (final Location xLocation : locations) {
                 try {
                     Thread.sleep(2000);
-                    mActivity.runOnUiThread(() -> showLocation(xLocation));
+                    runOnUiThread(() -> showLocation(xLocation));
                 } catch (InterruptedException ex) {
                     break;
                 } catch (Exception ex) {

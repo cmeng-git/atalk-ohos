@@ -28,12 +28,6 @@ import android.view.SurfaceHolder;
 
 import androidx.annotation.NonNull;
 
-import org.atalk.ohos.gui.call.VideoCallActivity;
-import org.atalk.ohos.gui.call.VideoHandlerFragment;
-import org.atalk.impl.timberlog.TimberLog;
-import org.atalk.impl.neomedia.codec.AbstractCodec2;
-import org.atalk.impl.neomedia.device.util.PreviewSurfaceProvider;
-
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
@@ -41,6 +35,12 @@ import java.util.LinkedList;
 
 import javax.media.Buffer;
 import javax.media.control.FormatControl;
+
+import org.atalk.impl.neomedia.codec.AbstractCodec2;
+import org.atalk.impl.neomedia.device.util.PreviewSurfaceProvider;
+import org.atalk.impl.timberlog.TimberLog;
+import org.atalk.ohos.gui.call.VideoCallActivity;
+import org.atalk.ohos.gui.call.VideoHandlerFragment;
 
 import timber.log.Timber;
 
@@ -170,7 +170,6 @@ public class PreviewStream extends CameraStreamBase {
      * Setup ImageReader to retrieve image data for remote video streaming; maxImages = 3 and acquireLatestImage();
      * Use try wth resource in reader.acquireLatestImage() for any IllegalStateException;
      * Call #close to release buffer before camera can acquiring more.
-     *
      * Note: The acquired image is always in landscape mode e.g. 1280x720.
      */
     private final ImageReader.OnImageAvailableListener mOnImageAvailableListener = reader -> {
@@ -201,7 +200,6 @@ public class PreviewStream extends CameraStreamBase {
     /**
      * Pop the oldest image in the bufferQueue for processing; i.e.
      * transformation and copy into the buffer for remote video data streaming
-     *
      * Note: Sync problem between device rotation with new swap/flip; inTransition get clear with old image data in process.
      * (PreviewStream.java:188)#lambda$new$0$PreviewStream: OnImage available exception: index=345623 out of bounds (limit=345600)
      *

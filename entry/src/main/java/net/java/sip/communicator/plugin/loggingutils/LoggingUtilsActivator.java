@@ -135,6 +135,10 @@ public class LoggingUtilsActivator implements BundleActivator {
      * or null if no such implementation was found.
      *
      * @return a currently valid implementation of the FileAccessService .
+     *
+     * Returns the <code>FileAccessService</code> obtained from the bundle context.
+     *
+     * @return the <code>FileAccessService</code> obtained from the bundle context
      */
     public static FileAccessService getFileAccessService() {
         if (fileAccessService == null) {
