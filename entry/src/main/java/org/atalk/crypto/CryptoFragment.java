@@ -28,6 +28,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
+import androidx.core.view.MenuProvider;
 
 import java.io.IOException;
 import java.net.URI;
@@ -94,7 +95,7 @@ import timber.log.Timber;
  * @author Eng Chong Meng
  */
 public class CryptoFragment extends BaseFragment
-        implements ChatSessionManager.CurrentChatListener, ChatRoomMemberPresenceListener,
+        implements MenuProvider, ChatSessionManager.CurrentChatListener, ChatRoomMemberPresenceListener,
         OmemoAuthenticateDialog.AuthenticateListener {
     /**
      * A map of the user selected chatType. The stored key is the chatSessionId. The information
@@ -147,8 +148,13 @@ public class CryptoFragment extends BaseFragment
      * Creates a new instance of <code>CryptoFragment</code>.
      */
     public CryptoFragment() {
-        setHasOptionsMenu(true);
         mMHS = MessageHistoryActivator.getMessageHistoryService();
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        requireActivity().addMenuProvider(this);
     }
 
     /**
@@ -160,13 +166,8 @@ public class CryptoFragment extends BaseFragment
         super.onStop();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-
+    public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
         // This happens when Activity is recreated by the system after OSGi service has been killed (and the whole process)
         if (AppGUIActivator.bundleContext == null) {
             Timber.e("OSGi service probably not initialized");
@@ -179,7 +180,7 @@ public class CryptoFragment extends BaseFragment
          * Add chat encryption choices if not found
          */
         if (menu.findItem(R.id.encryption_none) == null)
-            inflater.inflate(R.menu.crypto_choices, menu);
+            menuInflater.inflate(R.menu.crypto_choices, menu);
 
         mCryptoChoice = menu.findItem(R.id.crypto_choice);
         mNone = menu.findItem(R.id.encryption_none);
@@ -189,15 +190,12 @@ public class CryptoFragment extends BaseFragment
         doInit();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
         boolean hasChange = false;
-        item.setChecked(true);
+        menuItem.setChecked(true);
 
-        switch (item.getItemId()) {
+        switch (menuItem.getItemId()) {
             case R.id.crypto_choice:
                 Boolean isOmemoSupported = omemoCapable.get(mDescriptor);
                 if (isOmemoSupported == null)
@@ -241,7 +239,7 @@ public class CryptoFragment extends BaseFragment
             mMHS.setSessionChatType(activeChat.getChatSession(), mChatType);
             return true;
         }
-        return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(menuItem);
     }
 
     /**

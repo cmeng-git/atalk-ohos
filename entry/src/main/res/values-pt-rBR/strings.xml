@@ -369,6 +369,7 @@
     <string name="file_send_completed">O arquivo foi enviado com sucesso para %1$s</string>
     <string name="file_send_declined">%1$s recusou este arquivo</string>
     <string name="file_sending_to">Enviando arquivo para %1$s</string>
+    <string name="file_transfer_accepted">A transferência de ficheiros foi aceite</string>
     <string name="file_transfer_canceled">A transferência de arquivos foi cancelada</string>
     <string name="file_transfer_preparing">Preparando a transferência de arquivos com %1$s. Aguarde…</string>
     <string name="file_transfer_declined">A transferência de arquivos foi recusada</string>
@@ -392,7 +393,7 @@
     <string name="file_size_too_big">O tamanho do arquivo excede o máximo permitido para este protocolo: %1$s</string>
     <string name="file_transfer_active">A transferência de arquivos foi interrompida. Status de progresso @ %1$s foi perdido!</string>
     <string name="file_transfer_not_secure">XEP-0096: O protocolo SI File Transfer não suporta o envio de arquivos criptografados!</string>
-    <string name="file_transfer_not_supported">Cliente ou servidor do contato não tem suporte para transferências de arquivos ou protocolos necessários</string>
+    <string name="file_transfer_not_supported">Cliente ou servidor do contato (%1$s) não tem suporte para transferências de arquivos ou protocolos necessários</string>
 
     <string name="finish">Concluir</string>
     <string name="folder_not_exist">A pasta que contém este arquivo não foi encontrada. Podia ser excluída ou movida</string>

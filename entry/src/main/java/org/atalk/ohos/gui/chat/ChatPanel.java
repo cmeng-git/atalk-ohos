@@ -978,7 +978,7 @@ public class ChatPanel implements Chat, MessageListener, MessageReceiptListener 
     public void addFTReceiveRequest(OperationSetFileTransfer opSet, IncomingFileTransferRequest request, Date date) {
         Contact sender = request.getSender();
         String senderName = sender.getAddress();
-        String msgUuid = request.getID();
+        String msgUuid = request.getId();
         String msgContent = aTalkApp.getResString(R.string.file_transfer_request_received, date.toString(), senderName);
 
         int msgType = ChatMessage.MESSAGE_FILE_TRANSFER_RECEIVE;

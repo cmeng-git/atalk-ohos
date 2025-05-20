@@ -369,6 +369,7 @@
     <string name="file_send_completed">Файл успешно отправлен в %1$s</string>
     <string name="file_send_declined">%1$s отклонил этот файл</string>
     <string name="file_sending_to">Отправка файла в %1$s</string>
+    <string name="file_transfer_accepted">Передача файла принята</string>
     <string name="file_transfer_canceled">Передача файла отменена</string>
     <string name="file_transfer_preparing">Преобразование передачи файлов с %1$s. Подождите…</string>
     <string name="file_transfer_declined">Отказано в передаче отклоненный</string>
@@ -392,7 +393,7 @@
     <string name="file_size_too_big">Размер файла превышает максимально допустимый для этого протокола: %1$s</string>
     <string name="file_transfer_active">Прерывание передачи файлов прерывается. Отслеживание состояния @ %1$s потеряно!</string>
     <string name="file_transfer_not_secure">XEP-0096: Протокол передачи файлов SI не поддерживает отправку зашифрованных файлов!</string>
-    <string name="file_transfer_not_supported">Контактный клиент или сервер не поддерживает передачу файлов или требуемые протоколы</string>
+    <string name="file_transfer_not_supported">Контактный клиент (%1$s) или сервер не поддерживает передачу файлов или требуемые протоколы</string>
 
     <string name="finish">Закончить</string>
     <string name="folder_not_exist">Не удалось найти папку, содержащую этот файл. Он был удален или перемещен</string>

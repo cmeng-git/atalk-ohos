@@ -51,8 +51,8 @@ android {
         applicationId "org.atalk.ohos"
         archivesBaseName = "aTalk"
 
-        versionCode 6020
-        versionName "00.06.020"
+        versionCode 7000
+        versionName "00.07.000"
 
         minSdkVersion rootProject.minSdk
         targetSdkVersion rootProject.compileSdk
@@ -223,10 +223,10 @@ dependencies {
 
     annotationProcessor 'com.github.bumptech.glide:compiler:4.16.0'
     implementation 'com.github.bumptech.glide:glide:4.16.0'
-    implementation 'com.github.seancfoley:ipaddress:5.3.4'
-    implementation 'com.github.evgenyneu:js-evaluator-for-android:v5.0.0'
+    implementation 'com.github.seancfoley:ipaddress:5.5.1'
+    implementation 'com.github.evgenyneu:js-evaluator-for-android:v6.0.0'
 
-    implementation 'com.github.yalantis:ucrop:2.2.8'
+    implementation 'com.github.yalantis:ucrop:2.2.10'
     // Do not update to 1.7.x or higher; has problem and reported need to use gradle 7 which is not compatible with aTalk.
     implementation 'com.google.android.material:material:1.12.0'
 
@@ -301,6 +301,7 @@ dependencies {
     // implementation "org.igniterealtime.smack:smack-omemo:$smackVersion"
     implementation "org.igniterealtime.smack:smack-omemo-signal:$smackVersion"
 
+    // No static method entityFullFrom() : 1.1.0
     implementation 'org.jxmpp:jxmpp-jid:1.0.3'
     implementation 'org.osgi:osgi.core:8.0.0'
     implementation 'org.osmdroid:osmdroid-android:6.1.17'
@@ -417,6 +418,7 @@ dependencies {
 
         // Do not send <close/> on an already closed InBandBytestream session
         classDelete 'org.jivesoftware.smackx.bytestreams.ibb.InBandBytestreamSession**'
+        classDelete 'org.jivesoftware.smackx.bytestreams.socks5.Socks5Proxy**'
 
         // Add support for chatStat in conference room
         classDelete 'org.jivesoftware.smackx.chatstates.ChatStateManager**'

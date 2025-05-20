@@ -368,6 +368,7 @@
     <string name="file_send_completed">Datei wurde erfolgreich an %1$s übertragen</string>
     <string name="file_send_declined">%1$s hat diese Datei abgelehnt.</string>
     <string name="file_sending_to">Sende Datei an %1$s</string>
+    <string name="file_transfer_accepted">Dateiübertragung wurde akzeptiert</string>
     <string name="file_transfer_canceled">Dateitransfer wurde abgebrochen</string>
     <string name="file_transfer_preparing">Bereite Dateitransfer mit %1$s vor. Bitte warten…</string>
     <string name="file_transfer_declined">Dateitransfer wurde zurückgegangen.</string>
@@ -391,7 +392,7 @@
     <string name="file_size_too_big">Die maximale Dateigrösse wurde überschritten: %1$s</string>
     <string name="file_transfer_active">Der laufende Dateitransfer wurde unterbrochen @ %1$s.</string>
     <string name="file_transfer_not_secure">XEP-0096: Das SI File Transfer-Protokoll unterstützt den verschlüsselten Dateiversand nicht!</string>
-    <string name="file_transfer_not_supported">Contact Client oder Server unterstützt keine Dateiübertragung oder erforderliche Protokolle</string>
+    <string name="file_transfer_not_supported">Kontaktclient (%1$s) oder Server unterstützt keine Dateiübertragung oder erforderliche Protokolle</string>
 
     <string name="finish">Beenden</string>
     <string name="folder_not_exist">Das Verzeichnis zu dieser Datei wurde nicht gefunden. Es wurde anscheinend gelöscht.</string>
