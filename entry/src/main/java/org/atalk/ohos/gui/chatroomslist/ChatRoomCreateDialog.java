@@ -1,6 +1,6 @@
 /*
- * aTalk, ohos VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * aTalk, android VoIP and Instant Messaging client
+ * Copyright 2014 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,21 @@
  */
 package org.atalk.ohos.gui.chatroomslist;
 
-import ohos.aafwk.content.Intent;
-import ohos.agp.components.Button;
-import ohos.agp.components.Checkbox;
-import ohos.agp.components.Component;
-import ohos.agp.components.LayoutScatter;
-import ohos.agp.components.ListContainer;
-import ohos.agp.components.TextField;
-import ohos.app.Context;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.Spinner;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -41,14 +48,13 @@ import net.java.sip.communicator.service.protocol.ChatRoom;
 import net.java.sip.communicator.service.protocol.ProtocolProviderService;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.util.TextUtils;
-import org.atalk.ohos.BaseAbility;
-import org.atalk.ohos.ResourceTable;
+import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.AppGUIActivator;
 import org.atalk.ohos.gui.chat.ChatSessionManager;
-import org.atalk.ohos.gui.dialogs.DialogA;
-import org.atalk.ohos.util.ComponentUtil;
+import org.atalk.ohos.gui.menu.MainMenuActivity;
+import org.atalk.ohos.gui.util.ComboBox;
+import org.atalk.ohos.gui.util.ViewUtil;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smackx.bookmarks.BookmarkManager;
@@ -62,21 +68,22 @@ import timber.log.Timber;
  *
  * @author Eng Chong Meng
  */
-public class ChatRoomCreateDialog implements ListContainer.ItemClickedListener, ListContainer.ItemSelectedListener {
+public class ChatRoomCreateDialog extends Dialog implements OnItemSelectedListener, AdapterView.OnItemClickListener {
     private static final String CHATROOM = "chatroom";
 
-    private final Context mContext;
+    private final MainMenuActivity mParent;
     private final MUCServiceImpl mucService;
 
     /**
      * The account list view.
      */
-    private ListContainer accountsSpinner;
-    private ListContainer chatRoomComboBox; // ComboBox
-    private TextField subjectField;
-    private TextField nicknameField;
-    private TextField passwordField;
-    private Checkbox mSavePasswordCheckBox;
+    private Spinner accountsSpinner;
+    private ComboBox chatRoomComboBox;
+
+    private EditText subjectField;
+    private EditText nicknameField;
+    private EditText passwordField;
+    private CheckBox mSavePasswordCheckBox;
     private Button mJoinButton;
 
     /**
@@ -91,52 +98,47 @@ public class ChatRoomCreateDialog implements ListContainer.ItemClickedListener, 
     /**
      * Constructs the <code>ChatInviteDialog</code>.
      *
-     * @param context the <code>ChatPanel</code> corresponding to the <code>ChatRoom</code>, where the contact is invited.
+     * @param mContext the <code>ChatPanel</code> corresponding to the <code>ChatRoom</code>, where the contact is invited.
      */
-    public ChatRoomCreateDialog(Context context) {
-        mContext = context;
+    public ChatRoomCreateDialog(Context mContext) {
+        super(mContext);
+        mParent = (MainMenuActivity) mContext;
         mucService = MUCActivator.getMUCService();
     }
 
-    public DialogA create() {
-        LayoutScatter scatter = LayoutScatter.getInstance(mContext);
-        Component component = scatter.parse(ResourceTable.Layout_muc_room_create_dialog, null, false);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setTitle(R.string.chatroom_create_join);
+        this.setContentView(R.layout.muc_room_create_dialog);
 
-        nicknameField = component.findComponentById(ResourceTable.Id_NickName_Edit);
-        passwordField = component.findComponentById(ResourceTable.Id_passwordField);
-        Checkbox showPasswordCB = component.findComponentById(ResourceTable.Id_show_password);
-        showPasswordCB.setCheckedStateChangedListener((buttonView, isChecked)
-                -> ComponentUtil.showPassword(passwordField, isChecked));
-        mSavePasswordCheckBox = component.findComponentById(ResourceTable.Id_store_password);
+        nicknameField = findViewById(R.id.NickName_Edit);
+        passwordField = findViewById(R.id.passwordField);
+        CheckBox showPasswordCB = findViewById(R.id.show_password);
+        showPasswordCB.setOnCheckedChangeListener((buttonView, isChecked)
+                -> ViewUtil.showPassword(passwordField, isChecked));
+        mSavePasswordCheckBox = findViewById(R.id.store_password);
 
-        subjectField = component.findComponentById(ResourceTable.Id_chatRoom_Subject_Edit);
+        subjectField = findViewById(R.id.chatRoom_Subject_Edit);
         subjectField.setText("");
-        component.findComponentById(ResourceTable.Id_subject_clear).setClickedListener(v -> subjectField.setText(""));
+        findViewById(R.id.subject_clear).setOnClickListener(v -> subjectField.setText(""));
 
-        chatRoomComboBox = component.findComponentById(ResourceTable.Id_chatRoom_Combo);
-        chatRoomComboBox.setItemClickedListener(this);
+        chatRoomComboBox = findViewById(R.id.chatRoom_Combo);
+        chatRoomComboBox.setOnItemClickListener(this);
         new InitComboBox().execute();
 
-        accountsSpinner = component.findComponentById(ResourceTable.Id_jid_Accounts_Spinner);
-        // Init AccountSpinner only after InitComboBox(), else onItemSelected() will get trigger.
+        accountsSpinner = findViewById(R.id.jid_Accounts_Spinner);
+        // Init AccountSpinner only after initComboBox(), else onItemSelected() will get trigger.
         initAccountSpinner();
 
-        DialogA.Builder builder = new DialogA.Builder(mContext);
-        builder.setTitle(ResourceTable.String_chatroom_create_join)
-                .setComponent(component)
-                .setNegativeButton(ResourceTable.String_cancel, DialogA::remove);
-
-        builder.setPositiveButton(ResourceTable.String_join, dialog -> {
+        mJoinButton = findViewById(R.id.button_Join);
+        mJoinButton.setOnClickListener(v -> {
             if (createOrJoinChatRoom())
-                dialog.remove();
+                closeDialog();
         });
 
-        DialogA sDialog = builder.create();
-        mJoinButton = sDialog.getButton(DialogA.BUTTON_POSITIVE);
-        sDialog.setSwipeToDismiss(true);
-        sDialog.setAutoClosable(false);
-        sDialog.siteRemovable(false);
-        return sDialog;
+        findViewById(R.id.button_Cancel).setOnClickListener(v -> closeDialog());
+        setCanceledOnTouchOutside(false);
     }
 
     // add items into accountsSpinner dynamically
@@ -152,12 +154,12 @@ public class ChatRoomCreateDialog implements ListContainer.ItemClickedListener, 
         }
 
         // Create an ArrayAdapter using the string array and aTalk default spinner layout
-        ArrayAdapter<String> mAdapter = new ArrayAdapter<>(mContext, ResourceTable.Layout_simple_spinner_item, ppsList);
+        ArrayAdapter<String> mAdapter = new ArrayAdapter<>(mParent, R.layout.simple_spinner_item, ppsList);
         // Specify the layout to use when the list of choices appears
-        mAdapter.setDropDownViewResource(ResourceTable.Layout_simple_spinner_dropdown_item);
+        mAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
-        accountsSpinner.setItemProvider(mAdapter);
-        accountsSpinner.setItemSelectedListener(this);
+        accountsSpinner.setAdapter(mAdapter);
+        accountsSpinner.setOnItemSelectedListener(this);
     }
 
     /**
@@ -170,7 +172,7 @@ public class ChatRoomCreateDialog implements ListContainer.ItemClickedListener, 
             Executors.newSingleThreadExecutor().execute(() -> {
                 final List<String> chatRoomList = doInBackground();
 
-                BaseAbility.runOnUiThread(() -> {
+                new Handler(Looper.getMainLooper()).post(() -> {
                     if (chatRoomList.isEmpty())
                         chatRoomList.add(CHATROOM);
 
@@ -180,7 +182,7 @@ public class ChatRoomCreateDialog implements ListContainer.ItemClickedListener, 
 
                     // Update the dialog form fields with all the relevant values, for first chatRoomWrapperList entry if available.
                     if (!chatRoomWrapperList.isEmpty())
-                        onItemClicked(null, chatRoomComboBox, 0, 0);
+                        onItemClick(null, chatRoomComboBox, 0, 0);
                 });
             });
         }
@@ -213,11 +215,15 @@ public class ChatRoomCreateDialog implements ListContainer.ItemClickedListener, 
         }
     }
 
+    private void closeDialog() {
+        this.cancel();
+    }
+
     /**
      * Updates the enable/disable state of the OK button.
      */
     private void updateJoinButtonEnableState() {
-        String nickName = ComponentUtil.toString(nicknameField);
+        String nickName = ViewUtil.toString(nicknameField);
         String chatRoomField = chatRoomComboBox.getText();
 
         boolean mEnable = ((chatRoomField != null) && (nickName != null) && (getSelectedProvider() != null));
@@ -232,20 +238,25 @@ public class ChatRoomCreateDialog implements ListContainer.ItemClickedListener, 
     }
 
     @Override
-    public void onItemSelected(ListContainer listContainer, Component view, int pos, long id) {
+    public void onItemSelected(AdapterView<?> adapter, View view, int pos, long id) {
         new InitComboBox().execute();
     }
 
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+        // Another interface callback
+    }
+
     /**
-     * Callback method to be invoked when an item in this ListContainer i.e. comboBox has been clicked.
+     * Callback method to be invoked when an item in this AdapterView i.e. comboBox has been clicked.
      *
-     * @param listContainer The ListContainer where the click happened.
-     * @param view The view within the ListContainer that was clicked (this will be a view provided by the adapter)
+     * @param parent The AdapterView where the click happened.
+     * @param view The view within the AdapterView that was clicked (this will be a view provided by the adapter)
      * @param position The position of the view in the adapter.
      * @param id The row id of the item that was clicked.
      */
     @Override
-    public void onItemClicked(ListContainer listContainer, Component view, int position, long id) {
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         ChatRoomWrapper chatRoomWrapper = chatRoomWrapperList.get(chatRoomList.get(position));
         if (chatRoomWrapper != null) {
             // Timber.d("ComboBox Item clicked: %s; %s", position, chatRoomWrapper.getChatRoomName());
@@ -324,9 +335,9 @@ public class ChatRoomCreateDialog implements ListContainer.ItemClickedListener, 
      */
     private boolean createOrJoinChatRoom() {
         // allow nickName to contain spaces
-        String nickName = ComponentUtil.toString(nicknameField);
-        String password = ComponentUtil.toString(passwordField);
-        String subject = ComponentUtil.toString(subjectField);
+        String nickName = ViewUtil.toString(nicknameField);
+        String password = ViewUtil.toString(passwordField);
+        String subject = ViewUtil.toString(subjectField);
 
         String chatRoomID = chatRoomComboBox.getText();
         if (chatRoomID != null) {
@@ -349,9 +360,13 @@ public class ChatRoomCreateDialog implements ListContainer.ItemClickedListener, 
 
                 // Return without open the chat room, the protocol failed to create a chat room (null)
                 if ((chatRoomWrapper == null) || (chatRoomWrapper.getChatRoom() == null)) {
-                    aTalkApp.showToastMessage(ResourceTable.String_chatroom_create_error, chatRoomID);
+                    aTalkApp.showToastMessage(R.string.chatroom_create_error, chatRoomID);
                     return false;
                 }
+
+                // retrieve and save the created chatRoom in database -> createChatRoom will save a copy in dB
+                // chatRoomID = chatRoomWrapper.getChatRoomID();
+                // ConfigurationUtils.saveChatRoom(pps, chatRoomID, chatRoomID);
 
                 /*
                  * Save to server bookmark with auto-join option == false only for newly created chatRoom;
@@ -382,7 +397,7 @@ public class ChatRoomCreateDialog implements ListContainer.ItemClickedListener, 
                         if (evt.getPropertyName().equals(ChatRoomWrapper.JOIN_SUCCESS_PROP))
                             return;
 
-                        // if we failed for some , then close and remove the room
+                        // if we failed for some reason, then close and remove the room
                         AppGUIActivator.getUIService().closeChatRoomWindow(crWrapper);
                         MUCActivator.getMUCService().removeChatRoom(crWrapper);
                     });
@@ -401,17 +416,17 @@ public class ChatRoomCreateDialog implements ListContainer.ItemClickedListener, 
             mucService.joinChatRoom(chatRoomWrapper, nickName, pwdByte, subject);
 
             Intent chatIntent = ChatSessionManager.getChatIntent(chatRoomWrapper);
-            mContext.startAbility(chatIntent, 0);
+            mParent.startActivity(chatIntent);
             return true;
         }
         else if (TextUtils.isEmpty(chatRoomID)) {
-            aTalkApp.showToastMessage(ResourceTable.String_chatroom_join_name);
+            aTalkApp.showToastMessage(R.string.chatroom_join_name);
         }
         else if (nickName == null) {
-            aTalkApp.showToastMessage(ResourceTable.String_change_nickname_null);
+            aTalkApp.showToastMessage(R.string.change_nickname_null);
         }
         else {
-            aTalkApp.showToastMessage(ResourceTable.String_chatroom_join_failed, nickName, chatRoomID);
+            aTalkApp.showToastMessage(R.string.chatroom_join_failed, nickName, chatRoomID);
         }
         return false;
     }

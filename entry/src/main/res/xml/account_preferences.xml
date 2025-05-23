@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen
-  xmlns:ohos="http://schemas.huawei.com/res/ohos">
+  xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
-            ohos:title="aTalk Preferences" />
+            android:title="aTalk Preferences" />
 
     <PreferenceScreen
-        ohos:key="general_settings"
-        ohos:title="General"
-        ohos:summary="Configure general preferences">
+        android:key="general_settings"
+        android:title="General"
+        android:summary="Configure general preferences">
 
         <intent
-            ohos:action="org.atalk.ohos.gui.account.settings.AccountPreferenceAbility.ACCOUNT_SETUP"
-            ohos:targetPackage="org.atalk"
-            ohos:targetClass="org.atalk.ohos.gui.account.settings.AccountPreferenceAbility" />
+            android:action="org.atalk.ohos.gui.account.settings.AccountPreferenceActivity.ACCOUNT_SETUP"
+            android:targetPackage="org.atalk"
+            android:targetClass="org.atalk.ohos.gui.account.settings.AccountPreferenceActivity" />
     </PreferenceScreen>
 
     <PreferenceScreen
-        ohos:key="chat_settings"
-        ohos:title="Chat"
-        ohos:summary="Configure chat preferences">
+        android:key="chat_settings"
+        android:title="Chat"
+        android:summary="Configure chat preferences">
 
         <intent
-            ohos:action="org.atalk.ohos.gui.account.settings.AccountPreferenceAbility.ACCOUNT_SETUP"
-            ohos:targetPackage="org.atalk"
-            ohos:targetClass="org.atalk.ohos.gui.account.settings.AccountPreferenceAbility" />
+            android:action="org.atalk.ohos.gui.account.settings.AccountPreferenceActivity.ACCOUNT_SETUP"
+            android:targetPackage="org.atalk"
+            android:targetClass="org.atalk.ohos.gui.account.settings.AccountPreferenceActivity" />
     </PreferenceScreen>
 
 </PreferenceScreen>

@@ -1,29 +1,15 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
-apply plugin: 'com.huawei.ohos.app'
-
-ohos {
-    compileSdkVersion 7
-}
-
-allprojects {
-    repositories {
-        maven { url 'https://repo.huaweicloud.com/repository/maven/' }
-        maven { url 'https://developer.huawei.com/repo/' }
-    }
-}
-
 buildscript {
     repositories {
-        maven { url 'https://repo.huaweicloud.com/repository/maven/' }
-        maven { url 'https://developer.huawei.com/repo/' }
-        maven { url "https://jitpack.io" }
         google()
         mavenCentral()
     }
 
     dependencies {
-        classpath 'com.huawei.ohos:hap:3.1.5.0'
-        classpath 'com.huawei.ohos:decctest:1.2.7.20'
+        // gradle:4.2.2': [Build | Generate Sigbed Bundle / APL...], build has error i.e.
+        // i.e. aTalk/build/jarjar (Is a directory); but resolved with gradle: >=7.4.2'
+        // gradle-8.x requires JVM 17
+        classpath 'com.android.tools.build:gradle:8.2.2'
 
         // Required by android-youtube-player
         classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.0'
@@ -31,4 +17,25 @@ buildscript {
         // NOTE: Do not place your application dependencies here;
         // they belong in the individual module build.gradle files
     }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+project.ext {
+    preDexLibs = !project.hasProperty('disablePreDex')
+    testCoverage = project.hasProperty('testCoverage')
+
+    minSdk = 24
+    // SDE Eel is not compatible with API-34; missing dx, dx.jar and aapt2 not compatible
+    compileSdk = 34
+    buildTools = '34.0.0'
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
 }

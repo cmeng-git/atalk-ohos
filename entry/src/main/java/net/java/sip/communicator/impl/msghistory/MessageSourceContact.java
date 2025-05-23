@@ -7,6 +7,7 @@
 package net.java.sip.communicator.impl.msghistory;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.EventObject;
 import java.util.Hashtable;
@@ -38,9 +39,8 @@ import net.java.sip.communicator.service.protocol.event.MessageReceivedEvent;
 import net.java.sip.communicator.service.protocol.globalstatus.GlobalStatusEnum;
 import net.java.sip.communicator.util.DataObject;
 
-import org.atalk.ohos.ResourceTable;
+import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
-import org.atalk.util.TimeUtils;
 
 /**
  * Represents a contact source displaying a recent message for contact.
@@ -127,7 +127,7 @@ public class MessageSourceContact extends DataObject
      * Make sure the content of the message is not too long, as it will fill up tooltips and ui components.
      */
     private void updateMessageContent() {
-        if (TimeUtils.isToday(timestamp)) {
+        if (isToday(timestamp)) {
             // just hour
             this.messageContent = new SimpleDateFormat(TODAY_DATE_FORMAT, Locale.US).format(timestamp)
                     + this.messageContent;
@@ -144,6 +144,22 @@ public class MessageSourceContact extends DataObject
             this.messageContent = this.messageContent.substring(0, 60);
             this.messageContent += "...";
         }
+    }
+
+    /**
+     * Checks whether <code>timestamp</code> is today.
+     *
+     * @param timestamp the date to check
+     *
+     * @return whether <code>timestamp</code> is today.
+     */
+    private boolean isToday(Date timestamp) {
+        Calendar today = Calendar.getInstance();
+        Calendar tsCalendar = Calendar.getInstance();
+        tsCalendar.setTime(timestamp);
+
+        return today.get(Calendar.YEAR) == tsCalendar.get(Calendar.YEAR)
+                && today.get(Calendar.DAY_OF_YEAR) == tsCalendar.get(Calendar.DAY_OF_YEAR);
     }
 
     /**
@@ -284,7 +300,7 @@ public class MessageSourceContact extends DataObject
         if (this.displayName != null)
             return this.displayName;
         else
-            return aTalkApp.getResString(ResourceTable.String_unknown_user);
+            return aTalkApp.getResString(R.string.unknown_user);
     }
 
     /**

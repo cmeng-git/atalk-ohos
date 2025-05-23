@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="?attr/colorBackground"
+    android:orientation="vertical"
+    android:clickable="true"
+    android:focusable="true"
+    android:padding="@dimen/screen_padding">
+
+    <TextView
+        style="@style/MediumFont"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/label_padding"
+        android:text="@string/certconfig_revocation_title" />
+
+    <CheckBox
+        android:id="@+id/cb_crl"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/list_padding"
+        android:text="@string/certconfig_revocation_check_enabled" />
+
+    <CheckBox
+        android:id="@+id/cb_ocsp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/list_padding"
+        android:text="@string/certconfig_revocation_ocsp_enabled" />
+
+    <TextView
+        style="@style/MediumFont"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/label_padding"
+        android:text="@string/certconfig_cert_list_title" />
+
+    <TextView
+        style="@style/MediumFont"
+        android:background="@drawable/alpha_blue_01"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:layout_marginBottom="@dimen/label_padding"
+        android:text="@string/certconfig_cert_list_description" />
+
+    <Spinner
+        android:id="@+id/cboCert"
+        style="@style/SpinnerView" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/cmd_add"
+            style="@style/ButtonTop"
+            android:text="@string/add" />
+
+        <Button
+            android:id="@+id/cmd_remove"
+            style="@style/ButtonTop"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
+            android:text="@string/remove" />
+
+        <Button
+            android:id="@+id/cmd_edit"
+            style="@style/ButtonTop"
+            android:focusable="true"
+            android:text="@string/edit" />
+    </LinearLayout>
+</LinearLayout>

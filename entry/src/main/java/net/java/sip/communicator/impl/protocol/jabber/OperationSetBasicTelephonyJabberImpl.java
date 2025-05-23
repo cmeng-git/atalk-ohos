@@ -5,6 +5,7 @@
  */
 package net.java.sip.communicator.impl.protocol.jabber;
 
+import android.text.TextUtils;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -38,6 +39,7 @@ import net.java.sip.communicator.service.protocol.jabber.JabberAccountID;
 import net.java.sip.communicator.service.protocol.media.AbstractOperationSetBasicTelephony;
 import net.java.sip.communicator.service.protocol.media.MediaAwareCallPeer;
 
+import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.aTalk;
 import org.atalk.ohos.gui.call.JingleMessageSessionImpl;
@@ -366,7 +368,7 @@ public class OperationSetBasicTelephonyJabberImpl
         // Throw exception if the call is none of the above criteria check
         if ((!Roster.getInstanceFor(mConnection).contains(calleeJid.asBareJid())
                 && !isPrivateMessagingContact) && !alwaysCallGtalk && !isTelephonyCall) {
-            throw new OperationFailedException(aTalkApp.getResString(ResourceTable.String_not_in_call_group,
+            throw new OperationFailedException(aTalkApp.getResString(R.string.not_in_call_group,
                     calleeAddress), OperationFailedException.FORBIDDEN);
         }
 
@@ -389,7 +391,7 @@ public class OperationSetBasicTelephonyJabberImpl
                 }
 
                 if (discoInfoJid == null) {
-                    throw new OperationFailedException(aTalkApp.getResString(ResourceTable.String_domain_not_in_roster,
+                    throw new OperationFailedException(aTalkApp.getResString(R.string.domain_not_in_roster,
                             telephonyDomain), OperationFailedException.ILLEGAL_ARGUMENT);
                 }
             }
@@ -402,10 +404,10 @@ public class OperationSetBasicTelephonyJabberImpl
                 }
                 else {
                     if (telephonyDomain != null)
-                        throw new OperationFailedException(aTalkApp.getResString(ResourceTable.String_domain_not_in_roster,
+                        throw new OperationFailedException(aTalkApp.getResString(R.string.domain_not_in_roster,
                                 telephonyDomain), OperationFailedException.ILLEGAL_ARGUMENT);
                     else
-                        throw new OperationFailedException(aTalkApp.getResString(ResourceTable.String_invalid_address,
+                        throw new OperationFailedException(aTalkApp.getResString(R.string.invalid_address,
                                 fullCalleeJid), OperationFailedException.ILLEGAL_ARGUMENT);
                 }
             }
@@ -415,7 +417,7 @@ public class OperationSetBasicTelephonyJabberImpl
         DiscoverInfo di = mPPS.getScHelper().discoverInfo(discoInfoJid);
         if (di == null) {
             Timber.i("%s: jingle not supported?", discoInfoJid);
-            throw new OperationFailedException(aTalkApp.getResString(ResourceTable.String_jingle_not_supported,
+            throw new OperationFailedException(aTalkApp.getResString(R.string.jingle_not_supported,
                     discoInfoJid), OperationFailedException.NOT_SUPPORTED_OPERATION);
         }
 
@@ -440,7 +442,7 @@ public class OperationSetBasicTelephonyJabberImpl
                 throw (ThreadDeath) t;
             else {
                 if (telephonyDomain != null)
-                    throw new OperationFailedException(aTalkApp.getResString(ResourceTable.String_domain_not_in_roster,
+                    throw new OperationFailedException(aTalkApp.getResString(R.string.domain_not_in_roster,
                             telephonyDomain), OperationFailedException.ILLEGAL_ARGUMENT);
                 else {
                     String message = null;
@@ -745,7 +747,7 @@ public class OperationSetBasicTelephonyJabberImpl
     @Override
     public void processStanza(Stanza stanza) throws NotConnectedException, InterruptedException, SmackException.NotLoggedInException {
         StanzaError err = stanza.getError();
-        String message = aTalkApp.getResString(ResourceTable.String_call_error, (err != null) ? err.getCondition() : "Unknown");
+        String message = aTalkApp.getResString(R.string.call_error, (err != null) ? err.getCondition() : "Unknown");
         Timber.e(message);
 
         if (getActiveCalls().hasNext()) {
@@ -1055,7 +1057,7 @@ public class OperationSetBasicTelephonyJabberImpl
      * For leading transport-info's: if any, merged cached mediaTransports() before processing; need priority sorting.
      *
      * Received incoming call must have at least mic enabled before it is allowed to proceed;
-     * Actual Video sending is handled in: ReceivedCallAbility#answerCall(Call, boolean)
+     * Actual Video sending is handled in: ReceivedCallActivity#answerCall(Call, boolean)
      *
      * Note: Process in new thread so jingleSI can get updated with trailing transport-info received. Found that
      * actual startConnectivityEstablishment happen much later:

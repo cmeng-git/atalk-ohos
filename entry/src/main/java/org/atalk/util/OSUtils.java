@@ -21,7 +21,9 @@ package org.atalk.util;
  * @author Sebastien Vincent
  * @author Lubomir Marinov
  */
-public class OSUtils {
+public class OSUtils
+{
+
     /* <code>true</code> if architecture is 32 bit. */
     public static final boolean IS_32_BIT;
 
@@ -30,7 +32,6 @@ public class OSUtils {
 
     /* <code>true</code> if OS is Android */
     public static final boolean IS_ANDROID;
-    public static final boolean IS_OHOS;
 
     /* <code>true</code> if OS is Linux. */
     public static final boolean IS_LINUX;
@@ -77,7 +78,6 @@ public class OSUtils {
 
         if (osName == null) {
             IS_ANDROID = false;
-            IS_OHOS = false;
             IS_LINUX = false;
             IS_MAC = false;
             IS_WINDOWS = false;
@@ -91,12 +91,10 @@ public class OSUtils {
 
             if ((javaVmName != null) && javaVmName.equalsIgnoreCase("Dalvik")) {
                 IS_ANDROID = true;
-                IS_OHOS = true;
                 IS_LINUX = false;
             }
             else {
                 IS_ANDROID = false;
-                IS_OHOS = false;
                 IS_LINUX = true;
             }
             IS_MAC = false;
@@ -108,7 +106,6 @@ public class OSUtils {
         }
         else if (osName.startsWith("Mac")) {
             IS_ANDROID = false;
-            IS_OHOS = false;
             IS_LINUX = false;
             IS_MAC = true;
             IS_WINDOWS = false;
@@ -119,7 +116,6 @@ public class OSUtils {
         }
         else if (osName.startsWith("Windows")) {
             IS_ANDROID = false;
-            IS_OHOS = false;
             IS_LINUX = false;
             IS_MAC = false;
             IS_WINDOWS = true;
@@ -130,7 +126,6 @@ public class OSUtils {
         }
         else if (osName.startsWith("FreeBSD")) {
             IS_ANDROID = false;
-            IS_OHOS = false;
             IS_LINUX = false;
             IS_MAC = false;
             IS_WINDOWS = false;
@@ -141,7 +136,6 @@ public class OSUtils {
         }
         else {
             IS_ANDROID = false;
-            IS_OHOS = false;
             IS_LINUX = false;
             IS_MAC = false;
             IS_WINDOWS = false;
@@ -184,6 +178,7 @@ public class OSUtils {
      * Allows the extending of the <code>OSUtils</code> class but disallows
      * initializing non-extended <code>OSUtils</code> instances.
      */
-    protected OSUtils() {
+    protected OSUtils()
+    {
     }
 }

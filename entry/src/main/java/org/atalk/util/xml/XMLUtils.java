@@ -10,6 +10,8 @@ import static javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI;
 import static javax.xml.XMLConstants.XMLNS_ATTRIBUTE_NS_URI;
 import static javax.xml.XMLConstants.XML_NS_URI;
 
+import android.text.TextUtils;
+
 import org.atalk.util.OSUtils;
 import org.atalk.util.StringUtils;
 import org.w3c.dom.Attr;

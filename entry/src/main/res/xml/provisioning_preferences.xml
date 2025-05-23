@@ -1,49 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<PreferenceScreen xmlns:ohos="http://schemas.huawei.com/res/ohos"
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:custom="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
-        ohos:key="pref.cat.provisioning.method"
-        ohos:title="$string:provisioning_method">
+        android:key="pref.cat.provisioning.method"
+        android:title="@string/provisioning_method">
 
         <org.atalk.ohos.gui.settings.widget.ConfigListPreference
-            ohos:entries="@array/pref_provisioning_method"
-            ohos:entryValues="@array/pref_provisioning_method_values"
-            ohos:key="pref.key.provisioning_METHOD"
-            ohos:title="$string:provisioning_method"
+            android:entries="@array/pref_provisioning_method"
+            android:entryValues="@array/pref_provisioning_method_values"
+            android:key="pref.key.provisioning_METHOD"
+            android:title="@string/provisioning_method"
             custom:disableDependentsValue="Manual"
             custom:disableOnNotEqualValue="true" />
 
         <org.atalk.ohos.gui.settings.widget.ConfigEditText
-            ohos:dependency="pref.key.provisioning_METHOD"
-            ohos:key="pref.key.provisioning_URL"
-            ohos:title="$string:provisioning_manual" />
+            android:dependency="pref.key.provisioning_METHOD"
+            android:key="pref.key.provisioning_URL"
+            android:title="@string/provisioning_manual" />
 
         <org.atalk.ohos.gui.settings.widget.ConfigEditText
-            ohos:key="net.java.sip.communicator.UUID"
-            ohos:title="$string:provisioning_UUID"
+            android:key="net.java.sip.communicator.UUID"
+            android:title="@string/provisioning_UUID"
             custom:editable="false" />
     </PreferenceCategory>
 
     <PreferenceCategory
-        ohos:key="pref.cat.provisioning.credentials"
-        ohos:title="$string:provisioning_credentials">
+        android:key="pref.cat.provisioning.credentials"
+        android:title="@string/provisioning_credentials">
 
         <org.atalk.ohos.gui.settings.widget.ConfigEditText
-            ohos:key="plugin.provisioning.auth.USERNAME"
-            ohos:title="$string:username_"
+            android:key="plugin.provisioning.auth.USERNAME"
+            android:title="@string/username_"
             custom:editable="false" />
 
         <org.atalk.ohos.gui.settings.widget.ConfigEditText
-            ohos:inputType="textPassword"
-            ohos:key="plugin.provisioning.auth"
-            ohos:title="$string:password_"
+            android:inputType="textPassword"
+            android:key="plugin.provisioning.auth"
+            android:title="@string/password_"
             custom:editable="false" />
 
         <Preference
-            ohos:enabled="false"
-            ohos:key="pref.key.provisioning.forget_password"
-            ohos:title="$string:provisioning_forget_password" />
+            android:enabled="false"
+            android:key="pref.key.provisioning.forget_password"
+            android:title="@string/provisioning_forget_password" />
     </PreferenceCategory>
 </PreferenceScreen>

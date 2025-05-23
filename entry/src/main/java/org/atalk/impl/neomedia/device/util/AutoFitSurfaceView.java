@@ -1,12 +1,11 @@
 /*
- * aTalk, ohos VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * Copyright 2014 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *       http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,17 +15,16 @@
  */
 package org.atalk.impl.neomedia.device.util;
 
-import ohos.agp.components.AttrSet;
-import ohos.agp.components.Component.EstimateSizeListener;
-import ohos.agp.components.surfaceprovider.SurfaceProvider;
-import ohos.app.Context;
+import android.content.Context;
+import android.util.AttributeSet;
+import android.view.SurfaceView;
 
 import timber.log.Timber;
 
 /**
- * A {@link SurfaceProvider} that can be adjusted to a specified aspect ratio.
+ * A {@link SurfaceView} that can be adjusted to a specified aspect ratio.
  */
-public class AutoFitSurfaceView extends SurfaceProvider implements EstimateSizeListener {
+public class AutoFitSurfaceView extends SurfaceView {
     private int mRatioWidth = 0;
     private int mRatioHeight = 0;
 
@@ -34,11 +32,11 @@ public class AutoFitSurfaceView extends SurfaceProvider implements EstimateSizeL
         this(context, null);
     }
 
-    public AutoFitSurfaceView(Context context, AttrSet attrs) {
-        this(context, attrs, "");
+    public AutoFitSurfaceView(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
     }
 
-    public AutoFitSurfaceView(Context context, AttrSet attrs, String defStyle) {
+    public AutoFitSurfaceView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 
@@ -57,39 +55,36 @@ public class AutoFitSurfaceView extends SurfaceProvider implements EstimateSizeL
         if (mRatioWidth == width && mRatioHeight == height) {
             return;
         }
-
         mRatioWidth = width;
         mRatioHeight = height;
-        // setComponentSize(width, height);
-        if (getSurfaceOps().isPresent())
-           getSurfaceOps().get().setFixedSize(width, height);
+        requestLayout();
     }
 
     /**
      * onMeasure will return the container dimension and not the device display size;
      * Just set to requested dimension?
      *
-     * @param widthMeasureSpec EstimateSpec width
-     * @param heightMeasureSpec EstimateSpec height
+     * @param widthMeasureSpec
+     * @param heightMeasureSpec
      */
     @Override
-    public boolean onEstimateSize(int widthMeasureSpec, int heightMeasureSpec) {
-        int width = EstimateSpec.getSize(widthMeasureSpec);
-        int height = EstimateSpec.getSize(heightMeasureSpec);
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        int width = MeasureSpec.getSize(widthMeasureSpec);
+        int height = MeasureSpec.getSize(heightMeasureSpec);
         if (0 == mRatioWidth || 0 == mRatioHeight) {
-            setEstimatedSize(width, height);
+            setMeasuredDimension(width, height);
         }
         else {
             // setMeasuredDimension(mRatioWidth, mRatioHeight);
             if (width < height * mRatioWidth / mRatioHeight) {
-                setEstimatedSize(width, width * mRatioHeight / mRatioWidth);
+                setMeasuredDimension(width, width * mRatioHeight / mRatioWidth);
                 Timber.d("AutoFit SurfaceView onMeasureW: [%s x %s] => [%s x %s]", width, height, width, width * mRatioHeight / mRatioWidth);
             }
             else {
-                setEstimatedSize(height * mRatioWidth / mRatioHeight, height);
+                setMeasuredDimension(height * mRatioWidth / mRatioHeight, height);
                 Timber.d("AutoFit SurfaceView onMeasureH: [%s x %s] => [%s x %s]", width, height, height * mRatioHeight / mRatioWidth, height);
             }
         }
-        return true;
     }
 }

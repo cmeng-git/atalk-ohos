@@ -1,45 +1,36 @@
 /*
- * Copyright @ 2015 Atlassian Pty Ltd
+ * Jitsi, the OpenSource Java VoIP and Instant Messaging client.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Distributable under LGPL license. See terms of license at gnu.org.
  */
 package org.atalk.ohos.gui.call;
 
-import java.awt.*;
+import android.content.Context;
+import android.media.MediaCodec;
+import android.util.AttributeSet;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
-import ohos.agp.components.AttrSet;
-import ohos.agp.components.Component;
-import ohos.agp.components.ComponentContainer;
-import ohos.agp.components.DirectionalLayout;
-import ohos.app.Context;
+import java.awt.Dimension;
 
-import org.atalk.impl.neomedia.codec.video.MediaDecoder;
+import org.atalk.impl.neomedia.codec.video.AndroidDecoder;
 import org.atalk.ohos.aTalkApp;
-import org.atalk.ohos.agp.components.JComponent;
 
 import timber.log.Timber;
 
 /**
- * Layout that aligns remote video <code>JComponent.</code> by stretching it to max screen width or height.
+ * Layout that aligns remote video <code>View</code> by stretching it to max screen width or height.
  * It also controls whether call control buttons group should be auto hidden or stay visible all the time.
- * This layout will work only with <code>VideoCallAbility</code>.
+ * This layout will work only with <code>VideoCallActivity</code>.
  * <p>
- * IMPORTANT: it can't be done from <code>Ability</code>, because just after the views are created,
+ * IMPORTANT: it can't be done from <code>Activity</code>, because just after the views are created,
  * we don't know their sizes yet(return 0 or invalid).
  *
+ * @author Pawel Domas
  * @author Eng Chong Meng
  */
-public class RemoteVideoLayout extends DirectionalLayout implements Component.EstimateSizeListener {
+public class RemoteVideoLayout extends LinearLayout {
     /**
      * Last saved preferred video size used to calculate the max screen scaling.
      * Must set to null for sizeChange detection on first layout init; and when the remote view is removed
@@ -60,12 +51,12 @@ public class RemoteVideoLayout extends DirectionalLayout implements Component.Es
         super(context);
     }
 
-    public RemoteVideoLayout(Context context, AttrSet attrs) {
+    public RemoteVideoLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public RemoteVideoLayout(Context context, AttrSet attrs, String styleName) {
-        super(context, attrs, styleName);
+    public RemoteVideoLayout(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
     }
 
     /**
@@ -78,22 +69,24 @@ public class RemoteVideoLayout extends DirectionalLayout implements Component.Es
      *
      * @return <code>false</code> if no change is required for remoteVideoViewContainer dimension update
      * to playback the newly received video size:
-     * @see MediaDecoder#configureMediaCodec(Codec, String)
+     *
+     * @see AndroidDecoder#configureMediaCodec(MediaCodec, String)
      */
     public boolean setVideoPreferredSize(Dimension videoSize, boolean requestLayout) {
         preferredSizeChanged = requestLayout || (preferredSize == null)
                 || Math.abs(preferredSize.width / preferredSize.height - videoSize.width / videoSize.height) > 0.01f;
 
         preferredSize = videoSize;
-        refreshContour();
+        requestLayout();
         return preferredSizeChanged;
     }
 
     @Override
-    public boolean onEstimateSize(int widthMeasureSpec, int heightMeasureSpec) {
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         int childCount = getChildCount();
         if ((childCount == lastChildCount) && !preferredSizeChanged) {
-            return false;
+            return;
         }
 
         // Store values to prevent from too many calculations
@@ -101,11 +94,11 @@ public class RemoteVideoLayout extends DirectionalLayout implements Component.Es
         preferredSizeChanged = false;
 
         Context ctx = getContext();
-        if (!(ctx instanceof VideoCallAbility)) {
-            return false;
+        if (!(ctx instanceof VideoCallActivity)) {
+            return;
         }
 
-        VideoCallAbility videoAbility = (VideoCallAbility) ctx;
+        VideoCallActivity videoActivity = (VideoCallActivity) ctx;
         if (childCount > 0) {
             /*
              * MeasureSpec.getSize() is determined by previous layout dimension, any may not in full screen size;
@@ -116,8 +109,8 @@ public class RemoteVideoLayout extends DirectionalLayout implements Component.Es
             int parentWidth = aTalkApp.mDisplaySize.width;
             int parentHeight = aTalkApp.mDisplaySize.height;
             if (!aTalkApp.isPortrait) {
-                parentWidth = parentHeight;
-                parentHeight = parentWidth;
+                parentWidth = aTalkApp.mDisplaySize.height;
+                parentHeight = aTalkApp.mDisplaySize.width;
             }
 
             double width;
@@ -128,8 +121,8 @@ public class RemoteVideoLayout extends DirectionalLayout implements Component.Es
             }
             else {
                 // NullPointerException from the field? so give it a default
-                width = VideoHandlerSlice.DEFAULT_WIDTH;
-                height = VideoHandlerSlice.DEFAULT_HEIGHT;
+                width = VideoHandlerFragment.DEFAULT_WIDTH;
+                height = VideoHandlerFragment.DEFAULT_HEIGHT;
             }
 
             // Stretch to match height
@@ -139,7 +132,7 @@ public class RemoteVideoLayout extends DirectionalLayout implements Component.Es
                 height = parentHeight;
                 // width = height * ratio;
                 width = Math.ceil((height * ratio) / 16.0) * 16;
-                videoAbility.ensureAutoHideFragmentAttached();
+                videoActivity.ensureAutoHideFragmentAttached();
             }
             // Stretch to match width
             else {
@@ -147,32 +140,31 @@ public class RemoteVideoLayout extends DirectionalLayout implements Component.Es
                 double ratio = height / width;
                 width = parentWidth;
                 height = Math.ceil((width * ratio) / 16.0) * 16;
-                videoAbility.ensureAutoHideFragmentDetached();
+                videoActivity.ensureAutoHideFragmentDetached();
             }
 
             Timber.i("Remote video view dimension: [%s x %s]", width, height);
-            this.setEstimatedSize((int) width, (int) height);
+            this.setMeasuredDimension((int) width, (int) height);
 
-            ComponentContainer.LayoutConfig params = getLayoutConfig();
+            ViewGroup.LayoutParams params = getLayoutParams();
             params.width = (int) width;
             params.height = (int) height;
-            setLayoutConfig(params);
+            this.setLayoutParams(params);
 
             for (int i = 0; i < childCount; i++) {
-                JComponent child = (JComponent) getComponentAt(i);
-                ComponentContainer.LayoutConfig chP = child.getLayoutConfig();
+                View child = getChildAt(i);
+                ViewGroup.LayoutParams chP = child.getLayoutParams();
                 chP.width = params.width;
                 chP.height = params.height;
-                child.setLayoutConfig(chP);
+                child.setLayoutParams(chP);
             }
         }
         else {
-            ComponentContainer.LayoutConfig params = getLayoutConfig();
-            params.width = LayoutConfig.MATCH_CONTENT;
-            params.height = LayoutConfig.MATCH_CONTENT;
-            this.setLayoutConfig(params);
-            videoAbility.ensureAutoHideFragmentDetached();
+            ViewGroup.LayoutParams params = getLayoutParams();
+            params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+            params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            this.setLayoutParams(params);
+            videoActivity.ensureAutoHideFragmentDetached();
         }
-        return true;
     }
 }

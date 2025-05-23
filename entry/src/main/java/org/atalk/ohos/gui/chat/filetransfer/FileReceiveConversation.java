@@ -1,6 +1,6 @@
 /*
- * aTalk, ohos VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * aTalk, android VoIP and Instant Messaging client
+ * Copyright 2014 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,14 @@
  */
 package org.atalk.ohos.gui.chat.filetransfer;
 
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
 import java.io.File;
 import java.util.Date;
 import java.util.concurrent.Executors;
-
-import ohos.agp.components.Component;
-import ohos.agp.components.ComponentContainer;
-import ohos.agp.components.LayoutScatter;
 
 import net.java.sip.communicator.impl.filehistory.FileHistoryServiceImpl;
 import net.java.sip.communicator.service.filehistory.FileRecord;
@@ -38,13 +39,11 @@ import net.java.sip.communicator.service.protocol.event.ScFileTransferListener;
 import net.java.sip.communicator.util.ConfigurationUtils;
 import net.java.sip.communicator.util.GuiUtils;
 
-import org.apache.http.util.TextUtils;
-import org.atalk.ohos.BaseAbility;
-import org.atalk.ohos.ResourceTable;
+import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.AppGUIActivator;
+import org.atalk.ohos.gui.chat.ChatFragment;
 import org.atalk.ohos.gui.chat.ChatMessage;
-import org.atalk.ohos.gui.chat.ChatSlice;
 
 import timber.log.Timber;
 
@@ -62,7 +61,7 @@ public class FileReceiveConversation extends FileTransferConversation
     private FileHistoryServiceImpl mFHS;
     private String mSender;
 
-    private FileReceiveConversation(ChatSlice cPanel, String dir) {
+    private FileReceiveConversation(ChatFragment cPanel, String dir) {
         super(cPanel, dir);
     }
 
@@ -75,8 +74,8 @@ public class FileReceiveConversation extends FileTransferConversation
      * @param request the <code>IncomingFileTransferRequest</code> associated with this component
      * @param date the received file date
      */
-    // Constructor used by ChatSlice to start handle ReceiveFileTransferRequest
-    public static FileReceiveConversation newInstance(ChatSlice cPanel, String sender,
+    // Constructor used by ChatFragment to start handle ReceiveFileTransferRequest
+    public static FileReceiveConversation newInstance(ChatFragment cPanel, String sender,
             OperationSetFileTransfer opSet, IncomingFileTransferRequest request, final Date date) {
         FileReceiveConversation fragmentRFC = new FileReceiveConversation(cPanel, FileRecord.IN);
         fragmentRFC.mSender = sender;
@@ -91,11 +90,11 @@ public class FileReceiveConversation extends FileTransferConversation
         return fragmentRFC;
     }
 
-    public Component ReceiveFileConversionForm(LayoutScatter inflater, ChatSlice.MessageViewHolder msgViewHolder,
-            ComponentContainer container, int id, boolean init) {
+    public View ReceiveFileConversationForm(LayoutInflater inflater, ChatFragment.MessageViewHolder msgViewHolder,
+            ViewGroup container, int id, boolean init) {
         msgViewId = id;
-        Component convertView = inflateViewForFileTransfer(inflater, msgViewHolder, container, init);
-        messageViewHolder.stickerView.setPixelMap(null);
+        View convertView = inflateViewForFileTransfer(inflater, msgViewHolder, container, init);
+        messageViewHolder.stickerView.setImageDrawable(null);
 
         // ReceiveFileConversationForm get call again on UI refresh; create new file only if null.
         if (mXferFile == null)
@@ -110,26 +109,26 @@ public class FileReceiveConversation extends FileTransferConversation
         messageViewHolder.fileLabel.setText(fileLabel);
 
         // Must reset button image to fileIcon on new(); else reused view may contain an old thumbnail image
-            messageViewHolder.fileIcon.setPixelMap(ResourceTable.Media_file_icon);
+        messageViewHolder.fileIcon.setImageResource(R.drawable.file_icon);
         if (ConfigurationUtils.isSendThumbnail()) {
             byte[] thumbnail = fileTransferRequest.getThumbnail(this);
             showThumbnail(thumbnail);
         }
 
         // must init all buttons action as inflateViewForFileTransfer will change its references.
-        messageViewHolder.acceptButton.setClickedListener(v -> {
+        messageViewHolder.acceptButton.setOnClickListener(v -> {
             updateXferFileViewState(FileTransferStatusChangeEvent.ACCEPT,
-                    aTalkApp.getResString(ResourceTable.String_file_transfer_accepted, mSender));
+                    aTalkApp.getResString(R.string.file_transfer_accepted, mSender));
 
             // set the download for global display parameter
-            mChatSlice.getChatListAdapter().setFileName(msgViewId, mXferFile);
+            mChatFragment.getChatListAdapter().setFileName(msgViewId, mXferFile);
             new AcceptFile().execute();
             updateStatus(FileTransferStatusChangeEvent.ACCEPT, null);
         });
 
-        messageViewHolder.declineButton.setClickedListener(v -> {
+        messageViewHolder.declineButton.setOnClickListener(v -> {
             updateXferFileViewState(FileTransferStatusChangeEvent.DECLINED,
-                    aTalkApp.getResString(ResourceTable.String_file_transfer_declined));
+                    aTalkApp.getResString(R.string.file_transfer_declined));
             hideProgressRelatedComponents();
 
             try {
@@ -171,50 +170,50 @@ public class FileReceiveConversation extends FileTransferConversation
         switch (status) {
             case FileTransferStatusChangeEvent.PREPARING:
                 // hideProgressRelatedComponents();
-                statusText = aTalkApp.getResString(ResourceTable.String_file_transfer_preparing, mSender);
+                statusText = aTalkApp.getResString(R.string.file_transfer_preparing, mSender);
                 break;
 
             case FileTransferStatusChangeEvent.WAITING:
-                statusText = aTalkApp.getResString(ResourceTable.String_file_transfer_request_received, mSender);
+                statusText = aTalkApp.getResString(R.string.file_transfer_request_received, mSender);
                 break;
 
             case FileTransferStatusChangeEvent.ACCEPT:
-                statusText = aTalkApp.getResString(ResourceTable.String_file_transfer_accepted);
+                statusText = aTalkApp.getResString(R.string.file_transfer_accepted);
                 break;
 
             // Briefly visible for legacy Si file transfer; as transfer takes ~200ms to send 1.1 MB.
             // JFT encrypted takes ~7s to send/receive 1.1 MB.
             case FileTransferStatusChangeEvent.IN_PROGRESS:
-                statusText = aTalkApp.getResString(ResourceTable.String_file_receive_from, mSender);
+                statusText = aTalkApp.getResString(R.string.file_receive_from, mSender);
                 break;
 
             case FileTransferStatusChangeEvent.COMPLETED:
-                statusText = aTalkApp.getResString(ResourceTable.String_file_receive_completed, mSender);
+                statusText = aTalkApp.getResString(R.string.file_receive_completed, mSender);
                 if (mXferFile == null) { // Android view redraw happen
-                    mXferFile = mChatSlice.getChatListAdapter().getFileName(msgViewId);
+                    mXferFile = mChatFragment.getChatListAdapter().getFileName(msgViewId);
                 }
                 break;
 
             case FileTransferStatusChangeEvent.FAILED:
                 // hideProgressRelatedComponents(); keep the status info for user view
-                statusText = aTalkApp.getResString(ResourceTable.String_file_receive_failed, mSender);
+                statusText = aTalkApp.getResString(R.string.file_receive_failed, mSender);
                 if (!TextUtils.isEmpty(reason)) {
                     statusText += "\n" + reason;
                 }
                 break;
 
             case FileTransferStatusChangeEvent.CANCELED:
-                statusText = aTalkApp.getResString(ResourceTable.String_file_transfer_canceled);
+                statusText = aTalkApp.getResString(R.string.file_transfer_canceled);
                 break;
 
             case FileTransferStatusChangeEvent.DECLINED:
                 // hideProgressRelatedComponents();
-                statusText = aTalkApp.getResString(ResourceTable.String_file_transfer_declined);
+                statusText = aTalkApp.getResString(R.string.file_transfer_declined);
                 break;
         }
         updateFTStatus(msgUuid, status);
         updateXferFileViewState(status, statusText);
-        mChatSlice.scrollToBottom();
+        mChatFragment.scrollToBottom();
     }
 
     /**
@@ -244,7 +243,7 @@ public class FileReceiveConversation extends FileTransferConversation
             Executors.newSingleThreadExecutor().execute(() -> {
                 doInBackground();
 
-                BaseAbility.runOnUiThread(() -> {
+                runOnUiThread(() -> {
                     if (mFileTransfer != null) {
                         setFileTransfer(mFileTransfer, fileTransferRequest.getFileSize());
                     }
@@ -257,7 +256,7 @@ public class FileReceiveConversation extends FileTransferConversation
             // Remove previously added listener (no further required), that notify for request cancellations if any.
             fileTransferOpSet.removeFileTransferListener(FileReceiveConversation.this);
             if (mFileTransfer != null) {
-                mChatSlice.addActiveFileTransfer(mFileTransfer.getID(), mFileTransfer, msgViewId);
+                mChatFragment.addActiveFileTransfer(mFileTransfer.getID(), mFileTransfer, msgViewId);
             }
         }
     }
@@ -282,7 +281,7 @@ public class FileReceiveConversation extends FileTransferConversation
         int ftState = isFileTransferEnd(status) ?
                 ChatMessage.MESSAGE_FILE_TRANSFER_HISTORY : ChatMessage.MESSAGE_FILE_TRANSFER_RECEIVE;
         mFHS.updateFTStatusToDB(msgUuid, status, fileName, mEncryption, ftState);
-        mChatSlice.updateFTStatus(msgUuid, status, fileName, mEncryption, ftState);
+        mChatFragment.updateFTStatus(msgUuid, status, fileName, mEncryption, ftState);
     }
 
     /**
@@ -299,7 +298,7 @@ public class FileReceiveConversation extends FileTransferConversation
         final String reason = event.getReason();
 
         // Event thread - Must execute in UiThread to Update UI information
-        BaseAbility.runOnUiThread(() -> {
+        runOnUiThread(() -> {
             updateStatus(status, reason);
             if (isFileTransferEnd(status)) {
                 // must update this in UI, otherwise the status is not being updated to FileRecord
@@ -346,10 +345,10 @@ public class FileReceiveConversation extends FileTransferConversation
         updateFTStatus(request.getId(), FileTransferStatusChangeEvent.DECLINED);
 
         // Event triggered - Must execute in UiThread to Update UI information
-        BaseAbility.runOnUiThread(() -> {
+        runOnUiThread(() -> {
             if (request.equals(fileTransferRequest)) {
                 updateXferFileViewState(FileTransferStatusChangeEvent.DECLINED,
-                        aTalkApp.getResString(ResourceTable.String_file_transfer_declined));
+                        aTalkApp.getResString(R.string.file_transfer_declined));
                 fileTransferOpSet.removeFileTransferListener(FileReceiveConversation.this);
                 hideProgressRelatedComponents();
             }
@@ -367,10 +366,10 @@ public class FileReceiveConversation extends FileTransferConversation
         updateFTStatus(request.getId(), FileTransferStatusChangeEvent.CANCELED);
 
         // Event triggered - Must execute in UiThread to Update UI information
-        BaseAbility.runOnUiThread(() -> {
+        runOnUiThread(() -> {
             if (request.equals(fileTransferRequest)) {
                 updateXferFileViewState(FileTransferStatusChangeEvent.DECLINED,
-                        aTalkApp.getResString(ResourceTable.String_file_transfer_canceled));
+                        aTalkApp.getResString(R.string.file_transfer_canceled));
                 fileTransferOpSet.removeFileTransferListener(FileReceiveConversation.this);
             }
         });
@@ -385,6 +384,6 @@ public class FileReceiveConversation extends FileTransferConversation
      */
     @Override
     protected String getProgressLabel(long bytesString) {
-        return aTalkApp.getResString(ResourceTable.String_received_, bytesString);
+        return aTalkApp.getResString(R.string.received_, bytesString);
     }
 }

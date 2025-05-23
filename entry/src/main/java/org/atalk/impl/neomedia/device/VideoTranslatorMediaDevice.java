@@ -5,14 +5,6 @@
  */
 package org.atalk.impl.neomedia.device;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import javax.media.Format;
-import javax.media.Player;
-import javax.media.Processor;
-import javax.media.protocol.DataSource;
-
 import org.atalk.impl.neomedia.AbstractRTPConnector;
 import org.atalk.impl.neomedia.format.MediaFormatImpl;
 import org.atalk.service.neomedia.MediaDirection;
@@ -24,7 +16,15 @@ import org.atalk.service.neomedia.format.MediaFormat;
 import org.atalk.util.MediaType;
 import org.atalk.util.event.VideoEvent;
 import org.atalk.util.event.VideoListener;
-import org.atalk.ohos.agp.components.JComponent;
+
+import java.awt.Component;
+import java.util.LinkedList;
+import java.util.List;
+
+import javax.media.Format;
+import javax.media.Player;
+import javax.media.Processor;
+import javax.media.protocol.DataSource;
 
 /**
  * Implements a <code>MediaDevice</code> which is to be used in video conferencing implemented with an
@@ -338,13 +338,13 @@ public class VideoTranslatorMediaDevice extends AbstractMediaDevice implements M
 
         /**
          * Initializes a new <code>Player</code> instance which is to provide the local visual/video
-         * <code>JComponent</code>. The new instance is initialized to render the media of a specific
+         * <code>Component</code>. The new instance is initialized to render the media of a specific
          * <code>DataSource</code>.
          *
          * @param captureDevice the <code>DataSource</code> which is to have its media rendered by the new instance as
-         * the local visual/video <code>JComponent</code>
+         * the local visual/video <code>Component</code>
          * @return a new <code>Player</code> instance which is to provide the local visual/video
-         * <code>JComponent</code>
+         * <code>Component</code>
          */
         @Override
         protected Player createLocalPlayer(DataSource captureDevice)
@@ -415,12 +415,12 @@ public class VideoTranslatorMediaDevice extends AbstractMediaDevice implements M
         }
 
         /**
-         * {@inheritDoc} Returns the local visual <code>JComponent</code> for this
+         * {@inheritDoc} Returns the local visual <code>Component</code> for this
          * <code>MediaStreamMediaDeviceSession</code>, which, if present, is maintained in
          * <code>this.deviceSession</code>.
          */
         @Override
-        public JComponent getLocalVisualComponent()
+        public Component getLocalVisualComponent()
         {
             if (deviceSession != null)
                 return deviceSession.getLocalVisualComponent();
@@ -430,13 +430,13 @@ public class VideoTranslatorMediaDevice extends AbstractMediaDevice implements M
         /**
          * {@inheritDoc}
          * <p>
-         * Creates, if necessary, the local visual <code>JComponent</code> depicting the video being
-         * streamed from the local peer to a remote peer. The <code>JComponent</code> is provided by the
+         * Creates, if necessary, the local visual <code>Component</code> depicting the video being
+         * streamed from the local peer to a remote peer. The <code>Component</code> is provided by the
          * single <code>Player</code> instance, which is maintained for this
          * <code>VideoTranslatorMediaDevice</code> and is managed by <code>this.deviceSession</code>.
          */
         @Override
-        protected JComponent createLocalVisualComponent()
+        protected Component createLocalVisualComponent()
         {
             if (deviceSession != null)
                 return deviceSession.createLocalVisualComponent();
@@ -447,7 +447,7 @@ public class VideoTranslatorMediaDevice extends AbstractMediaDevice implements M
          * {@inheritDoc}
          * <p>
          * Returns the <code>Player</code> instance which provides the local visual/video
-         * <code>JComponent</code>. A single <code>Player</code> is maintained for this
+         * <code>Component</code>. A single <code>Player</code> is maintained for this
          * <code>VideoTranslatorMediaDevice</code>, and it is managed by <code>this.deviceSession</code>.
          */
         @Override

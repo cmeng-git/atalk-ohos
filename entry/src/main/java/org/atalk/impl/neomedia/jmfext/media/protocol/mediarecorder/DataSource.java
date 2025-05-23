@@ -5,12 +5,36 @@
  */
 package org.atalk.impl.neomedia.jmfext.media.protocol.mediarecorder;
 
+import android.annotation.SuppressLint;
+import android.graphics.SurfaceTexture;
+import android.hardware.camera2.CameraAccessException;
+import android.hardware.camera2.CameraCaptureSession;
+import android.hardware.camera2.CameraCharacteristics;
+import android.hardware.camera2.CameraDevice;
+import android.hardware.camera2.CameraManager;
+import android.hardware.camera2.CameraMetadata;
+import android.hardware.camera2.CaptureRequest;
+import android.hardware.camera2.params.StreamConfigurationMap;
+import android.media.MediaRecorder;
+import android.media.MediaRecorder.VideoSource;
+import android.net.LocalServerSocket;
+import android.net.LocalSocket;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.ParcelFileDescriptor;
+import android.os.Process;
+import android.view.Surface;
+import android.view.SurfaceHolder;
+
+import androidx.annotation.NonNull;
+
+import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
-import org.atalk.ohos.gui.call.VideoCallAbility;
-import org.atalk.ohos.gui.call.VideoHandlerSlice;
+import org.atalk.ohos.gui.call.VideoCallActivity;
+import org.atalk.ohos.gui.call.VideoHandlerFragment;
 import org.atalk.impl.neomedia.codec.FFmpeg;
 import org.atalk.impl.neomedia.codec.video.h264.H264;
-import org.atalk.impl.neomedia.device.util.OhosCamera;
+import org.atalk.impl.neomedia.device.util.AndroidCamera;
 import org.atalk.impl.neomedia.device.util.CameraUtils;
 import org.atalk.impl.neomedia.device.util.PreviewSurfaceProvider;
 import org.atalk.impl.neomedia.jmfext.media.protocol.AbstractPushBufferCaptureDevice;
@@ -30,6 +54,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
@@ -41,11 +66,6 @@ import javax.media.control.FormatControl;
 import javax.media.format.VideoFormat;
 import javax.media.protocol.BufferTransferHandler;
 import javax.media.protocol.PushBufferStream;
-
-import ohos.agp.graphics.Surface;
-import  ohos.eventhandler.EventHandler;
-import ohos.eventhandler.EventRunner;
-import ohos.media.common.Source;
 
 import timber.log.Timber;
 
@@ -151,12 +171,12 @@ public class DataSource extends AbstractPushBufferCaptureDevice
     private VideoFormat mVideoFormat = null;
 
     /**
-     * The size of video recording.
+     * The {@link android.util.Size} of video recording.
      */
     private Dimension mVideoSize;
 
     /**
-     * The size of camera preview.
+     * The {@link android.util.Size} of camera preview.
      */
     private Dimension mPreviewSize;
 
@@ -167,12 +187,12 @@ public class DataSource extends AbstractPushBufferCaptureDevice
     /**
      * An additional thread for running tasks that shouldn't block the UI.
      */
-    private EventRunner backgroundThread;
+    private HandlerThread backgroundThread;
 
     /**
-     * A {@link EventHandler} for running tasks in the background.
+     * A {@link Handler} for running tasks in the background.
      */
-    protected EventHandler mBackgroundHandler;
+    protected Handler mBackgroundHandler;
 
     /**
      * A {@link Semaphore} to prevent the app from exiting before closing the camera.
@@ -275,12 +295,13 @@ public class DataSource extends AbstractPushBufferCaptureDevice
      * @throws IOException if anything goes wrong while starting the transfer of media data from this <code>DataSource</code>
      * @see AbstractPushBufferCaptureDevice#doStart()
      */
+    @SuppressLint("MissingPermission")
     @Override
     protected synchronized void doStart()
             throws IOException
     {
         if (mediaRecorder == null) {
-            mCameraId = OhosCamera.getCameraId(getLocator());
+            mCameraId = AndroidCamera.getCameraId(getLocator());
             mediaRecorder = new MediaRecorder();
             mCameraDevice = null;
 
@@ -341,7 +362,7 @@ public class DataSource extends AbstractPushBufferCaptureDevice
     private final CameraDevice.StateCallback mStateCallback = new CameraDevice.StateCallback()
     {
         @Override
-        public void onOpened(CameraDevice cameraDevice)
+        public void onOpened(@NonNull CameraDevice cameraDevice)
         {
             mCameraDevice = cameraDevice;
             mCameraOpenCloseLock.release();
@@ -353,14 +374,14 @@ public class DataSource extends AbstractPushBufferCaptureDevice
                  * Then set the local previewSurface size by calling initLocalPreviewContainer()
                  * Note: Do not change the following execution order
                  */
-                VideoHandlerSlice videoSlice = VideoCallAbility.getVideoSlice();
-                mSurfaceProvider = videoSlice.localPreviewSurface;
+                VideoHandlerFragment videoFragment = VideoCallActivity.getVideoFragment();
+                mSurfaceProvider = videoFragment.localPreviewSurface;
                 mSurfaceProvider.setVideoSize(mPreviewSize);
-                // Need to init for MediaDecoder when hardware decode is enabled
-                // MediaDecoder.renderSurfaceProvider.setSurfaceSize(mPreviewSize);
+                // Need to init for AndroidDecoder when hardware decode is enabled
+                // AndroidDecoder.renderSurfaceProvider.setSurfaceSize(mPreviewSize);
 
                 SurfaceHolder surfaceHolder = mSurfaceProvider.obtainObject(); // this will create the surfaceView
-                videoSlice.initLocalPreviewContainer(mSurfaceProvider);
+                videoFragment.initLocalPreviewContainer(mSurfaceProvider);
                 mPreviewSurface = surfaceHolder.getSurface();
 
                 // Tries to read previously stored parameters; Obtain/save h264 parameters from short sample video if null
@@ -380,7 +401,7 @@ public class DataSource extends AbstractPushBufferCaptureDevice
         }
 
         @Override
-        public void onDisconnected(CameraDevice cameraDevice)
+        public void onDisconnected(@NonNull CameraDevice cameraDevice)
         {
             mCameraDevice.close();
             mCameraDevice = null;
@@ -388,7 +409,7 @@ public class DataSource extends AbstractPushBufferCaptureDevice
         }
 
         @Override
-        public void onError(CameraDevice cameraDevice, int error)
+        public void onError(@NonNull CameraDevice cameraDevice, int error)
         {
             String errMessage;
             switch (error) {
@@ -411,7 +432,7 @@ public class DataSource extends AbstractPushBufferCaptureDevice
                     errMessage = "UnKnown";
             }
             Timber.e("Set camera preview failed: %s", errMessage);
-            aTalkApp.showGenericError(ResourceTable.String_video_format_not_supported, "", errMessage);
+            aTalkApp.showGenericError(R.string.video_format_not_supported, "", errMessage);
 
             mediaRecorder.release();
             mediaRecorder = null;
@@ -425,6 +446,7 @@ public class DataSource extends AbstractPushBufferCaptureDevice
 
     /**
      * Must use H264/RTP for video encoder
+     *
      * After API 23, android doesn't allow non seekable file descriptors i.e. mOutputFile = null
      * org.atalk.ohos E/(DataSource.java:294)#startVideoRecording: IllegalStateException (media recorder) in configuring data source: : null
      *     java.lang.IllegalStateException
@@ -446,7 +468,7 @@ public class DataSource extends AbstractPushBufferCaptureDevice
 
             // Configure media recorder for video recording
             // mediaRecorder.setVideoSource(VideoSource.DEFAULT);  // has problem with this
-            configureMediaRecorder(mVideoFormat, Source.VideoSource.SURFACE);
+            configureMediaRecorder(mVideoFormat, VideoSource.SURFACE);
 
             // Sets the path of the output file to be produced. Call this after setOutputFormat() but before prepare().
             if (mOutputFile == null) {
@@ -474,7 +496,7 @@ public class DataSource extends AbstractPushBufferCaptureDevice
             mCameraDevice.createCaptureSession(surfaces, new CameraCaptureSession.StateCallback()
             {
                 @Override
-                public void onConfigured(CameraCaptureSession session)
+                public void onConfigured(@NonNull CameraCaptureSession session)
                 {
                     mCaptureSession = session;
                     updateCaptureRequest();
@@ -488,7 +510,7 @@ public class DataSource extends AbstractPushBufferCaptureDevice
                 }
 
                 @Override
-                public void onConfigureFailed(CameraCaptureSession session)
+                public void onConfigureFailed(@NonNull CameraCaptureSession session)
                 {
                     aTalkApp.showToastMessage("Media recording failed");
                 }
@@ -563,14 +585,14 @@ public class DataSource extends AbstractPushBufferCaptureDevice
                     new CameraCaptureSession.StateCallback()
                     {
                         @Override
-                        public void onConfigured(CameraCaptureSession session)
+                        public void onConfigured(@NonNull CameraCaptureSession session)
                         {
                             mCaptureSession = session;
                             updateCaptureRequest();
                         }
 
                         @Override
-                        public void onConfigureFailed(CameraCaptureSession session)
+                        public void onConfigureFailed(@NonNull CameraCaptureSession session)
                         {
                             aTalkApp.showToastMessage("Camera preview start failed");
                         }
@@ -671,7 +693,7 @@ public class DataSource extends AbstractPushBufferCaptureDevice
             mCameraDevice.createCaptureSession(Collections.singletonList(recorderSurface), new CameraCaptureSession.StateCallback()
             {
                 @Override
-                public void onConfigured(CameraCaptureSession session)
+                public void onConfigured(@NonNull CameraCaptureSession session)
                 {
                     mCaptureSession = session;
                     mediaRecorder.start();
@@ -680,7 +702,7 @@ public class DataSource extends AbstractPushBufferCaptureDevice
                 }
 
                 @Override
-                public void onConfigureFailed(CameraCaptureSession session)
+                public void onConfigureFailed(@NonNull CameraCaptureSession session)
                 {
                     Timber.e("Obtaining h264 parameters failed");
                 }
@@ -1533,18 +1555,21 @@ public class DataSource extends AbstractPushBufferCaptureDevice
     private void startBackgroundThread()
     {
         if (backgroundThread == null) {
-            backgroundThread = EventRunner.create("CameraBackground");
-            backgroundThread.run();
-            mBackgroundHandler = new EventHandler(backgroundThread);
+            backgroundThread = new HandlerThread("CameraBackground");
+            backgroundThread.start();
+            mBackgroundHandler = new Handler(backgroundThread.getLooper());
         }
     }
 
     private void stopBackgroundThread()
     {
-        if (backgroundThread != null) {
-            backgroundThread.stop();
+        backgroundThread.quitSafely();
+        try {
+            backgroundThread.join();
             backgroundThread = null;
             mBackgroundHandler = null;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 }

@@ -1,6 +1,6 @@
 /*
- * aTalk, ohos VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * aTalk, android VoIP and Instant Messaging client
+ * Copyright 2014 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+/*
+ * Jitsi, the OpenSource Java VoIP and Instant Messaging client.
+ *
+ * Distributable under LGPL license. See terms of license at gnu.org.
+ */
 package org.atalk.ohos.gui.contactlist.model;
 
-import ohos.agp.components.ListContainer;
+import android.widget.ExpandableListView;
 
 import net.java.sip.communicator.service.contactlist.MetaContactGroup;
 
 /**
  * Implements contact groups expand memory.
  *
- * @author Eng Chong Meng
+ * @author Pawel Domas
  */
-public class MetaGroupExpandHandler implements ListContainer.OnGroupExpandListener,
-        ListContainer.OnGroupCollapseListener {
+public class MetaGroupExpandHandler implements ExpandableListView.OnGroupExpandListener,
+        ExpandableListView.OnGroupCollapseListener {
     /**
      * Data key used to remember group state.
      */
@@ -35,22 +41,22 @@ public class MetaGroupExpandHandler implements ListContainer.OnGroupExpandListen
     /**
      * Meta contact list adapter used by this instance.
      */
-    private final MetaContactListProvider contactList;
+    private final MetaContactListAdapter contactList;
 
     /**
      * The contact list view.
      */
-    private final ListContainer contactListContainer;
+    private final ExpandableListView contactListView;
 
     /**
      * Creates new instance of <code>MetaGroupExpandHandler</code>.
      *
      * @param contactList contact list data model.
-     * @param contactListContainer contact list view.
+     * @param contactListView contact list view.
      */
-    public MetaGroupExpandHandler(MetaContactListProvider contactList, ListContainer contactListContainer) {
+    public MetaGroupExpandHandler(MetaContactListAdapter contactList, ExpandableListView contactListView) {
         this.contactList = contactList;
-        this.contactListContainer = contactListContainer;
+        this.contactListView = contactListView;
     }
 
     /**
@@ -61,23 +67,23 @@ public class MetaGroupExpandHandler implements ListContainer.OnGroupExpandListen
             MetaContactGroup metaGroup = (MetaContactGroup) contactList.getGroup(gIdx);
 
             if (Boolean.FALSE.equals(metaGroup.getData(KEY_EXPAND_MEMORY))) {
-                contactListContainer.collapseGroup(gIdx);
+                contactListView.collapseGroup(gIdx);
             }
             else {
                 // Will expand by default
-                contactListContainer.expandGroup(gIdx);
+                contactListView.expandGroup(gIdx);
             }
         }
-        contactListContainer.setOnGroupExpandListener(this);
-        contactListContainer.setOnGroupCollapseListener(this);
+        contactListView.setOnGroupExpandListener(this);
+        contactListView.setOnGroupCollapseListener(this);
     }
 
     /**
      * Unbinds the listener.
      */
     public void unbind() {
-        contactListContainer.setOnGroupExpandListener(null);
-        contactListContainer.setOnGroupCollapseListener(null);
+        contactListView.setOnGroupExpandListener(null);
+        contactListView.setOnGroupCollapseListener(null);
     }
 
     @Override

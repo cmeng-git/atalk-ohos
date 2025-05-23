@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/background_light"
+    android:clickable="true"
+    android:focusable="true"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/call_history"
+        style="@style/MediumFont"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/background_dark"
+        android:padding="5dp"
+        android:text="@string/call_history_name"
+        android:textColor="@color/textColorWhite" />
+
+    <LinearLayout
+        android:id="@+id/call_history_dateTime"
+        android:background="?attr/colorBackground"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/call_history_warn"
+            style="@style/MediumFont"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="@string/call_history_remove_before_date_warning" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <DatePicker
+                android:id="@+id/datePicker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:calendarViewShown="false"
+                android:datePickerMode="spinner" />
+
+            <TimePicker
+                android:id="@+id/timePicker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:calendarViewShown="false"
+                android:timePickerMode="spinner" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="10dp">
+
+            <Button
+                android:id="@+id/cancelButton"
+                style="@style/ButtonTop"
+                android:text="@string/cancel" />
+
+            <Button
+                android:id="@+id/purgeButton"
+                style="@style/ButtonTop"
+                android:layout_marginStart="4dp"
+                android:text="@string/purge" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/callListView"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_weight="1"
+        android:divider="@drawable/contact_list_h_separator_dark"
+        android:dividerHeight="1dp"
+        android:transcriptMode="normal" />
+
+</LinearLayout>

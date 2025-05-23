@@ -1,6 +1,6 @@
 /*
- * aTalk, ohos VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * aTalk, android VoIP and Instant Messaging client
+ * Copyright 2014 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,15 @@
  */
 package org.atalk.impl.appcertdialog;
 
+import android.app.Dialog;
+import android.content.Context;
+import android.content.res.Resources;
+import android.os.Bundle;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+
+import org.atalk.ohos.R;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.Certificate;
@@ -29,31 +38,24 @@ import java.util.Map;
 
 import javax.security.auth.x500.X500Principal;
 
-import ohos.agp.components.Component;
-import ohos.agp.components.LayoutScatter;
-import ohos.agp.components.webengine.WebConfig;
-import ohos.agp.components.webengine.WebView;
-import ohos.agp.window.dialog.CommonDialog;
-import ohos.app.Context;
-
-import org.atalk.ohos.ResourceTable;
-
 import timber.log.Timber;
 
 /**
  * Form that shows the content of an X509Certificate.
  *
- * @author Eng Chong Meng
+ * * @author Eng Chong Meng
  */
-public class X509CertificateView extends CommonDialog {
+public class X509CertificateView extends Dialog
+{
     private static final String BYTE_FORMAT = "%02x:";
-    private final Context mContext;
-    private Certificate mCertificate;
+    private Certificate certificate;
+    private Context mContext;
 
     /**
      * Constructs a X509 certificate form. Mainly use by external to format certificate to html string
      */
-    public X509CertificateView(Context context) {
+    public X509CertificateView(Context context)
+    {
         super(context);
         mContext = context;
     }
@@ -64,40 +66,42 @@ public class X509CertificateView extends CommonDialog {
      *
      * @param certificates <code>X509Certificate</code> object
      */
-    public X509CertificateView(Context context, Certificate[] certificates) {
+    public X509CertificateView(Context context, Certificate[] certificates)
+    {
         super(context);
         mContext = context;
-        mCertificate = certificates[0];
+        this.certificate = certificates[0];
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected void create() {
-        LayoutScatter scatter = LayoutScatter.getInstance(mContext);
-        Component component = scatter.parse(ResourceTable.Layout_x509_certificate_view, null, false);
-        setContentCustomComponent(component);
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.x509_certificate_view);
+        setTitle(mContext.getString(R.string.cert_info_chain));
 
-        setTitleText(mContext.getString(ResourceTable.String_cert_info_chain));
-        WebView certInfo = component.findComponentById(ResourceTable.Id_certificateInfo);
-        WebConfig settings = certInfo.getWebConfig();
-        settings.setAutoFitOnLoad(true);
-        settings.setTextAutoSizing(true);
+        WebView certInfo = findViewById(R.id.certificateInfo);
+        WebSettings settings = certInfo.getSettings();
+        settings.setDefaultFontSize(10);
+        settings.setDefaultFixedFontSize(10);
+        settings.setBuiltInZoomControls(true);
 
         // android API-29 cannot handle character "#", so replaced it with "&sharp;"
-        String certHtml = toString(mCertificate).replace("#", "&sharp;");
-        certInfo.load(certHtml, "text/html", true);
+        String certHtml = toString(certificate).replace("#", "&sharp;");
+        certInfo.loadData(certHtml, "text/html", "utf-8");
     }
 
     /**
      * Creates a html String representation of the given object.
      *
      * @param certificate to print
-     *
      * @return the String representation
      */
-    public String toString(Object certificate) {
+    public String toString(Object certificate)
+    {
         final StringBuilder sb = new StringBuilder();
         sb.append("<html><body>\n");
 
@@ -119,7 +123,8 @@ public class X509CertificateView extends CommonDialog {
      * @param sb StringBuilder to append to
      * @param certificate to print
      */
-    private void renderX509(StringBuilder sb, X509Certificate certificate) {
+    private void renderX509(StringBuilder sb, X509Certificate certificate)
+    {
         Map<String, String> rdnNames;
         X500Principal issuer = certificate.getIssuerX500Principal();
         X500Principal subject = certificate.getSubjectX500Principal();
@@ -127,7 +132,7 @@ public class X509CertificateView extends CommonDialog {
         sb.append("<table cellspacing='1' cellpadding='1'>\n");
 
         // subject
-        addTitle(sb, mContext.getString(ResourceTable.String_cert_info_issued_to));
+        addTitle(sb, mContext.getString(R.string.cert_info_issued_to));
         rdnNames = splitRdn(subject.getName());
         if (!rdnNames.isEmpty()) {
             for (Map.Entry<String, String> name : rdnNames.entrySet()) {
@@ -135,9 +140,9 @@ public class X509CertificateView extends CommonDialog {
                 String lblKey = "service_gui_CERT_INFO_" + nameType;
 
                 String lbl;
-                int resId = mContext. getIdentifier(lblKey, "string", mContext.getPackageName());
+                int resID = mContext.getResources().getIdentifier(lblKey, "string", mContext.getPackageName());
                 try {
-                    lbl = mContext.getString(resId);
+                    lbl = mContext.getString(resID);
                 } catch (Resources.NotFoundException e) {
                     Timber.w("Unknown certificate subject label: %s", nameType);
                     lbl = nameType;
@@ -150,11 +155,11 @@ public class X509CertificateView extends CommonDialog {
             }
         }
         else {
-            addField(sb, mContext.getString(ResourceTable.String_cert_info_cn), subject.getName());
+            addField(sb, mContext.getString(R.string.cert_info_cn), subject.getName());
         }
 
         // issuer
-        addTitle(sb, mContext.getString(ResourceTable.String_cert_info_issued_by));
+        addTitle(sb, mContext.getString(R.string.cert_info_issued_by));
         rdnNames = splitRdn(issuer.getName());
         if (!rdnNames.isEmpty()) {
             for (Map.Entry<String, String> name : rdnNames.entrySet()) {
@@ -177,15 +182,15 @@ public class X509CertificateView extends CommonDialog {
             }
         }
         else {
-            addField(sb, mContext.getString(ResourceTable.String_cert_info_cn), issuer.getName());
+            addField(sb, mContext.getString(R.string.cert_info_cn), issuer.getName());
         }
 
         // validity
-        addTitle(sb, mContext.getString(ResourceTable.String_cert_info_validity));
-        addField(sb, mContext.getString(ResourceTable.String_cert_info_issued_on), certificate.getNotBefore().toString());
-        addField(sb, mContext.getString(ResourceTable.String_cert_info_expires_on), certificate.getNotAfter().toString());
+        addTitle(sb, mContext.getString(R.string.cert_info_validity));
+        addField(sb, mContext.getString(R.string.cert_info_issued_on), certificate.getNotBefore().toString());
+        addField(sb, mContext.getString(R.string.cert_info_expires_on), certificate.getNotAfter().toString());
 
-        addTitle(sb, mContext.getString(ResourceTable.String_cert_info_fingerprints));
+        addTitle(sb, mContext.getString(R.string.cert_info_fingerprints));
         try {
             String sha256String = getThumbprint(certificate, "SHA-256");
             addField(sb, "SHA256:", sha256String, 48);
@@ -196,26 +201,26 @@ public class X509CertificateView extends CommonDialog {
             // do nothing as we cannot show this value
         }
 
-        addTitle(sb, mContext.getString(ResourceTable.String_cert_info_details));
-        addField(sb, mContext.getString(ResourceTable.String_cert_info_SN), certificate.getSerialNumber().toString());
-        addField(sb, mContext.getString(ResourceTable.String_cert_info_version), String.valueOf(certificate.getVersion()));
-        addField(sb, mContext.getString(ResourceTable.String_cert_info_sign_algo), String.valueOf(certificate.getSigAlgName()));
-        addTitle(sb, mContext.getString(ResourceTable.String_cert_info_pubkey_info));
-        addField(sb, mContext.getString(ResourceTable.String_cert_info_algo), certificate.getPublicKey().getAlgorithm());
+        addTitle(sb, mContext.getString(R.string.cert_info_details));
+        addField(sb, mContext.getString(R.string.cert_info_SN), certificate.getSerialNumber().toString());
+        addField(sb, mContext.getString(R.string.cert_info_version), String.valueOf(certificate.getVersion()));
+        addField(sb, mContext.getString(R.string.cert_info_sign_algo), String.valueOf(certificate.getSigAlgName()));
+        addTitle(sb, mContext.getString(R.string.cert_info_pubkey_info));
+        addField(sb, mContext.getString(R.string.cert_info_algo), certificate.getPublicKey().getAlgorithm());
 
         if (certificate.getPublicKey().getAlgorithm().equals("RSA")) {
             RSAPublicKey key = (RSAPublicKey) certificate.getPublicKey();
 
-            addField(sb, mContext.getString(ResourceTable.String_cert_info_pubkey),
-                    mContext.getString(ResourceTable.String_cert_info_key_bits,
+            addField(sb, mContext.getString(R.string.cert_info_pubkey),
+                    mContext.getString(R.string.cert_info_key_bits,
                             String.valueOf((key.getModulus().toByteArray().length - 1) * 8)),
                     getHex(key.getModulus().toByteArray()), 48);
 
-            addField(sb, mContext.getString(ResourceTable.String_cert_info_exponent),
+            addField(sb, mContext.getString(R.string.cert_info_exponent),
                     key.getPublicExponent().toString());
 
-            addField(sb, mContext.getString(ResourceTable.String_cert_info_key_size),
-                    mContext.getString(ResourceTable.String_cert_info_key_bits,
+            addField(sb, mContext.getString(R.string.cert_info_key_size),
+                    mContext.getString(R.string.cert_info_key_bits,
                             String.valueOf(key.getModulus().bitLength())));
         }
         else if (certificate.getPublicKey().getAlgorithm().equals("DSA")) {
@@ -223,8 +228,8 @@ public class X509CertificateView extends CommonDialog {
             addField(sb, "Y:", key.getY().toString(16));
         }
 
-        addField(sb, mContext.getString(ResourceTable.String_cert_info_signature),
-                mContext.getString(ResourceTable.String_cert_info_key_bits,
+        addField(sb, mContext.getString(R.string.cert_info_signature),
+                mContext.getString(R.string.cert_info_key_bits,
                         String.valueOf(certificate.getSignature().length * 8)),
                 getHex(certificate.getSignature()), 48);
         sb.append("</table>\n");
@@ -236,7 +241,8 @@ public class X509CertificateView extends CommonDialog {
      * @param sb StringBuilder to append to
      * @param title to print
      */
-    private void addTitle(StringBuilder sb, String title) {
+    private void addTitle(StringBuilder sb, String title)
+    {
         sb.append("<tr><td colspan='2'")
                 .append(" style='margin-top: 10pt; white-space: nowrap'><p><b>")
                 .append(title).append("</b></p></td></tr>\n");
@@ -249,7 +255,8 @@ public class X509CertificateView extends CommonDialog {
      * @param field name of the certificate field
      * @param value to print
      */
-    private void addField(StringBuilder sb, String field, String value) {
+    private void addField(StringBuilder sb, String field, String value)
+    {
         addField(sb, field, value, null, 0);
     }
 
@@ -261,7 +268,8 @@ public class X509CertificateView extends CommonDialog {
      * @param value to print
      * @param wrap force-wrap after number of characters
      */
-    private void addField(StringBuilder sb, String field, String value, int wrap) {
+    private void addField(StringBuilder sb, String field, String value, int wrap)
+    {
         addField(sb, field, value, null, wrap);
     }
 
@@ -274,7 +282,8 @@ public class X509CertificateView extends CommonDialog {
      * @param otherValue second line of value to print (wrapped)
      * @param wrap force-wrap after number of characters
      */
-    private void addField(StringBuilder sb, String field, String value, String otherValue, int wrap) {
+    private void addField(StringBuilder sb, String field, String value, String otherValue, int wrap)
+    {
         // use &bull; instead of &#8226; as sdk-29+ webview cannot accept &#xxxx coding.
         sb.append("<tr><td style='margin-right: 25pt;")
                 .append("white-space: nowrap' valign='top'>&bull; ")
@@ -305,10 +314,10 @@ public class X509CertificateView extends CommonDialog {
      * Converts the byte array to hex string.
      *
      * @param raw the data.
-     *
      * @return the hex string.
      */
-    private String getHex(byte[] raw) {
+    private String getHex(byte[] raw)
+    {
         if (raw == null)
             return null;
 
@@ -325,13 +334,12 @@ public class X509CertificateView extends CommonDialog {
      *
      * @param cert The certificate to hash.
      * @param algorithm The hash algorithm to use.
-     *
      * @return The SHA-1 hash of the certificate.
-     *
      * @throws CertificateException if exception
      */
     private static String getThumbprint(X509Certificate cert, String algorithm)
-            throws CertificateException {
+            throws CertificateException
+    {
         MessageDigest digest;
         try {
             digest = MessageDigest.getInstance(algorithm);
@@ -351,10 +359,10 @@ public class X509CertificateView extends CommonDialog {
 
     /**
      * @param rdnNames attribute strings with "," as seperator
-     *
      * @return Map of keys and values for each attribute
      */
-    private static Map<String, String> splitRdn(String rdnNames) {
+    private static Map<String, String> splitRdn(String rdnNames)
+    {
         Map<String, String> rdn_pairs = new LinkedHashMap<>();
         String[] pairs = rdnNames.split(",");
 

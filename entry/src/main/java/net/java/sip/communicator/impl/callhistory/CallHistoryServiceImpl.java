@@ -1,6 +1,6 @@
 /*
- * aTalk, ohos VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * aTalk, android VoIP and Instant Messaging client
+ * Copyright 2014 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,10 @@
  */
 package net.java.sip.communicator.impl.callhistory;
 
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+
 import java.io.IOException;
 import java.io.StreamTokenizer;
 import java.io.StringReader;
@@ -29,11 +33,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 import java.util.Vector;
-
-import ohos.data.rdb.RdbPredicates;
-import ohos.data.rdb.RdbStore;
-import ohos.data.rdb.ValuesBucket;
-import ohos.data.resultset.ResultSet;
 
 import net.java.sip.communicator.impl.history.HistoryQueryImpl;
 import net.java.sip.communicator.service.callhistory.CallHistoryQuery;
@@ -84,7 +83,13 @@ import timber.log.Timber;
  * @author Eng Chong Meng
  */
 public class CallHistoryServiceImpl implements CallHistoryService, CallListener, ServiceListener {
-    private static final String[] STRUCTURE_NAMES = new String[]{
+    /**
+     * Sort database message records by TimeStamp in ASC or DESC
+     */
+    private static final String ORDER_ASC = CallHistoryService.CALL_START + " ASC";
+    private static final String ORDER_DESC = CallHistoryService.CALL_START + " DESC";
+
+    private static String[] STRUCTURE_NAMES = new String[]{
             "accountUID", "callStart", "callEnd",
             "dir", "callParticipantIDs",
             "callParticipantStart", "callParticipantEnd",
@@ -112,8 +117,8 @@ public class CallHistoryServiceImpl implements CallHistoryService, CallListener,
 
     final private List<CallHistoryPeerRecordListener> callHistoryRecordListeners = new LinkedList<>();
 
-    private RdbStore mRdbStore;
-    private final ValuesBucket values = new ValuesBucket();
+    private SQLiteDatabase mDB;
+    private ContentValues contentValues = new ContentValues();
 
     /**
      * starts the service. Check the current registered protocol providers which supports
@@ -125,19 +130,20 @@ public class CallHistoryServiceImpl implements CallHistoryService, CallListener,
         Timber.d("Starting the call history implementation.");
 
         this.bundleContext = bc;
-        mRdbStore = DatabaseBackend.getRdbStore();
+        mDB = DatabaseBackend.getWritableDB();
 
         // start listening for newly register or removed protocol providers
         bc.addServiceListener(this);
 
         ServiceReference[] ppsRefs = null;
         try {
-            ppsRefs = bundleContext.getServiceReferences(ProtocolProviderService.class.getName(),null);
+            ppsRefs = bundleContext.getServiceReferences(ProtocolProviderService.class.getName(),
+                    null);
         } catch (InvalidSyntaxException e) {
             e.printStackTrace();
         }
 
-        if (ppsRefs != null) {
+        if (ppsRefs != null && ppsRefs.length != 0) {
             for (ServiceReference<ProtocolProviderService> ppsRef : ppsRefs) {
                 ProtocolProviderService pps = bundleContext.getService(ppsRef);
                 handleProviderAdded(pps);
@@ -154,12 +160,13 @@ public class CallHistoryServiceImpl implements CallHistoryService, CallListener,
         bc.removeServiceListener(this);
         ServiceReference[] ppsRefs = null;
         try {
-            ppsRefs = bundleContext.getServiceReferences(ProtocolProviderService.class.getName(), null);
+            ppsRefs = bundleContext.getServiceReferences(ProtocolProviderService.class.getName(),
+                    null);
         } catch (InvalidSyntaxException e) {
             e.printStackTrace();
         }
 
-        if (ppsRefs != null) {
+        if (ppsRefs != null && ppsRefs.length != 0) {
             for (ServiceReference<ProtocolProviderService> ppsRef : ppsRefs) {
                 ProtocolProviderService pps = bundleContext.getService(ppsRef);
                 handleProviderRemoved(pps);
@@ -265,14 +272,15 @@ public class CallHistoryServiceImpl implements CallHistoryService, CallListener,
         Iterator<Contact> contacts = metaContact.getContacts();
         while (contacts.hasNext()) {
             Contact contact = contacts.next();
-            RdbPredicates rdbPredicates = new RdbPredicates(CallHistoryService.TABLE_NAME)
-                    .equalTo(CallHistoryService.ENTITY_JID, contact.toString())
-                    .and().greaterThanOrEqualTo(CallHistoryService.CALL_START, startDate.getTime())
-                    .orderByAsc(CallHistoryService.CALL_START);
-            ResultSet resultSet = mRdbStore.query(rdbPredicates, null);
+            String startTimeStamp = String.valueOf(startDate.getTime());
+            String[] args = {contact.toString(), startTimeStamp};
 
-            while (resultSet.goToNextRow()) {
-                result.add(convertHistoryRecordToCallRecord(resultSet));
+            Cursor cursor = mDB.query(CallHistoryService.TABLE_NAME, null,
+                    CallHistoryService.ENTITY_JID + "=? AND "
+                            + CallHistoryService.CALL_START + ">=?", args, null, null, ORDER_ASC);
+
+            while (cursor.moveToNext()) {
+                result.add(convertHistoryRecordToCallRecord(cursor));
             }
         }
         return result;
@@ -288,13 +296,14 @@ public class CallHistoryServiceImpl implements CallHistoryService, CallListener,
     public Collection<CallRecord> findByStartDate(Date startDate) {
         TreeSet<CallRecord> result = new TreeSet<>(new CallRecordComparator());
 
-        RdbPredicates rdbPredicates = new RdbPredicates(CallHistoryService.TABLE_NAME)
-                .greaterThanOrEqualTo(CallHistoryService.CALL_START, startDate.getTime())
-                .orderByAsc(CallHistoryService.CALL_START);
-        ResultSet resultSet = mRdbStore.query(rdbPredicates, null);
+        String startTimeStamp = String.valueOf(startDate.getTime());
+        String[] args = {startTimeStamp};
 
-        while (resultSet.goToNextRow()) {
-            result.add(convertHistoryRecordToCallRecord(resultSet));
+        Cursor cursor = mDB.query(CallHistoryService.TABLE_NAME, null,
+                CallHistoryService.CALL_START + ">=?", args, null, null, ORDER_ASC);
+
+        while (cursor.moveToNext()) {
+            result.add(convertHistoryRecordToCallRecord(cursor));
         }
         return result;
     }
@@ -314,15 +323,15 @@ public class CallHistoryServiceImpl implements CallHistoryService, CallListener,
         Iterator<Contact> contacts = metaContact.getContacts();
         while (contacts.hasNext()) {
             Contact contact = contacts.next();
+            String endTimeStamp = String.valueOf(endDate.getTime());
+            String[] args = {contact.toString(), endTimeStamp};
 
-            RdbPredicates rdbPredicates = new RdbPredicates(CallHistoryService.TABLE_NAME)
-                    .equalTo(CallHistoryService.ENTITY_JID, contact.toString())
-                    .and().lessThan(CallHistoryService.CALL_START, endDate.getTime())
-                    .orderByAsc(CallHistoryService.CALL_START);
-            ResultSet resultSet = mRdbStore.query(rdbPredicates, null);
+            Cursor cursor = mDB.query(CallHistoryService.TABLE_NAME, null,
+                    CallHistoryService.ENTITY_JID + "=? AND "
+                            + CallHistoryService.CALL_START + "<=?", args, null, null, ORDER_ASC);
 
-            while (resultSet.goToNextRow()) {
-                result.add(convertHistoryRecordToCallRecord(resultSet));
+            while (cursor.moveToNext()) {
+                result.add(convertHistoryRecordToCallRecord(cursor));
             }
         }
         return result;
@@ -338,14 +347,15 @@ public class CallHistoryServiceImpl implements CallHistoryService, CallListener,
     public Collection<CallRecord> findByEndDate(String accountUuid, Date endDate) {
         TreeSet<CallRecord> result = new TreeSet<>(new CallRecordComparator());
 
-        RdbPredicates rdbPredicates = new RdbPredicates(CallHistoryService.TABLE_NAME)
-                .equalTo(CallHistoryService.ACCOUNT_UID, accountUuid)
-                .and().lessThanOrEqualTo(CallHistoryService.CALL_START, endDate.getTime())
-                .orderByDesc(CallHistoryService.CALL_START);
-        ResultSet resultSet = mRdbStore.query(rdbPredicates, null);
+        String endTimeStamp = String.valueOf(endDate.getTime());
+        String[] args = {accountUuid, endTimeStamp};
 
-        while (resultSet.goToNextRow()) {
-            result.add(convertHistoryRecordToCallRecord(resultSet));
+        Cursor cursor = mDB.query(CallHistoryService.TABLE_NAME, null,
+                CallHistoryService.ACCOUNT_UID + "=? AND "
+                        + CallHistoryService.CALL_START + "<=?", args, null, null, ORDER_DESC);
+
+        while (cursor.moveToNext()) {
+            result.add(convertHistoryRecordToCallRecord(cursor));
         }
         return result;
     }
@@ -360,13 +370,14 @@ public class CallHistoryServiceImpl implements CallHistoryService, CallListener,
     public Collection<CallRecord> findByEndDate(Date endDate) {
         TreeSet<CallRecord> result = new TreeSet<>(new CallRecordComparator());
 
-        RdbPredicates rdbPredicates = new RdbPredicates(CallHistoryService.TABLE_NAME)
-                .lessThanOrEqualTo(CallHistoryService.CALL_START, endDate.getTime())
-                .orderByAsc(CallHistoryService.CALL_START);
-        ResultSet resultSet = mRdbStore.query(rdbPredicates, null);
+        String endTimeStamp = String.valueOf(endDate.getTime());
+        String[] args = {endTimeStamp};
 
-        while (resultSet.goToNextRow()) {
-            result.add(convertHistoryRecordToCallRecord(resultSet));
+        Cursor cursor = mDB.query(CallHistoryService.TABLE_NAME, null,
+                CallHistoryService.CALL_START + "<=?", args, null, null, ORDER_ASC);
+
+        while (cursor.moveToNext()) {
+            result.add(convertHistoryRecordToCallRecord(cursor));
         }
         return result;
     }
@@ -388,16 +399,18 @@ public class CallHistoryServiceImpl implements CallHistoryService, CallListener,
         Iterator<Contact> contacts = metaContact.getContacts();
         while (contacts.hasNext()) {
             Contact contact = contacts.next();
+            String startTimeStamp = String.valueOf(startDate.getTime());
+            String endTimeStamp = String.valueOf(endDate.getTime());
+            String[] args = {contact.toString(), startTimeStamp, endTimeStamp};
 
-            RdbPredicates rdbPredicates = new RdbPredicates(CallHistoryService.TABLE_NAME)
-                    .equalTo(CallHistoryService.ENTITY_JID, contact.toString())
-                    .and().greaterThanOrEqualTo(CallHistoryService.CALL_START, startDate.getTime())
-                    .and().lessThanOrEqualTo(CallHistoryService.CALL_START, endDate.getTime())
-                    .orderByAsc(CallHistoryService.CALL_START);
-            ResultSet resultSet = mRdbStore.query(rdbPredicates, null);
+            Cursor cursor = mDB.query(CallHistoryService.TABLE_NAME, null,
+                    CallHistoryService.ENTITY_JID + "=? AND "
+                            + CallHistoryService.CALL_START + ">=? AND "
+                            + CallHistoryService.CALL_START + "<?",
+                    args, null, null, ORDER_ASC);
 
-            while (resultSet.goToNextRow()) {
-                result.add(convertHistoryRecordToCallRecord(resultSet));
+            while (cursor.moveToNext()) {
+                result.add(convertHistoryRecordToCallRecord(cursor));
             }
         }
         return result;
@@ -414,14 +427,16 @@ public class CallHistoryServiceImpl implements CallHistoryService, CallListener,
     public Collection<CallRecord> findByPeriod(Date startDate, Date endDate) {
         TreeSet<CallRecord> result = new TreeSet<>(new CallRecordComparator());
 
-        RdbPredicates rdbPredicates = new RdbPredicates(CallHistoryService.TABLE_NAME)
-                .and().greaterThanOrEqualTo(CallHistoryService.CALL_START, startDate.getTime())
-                .and().lessThanOrEqualTo(CallHistoryService.CALL_START, endDate.getTime())
-                .orderByAsc(CallHistoryService.CALL_START);
-        ResultSet resultSet = mRdbStore.query(rdbPredicates, null);
+        String startTimeStamp = String.valueOf(startDate.getTime());
+        String endTimeStamp = String.valueOf(endDate.getTime());
+        String[] args = {startTimeStamp, endTimeStamp};
 
-        while (resultSet.goToNextRow()) {
-            result.add(convertHistoryRecordToCallRecord(resultSet));
+        Cursor cursor = mDB.query(CallHistoryService.TABLE_NAME, null,
+                CallHistoryService.CALL_START + ">=? AND "
+                        + CallHistoryService.CALL_START + "<?", args, null, null, ORDER_ASC);
+
+        while (cursor.moveToNext()) {
+            result.add(convertHistoryRecordToCallRecord(cursor));
         }
         return result;
     }
@@ -440,14 +455,14 @@ public class CallHistoryServiceImpl implements CallHistoryService, CallListener,
         Iterator<Contact> contacts = metaContact.getContacts();
         while (contacts.hasNext()) {
             Contact contact = contacts.next();
-            RdbPredicates rdbPredicates = new RdbPredicates(CallHistoryService.TABLE_NAME)
-                    .equalTo(CallHistoryService.ENTITY_JID, contact.toString())
-                    .limit(count)
-                    .orderByDesc(CallHistoryService.CALL_START);
-            ResultSet resultSet = mRdbStore.query(rdbPredicates, null);
+            String[] args = {contact.toString()};
 
-            while (resultSet.goToNextRow()) {
-                result.add(convertHistoryRecordToCallRecord(resultSet));
+            Cursor cursor = mDB.query(CallHistoryService.TABLE_NAME, null,
+                    CallHistoryService.ENTITY_JID + "=?", args, null, null, ORDER_DESC,
+                    String.valueOf(count));
+
+            while (cursor.moveToNext()) {
+                result.add(convertHistoryRecordToCallRecord(cursor));
             }
         }
         return result;
@@ -463,13 +478,11 @@ public class CallHistoryServiceImpl implements CallHistoryService, CallListener,
     public Collection<CallRecord> findLast(int count) {
         TreeSet<CallRecord> result = new TreeSet<>(new CallRecordComparator());
 
-        RdbPredicates rdbPredicates = new RdbPredicates(CallHistoryService.TABLE_NAME)
-                .limit(count)
-                .orderByDesc(CallHistoryService.CALL_START);
-        ResultSet resultSet = mRdbStore.query(rdbPredicates, null);
+        Cursor cursor = mDB.query(CallHistoryService.TABLE_NAME, null,
+                null, null, null, null, ORDER_DESC, String.valueOf(count));
 
-        while (resultSet.goToNextRow()) {
-            result.add(convertHistoryRecordToCallRecord(resultSet));
+        while (cursor.moveToNext()) {
+            result.add(convertHistoryRecordToCallRecord(cursor));
         }
         return result;
     }
@@ -487,14 +500,13 @@ public class CallHistoryServiceImpl implements CallHistoryService, CallListener,
         CallHistoryQueryImpl callQuery = new CallHistoryQueryImpl(hq);
         CallRecord callRecord;
 
-        RdbPredicates rdbPredicates = new RdbPredicates(CallHistoryService.TABLE_NAME)
-                .like(CallHistoryService.ENTITY_FULL_JID, address)
-                .limit(recordCount)
-                .orderByDesc(CallHistoryService.CALL_START);
-        ResultSet resultSet = mRdbStore.query(rdbPredicates, null);
+        String[] args = {address};
+        Cursor cursor = mDB.query(CallHistoryService.TABLE_NAME, null,
+                CallHistoryService.ENTITY_FULL_JID + " LIKE '%?%'", args,
+                null, null, ORDER_DESC, String.valueOf(recordCount));
 
-        while (resultSet.goToNextRow()) {
-            callRecord = convertHistoryRecordToCallRecord(resultSet);
+        while (cursor.moveToNext()) {
+            callRecord = convertHistoryRecordToCallRecord(cursor);
             callQuery.addHistoryRecord(callRecord);
         }
         return callQuery;
@@ -531,18 +543,18 @@ public class CallHistoryServiceImpl implements CallHistoryService, CallListener,
     //	}
 
     /**
-     * Used to convert HistoryRecord in CallRecord and CallPeerRecord which are returned  in resultSet
+     * Used to convert HistoryRecord in CallRecord and CallPeerRecord which are returned  in cursor
      * by the finder methods
      *
-     * @param resultSet HistoryRecord in resultSet
+     * @param cursor HistoryRecord in cursor
      *
      * @return Object CallRecord
      */
-    private CallRecord convertHistoryRecordToCallRecord(ResultSet resultSet) {
+    private CallRecord convertHistoryRecordToCallRecord(Cursor cursor) {
         Map<String, String> mProperties = new Hashtable<>();
-        for (int i = 0; i < resultSet.getColumnCount(); i++) {
-            String value = (resultSet.getString(i) == null) ? "" : resultSet.getString(i);
-            mProperties.put(resultSet.getColumnNameForIndex(i), value);
+        for (int i = 0; i < cursor.getColumnCount(); i++) {
+            String value = (cursor.getString(i) == null) ? "" : cursor.getString(i);
+            mProperties.put(cursor.getColumnName(i), value);
         }
         return createCallRecordFromProperties(mProperties);
     }
@@ -550,7 +562,7 @@ public class CallHistoryServiceImpl implements CallHistoryService, CallListener,
     /**
      * Create from the retrieved database mProperties to chatMessages
      *
-     * @param mProperties CallRecord properties converted from resultSet
+     * @param mProperties CallRecord properties converted from cursor
      *
      * @return CallRecordImpl
      */
@@ -577,7 +589,7 @@ public class CallHistoryServiceImpl implements CallHistoryService, CallListener,
         callPeerNames = getCSVs(mProperties.get(CallHistoryService.ENTITY_JID));
         callPeerSecondaryIDs = getCSVs(mProperties.get(CallHistoryService.SEC_ENTITY_ID));
 
-        final int callPeerCount = callPeerIDs.size();
+        final int callPeerCount = callPeerIDs == null ? 0 : callPeerIDs.size();
         for (int i = 0; i < callPeerCount; i++) {
             // As we iterate over the CallPeer IDs we could not be sure that for some reason the
             // start or end call list could result in different size lists, so we check this first.
@@ -604,7 +616,7 @@ public class CallHistoryServiceImpl implements CallHistoryService, CallListener,
                     callPeerStartValue, callPeerEndValue);
 
             String callPeerSecondaryID = null;
-            if (!callPeerSecondaryIDs.isEmpty())
+            if (callPeerSecondaryIDs != null && !callPeerSecondaryIDs.isEmpty())
                 callPeerSecondaryID = callPeerSecondaryIDs.get(i);
 
             if (callPeerSecondaryID != null && !callPeerSecondaryID.equals("")) {
@@ -612,12 +624,12 @@ public class CallHistoryServiceImpl implements CallHistoryService, CallListener,
             }
 
             // if there is no record about the states (backward compatibility)
-            if (i < callPeerStates.size())
+            if (callPeerStates != null && i < callPeerStates.size())
                 cpr.setState(callPeerStates.get(i));
             else
                 Timber.i("Call history state list different from ids list.");
 
-            if (i < callPeerNames.size())
+            if (callPeerNames != null && i < callPeerNames.size())
                 cpr.setDisplayName(callPeerNames.get(i));
 
             result.getPeerRecords().add(cpr);
@@ -747,22 +759,22 @@ public class CallHistoryServiceImpl implements CallHistoryService, CallListener,
         String accountUid = callRecord.getSourceCall().getProtocolProvider().getAccountID().getAccountUid();
         Long timeStamp = new Date().getTime();
 
-        values.clear();
-        values.putString(CallHistoryService.UUID, Uuid);
-        values.putLong(CallHistoryService.TIME_STAMP, timeStamp);
-        values.putString(CallHistoryService.ACCOUNT_UID, accountUid);
-        values.putLong(CallHistoryService.CALL_START, callRecord.getStartTime().getTime());
-        values.putLong(CallHistoryService.CALL_END, callRecord.getEndTime().getTime());
-        values.putString(CallHistoryService.DIRECTION, callRecord.getDirection());
-        values.putString(CallHistoryService.ENTITY_FULL_JID, callPeerIDs.toString());
-        values.putString(CallHistoryService.ENTITY_CALL_START, callPeerStartTime.toString());
-        values.putString(CallHistoryService.ENTITY_CALL_END, callPeerEndTime.toString());
-        values.putString(CallHistoryService.ENTITY_CALL_STATE, callPeerStates.toString());
-        values.putInteger(CallHistoryService.CALL_END_REASON, callRecord.getEndReason());
-        values.putString(CallHistoryService.ENTITY_JID, callPeerNames.toString());
-        values.putString(CallHistoryService.SEC_ENTITY_ID, callPeerSecondaryIDs.toString());
+        contentValues.clear();
+        contentValues.put(CallHistoryService.UUID, Uuid);
+        contentValues.put(CallHistoryService.TIME_STAMP, timeStamp);
+        contentValues.put(CallHistoryService.ACCOUNT_UID, accountUid);
+        contentValues.put(CallHistoryService.CALL_START, callRecord.getStartTime().getTime());
+        contentValues.put(CallHistoryService.CALL_END, callRecord.getEndTime().getTime());
+        contentValues.put(CallHistoryService.DIRECTION, callRecord.getDirection());
+        contentValues.put(CallHistoryService.ENTITY_FULL_JID, callPeerIDs.toString());
+        contentValues.put(CallHistoryService.ENTITY_CALL_START, callPeerStartTime.toString());
+        contentValues.put(CallHistoryService.ENTITY_CALL_END, callPeerEndTime.toString());
+        contentValues.put(CallHistoryService.ENTITY_CALL_STATE, callPeerStates.toString());
+        contentValues.put(CallHistoryService.CALL_END_REASON, callRecord.getEndReason());
+        contentValues.put(CallHistoryService.ENTITY_JID, callPeerNames.toString());
+        contentValues.put(CallHistoryService.SEC_ENTITY_ID, callPeerSecondaryIDs.toString());
 
-        mRdbStore.insert(CallHistoryService.TABLE_NAME, values);
+        mDB.insert(CallHistoryService.TABLE_NAME, null, contentValues);
     }
 
     /**
@@ -948,26 +960,27 @@ public class CallHistoryServiceImpl implements CallHistoryService, CallListener,
         // update the record in db for found match record
         String[] columns = {CallHistoryService.UUID, CallHistoryService.ENTITY_FULL_JID,
                 CallHistoryService.ENTITY_CALL_START, CallHistoryService.SEC_ENTITY_ID};
-        RdbPredicates rdbPredicates = new RdbPredicates(CallHistoryService.TABLE_NAME)
-                .like(CallHistoryService.ENTITY_FULL_JID, peerAddress)
-                .and().like(CallHistoryService.ENTITY_CALL_START, String.valueOf(date.getTime()))
-                .orderByAsc(CallHistoryService.CALL_START);
-        ResultSet resultSet = mRdbStore.query(rdbPredicates, columns);
+        String[] args = {peerAddress, String.valueOf(date.getTime())};
+
+        Cursor cursor = mDB.query(CallHistoryService.TABLE_NAME, columns,
+                CallHistoryService.ENTITY_FULL_JID + " LIKE '%?%' AND "
+                        + CallHistoryService.ENTITY_CALL_START + " LIKE '%?%')",
+                args, null, null, ORDER_ASC);
 
         // process only for record that have matched peerID and date and same index locations
-        while (resultSet.goToNextRow()) {
-            String uuid = resultSet.getString(0);
+        while (cursor.moveToNext()) {
+            String uuid = cursor.getString(0);
 
-            List<String> peerIDs = getCSVs(resultSet.getString(1));
+            List<String> peerIDs = getCSVs(cursor.getString(1));
             int i = peerIDs.indexOf(peerAddress);
             if (i == -1)
                 continue;
 
-            String dateString = getCSVs(resultSet.getString(2)).get(i);
+            String dateString = getCSVs(cursor.getString(2)).get(i);
             if (!String.valueOf(date.getTime()).equals(dateString))
                 continue;
 
-            List<String> secondaryID = getCSVs(resultSet.getString(3));
+            List<String> secondaryID = getCSVs(cursor.getString(3));
             secondaryID.set(i, address);
             String secEntityID = "";
             int j = 0;
@@ -977,15 +990,13 @@ public class CallHistoryServiceImpl implements CallHistoryService, CallListener,
                 secEntityID += sid;
             }
 
-            values.clear();
-            values.putString(CallHistoryService.SEC_ENTITY_ID, secEntityID);
+            args = new String[]{uuid};
+            contentValues.clear();
+            contentValues.put(CallHistoryService.SEC_ENTITY_ID, secEntityID);
 
-            rdbPredicates = new RdbPredicates(CallHistoryService.TABLE_NAME)
-                    .equalTo(CallHistoryService.UUID, uuid)
-                    .orderByDesc(CallHistoryService.CALL_START);
-            mRdbStore.update(values, rdbPredicates);
+            mDB.update(CallHistoryService.TABLE_NAME, contentValues, CallHistoryService.UUID + "=?", args);
         }
-        resultSet.close();
+        cursor.close();
     }
 
     /**
@@ -1208,20 +1219,20 @@ public class CallHistoryServiceImpl implements CallHistoryService, CallListener,
             Contact contact = contacts.next();
             String accountUid = contact.getProtocolProvider().getAccountID().getAccountUid();
 
-            mRdbStore.delete(new RdbPredicates(CallHistoryService.TABLE_NAME)
-                    .equalTo(CallHistoryService.ACCOUNT_UID, accountUid)
-                    .and()
-                    .equalTo(CallHistoryService.ENTITY_JID, contact.getAddress()));
+            String[] args = {accountUid, contact.getAddress()};
+            mDB.delete(CallHistoryService.TABLE_NAME, CallHistoryService.ACCOUNT_UID + "=? AND "
+                    + CallHistoryService.ENTITY_JID + "=?", args);
         }
     }
 
     /**
      * Permanently removes all locally stored call history.
      */
+    @Override
     public void eraseLocallyStoredCallHistory(List<String> callUUIDs) {
         for (String uuid : callUUIDs) {
-            mRdbStore.delete(new RdbPredicates(CallHistoryService.TABLE_NAME)
-                    .equalTo(CallHistoryService.UUID, uuid));
+            String[] args = {uuid};
+            mDB.delete(CallHistoryService.TABLE_NAME, CallHistoryService.UUID + "=?", args);
         }
     }
 
@@ -1230,8 +1241,10 @@ public class CallHistoryServiceImpl implements CallHistoryService, CallListener,
      *
      * @return number of call records deleted
      */
+    @Override
     public int eraseLocallyStoredCallHistoryBefore(Date endDate) {
-        return mRdbStore.delete(new RdbPredicates(CallHistoryService.TABLE_NAME)
-                .lessThanOrEqualTo(CallHistoryService.CALL_START, endDate.getTime()));
+        String endTimeStamp = String.valueOf(endDate.getTime());
+        String[] args = {endTimeStamp};
+        return mDB.delete(CallHistoryService.TABLE_NAME, CallHistoryService.CALL_START + "<=?", args);
     }
 }

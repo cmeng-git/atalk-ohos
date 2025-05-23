@@ -1,56 +1,52 @@
 /*
- * aTalk, ohos VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * Jitsi, the OpenSource Java VoIP and Instant Messaging client.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Distributable under LGPL license. See terms of license at gnu.org.
  */
 package org.atalk.impl.neomedia.jmfext.media.renderer.video;
 
-import ohos.agp.graphics.Surface;
-import ohos.agp.utils.Rect;
+import android.content.Context;
+import android.media.MediaCodec;
+import android.view.Surface;
+import android.view.View;
 
-import org.atalk.impl.neomedia.codec.video.MediaDecoder;
-import org.atalk.impl.neomedia.jmfext.media.renderer.AbstractRenderer;
-import org.atalk.ohos.agp.components.JComponent;
-import org.atalk.service.neomedia.codec.Constants;
-
+import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Rectangle;
+
 import javax.media.Buffer;
 import javax.media.Format;
 import javax.media.ResourceUnavailableException;
 import javax.media.format.VideoFormat;
 import javax.media.renderer.VideoRenderer;
+
+import org.atalk.impl.neomedia.codec.video.AndroidDecoder;
+import org.atalk.impl.neomedia.jmfext.media.renderer.AbstractRenderer;
+import org.atalk.service.neomedia.ViewAccessor;
+import org.atalk.service.neomedia.codec.Constants;
+
 import timber.log.Timber;
 
 /**
  * Dummy renderer used only to construct valid codec graph when decoding into <code>Surface</code> is enabled.
  * The actual video rendering is performed by MediaCodec, i.e. codec.configure(format, surface, null, 0)
  *
+ * @author Pawel Domas
  * @author Eng Chong Meng
- * @see MediaDecoder# configureMediaCodec(Codec, String)
+ * @see AndroidDecoder#configureMediaCodec(MediaCodec, String)
  */
 @SuppressWarnings("unused")
 public class SurfaceRenderer extends AbstractRenderer<VideoFormat> implements VideoRenderer {
     private final static Format[] INPUT_FORMATS = new Format[]{
             new VideoFormat(
-                    Constants.OHOS_SURFACE,
+                    Constants.ANDROID_SURFACE,
                     null,
                     Format.NOT_SPECIFIED,
                     Surface.class,
                     Format.NOT_SPECIFIED)
     };
 
-    private JComponent component;
+    private Component component;
 
     public SurfaceRenderer() {
     }
@@ -98,24 +94,31 @@ public class SurfaceRenderer extends AbstractRenderer<VideoFormat> implements Vi
     }
 
     @Override
-    public Rect getBounds() {
+    public Rectangle getBounds() {
         return null;
     }
 
     @Override
-    public void setBounds(Rect rectangle) {
+    public void setBounds(Rectangle rectangle) {
     }
 
     @Override
-    public boolean setComponent(JComponent component) {
+    public Component getComponent() {
+        if (component == null) {
+            component = new SurfaceComponent();
+        }
+        return component;
+    }
+
+    @Override
+    public boolean setComponent(Component component) {
         return false;
     }
 
-    @Override
-    public JComponent getComponent() {
-        if (component == null) {
-            component = new JComponent(component.getContext());
+    private static class SurfaceComponent extends Component implements ViewAccessor {
+        @Override
+        public View getView(Context context) {
+            return AndroidDecoder.renderSurfaceProvider.getView();
         }
-        return component;
     }
 }

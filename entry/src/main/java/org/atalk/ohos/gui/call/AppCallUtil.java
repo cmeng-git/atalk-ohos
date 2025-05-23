@@ -5,11 +5,13 @@
  */
 package org.atalk.ohos.gui.call;
 
-import ohos.aafwk.ability.Ability;
-import ohos.agp.components.Component;
-import ohos.agp.components.ComponentContainer;
-import ohos.agp.components.Text;
-import ohos.app.Context;
+import android.app.Activity;
+import android.content.Context;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.PopupMenu;
+import android.widget.Toast;
 
 import net.java.sip.communicator.impl.protocol.jabber.OperationSetBasicTelephonyJabberImpl;
 import net.java.sip.communicator.service.contactlist.MetaContact;
@@ -18,11 +20,10 @@ import net.java.sip.communicator.service.protocol.OperationSetBasicTelephony;
 import net.java.sip.communicator.service.protocol.ProtocolProviderService;
 import net.java.sip.communicator.util.account.AccountUtils;
 
-import org.atalk.ohos.ResourceTable;
+import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.aTalk;
-import org.atalk.ohos.gui.dialogs.DialogH;
-import org.atalk.ohos.gui.dialogs.PopupMenu;
+import org.atalk.ohos.gui.dialogs.DialogActivity;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smackx.jinglemessage.element.JingleMessage;
@@ -31,6 +32,8 @@ import org.jxmpp.jid.Jid;
 import timber.log.Timber;
 
 /**
+ * @author Yana Stamcheva
+ * @author Pawel Domas
  * @author Eng Chong Meng
  */
 public class AppCallUtil {
@@ -40,15 +43,15 @@ public class AppCallUtil {
     private static Thread createCallThread;
 
     /**
-     * Creates an app call.
+     * Creates an android call.
      *
      * @param context the android context
      * @param contact the contact address to call
-     * @param callButton the button view that generated the call
+     * @param callButtonView the button view that generated the call
      * @param isVideoCall true to setup video call
      */
-    public static void createAndroidCall(Context context, Jid contact, Component callButton, boolean isVideoCall) {
-        showCallViaMenu(context, contact, callButton, isVideoCall);
+    public static void createAndroidCall(Context context, Jid contact, View callButtonView, boolean isVideoCall) {
+        showCallViaMenu(context, contact, callButtonView, isVideoCall);
     }
 
     /**
@@ -56,12 +59,12 @@ public class AppCallUtil {
      *
      * @param context the android context
      * @param calleeJid the target callee name that will be used.
-     * @param v the Component that will contain the popup menu.
+     * @param v the View that will contain the popup menu.
      * @param isVideoCall true for video call setup
      */
-    private static void showCallViaMenu(final Context context, final Jid calleeJid, Component v, final boolean isVideoCall) {
+    private static void showCallViaMenu(final Context context, final Jid calleeJid, View v, final boolean isVideoCall) {
         PopupMenu popup = new PopupMenu(context, v);
-        ComponentContainer menu = popup.getMenu();
+        Menu menu = popup.getMenu();
         ProtocolProviderService mProvider = null;
 
         // loop through all registered providers to find the callee own provider
@@ -69,9 +72,10 @@ public class AppCallUtil {
             XMPPConnection connection = provider.getConnection();
             if (Roster.getInstanceFor(connection).contains(calleeJid.asBareJid())) {
                 String accountAddress = provider.getAccountID().getAccountJid();
-                Text menuItem = popup.addMenuItem(accountAddress);
-                menuItem.setClickedListener(item -> {
+                MenuItem menuItem = menu.add(Menu.NONE, Menu.NONE, Menu.NONE, accountAddress);
+                menuItem.setOnMenuItemClickListener(item -> {
                     createCall(context, provider, calleeJid, isVideoCall);
+                    return false;
                 });
                 mProvider = provider;
             }
@@ -82,7 +86,7 @@ public class AppCallUtil {
         }
 
         // Show contact selection menu if more than one choice
-        if (menu.getChildCount() > 1) {
+        if (menu.size() > 1) {
             popup.show();
         }
         else if (mProvider != null)
@@ -97,7 +101,7 @@ public class AppCallUtil {
      * @param isVideoCall true to setup video call
      * @param callButtonView not null if call via contact list fragment.
      */
-    public static void createCall(Context context, MetaContact metaContact, boolean isVideoCall, Component callButtonView) {
+    public static void createCall(Context context, MetaContact metaContact, boolean isVideoCall, View callButtonView) {
         // Check for resource permission before continue
         if (!aTalk.isMediaCallAllowed(isVideoCall)) {
             Timber.w("createCall permission denied #1: %s", isVideoCall);
@@ -108,7 +112,7 @@ public class AppCallUtil {
         Jid callee = contact.getJid();
         ProtocolProviderService pps = contact.getProtocolProvider();
         if (!pps.isRegistered()) {
-            aTalkApp.showToastMessage(ResourceTable.String_create_call_failed);
+            aTalkApp.showToastMessage(R.string.create_call_failed);
             return;
         }
 
@@ -152,13 +156,13 @@ public class AppCallUtil {
         }
         // Allow max of 2 outgoing calls for attended call transfer support
         else if (CallManager.getActiveCallsCount() > 1) {
-            aTalkApp.showToastMessage(ResourceTable.String_call_max_transfer);
+            aTalkApp.showToastMessage(R.string.call_max_transfer);
             return;
         }
         // cmeng (20210319: Seems to have no chance to show; and it causes waitForDialogOpened() (10s) error often, so remove it
 //        final long dialogId = ProgressDialog.showProgressDialog(
-//                aTalkApp.getResString(ResourceTable.String_service_gui_CALL_OUTGOING),
-//                aTalkApp.getResString(ResourceTable.String_service_gui_CALL_OUTGOING_MSG, callee));
+//                aTalkApp.getResString(R.string.service_gui_CALL_OUTGOING),
+//                aTalkApp.getResString(R.string.service_gui_CALL_OUTGOING_MSG, callee));
 
         createCallThread = new Thread("Create call thread") {
             public void run() {
@@ -166,7 +170,7 @@ public class AppCallUtil {
                     CallManager.createCall(provider, callee.toString(), isVideoCall);
                 } catch (Throwable t) {
                     Timber.e(t, "Error creating the call: %s", t.getMessage());
-                    DialogH.getInstance(context).showDialog(context, context.getString(ResourceTable.String_error), t.getMessage());
+                    DialogActivity.showDialog(context, context.getString(R.string.error), t.getMessage());
                 } finally {
                     createCallThread = null;
                 }
@@ -180,13 +184,13 @@ public class AppCallUtil {
      *
      * @param activity activity doing a check.
      *
-     * @return <code>true</code> if there is call in progress and <code>Ability</code> was finished.
+     * @return <code>true</code> if there is call in progress and <code>Activity</code> was finished.
      */
-    public static boolean checkCallInProgress(Ability activity) {
+    public static boolean checkCallInProgress(Activity activity) {
         if (CallManager.getActiveCallsCount() > 0) {
             Timber.w("Call is in progress");
-            aTalkApp.showToastMessage(ResourceTable.String_call_in_progress_warning);
-            activity.terminateAbility();
+            Toast.makeText(activity, R.string.call_in_progress_warning, Toast.LENGTH_SHORT).show();
+            activity.finish();
             return true;
         }
         else {

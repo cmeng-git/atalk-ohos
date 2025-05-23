@@ -1,6 +1,6 @@
 /*
  * aTalk, android VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * Copyright 2014 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,27 @@
  */
 package org.atalk.crypto;
 
-import ohos.aafwk.content.Intent;
-import ohos.agp.components.BaseItemProvider;
-import ohos.agp.components.Component;
-import ohos.agp.components.ComponentContainer;
-import ohos.agp.components.LayoutScatter;
-import ohos.agp.components.ListContainer;
-import ohos.miscservices.pasteboard.PasteData;
-import ohos.miscservices.pasteboard.SystemPasteboard;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
+import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.ListView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import net.java.sip.communicator.service.protocol.AccountID;
 import net.java.sip.communicator.service.protocol.ProtocolProviderService;
@@ -31,12 +44,10 @@ import net.java.sip.communicator.util.account.AccountUtils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.atalk.crypto.omemo.SQLiteOmemoStore;
-import org.atalk.ohos.BaseAbility;
-import org.atalk.ohos.ResourceTable;
+import org.atalk.ohos.BaseActivity;
+import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
-import org.atalk.ohos.agp.components.MenuItem;
-import org.atalk.ohos.gui.dialogs.DialogA;
-import org.atalk.ohos.util.ComponentUtil;
+import org.atalk.ohos.gui.util.ViewUtil;
 import org.atalk.util.CryptoHelper;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smackx.omemo.OmemoManager;
@@ -46,12 +57,6 @@ import org.jivesoftware.smackx.omemo.exceptions.CorruptedOmemoKeyException;
 import org.jivesoftware.smackx.omemo.internal.OmemoDevice;
 import org.jivesoftware.smackx.omemo.trust.OmemoFingerprint;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 import timber.log.Timber;
 
 /**
@@ -59,13 +64,13 @@ import timber.log.Timber;
  *
  * @author Eng Chong Meng
  */
-public class CryptoPrivateKeys extends BaseAbility {
+public class CryptoPrivateKeys extends BaseActivity {
     private static final String OMEMO = "OMEMO:";
 
     /**
      * Adapter used to displays private keys for all accounts.
      */
-    private PrivateKeyProvider mPrivateKeyProvider;
+    private PrivateKeyListAdapter accountsAdapter;
 
     /**
      * Map to store bareJId to accountID sorted in ascending order
@@ -79,13 +84,13 @@ public class CryptoPrivateKeys extends BaseAbility {
      * {@inheritDoc}
      */
     @Override
-    protected void onStart(Intent intent) {
-        super.onStart(intent);
-        setUIContent(ResourceTable.Layout_list_layout);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.list_layout);
 
-        ListContainer accountsKeysList = findComponentById(ResourceTable.Id_list);
-        this.mPrivateKeyProvider = new PrivateKeyProvider(getDeviceFingerPrints());
-        accountsKeysList.setItemProvider(mPrivateKeyProvider);
+        ListView accountsKeysList = findViewById(R.id.list);
+        this.accountsAdapter = new PrivateKeyListAdapter(getDeviceFingerPrints());
+        accountsKeysList.setAdapter(accountsAdapter);
         registerForContextMenu(accountsKeysList);
     }
 
@@ -122,23 +127,25 @@ public class CryptoPrivateKeys extends BaseAbility {
             accountList.put(deviceJid, accountId);
         }
         if (deviceFingerprints.isEmpty())
-            deviceFingerprints.put(aTalkApp.getResString(ResourceTable.String_settings_crypto_priv_key_empty), "");
+            deviceFingerprints.put(aTalkApp.getResString(R.string.settings_crypto_priv_key_empty), "");
         return deviceFingerprints;
     }
 
     /**
      * {@inheritDoc}
      */
-    public void onCreateContextMenu(ContextMenu menu, Component v, ContextMenu.ContextMenuInfo menuInfo) {
-        getMenuInflater().parse(ResourceTable.Layout_menu_crypto_key, menu);
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        getMenuInflater().inflate(R.menu.crypto_key_ctx_menu, menu);
 
-        ListContainer.AdapterContextMenuInfo ctxInfo = (ComponentContainer.AdapterContextMenuInfo) menuInfo;
+        ListView.AdapterContextMenuInfo ctxInfo = (AdapterView.AdapterContextMenuInfo) menuInfo;
         int pos = ctxInfo.position;
-        String privateKey = mPrivateKeyProvider.getOwnKeyFromRow(pos);
+        String privateKey = accountsAdapter.getOwnKeyFromRow(pos);
         boolean isKeyExist = StringUtils.isNotEmpty(privateKey);
 
-        menu.findItem(ResourceTable.Id_generate).setEnabled(!isKeyExist);
-        menu.findItem(ResourceTable.Id_regenerate).setEnabled(isKeyExist);
+        menu.findItem(R.id.generate).setEnabled(!isKeyExist);
+        menu.findItem(R.id.regenerate).setEnabled(isKeyExist);
     }
 
     /**
@@ -146,31 +153,27 @@ public class CryptoPrivateKeys extends BaseAbility {
      */
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        ListContainer.AdapterContextMenuInfo info = (ComponentContainer.AdapterContextMenuInfo) item.getMenuInfo();
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         int pos = info.position;
-        String bareJid = mPrivateKeyProvider.getBareJidFromRow(pos);
+        String bareJid = accountsAdapter.getBareJidFromRow(pos);
 
-        int id = item.getId();
+        int id = item.getItemId();
         switch (id) {
-            case ResourceTable.Id_generate:
+            case R.id.generate:
                 showGenerateKeyAlert(bareJid, false);
-                mPrivateKeyProvider.notifyDataChanged();
+                accountsAdapter.notifyDataSetChanged();
                 return true;
 
-            case ResourceTable.Id_regenerate:
+            case R.id.regenerate:
                 showGenerateKeyAlert(bareJid, true);
-                mPrivateKeyProvider.notifyDataChanged();
+                accountsAdapter.notifyDataSetChanged();
                 return true;
 
-            case ResourceTable.Id_copy:
-                String privateKey = mPrivateKeyProvider.getOwnKeyFromRow(pos);
-                SystemPasteboard sPasteboard = SystemPasteboard.getSystemPasteboard(getContext());
-                if (sPasteboard != null) {
-                    PasteData pData = new PasteData();
-                    pData.addTextRecord(CryptoHelper.prettifyFingerprint(privateKey));
-                    sPasteboard.setPasteData(pData);
-                    aTalkApp.showToastMessage(ResourceTable.String_crypto_fingerprint_copy);
-                }
+            case R.id.copy:
+                String privateKey = accountsAdapter.getOwnKeyFromRow(pos);
+                ClipboardManager cbManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                cbManager.setPrimaryClip(ClipData.newPlainText(null, CryptoHelper.prettifyFingerprint(privateKey)));
+                Toast.makeText(this, R.string.crypto_fingerprint_copy, Toast.LENGTH_SHORT).show();
                 return true;
         }
         return super.onContextItemSelected(item);
@@ -184,24 +187,23 @@ public class CryptoPrivateKeys extends BaseAbility {
      */
     private void showGenerateKeyAlert(final String bareJid, boolean isKeyExist) {
         final AccountID accountId = accountList.get(bareJid);
-        int getResStrId = isKeyExist ? ResourceTable.String_crypto_key_regenerate_prompt
-                : ResourceTable.String_crypto_key_generate_prompt;
+        int getResStrId = isKeyExist ? R.string.crypto_key_regenerate_prompt
+                : R.string.crypto_key_generate_prompt;
 
         String warnMsg = bareJid.startsWith(OMEMO)
-                ? getString(ResourceTable.String_omemo_regenerate_identities_summary) : "";
+                ? getString(R.string.omemo_regenerate_identities_summary) : "";
         String message = getString(getResStrId, bareJid, warnMsg);
 
-        DialogA.Builder alertDialog = new DialogA.Builder(getContext());
-        alertDialog.setTitle(ResourceTable.String_crypto_key_generate_title)
-                .setContent(message)
-                .setPositiveButton(ResourceTable.String_proceed, dialog -> {
+        AlertDialog.Builder b = new AlertDialog.Builder(this);
+        b.setTitle(R.string.crypto_key_generate_title)
+                .setMessage(message)
+                .setPositiveButton(R.string.proceed, (dialog, which) -> {
                     if (accountId != null && bareJid.startsWith(OMEMO)) {
                         regenerate(accountId);
                     }
-                    // accountsAdapter.notifyDataChanged();
+                    accountsAdapter.notifyDataSetChanged();
                 })
-                .setNegativeButton(ResourceTable.String_cancel, DialogA::remove)
-                .create().show();
+                .setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss()).show();
     }
 
     /**
@@ -210,14 +212,14 @@ public class CryptoPrivateKeys extends BaseAbility {
      * @param accountId the accountID
      */
     private void regenerate(AccountID accountId) {
-        OmemoStore<?, ?, ?, ?, ?, ?, ?, ?, ?> omemoStore = OmemoService.getInstance().getOmemoStoreBackend();
+        OmemoStore omemoStore = OmemoService.getInstance().getOmemoStoreBackend();
         ((SQLiteOmemoStore) omemoStore).regenerate(accountId);
     }
 
     /**
      * Adapter which displays privateKeys for the given list of accounts.
      */
-    private class PrivateKeyProvider extends BaseItemProvider {
+    private class PrivateKeyListAdapter extends BaseAdapter {
         /**
          * The list of currently displayed devices and FingerPrints.
          */
@@ -229,7 +231,7 @@ public class CryptoPrivateKeys extends BaseAbility {
          *
          * @param fingerprintList list of <code>device</code> for which OMEMO fingerprints will be displayed.
          */
-        PrivateKeyProvider(Map<String, String> fingerprintList) {
+        PrivateKeyListAdapter(Map<String, String> fingerprintList) {
             deviceJid = new ArrayList<>(fingerprintList.keySet());
             deviceFP = new ArrayList<>(fingerprintList.values());
         }
@@ -262,20 +264,20 @@ public class CryptoPrivateKeys extends BaseAbility {
          * {@inheritDoc}
          */
         @Override
-        public Component getComponent(int position, Component rowComponent, ComponentContainer parent) {
-            if (rowComponent == null)
-                rowComponent = LayoutScatter.getInstance(getContext()).parse(ResourceTable.Layout_crypto_privkey_list_row, parent, false);
+        public View getView(int position, View rowView, ViewGroup parent) {
+            if (rowView == null)
+                rowView = getLayoutInflater().inflate(R.layout.crypto_privkey_list_row, parent, false);
 
             String bareJid = getBareJidFromRow(position);
-            ComponentUtil.setTextViewValue(rowComponent, ResourceTable.Id_protocolProvider, bareJid);
+            ViewUtil.setTextViewValue(rowView, R.id.protocolProvider, bareJid);
 
             String fingerprint = getOwnKeyFromRow(position);
             String fingerprintStr = fingerprint;
             if (StringUtils.isEmpty(fingerprint)) {
-                fingerprintStr = getString(ResourceTable.String_crypto_no_key_present);
+                fingerprintStr = getString(R.string.crypto_no_key_present);
             }
-            ComponentUtil.setTextViewValue(rowComponent, ResourceTable.Id_fingerprint, CryptoHelper.prettifyFingerprint(fingerprintStr));
-            return rowComponent;
+            ViewUtil.setTextViewValue(rowView, R.id.fingerprint, CryptoHelper.prettifyFingerprint(fingerprintStr));
+            return rowView;
         }
 
         String getBareJidFromRow(int row) {

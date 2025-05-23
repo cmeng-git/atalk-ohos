@@ -1,43 +1,35 @@
 /*
- * aTalk, ohos VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * Jitsi, the OpenSource Java VoIP and Instant Messaging client.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Distributable under LGPL license. See terms of license at gnu.org.
  */
 package org.atalk.impl.appnotification;
 
-import ohos.vibrator.agent.VibratorAgent;
+import android.content.Context;
+import android.os.Vibrator;
 
 import net.java.sip.communicator.service.notification.NotificationAction;
 import net.java.sip.communicator.service.notification.VibrateNotificationAction;
 import net.java.sip.communicator.service.notification.VibrateNotificationHandler;
 
+import org.atalk.ohos.aTalkApp;
+
 /**
  * Android implementation of {@link VibrateNotificationHandler}.
  *
- * @author Eng Chong Meng
+ * @author Pawel Domas
  */
 public class VibrateHandlerImpl implements VibrateNotificationHandler {
     /**
      * The <code>Vibrator</code> if present on this device.
      */
-    private final VibratorAgent vibratorAgent;
+    private final Vibrator vibratorService;
 
     /**
      * Creates new instance of <code>VibrateHandlerImpl</code>.
      */
     public VibrateHandlerImpl() {
-        this.vibratorAgent = new VibratorAgent();
+        this.vibratorService = (Vibrator) aTalkApp.getInstance().getSystemService(Context.VIBRATOR_SERVICE);
     }
 
     /**
@@ -46,24 +38,25 @@ public class VibrateHandlerImpl implements VibrateNotificationHandler {
      * @return <code>true</code> if the <code>Vibrator</code> service is present on this device.
      */
     private boolean hasVibrator() {
-        return (vibratorAgent != null) && vibratorAgent.isSupport(0);
+        return (vibratorService != null) && vibratorService.hasVibrator();
     }
 
     /**
      * {@inheritDoc}
      */
     public void vibrate(VibrateNotificationAction action) {
-        if (hasVibrator())
-            vibratorAgent.start(action.getvPattern());
-        // vibratorAgent.vibrate(action.getPattern(), action.getRepeat());
+        if (!hasVibrator())
+            return;
+        vibratorService.vibrate(action.getPattern(), action.getRepeat());
     }
 
     /**
      * {@inheritDoc}
      */
     public void cancel() {
-        if (hasVibrator())
-            vibratorAgent.stop();
+        if (!hasVibrator())
+            return;
+        vibratorService.cancel();
     }
 
     /**

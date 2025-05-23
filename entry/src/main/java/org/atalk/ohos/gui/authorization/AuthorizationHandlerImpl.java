@@ -5,21 +5,21 @@
  */
 package org.atalk.ohos.gui.authorization;
 
+import android.content.Context;
+import android.content.Intent;
+
 import net.java.sip.communicator.service.protocol.AuthorizationHandler;
 import net.java.sip.communicator.service.protocol.AuthorizationRequest;
 import net.java.sip.communicator.service.protocol.AuthorizationResponse;
 import net.java.sip.communicator.service.protocol.Contact;
 
 import org.apache.commons.lang3.StringUtils;
-import org.atalk.ohos.ResourceTable;
+import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
-import org.atalk.ohos.gui.dialogs.DialogH;
+import org.atalk.ohos.gui.dialogs.DialogActivity;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import ohos.aafwk.content.Intent;
-import ohos.app.Context;
 
 /**
  * Android implementation of <code>AuthorizationHandler</code>.
@@ -56,6 +56,7 @@ public class AuthorizationHandlerImpl implements AuthorizationHandler
 
     /**
      * Implements the <code>AuthorizationHandler.processAuthorisationRequest</code> method.
+     *
      * Called by the protocol provider whenever someone would like to add us to their contact list.
      */
     @Override
@@ -74,6 +75,7 @@ public class AuthorizationHandlerImpl implements AuthorizationHandler
 
     /**
      * Implements the <code>AuthorizationHandler.createAuthorizationRequest</code> method.
+     *
      * The method is called when the user has tried to add a contact to the contact list and this
      * contact requires authorization.
      */
@@ -86,7 +88,7 @@ public class AuthorizationHandlerImpl implements AuthorizationHandler
 
         requestMap.put(id, requestHolder);
         Intent dialogIntent = RequestAuthorizationDialog.getRequestAuthDialogIntent(id);
-        aTalkApp.getInstance().startAbility(dialogIntent, 0);
+        aTalkApp.getInstance().startActivity(dialogIntent);
         requestHolder.waitForResponse();
 
         // If user id did not cancel the dialog when return, prepared request and remove it
@@ -100,6 +102,7 @@ public class AuthorizationHandlerImpl implements AuthorizationHandler
 
     /**
      * Implements the <code>AuthorizationHandler.processAuthorizationResponse</code> method.
+     *
      * The method will be called whenever someone acts upon an authorization request that we
      * have previously sent.
      */
@@ -111,10 +114,10 @@ public class AuthorizationHandlerImpl implements AuthorizationHandler
 
         AuthorizationResponse.AuthorizationResponseCode responseCode = response.getResponseCode();
         if (responseCode == AuthorizationResponse.ACCEPT) {
-            msg += ctx.getString(ResourceTable.String_authorization_accepted);
+            msg += ctx.getString(R.string.authorization_accepted);
         }
         else if (responseCode == AuthorizationResponse.REJECT) {
-            msg += ctx.getString(ResourceTable.String_authorization_rejected);
+            msg += ctx.getString(R.string.authorization_rejected);
         }
 
         String reason = response.getReason();
@@ -122,7 +125,8 @@ public class AuthorizationHandlerImpl implements AuthorizationHandler
             msg += " " + reason;
         }
 
-        DialogH.getInstance(ctx).showConfirmDialog(ctx, ctx.getString(ResourceTable.String_authorization_request), msg, null, null);
+        DialogActivity.showConfirmDialog(ctx,
+                ctx.getString(R.string.authorization_request), msg, null, null);
     }
 
     /**
@@ -183,7 +187,7 @@ public class AuthorizationHandlerImpl implements AuthorizationHandler
         /**
          * Method should be used by the dialog activity to notify about the result.
          *
-         * @param response response
+         * @param response
          */
         public void notifyResponseReceived(AuthorizationResponse.AuthorizationResponseCode response)
         {

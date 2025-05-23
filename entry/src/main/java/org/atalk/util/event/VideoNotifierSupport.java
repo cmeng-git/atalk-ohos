@@ -15,11 +15,10 @@
  */
 package org.atalk.util.event;
 
+import java.awt.Component;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-
-import org.atalk.ohos.agp.components.JComponent;
 
 /**
  * Represents a mechanism to easily add to a specific <code>Object</code> by means
@@ -28,7 +27,8 @@ import org.atalk.ohos.agp.components.JComponent;
  * @author Lyubomir Marinov
  * @author Eng Chong Meng
  */
-public class VideoNotifierSupport {
+public class VideoNotifierSupport
+{
     private static final long THREAD_TIMEOUT = 5000;
 
     /**
@@ -40,7 +40,7 @@ public class VideoNotifierSupport {
 
     /**
      * The list of <code>VideoListener</code>s interested in changes in the
-     * availability of visual <code>JComponent</code>s depicting video.
+     * availability of visual <code>Component</code>s depicting video.
      */
     private final List<VideoListener> listeners = new ArrayList<>();
 
@@ -68,7 +68,8 @@ public class VideoNotifierSupport {
      * @param source the <code>Object</code> which is to be reported as the source
      * of the <code>VideoEvent</code>s fired by the new instance
      */
-    public VideoNotifierSupport(Object source) {
+    public VideoNotifierSupport(Object source)
+    {
         this(source, true);
     }
 
@@ -81,7 +82,8 @@ public class VideoNotifierSupport {
      * @param synchronous <code>true</code> if the new instance is to deliver the
      * <code>VideoEvent</code>s synchronously; otherwise, <code>false</code>
      */
-    public VideoNotifierSupport(Object source, boolean synchronous) {
+    public VideoNotifierSupport(Object source, boolean synchronous)
+    {
         this.source = source;
         this.synchronous = synchronous;
 
@@ -90,15 +92,16 @@ public class VideoNotifierSupport {
 
     /**
      * Adds a specific <code>VideoListener</code> to this <code>VideoNotifierSupport</code> in order to receive
-     * notifications when visual/video <code>JComponent</code>s are being added and removed.
-     * <p>
+     * notifications when visual/video <code>Component</code>s are being added and removed.
+     *
      * Adding a listener which has already been added does nothing i.e. it is not added more than once
      * and thus does not receive one and the same <code>VideoEvent</code> multiple times.
      *
-     * @param listener the <code>VideoListener</code> to be notified when visual/video <code>JComponent</code>s
+     * @param listener the <code>VideoListener</code> to be notified when visual/video <code>Component</code>s
      * are being added or removed in this <code>VideoNotifierSupport</code>
      */
-    public void addVideoListener(VideoListener listener) {
+    public void addVideoListener(VideoListener listener)
+    {
         if (listener == null)
             throw new NullPointerException("listener");
 
@@ -108,7 +111,8 @@ public class VideoNotifierSupport {
         }
     }
 
-    protected void doFireVideoEvent(VideoEvent event) {
+    protected void doFireVideoEvent(VideoEvent event)
+    {
         VideoListener[] listeners;
 
         synchronized (this.listeners) {
@@ -131,21 +135,21 @@ public class VideoNotifierSupport {
 
     /**
      * Notifies the <code>VideoListener</code>s registered with this <code>VideoMediaStream</code> about a specific
-     * type of change in the availability of a specific visual <code>JComponent</code> depicting video.
+     * type of change in the availability of a specific visual <code>Component</code> depicting video.
      *
      * @param type the type of change as defined by <code>VideoEvent</code> in the
-     * availability of the specified visual <code>JComponent</code> depicting video
-     * @param visualComponent the visual <code>JComponent</code> depicting video which has been added or removed
+     * availability of the specified visual <code>Component</code> depicting video
+     * @param visualComponent the visual <code>Component</code> depicting video which has been added or removed
      * @param origin {@link VideoEvent#LOCAL} if the origin of the video is local (e.g. it is being locally captured);
      * {@link VideoEvent#REMOTE} if the origin of the video is remote (e.g. a remote peer is streaming it)
      * @param wait <code>true</code> if the call is to wait till the specified
      * <code>VideoEvent</code> has been delivered to the <code>VideoListener</code>s; otherwise, <code>false</code>
-     *
-     * @return <code>true</code> if this event and, more specifically, the visual <code>JComponent</code> it describes
+     * @return <code>true</code> if this event and, more specifically, the visual <code>Component</code> it describes
      * have been consumed and should be considered owned, referenced (which is important because
-     * <code>JComponent</code>s belong to a single <code>Container</code> at a time); otherwise, <code>false</code>
+     * <code>Component</code>s belong to a single <code>Container</code> at a time); otherwise, <code>false</code>
      */
-    public boolean fireVideoEvent(int type, JComponent visualComponent, int origin, boolean wait) {
+    public boolean fireVideoEvent(int type, Component visualComponent, int origin, boolean wait)
+    {
         VideoEvent event = new VideoEvent(source, type, visualComponent, origin);
 
         fireVideoEvent(event, wait);
@@ -159,7 +163,8 @@ public class VideoNotifierSupport {
      * @param wait <code>true</code> if the call is to wait till the specified
      * <code>VideoEvent</code> has been delivered to the <code>VideoListener</code>s; otherwise, <code>false</code>
      */
-    public void fireVideoEvent(VideoEvent event, boolean wait) {
+    public void fireVideoEvent(VideoEvent event, boolean wait)
+    {
         if (synchronous)
             doFireVideoEvent(event);
         else {
@@ -192,18 +197,20 @@ public class VideoNotifierSupport {
 
     /**
      * Removes a specific <code>VideoListener</code> from this <code>VideoNotifierSupport</code> to stop
-     * receiving notifications when visual/video <code>JComponent</code>s are being added and removed.
+     * receiving notifications when visual/video <code>Component</code>s are being added and removed.
      *
      * @param listener the <code>VideoListener</code> to be removed that no longer be notified when
-     * visual/video <code>JComponent</code>s are being added or removed
+     * visual/video <code>Component</code>s are being added or removed
      */
-    public void removeVideoListener(VideoListener listener) {
+    public void removeVideoListener(VideoListener listener)
+    {
         synchronized (listeners) {
             listeners.remove(listener);
         }
     }
 
-    private void runInThread() {
+    private void runInThread()
+    {
         while (true) {
             VideoEvent event;
 
@@ -247,10 +254,13 @@ public class VideoNotifierSupport {
         }
     }
 
-    private void startThread() {
-        thread = new Thread("VideoNotifierSupportThread") {
+    private void startThread()
+    {
+        thread = new Thread("VideoNotifierSupportThread")
+        {
             @Override
-            public void run() {
+            public void run()
+            {
                 try {
                     runInThread();
                 } finally {

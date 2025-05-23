@@ -27,7 +27,7 @@ import net.java.sip.communicator.service.contactsource.ContactReceivedEvent;
 import net.java.sip.communicator.service.contactsource.ContactSourceService;
 import net.java.sip.communicator.service.contactsource.SourceContact;
 
-import org.atalk.ohos.ResourceTable;
+import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 
 import java.util.ArrayList;
@@ -50,7 +50,7 @@ public class CallHistoryContactSource implements ContactSourceService {
      * @return the display name of this contact source
      */
     public String getDisplayName() {
-        return aTalkApp.getResString(ResourceTable.String_call_history_name);
+        return aTalkApp.getResString(R.string.call_history_name);
     }
 
     /**

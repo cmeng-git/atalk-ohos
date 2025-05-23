@@ -14,7 +14,7 @@ import net.java.sip.communicator.service.protocol.event.FileTransferProgressList
 import net.java.sip.communicator.service.protocol.event.FileTransferStatusChangeEvent;
 import net.java.sip.communicator.service.protocol.event.FileTransferStatusListener;
 
-import org.atalk.ohos.ResourceTable;
+import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 import org.jivesoftware.smackx.jingle.element.JingleReason;
 
@@ -147,7 +147,7 @@ public abstract class AbstractFileTransfer implements FileTransfer {
                 fireStatusChangeEvent(FileTransferStatusChangeEvent.DECLINED, reasonText);
                 break;
             default:
-                reasonText = aTalkApp.getResString(ResourceTable.String_file_send_client_error, reasonText);
+                reasonText = aTalkApp.getResString(R.string.file_send_client_error, reasonText);
                 Timber.e(new Exception("JingleReason: " + reasonText));
                 fireStatusChangeEvent(FileTransferStatusChangeEvent.UNKNOWN, reasonText);
         }

@@ -211,7 +211,7 @@ public class SingleCallInProgressPolicy
      *
      * @param type one of {@link CallEvent#CALL_ENDED}, {@link CallEvent#CALL_INITIATED} and
      * {@link CallEvent#CALL_RECEIVED} which describes the type of the event to be handled
-     * @param call a <code>CallEvent</code> value which describes the change and the <code>Call</code> associated with it
+     * @param ev a <code>CallEvent</code> value which describes the change and the <code>Call</code> associated with it
      */
     private void handleCallEvent(int type, Call call)
     {
@@ -286,7 +286,8 @@ public class SingleCallInProgressPolicy
                 }
 
                 if (presence != null) {
-                    int presenceStatus = presence.getPresenceStatus().getStatus();
+                    int presenceStatus = (presence == null) ? PresenceStatus.AVAILABLE_THRESHOLD
+                            : presence.getPresenceStatus().getStatus();
 
                     // between AVAILABLE and EXTENDED AWAY (>20, <= 31) are the busy statuses as DND and On the phone
                     if (presenceStatus > PresenceStatus.ONLINE_THRESHOLD

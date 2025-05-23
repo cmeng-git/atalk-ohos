@@ -133,7 +133,7 @@ public class CredentialsStorageServiceImpl implements CredentialsStorageService
     /**
      * Loads the password for the specified account. If the password is stored encrypted,
      * decrypts it with the master password.
-     * <p>
+     *
      * Many threads can call this method at the same time, and the first thread may present the
      * user with the master password prompt and create a <code>Crypto</code> instance based on the
      * input (<code>createCrypto</code> method). This instance will be used later by all other threads.
@@ -161,11 +161,14 @@ public class CredentialsStorageServiceImpl implements CredentialsStorageService
      * value in the configuration to null.
      *
      * @param accountUuid account UUID
+     * @return <code>true</code> if the password for the specified <code>accountUuid</code> was
+     * successfully removed; otherwise, <code>false</code>
      */
-    public void removePassword(String accountUuid)
+    public boolean removePassword(String accountUuid)
     {
         setEncrypted(accountUuid, null);
         Timber.d("Password for '%s' removed", accountUuid);
+        return true;
     }
 
     /**

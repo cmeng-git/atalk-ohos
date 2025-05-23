@@ -1,6 +1,6 @@
 /*
  * aTalk, android VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * Copyright 2014 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,33 +16,33 @@
  */
 package org.atalk.ohos.plugin.audioservice;
 
+import android.app.Service;
+import android.content.Intent;
+import android.media.AudioAttributes;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.MediaRecorder;
+import android.media.PlaybackParams;
+import android.net.Uri;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.SystemClock;
+import android.text.TextUtils;
+
+import androidx.annotation.Nullable;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import ohos.aafwk.ability.IntentAbility;
-import ohos.aafwk.content.Intent;
-import ohos.event.commonevent.CommonEventData;
-import ohos.event.commonevent.CommonEventManager;
-import ohos.eventhandler.EventHandler;
-import ohos.eventhandler.EventRunner;
-import ohos.media.common.Source;
-import ohos.media.common.StorageProperty;
-import ohos.media.player.Player;
-import ohos.media.recorder.Recorder;
-import ohos.miscservices.timeutility.Time;
-import ohos.rpc.RemoteException;
-import ohos.utils.net.Uri;
-
-import org.apache.http.util.TextUtils;
-import org.atalk.ohos.aTalkApp;
 import org.atalk.persistance.FileBackend;
 
 import timber.log.Timber;
 
-public class AudioBgService extends IntentAbility {
+public class AudioBgService extends Service implements MediaPlayer.OnCompletionListener {
     // Media player actions
     public static final String ACTION_PLAYER_INIT = "player_init";
     public static final String ACTION_PLAYER_START = "player_start";
@@ -61,12 +61,12 @@ public class AudioBgService extends IntentAbility {
     public static final String PLAYBACK_POSITION = "playback_position";
     public static final String PLAYBACK_URI = "playback_uri";
 
-    private final Map<Uri, Player> uriPlayers = new ConcurrentHashMap<>();
+    private final Map<Uri, MediaPlayer> uriPlayers = new ConcurrentHashMap<>();
 
     // Handler for media player playback status broadcast
-    private EventHandler mHandlerPlayback;
+    private Handler mHandlerPlayback;
 
-    private Player mPlayer = null;
+    private MediaPlayer mPlayer = null;
     private Uri fileUri;
 
     private float playbackSpeed = 1.0f;
@@ -92,12 +92,12 @@ public class AudioBgService extends IntentAbility {
 
     private File audioFile = null;
 
-    private Recorder mRecorder = null;
+    private MediaRecorder mRecorder = null;
 
     private long startTime = 0L;
 
     // Handler for Sound Level Meter and Record Timer
-    private EventHandler mHandlerRecord;
+    private Handler mHandlerRecord;
 
     // The Google ASR input requirements state that audio input sensitivity should be set such
     // that 90 dB SPL_LEVEL at 1000 Hz yields RMS of 2500 for 16-bit samples,
@@ -112,47 +112,38 @@ public class AudioBgService extends IntentAbility {
     //private double mAlpha =  0.9 Coefficient of IIR smoothing filter for RMS.
     static final private double EMA_FILTER = 0.4;
 
-    public AudioBgService(String name) {
-        super(name);
-    }
-
     @Override
-    protected void onProcessIntent(Intent intent) {
-    }
-
-    @Override
-    protected void onCommand(Intent intent, boolean restart, int startId) {
-        super.onCommand(intent, restart, startId);
-
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        super.onStartCommand(intent, flags, startId);
         switch (intent.getAction()) {
             case ACTION_PLAYER_INIT:
-                fileUri = intent.getUri();
+                fileUri = intent.getData();
                 playerInit(fileUri);
                 break;
 
             case ACTION_PLAYER_START:
-                fileUri = intent.getUri();
+                fileUri = intent.getData();
                 playerStart(fileUri);
                 break;
 
             case ACTION_PLAYER_PAUSE:
-                fileUri = intent.getUri();
+                fileUri = intent.getData();
                 playerPause(fileUri);
                 break;
 
             case ACTION_PLAYER_STOP:
-                fileUri = intent.getUri();
+                fileUri = intent.getData();
                 playerRelease(fileUri);
                 break;
 
             case ACTION_PLAYER_SEEK:
-                fileUri = intent.getUri();
-                int seekPosition = intent.getIntParam(PLAYBACK_POSITION, 0);
+                fileUri = intent.getData();
+                int seekPosition = intent.getIntExtra(PLAYBACK_POSITION, 0);
                 playerSeek(fileUri, seekPosition);
                 break;
 
             case ACTION_PLAYBACK_PLAY:
-                fileUri = intent.getUri();
+                fileUri = intent.getData();
                 playerPlay(fileUri);
                 break;
 
@@ -165,7 +156,7 @@ public class AudioBgService extends IntentAbility {
                 break;
 
             case ACTION_RECORDING:
-                mHandlerRecord = new EventHandler(EventRunner.create());
+                mHandlerRecord = new Handler();
                 recordAudio();
                 break;
 
@@ -187,19 +178,20 @@ public class AudioBgService extends IntentAbility {
                     soundFile.delete();
                     audioFile = null;
                 }
-                terminateAbility();
+                stopSelf();
                 break;
         }
+        return START_NOT_STICKY;
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onDestroy() {
+        super.onDestroy();
         stopTimer();
         stopRecording();
 
         if (mHandlerPlayback != null) {
-            mHandlerPlayback.removeTask(playbackStatus);
+            mHandlerPlayback.removeCallbacks(playbackStatus);
             mHandlerPlayback = null;
         }
 
@@ -207,6 +199,12 @@ public class AudioBgService extends IntentAbility {
             fileUri = uri;
             playerRelease(uri);
         }
+    }
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
     }
 
     /* =============================================================
@@ -225,20 +223,27 @@ public class AudioBgService extends IntentAbility {
             return false;
 
         if (mHandlerPlayback == null)
-            mHandlerPlayback = new EventHandler(EventRunner.create());
+            mHandlerPlayback = new Handler();
 
-        mPlayer = new Player(aTalkApp.getInstance());
+        mPlayer = new MediaPlayer();
         uriPlayers.put(uri, mPlayer);
-        // mPlayer.setAudioAttributes(new AudioAttributes.Builder().setLegacyStreamType(AudioManager.STREAM_MUSIC).build());
+        mPlayer.setAudioAttributes(new AudioAttributes.Builder().setLegacyStreamType(AudioManager.STREAM_MUSIC).build());
 
-        mPlayer.setPlayerCallback(mCallback);
-        if (uri.toString().startsWith("https")) {
-            mPlayer.setSource(new Source(uri.toString()));
+        try {
+            mPlayer.setOnCompletionListener(this);
+            if (uri.toString().startsWith("http")) {
+                mPlayer.setDataSource(uri.toString());
+            }
+            else {
+                mPlayer.setDataSource(this, uri);
+            }
+            mPlayer.prepare();
+        } catch (IOException e) {
+            Timber.e("Media player creation error for: %s", uri.getPath());
+            playerRelease(uri);
+            return false;
         }
-        else {
-            mPlayer.setSource(new Source(uri.getDecodedPath()));
-        }
-        return mPlayer.prepare();
+        return true;
     }
 
     /**
@@ -252,19 +257,19 @@ public class AudioBgService extends IntentAbility {
             return;
 
         if (mHandlerPlayback == null)
-            mHandlerPlayback = new EventHandler(EventRunner.create());
+            mHandlerPlayback = new Handler();
 
         // Check player status on return to chatSession before start new
         mPlayer = uriPlayers.get(uri);
         if (mPlayer != null) {
-            if (mPlayer.isNowPlaying()) {
+            if (mPlayer.isPlaying()) {
                 playbackState(PlaybackState.play, uri);
                 // Cancel and re-sync with only one loop running
-                mHandlerPlayback.removeTask(playbackStatus);
-                mHandlerPlayback.postTask(playbackStatus, 500);
+                mHandlerPlayback.removeCallbacks(playbackStatus);
+                mHandlerPlayback.postDelayed(playbackStatus, 500);
             }
             else {
-                int position = mPlayer.getCurrentTime();
+                int position = mPlayer.getCurrentPosition();
                 int duration = mPlayer.getDuration();
                 if ((position > 0) && (position <= duration)) {
                     playbackState(PlaybackState.pause, uri);
@@ -290,7 +295,8 @@ public class AudioBgService extends IntentAbility {
     private void playerReInit(Uri uri) {
         mPlayer = uriPlayers.get(uri);
         if (mPlayer != null) {
-            if (mPlayer.isNowPlaying())
+            mPlayer.seekTo(0);
+            if (mPlayer.isPlaying())
                 mPlayer.pause();
             playbackState(PlaybackState.init, uri);
         }
@@ -309,7 +315,7 @@ public class AudioBgService extends IntentAbility {
         if (mPlayer == null) {
             playbackState(PlaybackState.stop, uri);
         }
-        else if (mPlayer.isNowPlaying()) {
+        else if (mPlayer.isPlaying()) {
             mPlayer.pause();
             playbackState(PlaybackState.pause, uri);
         }
@@ -330,20 +336,21 @@ public class AudioBgService extends IntentAbility {
             if (!playerCreate(uri))
                 return;
         }
-        else if (mPlayer.isNowPlaying()) {
+        else if (mPlayer.isPlaying()) {
             return;
         }
 
         try {
-            mPlayer.setPlaybackSpeed(playbackSpeed);
-            mPlayer.play();
+            PlaybackParams playPara = mPlayer.getPlaybackParams().setSpeed(playbackSpeed);
+            mPlayer.setPlaybackParams(playPara);
+            mPlayer.start();
             playbackState(PlaybackState.play, uri);
         } catch (Exception e) {
             Timber.e("Playback failed: %s", e.getMessage());
             playerRelease(uri);
         }
-        mHandlerPlayback.removeTask(playbackStatus);
-        mHandlerPlayback.postTask(playbackStatus, 500);
+        mHandlerPlayback.removeCallbacks(playbackStatus);
+        mHandlerPlayback.postDelayed(playbackStatus, 500);
     }
 
     /**
@@ -361,8 +368,8 @@ public class AudioBgService extends IntentAbility {
             return;
 
         try {
-            mPlayer.rewindTo(seekPosition * 1000L);
-            if (!mPlayer.isNowPlaying())
+            mPlayer.seekTo(seekPosition);
+            if (!mPlayer.isPlaying())
                 playbackState(PlaybackState.pause, uri);
         } catch (Exception e) {
             Timber.e("Playback failed");
@@ -374,14 +381,15 @@ public class AudioBgService extends IntentAbility {
      * Setting of playback speed is only support in Android.M
      */
     private void setPlaybackSpeed() {
-        for (Map.Entry<Uri, Player> entry : uriPlayers.entrySet()) {
-            Player player = entry.getValue();
+        for (Map.Entry<Uri, MediaPlayer> entry : uriPlayers.entrySet()) {
+            MediaPlayer player = entry.getValue();
             Uri uri = entry.getKey();
             if (player == null)
                 continue;
 
             try {
-                player.setPlaybackSpeed(playbackSpeed);
+                PlaybackParams playPara = player.getPlaybackParams().setSpeed(playbackSpeed);
+                player.setPlaybackParams(playPara);
 
                 // Update player state: play will start upon speed change if it was in pause state
                 playbackState(PlaybackState.play, uri);
@@ -402,10 +410,11 @@ public class AudioBgService extends IntentAbility {
 
         mPlayer = uriPlayers.get(uri);
         if (mPlayer != null) {
+            mPlayer.seekTo(0);
             playbackState(PlaybackState.stop, uri);
             uriPlayers.remove(uri);
 
-            if (mPlayer.isNowPlaying()) {
+            if (mPlayer.isPlaying()) {
                 mPlayer.stop();
             }
             mPlayer.reset();
@@ -414,54 +423,24 @@ public class AudioBgService extends IntentAbility {
         }
     }
 
-    private final Player.IPlayerCallback mCallback = new Player.IPlayerCallback() {
-        @Override
-        public void onPrepared() {
-        }
+    // Listener for playback completion
 
-        @Override
-        public void onMessage(int type, int extra) {
+    /**
+     * callback from the specific media player when playback of a media source has completed.
+     *
+     * @param mp Media Player instance
+     */
+    @Override
+    public void onCompletion(MediaPlayer mp) {
+        fileUri = getUriByPlayer(mp);
+        if (fileUri == null) {
+            mp.release();
+            stopSelf();
         }
-
-        @Override
-        public void onError(int errorType, int errorCode) {
-            terminateAbility();
+        else {
+            playerRelease(fileUri);
         }
-
-        @Override
-        public void onResolutionChanged(int width, int height) {
-        }
-
-        // callback from the specific media player when playback of a media source has completed.
-        @Override
-        public void onPlayBackComplete() {
-            fileUri = getUriByPlayer(mPlayer);
-            if (fileUri == null) {
-                mPlayer.release();
-            }
-            else {
-                playerRelease(fileUri);
-            }
-            terminateAbility();
-        }
-
-        @Override
-        public void onRewindToComplete() {
-        }
-
-        @Override
-        public void onBufferingChange(int i) {
-        }
-
-        @Override
-        public void onNewTimedMetaData(Player.MediaTimedMetaData mediaTimedMetaData) {
-        }
-
-        @Override
-        public void onMediaTimeIncontinuity(Player.MediaTimeInfo mediaTimeInfo) {
-        }
-    };
-
+    }
 
     /**
      * Return the uri of the given mp
@@ -470,8 +449,8 @@ public class AudioBgService extends IntentAbility {
      *
      * @return Uri of the player
      */
-    private Uri getUriByPlayer(Player mp) {
-        for (Map.Entry<Uri, Player> entry : uriPlayers.entrySet()) {
+    private Uri getUriByPlayer(MediaPlayer mp) {
+        for (Map.Entry<Uri, MediaPlayer> entry : uriPlayers.entrySet()) {
             if (entry.getValue().equals(mp)) {
                 return entry.getKey();
             }
@@ -490,20 +469,15 @@ public class AudioBgService extends IntentAbility {
      * @param uri media file uri
      */
     private void playbackState(PlaybackState pState, Uri uri) {
-        Player xPlayer = uriPlayers.get(uri);
+        MediaPlayer xPlayer = uriPlayers.get(uri);
         if (xPlayer != null) {
-            Intent intent = new Intent();
-            intent.setParam(PLAYBACK_URI, uri);
-            intent.setParam(PLAYBACK_STATE, pState);
-            intent.setParam(PLAYBACK_POSITION, xPlayer.getCurrentTime());
-            intent.setParam(PLAYBACK_DURATION, xPlayer.getDuration());
+            Intent intent = new Intent(PLAYBACK_STATE);
+            intent.putExtra(PLAYBACK_URI, uri);
+            intent.putExtra(PLAYBACK_STATE, pState);
+            intent.putExtra(PLAYBACK_POSITION, xPlayer.getCurrentPosition());
+            intent.putExtra(PLAYBACK_DURATION, xPlayer.getDuration());
 
-            CommonEventData eventData = new CommonEventData(intent, 0, PLAYBACK_STATE);
-            try {
-                CommonEventManager.publishCommonEvent(eventData);
-            } catch (RemoteException e) {
-                Timber.w("%s", e.getMessage());
-            }
+            LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
             // Timber.d("Audio playback state: %s (%s): %s", pState, xPlayer.getDuration(), uri.getPath());
         }
     }
@@ -518,28 +492,23 @@ public class AudioBgService extends IntentAbility {
         public void run() {
             boolean hasActivePlayer = false;
 
-            for (Map.Entry<Uri, Player> entry : uriPlayers.entrySet()) {
-                Player playerX = entry.getValue();
-                if ((playerX == null) || !playerX.isNowPlaying())
+            for (Map.Entry<Uri, MediaPlayer> entry : uriPlayers.entrySet()) {
+                MediaPlayer playerX = entry.getValue();
+                if ((playerX == null) || !playerX.isPlaying())
                     continue;
 
                 hasActivePlayer = true;
                 // Timber.d("Audio playback state: %s:  %s", playerX.getCurrentPosition(), entry.getKey());
 
-                Intent intent = new Intent();
-                intent.setParam(PLAYBACK_URI, entry.getKey());
-                intent.setParam(PLAYBACK_POSITION, playerX.getCurrentTime());
-                intent.setParam(PLAYBACK_DURATION, playerX.getDuration());
-                CommonEventData eventData = new CommonEventData(intent, 0, PLAYBACK_STATE);
-                try {
-                    CommonEventManager.publishCommonEvent(eventData);
-                } catch (RemoteException e) {
-                    Timber.w("%s", e.getMessage());
-                }
+                Intent intent = new Intent(PLAYBACK_STATUS);
+                intent.putExtra(PLAYBACK_URI, entry.getKey());
+                intent.putExtra(PLAYBACK_POSITION, playerX.getCurrentPosition());
+                intent.putExtra(PLAYBACK_DURATION, playerX.getDuration());
+                LocalBroadcastManager.getInstance(AudioBgService.this).sendBroadcast(intent);
             }
 
             if (hasActivePlayer)
-                mHandlerPlayback.postTask(this, 500);
+                mHandlerPlayback.postDelayed(this, 500);
         }
     };
 
@@ -551,7 +520,7 @@ public class AudioBgService extends IntentAbility {
      */
     public void playerPlay(Uri uri) {
         if (playerCreate(uri)) {
-            mPlayer.play();
+            mPlayer.start();
             uriPlayers.remove(uri);
         }
         mHandlerPlayback = null;
@@ -566,25 +535,23 @@ public class AudioBgService extends IntentAbility {
             return;
         }
 
-        Source mic = new Source();
-        mic.setRecorderAudioSource(Recorder.AudioSource.MIC);
+        mRecorder = new MediaRecorder();
+        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+        mRecorder.setOutputFile(audioFile.getAbsolutePath());
 
-        StorageProperty sFile = new StorageProperty.Builder()
-                .setRecorderPath(audioFile.getPath())
-                .build();
-
-        mRecorder = new Recorder();
-        mRecorder.setSource(mic);
-        mRecorder.setOutputFormat(Recorder.OutputFormat.THREE_GPP);
-        mRecorder.setOutputFormat(Recorder.AudioEncoder.AMR_NB);
-        mRecorder.setStorageProperty(sFile);
-
-        if (mRecorder.prepare()) {
+        try {
+            mRecorder.prepare();
             mRecorder.start();
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            Timber.e("io problems while recording [%s]: %s", audioFile.getAbsolutePath(), e.getMessage());
         }
 
-        startTime = Time.getCurrentTime();
-        mHandlerRecord.postTask(updateSPL, 0);
+        startTime = SystemClock.uptimeMillis();
+        mHandlerRecord.postDelayed(updateSPL, 0);
     }
 
     private void stopRecording() {
@@ -607,26 +574,21 @@ public class AudioBgService extends IntentAbility {
 
     private void stopTimer() {
         if (mHandlerRecord != null) {
-            mHandlerRecord.removeTask(updateSPL);
+            mHandlerRecord.removeCallbacks(updateSPL);
             mHandlerRecord = null;
         }
     }
 
     private void sendBroadcast(String filePath) {
-        Intent intent = new Intent();
+        Intent intent = new Intent(ACTION_AUDIO_RECORD);
         // intent.setDataAndType(uri, "video/3gp");
-        intent.setParam(URI, filePath);
-        CommonEventData eventData = new CommonEventData(intent, 0, ACTION_AUDIO_RECORD);
-        try {
-            CommonEventManager.publishCommonEvent(eventData);
-        } catch (RemoteException e) {
-            Timber.w("%s", e.getMessage());
-        }
+        intent.putExtra(URI, filePath);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
     private final Runnable updateSPL = new Runnable() {
         public void run() {
-            long finalTime = Time.getCurrentTime() - startTime;
+            long finalTime = SystemClock.uptimeMillis() - startTime;
             int seconds = (int) (finalTime / 1000);
             int minutes = seconds / 60;
             seconds = seconds % 60;
@@ -640,16 +602,11 @@ public class AudioBgService extends IntentAbility {
             double mSPL = (mOffsetDB + rmsdB) / mDBRange;
             // mBarLevel.setLevel(mSPL);
 
-            Intent intent = new Intent();
-            intent.setParam(SPL_LEVEL, mSPL);
-            intent.setParam(RECORD_TIMER, mDuration);
-            CommonEventData eventData = new CommonEventData(intent, 0, ACTION_SMI);
-            try {
-                CommonEventManager.publishCommonEvent(eventData);
-            } catch (RemoteException e) {
-                Timber.w("%s", e.getMessage());
-            }
-            mHandlerRecord.postTask(this, 100);
+            Intent intent = new Intent(ACTION_SMI);
+            intent.putExtra(SPL_LEVEL, mSPL);
+            intent.putExtra(RECORD_TIMER, mDuration);
+            LocalBroadcastManager.getInstance(AudioBgService.this).sendBroadcast(intent);
+            mHandlerRecord.postDelayed(this, 100);
         }
     };
 
@@ -662,7 +619,7 @@ public class AudioBgService extends IntentAbility {
 
     public double getAmplitude() {
         if (mRecorder != null)
-            return (mRecorder.obtainMaxAmplitude());
+            return (mRecorder.getMaxAmplitude());
         else
             return 0;
     }

@@ -1,6 +1,6 @@
 /*
- * aTalk, ohos VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * aTalk, android VoIP and Instant Messaging client
+ * Copyright 2014 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,15 @@
  */
 package org.atalk.persistance;
 
-import ohos.agp.components.Checkbox;
-import ohos.agp.components.Component;
-import ohos.agp.components.LayoutScatter;
-import ohos.agp.render.render3d.BuildConfig;
-import ohos.app.Context;
+import static net.java.sip.communicator.plugin.loggingutils.LogsCollector.LOGGING_DIR_NAME;
+
+import android.app.Activity;
+import android.content.Context;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.CheckBox;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,9 +37,11 @@ import net.java.sip.communicator.service.protocol.ProtocolProviderService;
 import net.java.sip.communicator.util.account.AccountUtils;
 
 import org.atalk.crypto.omemo.SQLiteOmemoStore;
-import org.atalk.ohos.ResourceTable;
+import org.atalk.ohos.BaseFragment;
+import org.atalk.ohos.BuildConfig;
+import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
-import org.atalk.ohos.gui.dialogs.DialogH;
+import org.atalk.ohos.gui.dialogs.DialogActivity;
 import org.atalk.persistance.migrations.OmemoDBCreate;
 import org.atalk.service.fileaccess.FileCategory;
 import org.atalk.service.libjitsi.LibJitsi;
@@ -45,52 +51,56 @@ import org.jivesoftware.smackx.omemo.OmemoStore;
 
 import timber.log.Timber;
 
-import static net.java.sip.communicator.plugin.loggingutils.LogsCollector.LOGGING_DIR_NAME;
-
 /**
  * Dialog allowing user to refresh persistent stores.
  *
  * @author Eng Chong Meng
  */
-public class ServerPersistentStoresRefreshDialog extends Component {
-    private final Component mDialog;
-    private final Context mContext;
-
-    public ServerPersistentStoresRefreshDialog(Context ctx) {
-        super(ctx);
-        mContext = ctx;
-        LayoutScatter inflater = LayoutScatter.getInstance(getContext());
-        mDialog = inflater.parse(ResourceTable.Layout_refresh_persistent_stores, null, false);
+public class ServerPersistentStoresRefreshDialog extends BaseFragment {
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.refresh_persistent_stores, container, false);
         if (BuildConfig.DEBUG) {
-            mDialog.findComponentById(ResourceTable.Id_cb_export_database).setVisibility(Component.VISIBLE);
+            view.findViewById(R.id.cb_export_database).setVisibility(View.VISIBLE);
+            // view.findViewById(R.id.cb_del_database).setVisibility(View.VISIBLE);
         }
+        return view;
     }
 
     /**
      * Displays create refresh store dialog. If the source wants to be notified about the result
      * should pass the listener here or <code>null</code> otherwise.
+     *
+     * @param parent the parent <code>Activity</code>
      */
-    public void show() {
-        DialogH.getInstance(mContext).showCustomDialog(mContext,
-                mContext.getString(ResourceTable.String_refresh_store), mDialog,
-                mContext.getString(ResourceTable.String_refresh_apply),
+    public void show(Activity parent) {
+        DialogActivity.showCustomDialog(parent,
+                parent.getString(R.string.refresh_store),
+                ServerPersistentStoresRefreshDialog.class.getName(), null,
+                parent.getString(R.string.refresh_apply),
                 new DialogListenerImpl(), null);
     }
 
     /**
-     * Implements <code>DialogH.DialogListener</code> interface and handles refresh stores process.
+     * Implements <code>DialogActivity.DialogListener</code> interface and handles refresh stores process.
      */
-    class DialogListenerImpl implements DialogH.DialogListener {
+    class DialogListenerImpl implements DialogActivity.DialogListener {
         @Override
-        public boolean onConfirmClicked(DialogH dialog) {
-            Checkbox cbRoster = mDialog.findComponentById(ResourceTable.Id_cb_roster); // view.findComponentById(cb_roster);
-            Checkbox cbCaps = mDialog.findComponentById(ResourceTable.Id_cb_caps);
-            Checkbox cbDiscoInfo = mDialog.findComponentById(ResourceTable.Id_cb_discoInfo);
-            Checkbox cbAvatar = mDialog.findComponentById(ResourceTable.Id_cb_avatar);
-            Checkbox cbOmemo = mDialog.findComponentById(ResourceTable.Id_cb_omemo);
-            Checkbox cbDebugLog = mDialog.findComponentById(ResourceTable.Id_cb_debug_log);
-            Checkbox cbExportDB = mDialog.findComponentById(ResourceTable.Id_cb_export_database);
-            Checkbox cbDeleteDB = mDialog.findComponentById(ResourceTable.Id_cb_del_database);
+        public boolean onConfirmClicked(DialogActivity dialog) {
+            View view = dialog.getContentFragment().getView();
+            if (view == null)
+                return false;
+
+            CheckBox cbRoster = view.findViewById(R.id.cb_roster);
+            CheckBox cbCaps = view.findViewById(R.id.cb_caps);
+            CheckBox cbAvatar = view.findViewById(R.id.cb_avatar);
+            CheckBox cbOmemo = view.findViewById(R.id.cb_omemo);
+            CheckBox cbDebugLog = view.findViewById(R.id.cb_debug_log);
+            CheckBox cbExportDB = view.findViewById(R.id.cb_export_database);
+            CheckBox cbDeleteDB = view.findViewById(R.id.cb_del_database);
 
             if (cbRoster.isChecked()) {
                 refreshRosterStore();
@@ -117,8 +127,7 @@ public class ServerPersistentStoresRefreshDialog extends Component {
         }
 
         @Override
-        public void onDialogCancelled(DialogH dialog) {
-            dialog.destroy();
+        public void onDialogCancelled(DialogActivity dialog) {
         }
     }
 
@@ -136,7 +145,7 @@ public class ServerPersistentStoresRefreshDialog extends Component {
                 try {
                     FileBackend.deleteRecursive(rosterStoreDirectory);
                 } catch (IOException e) {
-                    Timber.e("Failed to purge store for: %s", ResourceTable.String_refresh_store_roster);
+                    Timber.e("Failed to purge store for: %s", R.string.refresh_store_roster);
                 }
                 jabberProvider.initRosterStore();
             }
@@ -157,8 +166,8 @@ public class ServerPersistentStoresRefreshDialog extends Component {
      */
     private void purgeOmemoStorage() {
         // accountID omemo key attributes
-        String ZSONKEY_REGISTRATION_ID = "omemoRegId";
-        String ZSONKEY_CURRENT_PREKEY_ID = "omemoCurPreKeyId";
+        String JSONKEY_REGISTRATION_ID = "omemoRegId";
+        String JSONKEY_CURRENT_PREKEY_ID = "omemoCurPreKeyId";
         Context ctx = aTalkApp.getInstance();
 
         OmemoStore<?, ?, ?, ?, ?, ?, ?, ?, ?> omemoStore = OmemoService.getInstance().getOmemoStoreBackend();
@@ -167,11 +176,11 @@ public class ServerPersistentStoresRefreshDialog extends Component {
             DatabaseBackend db = DatabaseBackend.getInstance(ctx);
             for (ProtocolProviderService pps : ppServices) {
                 AccountID accountId = pps.getAccountID();
-                accountId.unsetKey(ZSONKEY_CURRENT_PREKEY_ID);
-                accountId.unsetKey(ZSONKEY_REGISTRATION_ID);
+                accountId.unsetKey(JSONKEY_CURRENT_PREKEY_ID);
+                accountId.unsetKey(JSONKEY_REGISTRATION_ID);
                 db.updateAccount(accountId);
             }
-            OmemoDBCreate.createOmemoTables(DatabaseBackend.getRdbStore());
+            OmemoDBCreate.createOmemoTables(db.getWritableDatabase());
 
             // start to regenerate all Omemo data for registered accounts - has exception
             // SQLiteOmemoStore.loadOmemoSignedPreKey().371 There is no SignedPreKeyRecord for: 0
@@ -214,9 +223,6 @@ public class ServerPersistentStoresRefreshDialog extends Component {
         File appXmlFP = new File(appRootDir, clFileName);
 
         File atalkExportDir = FileBackend.getaTalkStore(FileBackend.EXPROT_DB, true);
-        if (atalkExportDir == null)
-            return;
-
         try {
             // Clean up old contents before create new
             FileBackend.deleteRecursive(atalkExportDir);
@@ -249,7 +255,7 @@ public class ServerPersistentStoresRefreshDialog extends Component {
      */
     public static void deleteDB() {
         Context ctx = aTalkApp.getInstance();
-        DatabaseBackend.getInstance(ctx).deleteRdbStore(DatabaseBackend.DATABASE_NAME);
+        ctx.deleteDatabase(DatabaseBackend.DATABASE_NAME);
     }
 
     /**

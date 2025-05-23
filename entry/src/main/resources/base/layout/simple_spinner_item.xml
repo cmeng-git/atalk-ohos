@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<Text
-    xmlns:ohos="http://schemas.huawei.com/res/ohos"
-    ohos:id="$+id:text1"
-    ohos:background_element="$graphic:bg_picker"
-    ohos:truncation_mode="ellipsis_at_end"
-    ohos:max_text_lines="1"/>
-

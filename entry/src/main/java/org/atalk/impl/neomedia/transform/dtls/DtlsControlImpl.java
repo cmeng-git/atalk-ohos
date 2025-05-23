@@ -5,8 +5,9 @@
  */
 package org.atalk.impl.neomedia.transform.dtls;
 
-import org.apache.http.util.TextUtils;
-import org.atalk.ohos.ResourceTable;
+import android.text.TextUtils;
+
+import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.impl.timberlog.TimberLog;
 import org.atalk.impl.neomedia.AbstractRTPConnector;
@@ -773,10 +774,10 @@ public class DtlsControlImpl extends AbstractSrtpControl<DtlsTransformEngine> im
         if (TextUtils.isEmpty(message)) {
             if (AlertDescription.close_notify == alertDescription) {
                 srtError = SrtpListener.INFORMATION;  // change to for info only
-                message = aTalkApp.getResString(ResourceTable.String_media_security_encryption_ended, errDescription);
+                message = aTalkApp.getResString(R.string.media_security_encryption_ended, errDescription);
             }
             else {
-                message = aTalkApp.getResString(ResourceTable.String_media_security_internal_protocol_error, errDescription);
+                message = aTalkApp.getResString(R.string.media_security_internal_protocol_error, errDescription);
             }
         }
         srtpListener.securityMessageReceived(errDescription, message, srtError);

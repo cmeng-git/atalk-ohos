@@ -5,23 +5,23 @@
  */
 package net.java.sip.communicator.util;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.logging.LogManager;
-
-import ohos.app.Context;
+import android.content.Context;
+import android.content.res.AssetManager;
 
 import org.atalk.service.osgi.OSGiService;
 import org.atalk.util.OSUtils;
 import org.osgi.framework.BundleContext;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.logging.LogManager;
+
 /**
  * Implements the class which is to have its name specified to {@link LogManager} via the system property
  * <code>java.util.logging.config.class</code> and which is to read in the initial configuration.
  *
- * @author Eng Chong Meng
+ * @author Lyubomir Marinov
  */
 public class JavaUtilLoggingConfig
 {
@@ -35,21 +35,21 @@ public class JavaUtilLoggingConfig
                 System.setProperty(propertyName, JavaUtilLoggingConfig.class.getName());
             }
 
-            String filePath = System.getProperty("java.util.logging.config.file");
-            if (filePath == null)
-                filePath = "resources/rawfile/logging.properties";
+            String fileName = System.getProperty("java.util.logging.config.file");
+            if (fileName == null)
+                fileName = "lib/logging.properties";
 
             if (OSUtils.IS_ANDROID) {
                 BundleContext bundleContext = UtilActivator.bundleContext;
                 if (bundleContext != null) {
                     Context context = ServiceUtils.getService(bundleContext, OSGiService.class);
                     if (context != null) {
-                        is = context.getResourceManager().getRawFileEntry(filePath).openRawFile();
+                        is = context.getAssets().open(fileName, AssetManager.ACCESS_UNKNOWN);
                     }
                 }
             }
             else {
-                is = Files.newInputStream(Paths.get(filePath));
+                is = new FileInputStream(fileName);
             }
 
             if (is != null) {

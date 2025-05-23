@@ -26,6 +26,7 @@ import net.java.sip.communicator.service.protocol.ServerStoredDetails.WorkPhoneD
 import net.java.sip.communicator.util.ConfigurationUtils;
 import net.java.sip.communicator.util.account.AccountUtils;
 
+import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 
 /**
@@ -463,16 +464,16 @@ public class MetaContactPhoneUtil {
      */
     protected String getLocalizedPhoneNumber(GenericDetail d) {
         if (d instanceof WorkPhoneDetail) {
-            return aTalkApp.getResString(ResourceTable.String_work);
+            return aTalkApp.getResString(R.string.work);
         }
         else if (d instanceof MobilePhoneDetail) {
-            return aTalkApp.getResString(ResourceTable.String_mobile);
+            return aTalkApp.getResString(R.string.mobile);
         }
         else if (d instanceof VideoDetail) {
-            return aTalkApp.getResString(ResourceTable.String_video);
+            return aTalkApp.getResString(R.string.video);
         }
         else {
-            return aTalkApp.getResString(ResourceTable.String_home);
+            return aTalkApp.getResString(R.string.home);
         }
     }
 }

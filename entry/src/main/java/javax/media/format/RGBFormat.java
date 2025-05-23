@@ -1,7 +1,8 @@
 package javax.media.format;
 
-import java.awt.Dimension;
-import javax.media.Format;
+import java.awt.*;
+
+import javax.media.*;
 
 /**
  * Describes uncompressed RGB data. The data is in interleaved form. RGB
@@ -16,20 +17,15 @@ import javax.media.Format;
  * greenMask = 2, blueMask = 3 and pixelStride = 3.</LI>
  * </UL>
  */
-public class RGBFormat extends VideoFormat {
-    /**
-     * Mask value for the Red component.
-     */
+public class RGBFormat extends VideoFormat
+{
+    /** Mask value for the Red component. */
     protected int redMask = NOT_SPECIFIED;
 
-    /**
-     * Mask value for the Green component.
-     */
+    /** Mask value for the Green component. */
     protected int greenMask = NOT_SPECIFIED;
 
-    /**
-     * Mask value for the Blue component.
-     */
+    /** Mask value for the Blue component. */
     protected int blueMask = NOT_SPECIFIED;
 
     /**
@@ -38,9 +34,7 @@ public class RGBFormat extends VideoFormat {
      */
     protected int bitsPerPixel = NOT_SPECIFIED;
 
-    /**
-     * Increment value of the array index from one pixel to the next.
-     */
+    /** Increment value of the array index from one pixel to the next. */
     protected int pixelStride = NOT_SPECIFIED;
 
     /**
@@ -55,9 +49,7 @@ public class RGBFormat extends VideoFormat {
      */
     protected int flipped = NOT_SPECIFIED;
 
-    /**
-     * Endian ordering of the data where applicable
-     */
+    /** Endian ordering of the data where applicable */
     protected int endian = NOT_SPECIFIED;
 
     public static final int BIG_ENDIAN = 0;
@@ -68,9 +60,10 @@ public class RGBFormat extends VideoFormat {
     /**
      * Constructs a default <tt>RGBFormat</tt>.
      */
-    public RGBFormat() {
+    public RGBFormat()
+    {
         super(ENCODING);
-        mDataType = null;
+        dataType = null;
     }
 
     /**
@@ -80,28 +73,38 @@ public class RGBFormat extends VideoFormat {
      * pixel stride and specified frame width. The image is not flipped and the
      * endian is LITTLE_ENDIAN.
      *
-     * @param size A <tt>Dimension</tt> that specifies the frame size.
-     * @param maxDataLength The maximum length of a data chunk.
-     * @param dataType The type of the data. For example, byte array.
-     * @param frameRate The frame rate.
-     * @param bitsPerPixel The number of bits representing a pixel.
-     * @param red The mask for the red color component.
-     * @param green The mask for the green color component.
-     * @param blue The mask for the blue color component.
+     * @param size
+     *            A <tt>Dimension</tt> that specifies the frame size.
+     * @param maxDataLength
+     *            The maximum length of a data chunk.
+     * @param dataType
+     *            The type of the data. For example, byte array.
+     * @param frameRate
+     *            The frame rate.
+     * @param bitsPerPixel
+     *            The number of bits representing a pixel.
+     * @param red
+     *            The mask for the red color component.
+     * @param green
+     *            The mask for the green color component.
+     * @param blue
+     *            The mask for the blue color component.
      */
     public RGBFormat(Dimension size, int maxDataLength, Class<?> dataType,
-            float frameRate, int bitsPerPixel, int red, int green, int blue) {
+            float frameRate, int bitsPerPixel, int red, int green, int blue)
+    {
         super(ENCODING, size, maxDataLength, dataType, frameRate);
         this.bitsPerPixel = bitsPerPixel;
         this.redMask = red;
         this.greenMask = green;
         this.blueMask = blue;
-        if (bitsPerPixel != NOT_SPECIFIED && dataType != null) {
+        if (bitsPerPixel != NOT_SPECIFIED && dataType != null)
+        {
             pixelStride = bitsPerPixel / 8;
             if (dataType != byteArray)
                 pixelStride = 1;
-        }
-        else {
+        } else
+        {
             pixelStride = NOT_SPECIFIED;
         }
         if (size != null && pixelStride != NOT_SPECIFIED)
@@ -118,25 +121,37 @@ public class RGBFormat extends VideoFormat {
     /**
      * Constructs an <tt>RGBFormat</tt> object with the specified properties.
      *
-     * @param size A <tt>Dimension</tt> that specifies the frame size.
-     * @param maxDataLength The maximum length of a data chunk.
-     * @param dataType The type of the data. For example, byte array.
-     * @param frameRate The frame rate.
-     * @param bitsPerPixel The number of bits representing a pixel.
-     * @param red The mask for the red color component.
-     * @param green The mask for the green color component.
-     * @param blue The mask for the blue color component.
-     * @param pixelStride The number of array elements between adjacent pixels.
-     * @param flipped Indicates whether or not the lines in the video frame are
-     * flipped vertically (upside down). <tt>Format.TRUE</tt>
-     * indicates the image is flipped, <tt>Format.FALSE</tt>
-     * indicates that it is not.
-     * @param endian The byte ordering used for this <tt>RGBFormat</tt>--
-     * <tt>BIG_ENDIAN</tt> or <tt>LITTLE_ENDIAN</tt>.
+     * @param size
+     *            A <tt>Dimension</tt> that specifies the frame size.
+     * @param maxDataLength
+     *            The maximum length of a data chunk.
+     * @param dataType
+     *            The type of the data. For example, byte array.
+     * @param frameRate
+     *            The frame rate.
+     * @param bitsPerPixel
+     *            The number of bits representing a pixel.
+     * @param red
+     *            The mask for the red color component.
+     * @param green
+     *            The mask for the green color component.
+     * @param blue
+     *            The mask for the blue color component.
+     * @param pixelStride
+     *            The number of array elements between adjacent pixels.
+     * @param flipped
+     *            Indicates whether or not the lines in the video frame are
+     *            flipped vertically (upside down). <tt>Format.TRUE</tt>
+     *            indicates the image is flipped, <tt>Format.FALSE</tt>
+     *            indicates that it is not.
+     * @param endian
+     *            The byte ordering used for this <tt>RGBFormat</tt>--
+     *            <tt>BIG_ENDIAN</tt> or <tt>LITTLE_ENDIAN</tt>.
      */
     public RGBFormat(Dimension size, int maxDataLength, Class<?> dataType,
             float frameRate, int bitsPerPixel, int red, int green, int blue,
-            int pixelStride, int lineStride, int flipped, int endian) {
+            int pixelStride, int lineStride, int flipped, int endian)
+    {
         super(ENCODING, size, maxDataLength, dataType, frameRate);
         this.bitsPerPixel = bitsPerPixel;
         this.redMask = red;
@@ -154,8 +169,9 @@ public class RGBFormat extends VideoFormat {
      * @return A clone of this <tt>RGBFormat</tt>.
      */
     @Override
-    public Object clone() {
-        RGBFormat f = new RGBFormat(size, maxDataLength, mDataType, frameRate,
+    public Object clone()
+    {
+        RGBFormat f = new RGBFormat(size, maxDataLength, dataType, frameRate,
                 bitsPerPixel, redMask, greenMask, blueMask, pixelStride,
                 lineStride, flipped, endian);
         f.copy(this);
@@ -166,12 +182,15 @@ public class RGBFormat extends VideoFormat {
      * Copies the attributes from the specified <tt>Format</tt> into this
      * <tt>RGBFormat</tt>.
      *
-     * @param f The <tt>Format</tt> to copy the attributes from.
+     * @param f
+     *            The <tt>Format</tt> to copy the attributes from.
      */
     @Override
-    protected void copy(Format f) {
+    protected void copy(Format f)
+    {
         super.copy(f);
-        if (f instanceof RGBFormat) {
+        if (f instanceof RGBFormat)
+        {
             RGBFormat other = (RGBFormat) f;
             bitsPerPixel = other.bitsPerPixel;
             redMask = other.redMask;
@@ -190,13 +209,15 @@ public class RGBFormat extends VideoFormat {
      * <tt>RGBFormat</tt> object and all of its attributes are identical to the
      * attributes in this <tt>RGBFormat</tt> .
      *
-     * @param format The <tt>Format</tt> to compare.
-     *
+     * @param format
+     *            The <tt>Format</tt> to compare.
      * @return true if the specified <tt>Format</tt> is the same as this one.
      */
     @Override
-    public boolean equals(Object format) {
-        if (format instanceof RGBFormat) {
+    public boolean equals(Object format)
+    {
+        if (format instanceof RGBFormat)
+        {
             RGBFormat other = (RGBFormat) format;
 
             return super.equals(format) && bitsPerPixel == other.bitsPerPixel
@@ -205,8 +226,7 @@ public class RGBFormat extends VideoFormat {
                     && pixelStride == other.pixelStride
                     && lineStride == other.lineStride && endian == other.endian
                     && flipped == other.flipped;
-        }
-        else
+        } else
             return false;
     }
 
@@ -215,7 +235,8 @@ public class RGBFormat extends VideoFormat {
      *
      * @return An integer representing the number of bits per pixel.
      */
-    public int getBitsPerPixel() {
+    public int getBitsPerPixel()
+    {
         return bitsPerPixel;
     }
 
@@ -224,7 +245,8 @@ public class RGBFormat extends VideoFormat {
      *
      * @return The blue mask.
      */
-    public int getBlueMask() {
+    public int getBlueMask()
+    {
         return blueMask;
     }
 
@@ -232,9 +254,10 @@ public class RGBFormat extends VideoFormat {
      * Gets the endian ordering of the data for unpacked 16-bit data.
      *
      * @return An integer representing the endian ordering: BIG_ENDIAN,
-     * LITTLE_ENDIAN or NOT_SPECIFIED
+     *         LITTLE_ENDIAN or NOT_SPECIFIED
      */
-    public int getEndian() {
+    public int getEndian()
+    {
         return endian;
     }
 
@@ -242,9 +265,10 @@ public class RGBFormat extends VideoFormat {
      * Checks whether or not the video image is vertically flipped.
      *
      * @return <tt>Format.TRUE</tt> if the video is flipped,
-     * <tt>Format.FALSE</tt> if it is not.
+     *         <tt>Format.FALSE</tt> if it is not.
      */
-    public int getFlipped() {
+    public int getFlipped()
+    {
         return flipped;
     }
 
@@ -253,7 +277,8 @@ public class RGBFormat extends VideoFormat {
      *
      * @return The green mask.
      */
-    public int getGreenMask() {
+    public int getGreenMask()
+    {
         return greenMask;
     }
 
@@ -263,7 +288,8 @@ public class RGBFormat extends VideoFormat {
      *
      * @return An integer representing the line stride.
      */
-    public int getLineStride() {
+    public int getLineStride()
+    {
         return lineStride;
     }
 
@@ -273,7 +299,8 @@ public class RGBFormat extends VideoFormat {
      *
      * @return An integer representing the pixel stride.
      */
-    public int getPixelStride() {
+    public int getPixelStride()
+    {
         return pixelStride;
     }
 
@@ -282,7 +309,8 @@ public class RGBFormat extends VideoFormat {
      *
      * @return The red mask.
      */
-    public int getRedMask() {
+    public int getRedMask()
+    {
         return redMask;
     }
 
@@ -293,14 +321,13 @@ public class RGBFormat extends VideoFormat {
      *
      * @param format The matching <tt>Format</tt> to intersect with this
      * <tt>RGBFormat</tt>.
-     *
      * @return A <tt>Format</tt> object with its attributes set to those
      * attributes common to both <tt>Format</tt> objects.
-     *
      * @see #matches
      */
     @Override
-    public Format intersects(Format format) {
+    public Format intersects(Format format)
+    {
         Format fmt;
         if ((fmt = super.intersects(format)) == null)
             return null;
@@ -334,13 +361,14 @@ public class RGBFormat extends VideoFormat {
      * possible if "A" is derived from "B" or "B" is derived from "A". (The
      * compared attributes must still match, or <tt>matches</tt> fails.)
      *
-     * @param format The <tt>Format</tt> to compare with this one.
-     *
+     * @param format
+     *            The <tt>Format</tt> to compare with this one.
      * @return <tt>true</tt> if the specified <tt>Format</tt> matches this one,
-     * <tt>false</tt> if it does not.
+     *         <tt>false</tt> if it does not.
      */
     @Override
-    public boolean matches(Format format) {
+    public boolean matches(Format format)
+    {
         if (!super.matches(format))
             return false;
         if (!(format instanceof RGBFormat))
@@ -354,9 +382,9 @@ public class RGBFormat extends VideoFormat {
 
                 (redMask == NOT_SPECIFIED || other.redMask == NOT_SPECIFIED || redMask == other.redMask)
                 && (greenMask == NOT_SPECIFIED
-                || other.greenMask == NOT_SPECIFIED || greenMask == other.greenMask)
+                        || other.greenMask == NOT_SPECIFIED || greenMask == other.greenMask)
                 && (blueMask == NOT_SPECIFIED
-                || other.blueMask == NOT_SPECIFIED || blueMask == other.blueMask)
+                        || other.blueMask == NOT_SPECIFIED || blueMask == other.blueMask)
                 &&
 
                 (pixelStride == NOT_SPECIFIED
@@ -379,7 +407,8 @@ public class RGBFormat extends VideoFormat {
      * @return A <tt>Format</tt> that's less restrictive than the this format.
      */
     @Override
-    public Format relax() {
+    public Format relax()
+    {
         RGBFormat fmt;
         if ((fmt = (RGBFormat) super.relax()) == null)
             return null;
@@ -397,7 +426,8 @@ public class RGBFormat extends VideoFormat {
      * @return A <tt>String</tt> that describes the format attributes.
      */
     @Override
-    public String toString() {
+    public String toString()
+    {
         String s = getEncoding().toUpperCase();
         if (size != null)
             s += ", " + size.width + "x" + size.height;
@@ -412,11 +442,11 @@ public class RGBFormat extends VideoFormat {
         s += ", LineStride=" + lineStride;
         if (flipped != NOT_SPECIFIED)
             s += (flipped == Format.TRUE ? ", Flipped" : "");
-        if (mDataType == byteArray && bitsPerPixel == 16
+        if (dataType == byteArray && bitsPerPixel == 16
                 && endian != NOT_SPECIFIED)
             s += (endian == BIG_ENDIAN ? ", BigEndian" : ", LittleEndian");
-        if (mDataType != null && mDataType != Format.byteArray)
-            s += ", " + mDataType;
+        if (dataType != null && dataType != Format.byteArray)
+            s += ", " + dataType;
         return s;
     }
 }

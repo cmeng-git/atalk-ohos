@@ -253,7 +253,7 @@ public class DePacketizer extends AbstractCodec2
                     outBuffer.setDiscard(true);
                     return BUFFER_PROCESSED_OK;
                 }
-                // ReSync the firstSeq if process has dropped out data; must do this else Codec decoder has problem
+                // ReSync the firstSeq if process has dropped out data; must do this else MediaCodec decoder has problem
                 else if (RTPUtils.sequenceNumberComparator.compare(inSeq, firstSeq) > 0) {
                     firstSeq = inSeq;
                 }

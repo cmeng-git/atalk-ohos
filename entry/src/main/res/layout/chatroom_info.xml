@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/screen_padding">
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="5dp">
+
+                <TextView
+                    style="@style/MediumFont"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/chatroom_info_name" />
+
+                <TextView
+                    android:id="@+id/roominfo_name"
+                    style="@style/EntryTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/text_entry_height" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="5dp">
+
+                <TextView
+                    style="@style/MediumFont"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/chatroom_info_subject" />
+
+                <TextView
+                    android:id="@+id/roominfo_subject"
+                    style="@style/EntryTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="@dimen/text_entry_height" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="5dp">
+
+                <TextView
+                    style="@style/MediumFont"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/chatroom_info_description" />
+
+                <TextView
+                    android:id="@+id/roominfo_description"
+                    style="@style/EntryTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/text_entry_height"
+                    android:ellipsize="marquee"
+                    android:singleLine="true" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="5dp">
+
+                <TextView
+                    style="@style/MediumFont"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/chatroom_info_occupants" />
+
+                <TextView
+                    android:id="@+id/roominfo_occupants"
+                    style="@style/EntryTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/text_entry_height" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="5dp">
+
+                <TextView
+                    style="@style/MediumFont"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/chatroom_info_max_history_fetch" />
+
+                <TextView
+                    android:id="@+id/maxhistoryfetch"
+                    style="@style/EntryTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/text_entry_height" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="5dp">
+
+                <TextView
+                    style="@style/MediumFont"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/chatroom_info_contact_jid" />
+
+                <TextView
+                    android:id="@+id/roominfo_contactjid"
+                    style="@style/EntryTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="@dimen/text_entry_height" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="5dp">
+
+                <TextView
+                    style="@style/MediumFont"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/chatroom_info_language" />
+
+                <TextView
+                    android:id="@+id/roominfo_lang"
+                    style="@style/EntryTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/text_entry_height" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="5dp">
+
+                <TextView
+                    style="@style/MediumFont"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/chatroom_info_ldap_group" />
+
+                <TextView
+                    android:id="@+id/roominfo_ldapgroup"
+                    style="@style/EntryTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/text_entry_height" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/between_padding"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/muc_membersonly"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:clickable="false"
+                    android:text="@string/chatroom_info_member_only" />
+
+                <View
+                    android:id="@+id/centerShim1"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:visibility="invisible" />
+
+                <CheckBox
+                    android:id="@+id/muc_nonanonymous"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="4"
+                    android:clickable="false"
+                    android:text="@string/chatroom_info_non_anonymous" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/between_padding"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/muc_persistent"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:clickable="false"
+                    android:text="@string/chatroom_info_persistent" />
+
+                <View
+                    android:id="@+id/centerShim2"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:visibility="invisible" />
+
+                <CheckBox
+                    android:id="@+id/muc_passwordprotected"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="4"
+                    android:clickable="false"
+                    android:text="@string/chatroom_info_password_protected" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/between_padding"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/muc_moderated"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:clickable="false"
+                    android:text="@string/chatroom_info_moderated" />
+
+                <View
+                    android:id="@+id/centerShim3"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:visibility="invisible" />
+
+                <CheckBox
+                    android:id="@+id/room_subject_modifiable"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="4"
+                    android:clickable="false"
+                    android:text="@string/chatroom_info_subject_modifiable" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <View
+                    android:id="@+id/centerShim"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:visibility="invisible" />
+
+                <Button
+                    android:id="@+id/button_ok"
+                    style="@style/ButtonTop"
+                    android:layout_weight="1"
+                    android:text="@string/ok" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

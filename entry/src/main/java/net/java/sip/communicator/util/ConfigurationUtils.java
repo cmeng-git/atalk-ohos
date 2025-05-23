@@ -1,21 +1,20 @@
 /*
- * aTalk, ohos VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * Jitsi, the OpenSource Java VoIP and Instant Messaging client.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Distributable under LGPL license. See terms of license at gnu.org.
  */
 package net.java.sip.communicator.util;
 
+import static org.atalk.ohos.gui.settings.QuietTimeFragment.P_KEY_QUIET_HOURS_ENABLE;
+import static org.atalk.ohos.gui.settings.QuietTimeFragment.P_KEY_QUIET_HOURS_END;
+import static org.atalk.ohos.gui.settings.QuietTimeFragment.P_KEY_QUIET_HOURS_START;
+import static org.atalk.ohos.gui.settings.SettingsFragment.P_KEY_HEADS_UP_ENABLE;
+
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+
+import java.awt.Color;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
@@ -26,12 +25,6 @@ import java.util.Map;
 
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
-
-import ohos.data.rdb.RdbPredicates;
-import ohos.data.rdb.RdbStore;
-import ohos.data.rdb.ValuesBucket;
-import ohos.data.resultset.ResultSet;
-import ohos.utils.zson.ZSONObject;
 
 import net.java.sip.communicator.impl.configuration.SQLiteConfigurationStore;
 import net.java.sip.communicator.impl.msghistory.MessageHistoryActivator;
@@ -45,15 +38,15 @@ import net.java.sip.communicator.service.protocol.ProtocolProviderService;
 import net.java.sip.communicator.util.account.AccountUtils;
 
 import org.apache.commons.lang3.StringUtils;
-import org.atalk.ohos.ResourceTable;
+import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
+import org.atalk.ohos.gui.chat.ChatFragment;
 import org.atalk.ohos.gui.chat.ChatSession;
-import org.atalk.ohos.gui.chat.ChatSlice;
-import org.atalk.ohos.gui.settings.SettingsSlice;
+import org.atalk.ohos.gui.settings.SettingsFragment;
 import org.atalk.ohos.gui.settings.TimePreference;
 import org.atalk.ohos.gui.util.ThemeHelper;
 import org.atalk.ohos.gui.util.ThemeHelper.Theme;
-import org.atalk.ohos.gui.webview.WebViewSlice;
+import org.atalk.ohos.gui.webview.WebViewFragment;
 import org.atalk.persistance.DatabaseBackend;
 import org.atalk.service.configuration.ConfigurationService;
 import org.atalk.service.neomedia.codec.EncodingConfiguration;
@@ -64,13 +57,12 @@ import org.jivesoftware.smackx.chatstates.ChatStateManager;
 import org.jivesoftware.smackx.disco.ServiceDiscoveryManager;
 import org.jivesoftware.smackx.receipts.DeliveryReceipt;
 import org.jivesoftware.smackx.receipts.DeliveryReceiptManager;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.jxmpp.jid.Jid;
 import org.osgi.framework.ServiceReference;
 
 import timber.log.Timber;
-
-import static org.atalk.ohos.gui.settings.QuietTimeSlice.*;
-import static org.atalk.ohos.gui.settings.SettingsSlice.P_KEY_HEADS_UP_ENABLE;
 
 /**
  * Cares about all common configurations. Storing and retrieving configuration values.
@@ -80,6 +72,16 @@ import static org.atalk.ohos.gui.settings.SettingsSlice.P_KEY_HEADS_UP_ENABLE;
  * @author Eng Chong Meng
  */
 public class ConfigurationUtils {
+    /**
+     * The send message command defined by the Enter key.
+     */
+    public static final String ENTER_COMMAND = "Enter";
+
+    /**
+     * The send message command defined by the Ctrl-Enter key.
+     */
+    public static final String CTRL_ENTER_COMMAND = "Ctrl-Enter";
+
     /**
      * Indicates whether the message automatic pop-up is enabled.
      */
@@ -91,7 +93,7 @@ public class ConfigurationUtils {
     private static String sendMessageCommand;
 
     /**
-     * The Web Component access page
+     * The Web View access page
      */
     private static String mWebPage;
 
@@ -494,8 +496,8 @@ public class ConfigurationUtils {
      */
     private static boolean alerterEnabled;
 
-    private static RdbStore mRdbStore;
-    private static final ValuesBucket valuesBucket = new ValuesBucket();
+    private static SQLiteDatabase mDB;
+    private static final ContentValues contentValues = new ContentValues();
 
     /**
      * Loads all user interface configurations.
@@ -509,7 +511,7 @@ public class ConfigurationUtils {
         }
 
         mConfigService.addPropertyChangeListener(new ConfigurationChangeListener());
-        mRdbStore = DatabaseBackend.getRdbStore();
+        mDB = DatabaseBackend.getWritableDB();
 
         // Init the aTalk app Theme before any activity use
         initAppTheme();
@@ -522,8 +524,8 @@ public class ConfigurationUtils {
         // Load the "webPage" property.
         mWebPage = mConfigService.getString(pWebPage);
         if (StringUtils.isEmpty(mWebPage)
-                || mWebPage.equals(aTalkApp.getResString(ResourceTable.String_settings_webView_summary_old))) {
-            mWebPage = aTalkApp.getResString(ResourceTable.String_settings_webView_summary);
+                || mWebPage.equals(aTalkApp.getResString(R.string.settings_webView_summary_old))) {
+            mWebPage = aTalkApp.getResString(R.string.settings_webView_summary);
         }
 
         // Load the "auPopupNewMessage" property.
@@ -627,7 +629,7 @@ public class ConfigurationUtils {
         // .PNAME_IS_RECENT_MESSAGES_DISABLED, !isRecentMessagesShown);
 
         // Load the "acceptFileSize" property.
-        String fileSize = mConfigService.getString(pAcceptFileSize, aTalkApp.getResString(ResourceTable.String_auto_accept_fileSize));
+        String fileSize = mConfigService.getString(pAcceptFileSize, aTalkApp.getResString(R.string.auto_accept_filesize));
         acceptFileSize = Integer.parseInt(fileSize);
 
         // Load the "chatHistorySize" property.
@@ -1384,6 +1386,15 @@ public class ConfigurationUtils {
     }
 
     /**
+     * Returns the default chat font color.
+     *
+     * @return the default chat font color
+     */
+    public static Color getChatDefaultFontColor() {
+        return defaultFontColor == -1 ? null : new Color(defaultFontColor);
+    }
+
+    /**
      * Returns the default chat font bold.
      *
      * @return the default chat font bold
@@ -1497,9 +1508,9 @@ public class ConfigurationUtils {
      * @return the number of messages from chat history that would be shown in the chat window.
      */
     public static String getWebPage() {
-        WebViewSlice.initWebView();
+        WebViewFragment.initWebView();
         return StringUtils.isBlank(mWebPage)
-                ? aTalkApp.getResString(ResourceTable.String_settings_webView_summary) : mWebPage;
+                ? aTalkApp.getResString(R.string.settings_webView_summary) : mWebPage;
     }
 
     /**
@@ -2043,12 +2054,22 @@ public class ConfigurationUtils {
     }
 
     /**
+     * Sets the default font color.
+     *
+     * @param fontColor the default font color
+     */
+    public static void setChatDefaultFontColor(Color fontColor) {
+        defaultFontColor = fontColor.getRGB();
+        mConfigService.setProperty("gui.chat.DEFAULT_FONT_COLOR", defaultFontColor);
+    }
+
+    /**
      * Initialize aTalk app Theme;default to Theme.DARK if not defined
      */
     public static void initAppTheme() {
         Theme theme;
-        int themeValue = mConfigService.getInt(SettingsSlice.P_KEY_THEME, Theme.DARK.ordinal());
-        if (themeValue == Theme.DARK.ordinal()) {
+        int themeValue = mConfigService.getInt(SettingsFragment.P_KEY_THEME, Theme.DARK.ordinal());
+        if (themeValue == Theme.DARK.ordinal() || themeValue == android.R.style.Theme) {
             theme = Theme.DARK;
         }
         else {
@@ -2059,25 +2080,28 @@ public class ConfigurationUtils {
 
     /**
      * Updates the value of a contact option property through the <code>ConfigurationService</code>.
-     * The property-value pair is stored a ZSONObject element in contact options
+     * The property-value pair is stored a JSONObject element in contact options
      *
      * @param contactJid the identifier/BareJid of the contact table to update
      * @param property the property name in the contact options
      * @param value the value of the contact options property if null, property will be removed
      */
     public static void updateContactProperty(Jid contactJid, String property, String value) {
-        ZSONObject options = getContactOptions(contactJid);
-        if (value == null)
-            options.remove(property);
-        else
-            options.put(property, value);
+        JSONObject options = getContactOptions(contactJid);
+        try {
+            if (value == null)
+                options.remove(property);
+            else
+                options.put(property, value);
+        } catch (JSONException e) {
+            Timber.w("Contact property update failed: %s: %s", contactJid, property);
+        }
 
-        valuesBucket.clear();
-        valuesBucket.putString(Contact.OPTIONS, options.toString());
+        String[] args = {contactJid.toString()};
+        contentValues.clear();
+        contentValues.put(Contact.OPTIONS, options.toString());
 
-        RdbPredicates rdbPredicates = new RdbPredicates(Contact.TABLE_NAME)
-                .equalTo(Contact.CONTACT_JID, contactJid.toString());
-        mRdbStore.update(valuesBucket, rdbPredicates);
+        mDB.update(Contact.TABLE_NAME, contentValues, Contact.CONTACT_JID + "=?", args);
     }
 
     /**
@@ -2089,8 +2113,13 @@ public class ConfigurationUtils {
      * @return the value of the contact options property, saved via the <code>ConfigurationService</code>.
      */
     public static String getContactProperty(Jid contactJid, String property) {
-        ZSONObject options = getContactOptions(contactJid);
-        return options.getString(property);
+        JSONObject options = getContactOptions(contactJid);
+        try {
+            return options.getString(property);
+        } catch (JSONException e) {
+            // Timber.w("ChatRoom property not found for: " + chatRoomId + ": " + property);
+        }
+        return null;
     }
 
     /**
@@ -2100,24 +2129,27 @@ public class ConfigurationUtils {
      *
      * @return the contact options saved in <code>ConfigurationService</code>.
      */
-    private static ZSONObject getContactOptions(Jid contactJid) {
+    private static JSONObject getContactOptions(Jid contactJid) {
         // mDB is null when access during restoring process
-        if (mRdbStore == null)
-            mRdbStore = DatabaseBackend.getRdbStore();
+        if (mDB == null)
+            mDB = DatabaseBackend.getWritableDB();
 
         String[] columns = {Contact.OPTIONS};
-        RdbPredicates rdbPredicates = new RdbPredicates(Contact.TABLE_NAME)
-                .equalTo(Contact.CONTACT_JID, contactJid.asBareJid().toString());
-        ResultSet resultSet = mRdbStore.query(rdbPredicates, columns);
+        String[] args = {contactJid.asBareJid().toString()};
 
-        ZSONObject options = new ZSONObject();
-        while (resultSet.goToNextRow()) {
-            String value = resultSet.getString(0);
-            if (!StringUtils.isEmpty(value)) {
-                options = ZSONObject.stringToZSON(value);
+        Cursor cursor = mDB.query(Contact.TABLE_NAME, columns, Contact.CONTACT_JID + "=?", args,
+                null, null, null);
+
+        JSONObject options = new JSONObject();
+        while (cursor.moveToNext()) {
+            String value = cursor.getString(0);
+            try {
+                options = new JSONObject(value == null ? "" : value);
+            } catch (JSONException e) {
+                options = new JSONObject();
             }
         }
-        resultSet.close();
+        cursor.close();
         return options;
     }
 
@@ -2129,43 +2161,40 @@ public class ConfigurationUtils {
      * @param newChatRoomId the new identifier of the chat room  = newChatRoomName
      */
     public static void saveChatRoom(ProtocolProviderService protocolProvider, String oldChatRoomId, String newChatRoomId) {
-        String accountUid = protocolProvider.getAccountID().getAccountUid();
-
         String[] columns = {ChatSession.SESSION_UUID};
-        RdbPredicates rdbPredicates = new RdbPredicates(ChatSession.TABLE_NAME)
-                .equalTo(ChatSession.ACCOUNT_UID, accountUid)
-                .and().equalTo(ChatSession.ENTITY_JID, oldChatRoomId);
-        ResultSet resultSet = mRdbStore.query(rdbPredicates, columns);
+        String accountUid = protocolProvider.getAccountID().getAccountUid();
+        String[] args = {accountUid, oldChatRoomId};
 
-        valuesBucket.clear();
-        if (resultSet.getRowCount() > 0) {
+        Cursor cursor = mDB.query(ChatSession.TABLE_NAME, columns, ChatSession.ACCOUNT_UID
+                + "=? AND " + ChatSession.ENTITY_JID + "=?", args, null, null, null);
+
+        contentValues.clear();
+        if (cursor.getCount() > 0) {
             if (!oldChatRoomId.equals(newChatRoomId)) {
-                resultSet.goToNextRow();
-                valuesBucket.putString(ChatSession.ENTITY_JID, newChatRoomId);
-
-                rdbPredicates = new RdbPredicates(ChatSession.TABLE_NAME)
-                        .equalTo(ChatSession.SESSION_UUID, resultSet.getString(0));
-                mRdbStore.update(valuesBucket, rdbPredicates);
+                cursor.moveToNext();
+                args = new String[]{cursor.getString(0)};
+                contentValues.put(ChatSession.ENTITY_JID, newChatRoomId);
+                mDB.update(ChatSession.TABLE_NAME, contentValues, ChatSession.SESSION_UUID + "=?", args);
             }
         }
         else {
             String timeStamp = String.valueOf(System.currentTimeMillis());
             String sessionUuid = timeStamp + Math.abs(timeStamp.hashCode());
             String accountUuid = protocolProvider.getAccountID().getAccountUuid();
-            String attributes = new ZSONObject().toString();
+            String attributes = new JSONObject().toString();
 
-            valuesBucket.putString(ChatSession.SESSION_UUID, sessionUuid);
-            valuesBucket.putString(ChatSession.ACCOUNT_UUID, accountUuid);
-            valuesBucket.putString(ChatSession.ACCOUNT_UID, accountUid);
-            valuesBucket.putString(ChatSession.ENTITY_JID, newChatRoomId);
-            valuesBucket.putString(ChatSession.CREATED, timeStamp);
-            valuesBucket.putInteger(ChatSession.STATUS, ChatSlice.MSGTYPE_OMEMO);
-            valuesBucket.putInteger(ChatSession.MODE, ChatSession.MODE_MULTI);
-            valuesBucket.putString(ChatSession.ATTRIBUTES, attributes);
+            contentValues.put(ChatSession.SESSION_UUID, sessionUuid);
+            contentValues.put(ChatSession.ACCOUNT_UUID, accountUuid);
+            contentValues.put(ChatSession.ACCOUNT_UID, accountUid);
+            contentValues.put(ChatSession.ENTITY_JID, newChatRoomId);
+            contentValues.put(ChatSession.CREATED, timeStamp);
+            contentValues.put(ChatSession.STATUS, ChatFragment.MSGTYPE_OMEMO);
+            contentValues.put(ChatSession.MODE, ChatSession.MODE_MULTI);
+            contentValues.put(ChatSession.ATTRIBUTES, attributes);
 
-            mRdbStore.insert(ChatSession.TABLE_NAME, valuesBucket);
+            mDB.insert(ChatSession.TABLE_NAME, null, contentValues);
         }
-        resultSet.close();
+        cursor.close();
     }
 
     /**
@@ -2176,11 +2205,10 @@ public class ConfigurationUtils {
      */
     public static void removeChatRoom(ProtocolProviderService protocolProvider, String chatRoomId) {
         String accountUid = protocolProvider.getAccountID().getAccountUid();
+        String[] args = {accountUid, chatRoomId};
 
-        RdbPredicates rdbPredicates = new RdbPredicates(ChatSession.TABLE_NAME)
-                .equalTo(ChatSession.ACCOUNT_UID, accountUid)
-                .and().equalTo(ChatSession.ENTITY_JID, chatRoomId);
-        mRdbStore.delete(rdbPredicates);
+        mDB.delete(ChatSession.TABLE_NAME, ChatSession.ACCOUNT_UID + "=? AND "
+                + ChatSession.ENTITY_JID + "=?", args);
     }
 
     /**
@@ -2217,20 +2245,23 @@ public class ConfigurationUtils {
      */
     public static void updateChatRoomProperty(ProtocolProviderService protocolProvider,
             String chatRoomId, String property, String value) {
-        ZSONObject attributes = getChatRoomAttributes(protocolProvider, chatRoomId);
-        if (value == null)
-            attributes.remove(property);
-        else
-            attributes.put(property, value);
+        JSONObject attributes = getChatRoomAttributes(protocolProvider, chatRoomId);
+        try {
+            if (value == null)
+                attributes.remove(property);
+            else
+                attributes.put(property, value);
+        } catch (JSONException e) {
+            Timber.w("ChatRoom property update failed: %s: %s", chatRoomId, property);
+        }
 
         String accountUid = protocolProvider.getAccountID().getAccountUid();
-        valuesBucket.clear();
-        valuesBucket.putString(ChatSession.ATTRIBUTES, attributes.toString());
+        String[] args = {accountUid, chatRoomId};
+        contentValues.clear();
+        contentValues.put(ChatSession.ATTRIBUTES, attributes.toString());
 
-        RdbPredicates rdbPredicates = new RdbPredicates(ChatSession.TABLE_NAME)
-                .equalTo(ChatSession.ACCOUNT_UID, accountUid)
-                .and().equalTo(ChatSession.ENTITY_JID, chatRoomId);
-        mRdbStore.update(valuesBucket, rdbPredicates);
+        mDB.update(ChatSession.TABLE_NAME, contentValues, ChatSession.ACCOUNT_UID
+                + "=? AND " + ChatSession.ENTITY_JID + "=?", args);
     }
 
     /**
@@ -2242,9 +2273,15 @@ public class ConfigurationUtils {
      *
      * @return the value of the property, saved through the <code>ConfigurationService</code>.
      */
-    public static String getChatRoomProperty(ProtocolProviderService protocolProvider, String chatRoomId, String property) {
-        ZSONObject attributes = getChatRoomAttributes(protocolProvider, chatRoomId);
-        return attributes.getString(property);
+    public static String getChatRoomProperty(ProtocolProviderService protocolProvider,
+            String chatRoomId, String property) {
+        JSONObject attributes = getChatRoomAttributes(protocolProvider, chatRoomId);
+        try {
+            return attributes.getString(property);
+        } catch (JSONException e) {
+            // Timber.w("ChatRoom property not found for: " + chatRoomId + ": " + property);
+        }
+        return null;
     }
 
     /**
@@ -2256,25 +2293,28 @@ public class ConfigurationUtils {
      *
      * @return the chat room prefix saved in <code>ConfigurationService</code>.
      */
-    private static ZSONObject getChatRoomAttributes(ProtocolProviderService protocolProvider, String chatRoomId) {
+    private static JSONObject getChatRoomAttributes(ProtocolProviderService protocolProvider, String chatRoomId) {
         //mDB is null when access during restoring process
-        if (mRdbStore == null)
-            mRdbStore = DatabaseBackend.getRdbStore();
+        if (mDB == null)
+            mDB = DatabaseBackend.getWritableDB();
 
         String[] columns = {ChatSession.ATTRIBUTES};
         String accountUid = protocolProvider.getAccountID().getAccountUid();
+        String[] args = {accountUid, chatRoomId};
 
-        RdbPredicates rdbPredicates = new RdbPredicates(ChatSession.TABLE_NAME)
-                .equalTo(ChatSession.ACCOUNT_UID, accountUid)
-                .and().equalTo(ChatSession.ENTITY_JID, chatRoomId);
-        ResultSet resultSet = mRdbStore.query(rdbPredicates, columns);
+        Cursor cursor = mDB.query(ChatSession.TABLE_NAME, columns, ChatSession.ACCOUNT_UID
+                + "=? AND " + ChatSession.ENTITY_JID + "=?", args, null, null, null);
 
-        ZSONObject attributes = new ZSONObject();
-        while (resultSet.goToNextRow()) {
-            String value = resultSet.getString(0);
-            attributes = ZSONObject.stringToZSON(value);
+        JSONObject attributes = new JSONObject();
+        while (cursor.moveToNext()) {
+            String value = cursor.getString(0);
+            try {
+                attributes = new JSONObject(value == null ? "" : value);
+            } catch (JSONException e) {
+                attributes = new JSONObject();
+            }
         }
-        resultSet.close();
+        cursor.close();
         return attributes;
     }
 

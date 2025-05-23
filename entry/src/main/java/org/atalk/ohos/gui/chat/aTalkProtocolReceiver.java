@@ -1,23 +1,25 @@
 package org.atalk.ohos.gui.chat;
 
-import ohos.aafwk.content.Intent;
-
-import org.atalk.ohos.BaseAbility;
+import android.content.Intent;
+import android.os.Bundle;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+
+import org.atalk.ohos.BaseActivity;
+
 import timber.log.Timber;
 
 /**
  * @author Pawel Domas
  * @author Eng Chong Meng
  */
-public class aTalkProtocolReceiver extends BaseAbility
-{
+public class aTalkProtocolReceiver extends BaseActivity {
     @Override
-    protected void onStart(Intent intent)
-    {
-        super.onStart(intent);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        Intent intent = getIntent();
         Timber.i("aTalk protocol intent received %s", intent);
 
         String urlStr = intent.getDataString();
@@ -32,6 +34,6 @@ public class aTalkProtocolReceiver extends BaseAbility
         else {
             Timber.w("No URL supplied in aTalk link");
         }
-        terminateAbility();
+        finish();
     }
 }

@@ -1,43 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<PreferenceScreen xmlns:ohos="http://schemas.huawei.com/res/ohos">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
-        ohos:key="pref.cat.jbr.ice.general"
-        ohos:title="$string:general">
+        android:key="pref.cat.jbr.ice.general"
+        android:title="@string/general">
 
         <CheckBoxPreference
-            ohos:key="pref_key_ice_enabled"
-            ohos:title="$string:jbr_use_ice" />
+            android:key="pref_key_ice_enabled"
+            android:title="@string/jbr_use_ice" />
 
         <CheckBoxPreference
-            ohos:key="pref_key_upnp_enabled"
-            ohos:title="$string:jbr_use_upnp" />
+            android:key="pref_key_upnp_enabled"
+            android:title="@string/jbr_use_upnp" />
 
         <CheckBoxPreference
-            ohos:key="pref_key_auto_discover_stun"
-            ohos:title="$string:jbr_auto_stun_discovery" />
+            android:key="pref_key_auto_discover_stun"
+            android:title="@string/jbr_auto_stun_discovery" />
 
         <Preference
-            ohos:key="pref_key_stun_turn_servers"
-            ohos:summary="$string:jbr_stun_list_summary"
-            ohos:title="$string:jbr_stun_list" />
+            android:key="pref_key_stun_turn_servers"
+            android:summary="@string/jbr_stun_list_summary"
+            android:title="@string/jbr_stun_list" />
     </PreferenceCategory>
 
     <PreferenceCategory
-        ohos:key="pref.cat.jbr.jinglenodes"
-        ohos:title="$string:jbr_jingle_nodes">
+        android:key="pref.cat.jbr.jinglenodes"
+        android:title="@string/jbr_jingle_nodes">
         <CheckBoxPreference
-            ohos:key="pref_key_use_jingle_nodes"
-            ohos:title="$string:jbr_jingle_use" />
+            android:key="pref_key_use_jingle_nodes"
+            android:title="@string/jbr_jingle_use" />
 
         <CheckBoxPreference
-            ohos:key="pref_key_auto_relay_discovery"
-            ohos:title="$string:jbr_jingle_auto" />
+            android:key="pref_key_auto_relay_discovery"
+            android:title="@string/jbr_jingle_auto" />
 
         <Preference
-            ohos:key="pref_key_jingle_node_list"
-            ohos:summary="$string:jbr_jingle_list_summary"
-            ohos:title="$string:jbr_jingle_list" />
+            android:key="pref_key_jingle_node_list"
+            android:summary="@string/jbr_jingle_list_summary"
+            android:title="@string/jbr_jingle_list" />
     </PreferenceCategory>
 </PreferenceScreen>

@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<menu xmlns:app="http://schemas.huawei.com/apk/res-auto"
-    xmlns:ohos="http://schemas.huawei.com/res/ohos">
-
-    <item ohos:id="$+id:addItem"
-        ohos:title="$string:service_gui_SERVERS_LIST_ADD_SERVER"
-        app:showAsAction="always" />
-</menu>

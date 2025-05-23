@@ -1,6 +1,6 @@
 /*
- * aTalk, ohos VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * aTalk, android VoIP and Instant Messaging client
+ * Copyright 2014 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,11 @@
  * limitations under the License.
  */
 package net.java.sip.communicator.impl.msghistory;
+
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.text.TextUtils;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -35,11 +40,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-
-import ohos.data.rdb.RdbPredicates;
-import ohos.data.rdb.RdbStore;
-import ohos.data.rdb.ValuesBucket;
-import ohos.data.resultset.ResultSet;
 
 import net.java.sip.communicator.impl.protocol.jabber.ChatRoomJabberImpl;
 import net.java.sip.communicator.impl.protocol.jabber.ChatRoomMemberJabberImpl;
@@ -92,21 +92,19 @@ import net.java.sip.communicator.util.UtilActivator;
 import net.java.sip.communicator.util.account.AccountUtils;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.util.TextUtils;
 import org.atalk.impl.timberlog.TimberLog;
-import org.atalk.ohos.ResourceTable;
+import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
-import org.atalk.ohos.gui.chat.ChatSlice;
+import org.atalk.ohos.gui.chat.ChatFragment;
 import org.atalk.ohos.gui.chat.ChatMessage;
 import org.atalk.ohos.gui.chat.ChatMessageImpl;
 import org.atalk.ohos.gui.chat.ChatPanel;
 import org.atalk.ohos.gui.chat.ChatSession;
-import org.atalk.ohos.gui.chat.chatsession.ChatSessionSlice;
+import org.atalk.ohos.gui.chat.chatsession.ChatSessionFragment;
 import org.atalk.ohos.gui.chat.chatsession.ChatSessionRecord;
 import org.atalk.persistance.DatabaseBackend;
 import org.atalk.service.configuration.ConfigurationService;
 import org.jivesoftware.smack.SmackException;
-import org.jivesoftware.smack.packet.ExtensionElement;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Stanza;
 import org.jivesoftware.smackx.delay.packet.DelayInformation;
@@ -120,7 +118,6 @@ import org.jivesoftware.smackx.omemo.exceptions.NoRawSessionException;
 import org.jivesoftware.smackx.omemo.util.OmemoConstants;
 import org.jivesoftware.smackx.receipts.ReceiptReceivedListener;
 import org.jivesoftware.smackx.sid.element.OriginIdElement;
-import org.jivesoftware.smackx.sid.element.StanzaIdElement;
 import org.jxmpp.jid.EntityBareJid;
 import org.jxmpp.jid.EntityFullJid;
 import org.jxmpp.jid.Jid;
@@ -153,6 +150,11 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
         AdHocChatRoomMessageListener, ServiceListener, LocalUserChatRoomPresenceListener,
         LocalUserAdHocChatRoomPresenceListener, ReceiptReceivedListener {
     /**
+     * Sort database message records by TimeStamp in ASC or DESC
+     */
+    private static final String ORDER_ASC = ChatMessage.TIME_STAMP + " ASC";
+    private static final String ORDER_DESC = ChatMessage.TIME_STAMP + " DESC";
+    /**
      * Indicates if history logging is enabled.
      */
     private static boolean isHistoryLoggingEnabled = true;
@@ -180,8 +182,8 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
      */
     private ServiceRegistration<?> messageSourceServiceReg = null;
 
-    private RdbStore mRdbStore;
-    private final ValuesBucket values = new ValuesBucket();
+    private SQLiteDatabase mDB;
+    private final ContentValues contentValues = new ContentValues();
 
     /**
      * Starts the service. Check the current registered protocol providers which supports
@@ -191,7 +193,7 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
      */
     public void start(BundleContext bc) {
         this.bundleContext = bc;
-        mRdbStore = DatabaseBackend.getRdbStore();
+        mDB = DatabaseBackend.getWritableDB();
 
         ServiceReference<?> refConfig = bundleContext.getServiceReference(ConfigurationService.class.getName());
         configService = (ConfigurationService) bundleContext.getService(refConfig);
@@ -414,17 +416,18 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
      */
     public Collection<EventObject> findByStartDate(MetaContact metaContact, Date startDate) {
         HashSet<EventObject> result = new HashSet<>();
+        String startTimeStamp = String.valueOf(startDate.getTime());
+
         Contact contact = metaContact.getDefaultContact();
         String sessionUuid = getSessionUuidByJid(contact);
+        Cursor cursor;
+        String[] args = {sessionUuid, startTimeStamp};
+        cursor = mDB.query(ChatMessage.TABLE_NAME, null,
+                ChatMessage.SESSION_UUID + "=? AND " + ChatMessage.TIME_STAMP + ">=?",
+                args, null, null, ORDER_ASC);
 
-        RdbPredicates rdbPredicates = new RdbPredicates(ChatMessage.TABLE_NAME)
-                .equalTo(ChatMessage.SESSION_UUID, sessionUuid)
-                .and().greaterThanOrEqualTo(ChatMessage.TIME_STAMP, startDate.getTime())
-                .orderByAsc(ChatMessage.TIME_STAMP);
-        ResultSet resultSet = mRdbStore.query(rdbPredicates, null);
-
-        while (resultSet.goToNextRow()) {
-            result.add(convertHistoryRecordToMessageEvent(resultSet, contact));
+        while (cursor.moveToNext()) {
+            result.add(convertHistoryRecordToMessageEvent(cursor, contact));
         }
         return result;
     }
@@ -440,18 +443,18 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
      */
     public Collection<EventObject> findByEndDate(MetaContact metaContact, Date endDate) {
         HashSet<EventObject> result = new HashSet<>();
+        String endTimeStamp = String.valueOf(endDate.getTime());
 
         Contact contact = metaContact.getDefaultContact();
         String sessionUuid = getSessionUuidByJid(contact);
+        Cursor cursor;
+        String[] args = {sessionUuid, endTimeStamp};
+        cursor = mDB.query(ChatMessage.TABLE_NAME, null,
+                ChatMessage.SESSION_UUID + "=? AND " + ChatMessage.TIME_STAMP + "<?",
+                args, null, null, ORDER_ASC);
 
-        RdbPredicates rdbPredicates = new RdbPredicates(ChatMessage.TABLE_NAME)
-                .equalTo(ChatMessage.SESSION_UUID, sessionUuid)
-                .and().lessThanOrEqualTo(ChatMessage.TIME_STAMP, endDate.getTime())
-                .orderByAsc(ChatMessage.TIME_STAMP);
-        ResultSet resultSet = mRdbStore.query(rdbPredicates, null);
-
-        while (resultSet.goToNextRow()) {
-            result.add(convertHistoryRecordToMessageEvent(resultSet, contact));
+        while (cursor.moveToNext()) {
+            result.add(convertHistoryRecordToMessageEvent(cursor, contact));
         }
         return result;
     }
@@ -468,18 +471,19 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
      */
     public Collection<EventObject> findByPeriod(MetaContact metaContact, Date startDate, Date endDate) {
         HashSet<EventObject> result = new HashSet<>();
+        String startTimeStamp = String.valueOf(startDate.getTime());
+        String endTimeStamp = String.valueOf(endDate.getTime());
+
         Contact contact = metaContact.getDefaultContact();
         String sessionUuid = getSessionUuidByJid(contact);
+        Cursor cursor;
+        String[] args = {sessionUuid, startTimeStamp, endTimeStamp};
+        cursor = mDB.query(ChatMessage.TABLE_NAME, null,
+                ChatMessage.SESSION_UUID + "=? AND " + ChatMessage.TIME_STAMP + ">=? AND "
+                        + ChatMessage.TIME_STAMP + "<?", args, null, null, ORDER_ASC);
 
-        RdbPredicates rdbPredicates = new RdbPredicates(ChatMessage.TABLE_NAME)
-                .equalTo(ChatMessage.SESSION_UUID, sessionUuid)
-                .and().greaterThanOrEqualTo(ChatMessage.TIME_STAMP, startDate.getTime())
-                .and().lessThanOrEqualTo(ChatMessage.TIME_STAMP, endDate.getTime())
-                .orderByAsc(ChatMessage.TIME_STAMP);
-        ResultSet resultSet = mRdbStore.query(rdbPredicates, null);
-
-        while (resultSet.goToNextRow()) {
-            result.add(convertHistoryRecordToMessageEvent(resultSet, contact));
+        while (cursor.moveToNext()) {
+            result.add(convertHistoryRecordToMessageEvent(cursor, contact));
         }
         return result;
     }
@@ -540,15 +544,13 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
         while (contacts.hasNext()) {
             Contact contact = contacts.next();
             String sessionUuid = getSessionUuidByJid(contact);
+            Cursor cursor;
+            String[] args = {sessionUuid};
+            cursor = mDB.query(ChatMessage.TABLE_NAME, null, ChatMessage.SESSION_UUID
+                    + "=?", args, null, null, ORDER_DESC, String.valueOf(count));
 
-            RdbPredicates rdbPredicates = new RdbPredicates(ChatMessage.TABLE_NAME)
-                    .equalTo(ChatMessage.SESSION_UUID, sessionUuid)
-                    .limit(count)
-                    .orderByDesc(ChatMessage.TIME_STAMP);
-            ResultSet resultSet = mRdbStore.query(rdbPredicates, null);
-
-            while (resultSet.goToNextRow()) {
-                result.add(convertHistoryRecordToMessageEvent(resultSet, contact));
+            while (cursor.moveToNext()) {
+                result.add(convertHistoryRecordToMessageEvent(cursor, contact));
             }
         }
         result.sort(new MessageEventComparator<>());
@@ -567,21 +569,20 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
      */
     public Collection<EventObject> findFirstMessagesAfter(MetaContact metaContact, Date startDate, int count) {
         LinkedList<EventObject> result = new LinkedList<>();
+        String startTimeStamp = String.valueOf(startDate.getTime());
 
         Iterator<Contact> contacts = metaContact.getContacts();
         while (contacts.hasNext()) {
             Contact contact = contacts.next();
             String sessionUuid = getSessionUuidByJid(contact);
+            String[] args = {sessionUuid, startTimeStamp};
+            Cursor cursor;
+            cursor = mDB.query(ChatMessage.TABLE_NAME, null,
+                    ChatMessage.SESSION_UUID + "=? AND " + ChatMessage.TIME_STAMP + ">=?",
+                    args, null, null, ORDER_ASC, String.valueOf(count));
 
-            RdbPredicates rdbPredicates = new RdbPredicates(ChatMessage.TABLE_NAME)
-                    .equalTo(ChatMessage.SESSION_UUID, sessionUuid)
-                    .and().greaterThanOrEqualTo(ChatMessage.TIME_STAMP, startDate.getTime())
-                    .limit(count)
-                    .orderByAsc(ChatMessage.TIME_STAMP);
-            ResultSet resultSet = mRdbStore.query(rdbPredicates, null);
-
-            while (resultSet.goToNextRow()) {
-                result.add(convertHistoryRecordToMessageEvent(resultSet, contact));
+            while (cursor.moveToNext()) {
+                result.add(convertHistoryRecordToMessageEvent(cursor, contact));
             }
         }
         result.sort(new MessageEventComparator<>());
@@ -600,6 +601,7 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
      */
     public Collection<EventObject> findLastMessagesBefore(MetaContact metaContact, Date endDate, int count) {
         LinkedList<EventObject> result = new LinkedList<>();
+        String endTimeStamp = String.valueOf(endDate.getTime());
 
         // cmeng - metaUid is also the sessionUid for metaChatSession
         // String sessionUuid = metaContact.getMetaUID();
@@ -607,23 +609,21 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
         while (contacts.hasNext()) {
             Contact contact = contacts.next();
             String sessionUuid = getSessionUuidByJid(contact);
+            Cursor cursor;
+            String[] args = {sessionUuid, endTimeStamp};
+            cursor = mDB.query(ChatMessage.TABLE_NAME, null,
+                    ChatMessage.SESSION_UUID + "=? AND " + ChatMessage.TIME_STAMP + "<?",
+                    args, null, null, ORDER_DESC, String.valueOf(count));
 
-            RdbPredicates rdbPredicates = new RdbPredicates(ChatMessage.TABLE_NAME)
-                    .equalTo(ChatMessage.SESSION_UUID, sessionUuid)
-                    .and().lessThanOrEqualTo(ChatMessage.TIME_STAMP, endDate.getTime())
-                    .limit(count)
-                    .orderByDesc(ChatMessage.TIME_STAMP);
-            ResultSet resultSet = mRdbStore.query(rdbPredicates, null);
-
-            while (resultSet.goToNextRow()) {
-                result.add(convertHistoryRecordToMessageEvent(resultSet, contact));
+            while (cursor.moveToNext()) {
+                result.add(convertHistoryRecordToMessageEvent(cursor, contact));
             }
         }
         result.sort(new MessageEventComparator<>());
         return result;
     }
 
-    // ============== ChatSessionSlice utilities ======================
+    // ============== ChatSessionFragment utilities ======================
 
     /**
      * Returns all the chat session record created by the supplied accountUid before the given date
@@ -635,15 +635,15 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
      */
     public Collection<ChatSessionRecord> findSessionByEndDate(String accountUid, Date endDate) {
         List<ChatSessionRecord> result = new ArrayList<>();
+        String endTimeStamp = String.valueOf(endDate.getTime());
 
-        RdbPredicates rdbPredicates = new RdbPredicates(ChatSession.TABLE_NAME)
-                .equalTo(ChatSession.ACCOUNT_UID, accountUid)
-                .and().lessThanOrEqualTo(ChatSession.CREATED, endDate.getTime())
-                .orderByAsc(ChatSession.MODE + ", " + ChatSession.ENTITY_JID);
-        ResultSet resultSet = mRdbStore.query(rdbPredicates, null);
+        String[] args = {accountUid, endTimeStamp};
+        Cursor cursor = mDB.query(ChatSession.TABLE_NAME, null,
+                ChatSession.ACCOUNT_UID + "=? AND " + ChatSession.CREATED + "<?",
+                args, null, null, ChatSession.MODE + ", " + ChatSession.ENTITY_JID + " ASC");
 
-        while (resultSet.goToNextRow()) {
-            ChatSessionRecord csRecord = convertToSessionRecord(resultSet);
+        while (cursor.moveToNext()) {
+            ChatSessionRecord csRecord = convertToSessionRecord(cursor);
             if (csRecord != null) {
                 result.add(csRecord);
             }
@@ -655,21 +655,21 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
      * convert ChatSession Table rows to ChatSessionRecord for UI display
      * bit-7 of ChatSession.STATUS if set, then remove the record from UI; i.e. just return null
      *
-     * @param resultSet HistoryRecord in resultSet
+     * @param cursor HistoryRecord in cursor
      *
      * @return Object ChatSessionRecord
      */
-    private ChatSessionRecord convertToSessionRecord(ResultSet resultSet) {
+    private ChatSessionRecord convertToSessionRecord(Cursor cursor) {
         Map<String, String> mProperties = new Hashtable<>();
-        for (int i = 0; i < resultSet.getColumnCount(); i++) {
-            String value = (resultSet.getString(i) == null) ? "" : resultSet.getString(i);
-            mProperties.put(resultSet.getColumnNameForIndex(i), value);
+        for (int i = 0; i < cursor.getColumnCount(); i++) {
+            String value = (cursor.getString(i) == null) ? "" : cursor.getString(i);
+            mProperties.put(cursor.getColumnName(i), value);
         }
 
         try {
             EntityBareJid entityJBareid = JidCreate.entityBareFrom(mProperties.get(ChatSession.ENTITY_JID));
             int chatType = Integer.parseInt(Objects.requireNonNull(mProperties.get(ChatSession.STATUS)));
-            if ((chatType & ChatSessionSlice.SESSION_HIDDEN) != 0)
+            if ((chatType & ChatSessionFragment.SESSION_HIDDEN) != 0)
                 return null;
 
             int chatMode = Integer.parseInt(Objects.requireNonNull(mProperties.get(ChatSession.MODE)));
@@ -693,22 +693,18 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
      */
     public String getLastMessageForSessionUuid(String sessionUuid) {
         String msgBody = "";
-        long endDate = new Date().getTime();
+        String endTimeStamp = String.valueOf(new Date().getTime());
 
         if (!TextUtils.isEmpty(sessionUuid)) {
             String[] columns = {ChatMessage.MSG_BODY};
+            String[] args = {sessionUuid, endTimeStamp};
+            Cursor cursor = mDB.query(ChatMessage.TABLE_NAME, columns, ChatMessage.SESSION_UUID + "=? AND "
+                    + ChatMessage.TIME_STAMP + "<?", args, null, null, ORDER_DESC, "1");
 
-            RdbPredicates rdbPredicates = new RdbPredicates(ChatMessage.TABLE_NAME)
-                    .equalTo(ChatMessage.SESSION_UUID, sessionUuid)
-                    .and().lessThanOrEqualTo(ChatMessage.TIME_STAMP, endDate)
-                    .limit(1)
-                    .orderByDesc(ChatMessage.TIME_STAMP);
-            ResultSet resultSet = mRdbStore.query(rdbPredicates, columns);
-
-            while (resultSet.goToNextRow()) {
-                msgBody = resultSet.getString(0);
+            while (cursor.moveToNext()) {
+                msgBody = cursor.getString(0);
             }
-            resultSet.close();
+            cursor.close();
         }
         return msgBody;
     }
@@ -721,20 +717,18 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
      * @return last message Date (TimeStamp) for the specified sessionUuid
      */
     public Date getLastMessageDateForSessionUuid(String sessionUuid) {
-        long endDate = new Date().getTime();
+        String endTimeStamp = String.valueOf(new Date().getTime());
 
         String[] columns = {ChatMessage.TIME_STAMP};
-        RdbPredicates rdbPredicates = new RdbPredicates(ChatMessage.TABLE_NAME)
-                .equalTo(ChatMessage.SESSION_UUID, sessionUuid)
-                .and().lessThanOrEqualTo(ChatMessage.TIME_STAMP, endDate)
-                .orderByDesc(ChatMessage.TIME_STAMP);
-        ResultSet resultSet = mRdbStore.query(rdbPredicates, columns);
+        String[] args = {sessionUuid, endTimeStamp};
+        Cursor cursor = mDB.query(ChatMessage.TABLE_NAME, columns, ChatMessage.SESSION_UUID + "=? AND "
+                + ChatMessage.TIME_STAMP + "<?", args, null, null, ORDER_DESC, "1");
 
         String mamDate = "-1";
-        while (resultSet.goToNextRow()) {
-            mamDate = resultSet.getString(0);
+        while (cursor.moveToNext()) {
+            mamDate = cursor.getString(0);
         }
-        resultSet.close();
+        cursor.close();
         return mamDate.equals("-1") ? null : new Date(Long.parseLong(mamDate));
     }
 
@@ -750,21 +744,18 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
             return 0;
 
         String[] args = {sessionUuid};
-        values.clear();
-        values.putInteger(ChatSession.STATUS, chatType);
-
-        RdbPredicates rdbPredicates = new RdbPredicates(ChatSession.TABLE_NAME)
-                .equalTo(ChatSession.SESSION_UUID, sessionUuid);
+        contentValues.clear();
+        contentValues.put(ChatSession.STATUS, chatType);
 
         // From field crash on java.lang.IllegalArgumentException? HWKSA-M, Android 9
         try {
-            return mRdbStore.update(values, rdbPredicates);
+            return mDB.update(ChatSession.TABLE_NAME, contentValues, ChatSession.SESSION_UUID + "=?", args);
         } catch (IllegalArgumentException e) {
             Timber.w("Exception in setting Session ChatType for: %s; %s", sessionUuid, e.getMessage());
             return -1;
         }
     }
-    // ============== End ChatSessionSlice utilities ======================
+    // ============== End ChatSessionFragment utilities ======================
 
     // ============== Start mam Message utilities ======================
 
@@ -777,24 +768,28 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
      */
     public Date getMamDate(String sessionUuid) {
         String[] columns = {ChatSession.MAM_DATE};
-        RdbPredicates rdbPredicates = new RdbPredicates(ChatMessage.TABLE_NAME)
-                .equalTo(ChatMessage.SESSION_UUID, sessionUuid);
-        ResultSet resultSet = mRdbStore.query(rdbPredicates, columns);
+        String[] args = {sessionUuid};
+        Cursor cursor = mDB.query(ChatSession.TABLE_NAME, columns,
+                ChatSession.SESSION_UUID + "=?", args, null, null, null, null);
 
         Date mamDate = null;
-        while (resultSet.goToNextRow()) {
-            mamDate = new Date(Long.parseLong(resultSet.getString(0)));
+        while (cursor.moveToNext()) {
+            mamDate = new Date(Long.parseLong(cursor.getString(0)));
         }
-        resultSet.close();
+        cursor.close();
         return mamDate;
     }
 
     /**
-     * Update the last mam retrieval message timeStamp for the specified sessionUuid.
+     * Update the last mam retrieval message timeStamp for the specified sessionUuid;
+     * The mamDate is also used to store last Message sent/received, in case the last message is deleted.
+     * only if the specified date is after the current mamDate.
      * Always advance timeStamp by 10ms to avoid last message being included in future mam fetching.
      *
      * @param sessionUuid the chat sessions record id to which to save the timestamp
      * @param date last mam message timestamp
+     *
+     * @return a value of 0 means there is no chatSession record associated with this sessionUuid
      */
     public int setMamDate(String sessionUuid, Date date) {
         Date mamDate = getMamDate(sessionUuid);
@@ -802,12 +797,10 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
             return 0;
         }
 
-	    ValuesBucket values = new ValuesBucket();
-        values.putLong(ChatSession.MAM_DATE, date.getTime() + 10);
-
-        RdbPredicates rdbPredicates = new RdbPredicates(ChatSession.TABLE_NAME)
-                .equalTo(ChatSession.SESSION_UUID, sessionUuid);
-        return mRdbStore.update(values, rdbPredicates);
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ChatSession.MAM_DATE, Long.toString(date.getTime() + 10));
+        String[] args = {sessionUuid};
+        return mDB.update(ChatSession.TABLE_NAME, contentValues, ChatSession.SESSION_UUID + "=?", args);
     }
 
     public void saveMamIfNotExit(OmemoManager omemoManager, ChatPanel chatPanel, List<Forwarded<Message>> forwardedList) {
@@ -832,12 +825,19 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
                 continue;
             }
 
+            // Ignore any OOB or empty body message
+            // if (msg.hasExtension(OutOfBandData.QNAME) || TextUtils.isEmpty(msg.getBody())) {
+            if (TextUtils.isEmpty(msg.getBody())) {
+                Timber.w("Skip empty or OOB forward MAM message: %s", msg.getStanzaId());
+                continue;
+            }
+
             // Some received/DomainBareJid message does not have msgId. So use stanzaId from StanzaIdElement if found.
             String msgId = msg.getStanzaId();
             if (TextUtils.isEmpty(msgId)) {
-                ExtensionElement stanzaIdElement = msg.getExtension(StanzaIdElement.QNAME);
-                if (stanzaIdElement instanceof StanzaIdElement) {
-                    msgId = ((StanzaIdElement) stanzaIdElement).getId();
+                OriginIdElement orgStanzaElement = OriginIdElement.getOriginId(msg);
+                if (orgStanzaElement != null) {
+                    msgId = orgStanzaElement.getId();
                 }
             }
             if (TextUtils.isEmpty(msgId)) {
@@ -847,14 +847,10 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
             timeStamp = forwarded.getDelayInformation().getStamp();
 
             String[] args = {msgId, chatId};
-
-            RdbPredicates rdbPredicates = new RdbPredicates(ChatMessage.TABLE_NAME)
-                    .equalTo(ChatMessage.UUID, msgId)
-                    .and().equalTo(ChatMessage.SESSION_UUID, chatId);
-
-            ResultSet resultSet = mRdbStore.query(rdbPredicates, null);
-            int msgCount = resultSet.getRowCount();
-            resultSet.close();
+            Cursor cursor = mDB.query(ChatMessage.TABLE_NAME, null, ChatMessage.UUID
+                    + "=? AND " + ChatMessage.SESSION_UUID + "=?", args, null, null, null);
+            int msgCount = cursor.getCount();
+            cursor.close();
 
             // Proceed only if mam message is not found in database.
             if (msgCount == 0) {
@@ -919,17 +915,14 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
         }
 
         if (!TextUtils.isEmpty(msgId)) {
-            RdbPredicates rdbPredicates = new RdbPredicates(ChatMessage.TABLE_NAME)
-                    .equalTo(ChatMessage.UUID, msgId)
-                    .and()
-                    .equalTo(ChatMessage.DIRECTION, ChatMessage.DIR_IN);
-//            ResultSet resultSet = mRdbStore.query(rdbPredicates, null);
-//            resultSet.close();
-
-            long msgCount = mRdbStore.count(rdbPredicates);
+            String[] args = {msgId, ChatMessage.DIR_IN};
+            Cursor cursor = mDB.query(ChatMessage.TABLE_NAME, null, ChatMessage.UUID
+                    + "=? AND " + ChatMessage.DIRECTION + "=?", args, null, null, null);
+            int msgCount = cursor.getCount();
             isUnexpected = msgCount != 0;
             if (isUnexpected)
                 Timber.w("Unexpected Delay Message: (%s) %s", msgCount, msgId);
+            cursor.close();
         }
         return isUnexpected;
     }
@@ -950,32 +943,42 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
         String sessionUuid;
         String accountUuid;
         String entityJid;
+        String whereCondition = "";
+        String[] args = {};
+        Cursor cursorMsg;
         Object descriptor;
         LinkedList<EventObject> result = new LinkedList<>();
 
         // Timber.i("Find recent message for: " + providerToFilter + " -> " + contactToFilter);
-
-        RdbPredicates rdbPredicates = new RdbPredicates(ChatSession.TABLE_NAME);
+        List<String> argList = new ArrayList<>();
         if (StringUtils.isNotEmpty(providerToFilter)) {
-            rdbPredicates.equalTo(ChatSession.ACCOUNT_UID, providerToFilter);
+            whereCondition = ChatSession.ACCOUNT_UID + "=?";
+            argList.add(providerToFilter);
         }
         if (StringUtils.isNotEmpty(contactToFilter)) {
-            rdbPredicates.equalTo(ChatSession.ENTITY_JID, contactToFilter);
+            if (StringUtils.isNotEmpty(whereCondition))
+                whereCondition += " AND ";
+            whereCondition += ChatSession.ENTITY_JID + "=?";
+            argList.add(contactToFilter);
         }
-        ResultSet resultSet = mRdbStore.query(rdbPredicates, null);
+        if (argList.size() > 0)
+            args = argList.toArray(new String[0]);
+
+        Cursor cursor = mDB.query(ChatSession.TABLE_NAME, null, whereCondition, args, null,
+                null, null);
 
         // Iterate over all the found sessionsUuid for the given accountUuid
-        while (resultSet.goToNextRow()) {
+        while (cursor.moveToNext()) {
             if (result.size() >= count)
                 break;
 
-            sessionUuid = resultSet.getString(resultSet.getColumnIndexForName(ChatSession.SESSION_UUID));
+            sessionUuid = cursor.getString(cursor.getColumnIndexOrThrow(ChatSession.SESSION_UUID));
             // skip for null sessionUuid i.e. message from non-persistent contact e.g server announcement.
             if (StringUtils.isEmpty(sessionUuid))
                 continue;
 
-            accountUuid = resultSet.getString(resultSet.getColumnIndexForName(ChatSession.ACCOUNT_UUID));
-            entityJid = resultSet.getString(resultSet.getColumnIndexForName(ChatSession.ENTITY_JID));
+            accountUuid = cursor.getString(cursor.getColumnIndexOrThrow(ChatSession.ACCOUNT_UUID));
+            entityJid = cursor.getString(cursor.getColumnIndexOrThrow(ChatSession.ENTITY_JID));
 
             // find contact or chatRoom for given contactJid; skip if not found contacts,
             // disabled accounts and hidden one
@@ -983,29 +986,34 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
             if (descriptor == null)
                 continue;
 
-            rdbPredicates = new RdbPredicates(ChatMessage.TABLE_NAME)
-                    .equalTo(ChatMessage.SESSION_UUID, sessionUuid)
-                    .limit(count)
-                    .orderByDesc(ChatMessage.TIME_STAMP);
-            if (isSMSEnabled) { // cmeng: need to verify and(or)
-                rdbPredicates.and().equalTo(ChatMessage.MSG_TYPE, ChatMessage.MESSAGE_SMS_IN)
-                        .or().equalTo(ChatMessage.MSG_TYPE, ChatMessage.MESSAGE_SMS_OUT);
+            whereCondition = ChatMessage.SESSION_UUID + "=?";
+            argList.clear();
+            argList.add(sessionUuid);
+            if (isSMSEnabled) {
+                whereCondition += " AND (" + ChatMessage.MSG_TYPE + "=? OR " + ChatMessage.MSG_TYPE + "=?)";
+                argList.add(String.valueOf(ChatMessage.MESSAGE_SMS_IN));
+                argList.add(String.valueOf(ChatMessage.MESSAGE_SMS_OUT));
             }
-            resultSet = mRdbStore.query(rdbPredicates, null);
+            args = argList.toArray(new String[0]);
 
-            while (resultSet.goToNextRow()) {
+            cursorMsg = mDB.query(ChatMessage.TABLE_NAME, null, whereCondition, args,
+                    null, null, ORDER_DESC, String.valueOf(count));
+
+
+            while (cursorMsg.moveToNext()) {
                 if (descriptor instanceof Contact) {
-                    EventObject o = convertHistoryRecordToMessageEvent(resultSet, (Contact) descriptor);
+                    EventObject o = convertHistoryRecordToMessageEvent(cursorMsg, (Contact) descriptor);
                     result.add(o);
                 }
                 if (descriptor instanceof ChatRoom) {
-                    EventObject o = convertHistoryRecordToMessageEvent(resultSet, (ChatRoom) descriptor);
+                    EventObject o = convertHistoryRecordToMessageEvent(cursorMsg, (ChatRoom) descriptor);
                     result.add(o);
                 }
             }
-            resultSet.close();
+            cursorMsg.close();
         }
-        resultSet.close();
+
+        cursor.close();
         result.sort(new MessageEventComparator<>());
         return result;
     }
@@ -1022,16 +1030,16 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
         String sessionUuid;
         List<String> sessionUuids = new ArrayList<>();
         String[] columns = {ChatSession.SESSION_UUID};
-        RdbPredicates rdbPredicates = new RdbPredicates(ChatSession.TABLE_NAME)
-                .equalTo(ChatSession.ACCOUNT_UID, editedAccUID);
-        ResultSet resultSet = mRdbStore.query(rdbPredicates, columns);
+        String[] args = {editedAccUID};
 
-        while (resultSet.goToNextRow()) {
-            sessionUuid = resultSet.getString(0);
+        Cursor cursor = mDB.query(ChatSession.TABLE_NAME, columns, ChatSession.ACCOUNT_UID + "=?", args,
+                null, null, null);
+        while (cursor.moveToNext()) {
+            sessionUuid = cursor.getString(0);
             if (!TextUtils.isEmpty(sessionUuid))
                 sessionUuids.add(sessionUuid);
         }
-        resultSet.close();
+        cursor.close();
 
         if (!sessionUuids.isEmpty()) {
             for (String sessionId : sessionUuids) {
@@ -1051,11 +1059,11 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
     public int getMessageCountForSessionUuid(String sessionUuid) {
         int msgCount = 0;
         if (!TextUtils.isEmpty(sessionUuid)) {
-            RdbPredicates rdbPredicates = new RdbPredicates(ChatMessage.TABLE_NAME)
-                    .equalTo(ChatMessage.SESSION_UUID, sessionUuid);
-            ResultSet resultSet = mRdbStore.query(rdbPredicates, null);
-            msgCount = resultSet.getRowCount();
-            resultSet.close();
+            String[] args = {sessionUuid};
+            Cursor cursor = mDB.query(ChatMessage.TABLE_NAME, null, ChatMessage.SESSION_UUID + "=?", args,
+                    null, null, null);
+            msgCount = cursor.getCount();
+            cursor.close();
         }
         return msgCount;
     }
@@ -1195,17 +1203,16 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
         String accountUuid = accountID.getAccountUuid();
         String accountUid = accountID.getAccountUid();
         String[] columns = {ChatSession.SESSION_UUID};
+        String[] args = {accountUuid, entityJid};
 
-        RdbPredicates rdbPredicates = new RdbPredicates(ChatSession.TABLE_NAME)
-                .equalTo(ChatSession.ACCOUNT_UUID, accountUuid)
-                .and().equalTo(ChatSession.ENTITY_JID, entityJid);
-        ResultSet resultSet = mRdbStore.query(rdbPredicates, columns);
+        Cursor cursor = mDB.query(ChatSession.TABLE_NAME, columns, ChatSession.ACCOUNT_UUID
+                + "=? AND " + ChatSession.ENTITY_JID + "=?", args, null, null, null);
 
         String sessionUuid = null;
-        while (resultSet.goToNextRow()) {
-            sessionUuid = resultSet.getString(0);
+        while (cursor.moveToNext()) {
+            sessionUuid = cursor.getString(0);
         }
-        resultSet.close();
+        cursor.close();
         if (StringUtils.isNotEmpty(sessionUuid))
             return sessionUuid;
 
@@ -1214,14 +1221,13 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
         // Use metaContactUid if it is a metaContact chatSession
         if (mode == ChatSession.MODE_SINGLE) {
             columns = new String[]{MetaContactGroup.MC_UID};
-            rdbPredicates = new RdbPredicates(MetaContactGroup.TBL_CHILD_CONTACTS)
-                    .equalTo(MetaContactGroup.ACCOUNT_UUID, accountUuid)
-                    .and().equalTo(MetaContactGroup.CONTACT_JID, entityJid);
-            resultSet = mRdbStore.query(rdbPredicates, columns);
-            while (resultSet.goToNextRow()) {
-                sessionUuid = resultSet.getString(0);
+            cursor = mDB.query(MetaContactGroup.TBL_CHILD_CONTACTS, columns,
+                    MetaContactGroup.ACCOUNT_UUID + "=? AND " + MetaContactGroup.CONTACT_JID + "=?",
+                    args, null, null, null);
+            while (cursor.moveToNext()) {
+                sessionUuid = cursor.getString(0);
             }
-            resultSet.close();
+            cursor.close();
         }
 
         // generate new sessionUuid for non-persistent contact or ChatSession.MODE_MULTI
@@ -1229,16 +1235,16 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
             sessionUuid = timeStamp + Math.abs(entityJid.hashCode());
         }
 
-        values.clear();
-        values.putString(ChatSession.SESSION_UUID, sessionUuid);
-        values.putString(ChatSession.ACCOUNT_UUID, accountUuid);
-        values.putString(ChatSession.ACCOUNT_UID, accountUid);
-        values.putString(ChatSession.ENTITY_JID, entityJid);
-        values.putString(ChatSession.CREATED, timeStamp);
-        values.putInteger(ChatSession.STATUS, ChatSlice.MSGTYPE_OMEMO);
-        values.putInteger(ChatSession.MODE, mode);
+        contentValues.clear();
+        contentValues.put(ChatSession.SESSION_UUID, sessionUuid);
+        contentValues.put(ChatSession.ACCOUNT_UUID, accountUuid);
+        contentValues.put(ChatSession.ACCOUNT_UID, accountUid);
+        contentValues.put(ChatSession.ENTITY_JID, entityJid);
+        contentValues.put(ChatSession.CREATED, timeStamp);
+        contentValues.put(ChatSession.STATUS, ChatFragment.MSGTYPE_OMEMO);
+        contentValues.put(ChatSession.MODE, mode);
 
-        mRdbStore.insert(ChatSession.TABLE_NAME, values);
+        mDB.insert(ChatSession.TABLE_NAME, null, contentValues);
         return sessionUuid;
     }
 
@@ -1250,7 +1256,7 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
      * @return the chatSession chatType
      */
     public int getSessionChatType(ChatSession chatSession) {
-        int chatType = ChatSlice.MSGTYPE_OMEMO;
+        int chatType = ChatFragment.MSGTYPE_OMEMO;
         String entityJid = chatSession.getChatEntity();
         AccountID accountUid = chatSession.getCurrentChatTransport().getProtocolProvider().getAccountID();
 
@@ -1259,25 +1265,24 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
 
         String accountUuid = accountUid.getAccountUuid();
         String[] columns = {ChatSession.STATUS};
+        String[] args = {accountUuid, entityJid};
 
-        RdbPredicates rdbPredicates = new RdbPredicates(ChatSession.TABLE_NAME)
-                .equalTo(ChatSession.ACCOUNT_UUID, accountUuid)
-                .and().equalTo(ChatSession.ENTITY_JID, entityJid);
-        ResultSet resultSet = mRdbStore.query(rdbPredicates, columns);
+        Cursor cursor = mDB.query(ChatSession.TABLE_NAME, columns, ChatSession.ACCOUNT_UUID
+                + "=? AND " + ChatSession.ENTITY_JID + "=?", args, null, null, null);
 
-        while (resultSet.goToNextRow()) {
-            chatType = resultSet.getInt(0);
+        while (cursor.moveToNext()) {
+            chatType = cursor.getInt(0);
         }
-        resultSet.close();
+        cursor.close();
 
-        // clear the session record hidden bit if set; to make visible to ChatSessionSlice UI
-        if ((chatType & ChatSlice.MSGTYPE_MASK) != 0) {
-            chatType &= ChatSlice.MSGTYPE_MASK;
+        // clear the session record hidden bit if set; to make visible to ChatSessionFragment UI
+        if ((chatType & ChatFragment.MSGTYPE_MASK) != 0) {
+            chatType &= ChatFragment.MSGTYPE_MASK;
             setSessionChatType(chatSession, chatType);
         }
 
-        if (ChatSlice.MSGTYPE_UNKNOWN == chatType)
-            chatType = ChatSlice.MSGTYPE_OMEMO;
+        if (ChatFragment.MSGTYPE_UNKNOWN == chatType)
+            chatType = ChatFragment.MSGTYPE_OMEMO;
         return chatType;
     }
 
@@ -1292,21 +1297,20 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
         String entityJid = chatSession.getChatEntity();
         AccountID accountUid = chatSession.getCurrentChatTransport().getProtocolProvider().getAccountID();
 
-        if (StringUtils.isEmpty(entityJid) || entityJid.equals(aTalkApp.getResString(ResourceTable.String_unknown))
+        if (StringUtils.isEmpty(entityJid) || entityJid.equals(aTalkApp.getResString(R.string.unknown))
                 || (accountUid == null))
             return 0;
 
         String accountUuid = accountUid.getAccountUuid();
+        String[] args = {accountUuid, entityJid};
 
-        values.clear();
-        values.putInteger(ChatSession.STATUS, chatType);
+        contentValues.clear();
+        contentValues.put(ChatSession.STATUS, chatType);
 
-        RdbPredicates rdbPredicates = new RdbPredicates(ChatSession.TABLE_NAME)
-                .equalTo(ChatSession.ACCOUNT_UUID, accountUuid)
-                .and().equalTo(ChatSession.ENTITY_JID, entityJid);
         // From field crash on java.lang.IllegalArgumentException? HWKSA-M, Android 9
         try {
-            return mRdbStore.update(values, rdbPredicates);
+            return mDB.update(ChatSession.TABLE_NAME, contentValues, ChatSession.ACCOUNT_UUID
+                    + "=? AND " + ChatSession.ENTITY_JID + "=?", args);
         } catch (IllegalArgumentException e) {
             Timber.w("Exception setSessionChatType for EntityJid: %s and AccountUid: %s; %s",
                     entityJid, accountUid, e.getMessage());
@@ -1316,24 +1320,25 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
 
     /**
      * Use to convert HistoryRecord to MessageDeliveredEvent or MessageReceivedEvent or
-     * FileRecord which are returned in resultSet by the finder Methods
+     * FileRecord which are returned in cursor by the finder Methods
      *
-     * @param resultSet HistoryRecord in resultSet
+     * @param cursor HistoryRecord in cursor
      * @param contact always the metaContact.getDefaultContact().
      *
      * @return Object
      */
-    private EventObject convertHistoryRecordToMessageEvent(ResultSet resultSet, Contact contact) {
+    private EventObject convertHistoryRecordToMessageEvent(Cursor cursor, Contact contact) {
         Map<String, String> mProperties = new Hashtable<>();
 
-        for (int i = 0; i < resultSet.getColumnCount(); i++) {
-            String value = (resultSet.getString(i) == null) ? "" : resultSet.getString(i);
-            mProperties.put(resultSet.getColumnNameForIndex(i), value);
+        for (int i = 0; i < cursor.getColumnCount(); i++) {
+            String value = (cursor.getString(i) == null) ? "" : cursor.getString(i);
+            mProperties.put(cursor.getColumnName(i), value);
         }
 
         // Return FileRecord if it is of file transfer message type, but excluding MESSAGE_HTTP_FILE_LINK
         int msgType = Integer.parseInt(Objects.requireNonNull(mProperties.get(ChatMessage.MSG_TYPE)));
         if ((msgType == ChatMessage.MESSAGE_FILE_TRANSFER_HISTORY)
+                || (msgType == ChatMessage.MESSAGE_HTTP_FILE_DOWNLOAD)
                 || (msgType == ChatMessage.MESSAGE_FILE_TRANSFER_RECEIVE)
                 || (msgType == ChatMessage.MESSAGE_FILE_TRANSFER_SEND)
                 || (msgType == ChatMessage.MESSAGE_STICKER_SEND)) {
@@ -1360,18 +1365,18 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
 
     /**
      * Use to convert HistoryRecord in ChatRoomMessageDeliveredEvent or
-     * ChatRoomMessageReceivedEvent which are returned in resultSet by the finder methods
+     * ChatRoomMessageReceivedEvent which are returned in cursor by the finder methods
      *
-     * @param resultSet HistoryRecord in resultSet
+     * @param cursor HistoryRecord in cursor
      * @param chatRoom the chat room
      *
      * @return EventObject
      */
-    private EventObject convertHistoryRecordToMessageEvent(ResultSet resultSet, ChatRoom chatRoom) {
+    private EventObject convertHistoryRecordToMessageEvent(Cursor cursor, ChatRoom chatRoom) {
         Map<String, String> mProperties = new Hashtable<>();
-        for (int i = 0; i < resultSet.getColumnCount(); i++) {
-            String value = (resultSet.getString(i) == null) ? "" : resultSet.getString(i);
-            mProperties.put(resultSet.getColumnNameForIndex(i), value);
+        for (int i = 0; i < cursor.getColumnCount(); i++) {
+            String value = (cursor.getString(i) == null) ? "" : cursor.getString(i);
+            mProperties.put(cursor.getColumnName(i), value);
         }
 
         // jabberID should contain user bareJid if muc msg in; else contact fullJid if muc msg out
@@ -1424,7 +1429,7 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
     /**
      * Create from the retrieved database mProperties to chatMessages
      *
-     * @param mProperties message properties converted from resultSet
+     * @param mProperties message properties converted from cursor
      *
      * @return MessageImpl
      */
@@ -1452,7 +1457,7 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
     /**
      * Create from the retrieved database mProperties to FileRecord
      *
-     * @param mProperties message properties converted from resultSet
+     * @param mProperties message properties converted from cursor
      * @param entityJid an instance of Contact or ChatRoom of the history message
      *
      * @return FileRecord
@@ -1545,11 +1550,10 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
 
     @Override
     public void onReceiptReceived(Jid fromJid, Jid toJid, String receiptId, Stanza receipt) {
-        values.clear();
-        values.putInteger(ChatMessage.READ, ChatMessage.MESSAGE_DELIVERY_RECEIPT);
-        RdbPredicates rdbPredicates = new RdbPredicates(ChatMessage.TABLE_NAME)
-                .equalTo(ChatMessage.SERVER_MSG_ID, receiptId);
-        mRdbStore.update(values, rdbPredicates);
+        String[] args = {receiptId};
+        contentValues.clear();
+        contentValues.put(ChatMessage.READ, ChatMessage.MESSAGE_DELIVERY_RECEIPT);
+        mDB.update(ChatMessage.TABLE_NAME, contentValues, ChatMessage.SERVER_MSG_ID + "=?", args);
 
         for (MessageReceiptListener l : messageReceiptListeners) {
             l.receiptReceived(fromJid, toJid, receiptId, receipt);
@@ -1723,11 +1727,11 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
         // Strip off the resourcePart
         entityJid = jid.replaceAll("(\\w+)/.*", "$1");
 
-        values.clear();
-        values.putString(ChatMessage.SESSION_UUID, chatId);
-        values.putLong(ChatMessage.TIME_STAMP, msgTimestamp.getTime());
-        values.putString(ChatMessage.ENTITY_JID, entityJid);
-        values.putString(ChatMessage.JID, jid);
+        contentValues.clear();
+        contentValues.put(ChatMessage.SESSION_UUID, chatId);
+        contentValues.put(ChatMessage.TIME_STAMP, msgTimestamp.getTime());
+        contentValues.put(ChatMessage.ENTITY_JID, entityJid);
+        contentValues.put(ChatMessage.JID, jid);
 
         writeMessageToDB(message, direction, msgType);
         setMamDate(chatId, msgTimestamp);
@@ -1753,11 +1757,11 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
         String jid = from.getContactAddress();  // contact entityFullJid
         String entityJid = jid.replaceAll("(\\w+)/.*", "$1");
 
-        values.clear();
-        values.putString(ChatMessage.SESSION_UUID, chatId);
-        values.putLong(ChatMessage.TIME_STAMP, msgTimestamp.getTime());
-        values.putString(ChatMessage.ENTITY_JID, entityJid);
-        values.putString(ChatMessage.JID, jid);
+        contentValues.clear();
+        contentValues.put(ChatMessage.SESSION_UUID, chatId);
+        contentValues.put(ChatMessage.TIME_STAMP, msgTimestamp.getTime());
+        contentValues.put(ChatMessage.ENTITY_JID, entityJid);
+        contentValues.put(ChatMessage.JID, jid);
 
         writeMessageToDB(message, direction, msgType);
         setMamDate(chatId, msgTimestamp);
@@ -1776,12 +1780,12 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
      */
     private void writeMessage(String chatId, String direction, Contact contact, String sender,
             IMessage message, Date msgTimestamp, int msgType) {
-        values.clear();
-        values.putString(ChatMessage.SESSION_UUID, chatId);
-        values.putLong(ChatMessage.TIME_STAMP, msgTimestamp.getTime());
-        values.putString(ChatMessage.ENTITY_JID, contact.getAddress());
+        contentValues.clear();
+        contentValues.put(ChatMessage.SESSION_UUID, chatId);
+        contentValues.put(ChatMessage.TIME_STAMP, msgTimestamp.getTime());
+        contentValues.put(ChatMessage.ENTITY_JID, contact.getAddress());
         // JID is not stored for chatMessage or incoming message
-        values.putString(ChatMessage.JID, sender);
+        contentValues.put(ChatMessage.JID, sender);
 
         writeMessageToDB(message, direction, msgType);
         setMamDate(chatId, msgTimestamp);
@@ -1809,11 +1813,11 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
         String sessionUuid = getSessionUuidByJid(destination);
         int msgType = isSmsSubtype ? ChatMessage.MESSAGE_SMS_OUT : ChatMessage.MESSAGE_OUT;
 
-        values.clear();
-        values.putString(ChatMessage.SESSION_UUID, sessionUuid);
-        values.putLong(ChatMessage.TIME_STAMP, msgTimestamp.getTime());
-        values.putString(ChatMessage.ENTITY_JID, source.getAddress());
-        values.putString(ChatMessage.JID, destination.getAddress());
+        contentValues.clear();
+        contentValues.put(ChatMessage.SESSION_UUID, sessionUuid);
+        contentValues.put(ChatMessage.TIME_STAMP, msgTimestamp.getTime());
+        contentValues.put(ChatMessage.ENTITY_JID, source.getAddress());
+        contentValues.put(ChatMessage.JID, destination.getAddress());
 
         writeMessageToDB(message, direction, msgType);
         setMamDate(sessionUuid, msgTimestamp);
@@ -1827,27 +1831,27 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
      * @param msgType ChatMessage#Type
      */
     private void writeMessageToDB(IMessage message, String direction, int msgType) {
-        values.putString(ChatMessage.UUID, message.getMessageUID());
-        values.putString(ChatMessage.MSG_BODY, message.getContent());
-        values.putInteger(ChatMessage.ENC_TYPE, message.getEncType());
-        values.putInteger(ChatMessage.CARBON, message.isCarbon() ? 1 : 0);
-        values.putString(ChatMessage.DIRECTION, direction);
-        values.putInteger(ChatMessage.MSG_TYPE, msgType);
+        contentValues.put(ChatMessage.UUID, message.getMessageUID());
+        contentValues.put(ChatMessage.MSG_BODY, message.getContent());
+        contentValues.put(ChatMessage.ENC_TYPE, message.getEncType());
+        contentValues.put(ChatMessage.CARBON, message.isCarbon() ? 1 : 0);
+        contentValues.put(ChatMessage.DIRECTION, direction);
+        contentValues.put(ChatMessage.MSG_TYPE, msgType);
 
         if (ChatMessage.DIR_OUT.equals(direction)) {
-            values.putInteger(ChatMessage.STATUS, ChatMessage.MESSAGE_OUT);
-            values.putString(ChatMessage.SERVER_MSG_ID, message.getServerMsgId());
-            values.putString(ChatMessage.REMOTE_MSG_ID, message.getRemoteMsgId());
-            values.putInteger(ChatMessage.READ, ChatMessage.MESSAGE_DELIVERY_CLIENT_SENT);
+            contentValues.put(ChatMessage.STATUS, ChatMessage.MESSAGE_OUT);
+            contentValues.put(ChatMessage.SERVER_MSG_ID, message.getServerMsgId());
+            contentValues.put(ChatMessage.REMOTE_MSG_ID, message.getRemoteMsgId());
+            contentValues.put(ChatMessage.READ, ChatMessage.MESSAGE_DELIVERY_CLIENT_SENT);
         }
         else {
-            values.putInteger(ChatMessage.STATUS, (ChatMessage.MESSAGE_HTTP_FILE_DOWNLOAD == msgType)
+            contentValues.put(ChatMessage.STATUS, (ChatMessage.MESSAGE_HTTP_FILE_DOWNLOAD == msgType)
                     ? FileRecord.STATUS_UNKNOWN : ChatMessage.MESSAGE_IN);
-            values.putString(ChatMessage.REMOTE_MSG_ID, message.getMessageUID());
+            contentValues.put(ChatMessage.REMOTE_MSG_ID, message.getMessageUID());
         }
         // Inserted message SessionUuid must exist in chatSessions table; else:
         // SQLiteConstraintException: FOREIGN KEY constraint failed (code 787 SQLITE_CONSTRAINT_FOREIGNKEY[787])
-        mRdbStore.insert(ChatMessage.TABLE_NAME, values);
+        mDB.insert(ChatMessage.TABLE_NAME, null, contentValues);
     }
 
     //============ service change events handler ================//
@@ -1929,27 +1933,26 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
     public Collection<EventObject> findByPeriod(MetaContact metaContact, Date startDate,
             Date endDate, String[] keywords, boolean caseSensitive) {
         HashSet<EventObject> result = new HashSet<>();
-        StringBuilder filterLike = new StringBuilder();
+        String startTimeStamp = String.valueOf(startDate.getTime());
+        String endTimeStamp = String.valueOf(endDate.getTime());
+        StringBuilder filterLike = new StringBuilder("( ");
         for (String word : keywords) {
-            filterLike.append(word).append(" OR ");
+            filterLike.append(ChatMessage.MSG_BODY + " LIKE '%").append(word).append("%' OR ");
         }
-        String filter = filterLike.substring(0, filterLike.length() - 4);
+        filterLike = new StringBuilder(filterLike.substring(0, filterLike.length() - 4) + " )");
 
         Iterator<Contact> contacts = metaContact.getContacts();
         while (contacts.hasNext()) {
             Contact contact = contacts.next();
             String sessionUuid = getSessionUuidByJid(contact);
+            String[] args = {sessionUuid, startTimeStamp, endTimeStamp};
 
-            RdbPredicates rdbPredicates = new RdbPredicates(ChatMessage.TABLE_NAME)
-                    .equalTo(ChatMessage.SESSION_UUID, sessionUuid)
-                    .and().greaterThanOrEqualTo(ChatMessage.TIME_STAMP, startDate.getTime())
-                    .and().lessThanOrEqualTo(ChatMessage.TIME_STAMP, endDate.getTime())
-                    .and().like(ChatMessage.MSG_BODY, filter)
-                    .orderByAsc(ChatMessage.TIME_STAMP);
-            ResultSet resultSet = mRdbStore.query(rdbPredicates, null);
+            Cursor cursor = mDB.query(ChatMessage.TABLE_NAME, null,
+                    ChatMessage.SESSION_UUID + "=? AND " + ChatMessage.TIME_STAMP + ">=? AND "
+                            + ChatMessage.TIME_STAMP + "<? AND " + filterLike, args, null, null, ORDER_ASC);
 
-            while (resultSet.goToNextRow()) {
-                result.add(convertHistoryRecordToMessageEvent(resultSet, contact));
+            while (cursor.moveToNext()) {
+                result.add(convertHistoryRecordToMessageEvent(cursor, contact));
             }
         }
         return result;
@@ -1968,19 +1971,19 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
     public Collection<EventObject> findByKeyword(MetaContact metaContact, String keyword,
             boolean caseSensitive) {
         HashSet<EventObject> result = new HashSet<>();
+        String filterLike = "( " + ChatMessage.MSG_BODY + " LIKE '%" + keyword + "%' )";
 
         Iterator<Contact> contacts = metaContact.getContacts();
         while (contacts.hasNext()) {
             Contact contact = contacts.next();
             String sessionUuid = getSessionUuidByJid(contact);
-            RdbPredicates rdbPredicates = new RdbPredicates(ChatMessage.TABLE_NAME)
-                    .equalTo(ChatMessage.SESSION_UUID, sessionUuid)
-                    .and().like(ChatMessage.MSG_BODY, keyword)
-                    .orderByAsc(ChatMessage.TIME_STAMP);
-            ResultSet resultSet = mRdbStore.query(rdbPredicates, null);
+            String[] args = {sessionUuid};
 
-            while (resultSet.goToNextRow()) {
-                result.add(convertHistoryRecordToMessageEvent(resultSet, contact));
+            Cursor cursor = mDB.query(ChatMessage.TABLE_NAME, null,
+                    ChatMessage.SESSION_UUID + "=? AND " + filterLike, args, null, null, ORDER_ASC);
+
+            while (cursor.moveToNext()) {
+                result.add(convertHistoryRecordToMessageEvent(cursor, contact));
             }
         }
         return result;
@@ -1999,25 +2002,23 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
     public Collection<EventObject> findByKeywords(MetaContact metaContact,
             String[] keywords, boolean caseSensitive) {
         HashSet<EventObject> result = new HashSet<>();
-        StringBuilder filterLike = new StringBuilder();
+        StringBuilder filterLike = new StringBuilder("( ");
         for (String word : keywords) {
-            filterLike.append(word).append(" OR ");
+            filterLike.append(ChatMessage.MSG_BODY + " LIKE '%").append(word).append("%' OR ");
         }
-        String filter = filterLike.substring(0, filterLike.length() - 4);
+        filterLike = new StringBuilder(filterLike.substring(0, filterLike.length() - 4) + " )");
 
         Iterator<Contact> contacts = metaContact.getContacts();
         while (contacts.hasNext()) {
             Contact contact = contacts.next();
             String sessionUuid = getSessionUuidByJid(contact);
+            String[] args = {sessionUuid};
 
-            RdbPredicates rdbPredicates = new RdbPredicates(ChatMessage.TABLE_NAME)
-                    .equalTo(ChatMessage.SESSION_UUID, sessionUuid)
-                    .and().like(ChatMessage.MSG_BODY, filter)
-                    .orderByAsc(ChatMessage.TIME_STAMP);
-            ResultSet resultSet = mRdbStore.query(rdbPredicates, null);
+            Cursor cursor = mDB.query(ChatMessage.TABLE_NAME, null,
+                    ChatMessage.SESSION_UUID + "=? AND " + filterLike, args, null, null, ORDER_ASC);
 
-            while (resultSet.goToNextRow()) {
-                result.add(convertHistoryRecordToMessageEvent(resultSet, contact));
+            while (cursor.moveToNext()) {
+                result.add(convertHistoryRecordToMessageEvent(cursor, contact));
             }
         }
         return result;
@@ -2033,16 +2034,16 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
      */
     public Collection<EventObject> findByStartDate(ChatRoom room, Date startDate) {
         HashSet<EventObject> result = new HashSet<>();
+        String startTimeStamp = String.valueOf(startDate.getTime());
         String sessionUuid = getSessionUuidByJid(room);
+        String[] args = {sessionUuid, startTimeStamp};
 
-        RdbPredicates rdbPredicates = new RdbPredicates(ChatMessage.TABLE_NAME)
-                .equalTo(ChatMessage.SESSION_UUID, sessionUuid)
-                .and().greaterThanOrEqualTo(ChatMessage.TIME_STAMP, startDate.getTime())
-                .orderByAsc(ChatMessage.TIME_STAMP);
-        ResultSet resultSet = mRdbStore.query(rdbPredicates, null);
+        Cursor cursor = mDB.query(ChatMessage.TABLE_NAME, null,
+                ChatMessage.SESSION_UUID + "=? AND " + ChatMessage.TIME_STAMP + ">=?",
+                args, null, null, ORDER_ASC);
 
-        while (resultSet.goToNextRow()) {
-            result.add(convertHistoryRecordToMessageEvent(resultSet, room));
+        while (cursor.moveToNext()) {
+            result.add(convertHistoryRecordToMessageEvent(cursor, room));
         }
         return result;
     }
@@ -2057,16 +2058,16 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
      */
     public Collection<EventObject> findByEndDate(ChatRoom room, Date endDate) {
         HashSet<EventObject> result = new HashSet<>();
+        String endTimeStamp = String.valueOf(endDate.getTime());
         String sessionUuid = getSessionUuidByJid(room);
+        String[] args = {sessionUuid, endTimeStamp};
 
-        RdbPredicates rdbPredicates = new RdbPredicates(ChatMessage.TABLE_NAME)
-                .equalTo(ChatMessage.SESSION_UUID, sessionUuid)
-                .and().lessThanOrEqualTo(ChatMessage.TIME_STAMP, endDate.getTime())
-                .orderByAsc(ChatMessage.TIME_STAMP);
-        ResultSet resultSet = mRdbStore.query(rdbPredicates, null);
+        Cursor cursor = mDB.query(ChatMessage.TABLE_NAME, null,
+                ChatMessage.SESSION_UUID + "=? AND " + ChatMessage.TIME_STAMP + "<?",
+                args, null, null, ORDER_ASC);
 
-        while (resultSet.goToNextRow()) {
-            result.add(convertHistoryRecordToMessageEvent(resultSet, room));
+        while (cursor.moveToNext()) {
+            result.add(convertHistoryRecordToMessageEvent(cursor, room));
         }
         return result;
     }
@@ -2082,17 +2083,17 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
      */
     public Collection<EventObject> findByPeriod(ChatRoom room, Date startDate, Date endDate) {
         HashSet<EventObject> result = new HashSet<>();
+        String startTimeStamp = String.valueOf(startDate.getTime());
+        String endTimeStamp = String.valueOf(endDate.getTime());
         String sessionUuid = getSessionUuidByJid(room);
+        String[] args = {sessionUuid, startTimeStamp, endTimeStamp};
 
-        RdbPredicates rdbPredicates = new RdbPredicates(ChatMessage.TABLE_NAME)
-                .equalTo(ChatMessage.SESSION_UUID, sessionUuid)
-                .and().greaterThanOrEqualTo(ChatMessage.TIME_STAMP, startDate.getTime())
-                .and().lessThanOrEqualTo(ChatMessage.TIME_STAMP, endDate.getTime())
-                .orderByAsc(ChatMessage.TIME_STAMP);
-        ResultSet resultSet = mRdbStore.query(rdbPredicates, null);
+        Cursor cursor = mDB.query(ChatMessage.TABLE_NAME, null,
+                ChatMessage.SESSION_UUID + "=? AND " + ChatMessage.TIME_STAMP + ">=? AND "
+                        + ChatMessage.TIME_STAMP + "<?", args, null, null, ORDER_ASC);
 
-        while (resultSet.goToNextRow()) {
-            result.add(convertHistoryRecordToMessageEvent(resultSet, room));
+        while (cursor.moveToNext()) {
+            result.add(convertHistoryRecordToMessageEvent(cursor, room));
         }
         return result;
     }
@@ -2125,27 +2126,25 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
      *
      * @return Collection of MessageReceivedEvents or MessageDeliveredEvents
      */
-    public Collection<EventObject> findByPeriod(ChatRoom room, Date startDate, Date endDate,
-            String[] keywords, boolean caseSensitive) {
+    public Collection<EventObject> findByPeriod(ChatRoom room, Date startDate, Date
+            endDate, String[] keywords, boolean caseSensitive) {
         HashSet<EventObject> result = new HashSet<>();
+        String startTimeStamp = String.valueOf(startDate.getTime());
+        String endTimeStamp = String.valueOf(endDate.getTime());
         String sessionUuid = getSessionUuidByJid(room);
-
-        StringBuilder filterLike = new StringBuilder();
+        String[] args = {sessionUuid, startTimeStamp, endTimeStamp};
+        StringBuilder filterLike = new StringBuilder("( ");
         for (String word : keywords) {
-            filterLike.append(word).append(" OR ");
+            filterLike.append(ChatMessage.MSG_BODY + " LIKE '%").append(word).append("%' OR ");
         }
-        String filter = filterLike.substring(0, filterLike.length() - 4);
+        filterLike = new StringBuilder(filterLike.substring(0, filterLike.length() - 4) + " )");
 
-        RdbPredicates rdbPredicates = new RdbPredicates(ChatMessage.TABLE_NAME)
-                .equalTo(ChatMessage.SESSION_UUID, sessionUuid)
-                .and().greaterThanOrEqualTo(ChatMessage.TIME_STAMP, startDate.getTime())
-                .and().lessThanOrEqualTo(ChatMessage.TIME_STAMP, endDate.getTime())
-                .and().like(ChatMessage.MSG_BODY, filter)
-                .orderByAsc(ChatMessage.TIME_STAMP);
-        ResultSet resultSet = mRdbStore.query(rdbPredicates, null);
+        Cursor cursor = mDB.query(ChatMessage.TABLE_NAME, null,
+                ChatMessage.SESSION_UUID + "=? AND " + ChatMessage.TIME_STAMP + ">=? AND "
+                        + ChatMessage.TIME_STAMP + "<? AND " + filterLike, args, null, null, ORDER_ASC);
 
-        while (resultSet.goToNextRow()) {
-            result.add(convertHistoryRecordToMessageEvent(resultSet, room));
+        while (cursor.moveToNext()) {
+            result.add(convertHistoryRecordToMessageEvent(cursor, room));
         }
         return result;
     }
@@ -2172,18 +2171,18 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
      *
      * @return Collection of MessageReceivedEvents or MessageDeliveredEvents
      */
-    public Collection<EventObject> findByKeyword(ChatRoom room, String keyword, boolean caseSensitive) {
+    public Collection<EventObject> findByKeyword(ChatRoom room, String keyword,
+            boolean caseSensitive) {
         HashSet<EventObject> result = new HashSet<>();
         String sessionUuid = getSessionUuidByJid(room);
+        String[] args = {sessionUuid};
+        String filterLike = "( " + ChatMessage.MSG_BODY + " LIKE '%" + keyword + "%' )";
 
-        RdbPredicates rdbPredicates = new RdbPredicates(ChatMessage.TABLE_NAME)
-                .equalTo(ChatMessage.SESSION_UUID, sessionUuid)
-                .and().like(ChatMessage.MSG_BODY, keyword)
-                .orderByAsc(ChatMessage.TIME_STAMP);
-        ResultSet resultSet = mRdbStore.query(rdbPredicates, null);
+        Cursor cursor = mDB.query(ChatMessage.TABLE_NAME, null,
+                ChatMessage.SESSION_UUID + "=? AND " + filterLike, args, null, null, ORDER_ASC);
 
-        while (resultSet.goToNextRow()) {
-            result.add(convertHistoryRecordToMessageEvent(resultSet, room));
+        while (cursor.moveToNext()) {
+            result.add(convertHistoryRecordToMessageEvent(cursor, room));
         }
         return result;
     }
@@ -2214,20 +2213,18 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
     public Collection<EventObject> findByKeywords(ChatRoom room, String[] keywords, boolean caseSensitive) {
         HashSet<EventObject> result = new HashSet<>();
         String sessionUuid = getSessionUuidByJid(room);
-        StringBuilder filterLike = new StringBuilder();
+        String[] args = {sessionUuid};
+        StringBuilder filterLike = new StringBuilder("( ");
         for (String word : keywords) {
-            filterLike.append(word).append(" OR ");
+            filterLike.append(ChatMessage.MSG_BODY + " LIKE '%").append(word).append("%' OR ");
         }
-        String filter = filterLike.substring(0, filterLike.length() - 4);
+        filterLike = new StringBuilder(filterLike.substring(0, filterLike.length() - 4) + " )");
 
-        RdbPredicates rdbPredicates = new RdbPredicates(ChatMessage.TABLE_NAME)
-                .equalTo(ChatMessage.SESSION_UUID, sessionUuid)
-                .and().like(ChatMessage.MSG_BODY, filter)
-                .orderByAsc(ChatMessage.TIME_STAMP);
-        ResultSet resultSet = mRdbStore.query(rdbPredicates, null);
+        Cursor cursor = mDB.query(ChatMessage.TABLE_NAME, null,
+                ChatMessage.SESSION_UUID + "=? AND " + filterLike, args, null, null, ORDER_ASC);
 
-        while (resultSet.goToNextRow()) {
-            result.add(convertHistoryRecordToMessageEvent(resultSet, room));
+        while (cursor.moveToNext()) {
+            result.add(convertHistoryRecordToMessageEvent(cursor, room));
         }
         return result;
     }
@@ -2243,15 +2240,13 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
     public Collection<EventObject> findLast(ChatRoom room, int count) {
         LinkedList<EventObject> result = new LinkedList<>();
         String sessionUuid = getSessionUuidByJid(room);
+        String[] args = {sessionUuid};
 
-        RdbPredicates rdbPredicates = new RdbPredicates(ChatMessage.TABLE_NAME)
-                .equalTo(ChatMessage.SESSION_UUID, sessionUuid)
-                .limit(count)
-                .orderByDesc(ChatMessage.TIME_STAMP);
-        ResultSet resultSet = mRdbStore.query(rdbPredicates, null);
+        Cursor cursor = mDB.query(ChatMessage.TABLE_NAME, null, ChatMessage.SESSION_UUID
+                + "=?", args, null, null, ORDER_DESC, String.valueOf(count));
 
-        while (resultSet.goToNextRow()) {
-            result.add(convertHistoryRecordToMessageEvent(resultSet, room));
+        while (cursor.moveToNext()) {
+            result.add(convertHistoryRecordToMessageEvent(cursor, room));
         }
 
         result.sort(new MessageEventComparator<>());
@@ -2270,17 +2265,16 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
      */
     public Collection<EventObject> findFirstMessagesAfter(ChatRoom room, Date startDate, int count) {
         LinkedList<EventObject> result = new LinkedList<>();
+        String startTimeStamp = String.valueOf(startDate.getTime());
         String sessionUuid = getSessionUuidByJid(room);
+        String[] args = {sessionUuid, startTimeStamp};
 
-        RdbPredicates rdbPredicates = new RdbPredicates(ChatMessage.TABLE_NAME)
-                .equalTo(ChatMessage.SESSION_UUID, sessionUuid)
-                .and().greaterThanOrEqualTo(ChatMessage.TIME_STAMP, startDate.getTime())
-                .limit(count)
-                .orderByDesc(ChatMessage.TIME_STAMP);
-        ResultSet resultSet = mRdbStore.query(rdbPredicates, null);
+        Cursor cursor = mDB.query(ChatMessage.TABLE_NAME, null,
+                ChatMessage.SESSION_UUID + "=? AND " + ChatMessage.TIME_STAMP + ">=?",
+                args, null, null, ORDER_DESC, String.valueOf(count));
 
-        while (resultSet.goToNextRow()) {
-            result.add(convertHistoryRecordToMessageEvent(resultSet, room));
+        while (cursor.moveToNext()) {
+            result.add(convertHistoryRecordToMessageEvent(cursor, room));
         }
 
         result.sort(new ChatRoomMessageEventComparator<>());
@@ -2299,18 +2293,18 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
      */
     public Collection<EventObject> findLastMessagesBefore(ChatRoom room, Date endDate, int count) {
         LinkedList<EventObject> result = new LinkedList<>();
+        String endTimeStamp = String.valueOf(endDate.getTime());
         String sessionUuid = getSessionUuidByJid(room);
+        String[] args = {sessionUuid, endTimeStamp};
 
-        RdbPredicates rdbPredicates = new RdbPredicates(ChatMessage.TABLE_NAME)
-                .equalTo(ChatMessage.SESSION_UUID, sessionUuid)
-                .and().lessThanOrEqualTo(ChatMessage.TIME_STAMP, endDate.getTime())
-                .limit(count)
-                .orderByDesc(ChatMessage.TIME_STAMP);
-        ResultSet resultSet = mRdbStore.query(rdbPredicates, null);
+        Cursor cursor = mDB.query(ChatMessage.TABLE_NAME, null,
+                ChatMessage.SESSION_UUID + "=? AND " + ChatMessage.TIME_STAMP + "<?",
+                args, null, null, ORDER_DESC, String.valueOf(count));
 
-        while (resultSet.goToNextRow()) {
-            result.add(convertHistoryRecordToMessageEvent(resultSet, room));
+        while (cursor.moveToNext()) {
+            result.add(convertHistoryRecordToMessageEvent(cursor, room));
         }
+
         result.sort(new ChatRoomMessageEventComparator<>());
         return result;
     }
@@ -2322,8 +2316,8 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
         configService.addPropertyChangeListener(
                 MessageHistoryService.PNAME_IS_RECENT_MESSAGES_DISABLED, msgHistoryPropListener);
 
-        boolean isRecentMessagesDisabled
-                = configService.getBoolean(MessageHistoryService.PNAME_IS_RECENT_MESSAGES_DISABLED, false);
+        boolean isRecentMessagesDisabled = configService.getBoolean(
+                MessageHistoryService.PNAME_IS_RECENT_MESSAGES_DISABLED, false);
 
         if (!isRecentMessagesDisabled)
             loadRecentMessages();
@@ -2416,16 +2410,16 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
      */
     @Override
     public int eraseLocallyStoredChatHistory(int chatMode) {
+        String[] args = {String.valueOf(chatMode)};
         String[] columns = {ChatSession.SESSION_UUID};
         List<String> sessionUuids = new ArrayList<>();
 
-        RdbPredicates rdbPredicates = new RdbPredicates(ChatSession.TABLE_NAME)
-                .equalTo(ChatSession.MODE, chatMode);
-        ResultSet resultSet = mRdbStore.query(rdbPredicates, columns);
-        while (resultSet.goToNextRow()) {
-            sessionUuids.add(resultSet.getString(0));
+        Cursor cursor = mDB.query(ChatSession.TABLE_NAME, columns, ChatSession.MODE + "=?",
+                args, null, null, null);
+        while (cursor.moveToNext()) {
+            sessionUuids.add(cursor.getString(0));
         }
-        resultSet.close();
+        cursor.close();
 
         return purgeLocallyStoredHistory(sessionUuids, true);
     }
@@ -2482,8 +2476,8 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
     private int purgeLocallyStoredHistory(List<String> msgUUIDs) {
         int msgCount = 0;
         for (String uuid : msgUUIDs) {
-            msgCount += mRdbStore.delete(new RdbPredicates(ChatMessage.TABLE_NAME)
-                    .equalTo(ChatMessage.UUID, uuid));
+            String[] args = {uuid};
+            msgCount += mDB.delete(ChatMessage.TABLE_NAME, ChatMessage.UUID + "=?", args);
         }
         return msgCount;
     }
@@ -2499,14 +2493,14 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
     public int purgeLocallyStoredHistory(List<String> sessionUuids, boolean eraseSid) {
         int msgCount = 0;
         for (String uuid : sessionUuids) {
+            String[] args = {uuid};
             // purged all messages with the same sessionUuid
-            msgCount += mRdbStore.delete(new RdbPredicates(ChatMessage.TABLE_NAME)
-                    .equalTo(ChatMessage.SESSION_UUID, uuid));
+            msgCount += mDB.delete(ChatMessage.TABLE_NAME, ChatMessage.SESSION_UUID + "=?", args);
 
-            // Purge the sessionUuid in the ChatSession if true
+            // Purge the sessionUuid in the ChatSession if true and its messages count is zero
             int count = getMessageCountForSessionUuid(uuid);
             if (eraseSid && count == 0) {
-                mRdbStore.delete(new RdbPredicates(ChatSession.TABLE_NAME).equalTo(ChatSession.SESSION_UUID, uuid));
+                mDB.delete(ChatSession.TABLE_NAME, ChatSession.SESSION_UUID + "=?", args);
                 msgCount++;
             }
         }
@@ -2551,19 +2545,20 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
         if (TextUtils.isEmpty(sessionUuid)) {
             return msgFilePathDel;
         }
+
         String filePath;
+        String[] args = {sessionUuid};
         String[] columns = {ChatMessage.FILE_PATH};
 
-        RdbPredicates rdbPredicates = new RdbPredicates(ChatMessage.TABLE_NAME)
-                .equalTo(ChatMessage.SESSION_UUID, sessionUuid);
-        ResultSet resultSet = mRdbStore.query(rdbPredicates, columns);
-        while (resultSet.goToNextRow()) {
-            filePath = resultSet.getString(0);
+        Cursor cursor = mDB.query(ChatMessage.TABLE_NAME, columns, ChatMessage.SESSION_UUID + "=?",
+                args, null, null, null);
+        while (cursor.moveToNext()) {
+            filePath = cursor.getString(0);
             if (!TextUtils.isEmpty(filePath)) {
                 msgFilePathDel.add(filePath);
             }
         }
-        resultSet.close();
+        cursor.close();
         return msgFilePathDel;
     }
 
@@ -2577,16 +2572,15 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
         String filePath;
         String[] columns = {ChatMessage.FILE_PATH};
 
-        RdbPredicates rdbPredicates = new RdbPredicates(ChatMessage.TABLE_NAME)
-                .and().isNotNull(ChatMessage.FILE_PATH);
-        ResultSet resultSet = mRdbStore.query(rdbPredicates, columns);
-        while (resultSet.goToNextRow()) {
-            filePath = resultSet.getString(0);
+        Cursor cursor = mDB.query(ChatMessage.TABLE_NAME, columns, ChatMessage.FILE_PATH + " IS NOT NULL",
+                null, null, null, null);
+        while (cursor.moveToNext()) {
+            filePath = cursor.getString(0);
             if (!TextUtils.isEmpty(filePath)) {
                 msgFilePathDel.add(filePath);
             }
         }
-        resultSet.close();
+        cursor.close();
         return msgFilePathDel;
     }
 

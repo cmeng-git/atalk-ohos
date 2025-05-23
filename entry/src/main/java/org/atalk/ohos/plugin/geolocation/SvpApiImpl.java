@@ -1,6 +1,6 @@
 /*
  * aTalk, android VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * Copyright 2014 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,21 +16,19 @@
  */
 package org.atalk.ohos.plugin.geolocation;
 
-import org.atalk.ohos.aTalkApp;
-import org.atalk.ohos.gui.chat.SvpApi;
+import android.app.Activity;
+import android.content.Intent;
+import android.location.Location;
+import android.location.LocationManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import ohos.aafwk.ability.Ability;
-import ohos.aafwk.content.Intent;
-import ohos.aafwk.content.IntentParams;
-import ohos.aafwk.content.Operation;
-
-import ohos.location.Location;
+import org.atalk.ohos.aTalkApp;
+import org.atalk.ohos.gui.chat.SvpApi;
 
 /**
- * The <code>SvpApiImpl</code> working in conjunction with ChatSlice to provide street map view support.
+ * The <code>SvpApiImpl</code> working in conjunction with ChatFragment to provide street map view support.
  * An implementation API for F-Droid release
  *
  * @author Eng Chong Meng
@@ -40,23 +38,14 @@ public class SvpApiImpl implements SvpApi {
      * Perform osm street map view when user click the show map button
      */
     @Override
-    public void onSVPClick(Ability activity, double[] dblLocation) {
+    public void onSVPClick(Activity activity, double[] dblLocation) {
         Location mLocation = toLocation(dblLocation);
 
-        Operation operation = new Intent.OperationBuilder()
-                        .withBundleName(activity.getBundleName())
-                        .withAbilityName(OsmAbility.class)
-                        .build();
-
-        IntentParams intentParams = new IntentParams();
-        intentParams.setParam(GeoIntentKey.LOCATION, mLocation);
-
-        Intent intent = new Intent();
-        intent.setOperation(operation);
-        intent.setParam(GeoIntentKey.LOCATION_FETCH_MODE, GeoConstants.ZERO_FIX);
-        intent.setParam(GeoIntentKey.LOCATION, intentParams);
-        intent.setParam(GeoIntentKey.LOCATION_LIST, new ArrayList<Location>());
-        activity.startAbility(intent);
+        Intent intent = new Intent(activity, OsmActivity.class);
+        intent.putExtra(GeoIntentKey.LOCATION_FETCH_MODE, GeoConstants.ZERO_FIX);
+        intent.putExtra(GeoIntentKey.LOCATION, mLocation);
+        intent.putExtra(GeoIntentKey.LOCATION_LIST, new ArrayList<Location>());
+        activity.startActivity(intent);
     }
 
     /**
@@ -66,7 +55,7 @@ public class SvpApiImpl implements SvpApi {
      */
     @Override
 
-    public void onSVPLongClick(Ability activity, List<double[]> dblLocations) {
+    public void onSVPLongClick(Activity activity, List<double[]> dblLocations) {
         ArrayList<Location> locations = new ArrayList<>();
         for (double[] entry : dblLocations) {
             locations.add(toLocation(entry));
@@ -82,17 +71,11 @@ public class SvpApiImpl implements SvpApi {
         //     locations.add(location);
         // }
 
-        Intent intent = new Intent();
-        Operation operation = new Intent.OperationBuilder()
-                .withBundleName(activity.getBundleName())
-                .withAbilityName(OsmAbility.class)
-                .build();
-
-        intent.setOperation(operation);
-        intent.setParam(GeoIntentKey.LOCATION_FETCH_MODE, GeoConstants.ZERO_FIX);
-        intent.setParam(GeoIntentKey.LOCATION, toLocation(dblLocations.get(0)).toString());
-        intent.setParam(GeoIntentKey.LOCATION_LIST, locations);
-        activity.startAbility(intent);
+        Intent intent = new Intent(activity, OsmActivity.class);
+        intent.putExtra(GeoIntentKey.LOCATION_FETCH_MODE, GeoConstants.ZERO_FIX);
+        intent.putExtra(GeoIntentKey.LOCATION, toLocation(dblLocations.get(0)));
+        intent.putExtra(GeoIntentKey.LOCATION_LIST, locations);
+        activity.startActivity(intent);
     }
 
     /**
@@ -107,15 +90,15 @@ public class SvpApiImpl implements SvpApi {
     @Override
     public Object svpHandler(Object mSVP, double[] dblLocation) {
         if (mSVP == null) {
-            Ability currentAbility = aTalkApp.getCurrentAbility();
-            if (currentAbility != null) {
-                if (currentAbility instanceof OsmAbility) {
-                    mSVP = currentAbility;
+            Activity currentActivity = aTalkApp.getCurrentActivity();
+            if (currentActivity != null) {
+                if (currentActivity instanceof OsmActivity) {
+                    mSVP = currentActivity;
                 }
             }
         }
         if (mSVP != null) {
-            ((OsmAbility) mSVP).showLocation(toLocation(dblLocation));
+            ((OsmActivity) mSVP).showLocation(toLocation(dblLocation));
         }
         return mSVP;
     }

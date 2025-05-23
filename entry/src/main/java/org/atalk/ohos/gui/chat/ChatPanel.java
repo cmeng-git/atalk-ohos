@@ -1,20 +1,14 @@
 /*
- * aTalk, ohos VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * Jitsi, the OpenSource Java VoIP and Instant Messaging client.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Distributable under LGPL license. See terms of license at gnu.org.
  */
 package org.atalk.ohos.gui.chat;
+
+import android.content.Intent;
+import android.text.TextUtils;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -26,10 +20,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.TimeZone;
 import java.util.concurrent.CopyOnWriteArrayList;
-
-import ohos.aafwk.ability.Ability;
-import ohos.aafwk.content.Intent;
-import ohos.ai.tts.TtsClient;
 
 import net.java.sip.communicator.impl.msghistory.MessageHistoryActivator;
 import net.java.sip.communicator.impl.msghistory.MessageHistoryServiceImpl;
@@ -65,10 +55,8 @@ import net.java.sip.communicator.service.protocol.event.MessageReceivedEvent;
 import net.java.sip.communicator.util.ConfigurationUtils;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.util.TextUtils;
 import org.atalk.impl.timberlog.TimberLog;
-import org.atalk.ohos.BaseAbility;
-import org.atalk.ohos.ResourceTable;
+import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.AppGUIActivator;
 import org.atalk.ohos.gui.actionbar.ActionBarUtil;
@@ -76,6 +64,7 @@ import org.atalk.ohos.gui.chat.conference.AdHocChatRoomWrapper;
 import org.atalk.ohos.gui.chat.conference.ConferenceChatManager;
 import org.atalk.ohos.gui.chat.conference.ConferenceChatSession;
 import org.atalk.ohos.gui.chat.filetransfer.FileTransferActivator;
+import org.atalk.ohos.plugin.textspeech.TTSService;
 import org.atalk.persistance.FileBackend;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
@@ -92,9 +81,9 @@ import org.jxmpp.stringprep.XmppStringprepException;
 import timber.log.Timber;
 
 /**
- * The <code>ChatPanel</code>, <code>ChatAbility</code>, <code>ChatController</code> and <code>ChatSlice</code>
+ * The <code>ChatPanel</code>, <code>ChatActivity</code>, <code>ChatController</code> and <code>ChatFragment</code>
  * together formed the frontend interface to the user, where users can write and send messages
- * (ChatController), view received and sent messages (ChatSlice). A ChatPanel is created for a
+ * (ChatController), view received and sent messages (ChatFragment). A ChatPanel is created for a
  * contact or for a group of contacts in case of a chat conference. There is always one default
  * contact for the chat, which is the first contact which was added to the chat. Each "Chat GUI'
  * constitutes a fragment page access/scroll to view via the ChatPagerAdapter.
@@ -110,9 +99,6 @@ public class ChatPanel implements Chat, MessageListener, MessageReceiptListener 
      */
     private static final int HISTORY_CHUNK_SIZE = 30;
     private static final int MAM_PAGE_SIZE = 50;
-
-    private final TtsClient mTTSClient = TtsClient.getInstance();
-
     /**
      * The underlying <code>MetaContact</code>, we're chatting with.
      */
@@ -148,7 +134,7 @@ public class ChatPanel implements Chat, MessageListener, MessageReceiptListener 
      * <p>
      * Important: when historyLog is disabled i.e. all messages exchanges are only saved in msgCache.
      * <p>
-     * Use CopyOnWriteArrayList instead to avoid ChatSlice#prependMessages ConcurrentModificationException
+     * Use CopyOnWriteArrayList instead to avoid ChatFragment#prependMessages ConcurrentModificationException
      */
     private List<ChatMessage> msgCache = new CopyOnWriteArrayList<>();
 
@@ -323,9 +309,9 @@ public class ChatPanel implements Chat, MessageListener, MessageReceiptListener 
      * @return return <code>true</code> if OMEMO crypto chat is selected.
      */
     public boolean isOmemoChat() {
-        return ((mChatType == ChatSlice.MSGTYPE_OMEMO)
-                || (mChatType == ChatSlice.MSGTYPE_OMEMO_UA)
-                || (mChatType == ChatSlice.MSGTYPE_OMEMO_UT));
+        return ((mChatType == ChatFragment.MSGTYPE_OMEMO)
+                || (mChatType == ChatFragment.MSGTYPE_OMEMO_UA)
+                || (mChatType == ChatFragment.MSGTYPE_OMEMO_UT));
     }
 
     /**
@@ -475,7 +461,7 @@ public class ChatPanel implements Chat, MessageListener, MessageReceiptListener 
      */
     public List<ChatMessage> getHistory(boolean init) {
         /*
-         * If chatFragment is initializing (or onActive) AND we have already cached the messages
+         * If chatFragment is initializing (or onResume) AND we have already cached the messages
          * i.e. (historyLoaded == true), then just return the current msgCache content.
          * Always perform msgCache.sort; more delayed normal/encrypted messages may have been added on user re-login,
          */
@@ -695,7 +681,7 @@ public class ChatPanel implements Chat, MessageListener, MessageReceiptListener 
 
     /**
      * Update the file transfer status in the msgCache; must do this else file transfer will be
-     * reactivated onActive chat. Also important if historyLog is disabled.
+     * reactivated onResume chat. Also important if historyLog is disabled.
      *
      * @param msgUuid ChatMessage uuid
      * @param status File transfer status
@@ -935,15 +921,12 @@ public class ChatPanel implements Chat, MessageListener, MessageReceiptListener 
      * @param chatMessage ChatMessage for TTS
      */
     public void ttsSpeak(ChatMessage chatMessage) {
-        String ttsText = chatMessage.getMessage();
-        if (!TextUtils.isEmpty(ttsText) && !FileBackend.isHttpFileDnLink(ttsText)) {
-            String mUtteranceID = "toTts";
-            if (ttsText.length() > 512) {
-                mTTSClient.speakLongText(ttsText, mUtteranceID);
-            }
-            else {
-                mTTSClient.speakText(ttsText, mUtteranceID);
-            }
+        String textBody = chatMessage.getMessage();
+        if (!TextUtils.isEmpty(textBody) && !FileBackend.isHttpFileDnLink(textBody)) {
+            Intent spkIntent = new Intent(aTalkApp.getInstance(), TTSService.class);
+            spkIntent.putExtra(TTSService.EXTRA_MESSAGE, textBody);
+            spkIntent.putExtra(TTSService.EXTRA_QMODE, false);
+            aTalkApp.getInstance().startService(spkIntent);
         }
     }
 
@@ -996,7 +979,7 @@ public class ChatPanel implements Chat, MessageListener, MessageReceiptListener 
         Contact sender = request.getSender();
         String senderName = sender.getAddress();
         String msgUuid = request.getId();
-        String msgContent = aTalkApp.getResString(ResourceTable.String_file_transfer_request_received, date.toString(), senderName);
+        String msgContent = aTalkApp.getResString(R.string.file_transfer_request_received, date.toString(), senderName);
 
         int msgType = ChatMessage.MESSAGE_FILE_TRANSFER_RECEIVE;
         int encType = IMessage.ENCODE_PLAIN;
@@ -1112,28 +1095,28 @@ public class ChatPanel implements Chat, MessageListener, MessageReceiptListener 
 
         switch (evt.getErrorCode()) {
             case MessageDeliveryFailedEvent.OFFLINE_MESSAGES_NOT_SUPPORTED:
-                errorMsg = aTalkApp.getResString(ResourceTable.String_message_delivery_not_supported, contactJid);
+                errorMsg = aTalkApp.getResString(R.string.message_delivery_not_supported, contactJid);
                 break;
             case MessageDeliveryFailedEvent.NETWORK_FAILURE:
-                errorMsg = aTalkApp.getResString(ResourceTable.String_message_delivery_network_error);
+                errorMsg = aTalkApp.getResString(R.string.message_delivery_network_error);
                 break;
             case MessageDeliveryFailedEvent.PROVIDER_NOT_REGISTERED:
-                errorMsg = aTalkApp.getResString(ResourceTable.String_message_delivery_not_registered);
+                errorMsg = aTalkApp.getResString(R.string.message_delivery_not_registered);
                 break;
             case MessageDeliveryFailedEvent.INTERNAL_ERROR:
-                errorMsg = aTalkApp.getResString(ResourceTable.String_message_delivery_internal_error);
+                errorMsg = aTalkApp.getResString(R.string.message_delivery_internal_error);
                 break;
             case MessageDeliveryFailedEvent.OMEMO_SEND_ERROR:
                 errorMsg = evt.getReason();
                 mergeMessage = false;
                 break;
             default:
-                errorMsg = aTalkApp.getResString(ResourceTable.String_message_delivery_error);
+                errorMsg = aTalkApp.getResString(R.string.message_delivery_error);
         }
 
         String reason = evt.getReason();
         if (!TextUtils.isEmpty(reason) && mergeMessage) {
-            errorMsg += " " + aTalkApp.getResString(ResourceTable.String_error_was_, reason);
+            errorMsg += " " + aTalkApp.getResString(R.string.error_was_, reason);
         }
         addMessage(contactJid, new Date(), ChatMessage.MESSAGE_OUT, srcMessage.getMimeType(), srcMessage.getContent());
         addMessage(contactJid, new Date(), ChatMessage.MESSAGE_ERROR, IMessage.ENCODE_PLAIN, errorMsg);
@@ -1170,12 +1153,12 @@ public class ChatPanel implements Chat, MessageListener, MessageReceiptListener 
      */
     public void updateChatTransportStatus(final ChatTransport chatTransport) {
         if (isChatFocused()) {
-            final Ability ability = aTalkApp.getCurrentAbility();
-            if (ability != null) {
-                BaseAbility.runOnUiThread(() -> {
+            final AppCompatActivity activity = aTalkApp.getCurrentActivity();
+            if (activity != null) {
+                activity.runOnUiThread(() -> {
                     PresenceStatus presenceStatus = chatTransport.getStatus();
-                    ActionBarUtil.setSubtitle(ability, presenceStatus.getStatusName());
-                    ActionBarUtil.setStatusIcon(ability, presenceStatus.getStatusIcon());
+                    ActionBarUtil.setSubtitle(activity, presenceStatus.getStatusName());
+                    ActionBarUtil.setStatusIcon(activity, presenceStatus.getStatusIcon());
                 });
             }
         }
@@ -1184,10 +1167,10 @@ public class ChatPanel implements Chat, MessageListener, MessageReceiptListener 
         if (ConfigurationUtils.isShowStatusChangedInChat()) {
             // Show a status message to the user.
             // addMessage(contactName, chatTransport.getName(), new Date(), ChatMessage.MESSAGE_STATUS, IMessage.ENCODE_PLAIN,
-            //        aTalkApp.getResString(ResourceTable.String_service_gui_STATUS_CHANGED_CHAT_MESSAGE, chatTransport.getStatus().getStatusName()),
+            //        aTalkApp.getResString(R.string.service_gui_STATUS_CHANGED_CHAT_MESSAGE, chatTransport.getStatus().getStatusName()),
             //        IMessage.ENCRYPTION_NONE, null, null);
             addMessage(contactName, new Date(), ChatMessage.MESSAGE_STATUS, IMessage.ENCODE_PLAIN,
-                    aTalkApp.getResString(ResourceTable.String_status_change_message, chatTransport.getStatus().getStatusName()));
+                    aTalkApp.getResString(R.string.status_change_message, chatTransport.getStatus().getStatusName()));
         }
     }
 
@@ -1199,10 +1182,10 @@ public class ChatPanel implements Chat, MessageListener, MessageReceiptListener 
      */
     public void setContactName(ChatContact<?> chatContact, final String name) {
         if (isChatFocused()) {
-            final Ability ability = aTalkApp.getCurrentAbility();
-            BaseAbility.runOnUiThread(() -> {
+            final AppCompatActivity activity = aTalkApp.getCurrentActivity();
+            activity.runOnUiThread(() -> {
                 if (mChatSession instanceof MetaContactChatSession) {
-                    ActionBarUtil.setTitle(ability, name);
+                    ActionBarUtil.setTitle(activity, name);
                 }
             });
         }
@@ -1218,12 +1201,12 @@ public class ChatPanel implements Chat, MessageListener, MessageReceiptListener 
             chatSubject = subject;
 
             if (isChatFocused()) {
-                final Ability ability = aTalkApp.getCurrentAbility();
-                if (ability != null) {
-                    BaseAbility.runOnUiThread(() -> {
+                final AppCompatActivity activity = aTalkApp.getCurrentActivity();
+                if (activity != null) {
+                    activity.runOnUiThread(() -> {
                         // cmeng: check instanceof just in case user change chat session
                         if (mChatSession instanceof ConferenceChatSession) {
-                            ActionBarUtil.setSubtitle(ability, subject);
+                            ActionBarUtil.setSubtitle(activity, subject);
                         }
                     });
                 }
@@ -1231,7 +1214,7 @@ public class ChatPanel implements Chat, MessageListener, MessageReceiptListener 
             // Do not display change subject message if this is the original subject
             if (!TextUtils.isEmpty(oldSubject))
                 this.addMessage(mChatSession.getChatEntity(), new Date(), ChatMessage.MESSAGE_STATUS, IMessage.ENCODE_PLAIN,
-                        aTalkApp.getResString(ResourceTable.String_chatroom_subject_changed, oldSubject, subject));
+                        aTalkApp.getResString(R.string.chatroom_subject_changed, oldSubject, subject));
         }
     }
 
@@ -1295,7 +1278,7 @@ public class ChatPanel implements Chat, MessageListener, MessageReceiptListener 
                 if (chatRoomWrapper != null) {
                     // conferenceChatSession = new ConferenceChatSession(this, chatRoomWrapper);
                     Intent chatIntent = ChatSessionManager.getChatIntent(chatRoomWrapper);
-                    aTalkApp.getInstance().startAbility(chatIntent, 0);
+                    aTalkApp.getInstance().startActivity(chatIntent);
                 }
                 else {
                     Timber.e("Failed to create chatroom");
@@ -1306,7 +1289,7 @@ public class ChatPanel implements Chat, MessageListener, MessageReceiptListener 
                         = conferenceChatManager.createAdHocChatRoom(pps, chatContacts, reason);
                 // conferenceChatSession = new AdHocConferenceChatSession(this, chatRoomWrapper);
                 Intent chatIntent = ChatSessionManager.getChatIntent(chatRoomWrapper);
-                aTalkApp.getInstance().startAbility(chatIntent, 0);
+                aTalkApp.getInstance().startActivity(chatIntent);
             }
             // if (conferenceChatSession != null) {
             //   this.setChatSession(conferenceChatSession);

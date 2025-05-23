@@ -5,14 +5,19 @@
  */
 package org.atalk.ohos.gui.settings.notification;
 
-import ohos.aafwk.content.Intent;
-import ohos.agp.components.BaseItemProvider;
-import ohos.agp.components.Checkbox;
-import ohos.agp.components.Component;
-import ohos.agp.components.ComponentContainer;
-import ohos.agp.components.LayoutScatter;
-import ohos.agp.components.ListContainer;
-import ohos.agp.components.Text;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.CompoundButton;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 import net.java.sip.communicator.service.notification.NotificationChangeListener;
 import net.java.sip.communicator.service.notification.NotificationService;
@@ -21,29 +26,24 @@ import net.java.sip.communicator.service.notification.event.NotificationEventTyp
 import net.java.sip.communicator.util.ServiceUtils;
 import net.java.sip.communicator.util.UtilActivator;
 
-import org.atalk.ohos.BaseAbility;
-import org.atalk.ohos.ResourceTable;
+import org.atalk.ohos.BaseActivity;
+import org.atalk.ohos.R;
 import org.atalk.ohos.gui.AppGUIActivator;
 import org.atalk.service.resources.ResourceManagementService;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
-
 /**
- * The <code>Ability</code> lists all notification events. When user selects one of them the details screen is opened.
+ * The <code>Activity</code> lists all notification events. When user selects one of them the details screen is opened.
  *
  * @author Pawel Domas
  * @author Eng Chong Meng
  */
-public class NotificationSettings extends BaseAbility {
+public class NotificationSettings extends BaseActivity {
     public static final String NOTICE_PREFIX = "notificationconfig.event.";
 
     /**
      * Notifications adapter.
      */
-    private NotificationItemProvider adapter;
+    private NotificationsAdapter adapter;
 
     /**
      * Notification service instance.
@@ -54,22 +54,22 @@ public class NotificationSettings extends BaseAbility {
      * {@inheritDoc}
      */
     @Override
-    protected void onStart(Intent intent) {
-        super.onStart(intent);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         this.notificationService = ServiceUtils.getService(AppGUIActivator.bundleContext, NotificationService.class);
-        setUIContent(ResourceTable.Layout_list_layout);
+        setContentView(R.layout.list_layout);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected void onActive() {
-        super.onActive();
+    protected void onResume() {
+        super.onResume();
         // Refresh the list each time is displayed
-        adapter = new NotificationItemProvider();
-        ListContainer listView = findComponentById(ResourceTable.Id_list);
-        listView.setItemProvider(adapter);
+        adapter = new NotificationsAdapter();
+        ListView listView = findViewById(R.id.list);
+        listView.setAdapter(adapter);
         // And start listening for updates
         notificationService.addNotificationChangeListener(adapter);
     }
@@ -78,8 +78,8 @@ public class NotificationSettings extends BaseAbility {
      * {@inheritDoc}
      */
     @Override
-    protected void onInactive() {
-        super.onInactive();
+    protected void onPause() {
+        super.onPause();
         // Do not listen for changes when paused
         notificationService.removeNotificationChangeListener(adapter);
         adapter = null;
@@ -88,7 +88,7 @@ public class NotificationSettings extends BaseAbility {
     /**
      * Adapter lists all notification events.
      */
-    class NotificationItemProvider extends BaseItemProvider implements NotificationChangeListener {
+    class NotificationsAdapter extends BaseAdapter implements NotificationChangeListener {
         /**
          * List of event types
          */
@@ -100,10 +100,10 @@ public class NotificationSettings extends BaseAbility {
         private final Map<String, String> sortedEvents = new TreeMap<>();
 
         /**
-         * Creates new instance of <code>NotificationItemProvider</code>;
+         * Creates new instance of <code>NotificationsAdapter</code>;
          * Values are sorted in ascending order by eventNames for user easy reference.
          */
-        NotificationItemProvider() {
+        NotificationsAdapter() {
             ResourceManagementService rms = UtilActivator.getResources();
             Map<String, String> unSortedMap = new HashMap<>();
             for (String event : notificationService.getRegisteredEvents()) {
@@ -146,23 +146,23 @@ public class NotificationSettings extends BaseAbility {
          * {@inheritDoc}
          */
         @Override
-        public Component getComponent(int position, Component rowView, ComponentContainer parent) {
+        public View getView(final int position, View rowView, ViewGroup parent) {
             //if (rowView == null) cmeng would not update properly the status on enter/return
-            rowView = LayoutScatter.getInstance(getContext()).parse(ResourceTable.Layout_notification_item, parent, false);
+            rowView = getLayoutInflater().inflate(R.layout.notification_item, parent, false);
 
             String eventType = events.get(position);
-            rowView.setClickedListener(v -> {
-                Intent details = NotificationDetails.getIntent(getContext(), eventType);
-                startAbility(details);
+            rowView.setOnClickListener(v -> {
+                Intent details = NotificationDetails.getIntent(NotificationSettings.this, eventType);
+                startActivity(details);
             });
 
-            Text textView = rowView.findComponentById(ResourceTable.Id_descriptor);
+            TextView textView = rowView.findViewById(R.id.descriptor);
             textView.setText((String) getItem(position));
 
-            Checkbox enableBtn = rowView.findComponentById(ResourceTable.Id_enable);
+            CompoundButton enableBtn = rowView.findViewById(R.id.enable);
             enableBtn.setChecked(notificationService.isActive(eventType));
 
-            enableBtn.setCheckedStateChangedListener((buttonView, isChecked)
+            enableBtn.setOnCheckedChangeListener((buttonView, isChecked)
                     -> notificationService.setActive(eventType, isChecked));
             return rowView;
         }
@@ -174,7 +174,7 @@ public class NotificationSettings extends BaseAbility {
         public void eventTypeAdded(final NotificationEventTypeEvent event) {
             runOnUiThread(() -> {
                 events.add(event.getEventType());
-                notifyDataChanged();
+                notifyDataSetChanged();
             });
         }
 
@@ -185,7 +185,7 @@ public class NotificationSettings extends BaseAbility {
         public void eventTypeRemoved(final NotificationEventTypeEvent event) {
             runOnUiThread(() -> {
                 events.remove(event.getEventType());
-                notifyDataChanged();
+                notifyDataSetChanged();
             });
         }
 

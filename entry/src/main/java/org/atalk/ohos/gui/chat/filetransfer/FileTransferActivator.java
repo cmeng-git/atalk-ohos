@@ -1,6 +1,6 @@
 /*
- * aTalk, ohos VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * aTalk, android VoIP and Instant Messaging client
+ * Copyright 2014 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,9 +26,9 @@ import net.java.sip.communicator.service.protocol.event.FileTransferCreatedEvent
 import net.java.sip.communicator.service.protocol.event.FileTransferRequestEvent;
 import net.java.sip.communicator.service.protocol.event.ScFileTransferListener;
 
+import org.atalk.impl.timberlog.TimberLog;
 import org.atalk.ohos.gui.chat.ChatPanel;
 import org.atalk.ohos.gui.chat.ChatSessionManager;
-import org.atalk.impl.timberlog.TimberLog;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;

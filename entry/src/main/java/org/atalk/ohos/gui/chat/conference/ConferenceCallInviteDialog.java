@@ -13,13 +13,14 @@
  */
 package org.atalk.ohos.gui.chat.conference;
 
-import ohos.agp.components.Button;
-import ohos.agp.components.Component;
-import ohos.agp.components.LayoutScatter;
-import ohos.agp.components.ListContainer;
-import ohos.agp.window.dialog.BaseDialog;
-import ohos.agp.window.dialog.IDialog;
-import ohos.app.Context;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ExpandableListView;
+import android.widget.ExpandableListView.OnChildClickListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.java.sip.communicator.service.contactlist.MetaContact;
+import net.java.sip.communicator.service.gui.ContactList;
 import net.java.sip.communicator.service.protocol.Call;
 import net.java.sip.communicator.service.protocol.CallConference;
 import net.java.sip.communicator.service.protocol.OperationSet;
@@ -38,18 +40,19 @@ import net.java.sip.communicator.service.protocol.ProtocolProviderActivator;
 import net.java.sip.communicator.service.protocol.ProtocolProviderService;
 import net.java.sip.communicator.util.ConfigurationUtils;
 
-import org.atalk.ohos.ResourceTable;
+import org.atalk.ohos.R;
 import org.atalk.ohos.gui.call.CallManager;
-import org.atalk.ohos.gui.contactlist.ContactListSlice;
-import org.atalk.ohos.gui.contactlist.model.MetaContactListProvider;
-import org.atalk.ohos.gui.dialogs.DialogA;
+import org.atalk.ohos.gui.contactlist.ContactListFragment;
+import org.atalk.ohos.gui.contactlist.model.BaseContactListAdapter;
+import org.atalk.ohos.gui.contactlist.model.MetaContactListAdapter;
+import org.atalk.ohos.gui.contactlist.model.MetaGroupExpandHandler;
 
 /**
  * The invite dialog is the one shown when the user clicks on the conference button in the chat toolbar.
  *
  * @author Eng Chong Meng
  */
-public class ConferenceCallInviteDialog implements ListContainer.ItemClickedListener { //}  OnChildClickListener {
+public class ConferenceCallInviteDialog extends Dialog implements OnChildClickListener, DialogInterface.OnShowListener {
     private static final boolean MUC_OFFLINE_ALLOW = true;
 
     private Button mInviteButton;
@@ -57,15 +60,27 @@ public class ConferenceCallInviteDialog implements ListContainer.ItemClickedList
     /**
      * Contact list data model.
      */
-    protected MetaContactListProvider contactListAdapter;
+    protected MetaContactListAdapter contactListAdapter;
 
     /**
      * The contact list view.
      */
-    // protected ExpandableListContainer contactListContainer;
-    protected ListContainer contactListContainer;
+    protected ExpandableListView contactListView;
 
-    private final Context mContext;
+    /**
+     * Stores last clicked <code>MetaContact</code>.
+     */
+    public MetaContact clickedContact;
+
+    /**
+     * The source contact list.
+     */
+    protected ContactList srcContactList;
+
+    /**
+     * The destination contact list.
+     */
+    protected ContactList destContactList;
 
     /**
      * A map of all active chats i.e. metaContactChat, MUC etc.
@@ -97,16 +112,17 @@ public class ConferenceCallInviteDialog implements ListContainer.ItemClickedList
      * @param isJitsiVideobridge <code>true</code> if this dialog should create a conference through
      * a Jitsi Videobridge; otherwise, <code>false</code>
      */
-    public ConferenceCallInviteDialog(Context context, CallConference conference, ProtocolProviderService preselectedProvider,
+    public ConferenceCallInviteDialog(Context mContext, CallConference conference, ProtocolProviderService preselectedProvider,
             List<ProtocolProviderService> protocolProviders, final boolean isJitsiVideobridge) {
+        super(mContext);
 
-        mContext = context;
         this.conference = conference;
         this.preselectedProtocolProvider = preselectedProvider;
         this.isJitsiVideobridge = isJitsiVideobridge;
 
         if (preselectedProtocolProvider == null)
             initAccountSelectorPanel(protocolProviders);
+        setOnShowListener(this);
     }
 
     /**
@@ -114,10 +130,11 @@ public class ConferenceCallInviteDialog implements ListContainer.ItemClickedList
      * provider to be used and if this is an invite for a video bridge conference.
      *
      * @param protocolProviders the protocol providers list
-     * @param isJitsiVideobridge <code>true</code> if this dialog should create a conference
-     * through a Jitsi Videobridge; otherwise, <code>false</code>
+     * @param isJitsiVideobridge <code>true</code> if this dialog should create a conference through a Jitsi Videobridge;
+     * otherwise, <code>false</code>
      */
-    public ConferenceCallInviteDialog(Context mContext, List<ProtocolProviderService> protocolProviders, boolean isJitsiVideobridge) {
+    public ConferenceCallInviteDialog(Context mContext,
+            List<ProtocolProviderService> protocolProviders, boolean isJitsiVideobridge) {
         this(mContext, null, null, protocolProviders, isJitsiVideobridge);
     }
 
@@ -126,31 +143,39 @@ public class ConferenceCallInviteDialog implements ListContainer.ItemClickedList
      * provider to be used and if this is an invite for a video bridge conference.
      *
      * @param selectedConfProvider the preselected protocol provider
-     * @param isJitsiVideobridge <code>true</code> if this dialog should create a conference
-     * through a Jitsi Videobridge; otherwise, <code>false</code>
+     * @param isJitsiVideobridge <code>true</code> if this dialog should create a conference through a Jitsi Videobridge;
+     * otherwise, <code>false</code>
      */
-    public ConferenceCallInviteDialog(Context mContext, ProtocolProviderService selectedConfProvider, boolean isJitsiVideobridge) {
+    public ConferenceCallInviteDialog(Context mContext, ProtocolProviderService selectedConfProvider,
+            boolean isJitsiVideobridge) {
         this(mContext, null, selectedConfProvider, null, isJitsiVideobridge);
     }
 
-    public DialogA create() {
-        LayoutScatter inflater = LayoutScatter.getInstance(mContext);
-        Component dialogComponent = inflater.parse(ResourceTable.Layout_videobridge_invite_dialog, null, false);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setTitle(R.string.invite_contact_to_videoBridge);
 
-        contactListContainer = dialogComponent.findComponentById(ResourceTable.Id_ContactListContainer);
-        // contactListContainer.setSelector(ResourceTable.Media_list_selector_state);
-        contactListContainer.setItemClickedListener(this);
+        this.setContentView(R.layout.videobridge_invite_dialog);
+        contactListView = this.findViewById(R.id.ContactListView);
+        contactListView.setSelector(R.drawable.list_selector_state);
+        contactListView.setOnChildClickListener(this);
 
         // Adds context menu for contact list items
-        // registerForContextMenu(contactListContainer);
+        registerForContextMenu(contactListView);
         initListAdapter();
 
-        DialogA.Builder builder = new DialogA.Builder(mContext);
-        builder.setTitle(ResourceTable.String_invite_contact_to_videoBridge)
-                .setComponent(dialogComponent)
-                .setNegativeButton(ResourceTable.String_cancel, DialogA::remove);
+        mInviteButton = this.findViewById(R.id.button_invite);
+        if (mucContactList.isEmpty()) {
+            mInviteButton.setEnabled(false);
+            mInviteButton.setAlpha(.3f);
+        }
+        else {
+            mInviteButton.setEnabled(true);
+            mInviteButton.setAlpha(1.0f);
+        }
 
-        builder.setPositiveButton(ResourceTable.String_invite, dialog -> {
+        mInviteButton.setOnClickListener(v -> {
             List<MetaContact> mContacts = new LinkedList<>(mucContactList.values());
             if (!mContacts.isEmpty()) {
                 if (isJitsiVideobridge)
@@ -160,66 +185,55 @@ public class ConferenceCallInviteDialog implements ListContainer.ItemClickedList
 
                 // Store the last used account in order to pre-select it next time.
                 ConfigurationUtils.setLastCallConferenceProvider(preselectedProtocolProvider);
-                dialog.remove();
+                closeDialog();
             }
         });
 
-        DialogA inviteDialog = builder.create();
-        inviteDialog.registerDisplayCallback(displayCallback);
-
-        mInviteButton = inviteDialog.getButton(DialogA.BUTTON_POSITIVE);
-        if (mucContactList.isEmpty()) {
-            mInviteButton.setEnabled(false);
-            mInviteButton.setAlpha(.3f);
-        }
-        else {
-            mInviteButton.setEnabled(true);
-            mInviteButton.setAlpha(1.0f);
-        }
-        return inviteDialog;
+        Button mCancelButton = this.findViewById(R.id.buttonCancel);
+        mCancelButton.setOnClickListener(v -> closeDialog());
+        // this.initContactListData();
     }
 
-
-    BaseDialog.DisplayCallback displayCallback = new BaseDialog.DisplayCallback() {
-        @Override
-        public void onDisplay(IDialog iDialog) {
-            List<MetaContact> mContacts = new LinkedList<>(mucContactList.values());
-            int indexes = contactListAdapter.getGroupCount();
-            for (MetaContact mContact : mContacts) {
-                int childIdx;
-                for (int gIdx = 0; gIdx < indexes; gIdx++) {
-                    childIdx = contactListAdapter.getChildIndex(gIdx, mContact);
-                    if (childIdx != -1) {
-                        childIdx += gIdx + 1;
-                        contactListContainer.getComponentAt(childIdx).setSelected(true);
-                        break;
-                    }
-                }
-            }
-        }
-    };
-
     private void initListAdapter() {
-        contactListContainer.setItemProvider(getContactListAdapter());
+        contactListView.setAdapter(getContactListAdapter());
 
-        /*
-         * Meta contact groups expand memory.
-         */
-        // MetaGroupExpandHandler listExpandHandler = new MetaGroupExpandHandler(contactListAdapter, contactListContainer);
-        // listExpandHandler.bindAndRestore();
+        // Attach Meta contact groups expand memory
+        MetaGroupExpandHandler listExpandHandler = new MetaGroupExpandHandler(contactListAdapter, contactListView);
+        listExpandHandler.bindAndRestore();
 
         // setDialogMode to true to avoid contacts being filtered
         contactListAdapter.setDialogMode(true);
 
-        // Update ExpandedList Component.
+        // Update ExpandedList View
         contactListAdapter.invalidateViews();
     }
 
-    private MetaContactListProvider getContactListAdapter() {
+    public void chkSelectedContact() {
+        List<MetaContact> mContacts = new LinkedList<>(mucContactList.values());
+        int indexes = contactListAdapter.getGroupCount();
+        for (MetaContact mContact : mContacts) {
+            int childIdx;
+            for (int gIdx = 0; gIdx < indexes; gIdx++) {
+                childIdx = contactListAdapter.getChildIndex(gIdx, mContact);
+                if (childIdx != -1) {
+                    contactListView.setItemChecked(childIdx, true);
+                    break;
+                }
+            }
+        }
+    }
+
+    public void closeDialog() {
+        // must clear dialogMode on exit dialog
+        contactListAdapter.setDialogMode(false);
+        this.cancel();
+    }
+
+    private MetaContactListAdapter getContactListAdapter() {
         if (contactListAdapter == null) {
-            ContactListSlice clf = new ContactListSlice(mContext); //(ContactListSlice) aTalk.getFragment(aTalk.CL_FRAGMENT);
+            ContactListFragment clf = new ContactListFragment(); //(ContactListFragment) aTalk.getFragment(aTalk.CL_FRAGMENT);
             // Disable call button options
-            contactListAdapter = new MetaContactListProvider(clf, false);
+            contactListAdapter = new MetaContactListAdapter(clf, false);
             contactListAdapter.initModelData();
         }
         // Do not include groups with zero member in main contact list
@@ -227,16 +241,22 @@ public class ConferenceCallInviteDialog implements ListContainer.ItemClickedList
         return contactListAdapter;
     }
 
+    /**
+     *
+     */
     @Override
-    public void onItemClicked(ListContainer listView, Component clicked, int position, long id) {
-        /// BaseContactListProvider adapter = (BaseContactListProvider) listView.getExpandableListAdapter();
-        contactListContainer.setSelectedItemIndex(position);
+    public boolean onChildClick(ExpandableListView listView, View v, int groupPosition,
+            int childPosition, long id) {
+        BaseContactListAdapter adapter = (BaseContactListAdapter) listView.getExpandableListAdapter();
+        int position = adapter.getListIndex(groupPosition, childPosition);
+        contactListView.setSelection(position);
+        // adapter.invalidateViews();
 
         // Get v index for multiple selection highlight
-        /// int index = listView.getFlatListPosition(ExpandableListContainer.getPackedPositionForChild(
-        ///     groupPosition, childPosition));
+        int index = listView.getFlatListPosition(ExpandableListView.getPackedPositionForChild(
+                groupPosition, childPosition));
 
-        /// Object clicked = adapter.getChild(groupPosition, childPosition);
+        Object clicked = adapter.getChild(groupPosition, childPosition);
         if ((clicked instanceof MetaContact)) {
             MetaContact metaContact = (MetaContact) clicked;
             if (MUC_OFFLINE_ALLOW
@@ -245,11 +265,13 @@ public class ConferenceCallInviteDialog implements ListContainer.ItemClickedList
                 String key = metaContact.getMetaUID();
                 if (mucContactList.containsKey(key)) {
                     mucContactList.remove(key);
-                    clicked.setSelected(false);
+                    listView.setItemChecked(index, false);
+                    // v.setSelected(false);
                 }
                 else {
                     mucContactList.put(key, metaContact);
-                    clicked.setSelected(true);
+                    listView.setItemChecked(index, true);
+                    // v.setSelected(true); for single item selection only
                 }
 
                 if (mucContactList.isEmpty()) {
@@ -260,8 +282,11 @@ public class ConferenceCallInviteDialog implements ListContainer.ItemClickedList
                     mInviteButton.setEnabled(true);
                     mInviteButton.setAlpha(1.0f);
                 }
+                return true;
             }
+            return false;
         }
+        return false;
     }
 
     /**
@@ -285,9 +310,12 @@ public class ConferenceCallInviteDialog implements ListContainer.ItemClickedList
      * selector box
      */
     private void initAccountListData(List<ProtocolProviderService> protocolProviders) {
-        for (ProtocolProviderService pps : protocolProviders) {
-            // accountSelectorBox.addItem(pps);
+        for (ProtocolProviderService protocolProvider : protocolProviders) {
+            // accountSelectorBox.addItem(protocolProvider);
         }
+
+        // if (accountSelectorBox.getItemCount() > 0)
+        // accountSelectorBox.setSelectedIndex(0);
     }
 
     /**
@@ -320,6 +348,10 @@ public class ConferenceCallInviteDialog implements ListContainer.ItemClickedList
                 }
             }
         }
+        // if (pps != null)
+        // accountSelectorBox.setSelectedItem(pps);
+        // else if (accountSelectorBox.getItemCount() > 0)
+        // accountSelectorBox.setSelectedIndex(0);
     }
 
     /**
@@ -330,6 +362,7 @@ public class ConferenceCallInviteDialog implements ListContainer.ItemClickedList
         List<String> callees = new ArrayList<>();
 
         // Collection<String> selectedContactAddresses = new ArrayList<String>();
+
         for (MetaContact mContact : mContacts) {
             String mAddress = mContact.getDefaultContact().getAddress();
             callees.add(mAddress);
@@ -347,6 +380,58 @@ public class ConferenceCallInviteDialog implements ListContainer.ItemClickedList
             }
         }
     }
+
+    /**
+     * Invites the contacts to the chat conference.
+     *
+     * @param contacts
+     *        the list of contacts to invite
+     */
+//	private void inviteContacts(Collection<UIContact> contacts)
+//	{
+//		ProtocolProviderService selectedProvider;
+//		Map<ProtocolProviderService, List<String>> selectedProviderCallees = new HashMap<ProtocolProviderService, List<String>>();
+//		List<String> callees;
+//
+//		Iterator<UIContact> contactsIter = contacts.iterator();
+//
+//		while (contactsIter.hasNext()) {
+//			UIContact uiContact = contactsIter.next();
+//
+//			Iterator<UIContactDetail> contactDetailsIter = uiContact
+//				.getContactDetailsForOperationSet(OperationSetBasicTelephony.class).iterator();
+//
+//			// We invite the first protocol contact that corresponds to the invite provider.
+//			if (contactDetailsIter.hasNext()) {
+//				UIContactDetail inviteDetail = contactDetailsIter.next();
+//				selectedProvider = inviteDetail
+//					.getPreferredProtocolProvider(OperationSetBasicTelephony.class);
+//
+//				if (selectedProvider == null) {
+//					// selectedProvider = (ProtocolProviderService)
+//					// accountSelectorBox.getSelectedItem();
+//				}
+//
+//				if (selectedProvider != null
+//					&& selectedProviderCallees.get(selectedProvider) != null) {
+//					callees = selectedProviderCallees.get(selectedProvider);
+//				}
+//				else {
+//					callees = new ArrayList<String>();
+//				}
+//
+//				callees.add(inviteDetail.getAddress());
+//				selectedProviderCallees.put(selectedProvider, callees);
+//			}
+//		}
+//
+//		if (conference != null) {
+//			CallManager.inviteToConferenceCall(selectedProviderCallees, conference);
+//		}
+//		else {
+//			CallManager.createConferenceCall(selectedProviderCallees);
+//		}
+//	}
 
     /**
      * Invites the contacts to the chat conference.
@@ -371,6 +456,58 @@ public class ConferenceCallInviteDialog implements ListContainer.ItemClickedList
             else {
                 CallManager.createJitsiVideobridgeConfCall(preselectedProvider,
                         callees.toArray(new String[0]));
+            }
+        }
+    }
+
+//	/**
+//	 * Invites the contacts to the chat conference.
+//	 *
+//	 * @param mContacts
+//	 *        the list of contacts to invite
+//	 */
+//	private void inviteJitsiVideobridgeContacts(ProtocolProviderService preselectedProvider,
+//		Collection<UIContact> mcontacts)
+//	{
+//		List<String> callees = new ArrayList<String>();
+//		Iterator<UIContact> contactsIter = contacts.iterator();
+//
+//		while (contactsIter.hasNext()) {
+//			UIContact uiContact = contactsIter.next();
+//
+//			Iterator<UIContactDetail> contactDetailsIter = uiContact
+//				.getContactDetailsForOperationSet(OperationSetBasicTelephony.class).iterator();
+//
+//			// We invite the first protocol contact that corresponds to the invite provider.
+//			if (contactDetailsIter.hasNext()) {
+//				UIContactDetail inviteDetail = contactDetailsIter.next();
+//				callees.add(inviteDetail.getAddress());
+//			}
+//		}
+//
+//		if (conference != null) {
+//			CallManager.inviteToJitsiVideobridgeConfCall(
+//				callees.toArray(new String[callees.size()]), conference.getCalls().get(0));
+//		}
+//		else {
+//			CallManager.createJitsiVideobridgeConfCall(preselectedProvider,
+//				callees.toArray(new String[callees.size()]));
+//		}
+//	}
+
+    @Override
+    public void onShow(DialogInterface arg0) {
+        List<MetaContact> mContacts = new LinkedList<>(mucContactList.values());
+        int indexes = contactListAdapter.getGroupCount();
+        for (MetaContact mContact : mContacts) {
+            int childIdx;
+            for (int gIdx = 0; gIdx < indexes; gIdx++) {
+                childIdx = contactListAdapter.getChildIndex(gIdx, mContact);
+                if (childIdx != -1) {
+                    childIdx += gIdx + 1;
+                    contactListView.setItemChecked(childIdx, true);
+                    break;
+                }
             }
         }
     }

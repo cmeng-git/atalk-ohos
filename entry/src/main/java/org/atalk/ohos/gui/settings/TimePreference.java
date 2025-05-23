@@ -1,6 +1,6 @@
 /*
- * aTalk, ohos VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * aTalk, android VoIP and Instant Messaging client
+ * Copyright 2014 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,16 @@
  */
 package org.atalk.ohos.gui.settings;
 
+import android.content.Context;
+import android.content.res.TypedArray;
+import android.util.AttributeSet;
+
+import androidx.preference.DialogPreference;
+import androidx.preference.Preference;
+
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
-
-import ohos.app.Context;
 
 /**
  * This class is used in our preference where user can pick a quiet time for notifications not to appear.

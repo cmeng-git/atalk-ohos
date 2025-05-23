@@ -15,6 +15,9 @@ package org.atalk.util.dsi;
 
 import org.atalk.impl.timberlog.TimberLog;
 import org.atalk.util.concurrent.ExecutorUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.beans.PropertyChangeListener;
 import java.lang.ref.WeakReference;
@@ -24,16 +27,14 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 
-import ohos.utils.zson.ZSONArray;
-import ohos.utils.zson.ZSONObject;
-
 /**
  * Implements {@link ActiveSpeakerDetector} with inspiration from the paper &quot;Dominant Speaker
  * Identification for Multipoint Videoconferencing&quot; by Ilana Volfin and Israel Cohen.
  *
  * @author Lyubomir Marinov
  */
-public class DominantSpeakerIdentification extends AbstractActiveSpeakerDetector {
+public class DominantSpeakerIdentification extends AbstractActiveSpeakerDetector
+{
     /**
      * The threshold of the relevant speech activities in the immediate time-interval in
      * &quot;global decision&quot;/&quot;Dominant speaker selection&quot; phase of the algorithm.
@@ -170,11 +171,11 @@ public class DominantSpeakerIdentification extends AbstractActiveSpeakerDetector
      *
      * @param n the number of possibilities to pick from
      * @param r the number unordered outcomes to pick from <code>n</code>
-     *
      * @return the binomial coefficient indexed by <code>n</code> and <code>r</code> i.e. the number of
      * ways of picking <code>r</code> unordered outcomes from <code>n</code> possibilities
      */
-    private static long binomialCoefficient(int n, int r) {
+    private static long binomialCoefficient(int n, int r)
+    {
         int m = n - r; // r = Math.max(r, n - r);
 
         if (r < m)
@@ -188,7 +189,8 @@ public class DominantSpeakerIdentification extends AbstractActiveSpeakerDetector
         return t;
     }
 
-    private static boolean computeBigs(byte[] littles, byte[] bigs, int threshold) {
+    private static boolean computeBigs(byte[] littles, byte[] bigs, int threshold)
+    {
         int bigLength = bigs.length;
         int littleLengthPerBig = littles.length / bigLength;
         boolean changed = false;
@@ -208,7 +210,8 @@ public class DominantSpeakerIdentification extends AbstractActiveSpeakerDetector
         return changed;
     }
 
-    private static double computeSpeechActivityScore(int vL, int nR, double p, double lambda) {
+    private static double computeSpeechActivityScore(int vL, int nR, double p, double lambda)
+    {
         double speechActivityScore = Math.log(binomialCoefficient(nR, vL)) + vL * Math.log(p)
                 + (nR - vL) * Math.log(1 - p) - Math.log(lambda) + lambda * vL;
 
@@ -272,7 +275,8 @@ public class DominantSpeakerIdentification extends AbstractActiveSpeakerDetector
     /**
      * Initializes a new <code>DominantSpeakerIdentification</tT> instance.
      */
-    public DominantSpeakerIdentification() {
+    public DominantSpeakerIdentification()
+    {
     }
 
     /**
@@ -282,7 +286,8 @@ public class DominantSpeakerIdentification extends AbstractActiveSpeakerDetector
      * @param listener a <code>PropertyChangeListener</code> to be notified about changes in the values of the
      * properties of this <code>DominantSpeakerIdentification</code>
      */
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
+    public void addPropertyChangeListener(PropertyChangeListener listener)
+    {
         propertyChangeNotifier.addPropertyChangeListener(listener);
     }
 
@@ -295,50 +300,56 @@ public class DominantSpeakerIdentification extends AbstractActiveSpeakerDetector
      *
      * @param decisionMaker the <code>DecisionMaker</code> which has exited
      */
-    synchronized void decisionMakerExited(DecisionMaker decisionMaker) {
+    synchronized void decisionMakerExited(DecisionMaker decisionMaker)
+    {
         if (this.decisionMaker == decisionMaker)
             this.decisionMaker = null;
     }
 
     /**
-     * Retrieves a ZSON representation of this instance for the purposes of the REST API of Videobridge.
-     * <p>
+     * Retrieves a JSON representation of this instance for the purposes of the REST API of Videobridge.
+     *
      * By the way, the method name reflects the fact that the method handles an HTTP GET request.
      *
-     * @return a <code>ZSONObject</code> which represents this instance of the purposes of the REST API of Videobridge
+     * @return a <code>JSONObject</code> which represents this instance of the purposes of the REST API of Videobridge
      */
-    public ZSONObject doGetZSON() {
-        ZSONObject zsonObject;
+    public JSONObject doGetJSON()
+    {
+        JSONObject jsonObject;
         if (TimberLog.isTraceEnable) {
             synchronized (this) {
-                zsonObject = new ZSONObject();
+                jsonObject = new JSONObject();
 
                 // dominantSpeaker
                 long dominantSpeaker = getDominantSpeaker();
-                zsonObject.put("dominantSpeaker", (dominantSpeaker == -1) ? null : dominantSpeaker);
-                // speakers
-                Collection<Speaker> speakersCollection = this.speakers.values();
-                ZSONArray speakersArray = new ZSONArray();
+                try {
+                    jsonObject.put("dominantSpeaker", (dominantSpeaker == -1) ? null : dominantSpeaker);
+                    // speakers
+                    Collection<Speaker> speakersCollection = this.speakers.values();
+                    JSONArray speakersArray = new JSONArray();
 
-                for (Speaker speaker : speakersCollection) {
-                    // ssrc
-                    ZSONObject speakerZSONObject = new ZSONObject();
-                    speakerZSONObject.put("ssrc", speaker.ssrc);
+                    for (Speaker speaker : speakersCollection) {
+                        // ssrc
+                        JSONObject speakerJSONObject = new JSONObject();
+                        speakerJSONObject.put("ssrc", Long.valueOf(speaker.ssrc));
 
-                    // levels
-                    speakerZSONObject.put("levels", speaker.getLevels());
-                    speakersArray.add(speakerZSONObject);
+                        // levels
+                        speakerJSONObject.put("levels", speaker.getLevels());
+                        speakersArray.put(speakerJSONObject);
+                    }
+
+                    jsonObject.put("speakers", speakersArray);
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-
-                zsonObject.put("speakers", speakersArray);
             }
         }
         else {
-            // Retrieving a ZSON representation of a DominantSpeakerIdentification has been
+            // Retrieving a JSON representation of a DominantSpeakerIdentification has been
             // implemented for the purposes of debugging only.
-            zsonObject = null;
+            jsonObject = null;
         }
-        return zsonObject;
+        return jsonObject;
     }
 
     /**
@@ -351,7 +362,8 @@ public class DominantSpeakerIdentification extends AbstractActiveSpeakerDetector
      * @param oldValue the value of the property with the specified name before the change
      * @param newValue the value of the property with the specified name after the change
      */
-    protected void firePropertyChange(String property, Long oldValue, Long newValue) {
+    protected void firePropertyChange(String property, Long oldValue, Long newValue)
+    {
         firePropertyChange(property, (Object) oldValue, (Object) newValue);
 
         if (DOMINANT_SPEAKER_PROPERTY_NAME.equals(property)) {
@@ -371,7 +383,8 @@ public class DominantSpeakerIdentification extends AbstractActiveSpeakerDetector
      * @param oldValue the value of the property with the specified name before the change
      * @param newValue the value of the property with the specified name after the change
      */
-    protected void firePropertyChange(String property, Object oldValue, Object newValue) {
+    protected void firePropertyChange(String property, Object oldValue, Object newValue)
+    {
         propertyChangeNotifier.firePropertyChange(property, oldValue, newValue);
     }
 
@@ -380,7 +393,8 @@ public class DominantSpeakerIdentification extends AbstractActiveSpeakerDetector
      *
      * @return the synchronization source identifier (SSRC) of the dominant speaker in this multipoint conference
      */
-    public long getDominantSpeaker() {
+    public long getDominantSpeaker()
+    {
         Long dominantSSRC = this.dominantSSRC;
 
         return (dominantSSRC == null) ? -1 : dominantSSRC;
@@ -392,10 +406,10 @@ public class DominantSpeakerIdentification extends AbstractActiveSpeakerDetector
      * <code>ssrc</code>, added to this multipoint conference and returned.
      *
      * @param ssrc the SSRC identifying the <code>Speaker</code> to return
-     *
      * @return the <code>Speaker</code> in this multipoint conference identified by the specified <code>ssrc</code>
      */
-    private synchronized Speaker getOrCreateSpeaker(long ssrc) {
+    private synchronized Speaker getOrCreateSpeaker(long ssrc)
+    {
         Long key = ssrc;
         Speaker speaker = speakers.get(key);
 
@@ -414,7 +428,8 @@ public class DominantSpeakerIdentification extends AbstractActiveSpeakerDetector
      * {@inheritDoc}
      */
     @Override
-    public void levelChanged(long ssrc, int level) {
+    public void levelChanged(long ssrc, int level)
+    {
         Speaker speaker;
         long now = System.currentTimeMillis();
 
@@ -435,14 +450,16 @@ public class DominantSpeakerIdentification extends AbstractActiveSpeakerDetector
                 maybeStartDecisionMaker();
             }
         }
-        speaker.levelChanged(level, now);
+        if (speaker != null)
+            speaker.levelChanged(level, now);
     }
 
     /**
      * Makes the decision whether there has been a speaker switch event. If there has been such an
      * event, notifies the registered listeners that a new speaker is dominating the multipoint conference.
      */
-    private void makeDecision() {
+    private void makeDecision()
+    {
         // If we have to fire events to any registered listeners eventually, we
         // will want to do it outside the synchronized block.
         Long oldDominantSpeakerValue = null, newDominantSpeakerValue = null;
@@ -536,7 +553,8 @@ public class DominantSpeakerIdentification extends AbstractActiveSpeakerDetector
      * this <code>DominantSpeakerIdentification</code> justifies the start of such a background thread
      * (e.g. there is at least one <code>Speaker</code> in this multipoint conference).
      */
-    private synchronized void maybeStartDecisionMaker() {
+    private synchronized void maybeStartDecisionMaker()
+    {
         if ((this.decisionMaker == null) && !speakers.isEmpty()) {
             DecisionMaker decisionMaker = new DecisionMaker(this);
             boolean scheduled = false;
@@ -560,7 +578,8 @@ public class DominantSpeakerIdentification extends AbstractActiveSpeakerDetector
      * @param listener a <code>PropertyChangeListener</code> to no longer be notified about changes in the values
      * of the properties of this <code>DominantSpeakerIdentification</code>
      */
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
+    public void removePropertyChangeListener(PropertyChangeListener listener)
+    {
         propertyChangeNotifier.removePropertyChangeListener(listener);
     }
 
@@ -571,7 +590,8 @@ public class DominantSpeakerIdentification extends AbstractActiveSpeakerDetector
      * @return a negative integer if the <code>DecisionMaker</code> is to exit or a non-negative
      * integer to specify the time in milliseconds until the next execution of the <code>DecisionMaker</code>
      */
-    private long runInDecisionMaker() {
+    private long runInDecisionMaker()
+    {
         long now = System.currentTimeMillis();
         long levelIdleTimeout = LEVEL_IDLE_TIMEOUT - (now - lastLevelIdleTime);
         long sleep = 0;
@@ -610,11 +630,11 @@ public class DominantSpeakerIdentification extends AbstractActiveSpeakerDetector
      * the decision whether there has been a speaker switch event.
      *
      * @param decisionMaker the <code>DecisionMaker</code> invoking the method
-     *
      * @return a negative integer if the <code>decisionMaker</code> is to exit or a non-negative
      * integer to specify the time in milliseconds until the next execution of the <code>decisionMaker</code>
      */
-    long runInDecisionMaker(DecisionMaker decisionMaker) {
+    long runInDecisionMaker(DecisionMaker decisionMaker)
+    {
         synchronized (this) {
             // Most obviously, DecisionMakers no longer employed by this
             // DominantSpeakerIdentification should cease to exist as soon as possible.
@@ -643,7 +663,8 @@ public class DominantSpeakerIdentification extends AbstractActiveSpeakerDetector
      *
      * @param now the time at which the timing out is being detected
      */
-    private synchronized void timeoutIdleLevels(long now) {
+    private synchronized void timeoutIdleLevels(long now)
+    {
         Iterator<Map.Entry<Long, Speaker>> i = speakers.entrySet().iterator();
 
         while (i.hasNext()) {
@@ -669,7 +690,8 @@ public class DominantSpeakerIdentification extends AbstractActiveSpeakerDetector
      *
      * @author Lyubomir Marinov
      */
-    private static class DecisionMaker implements Runnable {
+    private static class DecisionMaker implements Runnable
+    {
         /**
          * The <code>DominantSpeakerIdentification</code> instance which is repeatedly run into this
          * background thread in order to make the (global) decision about speaker switches. It is a
@@ -686,7 +708,8 @@ public class DominantSpeakerIdentification extends AbstractActiveSpeakerDetector
          * @param algorithm the <code>DominantSpeakerIdentification</code> to be repeatedly run by the new
          * instance in order to make the (global) decision about speaker switches
          */
-        public DecisionMaker(DominantSpeakerIdentification algorithm) {
+        public DecisionMaker(DominantSpeakerIdentification algorithm)
+        {
             this.algorithm = new WeakReference<>(algorithm);
         }
 
@@ -695,7 +718,8 @@ public class DominantSpeakerIdentification extends AbstractActiveSpeakerDetector
          * switches until the multipoint conference expires.
          */
         @Override
-        public void run() {
+        public void run()
+        {
             try {
                 do {
                     DominantSpeakerIdentification algorithm = this.algorithm.get();
@@ -743,24 +767,27 @@ public class DominantSpeakerIdentification extends AbstractActiveSpeakerDetector
      *
      * @author Lyubomir Marinov
      */
-    private class PropertyChangeNotifier extends org.atalk.util.event.PropertyChangeNotifier {
+    private class PropertyChangeNotifier extends org.atalk.util.event.PropertyChangeNotifier
+    {
         /**
          * {@inheritDoc}
-         * <p>
+         *
          * Makes the super implementations (which is protected) public.
          */
         @Override
-        public void firePropertyChange(String property, Object oldValue, Object newValue) {
+        public void firePropertyChange(String property, Object oldValue, Object newValue)
+        {
             super.firePropertyChange(property, oldValue, newValue);
         }
 
         /**
          * {@inheritDoc}
-         * <p>
+         *
          * Always returns this <code>DominantSpeakerIdentification</code>.
          */
         @Override
-        protected Object getPropertyChangeSource(String property, Object oldValue, Object newValue) {
+        protected Object getPropertyChangeSource(String property, Object oldValue, Object newValue)
+        {
             return DominantSpeakerIdentification.this;
         }
     }
@@ -770,7 +797,8 @@ public class DominantSpeakerIdentification extends AbstractActiveSpeakerDetector
      *
      * @author Lyubomir Marinov
      */
-    private static class Speaker {
+    private static class Speaker
+    {
         private final byte[] immediates = new byte[LONG_COUNT * N3 * N2];
 
         /**
@@ -840,12 +868,14 @@ public class DominantSpeakerIdentification extends AbstractActiveSpeakerDetector
          *
          * @param ssrc the synchronization source identifier/SSRC of the new instance
          */
-        public Speaker(long ssrc) {
+        public Speaker(long ssrc)
+        {
             this.ssrc = ssrc;
             levels = new byte[immediates.length];
         }
 
-        private boolean computeImmediates() {
+        private boolean computeImmediates()
+        {
             // The minimum audio level received or measured for this Speaker is
             // the level of "silence" for this Speaker. Since the various
             // Speakers may differ in their levels of "silence", put all
@@ -872,18 +902,21 @@ public class DominantSpeakerIdentification extends AbstractActiveSpeakerDetector
             return changed;
         }
 
-        private boolean computeLongs() {
+        private boolean computeLongs()
+        {
             return computeBigs(mediums, longs, LONG_THRESHOLD);
         }
 
-        private boolean computeMediums() {
+        private boolean computeMediums()
+        {
             return computeBigs(immediates, mediums, MEDIUM_THRESHOLD);
         }
 
         /**
          * Computes/evaluates the speech activity score of this <code>Speaker</code> for the immediate time-interval.
          */
-        private void evaluateImmediateSpeechActivityScore() {
+        private void evaluateImmediateSpeechActivityScore()
+        {
             immediateSpeechActivityScore
                     = computeSpeechActivityScore(immediates[0], N1, 0.5, 0.78);
         }
@@ -891,14 +924,16 @@ public class DominantSpeakerIdentification extends AbstractActiveSpeakerDetector
         /**
          * Computes/evaluates the speech activity score of this <code>Speaker</code> for the long time-interval.
          */
-        private void evaluateLongSpeechActivityScore() {
+        private void evaluateLongSpeechActivityScore()
+        {
             longSpeechActivityScore = computeSpeechActivityScore(longs[0], N3, 0.5, 47);
         }
 
         /**
          * Computes/evaluates the speech activity score of this <code>Speaker</code> for the medium time-interval.
          */
-        private void evaluateMediumSpeechActivityScore() {
+        private void evaluateMediumSpeechActivityScore()
+        {
             mediumSpeechActivityScore = computeSpeechActivityScore(mediums[0], N2, 0.5, 24);
         }
 
@@ -907,7 +942,8 @@ public class DominantSpeakerIdentification extends AbstractActiveSpeakerDetector
          * and long time-intervals. Invoked when it is time to decide whether there has been a
          * speaker switch event.
          */
-        synchronized void evaluateSpeechActivityScores() {
+        synchronized void evaluateSpeechActivityScores()
+        {
             if (computeImmediates()) {
                 evaluateImmediateSpeechActivityScore();
                 if (computeMediums()) {
@@ -925,7 +961,8 @@ public class DominantSpeakerIdentification extends AbstractActiveSpeakerDetector
          * @return the time in milliseconds at which an actual (audio) level was reported or
          * measured for this <code>Speaker</code> last
          */
-        public synchronized long getLastLevelChangedTime() {
+        public synchronized long getLastLevelChangedTime()
+        {
             return lastLevelChangedTime;
         }
 
@@ -935,7 +972,8 @@ public class DominantSpeakerIdentification extends AbstractActiveSpeakerDetector
          * @return a <code>byte</code> array which represents the (history of) audio levels received or
          * measured for this <code>Speaker</code>
          */
-        byte[] getLevels() {
+        byte[] getLevels()
+        {
             // The levels of Speaker are internally maintained starting with the
             // last audio level received or measured for this Speaker and ending
             // with the first audio level received or measured for this Speaker.
@@ -954,11 +992,11 @@ public class DominantSpeakerIdentification extends AbstractActiveSpeakerDetector
          *
          * @param interval <code>0</code> for the immediate time-interval, <code>1</code> for the medium
          * time-interval, or <code>2</code> for the long time-interval
-         *
          * @return the speech activity score of this <code>Speaker</code> for the time-interval
          * specified by <code>index</code>
          */
-        double getSpeechActivityScore(int interval) {
+        double getSpeechActivityScore(int interval)
+        {
             switch (interval) {
                 case 0:
                     return immediateSpeechActivityScore;
@@ -977,7 +1015,8 @@ public class DominantSpeakerIdentification extends AbstractActiveSpeakerDetector
          * @param level the audio level which has been received or measured for this <code>Speaker</code>
          */
         @SuppressWarnings("unused")
-        public void levelChanged(int level) {
+        public void levelChanged(int level)
+        {
             levelChanged(level, System.currentTimeMillis());
         }
 
@@ -988,7 +1027,8 @@ public class DominantSpeakerIdentification extends AbstractActiveSpeakerDetector
          * @param time the (local <code>System</code>) time in milliseconds at which the specified
          * <code>level</code> has been received or measured
          */
-        public synchronized void levelChanged(int level, long time) {
+        public synchronized void levelChanged(int level, long time)
+        {
             // It sounds relatively reasonable that late audio levels should better be discarded.
             if (lastLevelChangedTime <= time) {
                 lastLevelChangedTime = time;
@@ -1017,7 +1057,8 @@ public class DominantSpeakerIdentification extends AbstractActiveSpeakerDetector
          * a certain time which very likely means that this <code>Speaker</code> will not have a level
          * within a certain time-frame of a <code>DominantSpeakerIdentification</code> algorithm.
          */
-        public synchronized void levelTimedOut() {
+        public synchronized void levelTimedOut()
+        {
             levelChanged(MIN_LEVEL, lastLevelChangedTime);
         }
 
@@ -1027,7 +1068,8 @@ public class DominantSpeakerIdentification extends AbstractActiveSpeakerDetector
          *
          * @param level the audio level received or measured for this <code>Speaker</code>
          */
-        private void updateMinLevel(byte level) {
+        private void updateMinLevel(byte level)
+        {
             if (level != MIN_LEVEL) {
                 if ((minLevel == MIN_LEVEL) || (minLevel > level)) {
                     minLevel = level;

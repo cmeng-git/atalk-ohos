@@ -1,6 +1,6 @@
 /*
  * aTalk, android VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * Copyright 2014 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,68 +16,85 @@
  */
 package org.atalk.ohos.plugin.geolocation;
 
+import android.app.Service;
+import android.content.Context;
+import android.content.Intent;
+import android.location.Address;
+import android.location.Criteria;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
+import android.os.CancellationSignal;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Looper;
+import android.text.TextUtils;
+
+import androidx.annotation.Nullable;
+import androidx.core.location.LocationListenerCompat;
+import androidx.core.location.LocationManagerCompat;
+import androidx.core.location.LocationRequestCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
-import ohos.aafwk.ability.Ability;
-import ohos.aafwk.content.Intent;
-import ohos.aafwk.content.IntentParams;
-import ohos.aafwk.content.Operation;
-import ohos.event.commonevent.CommonEventData;
-import ohos.event.commonevent.CommonEventManager;
-import ohos.eventhandler.EventHandler;
-import ohos.eventhandler.EventRunner;
-import ohos.location.GeoAddress;
-import ohos.location.GeoConvert;
-import ohos.location.Location;
-import ohos.location.Locator;
-import ohos.location.LocatorCallback;
-import ohos.location.RequestParam;
-import ohos.rpc.RemoteException;
 
 import timber.log.Timber;
 
 /**
  * GeoLocation service that retrieve current location update, and broadcast to the intended receiver.
- * Use the best available Location provider on the device in onStart()
+ * Use the best available Location provider on the device in onCreate()
  *
  * @author Eng Chong Meng
  */
-public class LocationBgService extends Ability {
+public class LocationBgService extends Service implements LocationListenerCompat {
     private static final long NO_FALLBACK = 0;
-    private Locator mLocator;
-    private LocationCallback mLocationCallback;
-    private EventHandler mEventHandler;
+    private LocationManager mLocationManager;
+    private String mProvider;
+    private Handler mServiceHandler;
+
     private int mLocationMode;
     private boolean mAddressRequest;
-    private int mLocationUpdateMinTime = 0;
-    private int mLocationUpdateMinDistance = 0;
+    private long mLocationUpdateMinTime = 0;
+    private float mLocationUpdateMinDistance = 0.0f;
     private long fallBackToLastLocationTime;
 
+    @Nullable
     @Override
-    public void onStart(Intent intent) {
-        super.onStart(intent);
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
 
-        mLocator = new Locator(getContext());
-        mLocationCallback = new LocationCallback();
-        mEventHandler = new EventHandler(EventRunner.create());
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        mServiceHandler = new Handler(Looper.getMainLooper());
+
+        Criteria criteria = new Criteria();
+        criteria.setAccuracy(Criteria.ACCURACY_FINE);
+        criteria.setVerticalAccuracy(Criteria.ACCURACY_HIGH);
+        criteria.setPowerRequirement(Criteria.POWER_MEDIUM);
+
+        mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        mProvider = mLocationManager.getBestProvider(criteria, true);
+        Timber.d("Best location provider selected: %s", mProvider);
     }
 
     @SuppressWarnings("MissingPermission")
     @Override
-    protected void onCommand(Intent intent, boolean restart, int startId) {
-        super.onCommand(intent, restart, startId);
-
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        super.onStartCommand(intent, flags, startId);
         String actionIntent = intent.getAction();
         // action not defined on gps service first startup
         if (actionIntent == null) {
-            return;
+            return START_NOT_STICKY;
         }
 
         Timber.d("Location background service start command %s", actionIntent);
         if (actionIntent.equals(GeoConstants.ACTION_LOCATION_FETCH_START)) {
-            GeoLocationRequest geoLocationRequest = intent.getSerializableParam(GeoIntentKey.LOCATION_REQUEST);
+            GeoLocationRequest geoLocationRequest = intent.getParcelableExtra(GeoIntentKey.LOCATION_REQUEST);
             mLocationMode = geoLocationRequest.getLocationFetchMode();
             mAddressRequest = geoLocationRequest.getAddressRequest();
             mLocationUpdateMinTime = geoLocationRequest.getLocationUpdateMinTime();
@@ -85,10 +102,12 @@ public class LocationBgService extends Ability {
             fallBackToLastLocationTime = geoLocationRequest.getFallBackToLastLocationTime();
             requestLocationUpdates();
         }
-        // Tells the system to not try to recreate the service after it has been killed.
         else if (actionIntent.equals(GeoConstants.ACTION_LOCATION_FETCH_STOP)) {
             stopLocationService();
         }
+
+        // Tells the system to not try to recreate the service after it has been killed.
+        return START_NOT_STICKY;
     }
 
     @SuppressWarnings("MissingPermission")
@@ -97,79 +116,65 @@ public class LocationBgService extends Ability {
         startFallbackToLastLocationTimer();
 
         // Use higher accuracy location fix for SINGLE_FIX request
-        // int quality = (GeoConstants.SINGLE_FIX == mLocationMode) ?
-        //         RequestParam.PRIORITY_ACCURACY : RequestParam.PRIORITY_FAST_FIRST_FIX;
+        // int quality = (GeoConstants.SINGLE_FIX == mLocationMode) ? LocationRequestCompat.QUALITY_HIGH_ACCURACY :
+        //        LocationRequestCompat.QUALITY_BALANCED_POWER_ACCURACY;
         try {
-            RequestParam requestParam = new RequestParam(RequestParam.PRIORITY_FAST_FIRST_FIX);
-            requestParam.setTimeInterval(mLocationUpdateMinTime);
-            requestParam.setDistanceInterval(mLocationUpdateMinDistance);
-            if (GeoConstants.SINGLE_FIX == mLocationMode) {
-                mLocator.requestOnce(requestParam, mLocationCallback);
-            }
-            else {
-                mLocator.startLocating(requestParam, mLocationCallback);
-            }
-        } catch (Exception unlikely) {
+            LocationRequestCompat locationRequest = new LocationRequestCompat.Builder(mLocationUpdateMinTime)
+                    .setMinUpdateIntervalMillis(mLocationUpdateMinTime)
+                    .setMinUpdateDistanceMeters(mLocationUpdateMinDistance)
+                    .setQuality(LocationRequestCompat.QUALITY_BALANCED_POWER_ACCURACY)
+                    .build();
+            LocationManagerCompat.requestLocationUpdates(mLocationManager, mProvider, locationRequest, this, Looper.myLooper());
+        } catch (SecurityException unlikely) {
             Timber.e("Lost location permission. Could not request updates:%s", unlikely.getMessage());
+        } catch (Throwable ex) {
+            Timber.e("Unable to attach listener for location provider %s; check permissions? %s", mProvider, ex.getMessage());
         }
     }
 
     @SuppressWarnings("MissingPermission")
     private void startFallbackToLastLocationTimer() {
         if (fallBackToLastLocationTime != NO_FALLBACK) {
-            mEventHandler.removeTask(getLastLocation);
-            mEventHandler.postTask(getLastLocation, fallBackToLastLocationTime);
+            mServiceHandler.removeCallbacksAndMessages(null);
+            mServiceHandler.postDelayed(this::getLastLocation, fallBackToLastLocationTime);
         }
     }
 
-    private final Runnable getLastLocation = new Runnable() {
-        @Override
-        public void run() {
-            Location location = mLocator.getCachedLocation();
-            Timber.d("Fallback location received: %s", location);
-            onLocationChanged(location);
+    private void getLastLocation() {
+        try {
+            LocationManagerCompat.getCurrentLocation(mLocationManager, mProvider, (CancellationSignal) null,
+                    Runnable::run, location -> {
+                        if (location != null) {
+                            Timber.d("Fallback location received: %s", location);
+                            onLocationChanged(location);
+                        }
+                    });
+        } catch (SecurityException unlikely) {
+            Timber.e(unlikely, "Lost location permission.");
         }
-    };
+    }
 
     /**
      * Removes location updates. Note that in this sample we merely log the
      * {@link SecurityException}.
      */
     private void stopLocationService() {
-        if (mEventHandler != null)
-            mEventHandler.removeTask(getLastLocation);
-        mEventHandler = null;
+        if (mServiceHandler != null)
+            mServiceHandler.removeCallbacksAndMessages(null);
 
-        if (mLocator != null) {
-            // Do not set mLocationManager=null, startService immediately after softSelf will not execute onStart()
+        if (mLocationManager != null) {
+            // Do not set mLocationManager=null, startService immediately after softSelf will not execute onCreate()
             try {
-                mLocator.stopLocating(mLocationCallback);
-            } catch (Exception ex) {
+                mLocationManager.removeUpdates(this);
+            } catch (Throwable ex) {
                 Timber.w("Unable to de-attach location listener: %s", ex.getMessage());
             }
         }
+        stopSelf();
         // Timber.d("Stop Location Manager background service");
-        terminateAbility();
     }
 
-    private class LocationCallback implements LocatorCallback {
-
-        @Override
-        public void onLocationReport(Location location) {
-            onLocationChanged(location);
-        }
-
-        @Override
-        public void onStatusChanged(int i) {
-
-        }
-
-        @Override
-        public void onErrorReport(int i) {
-
-        }
-    }
-
+    @Override
     public void onLocationChanged(Location location) {
         // Timber.d("New location received: %s", location);
         if (location != null) {
@@ -184,39 +189,23 @@ public class LocationBgService extends Ability {
                 locAddress = getLocationAddress(location);
             }
 
-            Intent intent = new Intent();
-            Operation operation = new Intent.OperationBuilder()
-                    .withAction(GeoConstants.INTENT_LOCATION_RECEIVED)
-                    .build();
-            intent.setOperation(operation);
-
             // Notify anyone listening for broadcasts about the new location.
-            IntentParams intentParams = new IntentParams();
-            intentParams.setParam(GeoIntentKey.LOCATION, location);
-
-            intent.setParam(GeoIntentKey.LOCATION, intentParams);
-            intent.setParam(GeoIntentKey.ADDRESS, locAddress);
-            CommonEventData eventData = new CommonEventData(intent);
-            try {
-                CommonEventManager.publishCommonEvent(eventData);
-            } catch (RemoteException e) {
-                Timber.w("%s", e.getMessage());
-            }
+            Intent intent = new Intent();
+            intent.setAction(GeoConstants.INTENT_LOCATION_RECEIVED);
+            intent.putExtra(GeoIntentKey.LOCATION, location);
+            intent.putExtra(GeoIntentKey.ADDRESS, locAddress);
+            LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
         }
         else {
             Intent intent = new Intent();
-            Operation operation = new Intent.OperationBuilder()
-                    .withAction(GeoConstants.INTENT_NO_LOCATION_RECEIVED)
-                    .build();
-            intent.setOperation(operation);
-            CommonEventData eventData = new CommonEventData(intent);
-            try {
-                CommonEventManager.publishCommonEvent(eventData);
-            } catch (RemoteException e) {
-                Timber.w("%s", e.getMessage());
-            }
+            intent.setAction(GeoConstants.INTENT_NO_LOCATION_RECEIVED);
+            LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
         }
-        mEventHandler.removeTask(getLastLocation);
+
+        mServiceHandler.removeCallbacksAndMessages(null);
+        if (mLocationMode == GeoConstants.SINGLE_FIX) {
+            stopLocationService();
+        }
     }
 
     /**
@@ -228,21 +217,21 @@ public class LocationBgService extends Ability {
      */
     private String getLocationAddress(Location loc) {
         String locAddress = "No service available or no address found";
-
-        GeoConvert gcd = new GeoConvert(Locale.getDefault());
-        if (gcd.isGeoAvailable())
-            return locAddress;
-
-        List<GeoAddress> addresses;
+        Geocoder gcd = new Geocoder(getBaseContext(), Locale.getDefault());
+        List<Address> addresses;
         try {
-            addresses = gcd.getAddressFromLocation(loc.getLatitude(), loc.getLongitude(), 1);
-            if (!addresses.isEmpty()) {
-                GeoAddress address = addresses.get(0);
-                locAddress = address.toString();
+            addresses = gcd.getFromLocation(loc.getLatitude(), loc.getLongitude(), 1);
+            ArrayList<String> addressFragments = new ArrayList<>();
+            if ((addresses != null) && (addresses.size() > 0)) {
+                Address address = addresses.get(0);
+                // Fetch the address lines using getAddressLine, concatenate them, and send them to the thread.
+                for (int i = 0; i <= address.getMaxAddressLineIndex(); i++) {
+                    addressFragments.add(address.getAddressLine(i));
+                }
+                locAddress = TextUtils.join(" \n", addressFragments);
             }
         } catch (IllegalArgumentException | IOException e) {
-            locAddress = e.getMessage();
-            Timber.e("Get location address: %s", locAddress);
+            Timber.e("Get location address: %s", e.getMessage());
         }
         return locAddress;
     }

@@ -1,40 +1,25 @@
 /*
- * aTalk, ohos VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * Jitsi, the OpenSource Java VoIP and Instant Messaging client.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Distributable under LGPL license. See terms of license at gnu.org.
  */
 package org.atalk.ohos.gui.call.notification;
 
-import ohos.aafwk.content.Intent;
-import ohos.aafwk.content.IntentParams;
-import ohos.app.Context;
-import ohos.event.intentagent.IntentAgent;
-import ohos.event.intentagent.IntentAgentConstant.OperationType;
-import ohos.event.intentagent.IntentAgentHelper;
-import ohos.event.intentagent.IntentAgentInfo;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.media.AudioManager;
 
 import net.java.sip.communicator.service.protocol.Call;
 
+import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.call.CallManager;
 import org.atalk.impl.timberlog.TimberLog;
 
 import timber.log.Timber;
 
-import static org.atalk.impl.appstray.NotificationPopupHandler.getIntentFlag;
-
 /**
- * <code>IntentAgent.OnCompleted </code> that listens for {@link #CALL_CTRL_ACTION} action
+ * <code>BroadcastReceiver</code> that listens for {@link #CALL_CTRL_ACTION} action
  * and performs few basic operations(mute, hangup...) on the call.<br/>
  * Target call must be specified by ID passed as extra argument under {@link #EXTRA_CALL_ID} key.
  * The IDs are managed by {@link CallManager}.<br/>
@@ -43,11 +28,11 @@ import static org.atalk.impl.appstray.NotificationPopupHandler.getIntentFlag;
  * {@link #ACTION_TOGGLE_MUTE} - toggles between muted and not muted call state. <br/>
  * {@link #ACTION_TOGGLE_ON_HOLD} - toggles the on hold call state.
  * {@link #ACTION_HANGUP} - ends the call. <br/>
- * {@link #ACTION_TRANSFER_CALL} - start call transfer dialog. <br/>
  *
+ * @author Pawel Domas
  * @author Eng Chong Meng
  */
-public class CallControl implements IntentAgent.OnCompleted {
+public class CallControl extends BroadcastReceiver {
     /**
      * Call control action name
      */
@@ -83,15 +68,12 @@ public class CallControl implements IntentAgent.OnCompleted {
      */
     public static final int ACTION_HANGUP = 5;
 
-    // ACTION_TRANSFER_CALL is handled via VideoCallAbility Directly
-    public static final int ACTION_TRANSFER_CALL = 6;
-
     /**
      * {@inheritDoc}
      */
     @Override
-    public void onSendCompleted(IntentAgent intentAgent, Intent intent, int i, String s, IntentParams intentParams) {
-       String callId = (String) intentParams.getParam(EXTRA_CALL_ID);
+    public void onReceive(Context context, Intent intent) {
+        String callId = intent.getStringExtra(EXTRA_CALL_ID);
         if (callId == null) {
             Timber.e("Extra call ID is null");
             return;
@@ -103,8 +85,8 @@ public class CallControl implements IntentAgent.OnCompleted {
             return;
         }
 
-        Integer action = (Integer) intentParams.getParam(EXTRA_ACTION);
-        if (action == null) {
+        int action = intent.getIntExtra(EXTRA_ACTION, -1);
+        if (action == -1) {
             Timber.e("No action supplied");
             return;
         }
@@ -113,8 +95,8 @@ public class CallControl implements IntentAgent.OnCompleted {
         switch (action) {
             case ACTION_TOGGLE_SPEAKER:
                 Timber.log(TimberLog.FINER, "Action TOGGLE SPEAKER");
-//                AudioManager audio = (AudioManager) aTalkApp.getInstance().getSystemService(Context.AUDIO_SERVICE);
-//                audio.setSpeakerphoneOn(!audio.isSpeakerphoneOn());
+                AudioManager audio = (AudioManager) aTalkApp.getInstance().getSystemService(Context.AUDIO_SERVICE);
+                audio.setSpeakerphoneOn(!audio.isSpeakerphoneOn());
                 break;
 
             case ACTION_TOGGLE_MUTE:
@@ -140,47 +122,47 @@ public class CallControl implements IntentAgent.OnCompleted {
     }
 
     /**
-     * Creates the <code>IntentAgent</code> for {@link #ACTION_HANGUP}.
+     * Creates the <code>Intent</code> for {@link #ACTION_HANGUP}.
      *
      * @param callId the ID of target call.
      *
-     * @return the <code>IntentAgent</code> for {@link #ACTION_HANGUP}.
+     * @return the <code>Intent</code> for {@link #ACTION_HANGUP}.
      */
-    public static IntentAgent getHangupIntent(Context ctx, String callId) {
-        return createIntentAgent(ctx, callId, ACTION_HANGUP);
+    public static Intent getHangupIntent(String callId) {
+        return createIntent(callId, ACTION_HANGUP);
     }
 
     /**
-     * Creates the <code>IntentAgent</code> for {@link #ACTION_TOGGLE_MUTE}.
+     * Creates the <code>Intent</code> for {@link #ACTION_TOGGLE_MUTE}.
      *
      * @param callId the ID of target call.
      *
-     * @return the <code>IntentAgent</code> for {@link #ACTION_TOGGLE_MUTE}.
+     * @return the <code>Intent</code> for {@link #ACTION_TOGGLE_MUTE}.
      */
-    public static IntentAgent getToggleMuteIntent(Context ctx, String callId) {
-        return createIntentAgent(ctx, callId, ACTION_TOGGLE_MUTE);
+    public static Intent getToggleMuteIntent(String callId) {
+        return createIntent(callId, ACTION_TOGGLE_MUTE);
     }
 
     /**
-     * Creates the <code>IntentAgent</code> for {@link #ACTION_TOGGLE_ON_HOLD}.
+     * Creates the <code>Intent</code> for {@link #ACTION_TOGGLE_ON_HOLD}.
      *
      * @param callId the ID of target call.
      *
-     * @return the <code>IntentAgent</code> for {@link #ACTION_TOGGLE_ON_HOLD}.
+     * @return the <code>Intent</code> for {@link #ACTION_TOGGLE_ON_HOLD}.
      */
-    public static IntentAgent getToggleOnHoldIntent(Context ctx, String callId) {
-        return createIntentAgent(ctx, callId, ACTION_TOGGLE_ON_HOLD);
+    public static Intent getToggleOnHoldIntent(String callId) {
+        return createIntent(callId, ACTION_TOGGLE_ON_HOLD);
     }
 
     /**
-     * Creates the <code>IntentAgent</code> for {@link #ACTION_TOGGLE_ON_HOLD}.
+     * Creates the <code>Intent</code> for {@link #ACTION_TOGGLE_ON_HOLD}.
      *
      * @param callId the ID of target call.
      *
-     * @return the <code>IntentAgent</code> for {@link #ACTION_TOGGLE_ON_HOLD}.
+     * @return the <code>Intent</code> for {@link #ACTION_TOGGLE_ON_HOLD}.
      */
-    public static IntentAgent getToggleSpeakerIntent(Context ctx, String callId) {
-        return createIntentAgent(ctx, callId, ACTION_TOGGLE_SPEAKER);
+    public static Intent getToggleSpeakerIntent(String callId) {
+        return createIntent(callId, ACTION_TOGGLE_SPEAKER);
     }
 
     /**
@@ -193,14 +175,12 @@ public class CallControl implements IntentAgent.OnCompleted {
      * @return new <code>Intent</code> for given call <code>action</code> value that will be performed on the
      * call identified by <code>callId</code>.
      */
-    private static IntentAgent createIntentAgent(Context ctx, String callId, int action) {
-        IntentParams intentParams = new IntentParams();
-        intentParams.setParam(EXTRA_CALL_ID, callId);
-        intentParams.setParam(EXTRA_ACTION, action);
-
-        IntentAgentInfo intentInfo = new IntentAgentInfo(action, OperationType.SEND_COMMON_EVENT,
-                getIntentFlag(false, false), null, intentParams);
-
-        return IntentAgentHelper.getIntentAgent(ctx, intentInfo);
+    private static Intent createIntent(String callId, int action) {
+        Intent intent = new Intent();
+        intent.setPackage(aTalkApp.getInstance().getPackageName());
+        intent.setAction(CallControl.CALL_CTRL_ACTION);
+        intent.putExtra(CallControl.EXTRA_CALL_ID, callId);
+        intent.putExtra(CallControl.EXTRA_ACTION, action);
+        return intent;
     }
 }

@@ -5,6 +5,11 @@
  */
 package net.java.sip.communicator.impl.protocol.jabber;
 
+import static org.atalk.impl.neomedia.format.MediaFormatImpl.FORMAT_PARAMETER_ATTR_IMAGEATTR;
+import static org.atalk.impl.neomedia.transform.dtls.DtlsControlImpl.DEFAULT_SIGNATURE_AND_HASH_ALGORITHM;
+import static org.atalk.impl.neomedia.transform.zrtp.ZrtpControlImpl.generateMyZid;
+
+import java.awt.Component;
 import java.beans.PropertyChangeEvent;
 import java.lang.reflect.UndeclaredThrowableException;
 import java.util.ArrayList;
@@ -17,9 +22,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import ohos.agp.components.Component;
-import ohos.app.Context;
-
 import net.java.sip.communicator.service.protocol.AccountID;
 import net.java.sip.communicator.service.protocol.Call;
 import net.java.sip.communicator.service.protocol.CallConference;
@@ -29,13 +31,12 @@ import net.java.sip.communicator.service.protocol.ProtocolProviderFactory;
 import net.java.sip.communicator.service.protocol.media.CallPeerMediaHandler;
 import net.java.sip.communicator.service.protocol.media.SrtpControls;
 
+import org.atalk.ohos.R;
+import org.atalk.ohos.aTalkApp;
+import org.atalk.ohos.gui.call.VideoCallActivity;
+import org.atalk.ohos.gui.dialogs.DialogActivity;
 import org.atalk.impl.neomedia.format.MediaFormatImpl;
 import org.atalk.impl.neomedia.transform.dtls.DtlsControlImpl;
-import org.atalk.ohos.ResourceTable;
-import org.atalk.ohos.aTalkApp;
-import org.atalk.ohos.agp.components.JComponent;
-import org.atalk.ohos.gui.call.VideoCallAbility;
-import org.atalk.ohos.gui.dialogs.DialogH;
 import org.atalk.service.libjitsi.LibJitsi;
 import org.atalk.service.neomedia.DtlsControl;
 import org.atalk.service.neomedia.MediaDirection;
@@ -75,10 +76,6 @@ import org.jxmpp.jid.Jid;
 
 import ch.imvs.sdes4j.srtp.SrtpCryptoAttribute;
 import timber.log.Timber;
-
-import static org.atalk.impl.neomedia.format.MediaFormatImpl.FORMAT_PARAMETER_ATTR_IMAGEATTR;
-import static org.atalk.impl.neomedia.transform.dtls.DtlsControlImpl.DEFAULT_SIGNATURE_AND_HASH_ALGORITHM;
-import static org.atalk.impl.neomedia.transform.zrtp.ZrtpControlImpl.generateMyZid;
 
 /**
  * An XMPP specific extension of the generic media handler.
@@ -138,7 +135,7 @@ public class CallPeerMediaHandlerJabberImpl extends CallPeerMediaHandler<CallPee
      * Whether other party is able to change video quality settings. Normally it's whether we have
      * detected existence of imageattr in sdp.
      *
-     * @see MediaFormatImpl#FORMAT_PARAMETER_ATTR_IMAGEATTR
+     * @see MediaFormatImpl.FORMAT_PARAMETER_ATTR_IMAGEATTR
      */
     private boolean supportQualityControls = false;
 
@@ -415,7 +412,7 @@ public class CallPeerMediaHandlerJabberImpl extends CallPeerMediaHandler<CallPee
         // Fail if no media content/description element (e.g. all devices are inactive).
         if (mediaDescs.isEmpty()) {
             ProtocolProviderServiceJabberImpl.throwOperationFailedException(
-                    aTalkApp.getResString(ResourceTable.String_call_no_active_device),
+                    aTalkApp.getResString(R.string.call_no_active_device),
                     OperationFailedException.GENERAL_ERROR, null);
         }
 
@@ -450,7 +447,7 @@ public class CallPeerMediaHandlerJabberImpl extends CallPeerMediaHandler<CallPee
         // Fail if no media is described (e.g. all devices are inactive).
         if (mediaDescs.isEmpty()) {
             ProtocolProviderServiceJabberImpl.throwOperationFailedException(
-                    aTalkApp.getResString(ResourceTable.String_call_no_active_device),
+                    aTalkApp.getResString(R.string.call_no_active_device),
                     OperationFailedException.GENERAL_ERROR, null);
         }
         // Describe the transport(s).
@@ -661,7 +658,7 @@ public class CallPeerMediaHandlerJabberImpl extends CallPeerMediaHandler<CallPee
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * In the case of a telephony conference organized by the local peer/user via the Jitsi
      * Videobridge server-side technology, returns an SSRC reported by the server as received on
      * the channel allocated by the local peer/user for the purposes of communicating with the
@@ -722,7 +719,7 @@ public class CallPeerMediaHandlerJabberImpl extends CallPeerMediaHandler<CallPee
 
     /**
      * Get the <code>TransportManager</code> implementation handling our address management.
-     * <p>
+     *
      * TODO: this method can and should be simplified.
      *
      * @return the <code>TransportManager</code> implementation handling our address management
@@ -846,13 +843,13 @@ public class CallPeerMediaHandlerJabberImpl extends CallPeerMediaHandler<CallPee
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * In the case of utilization of the Jitsi Videobridge server-side technology, returns the
-     * visual <code>JComponent</code> s which display RTP video streams reported by the server to be
+     * visual <code>Component</code> s which display RTP video streams reported by the server to be
      * sent by the remote peer represented by this instance.
      */
     @Override
-    public List<JComponent> getVisualComponents() {
+    public List<Component> getVisualComponents() {
         /*
          * TODO The super is currently unable to provide the complete set of remote SSRCs (i.e. in
          * the case of no utilization of the Jitsi Videobridge server-side technology) so we
@@ -871,10 +868,10 @@ public class CallPeerMediaHandlerJabberImpl extends CallPeerMediaHandler<CallPee
                     return Collections.emptyList();
                 else {
                     VideoMediaStream videoStream = (VideoMediaStream) stream;
-                    List<JComponent> visualComponents = new LinkedList<>();
+                    List<Component> visualComponents = new LinkedList<>();
 
                     for (int remoteSSRC : remoteSSRCs) {
-                        JComponent visualComponent = videoStream.getVisualComponent(0xFFFFFFFFL & remoteSSRC);
+                        Component visualComponent = videoStream.getVisualComponent(0xFFFFFFFFL & remoteSSRC);
                         if (visualComponent != null)
                             visualComponents.add(visualComponent);
                     }
@@ -988,7 +985,7 @@ public class CallPeerMediaHandlerJabberImpl extends CallPeerMediaHandler<CallPee
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * In the case of a telephony conference organized by the local peer/user and utilizing the
      * Jitsi Videobridge server-side technology, a single <code>MediaHandler</code> is shared by
      * multiple <code>CallPeerMediaHandler</code>s in order to have a single <code>AudioMediaStream</code>
@@ -1133,7 +1130,7 @@ public class CallPeerMediaHandlerJabberImpl extends CallPeerMediaHandler<CallPee
         // if sender has paused the video temporary, then set backToChat flag to avoid checkReplay failure on resume
         Senders sender = content.getSenders();
         if (Senders.responder == sender) {
-            VideoCallAbility.setBackToChat(true);
+            VideoCallActivity.setBackToChat(true);
         }
 
         // stream targeted transport-info rtp/rtcp
@@ -1365,9 +1362,8 @@ public class CallPeerMediaHandlerJabberImpl extends CallPeerMediaHandler<CallPee
 
         if (!atLeastOneValidDescription) {
             // don't just throw exception. Must inform user to take action
-            Context ctx = aTalkApp.getInstance();
-            DialogH.getInstance(ctx).showDialog(ctx, ResourceTable.String_call_audio,
-                    ResourceTable.String_call_no_matching_format, remoteFormats.toString());
+            DialogActivity.showDialog(aTalkApp.getInstance(), R.string.call_audio,
+                    R.string.call_no_matching_format, remoteFormats.toString());
 
             ProtocolProviderServiceJabberImpl.throwOperationFailedException(
                     "Offer contained no media formats or no valid media descriptions.",
@@ -1704,7 +1700,7 @@ public class CallPeerMediaHandlerJabberImpl extends CallPeerMediaHandler<CallPee
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * The super implementation relies on the direction of the streams and is therefore not
      * accurate when we use a Videobridge.
      */
@@ -1715,7 +1711,7 @@ public class CallPeerMediaHandlerJabberImpl extends CallPeerMediaHandler<CallPee
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * Handles the case when a Videobridge is in use.
      *
      * @param locallyOnHold <code>true</code> if we are to make our streams stop transmitting and <code>false</code> if we
@@ -2046,6 +2042,7 @@ public class CallPeerMediaHandlerJabberImpl extends CallPeerMediaHandler<CallPee
      * Sets the jingle transports that this <code>CallPeerMediaHandlerJabberImpl</code> supports.
      * Unknown transports are ignored, and the <code>transports</code> <code>Collection</code> is put into
      * order depending on local preference.
+     *
      * Currently only ice and raw-udp are recognized, with ice being preferred over raw-udp
      *
      * @param transports A <code>Collection</code> of XML namespaces of jingle transport elements to be set as the

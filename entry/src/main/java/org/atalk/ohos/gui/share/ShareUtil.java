@@ -1,6 +1,6 @@
 /*
- * aTalk, ohos VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * aTalk, android VoIP and Instant Messaging client
+ * Copyright 2014 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,18 +17,22 @@
 
 package org.atalk.ohos.gui.share;
 
+import android.app.Activity;
+import android.app.PendingIntent;
+import android.content.ActivityNotFoundException;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Handler;
+import android.text.Html;
+import android.text.TextUtils;
+
 import java.util.ArrayList;
 
-import ohos.aafwk.ability.Ability;
-import ohos.aafwk.content.Intent;
-import ohos.app.Context;
-import ohos.eventhandler.EventHandler;
-import ohos.eventhandler.EventRunner;
-import ohos.utils.net.Uri;
-
-import org.apache.http.util.TextUtils;
 import org.atalk.impl.appstray.NotificationPopupHandler;
-import org.atalk.ohos.BaseAbility;
+import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.persistance.FileBackend;
 
@@ -53,7 +57,7 @@ public class ShareUtil {
      * @param msgContent text content for sharing
      * @param imageUris array of image uris for sharing
      */
-    public static void share(final Ability activity, String msgContent, ArrayList<Uri> imageUris) {
+    public static void share(final Activity activity, String msgContent, ArrayList<Uri> imageUris) {
         if (activity != null) {
             int timeDelay = 0;
 
@@ -62,10 +66,10 @@ public class ShareUtil {
                 try {
                     if (!imageUris.isEmpty()) {
                         PendingIntent pi = PendingIntent.getBroadcast(activity, REQUEST_CODE_SHARE,
-                                new Intent(activity, ShareBroadcastReceiver.class),
-                                NotificationPopupHandler.getIntentFlag(false, true));
-                        activity.startAbility(Intent.createChooser(shareIntent,
-                                activity.getString(ResourceTable.String_share_text), pi.getIntentSender()));
+                                new Intent(activity, ShareBroadcastReceiver.class).setPackage(activity.getPackageName()),
+                                NotificationPopupHandler.getPendingIntentFlag(false, true));
+                        activity.startActivity(Intent.createChooser(shareIntent,
+                                activity.getString(R.string.share_text), pi.getIntentSender()));
 
                         // setup up media file sending intent
                         ShareBroadcastReceiver.setShareIntent(activity, share(activity, imageUris));
@@ -74,20 +78,20 @@ public class ShareUtil {
                     else {
                         // setting is used only when !imageUris.isEmpty()
                         timeDelay = TIME_DELAY;
-                        activity.startAbility(Intent.createChooser(shareIntent,
-                                activity.getString(ResourceTable.String_share_text)));
+                        activity.startActivity(Intent.createChooser(shareIntent,
+                                activity.getString(R.string.share_text)));
                     }
                 } catch (ActivityNotFoundException e) {
-                    Timber.w("%s", aTalkApp.getResString(ResourceTable.String_open_file_no_application));
+                    Timber.w("%s", aTalkApp.getResString(R.string.open_file_no_application));
                 }
             }
 
             if (!imageUris.isEmpty()) {
                 // must wait for user first before starting file transfer if any
-                new EventHandler(EventRunner.create()).postTask(() -> {
+                new Handler().postDelayed(() -> {
                     Intent intent = share(activity, imageUris);
                     try {
-                        activity.startAbility(Intent.createChooser(intent, activity.getText(ResourceTable.String_share_file)));
+                        activity.startActivity(Intent.createChooser(intent, activity.getText(R.string.share_file)));
                     } catch (ActivityNotFoundException e) {
                         Timber.w("No application found to open file");
                     }
@@ -104,18 +108,18 @@ public class ShareUtil {
      *
      * @return share intent of the given msgContent
      */
-    public static Intent share(Ability activity, String msgContent) {
+    public static Intent share(Activity activity, String msgContent) {
         Intent shareIntent = null;
         if ((activity != null) && (!TextUtils.isEmpty(msgContent))) {
             shareIntent = new Intent();
-            shareIntent.setAction(ShareAbility.ACTION_SEND);
+            shareIntent.setAction(Intent.ACTION_SEND);
 
             // replace all "\n" with <br/> to avoid strip by Html.fromHtml
             msgContent = msgContent.replaceAll("\n", "<br/>");
             msgContent = Html.fromHtml(msgContent, Html.FROM_HTML_MODE_LEGACY).toString();
             msgContent = msgContent.replaceAll("<br/>", "\n");
 
-            shareIntent.setParam(ShareAbility.EXTRA_TEXT, msgContent);
+            shareIntent.putExtra(Intent.EXTRA_TEXT, msgContent);
             shareIntent.setType("text/plain");
         }
         return shareIntent;
@@ -133,8 +137,8 @@ public class ShareUtil {
         Intent shareIntent = null;
         if ((context != null) && !imageUris.isEmpty()) {
             shareIntent = new Intent();
-            shareIntent.setAction(BaseAbility.ACTION_SEND_MULTIPLE);
-            shareIntent.setSequenceableArrayListParam(BaseAbility.EXTRA_STREAM, imageUris);
+            shareIntent.setAction(Intent.ACTION_SEND_MULTIPLE);
+            shareIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, imageUris);
             shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             String mimeType = getMimeType(context, imageUris);
             shareIntent.setType(mimeType);
@@ -147,7 +151,7 @@ public class ShareUtil {
      * msgContent is saved intent.categories if both types are required; otherwise follow standard share method
      *
      * @param context a reference context of the activity
-     * @param shareLocal a reference of the ShareAbility
+     * @param shareLocal a reference of the ShareActivity
      * @param msgContent text content for sharing
      * @param imageUris array of image uris for sharing
      */
@@ -155,8 +159,8 @@ public class ShareUtil {
         if ((context != null) && (shareLocal != null)) {
 
             if (!imageUris.isEmpty()) {
-                shareLocal.setAction(ShareAbility.ACTION_SEND_MULTIPLE);
-                shareLocal.setSequenceableArrayListParam(BaseAbility.EXTRA_STREAM, imageUris);
+                shareLocal.setAction(Intent.ACTION_SEND_MULTIPLE);
+                shareLocal.putParcelableArrayListExtra(Intent.EXTRA_STREAM, imageUris);
                 shareLocal.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 String mimeType = getMimeType(context, imageUris);
                 shareLocal.setType(mimeType);
@@ -167,8 +171,8 @@ public class ShareUtil {
                 }
             }
             else if (!TextUtils.isEmpty(msgContent)) {
-                shareLocal.setAction(BaseAbility.ACTION_SEND);
-                shareLocal.setParam(BaseAbility.EXTRA_TEXT, msgContent);
+                shareLocal.setAction(Intent.ACTION_SEND);
+                shareLocal.putExtra(Intent.EXTRA_TEXT, msgContent);
                 shareLocal.setType("text/plain");
             }
         }
@@ -214,8 +218,8 @@ public class ShareUtil {
     public static class ShareBroadcastReceiver extends BroadcastReceiver {
         private static Intent mediaIntent;
 
-        public static void setShareIntent(Ability activity, Intent intent) {
-            mediaIntent = Intent.createChooser(intent, activity.getText(ResourceTable.String_share_file));
+        public static void setShareIntent(Activity activity, Intent intent) {
+            mediaIntent = Intent.createChooser(intent, activity.getText(R.string.share_file));
             mediaIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         }
 
@@ -227,9 +231,9 @@ public class ShareUtil {
                 return;
 
             // must wait for user to complete text share before starting file share
-            new EventHandler(EventRunner.create()).postTask(() -> {
+            new Handler().postDelayed(() -> {
                 try {
-                    context.startAbility(mediaIntent);
+                    context.startActivity(mediaIntent);
                     mediaIntent = null;
                 } catch (ActivityNotFoundException e) {
                     Timber.w("No application found to open file");

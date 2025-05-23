@@ -28,7 +28,7 @@ import net.java.sip.communicator.service.protocol.event.MessageReceivedEvent;
 import net.java.sip.communicator.service.protocol.globalstatus.GlobalStatusEnum;
 import net.java.sip.communicator.util.ConfigurationUtils;
 
-import org.atalk.ohos.ResourceTable;
+import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.AppGUIActivator;
 import org.atalk.ohos.gui.chat.ChatContact;
@@ -413,7 +413,7 @@ public class AdHocConferenceChatSession extends ChatSession implements AdHocChat
              */
             if (!evt.isReasonUserList()) {
                 statusMessage = aTalkApp.getResString(
-                        ResourceTable.String_chatroom_user_joined, sourceChatRoom.getName());
+                        R.string.chatroom_user_joined, sourceChatRoom.getName());
                 sessionRenderer.updateChatContactStatus(chatContact, statusMessage);
             }
         }
@@ -421,11 +421,11 @@ public class AdHocConferenceChatSession extends ChatSession implements AdHocChat
                 || eventType.equals(AdHocChatRoomParticipantPresenceChangeEvent.CONTACT_QUIT)) {
             if (eventType.equals(AdHocChatRoomParticipantPresenceChangeEvent.CONTACT_LEFT)) {
                 statusMessage = aTalkApp.getResString(
-                        ResourceTable.String_chatroom_user_left, sourceChatRoom.getName());
+                        R.string.chatroom_user_left, sourceChatRoom.getName());
             }
             else if (eventType.equals(AdHocChatRoomParticipantPresenceChangeEvent.CONTACT_QUIT)) {
                 statusMessage = aTalkApp.getResString(
-                        ResourceTable.String_chatroom_user_quit, sourceChatRoom.getName());
+                        R.string.chatroom_user_quit, sourceChatRoom.getName());
             }
 
             for (ChatContact<?> chatContact : chatParticipants) {

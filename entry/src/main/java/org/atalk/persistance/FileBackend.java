@@ -16,7 +16,15 @@
  */
 package org.atalk.persistance;
 
-import org.apache.http.util.TextUtils;
+import android.content.ContentResolver;
+import android.content.Context;
+import android.net.Uri;
+import android.os.Environment;
+import android.text.TextUtils;
+import android.webkit.MimeTypeMap;
+
+import androidx.core.content.FileProvider;
+
 import org.atalk.ohos.aTalkApp;
 
 import java.io.File;
@@ -31,10 +39,6 @@ import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-
-import ohos.app.Context;
-import ohos.app.Environment;
-import ohos.utils.net.Uri;
 
 import timber.log.Timber;
 
@@ -54,7 +58,7 @@ public class FileBackend
      */
     private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
 
-    // android-Q accessible path to apk is: /storage/emulated/0/Android/data/org.atalk.ohos/files
+    // android-Q accessible path to apk is: /storage/emulated/0/Android/data/org.atalk.android/files
     public static String FP_aTALK = "/aTalk";
     public static String EXPROT_DB = "EXPORT_DB";
 
@@ -235,15 +239,12 @@ public class FileBackend
         // https://developer.android.com/reference/android/os/Environment#getExternalStorageDirectory()
         // File atalkDLDir = aTalkApp.getInstance().getExternalFilesDir(filePath);
         // File atalkDLDir = new File(Environment.getExternalStorageDirectory(), filePath);
-        try {
-            File atalkDLDir = new File(aTalkApp.getInstance().getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS) + filePath);
-            if (createNew && !atalkDLDir.exists() && !atalkDLDir.mkdirs()) {
-                Timber.e("Could not create aTalk folder: %s", atalkDLDir);
-            }
-            return atalkDLDir;
-        } catch (RuntimeException e) {
-            return null;
+        File atalkDLDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + filePath);
+
+        if (createNew && !atalkDLDir.exists() && !atalkDLDir.mkdirs()) {
+            Timber.e("Could not create aTalk folder: %s", atalkDLDir);
         }
+        return atalkDLDir;
     }
 
     /**
@@ -275,8 +276,9 @@ public class FileBackend
     public static Uri getUriForFile(Context context, File file)
     {
         try {
-            return Uri.getUriFromFile(file);
-        } catch (RuntimeException e) {
+            String packageId = context.getPackageName();
+            return FileProvider.getUriForFile(context, packageId + FILE_PROVIDER, file);
+        } catch (IllegalArgumentException e) {
             throw new SecurityException(e);
         }
     }
@@ -374,7 +376,7 @@ public class FileBackend
 
         // Make a guess base on filePath
         if ((mimeType == null) || mimeType.equals(("application/octet-stream"))) {
-            String fileName = uri.getDecodedPath();
+            String fileName = uri.getPath();
 
             if (fileName != null) {
                 if (fileName.contains("image"))

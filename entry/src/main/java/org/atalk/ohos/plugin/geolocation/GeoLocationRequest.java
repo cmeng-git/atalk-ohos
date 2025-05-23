@@ -1,6 +1,6 @@
 /*
- * aTalk, ohos VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * aTalk, android VoIP and Instant Messaging client
+ * Copyright 2014 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,8 @@
  */
 package org.atalk.ohos.plugin.geolocation;
 
-import ohos.utils.Parcel;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 /**
  * Parcelable  geoLocation request with builder implementation.
@@ -24,19 +25,20 @@ import ohos.utils.Parcel;
  *
  * @author Eng Chong Meng
  */
-public class GeoLocationRequest extends Parcel {
+public class GeoLocationRequest implements Parcelable
+{
     final private int mLocationFetchMode;
     final boolean mAddressRequest;
-    final int mUpdateMinTime;
-    final int mUpdateMinDistance;
-    final int mFallBackToLastLocationTime;
+    final long mUpdateMinTime;
+    final float mUpdateMinDistance;
+    final long mFallBackToLastLocationTime;
 
     public GeoLocationRequest(
             int locationFetchMode,
             boolean addressRequest,
-            int updateMinTime,
-            int updateMinDistance,
-            int fallBackToLastLocationTime)
+            long updateMinTime,
+            float updateMinDistance,
+            long fallBackToLastLocationTime)
     {
         mLocationFetchMode = locationFetchMode;
         mAddressRequest = addressRequest;
@@ -55,12 +57,12 @@ public class GeoLocationRequest extends Parcel {
         return mAddressRequest;
     }
 
-    public int getLocationUpdateMinTime()
+    public Long getLocationUpdateMinTime()
     {
         return mUpdateMinTime;
     }
 
-    public int getLocationUpdateMinDistance()
+    public float getLocationUpdateMinDistance()
     {
         return mUpdateMinDistance;
     }
@@ -70,34 +72,34 @@ public class GeoLocationRequest extends Parcel {
         return mFallBackToLastLocationTime;
     }
 
-//    public static final Creator<GeoLocationRequest> CREATOR = new Creator<GeoLocationRequest>()
-//    {
-//        @Override
-//        public GeoLocationRequest createFromParcel(Parcel in)
-//        {
-//            return new GeoLocationRequest(
-//                    /* mLoctionFetchMode = */ in.readInt(),
-//                    /* mAddressRequest= */ in.readByte() != 0,
-//                    /* mUpdateMinTime= */ in.readLong(),
-//                    /* mUpdateMinDistance= */ in.readFloat(),
-//                    /* mFallBackToLastLocationTime= */ in.readLong()
-//            );
-//        }
-//
-//        // @Override
-//        public GeoLocationRequest[] newArray(int size)
-//        {
-//            return new GeoLocationRequest[size];
-//        }
-//    };
+    public static final Creator<GeoLocationRequest> CREATOR = new Creator<GeoLocationRequest>()
+    {
+        @Override
+        public GeoLocationRequest createFromParcel(Parcel in)
+        {
+            return new GeoLocationRequest(
+                    /* mLoctionFetchMode = */ in.readInt(),
+                    /* mAddressRequest= */ in.readByte() != 0,
+                    /* mUpdateMinTime= */ in.readLong(),
+                    /* mUpdateMinDistance= */ in.readFloat(),
+                    /* mFallBackToLastLocationTime= */ in.readLong()
+            );
+        }
 
-    // @Override
+        // @Override
+        public GeoLocationRequest[] newArray(int size)
+        {
+            return new GeoLocationRequest[size];
+        }
+    };
+
+    @Override
     public int describeContents()
     {
         return 0;
     }
 
-    // @Override
+    @Override
     public void writeToParcel(Parcel dest, int flags)
     {
         dest.writeInt(mLocationFetchMode);
@@ -109,11 +111,11 @@ public class GeoLocationRequest extends Parcel {
 
     public static class GeoLocationRequestBuilder
     {
-        private boolean mAddressRequest = false;
         private int mLocationFetchMode;
-        private int mUpdateMinTime;
-        private int mUpdateMinDistance;
-        private int mFallBackToLastLocationTime;
+        private boolean mAddressRequest = false;
+        private long mUpdateMinTime;
+        private float mUpdateMinDistance;
+        private long mFallBackToLastLocationTime;
 
         public GeoLocationRequestBuilder setLocationFetchMode(int locationFetchMode)
         {
@@ -127,19 +129,19 @@ public class GeoLocationRequest extends Parcel {
             return this;
         }
 
-        public GeoLocationRequestBuilder setLocationUpdateMinTime(int minTime)
+        public GeoLocationRequestBuilder setLocationUpdateMinTime(Long minTime)
         {
             mUpdateMinTime = minTime;
             return this;
         }
 
-        public GeoLocationRequestBuilder setLocationUpdateMinDistance(int minDistance)
+        public GeoLocationRequestBuilder setLocationUpdateMinDistance(float minDistance)
         {
             mUpdateMinDistance = minDistance;
             return this;
         }
 
-        public GeoLocationRequestBuilder setFallBackToLastLocationTime(int fallBackToLastLocationTime)
+        public GeoLocationRequestBuilder setFallBackToLastLocationTime(long fallBackToLastLocationTime)
         {
             mFallBackToLastLocationTime = fallBackToLastLocationTime;
             return this;

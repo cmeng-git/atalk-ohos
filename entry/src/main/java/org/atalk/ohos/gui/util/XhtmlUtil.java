@@ -1,6 +1,6 @@
 /*
- * aTalk, ohos VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * aTalk, android VoIP and Instant Messaging client
+ * Copyright 2014 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,15 +27,16 @@ import java.util.List;
  *
  * @author Eng Chong Meng
  */
-public class XhtmlUtil {
+public class XhtmlUtil
+{
     /**
      * return the extracted content of the XHTMLExtension for the given message
      *
-     * @param message message contaning XHTMLExtension extension
-     *
+     * @param xhtmlExt XHTMLExtension extension
      * @return XHTML String of the given message
      */
-    public static String getXhtmlExtension(Message message) {
+    public static String getXhtmlExtension(Message message)
+    {
         String xhtmlString = null;
         if (XHTMLManager.isXHTMLMessage(message)) {
             XHTMLExtension xhtmlExt = message.getExtension(XHTMLExtension.class);

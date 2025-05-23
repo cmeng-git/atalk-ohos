@@ -10,14 +10,15 @@ import net.java.sip.communicator.service.protocol.CallPeer;
 import net.java.sip.communicator.service.protocol.ChatRoom;
 import net.java.sip.communicator.service.protocol.OperationFailedException;
 import net.java.sip.communicator.service.protocol.OperationSetJitsiMeetTools;
+
 import org.jivesoftware.smack.packet.ExtensionElement;
-import timber.log.Timber;
+import org.json.JSONObject;
 
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import ohos.utils.zson.ZSONObject;
+import timber.log.Timber;
 
 /**
  * Jabber protocol provider implementation of {@link OperationSetJitsiMeetTools}
@@ -104,7 +105,8 @@ public class OperationSetJitsiMeetToolsJabberImpl implements OperationSetJitsiMe
     /**
      * Event is fired after startmuted extension is received.
      *
-     * @param startMuted startMutedFlags[0] represents the muted status of audio stream.
+     * @param startMutedFlags startMutedFlags[0] represents
+     * the muted status of audio stream.
      * startMuted[1] represents the muted status of video stream.
      */
     public void notifySessionStartMuted(boolean[] startMuted)
@@ -123,7 +125,7 @@ public class OperationSetJitsiMeetToolsJabberImpl implements OperationSetJitsiMe
      * {@inheritDoc}
      */
     @Override
-    public void sendZSON(CallPeer callPeer, ZSONObject zsonObject, Map<String, Object> params)
+    public void sendJSON(CallPeer callPeer, JSONObject jsonObject, Map<String, Object> params)
             throws OperationFailedException
     {
         throw new OperationFailedException("Operation not supported for this protocol yet!",

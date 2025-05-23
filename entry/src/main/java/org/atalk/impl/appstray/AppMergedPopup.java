@@ -1,31 +1,21 @@
 /*
- * aTalk, ohos VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * Jitsi, the OpenSource Java VoIP and Instant Messaging client.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Distributable under LGPL license. See terms of license at gnu.org.
  */
 package org.atalk.impl.appstray;
 
+import androidx.core.app.NotificationCompat;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import ohos.event.notification.NotificationRequest;
 
 import net.java.sip.communicator.service.systray.PopupMessage;
 
 /**
  * Popup notification that consists of few merged previous popups.
  *
+ * @author Pawel Domas
  * @author Eng Chong Meng
  */
 public class AppMergedPopup extends AppPopup {
@@ -83,21 +73,21 @@ public class AppMergedPopup extends AppPopup {
      * {@inheritDoc}
      */
     @Override
-    NotificationRequest buildNotification(int nId) {
-        NotificationRequest nRequest = super.buildNotification(nId);
+    NotificationCompat.Builder buildNotification(int nId) {
+        NotificationCompat.Builder builder = super.buildNotification(nId);
         // Set number of events
-        nRequest.setBadgeNumber(mergedPopups.size() + 1);
-        return nRequest;
+        builder.setNumber(mergedPopups.size() + 1);
+        return builder;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected void onBuildInboxStyle(NotificationRequest.NotificationPictureContent pContent) {
-        super.onBuildInboxStyle(pContent);
+    protected void onBuildInboxStyle(NotificationCompat.InboxStyle inboxStyle) {
+        super.onBuildInboxStyle(inboxStyle);
         for (AppPopup popup : mergedPopups) {
-            pContent.setAdditionalText(popup.getMessage());
+            inboxStyle.addLine(popup.getMessage());
         }
     }
 

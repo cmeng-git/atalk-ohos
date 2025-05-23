@@ -1,58 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<PreferenceScreen xmlns:ohos="http://schemas.huawei.com/res/ohos">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory
-        ohos:key="pref.cat.security.general"
-        ohos:title="$string:general">
+        android:key="pref.cat.security.general"
+        android:title="@string/general">
         <CheckBoxPreference
-            ohos:key="pref_key_enable_encryption"
-            ohos:title="$string:security_encryption_enable" />
+            android:key="pref_key_enable_encryption"
+            android:title="@string/security_encryption_enable" />
         <Preference
-            ohos:dependency="pref_key_enable_encryption"
-            ohos:key="pref_key_enc_protos_dialog"
-            ohos:persistent="false"
-            ohos:title="$string:security_encryption_protocols" />
+            android:dependency="pref_key_enable_encryption"
+            android:key="pref_key_enc_protos_dialog"
+            android:persistent="false"
+            android:title="@string/security_encryption_protocols" />
     </PreferenceCategory>
     <PreferenceCategory
-        ohos:key="pref.cat.security.zrtp"
-        ohos:title="$string:security_zrtp_options">
+        android:key="pref.cat.security.zrtp"
+        android:title="@string/security_zrtp_options">
         <CheckBoxPreference
-            ohos:dependency="pref_key_enable_encryption"
-            ohos:key="pref_key_enc_sipzrtp_attr"
-            ohos:title="$string:security_zrtp_signalling" />
+            android:dependency="pref_key_enable_encryption"
+            android:key="pref_key_enc_sipzrtp_attr"
+            android:title="@string/security_zrtp_signalling" />
         <!-- Reset ZID -->
         <PreferenceScreen
-            ohos:key="pref.key.zid.reset"
-            ohos:summary="$string:zid_reset_summary"
-            ohos:title="$string:zid_reset_title">
+            android:key="pref.key.zid.reset"
+            android:summary="@string/zid_reset_summary"
+            android:title="@string/zid_reset_title">
         </PreferenceScreen>
     </PreferenceCategory>
     <PreferenceCategory
-        ohos:key="pref.cat.security.dtls"
-        ohos:title="$string:security_dtls_srtp">
+        android:key="pref.cat.security.dtls"
+        android:title="@string/security_dtls_srtp">
         <ListPreference
-            ohos:dependency="pref_key_enable_encryption"
-            ohos:dialogTitle="$string:security_dtls_title"
-            ohos:entries="@array/pref_dtls_srtp_cert_sa"
-            ohos:entryValues="@array/pref_dtls_srtp_cert_sa"
-            ohos:key="pref_key_enc_dtls_cert_signature_algorithm"
-            ohos:title="$string:security_dtls_title" />
+            android:dependency="pref_key_enable_encryption"
+            android:dialogTitle="@string/security_dtls_title"
+            android:entries="@array/pref_dtls_srtp_cert_sa"
+            android:entryValues="@array/pref_dtls_srtp_cert_sa"
+            android:key="pref_key_enc_dtls_cert_signature_algorithm"
+            android:title="@string/security_dtls_title" />
     </PreferenceCategory>
 
     <PreferenceCategory
-        ohos:key="pref.cat.security.sdes"
-        ohos:title="$string:security_sdes">
+        android:key="pref.cat.security.sdes"
+        android:title="@string/security_sdes">
         <MultiSelectListPreference
-            ohos:dependency="pref_key_enable_encryption"
-            ohos:dialogTitle="$string:security_sdes_dlg_title"
-            ohos:key="pref_key_ecn_cipher_suites"
-            ohos:title="$string:security_sdes_title" />
+            android:dependency="pref_key_enable_encryption"
+            android:dialogTitle="@string/security_sdes_dlg_title"
+            android:key="pref_key_ecn_cipher_suites"
+            android:title="@string/security_sdes_title" />
         <ListPreference
-            ohos:dependency="pref_key_enable_encryption"
-            ohos:dialogTitle="$string:security_rtp_savp_title"
-            ohos:entries="@array/pref_savp_option_desc"
-            ohos:entryValues="@array/pref_savp_option_desc"
-            ohos:key="pref_key_enc_savp_option"
-            ohos:title="$string:security_rtp_savp" />
+            android:dependency="pref_key_enable_encryption"
+            android:dialogTitle="@string/security_rtp_savp_title"
+            android:entries="@array/pref_savp_option_desc"
+            android:entryValues="@array/pref_savp_option_desc"
+            android:key="pref_key_enc_savp_option"
+            android:title="@string/security_rtp_savp" />
     </PreferenceCategory>
 </PreferenceScreen>

@@ -1,6 +1,6 @@
 /*
- * aTalk, ohos VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * aTalk, android VoIP and Instant Messaging client
+ * Copyright 2014 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,20 @@
  */
 package org.atalk.ohos.gui.account.settings;
 
-import ohos.agp.components.*;
-import ohos.agp.window.dialog.BaseDialog;
-import ohos.agp.window.dialog.CommonDialog;
-import ohos.agp.window.dialog.IDialog;
-import ohos.app.Context;
+import android.app.Dialog;
+import android.content.Context;
+import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.Spinner;
 
 import net.java.sip.communicator.plugin.jabberaccregwizz.JabberAccountRegistrationActivator;
 import net.java.sip.communicator.service.protocol.AccountManager;
@@ -28,11 +37,10 @@ import net.java.sip.communicator.service.protocol.ProtocolProviderActivator;
 import net.java.sip.communicator.service.protocol.ProtocolProviderFactory;
 import net.java.sip.communicator.service.protocol.jabber.JabberAccountRegistration;
 
-import org.apache.http.util.TextUtils;
-import org.atalk.ohos.ResourceTable;
+import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
-import org.atalk.ohos.gui.dialogs.DialogH;
-import org.atalk.ohos.util.ComponentUtil;
+import org.atalk.ohos.gui.dialogs.DialogActivity;
+import org.atalk.ohos.gui.util.ViewUtil;
 import org.atalk.service.configuration.ConfigurationService;
 
 /**
@@ -40,8 +48,7 @@ import org.atalk.service.configuration.ConfigurationService;
  *
  * @author Eng Chong Meng
  */
-public class BoshProxyDialog extends CommonDialog implements BaseDialog.RemoveCallback,
-        ListContainer.ItemSelectedListener, Text.TextObserver {
+public class BoshProxyDialog extends Dialog implements OnItemSelectedListener, TextWatcher, DialogActivity.DialogListener {
     public final static String NONE = "NONE";
     public final static String BOSH = "BOSH";
     public final static String HTTP = "HTTP";
@@ -56,17 +63,17 @@ public class BoshProxyDialog extends CommonDialog implements BaseDialog.RemoveCa
     /**
      * The bosh proxy list view.
      */
-    private ListContainer spinnerType;
-    private Component boshUrlSetting;
+    private Spinner spinnerType;
+    private View boshUrlSetting;
 
-    private Checkbox cbHttpProxy;
-    private Text boshURL;
+    private CheckBox cbHttpProxy;
+    private EditText boshURL;
 
-    private Text proxyHost;
-    private Text proxyPort;
+    private EditText proxyHost;
+    private EditText proxyPort;
 
-    private Text proxyUserName;
-    private Text proxyPassword;
+    private EditText proxyUserName;
+    private EditText proxyPassword;
 
     private Button mApplyButton;
 
@@ -93,74 +100,69 @@ public class BoshProxyDialog extends CommonDialog implements BaseDialog.RemoveCa
         AccountManager accManager = ProtocolProviderActivator.getAccountManager();
         ProtocolProviderFactory factory = JabberAccountRegistrationActivator.getJabberProtocolProviderFactory();
         mAccountUuid = accManager.getStoredAccountUUID(factory, editedAccUID);
-
-        initBoshProxy();
     }
 
-    private void initBoshProxy() {
-        setTitleText(mContext.getString(ResourceTable.String_settings_bosh_proxy));
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setTitle(R.string.settings_bosh_proxy);
+        this.setContentView(R.layout.bosh_proxy_dialog);
 
-        LayoutScatter layoutScatter = LayoutScatter.getInstance(mContext);
-        Component boshProxy = layoutScatter.parse(ResourceTable.Layout_bosh_proxy_dialog, null, false);
+        spinnerType = findViewById(R.id.boshProxyType);
+        boshUrlSetting = findViewById(R.id.boshURL_setting);
+        boshURL = findViewById(R.id.boshURL);
+        boshURL.addTextChangedListener(this);
 
-        spinnerType = boshProxy.findComponentById(ResourceTable.Id_boshProxyType);
+        cbHttpProxy = findViewById(R.id.cbHttpProxy);
+        cbHttpProxy.setOnCheckedChangeListener((buttonView, isChecked) -> hasChanges = true);
 
-        boshUrlSetting = boshProxy.findComponentById(ResourceTable.Id_boshURL_setting);
-        boshURL = boshProxy.findComponentById(ResourceTable.Id_boshURL);
-        boshURL.addTextObserver(this);
+        proxyHost = findViewById(R.id.proxyHost);
+        proxyHost.addTextChangedListener(this);
+        proxyPort = findViewById(R.id.proxyPort);
+        proxyPort.addTextChangedListener(this);
 
-        cbHttpProxy = boshProxy.findComponentById(ResourceTable.Id_cbHttpProxy);
-        cbHttpProxy.setCheckedStateChangedListener((buttonView, isChecked) -> hasChanges = true);
+        proxyUserName = findViewById(R.id.proxyUsername);
+        proxyUserName.addTextChangedListener(this);
+        proxyPassword = findViewById(R.id.proxyPassword);
+        proxyPassword.addTextChangedListener(this);
 
-        proxyHost = boshProxy.findComponentById(ResourceTable.Id_proxyHost);
-        proxyHost.addTextObserver(this);
-        proxyPort = boshProxy.findComponentById(ResourceTable.Id_proxyPort);
-        proxyPort.addTextObserver(this);
+        initBoshProxyDialog();
 
-        proxyUserName = boshProxy.findComponentById(ResourceTable.Id_proxyUsername);
-        proxyUserName.addTextObserver(this);
-        proxyPassword = boshProxy.findComponentById(ResourceTable.Id_proxyPassword);
-        proxyPassword.addTextObserver(this);
+        CheckBox showPassword = findViewById(R.id.show_password);
+        showPassword.setOnCheckedChangeListener((buttonView, isChecked)
+                -> ViewUtil.showPassword(proxyPassword, isChecked));
 
-        initBoshProxyContent();
-
-        Checkbox showPassword = boshProxy.findComponentById(ResourceTable.Id_show_password);
-        showPassword.setCheckedStateChangedListener((buttonView, isChecked)
-                -> ComponentUtil.showPassword(proxyPassword, isChecked));
-
-        mApplyButton = boshProxy.findComponentById(ResourceTable.Id_button_Apply);
-        mApplyButton.setClickedListener(v -> {
+        mApplyButton = findViewById(R.id.button_Apply);
+        mApplyButton.setOnClickListener(v -> {
             if (hasChanges) {
                 if (saveBoshProxySettings())
-                    destroy();
+                    cancel();
             }
         });
 
-        Button cancelButton = boshProxy.findComponentById(ResourceTable.Id_button_Cancel);
-        cancelButton.setClickedListener(v -> checkUnsavedChanges());
-
-        setSwipeToDismiss(true);
-        setAutoClosable(false);
-        siteRemovable(true);
+        Button cancelButton = findViewById(R.id.button_Cancel);
+        cancelButton.setOnClickListener(v -> checkUnsavedChanges());
+        setCancelable(false);
+        setCanceledOnTouchOutside(false);
         hasChanges = false;
     }
 
     /**
      * initialize the Bosh-proxy dialog with the db stored values
      */
-    private void initBoshProxyContent() {
-        BaseItemProvider<CharSequence> adapterType = ArrayAdapter.createFromResource(mContext,
-                ResourceTable.Strarray_bosh_proxy_type, ResourceTable.Layout_simple_spinner_item);
-        adapterType.setDropDownViewResource(ResourceTable.Layout_simple_spinner_dropdown_item);
-        spinnerType.setItemProvider(adapterType);
-        spinnerType.setItemSelectedListener(this);
+    private void initBoshProxyDialog() {
+        ArrayAdapter<CharSequence> adapterType = ArrayAdapter.createFromResource(mContext,
+                R.array.bosh_proxy_type, R.layout.simple_spinner_item);
+        adapterType.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
+        spinnerType.setAdapter(adapterType);
+        spinnerType.setOnItemSelectedListener(this);
 
         String type = jbrReg.getProxyType();
         if (!TextUtils.isEmpty(type)) {
-            for (mIndex = 0; mIndex < spinnerType.getChildCount(); mIndex++) {
-                if (spinnerType.getComponentAt(mIndex).equals(type)) {
-                    spinnerType.setSelectedItemIndex(mIndex);
-                    onItemSelected(spinnerType, spinnerType.getComponentAt(0), mIndex, spinnerType.getSelectedItemIndex());
+            for (mIndex = 0; mIndex < spinnerType.getCount(); mIndex++) {
+                if (spinnerType.getItemAtPosition(mIndex).equals(type)) {
+                    spinnerType.setSelection(mIndex);
+                    onItemSelected(spinnerType, spinnerType.getSelectedView(), mIndex, spinnerType.getSelectedItemId());
                     break;
                 }
             }
@@ -176,14 +178,13 @@ public class BoshProxyDialog extends CommonDialog implements BaseDialog.RemoveCa
     }
 
     @Override
-    public void onItemSelected(ListContainer listContainer, Component component, int pos, long id) {
-
-        Text type = (Text) listContainer.getComponentAt(pos);
-        if (BOSH.equals(type.toString())) {
-            boshUrlSetting.setVisibility(Component.VISIBLE);
+    public void onItemSelected(AdapterView<?> adapter, View view, int pos, long id) {
+        String type = (String) adapter.getItemAtPosition(pos);
+        if (BOSH.equals(type)) {
+            boshUrlSetting.setVisibility(View.VISIBLE);
         }
         else {
-            boshUrlSetting.setVisibility(Component.HIDE);
+            boshUrlSetting.setVisibility(View.GONE);
         }
 
         if (mIndex != pos) {
@@ -193,8 +194,8 @@ public class BoshProxyDialog extends CommonDialog implements BaseDialog.RemoveCa
     }
 
     @Override
-    public void onTextUpdated(String text, int start, int before, int count) {
-        hasChanges = true;
+    public void onNothingSelected(AdapterView<?> parent) {
+        // Another interface callback
     }
 
     /**
@@ -204,11 +205,11 @@ public class BoshProxyDialog extends CommonDialog implements BaseDialog.RemoveCa
         Object sType = spinnerType.getSelectedItem();
         String type = (sType == null) ? NONE : sType.toString();
 
-        String boshUrl = ComponentUtil.toString(boshURL);
-        String host = ComponentUtil.toString(proxyHost);
-        String port = ComponentUtil.toString(proxyPort);
-        String userName = ComponentUtil.toString(proxyUserName);
-        String password = ComponentUtil.toString(proxyPassword);
+        String boshUrl = ViewUtil.toString(boshURL);
+        String host = ViewUtil.toString(proxyHost);
+        String port = ViewUtil.toString(proxyPort);
+        String userName = ViewUtil.toString(proxyUserName);
+        String password = ViewUtil.toString(proxyPassword);
 
         String accPrefix = mAccountUuid + ".";
         ConfigurationService configSrvc = ProtocolProviderActivator.getConfigurationService();
@@ -218,7 +219,7 @@ public class BoshProxyDialog extends CommonDialog implements BaseDialog.RemoveCa
         switch (type) {
             case BOSH:
                 if (boshUrl == null) {
-                    aTalkApp.showToastMessage(ResourceTable.String_bosh_proxy_url_null);
+                    aTalkApp.showToastMessage(R.string.bosh_proxy_url_null);
                     return false;
                 }
                 configSrvc.setProperty(accPrefix + ProtocolProviderFactory.BOSH_URL, boshUrl);
@@ -235,7 +236,7 @@ public class BoshProxyDialog extends CommonDialog implements BaseDialog.RemoveCa
             case SOCKS4:
             case SOCKS5:
                 if ((host == null) || (port == null)) {
-                    aTalkApp.showToastMessage(ResourceTable.String_bosh_proxy_host_port_null);
+                    aTalkApp.showToastMessage(R.string.bosh_proxy_host_port_null);
                     return false;
                 }
                 break;
@@ -260,15 +261,8 @@ public class BoshProxyDialog extends CommonDialog implements BaseDialog.RemoveCa
         // remove obsolete setting from DB - to be remove on later version (>2.0.4)
         configSrvc.setProperty(accPrefix + ProtocolProviderFactory.IS_USE_PROXY, null);
 
-        AccountPreferenceSlice.setUncommittedChanges();
+        AccountPreferenceFragment.setUncommittedChanges();
         return true;
-    }
-
-    @Override
-    public void onRemove(IDialog iDialog) {
-        if (hasChanges) {
-            checkUnsavedChanges();
-        }
     }
 
     /**
@@ -276,34 +270,45 @@ public class BoshProxyDialog extends CommonDialog implements BaseDialog.RemoveCa
      */
     private void checkUnsavedChanges() {
         if (hasChanges) {
-            DialogH.getInstance(mContext).showConfirmDialog(mContext,
-                    ResourceTable.String_unsaved_changes_title,
-                    ResourceTable.String_unsaved_changes,
-                    ResourceTable.String_save, new DialogH.DialogListener() {
-                        /**
-                         * Fired when user clicks the dialog's confirm button.
-                         *
-                         * @param dialog source <code>DialogH</code>.
-                         */
-                        @Override
-                        public boolean onConfirmClicked(DialogH dialog) {
-                            return mApplyButton.simulateClick();
-                        }
-
-                        /**
-                         * Fired when user dismisses the dialog.
-                         *
-                         * @param dialog source <code>DialogH</code>
-                         */
-                        @Override
-                        public void onDialogCancelled(DialogH dialog) {
-                            dialog.destroy();
-                        }
-                    });
+            DialogActivity.showConfirmDialog(mContext,
+                    R.string.unsaved_changes_title,
+                    R.string.unsaved_changes,
+                    R.string.save, this);
         }
         else {
-            destroy();
+            cancel();
         }
+    }
+
+    /**
+     * Fired when user clicks the dialog's confirm button.
+     *
+     * @param dialog source <code>DialogActivity</code>.
+     */
+    public boolean onConfirmClicked(DialogActivity dialog) {
+        return mApplyButton.performClick();
+    }
+
+    /**
+     * Fired when user dismisses the dialog.
+     *
+     * @param dialog source <code>DialogActivity</code>
+     */
+    public void onDialogCancelled(DialogActivity dialog) {
+        cancel();
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+        hasChanges = true;
     }
 }
 

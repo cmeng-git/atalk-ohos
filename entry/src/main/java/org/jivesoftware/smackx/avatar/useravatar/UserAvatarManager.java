@@ -17,7 +17,13 @@
 
 package org.jivesoftware.smackx.avatar.useravatar;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -26,10 +32,8 @@ import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import ohos.media.image.PixelMap;
-import ohos.media.image.common.Size;
+import javax.imageio.ImageIO;
 
-import org.atalk.ohos.util.AppImageUtil;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPConnectionRegistry;
@@ -140,12 +144,12 @@ public class UserAvatarManager extends AvatarManager {
         addJidToAvatarHashIndex(mAccount, dataId);
 
         String mimeType = "image/png";
-        PixelMap pixelMap = AppImageUtil.pixelMapFromBytes(byteData);
-        Size size = pixelMap.getImageInfo().size;
+        ByteArrayInputStream stream = new ByteArrayInputStream(byteData);
+        Bitmap avatar = BitmapFactory.decodeStream(stream);
 
         AvatarMetadata.Info info = new AvatarMetadata.Info(dataId, mimeType, byteData.length);
-        info.setHeight(size.height);
-        info.setWidth(size.width);
+        info.setHeight(avatar.getHeight());
+        info.setWidth(avatar.getWidth());
         return info;
     }
 

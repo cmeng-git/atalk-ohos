@@ -1,6 +1,6 @@
 /*
- * aTalk, ohos VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * aTalk, android VoIP and Instant Messaging client
+ * Copyright 2014 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,11 @@
  */
 package org.atalk.ohos.gui.chat.filetransfer;
 
-import ohos.agp.components.Component;
-import ohos.agp.components.ComponentContainer;
-import ohos.agp.components.LayoutScatter;
-import ohos.utils.net.Uri;
+import android.net.Uri;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import java.io.File;
 import java.util.Date;
@@ -33,12 +34,11 @@ import net.java.sip.communicator.service.protocol.event.FileTransferStatusChange
 import net.java.sip.communicator.service.protocol.event.FileTransferStatusListener;
 import net.java.sip.communicator.util.GuiUtils;
 
-import org.apache.http.util.TextUtils;
-import org.atalk.ohos.ResourceTable;
+import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.AppGUIActivator;
+import org.atalk.ohos.gui.chat.ChatFragment;
 import org.atalk.ohos.gui.chat.ChatMessage;
-import org.atalk.ohos.gui.chat.ChatSlice;
 import org.atalk.persistance.FileBackend;
 
 import timber.log.Timber;
@@ -58,7 +58,7 @@ public class FileHttpDownloadConversation extends FileTransferConversation
     private String mSender;
     private FileHistoryServiceImpl mFHS;
 
-    private FileHttpDownloadConversation(ChatSlice cPanel, String dir) {
+    private FileHttpDownloadConversation(ChatFragment cPanel, String dir) {
         super(cPanel, dir);
     }
 
@@ -70,8 +70,8 @@ public class FileHttpDownloadConversation extends FileTransferConversation
      * @param httpFileTransferJabber Http file transfer implementation
      * @param date the date
      */
-    // Constructor used by ChatSlice to start handle ReceiveFileTransferRequest
-    public static FileHttpDownloadConversation newInstance(ChatSlice cPanel, String sender,
+    // Constructor used by ChatFragment to start handle ReceiveFileTransferRequest
+    public static FileHttpDownloadConversation newInstance(ChatFragment cPanel, String sender,
             HttpFileDownloadJabberImpl httpFileTransferJabber, final Date date) {
         FileHttpDownloadConversation fragmentRFC = new FileHttpDownloadConversation(cPanel, FileRecord.IN);
         fragmentRFC.mSender = sender;
@@ -84,9 +84,9 @@ public class FileHttpDownloadConversation extends FileTransferConversation
         return fragmentRFC;
     }
 
-    public Component HttpFileDownloadConversionForm(LayoutScatter inflater, ChatSlice.MessageViewHolder msgViewHolder,
-            ComponentContainer container, int id, boolean init) {
-        Component convertView = inflateViewForFileTransfer(inflater, msgViewHolder, container, init);
+    public View HttpFileDownloadConversionForm(LayoutInflater inflater, ChatFragment.MessageViewHolder msgViewHolder,
+            ViewGroup container, int id, boolean init) {
+        View convertView = inflateViewForFileTransfer(inflater, msgViewHolder, container, init);
 
         msgViewId = id;
         mFileTransfer = httpFileTransferJabber;
@@ -102,7 +102,7 @@ public class FileHttpDownloadConversation extends FileTransferConversation
         mEncryption = httpFileTransferJabber.getEncryptionType();
         setEncryptionState(mEncryption);
 
-        messageViewHolder.stickerView.setPixelMap(null);
+        messageViewHolder.stickerView.setImageDrawable(null);
         messageViewHolder.fileLabel.setText(getFileLabel(fileName, fileSize));
 
         // Create a new file record in database for proper tracking.
@@ -110,16 +110,16 @@ public class FileHttpDownloadConversation extends FileTransferConversation
         mFHS.insertRecordToDB(event, ChatMessage.MESSAGE_HTTP_FILE_DOWNLOAD, fileName);
 
         // Must reset button image to fileIcon on new(); else reused view may contain an old thumbnail image
-        messageViewHolder.fileIcon.setPixelMap(ResourceTable.Media_file_icon);
+        messageViewHolder.fileIcon.setImageResource(R.drawable.file_icon);
 
         // must init all buttons action as inflateViewForFileTransfer will change its references.
-        messageViewHolder.acceptButton.setClickedListener(v ->
+        messageViewHolder.acceptButton.setOnClickListener(v ->
         {
             updateStatus(FileTransferStatusChangeEvent.ACCEPT, null);
             startDownload();
         });
 
-        messageViewHolder.declineButton.setClickedListener(
+        messageViewHolder.declineButton.setOnClickListener(
                 v -> updateStatus(FileTransferStatusChangeEvent.DECLINED, null)
         );
 
@@ -154,31 +154,31 @@ public class FileHttpDownloadConversation extends FileTransferConversation
 
         switch (status) {
             case FileTransferStatusChangeEvent.PREPARING:
-                statusText = aTalkApp.getResString(ResourceTable.String_file_transfer_preparing, mSender);
+                statusText = aTalkApp.getResString(R.string.file_transfer_preparing, mSender);
                 break;
 
             case FileTransferStatusChangeEvent.WAITING:
-                statusText = aTalkApp.getResString(ResourceTable.String_file_transfer_request_received, mSender);
+                statusText = aTalkApp.getResString(R.string.file_transfer_request_received, mSender);
                 break;
 
             case FileTransferStatusChangeEvent.ACCEPT:
-                statusText = aTalkApp.getResString(ResourceTable.String_file_transfer_accepted);
+                statusText = aTalkApp.getResString(R.string.file_transfer_accepted);
                 break;
 
             case FileTransferStatusChangeEvent.IN_PROGRESS:
-                statusText = aTalkApp.getResString(ResourceTable.String_file_receive_from, mSender);
-                mChatSlice.addActiveFileTransfer(httpFileTransferJabber.getID(), httpFileTransferJabber, msgViewId);
+                statusText = aTalkApp.getResString(R.string.file_receive_from, mSender);
+                mChatFragment.addActiveFileTransfer(httpFileTransferJabber.getID(), httpFileTransferJabber, msgViewId);
                 break;
 
             case FileTransferStatusChangeEvent.COMPLETED:
-                statusText = aTalkApp.getResString(ResourceTable.String_file_receive_completed, mSender);
+                statusText = aTalkApp.getResString(R.string.file_receive_completed, mSender);
                 if (mXferFile == null) { // Android view redraw happen?
-                    mXferFile = mChatSlice.getChatListAdapter().getFileName(msgViewId);
+                    mXferFile = mChatFragment.getChatListAdapter().getFileName(msgViewId);
                 }
                 break;
 
             case FileTransferStatusChangeEvent.FAILED:
-                statusText = aTalkApp.getResString(ResourceTable.String_file_receive_failed, mSender);
+                statusText = aTalkApp.getResString(R.string.file_receive_failed, mSender);
                 if (!TextUtils.isEmpty(reason)) {
                     statusText += "\n" + reason;
                 }
@@ -186,7 +186,7 @@ public class FileHttpDownloadConversation extends FileTransferConversation
 
             // local cancel the file download process
             case FileTransferStatusChangeEvent.CANCELED:
-                statusText = aTalkApp.getResString(ResourceTable.String_file_transfer_canceled);
+                statusText = aTalkApp.getResString(R.string.file_transfer_canceled);
                 if (!TextUtils.isEmpty(reason)) {
                     statusText += ": " + reason;
                 }
@@ -194,12 +194,12 @@ public class FileHttpDownloadConversation extends FileTransferConversation
 
             // user reject the incoming http download
             case FileTransferStatusChangeEvent.DECLINED:
-                statusText = aTalkApp.getResString(ResourceTable.String_file_transfer_declined);
+                statusText = aTalkApp.getResString(R.string.file_transfer_declined);
                 break;
         }
         updateFTStatus(status);
         updateXferFileViewState(status, statusText);
-        mChatSlice.scrollToBottom();
+        mChatFragment.scrollToBottom();
     }
 
     /**
@@ -220,7 +220,7 @@ public class FileHttpDownloadConversation extends FileTransferConversation
         int ftState = isFileTransferEnd(status) ?
                 ChatMessage.MESSAGE_FILE_TRANSFER_HISTORY : ChatMessage.MESSAGE_HTTP_FILE_DOWNLOAD;
         mFHS.updateFTStatusToDB(msgUuid, status, fileName, mEncryption, ftState);
-        mChatSlice.updateFTStatus(msgUuid, status, fileName, mEncryption, ftState);
+        mChatFragment.updateFTStatus(msgUuid, status, fileName, mEncryption, ftState);
     }
 
     /**
@@ -249,7 +249,7 @@ public class FileHttpDownloadConversation extends FileTransferConversation
      */
     public File createOutFile(File infile) {
         String fileName = infile.getName();
-        String mimeType = FileBackend.getMimeType(getAbility(), Uri.getUriFromFile(infile));
+        String mimeType = FileBackend.getMimeType(getActivity(), Uri.fromFile(infile));
         setTransferFilePath(fileName, mimeType);
 
         // Change the file name to the name we would use on the local file system.
@@ -269,7 +269,7 @@ public class FileHttpDownloadConversation extends FileTransferConversation
      */
     @Override
     protected String getProgressLabel(long bytesString) {
-        return aTalkApp.getResString(ResourceTable.String_received_, bytesString);
+        return aTalkApp.getResString(R.string.received_, bytesString);
     }
 
     /**

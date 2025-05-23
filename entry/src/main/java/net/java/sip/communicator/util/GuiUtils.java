@@ -6,6 +6,7 @@
  */
 package net.java.sip.communicator.util;
 
+import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 
 import java.text.DateFormat;
@@ -415,40 +416,40 @@ public class GuiUtils
 
         switch (month) {
             case 0:
-                monthStringKey = ResourceTable.String_jan;
+                monthStringKey = R.string.jan;
                 break;
             case 1:
-                monthStringKey = ResourceTable.String_feb;
+                monthStringKey = R.string.feb;
                 break;
             case 2:
-                monthStringKey = ResourceTable.String_mar;
+                monthStringKey = R.string.mar;
                 break;
             case 3:
-                monthStringKey = ResourceTable.String_apr;
+                monthStringKey = R.string.apr;
                 break;
             case 4:
-                monthStringKey = ResourceTable.String_may;
+                monthStringKey = R.string.may;
                 break;
             case 5:
-                monthStringKey = ResourceTable.String_jun;
+                monthStringKey = R.string.jun;
                 break;
             case 6:
-                monthStringKey = ResourceTable.String_jul;
+                monthStringKey = R.string.jul;
                 break;
             case 7:
-                monthStringKey = ResourceTable.String_aug;
+                monthStringKey = R.string.aug;
                 break;
             case 8:
-                monthStringKey = ResourceTable.String_sep;
+                monthStringKey = R.string.sep;
                 break;
             case 9:
-                monthStringKey = ResourceTable.String_oct;
+                monthStringKey = R.string.oct;
                 break;
             case 10:
-                monthStringKey = ResourceTable.String_nov;
+                monthStringKey = R.string.nov;
                 break;
             case 11:
-                monthStringKey = ResourceTable.String_dec;
+                monthStringKey = R.string.dec;
                 break;
             default:
                 return "";

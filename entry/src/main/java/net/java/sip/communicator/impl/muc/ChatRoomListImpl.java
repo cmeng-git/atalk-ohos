@@ -15,13 +15,12 @@
  */
 package net.java.sip.communicator.impl.muc;
 
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
-
-import ohos.data.rdb.RdbPredicates;
-import ohos.data.rdb.RdbStore;
-import ohos.data.resultset.ResultSet;
 
 import net.java.sip.communicator.service.muc.ChatRoomListChangeEvent;
 import net.java.sip.communicator.service.muc.ChatRoomListChangeListener;
@@ -75,14 +74,14 @@ public class ChatRoomListImpl implements RegistrationStateChangeListener, Servic
      */
     private final Vector<ChatRoomListChangeListener> listChangeListeners = new Vector<>();
 
-    private final RdbStore mRdbStore;
+    private SQLiteDatabase mDB;
 
     /**
      * Constructs and initializes new <code>ChatRoomListImpl</code> objects. Adds the created object
      * as service lister to the bundle context.
      */
     public ChatRoomListImpl() {
-        mRdbStore = DatabaseBackend.getRdbStore();
+        mDB = DatabaseBackend.getWritableDB();
         loadList();
         MUCActivator.bundleContext.addServiceListener(this);
     }
@@ -212,11 +211,14 @@ public class ChatRoomListImpl implements RegistrationStateChangeListener, Servic
 
             AccountID accountID = chatRoomProvider.getProtocolProvider().getAccountID();
             AccountManager accountManager = MUCActivator.getAccountManager();
-            if ((accountManager != null) && (!accountManager.getStoredAccounts().contains(accountID))) {
-                RdbPredicates rdbPredicates = new RdbPredicates(ChatSession.TABLE_NAME)
-                        .equalTo(ChatSession.ACCOUNT_UID, accountID.getAccountUid())
-                        .and().equalTo(ChatSession.MODE, ChatSession.MODE_MULTI);
-                mRdbStore.delete(rdbPredicates);
+            if ((accountManager != null)
+                    && (!accountManager.getStoredAccounts().contains(accountID))) {
+
+                String accountUid = accountID.getAccountUid();
+                String[] args = {accountUid, String.valueOf(ChatSession.MODE_MULTI)};
+
+                mDB.delete(ChatSession.TABLE_NAME, ChatSession.ACCOUNT_UID + "=? AND "
+                        + ChatSession.MODE + "=?", args);
             }
         }
 
@@ -470,19 +472,19 @@ public class ChatRoomListImpl implements RegistrationStateChangeListener, Servic
      */
     public List<String> getExistingChatRooms(ProtocolProviderService pps) {
         List<String> chatRooms = new ArrayList<>(0);
+
         String accountUid = pps.getAccountID().getAccountUid();
+        String[] args = {accountUid, String.valueOf(ChatSession.MODE_MULTI)};
         String[] columns = {ChatSession.ENTITY_JID};
+        String ORDER_ASC = ChatSession.ENTITY_JID + " ASC";
 
-        RdbPredicates rdbPredicates = new RdbPredicates(ChatSession.TABLE_NAME)
-                .equalTo(ChatSession.ACCOUNT_UID, accountUid)
-                .and().equalTo(ChatSession.MODE, ChatSession.MODE_MULTI)
-                .orderByAsc(ChatSession.ENTITY_JID);
-        ResultSet resultSet = mRdbStore.query(rdbPredicates, columns);
+        Cursor cursor = mDB.query(ChatSession.TABLE_NAME, columns, ChatSession.ACCOUNT_UID
+                + "=? AND " + ChatSession.MODE + "=?", args, null, null, ORDER_ASC);
 
-        while (resultSet.goToNextRow()) {
-            chatRooms.add(resultSet.getString(0));
+        while (cursor.moveToNext()) {
+            chatRooms.add(cursor.getString(0));
         }
-        resultSet.close();
+        cursor.close();
         return chatRooms;
     }
 }

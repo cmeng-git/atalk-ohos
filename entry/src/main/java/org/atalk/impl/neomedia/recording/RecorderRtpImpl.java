@@ -1529,7 +1529,7 @@ public class RecorderRtpImpl implements Recorder, ReceiveStreamListener,
          * The actual <code>ReceiveStream</code> which is represented by this
          * <code>ReceiveStreamDesc</code>.
          */
-        private final ReceiveStream receiveStream;
+        private ReceiveStream receiveStream;
 
         /**
          * The SSRC of the stream.

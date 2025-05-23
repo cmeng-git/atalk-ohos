@@ -24,7 +24,7 @@ import net.java.sip.communicator.service.systray.SystrayService;
 import net.java.sip.communicator.util.ServiceUtils;
 
 import org.atalk.impl.neomedia.device.DeviceConfiguration;
-import org.atalk.ohos.ResourceTable;
+import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.aTalk;
 import org.atalk.service.audionotifier.AudioNotifierService;
@@ -391,8 +391,8 @@ public class NeomediaActivator implements BundleActivator {
 
                     extras.put(NotificationData.POPUP_MESSAGE_HANDLER_TAG_EXTRA, this);
                     notificationService.fireNotification(DEVICE_CONFIGURATION_HAS_CHANGED, SystrayService.NONE_MESSAGE_TYPE,
-                            aTalkApp.getResString(ResourceTable.String_media_configform_audio_device_config_changed),
-                            aTalkApp.getResString(ResourceTable.String_media_configform_audio_device_config_management_click),
+                            aTalkApp.getResString(R.string.media_configform_audio_device_config_changed),
+                            aTalkApp.getResString(R.string.media_configform_audio_device_config_management_click),
                             null, extras);
                 }
             }

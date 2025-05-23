@@ -5,7 +5,47 @@
  */
 package org.atalk.impl.neomedia.device;
 
-import java.awt.*;
+import org.atalk.impl.timberlog.TimberLog;
+import org.atalk.impl.neomedia.AbstractRTPConnector;
+import org.atalk.impl.neomedia.MediaStreamImpl;
+import org.atalk.impl.neomedia.NeomediaServiceUtils;
+import org.atalk.impl.neomedia.RTCPFeedbackMessagePacket;
+import org.atalk.impl.neomedia.VideoMediaStreamImpl;
+import org.atalk.impl.neomedia.codec.video.HFlip;
+import org.atalk.impl.neomedia.codec.video.SwScale;
+import org.atalk.impl.neomedia.codec.video.h264.DePacketizer;
+import org.atalk.impl.neomedia.codec.video.h264.JNIDecoder;
+import org.atalk.impl.neomedia.codec.video.h264.JNIEncoder;
+import org.atalk.impl.neomedia.control.ImgStreamingControl;
+import org.atalk.impl.neomedia.format.MediaFormatImpl;
+import org.atalk.impl.neomedia.format.VideoMediaFormatImpl;
+import org.atalk.impl.neomedia.transform.ControlTransformInputStream;
+import org.atalk.service.libjitsi.LibJitsi;
+import org.atalk.service.neomedia.MediaDirection;
+import org.atalk.service.neomedia.control.KeyFrameControl;
+import org.atalk.service.neomedia.control.KeyFrameControlAdapter;
+import org.atalk.service.neomedia.event.RTCPFeedbackMessageCreateListener;
+import org.atalk.service.neomedia.event.RTCPFeedbackMessageEvent;
+import org.atalk.service.neomedia.event.RTCPFeedbackMessageListener;
+import org.atalk.service.neomedia.format.MediaFormat;
+import org.atalk.service.neomedia.format.VideoMediaFormat;
+import org.atalk.service.resources.ResourceManagementService;
+import org.atalk.util.MediaType;
+import org.atalk.util.OSUtils;
+import org.atalk.util.event.SizeChangeVideoEvent;
+import org.atalk.util.event.VideoEvent;
+import org.atalk.util.event.VideoListener;
+import org.atalk.util.event.VideoNotifierSupport;
+import org.atalk.util.swing.VideoLayout;
+
+import java.awt.Canvas;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
@@ -37,41 +77,8 @@ import javax.media.protocol.PullBufferDataSource;
 import javax.media.protocol.PullBufferStream;
 import javax.media.protocol.SourceCloneable;
 import javax.media.rtp.OutputDataStream;
-
-import ohos.agp.components.Component;
-import ohos.agp.components.ScaleInfo;
-
-import org.atalk.impl.neomedia.AbstractRTPConnector;
-import org.atalk.impl.neomedia.MediaStreamImpl;
-import org.atalk.impl.neomedia.NeomediaServiceUtils;
-import org.atalk.impl.neomedia.RTCPFeedbackMessagePacket;
-import org.atalk.impl.neomedia.VideoMediaStreamImpl;
-import org.atalk.impl.neomedia.codec.video.HFlip;
-import org.atalk.impl.neomedia.codec.video.SwScale;
-import org.atalk.impl.neomedia.codec.video.h264.DePacketizer;
-import org.atalk.impl.neomedia.codec.video.h264.JNIDecoder;
-import org.atalk.impl.neomedia.codec.video.h264.JNIEncoder;
-import org.atalk.impl.neomedia.control.ImgStreamingControl;
-import org.atalk.impl.neomedia.format.MediaFormatImpl;
-import org.atalk.impl.neomedia.format.VideoMediaFormatImpl;
-import org.atalk.impl.neomedia.transform.ControlTransformInputStream;
-import org.atalk.impl.timberlog.TimberLog;
-import org.atalk.service.neomedia.MediaDirection;
-import org.atalk.service.neomedia.control.KeyFrameControl;
-import org.atalk.service.neomedia.control.KeyFrameControlAdapter;
-import org.atalk.service.neomedia.event.RTCPFeedbackMessageCreateListener;
-import org.atalk.service.neomedia.event.RTCPFeedbackMessageEvent;
-import org.atalk.service.neomedia.event.RTCPFeedbackMessageListener;
-import org.atalk.service.neomedia.format.MediaFormat;
-import org.atalk.service.neomedia.format.VideoMediaFormat;
-import org.atalk.util.MediaType;
-import org.atalk.util.OSUtils;
-import org.atalk.util.event.SizeChangeVideoEvent;
-import org.atalk.util.event.VideoEvent;
-import org.atalk.util.event.VideoListener;
-import org.atalk.util.event.VideoNotifierSupport;
-import org.atalk.ohos.agp.components.JComponent;
-import org.atalk.util.swing.VideoLayout;
+import javax.swing.ImageIcon;
+import javax.swing.SwingUtilities;
 
 import timber.log.Timber;
 
@@ -85,20 +92,26 @@ import timber.log.Timber;
  * @author Eng Chong Meng
  */
 public class VideoMediaDeviceSession extends MediaDeviceSession
-        implements RTCPFeedbackMessageCreateListener {
+        implements RTCPFeedbackMessageCreateListener
+{
+    /**
+     * The image ID of the icon which is to be displayed as the local visual <code>Component</code>
+     * depicting the streaming of the desktop of the local peer to the remote peer.
+     */
+    private static final String DESKTOP_STREAMING_ICON = "impl.media.DESKTOP_STREAMING_ICON";
 
     /**
-     * Gets the visual <code>JComponent</code> of a specific <code>Player</code> if it has one and
+     * Gets the visual <code>Component</code> of a specific <code>Player</code> if it has one and
      * ignores the failure to access it if the specified <code>Player</code> is unrealized.
      *
-     * @param player the <code>Player</code> to get the visual <code>JComponent</code> of if it has one
-     *
-     * @return the visual <code>JComponent</code> of the specified <code>Player</code> if it has one;
+     * @param player the <code>Player</code> to get the visual <code>Component</code> of if it has one
+     * @return the visual <code>Component</code> of the specified <code>Player</code> if it has one;
      * <code>null</code> if the specified <code>Player</code> does not have a visual
-     * <code>JComponent</code> or the <code>Player</code> is unrealized
+     * <code>Component</code> or the <code>Player</code> is unrealized
      */
-    private static JComponent getVisualComponent(Player player) {
-        JComponent visualComponent = null;
+    private static Component getVisualComponent(Player player)
+    {
+        Component visualComponent = null;
 
         if (player.getState() >= Player.Realized) {
             try {
@@ -129,7 +142,7 @@ public class VideoMediaDeviceSession extends MediaDeviceSession
     private KeyFrameControl.KeyFrameRequester keyFrameRequester;
 
     /**
-     * The <code>Player</code> which provides the local visual/video <code>JComponent</code>.
+     * The <code>Player</code> which provides the local visual/video <code>Component</code>.
      */
     private Player localPlayer;
 
@@ -194,7 +207,8 @@ public class VideoMediaDeviceSession extends MediaDeviceSession
      * @param device the video <code>MediaDevice</code> the use of which by a <code>MediaStream</code> is to be
      * represented by the new instance
      */
-    public VideoMediaDeviceSession(AbstractMediaDevice device) {
+    public VideoMediaDeviceSession(AbstractMediaDevice device)
+    {
         super(device);
     }
 
@@ -203,7 +217,8 @@ public class VideoMediaDeviceSession extends MediaDeviceSession
      *
      * @param listener the listener to add
      */
-    public void addRTCPFeedbackMessageCreateListener(RTCPFeedbackMessageCreateListener listener) {
+    public void addRTCPFeedbackMessageCreateListener(RTCPFeedbackMessageCreateListener listener)
+    {
         synchronized (rtcpFeedbackMessageCreateListeners) {
             rtcpFeedbackMessageCreateListeners.add(listener);
         }
@@ -214,16 +229,17 @@ public class VideoMediaDeviceSession extends MediaDeviceSession
 
     /**
      * Adds a specific <code>VideoListener</code> to this instance in order to receive notifications
-     * when visual/video <code>JComponent</code>s are being added and removed.
+     * when visual/video <code>Component</code>s are being added and removed.
      * <p>
      * Adding a listener which has already been added does nothing i.e. it is not added more than
      * once and thus does not receive one and the same <code>VideoEvent</code> multiple times.
      * </p>
      *
-     * @param listener the <code>VideoListener</code> to be notified when visual/video <code>JComponent</code>s are
+     * @param listener the <code>VideoListener</code> to be notified when visual/video <code>Component</code>s are
      * being added or removed in this instance
      */
-    public void addVideoListener(VideoListener listener) {
+    public void addVideoListener(VideoListener listener)
+    {
         videoNotifierSupport.addVideoListener(listener);
     }
 
@@ -234,11 +250,11 @@ public class VideoMediaDeviceSession extends MediaDeviceSession
      *
      * @param device the <code>MediaDevice</code> to be checked for suitability to become the
      * <code>MediaDevice</code> of this instance
-     *
      * @see MediaDeviceSession#checkDevice(AbstractMediaDevice)
      */
     @Override
-    protected void checkDevice(AbstractMediaDevice device) {
+    protected void checkDevice(AbstractMediaDevice device)
+    {
         if (!MediaType.VIDEO.equals(device.getMediaType()))
             throw new IllegalArgumentException("device");
     }
@@ -248,10 +264,11 @@ public class VideoMediaDeviceSession extends MediaDeviceSession
      *
      * @param ev the <code>ControllerEvent</code> specifying the <code>Controller</tt which is the source of
      * the event and the very type of the event
-     * @param hflip <code>true</code> if the image displayed in the local visual <code>JComponent</code> is to be
+     * @param hflip <code>true</code> if the image displayed in the local visual <code>Component</code> is to be
      * horizontally flipped; otherwise, <code>false</code>
      */
-    private void controllerUpdateForCreateLocalVisualComponent(ControllerEvent ev, boolean hflip) {
+    private void controllerUpdateForCreateLocalVisualComponent(ControllerEvent ev, boolean hflip)
+    {
         if (ev instanceof ConfigureCompleteEvent) {
             Processor player = (Processor) ev.getSourceController();
 
@@ -284,7 +301,7 @@ public class VideoMediaDeviceSession extends MediaDeviceSession
         }
         else if (ev instanceof RealizeCompleteEvent) {
             Player player = (Player) ev.getSourceController();
-            JComponent visualComponent = player.getVisualComponent();
+            Component visualComponent = player.getVisualComponent();
             boolean start;
 
             if (visualComponent == null)
@@ -322,7 +339,8 @@ public class VideoMediaDeviceSession extends MediaDeviceSession
      * @return the <code>DataSource</code> that this instance is to read captured media from
      */
     @Override
-    protected DataSource createCaptureDevice() {
+    protected DataSource createCaptureDevice()
+    {
         /*
          * Create our DataSource as SourceCloneable so we can use it to both display local video
          * and stream to remote peer.
@@ -368,7 +386,9 @@ public class VideoMediaDeviceSession extends MediaDeviceSession
             }
 
             if (!(captureDevice instanceof SourceCloneable)) {
-                return Manager.createCloneableDataSource(captureDevice);
+                DataSource cloneableDataSource = Manager.createCloneableDataSource(captureDevice);
+                if (cloneableDataSource != null)
+                    captureDevice = cloneableDataSource;
             }
         }
         return captureDevice;
@@ -376,25 +396,26 @@ public class VideoMediaDeviceSession extends MediaDeviceSession
 
     /**
      * Initializes a new <code>Player</code> instance which is to provide the local visual/video
-     * <code>JComponent</code>. The new instance is initialized to render the media of the
+     * <code>Component</code>. The new instance is initialized to render the media of the
      * <code>captureDevice</code> of this <code>MediaDeviceSession</code>.
      *
-     * @return a new <code>Player</code> instance which is to provide the local visual/video <code>JComponent</code>
+     * @return a new <code>Player</code> instance which is to provide the local visual/video <code>Component</code>
      */
-    private Player createLocalPlayer() {
+    private Player createLocalPlayer()
+    {
         return createLocalPlayer(getCaptureDevice());
     }
 
     /**
      * Initializes a new <code>Player</code> instance which is to provide the local visual/video
-     * <code>JComponent</code>. The new instance is initialized to render the media of a specific <code>DataSource</code>.
+     * <code>Component</code>. The new instance is initialized to render the media of a specific <code>DataSource</code>.
      *
      * @param captureDevice the <code>DataSource</code> which is to have its media rendered by the new instance as the
-     * local visual/video <code>JComponent</code>
-     *
-     * @return a new <code>Player</code> instance which is to provide the local visual/video <code>JComponent</code>
+     * local visual/video <code>Component</code>
+     * @return a new <code>Player</code> instance which is to provide the local visual/video <code>Component</code>
      */
-    protected Player createLocalPlayer(DataSource captureDevice) {
+    protected Player createLocalPlayer(DataSource captureDevice)
+    {
         DataSource dataSource = (captureDevice instanceof SourceCloneable)
                 ? ((SourceCloneable) captureDevice).createClone() : null;
         Processor localPlayer = null;
@@ -411,7 +432,7 @@ public class VideoMediaDeviceSession extends MediaDeviceSession
             if (exception == null) {
                 if (localPlayer != null) {
                     /*
-                     * If a local visual JComponent is to be displayed for desktop
+                     * If a local visual Component is to be displayed for desktop
                      * sharing/streaming, do not flip it because it does not seem natural.
                      */
                     final boolean hflip = (captureDevice.getControl(ImgStreamingControl.class.getName()) == null);
@@ -428,38 +449,157 @@ public class VideoMediaDeviceSession extends MediaDeviceSession
     }
 
     /**
-     * Creates the visual <code>JComponent</code> depicting the video being streamed from the local peer
+     * Creates the visual <code>Component</code> depicting the video being streamed from the local peer
      * to the remote peer.
      *
-     * @return the visual <code>JComponent</code> depicting the video being streamed from the local peer
+     * @return the visual <code>Component</code> depicting the video being streamed from the local peer
      * to the remote peer if it was immediately created or <code>null</code> if it was not
      * immediately created and it is to be delivered to the currently registered
      * <code>VideoListener</code>s in a <code>VideoEvent</code> with type
      * {@link VideoEvent#VIDEO_ADDED} and origin {@link VideoEvent#LOCAL}
      */
-    protected JComponent createLocalVisualComponent() {
-        // On ohos local preview is displayed directly using Surface provided
+    protected Component createLocalVisualComponent()
+    {
+        // On Android local preview is displayed directly using Surface provided
         // to the recorder. We don't want to build unused codec chain.
-        return null;
+        if (OSUtils.IS_ANDROID) {
+            return null;
+        }
+
+        /*
+         * Displaying the currently streamed desktop is perceived as unnecessary because the user
+         * sees the whole desktop anyway. Instead, a static image will be presented.
+         */
+        DataSource captureDevice = getCaptureDevice();
+
+        if ((captureDevice != null)
+                && (captureDevice.getControl(ImgStreamingControl.class.getName()) != null)) {
+            return createLocalVisualComponentForDesktopStreaming();
+        }
+
+        /*
+         * The visual Component to depict the video being streamed from the local peer to the
+         * remote peer is created by JMF and its Player so it is likely to take noticeably
+         * long time. Consequently, we will deliver it to the currently registered
+         * VideoListeners in a VideoEvent after returning from the call.
+         */
+        Component localVisualComponent;
+
+        synchronized (localPlayerSyncRoot) {
+            if (localPlayer == null)
+                localPlayer = createLocalPlayer();
+            localVisualComponent = (localPlayer == null) ? null : getVisualComponent(localPlayer);
+        }
+        /*
+         * If the local visual/video Component exists at this time, it has likely been created by a
+         * previous call to this method. However, the caller may still depend on a VIDEO_ADDED
+         * event being fired for it.
+         */
+        if (localVisualComponent != null) {
+            fireVideoEvent(VideoEvent.VIDEO_ADDED, localVisualComponent, VideoEvent.LOCAL, false);
+        }
+        return localVisualComponent;
+    }
+
+    /**
+     * Creates the visual <code>Component</code> to depict the streaming of the desktop of the local
+     * peer to the remote peer.
+     *
+     * @return the visual <code>Component</code> to depict the streaming of the desktop of the local
+     * peer to the remote peer
+     */
+    private Component createLocalVisualComponentForDesktopStreaming()
+    {
+        ResourceManagementService resources = LibJitsi.getResourceManagementService();
+        ImageIcon icon = (resources == null) ? null : resources.getImage(DESKTOP_STREAMING_ICON);
+        Canvas canvas;
+
+        if (icon == null)
+            canvas = null;
+        else {
+            final Image img = icon.getImage();
+
+            canvas = new Canvas()
+            {
+                public static final long serialVersionUID = 0L;
+
+                @Override
+                public void paint(Graphics g)
+                {
+                    int width = getWidth();
+                    int height = getHeight();
+
+                    g.setColor(Color.BLACK);
+                    g.fillRect(0, 0, width, height);
+
+                    int imgWidth = img.getWidth(this);
+                    int imgHeight = img.getHeight(this);
+
+                    if ((imgWidth < 1) || (imgHeight < 1))
+                        return;
+
+                    boolean scale = false;
+                    float scaleFactor = 1;
+
+                    if (imgWidth > width) {
+                        scale = true;
+                        scaleFactor = width / (float) imgWidth;
+                    }
+                    if (imgHeight > height) {
+                        scale = true;
+                        scaleFactor = Math.min(scaleFactor, height / (float) imgHeight);
+                    }
+
+                    int dstWidth;
+                    int dstHeight;
+
+                    if (scale) {
+                        dstWidth = Math.round(imgWidth * scaleFactor);
+                        dstHeight = Math.round(imgHeight * scaleFactor);
+                    }
+                    else {
+                        dstWidth = imgWidth;
+                        dstHeight = imgHeight;
+                    }
+
+                    int dstX = (width - dstWidth) / 2;
+                    int dstY = (height - dstWidth) / 2;
+                    g.drawImage(img, dstX, dstY, dstX + dstWidth, dstY + dstHeight, 0, 0, imgWidth,
+                            imgHeight, this);
+                }
+            };
+
+            Dimension iconSize = new Dimension(icon.getIconWidth(), icon.getIconHeight());
+            canvas.setMaximumSize(iconSize);
+            canvas.setPreferredSize(iconSize);
+
+            /*
+             * Set a clue so that we can recognize it if it gets received as an argument to
+             * #disposeLocalVisualComponent().
+             */
+            canvas.setName(DESKTOP_STREAMING_ICON);
+            fireVideoEvent(VideoEvent.VIDEO_ADDED, canvas, VideoEvent.LOCAL, false);
+        }
+        return canvas;
     }
 
     /**
      * Releases the resources allocated by a specific local <code>Player</code> in the course of its
      * execution and prepares it to be garbage collected. If the specified <code>Player</code> is
      * rendering video, notifies the <code>VideoListener</code>s of this instance that its visual
-     * <code>JComponent</code> is to no longer be used by firing a {@link VideoEvent#VIDEO_REMOVED}
+     * <code>Component</code> is to no longer be used by firing a {@link VideoEvent#VIDEO_REMOVED}
      * <code>VideoEvent</code>.
      *
      * @param player the <code>Player</code> to dispose of
-     *
      * @see MediaDeviceSession#disposePlayer(Player)
      */
-    protected void disposeLocalPlayer(Player player) {
+    protected void disposeLocalPlayer(Player player)
+    {
         /*
          * The player is being disposed so let the (interested) listeners know its
          * Player#getVisualComponent() (if any) should be released.
          */
-        JComponent visualComponent = null;
+        Component visualComponent = null;
         try {
             visualComponent = getVisualComponent(player);
             player.stop();
@@ -477,23 +617,55 @@ public class VideoMediaDeviceSession extends MediaDeviceSession
     }
 
     /**
+     * Disposes of the local visual <code>Component</code> of the local peer.
+     *
+     * @param component the local visual <code>Component</code> of the local peer to dispose of
+     */
+    protected void disposeLocalVisualComponent(Component component)
+    {
+        if (component != null) {
+            /*
+             * Desktop streaming does not use a Player but a Canvas with its name equal to the
+             * value of DESKTOP_STREAMING_ICON.
+             */
+            if (DESKTOP_STREAMING_ICON.equals(component.getName())) {
+                fireVideoEvent(VideoEvent.VIDEO_REMOVED, component, VideoEvent.LOCAL, false);
+            }
+            else {
+                Player localPlayer;
+
+                synchronized (localPlayerSyncRoot) {
+                    localPlayer = this.localPlayer;
+                }
+                if (localPlayer != null) {
+                    Component localPlayerVisualComponent = getVisualComponent(localPlayer);
+
+                    if ((localPlayerVisualComponent == null)
+                            || (localPlayerVisualComponent == component))
+                        disposeLocalPlayer(localPlayer);
+                }
+            }
+        }
+    }
+
+    /**
      * Releases the resources allocated by a specific <code>Player</code> in the course of its
      * execution and prepares it to be garbage collected. If the specified <code>Player</code>
      * is rendering video, notifies the <code>VideoListener</code>s of this instance that its
-     * visual <code>JComponent</code> is to no longer be used by firing a
+     * visual <code>Component</code> is to no longer be used by firing a
      * {@link VideoEvent#VIDEO_REMOVED} <code>VideoEvent</code>.
      *
      * @param player the <code>Player</code> to dispose of
-     *
      * @see MediaDeviceSession#disposePlayer(Player)
      */
     @Override
-    protected void disposePlayer(Player player) {
+    protected void disposePlayer(Player player)
+    {
         /*
          * The player is being disposed so let the (interested) listeners know its
          * Player#getVisualComponent() (if any) should be released.
          */
-        JComponent visualComponent = getVisualComponent(player);
+        Component visualComponent = getVisualComponent(player);
         super.disposePlayer(player);
 
         if (visualComponent != null) {
@@ -503,24 +675,24 @@ public class VideoMediaDeviceSession extends MediaDeviceSession
 
     /**
      * Notify the <code>VideoListener</code>s registered with this instance about a specific type of
-     * change in the availability of a specific visual <code>JComponent</code> depicting video.
+     * change in the availability of a specific visual <code>Component</code> depicting video.
      *
      * @param type the type of change as defined by <code>VideoEvent</code> in the availability of the
-     * specified visual <code>JComponent</code> depicting video
-     * @param visualComponent the visual <code>JComponent</code> depicting video which has been added
+     * specified visual <code>Component</code> depicting video
+     * @param visualComponent the visual <code>Component</code> depicting video which has been added
      * or removed in this instance
      * @param origin {@link VideoEvent#LOCAL} if the origin of the video is local (e.g. it is being locally
      * captured); {@link VideoEvent#REMOTE} if the origin of the video is remote (e.g. a
      * remote peer is streaming it)
      * @param wait <code>true</code> if the call is to wait till the specified <code>VideoEvent</code> has been
      * delivered to the <code>VideoListener</code>s; otherwise, <code>false</code>
-     *
-     * @return <code>true</code> if this event and, more specifically, the visual <code>JComponent</code> it
+     * @return <code>true</code> if this event and, more specifically, the visual <code>Component</code> it
      * describes have been consumed and should be considered owned, referenced (which is
-     * important because <code>JComponent</code>s belong to a single <code>Container</code> at a
+     * important because <code>Component</code>s belong to a single <code>Container</code> at a
      * time); otherwise, <code>false</code>
      */
-    protected boolean fireVideoEvent(int type, JComponent visualComponent, int origin, boolean wait) {
+    protected boolean fireVideoEvent(int type, Component visualComponent, int origin, boolean wait)
+    {
         Timber.log(TimberLog.FINER, "Firing VideoEvent with type %s, originated from %s and Wait is %s",
                 VideoEvent.typeToString(type), VideoEvent.originToString(origin), wait);
         return videoNotifierSupport.fireVideoEvent(type, visualComponent, origin, wait);
@@ -534,7 +706,8 @@ public class VideoMediaDeviceSession extends MediaDeviceSession
      * @param wait <code>true</code> if the call is to wait till the specified <code>VideoEvent</code> has been
      * delivered to the <code>VideoListener</code>s; otherwise, <code>false</code>
      */
-    protected void fireVideoEvent(VideoEvent videoEvent, boolean wait) {
+    protected void fireVideoEvent(VideoEvent videoEvent, boolean wait)
+    {
         videoNotifierSupport.fireVideoEvent(videoEvent, wait);
     }
 
@@ -543,7 +716,8 @@ public class VideoMediaDeviceSession extends MediaDeviceSession
      *
      * @return the JMF <code>Format</code> of the <code>captureDevice</code> of this <code>MediaDeviceSession</code>
      */
-    private Format getCaptureDeviceFormat() {
+    private Format getCaptureDeviceFormat()
+    {
         DataSource captureDevice = getCaptureDevice();
         if (captureDevice != null) {
             FormatControl[] formatControls = null;
@@ -570,13 +744,14 @@ public class VideoMediaDeviceSession extends MediaDeviceSession
     }
 
     /**
-     * Gets the visual <code>JComponent</code>, if any, depicting the video streamed from the local peer
+     * Gets the visual <code>Component</code>, if any, depicting the video streamed from the local peer
      * to the remote peer.
      *
-     * @return the visual <code>JComponent</code> depicting the local video if local video is actually
+     * @return the visual <code>Component</code> depicting the local video if local video is actually
      * being streamed from the local peer to the remote peer; otherwise, <code>null</code>
      */
-    public JComponent getLocalVisualComponent() {
+    public Component getLocalVisualComponent()
+    {
         synchronized (localPlayerSyncRoot) {
             return (localPlayer == null) ? null : getVisualComponent(localPlayer);
         }
@@ -589,7 +764,8 @@ public class VideoMediaDeviceSession extends MediaDeviceSession
      * <code>null</code> if we are not receiving any video or the FMJ <code>Format</code> of the
      * video we are receiving from the remote peer cannot be determined
      */
-    public VideoFormat getReceivedVideoFormat() {
+    public VideoFormat getReceivedVideoFormat()
+    {
         if (playerScaler != null) {
             Format format = playerScaler.getInputFormat();
 
@@ -605,7 +781,8 @@ public class VideoMediaDeviceSession extends MediaDeviceSession
      *
      * @return The video format of the sent video. Null, if no video is sent.
      */
-    public VideoFormat getSentVideoFormat() {
+    public VideoFormat getSentVideoFormat()
+    {
         DataSource capture = getCaptureDevice();
         if (capture instanceof PullBufferDataSource) {
             PullBufferStream[] streams = ((PullBufferDataSource) capture).getStreams();
@@ -621,26 +798,27 @@ public class VideoMediaDeviceSession extends MediaDeviceSession
     }
 
     /**
-     * Gets the visual <code>JComponent</code>s rendering the <code>ReceiveStream</code> corresponding to
+     * Gets the visual <code>Component</code>s rendering the <code>ReceiveStream</code> corresponding to
      * the given ssrc.
      *
-     * @param ssrc the src-id of the receive stream, which visual <code>JComponent</code> we're looking for
-     *
-     * @return the visual <code>JComponent</code> rendering the <code>ReceiveStream</code> corresponding to
+     * @param ssrc the src-id of the receive stream, which visual <code>Component</code> we're looking for
+     * @return the visual <code>Component</code> rendering the <code>ReceiveStream</code> corresponding to
      * the given ssrc
      */
-    public JComponent getVisualComponent(long ssrc) {
+    public Component getVisualComponent(long ssrc)
+    {
         Player player = getPlayer(ssrc);
         return (player == null) ? null : getVisualComponent(player);
     }
 
     /**
-     * Gets the visual <code>JComponent</code>s where video from the remote peer is being rendered.
+     * Gets the visual <code>Component</code>s where video from the remote peer is being rendered.
      *
-     * @return the visual <code>JComponent</code>s where video from the remote peer is being rendered
+     * @return the visual <code>Component</code>s where video from the remote peer is being rendered
      */
-    public List<JComponent> getVisualComponents() {
-        List<JComponent> visualComponents = new LinkedList<>();
+    public List<Component> getVisualComponents()
+    {
+        List<Component> visualComponents = new LinkedList<>();
 
         /*
          * When we know (through means such as SDP) that we don't want to receive, it doesn't make
@@ -649,7 +827,7 @@ public class VideoMediaDeviceSession extends MediaDeviceSession
          */
         if (getStartedDirection().allowsReceiving()) {
             for (Player player : getPlayers()) {
-                JComponent visualComponent = getVisualComponent(player);
+                Component visualComponent = getVisualComponent(player);
 
                 if (visualComponent != null)
                     visualComponents.add(visualComponent);
@@ -663,12 +841,12 @@ public class VideoMediaDeviceSession extends MediaDeviceSession
      * {@link #keyFrameRequester}.
      *
      * @param keyFrameRequester the <code>KeyFrameControl.KeyFrameRequester</code> on which the method is invoked
-     *
      * @return <code>true</code> if this <code>KeyFrameRequester</code> has indeed requested a key frame
      * from the remote peer of the associated <code>VideoMediaStream</code> in response to the
      * call; otherwise, <code>false</code>
      */
-    private boolean keyFrameRequesterRequestKeyFrame(KeyFrameControl.KeyFrameRequester keyFrameRequester) {
+    private boolean keyFrameRequesterRequestKeyFrame(KeyFrameControl.KeyFrameRequester keyFrameRequester)
+    {
         boolean requested = false;
 
         if (VideoMediaDeviceSession.this.useRTCPFeedbackPLI) {
@@ -696,7 +874,8 @@ public class VideoMediaDeviceSession extends MediaDeviceSession
      */
     @Override
     public void onRTCPFeedbackMessageCreate(
-            RTCPFeedbackMessageListener rtcpFeedbackMessageListener) {
+            RTCPFeedbackMessageListener rtcpFeedbackMessageListener)
+    {
         if (rtpConnector != null) {
             try {
                 ((ControlTransformInputStream) rtpConnector.getControlInputStream())
@@ -712,11 +891,11 @@ public class VideoMediaDeviceSession extends MediaDeviceSession
      * <code>ConfigureCompleteEvent</code>.
      *
      * @param player the <code>Player</code> which is the source of a <code>ConfigureCompleteEvent</code>
-     *
      * @see MediaDeviceSession#playerConfigureComplete(Processor)
      */
     @Override
-    protected void playerConfigureComplete(Processor player) {
+    protected void playerConfigureComplete(Processor player)
+    {
         super.playerConfigureComplete(player);
 
         TrackControl[] trackControls = player.getTrackControls();
@@ -745,9 +924,11 @@ public class VideoMediaDeviceSession extends MediaDeviceSession
 
                         if (keyFrameControl != null) {
                             depacketizer.setKeyFrameControl(keyFrameControl);
-                            decoder.setKeyFrameControl(new KeyFrameControlAdapter() {
+                            decoder.setKeyFrameControl(new KeyFrameControlAdapter()
+                            {
                                 @Override
-                                public boolean requestKeyFrame(boolean urgent) {
+                                public boolean requestKeyFrame(boolean urgent)
+                                {
                                     return depacketizer.requestKeyFrame(urgent);
                                 }
                             });
@@ -773,11 +954,11 @@ public class VideoMediaDeviceSession extends MediaDeviceSession
      *
      * @param ev the <code>ControllerEvent</code> specifying the <code>Controller</code> which is the source of
      * the event and the very type of the event
-     *
      * @see MediaDeviceSession#playerControllerUpdate(ControllerEvent)
      */
     @Override
-    protected void playerControllerUpdate(ControllerEvent ev) {
+    protected void playerControllerUpdate(ControllerEvent ev)
+    {
         super.playerControllerUpdate(ev);
 
         /*
@@ -797,34 +978,25 @@ public class VideoMediaDeviceSession extends MediaDeviceSession
      * <code>RealizeCompleteEvent</code>.
      *
      * @param player the <code>Player</code> which is the source of a <code>RealizeCompleteEvent</code>.
-     *
      * @see MediaDeviceSession#playerRealizeComplete(Processor)
      */
     @Override
-    protected void playerRealizeComplete(final Processor player) {
+    protected void playerRealizeComplete(final Processor player)
+    {
         super.playerRealizeComplete(player);
 
-        JComponent visualComponent = getVisualComponent(player);
+        Component visualComponent = getVisualComponent(player);
         if (visualComponent != null) {
             /*
              * SwScale seems to be very good at scaling with respect to image quality so use it for
              * the scaling in the player replacing the scaling it does upon rendering.
              */
-            visualComponent.setScaledListener(new JComponent.ScaledListener() {
+            visualComponent.addComponentListener(new ComponentAdapter()
+            {
                 @Override
-                public void onScaleStart(Component component, ScaleInfo scaleInfo) {
-
-                }
-
-                @Override
-                public void onScaleUpdate(Component component, ScaleInfo scaleInfo) {
-
-                }
-
-                @Override
-                public void onScaleEnd(Component component, ScaleInfo scaleInfo) {
-                    playerVisualComponentResized(player, (JComponent) component, scaleInfo);
-
+                public void componentResized(ComponentEvent ev)
+                {
+                    playerVisualComponentResized(player, ev);
                 }
             });
             // cmeng - unnecessary here, let actual video streaming fire.
@@ -840,31 +1012,32 @@ public class VideoMediaDeviceSession extends MediaDeviceSession
      *
      * @param sourceController the <code>Player</code> which is the source of the event
      * @param origin {@link VideoEvent#LOCAL} or {@link VideoEvent#REMOTE} which specifies the origin of
-     * the visual <code>JComponent</code> displaying video which is concerned
+     * the visual <code>Component</code> displaying video which is concerned
      * @param width the width reported in the event
      * @param height the height reported in the event
-     *
      * @see SizeChangeEvent
      */
-    protected void playerSizeChange(final Controller sourceController, final int origin, final int width, final int height) {
+    protected void playerSizeChange(final Controller sourceController, final int origin,
+            final int width, final int height)
+    {
         /*
          * Invoking anything that is likely to change the UI in the Player thread seems like a
          * performance hit so bring it into the event thread.
          */
-//        if (!SwingUtilities.isEventDispatchThread()) {
-//            SwingUtilities.invokeLater(() -> playerSizeChange(sourceController, origin, width, height));
-//            return;
-//        }
+        if (!SwingUtilities.isEventDispatchThread()) {
+            SwingUtilities.invokeLater(() -> playerSizeChange(sourceController, origin, width, height));
+            return;
+        }
 
         Player player = (Player) sourceController;
-        JComponent visualComponent = getVisualComponent(player);
+        Component visualComponent = getVisualComponent(player);
 
         if (visualComponent != null) {
             /*
              * The Player will notify the new size, and before it reaches the Renderer.
              * The notification/event may as well arrive before the Renderer reflects the
-             * new size onto the preferredSize of the JComponent. In order to make sure the new
-             * size is reflected on the preferredSize of the JComponent before the notification/event
+             * new size onto the preferredSize of the Component. In order to make sure the new
+             * size is reflected on the preferredSize of the Component before the notification/event
              * arrives to its destination/listener, reflect it as soon as possible i.e. now.
              */
             try {
@@ -883,25 +1056,29 @@ public class VideoMediaDeviceSession extends MediaDeviceSession
     }
 
     /**
-     * Notify this instance that the visual <code>JComponent</code> of a <code>Player</code> rendering
+     * Notify this instance that the visual <code>Component</code> of a <code>Player</code> rendering
      * remote content has been resized.
      *
-     * @param player the <code>Player</code> rendering remote content the visual <code>JComponent</code> of which has been resized
-     * @param scaleInfo a <code>ComponentEvent</code> which specifies the resized <code>JComponent</code>
+     * @param player the <code>Player</code> rendering remote content the visual <code>Component</code> of which has been resized
+     * @param ev a <code>ComponentEvent</code> which specifies the resized <code>Component</code>
      */
-    private void playerVisualComponentResized(Processor player, JComponent visualComponent, ScaleInfo scaleInfo) {
+    private void playerVisualComponentResized(Processor player, ComponentEvent ev)
+    {
         if (playerScaler == null)
             return;
+
+        Component visualComponent = ev.getComponent();
 
         /*
          * When the visualComponent is not in a UI hierarchy, its size is not expected to be
          * representative of what the user is seeing.
          */
-        if (visualComponent.isFocusable())
+        if (visualComponent.isDisplayable())
             return;
 
-        float outputWidth = visualComponent.getWidth();
-        float outputHeight = visualComponent.getHeight();
+        Dimension outputSize = visualComponent.getSize();
+        float outputWidth = outputSize.width;
+        float outputHeight = outputSize.height;
 
         if ((outputWidth < SwScale.MIN_SWS_SCALE_HEIGHT_OR_WIDTH)
                 || (outputHeight < SwScale.MIN_SWS_SCALE_HEIGHT_OR_WIDTH))
@@ -980,7 +1157,8 @@ public class VideoMediaDeviceSession extends MediaDeviceSession
      *
      * @param listener the listener to remove
      */
-    public void removeRTCPFeedbackMessageCreateListner(RTCPFeedbackMessageCreateListener listener) {
+    public void removeRTCPFeedbackMessageCreateListner(RTCPFeedbackMessageCreateListener listener)
+    {
         synchronized (rtcpFeedbackMessageCreateListeners) {
             rtcpFeedbackMessageCreateListeners.remove(listener);
         }
@@ -988,12 +1166,13 @@ public class VideoMediaDeviceSession extends MediaDeviceSession
 
     /**
      * Removes a specific <code>VideoListener</code> from this instance in order to have to no longer
-     * receive notifications when visual/video <code>JComponent</code>s are being added and removed.
+     * receive notifications when visual/video <code>Component</code>s are being added and removed.
      *
      * @param listener the <code>VideoListener</code> to no longer be notified when visual/video
-     * <code>JComponent</code>s are being added or removed in this instance
+     * <code>Component</code>s are being added or removed in this instance
      */
-    public void removeVideoListener(VideoListener listener) {
+    public void removeVideoListener(VideoListener listener)
+    {
         videoNotifierSupport.removeVideoListener(listener);
     }
 
@@ -1002,7 +1181,8 @@ public class VideoMediaDeviceSession extends MediaDeviceSession
      *
      * @param rtpConnector the RTP connector
      */
-    public void setConnector(AbstractRTPConnector rtpConnector) {
+    public void setConnector(AbstractRTPConnector rtpConnector)
+    {
         this.rtpConnector = rtpConnector;
     }
 
@@ -1014,7 +1194,8 @@ public class VideoMediaDeviceSession extends MediaDeviceSession
      * media captured by its <code>MediaDevice</code>
      */
     @Override
-    public void setFormat(MediaFormat format) {
+    public void setFormat(MediaFormat format)
+    {
         if (format instanceof VideoMediaFormat
                 && ((VideoMediaFormat) format).getFrameRate() != -1) {
             FrameRateControl frameRateControl
@@ -1042,7 +1223,8 @@ public class VideoMediaDeviceSession extends MediaDeviceSession
      * @param keyFrameControl the <code>KeyFrameControl</code> to be used by this <code>VideoMediaDeviceSession</code> as a
      * means of control over its key frame-related logic
      */
-    public void setKeyFrameControl(KeyFrameControl keyFrameControl) {
+    public void setKeyFrameControl(KeyFrameControl keyFrameControl)
+    {
         if (this.keyFrameControl != keyFrameControl) {
             if ((this.keyFrameControl != null) && (keyFrameRequester != null))
                 this.keyFrameControl.removeKeyFrameRequester(keyFrameRequester);
@@ -1059,7 +1241,8 @@ public class VideoMediaDeviceSession extends MediaDeviceSession
      *
      * @param localSSRC local SSRC
      */
-    public void setLocalSSRC(long localSSRC) {
+    public void setLocalSSRC(long localSSRC)
+    {
         this.localSSRC = localSSRC;
     }
 
@@ -1068,7 +1251,8 @@ public class VideoMediaDeviceSession extends MediaDeviceSession
      *
      * @param size the size of the output video
      */
-    public void setOutputSize(Dimension size) {
+    public void setOutputSize(Dimension size)
+    {
         boolean equal = Objects.equals(size, outputSize);
 
         if (!equal) {
@@ -1083,11 +1267,11 @@ public class VideoMediaDeviceSession extends MediaDeviceSession
      *
      * @param processor the <code>Processor</code> to set the output <code>MediaFormatImpl</code> of
      * @param mediaFormat the <code>MediaFormatImpl</code> to set on <code>processor</code>
-     *
      * @see MediaDeviceSession#setProcessorFormat(Processor, MediaFormatImpl)
      */
     @Override
-    protected void setProcessorFormat(Processor processor, MediaFormatImpl<? extends Format> mediaFormat) {
+    protected void setProcessorFormat(Processor processor, MediaFormatImpl<? extends Format> mediaFormat)
+    {
         Format format = mediaFormat.getFormat();
         /*
          * Add a size in the output format. As VideoFormat has no setter, we recreate the object.
@@ -1138,16 +1322,15 @@ public class VideoMediaDeviceSession extends MediaDeviceSession
      * <code>mediaFormat</code> encapsulates a JMF <code>Format</code>, the specified <code>format</code>
      * is to be set on the specified <code>trackControl</code> because it may be more specific
      * than the JMF <code>Format</code> of the <code>mediaFormat</code>
-     *
      * @return the JMF <code>Format</code> set on <code>TrackControl</code> after the attempt to set the
      * specified <code>mediaFormat</code> or <code>null</code> if the specified <code>format</code> was
      * found to be incompatible with <code>trackControl</code>
-     *
      * @see MediaDeviceSession#setProcessorFormat(TrackControl, MediaFormatImpl, Format)
      */
     @Override
     protected Format setProcessorFormat(TrackControl trackControl,
-            MediaFormatImpl<? extends Format> mediaFormat, Format format) {
+            MediaFormatImpl<? extends Format> mediaFormat, Format format)
+    {
         JNIEncoder encoder = null;
         SwScale scaler = null;
         int codecCount = 0;
@@ -1226,7 +1409,8 @@ public class VideoMediaDeviceSession extends MediaDeviceSession
      *
      * @param remoteSSRC remote SSRC
      */
-    public void setRemoteSSRC(long remoteSSRC) {
+    public void setRemoteSSRC(long remoteSSRC)
+    {
         this.remoteSSRC = remoteSSRC;
     }
 
@@ -1236,15 +1420,18 @@ public class VideoMediaDeviceSession extends MediaDeviceSession
      *
      * @param useRTCPFeedbackPLI <code>true</code> to use PLI; otherwise, <code>false</code>
      */
-    public void setRTCPFeedbackPLI(boolean useRTCPFeedbackPLI) {
+    public void setRTCPFeedbackPLI(boolean useRTCPFeedbackPLI)
+    {
         if (this.useRTCPFeedbackPLI != useRTCPFeedbackPLI) {
             this.useRTCPFeedbackPLI = useRTCPFeedbackPLI;
 
             if (this.useRTCPFeedbackPLI) {
                 if (keyFrameRequester == null) {
-                    keyFrameRequester = new KeyFrameControl.KeyFrameRequester() {
+                    keyFrameRequester = new KeyFrameControl.KeyFrameRequester()
+                    {
                         @Override
-                        public boolean requestKeyFrame() {
+                        public boolean requestKeyFrame()
+                        {
                             return keyFrameRequesterRequestKeyFrame(this);
                         }
                     };
@@ -1270,7 +1457,8 @@ public class VideoMediaDeviceSession extends MediaDeviceSession
      * property of this instance
      */
     @Override
-    protected void startedDirectionChanged(MediaDirection oldValue, MediaDirection newValue) {
+    protected void startedDirectionChanged(MediaDirection oldValue, MediaDirection newValue)
+    {
         super.startedDirectionChanged(oldValue, newValue);
 
         try {
@@ -1300,7 +1488,7 @@ public class VideoMediaDeviceSession extends MediaDeviceSession
             int state = player.getState();
 
             /*
-             * The visual JComponent of a Player is safe to access and, respectively, report through
+             * The visual Component of a Player is safe to access and, respectively, report through
              * a VideoEvent only when the Player is Realized.
              */
             if (state < Player.Realized) {
@@ -1311,7 +1499,7 @@ public class VideoMediaDeviceSession extends MediaDeviceSession
                 if (state != Player.Started) {
                     player.start();
 
-                    JComponent visualComponent = getVisualComponent(player);
+                    Component visualComponent = getVisualComponent(player);
                     if (visualComponent != null) {
                         fireVideoEvent(VideoEvent.VIDEO_ADDED, visualComponent, VideoEvent.REMOTE, false);
                     }
@@ -1323,7 +1511,7 @@ public class VideoMediaDeviceSession extends MediaDeviceSession
                  * Therefore must not dispose of the player when a remote video dimension change;
                  * otherwise there is no player when new video streaming/format is received (with no jingle action).
                  */
-                JComponent visualComponent = getVisualComponent(player);
+                Component visualComponent = getVisualComponent(player);
                 player.stop();
 
                 if (visualComponent != null) {
@@ -1334,12 +1522,13 @@ public class VideoMediaDeviceSession extends MediaDeviceSession
     }
 
     /**
-     * Return the <code>Player</code> instance which provides the local visual/video <code>JComponent</code>.
+     * Return the <code>Player</code> instance which provides the local visual/video <code>Component</code>.
      *
-     * @return the <code>Player</code> instance which provides the local visual/video <code>JComponent</code>
+     * @return the <code>Player</code> instance which provides the local visual/video <code>Component</code>
      * .
      */
-    protected Player getLocalPlayer() {
+    protected Player getLocalPlayer()
+    {
         synchronized (localPlayerSyncRoot) {
             return localPlayer;
         }
@@ -1349,7 +1538,8 @@ public class VideoMediaDeviceSession extends MediaDeviceSession
      * Extends <code>SwScale</code> in order to provide scaling with high quality to a specific
      * <code>Player</code> of remote video.
      */
-    private class PlayerScaler extends SwScale {
+    private class PlayerScaler extends SwScale
+    {
         /**
          * The last size reported in the form of a <code>SizeChangeEvent</code>.
          */
@@ -1367,7 +1557,8 @@ public class VideoMediaDeviceSession extends MediaDeviceSession
          * @param player the <code>Player</code> of remote video into the codec chain of which the new instance
          * is to be set
          */
-        public PlayerScaler(Player player) {
+        public PlayerScaler(Player player)
+        {
             super(true);
             this.player = player;
         }
@@ -1379,13 +1570,12 @@ public class VideoMediaDeviceSession extends MediaDeviceSession
          *
          * @param inBuf input buffer
          * @param outBuf output buffer
-         *
          * @return the native <code>PaSampleFormat</code>
-         *
          * @see SwScale#process(Buffer, Buffer)
          */
         @Override
-        public int process(Buffer inBuf, Buffer outBuf) {
+        public int process(Buffer inBuf, Buffer outBuf)
+        {
             int result = super.process(inBuf, outBuf);
             if (result == BUFFER_PROCESSED_OK) {
                 Format inputFormat = getInputFormat();
@@ -1407,13 +1597,12 @@ public class VideoMediaDeviceSession extends MediaDeviceSession
          * Ensures that this <code>SwScale</code> preserves the aspect ratio of its input video when scaling.
          *
          * @param inputFormat format to set
-         *
          * @return format
-         *
          * @see SwScale#setInputFormat(Format)
          */
         @Override
-        public Format setInputFormat(Format inputFormat) {
+        public Format setInputFormat(Format inputFormat)
+        {
             inputFormat = super.setInputFormat(inputFormat);
             if (inputFormat instanceof VideoFormat) {
                 Dimension inputSize = ((VideoFormat) inputFormat).getSize();

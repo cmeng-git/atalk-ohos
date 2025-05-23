@@ -1,38 +1,25 @@
 /*
- * aTalk, ohos VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * Jitsi, the OpenSource Java VoIP and Instant Messaging client.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Distributable under LGPL license. See terms of license at gnu.org.
  */
 package org.atalk.service.neomedia;
 
-import ohos.agp.components.surfaceprovider.SurfaceProvider;
-import ohos.app.Context;
-
-import org.atalk.ohos.agp.components.JComponent;
+import android.content.Context;
+import android.view.View;
 
 /**
- * Declares the interface to be supported by providers of access to JComponent.
+ * Declares the interface to be supported by providers of access to {@link View}s.
  *
- * @author Eng Chong Meng
+ * @author Lyubomir Marinov
  */
-public interface ViewAccessor {
+public interface ViewAccessor
+{
     /**
-     * Gets the JComponent provided by this instance which is to be used in a specific {@link Context}.
+     * Gets the {@link View} provided by this instance which is to be used in a specific {@link Context}.
      *
-     * @param context the <code>Context</code> in which the provided <code>JComponent</code> will be used
-     *
-     * @return the <code>JComponent</code> provided by this instance which is to be used in a specific <code>Context</code>
+     * @param context the <code>Context</code> in which the provided <code>View</code> will be used
+     * @return the <code>View</code> provided by this instance which is to be used in a specific <code>Context</code>
      */
-    SurfaceProvider getComponent(Context context);
+    public View getView(Context context);
 }

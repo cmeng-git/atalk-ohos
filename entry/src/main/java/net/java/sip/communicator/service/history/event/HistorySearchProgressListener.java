@@ -16,12 +16,12 @@ public interface HistorySearchProgressListener
 	/**
 	 * The minimum value for the progress change. This is value indicates that the process has started.
 	 */
-	int PROGRESS_MINIMUM_VALUE = 0;
+	public static int PROGRESS_MINIMUM_VALUE = 0;
 
 	/**
 	 * The maximum value for the progress change. This is value indicates that the process is finished.
 	 */
-	int PROGRESS_MAXIMUM_VALUE = 1000;
+	public static int PROGRESS_MAXIMUM_VALUE = 1000;
 
 	/**
 	 * This method gets called when progress changes through the search process

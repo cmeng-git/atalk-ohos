@@ -295,7 +295,7 @@ public class RecorderImpl implements Recorder
             Recorder.Listener[] listeners;
 
             synchronized (this.listeners) {
-                listeners = this.listeners.toArray(new Listener[0]);
+                listeners = this.listeners.toArray(new Recorder.Listener[this.listeners.size()]);
             }
             for (Recorder.Listener listener : listeners)
                 listener.recorderStopped(this);

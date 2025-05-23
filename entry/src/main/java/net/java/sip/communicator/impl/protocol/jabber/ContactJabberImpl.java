@@ -11,9 +11,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import ohos.utils.zson.ZSONArray;
-import ohos.utils.zson.ZSONObject;
-
 import net.java.sip.communicator.service.protocol.AbstractContact;
 import net.java.sip.communicator.service.protocol.ContactGroup;
 import net.java.sip.communicator.service.protocol.ContactResource;
@@ -27,6 +24,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.http.util.TextUtils;
 import org.jivesoftware.smack.roster.RosterEntry;
 import org.jivesoftware.smackx.blocking.BlockingCommandManager;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.jxmpp.jid.FullJid;
 import org.jxmpp.jid.Jid;
 
@@ -110,8 +110,8 @@ public class ContactJabberImpl extends AbstractContact {
      */
     private boolean isLocal = false;
 
-    protected final ZSONObject zonKeys = new ZSONObject();
-    protected final ZSONArray groups = new ZSONArray();
+    protected JSONObject keys = new JSONObject();
+    protected JSONArray groups = new JSONArray();
 
     protected int subscription = 0;
     private String photoUri;
@@ -213,7 +213,7 @@ public class ContactJabberImpl extends AbstractContact {
      *
      * @return a reference to the image currently stored by this contact.
      *
-     * @see ServerStoredContactListJabberImpl #ImageRetriever
+     * @see ServerStoredContactListJabberImpl.ImageRetriever#run()
      */
     public byte[] getImage(boolean retrieveIfNecessary) {
         if ((image == null) && retrieveIfNecessary)
@@ -568,9 +568,13 @@ public class ContactJabberImpl extends AbstractContact {
     }
 
     public long getPgpKeyId() {
-        synchronized (zonKeys) {
-            if (this.zonKeys.containsKey(PGP_KEY_ID)) {
-                return this.zonKeys.getLong(PGP_KEY_ID);
+        synchronized (this.keys) {
+            if (this.keys.has(PGP_KEY_ID)) {
+                try {
+                    return this.keys.getLong(PGP_KEY_ID);
+                } catch (JSONException e) {
+                    return 0;
+                }
             }
             else {
                 return 0;
@@ -579,8 +583,12 @@ public class ContactJabberImpl extends AbstractContact {
     }
 
     public void setPgpKeyId(long keyId) {
-        synchronized (this.zonKeys) {
-            zonKeys.put(PGP_KEY_ID, keyId);
+        synchronized (this.keys) {
+            try {
+                this.keys.put(PGP_KEY_ID, keyId);
+            } catch (final JSONException ex) {
+                ex.printStackTrace();
+            }
         }
     }
 

@@ -1,31 +1,19 @@
 /*
- * aTalk, ohos VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * Jitsi, the OpenSource Java VoIP and Instant Messaging client.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Distributable under LGPL license. See terms of license at gnu.org.
  */
 package net.java.sip.communicator.impl.configuration;
+
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import ohos.app.Context;
-import ohos.data.DatabaseHelper;
-import ohos.data.rdb.RdbPredicates;
-import ohos.data.rdb.RdbStore;
-import ohos.data.rdb.ValuesBucket;
-import ohos.data.resultset.ResultSet;
 
 import net.java.sip.communicator.service.protocol.AccountID;
 import net.java.sip.communicator.util.ServiceUtils;
@@ -54,8 +42,8 @@ public class SQLiteConfigurationStore extends DatabaseConfigurationStore {
     /**
      * aTalk backend SQLite database
      */
-    private final DatabaseHelper openHelper;
-    private static RdbStore mRdbStore = null;
+    private final SQLiteOpenHelper openHelper;
+    private static SQLiteDatabase mDB = null;
 
     /**
      * Initializes a new <code>SQLiteConfigurationStore</code> instance.
@@ -66,7 +54,7 @@ public class SQLiteConfigurationStore extends DatabaseConfigurationStore {
 
     public SQLiteConfigurationStore(Context context) {
         openHelper = DatabaseBackend.getInstance(context);
-        mRdbStore = DatabaseBackend.getRdbStore();
+        mDB = openHelper.getReadableDatabase();
     }
 
     /**
@@ -86,7 +74,7 @@ public class SQLiteConfigurationStore extends DatabaseConfigurationStore {
      */
     @Override
     public Object getProperty(String name) {
-        ResultSet resultSet = null;
+        Cursor cursor = null;
         Object value = properties.get(name);
         if (value == null) {
             String[] columns = {COLUMN_VALUE};
@@ -97,25 +85,22 @@ public class SQLiteConfigurationStore extends DatabaseConfigurationStore {
                         value = name;  // just return the accountUuid
                     }
                     else {
-                        RdbPredicates rdbPredicates = new RdbPredicates(AccountID.TBL_PROPERTIES)
-                                .equalTo(AccountID.ACCOUNT_UUID, name.substring(0, idx))
-                                .and().equalTo(COLUMN_NAME, name.substring(idx + 1))
-                                .limit(1);
-                        resultSet = mRdbStore.query(rdbPredicates, columns);
+                        String[] args = {name.substring(0, idx), name.substring(idx + 1)};
+                        cursor = mDB.query(AccountID.TBL_PROPERTIES, columns,
+                                AccountID.ACCOUNT_UUID + "=? AND " + COLUMN_NAME + "=?",
+                                args, null, null, null, "1");
                     }
                 }
                 else {
-                    RdbPredicates rdbPredicates = new RdbPredicates(TABLE_NAME)
-                            .equalTo(COLUMN_NAME, name)
-                            .limit(1);
-                    resultSet = mRdbStore.query(rdbPredicates, columns);
+                    cursor = mDB.query(TABLE_NAME, columns,
+                            COLUMN_NAME + "=?", new String[]{name}, null, null, null, "1");
                 }
-                if (resultSet != null) {
+                if (cursor != null) {
                     try {
-                        if ((resultSet.getRowCount() == 1) && resultSet.goToFirstRow())
-                            value = resultSet.getString(0);
+                        if ((cursor.getCount() == 1) && cursor.moveToFirst())
+                            value = cursor.getString(0);
                     } finally {
-                        resultSet.close();
+                        cursor.close();
                     }
                 }
             }
@@ -148,12 +133,11 @@ public class SQLiteConfigurationStore extends DatabaseConfigurationStore {
                 tableName = TABLE_NAME;
             }
 
-            RdbPredicates rdbPredicates = new RdbPredicates(tableName)
-                    .orderByAsc(COLUMN_NAME);
-            ResultSet resultSet = mRdbStore.query(rdbPredicates, new String[]{COLUMN_NAME});
-
-            while (resultSet.goToNextRow()) {
-                propertyNames.add(resultSet.getString(0));
+            try (Cursor cursor = mDB.query(tableName, new String[]{COLUMN_NAME},
+                    null, null, null, null, COLUMN_NAME + " ASC")) {
+                while (cursor.moveToNext()) {
+                    propertyNames.add(cursor.getString(0));
+                }
             }
         }
         return propertyNames.toArray(new String[0]);
@@ -190,20 +174,18 @@ public class SQLiteConfigurationStore extends DatabaseConfigurationStore {
                 int idx = name.indexOf(".");
                 // remove user account if only accountUuid is specified
                 if (idx == -1) {
-                    mRdbStore.delete(new RdbPredicates(AccountID.TABLE_NAME)
-                            .equalTo(AccountID.ACCOUNT_UUID, name));
+                    String[] args = {name};
+                    mDB.delete(AccountID.TABLE_NAME, AccountID.ACCOUNT_UUID + "=?", args);
                 }
                 // Otherwise, remove the accountProperty from the AccountID.TBL_PROPERTIES
                 else {
-                    RdbPredicates rdbPredicates = new RdbPredicates(AccountID.TBL_PROPERTIES)
-                            .equalTo(AccountID.ACCOUNT_UUID, name.substring(0, idx))
-                            .and().equalTo(COLUMN_NAME, name.substring(idx + 1));
-                    mRdbStore.delete(rdbPredicates);
+                    String[] args = {name.substring(0, idx), name.substring(idx + 1)};
+                    mDB.delete(AccountID.TBL_PROPERTIES,
+                            AccountID.ACCOUNT_UUID + "=? AND " + COLUMN_NAME + "=?", args);
                 }
             }
             else {
-                mRdbStore.delete(new RdbPredicates(AccountID.TABLE_NAME)
-                        .equalTo(AccountID.COLUMN_NAME, name));
+                mDB.delete(TABLE_NAME, COLUMN_NAME + "=?", new String[]{name});
             }
         }
         Timber.log(TimberLog.FINER, "### Remove property from table: %s", name);
@@ -224,21 +206,21 @@ public class SQLiteConfigurationStore extends DatabaseConfigurationStore {
         synchronized (openHelper) {
             String tableName = TABLE_NAME;
 
-            ValuesBucket Values = new ValuesBucket();
-            Values.putString(COLUMN_VALUE, value.toString());
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(COLUMN_VALUE, value.toString());
 
             if (name.startsWith(AccountID.ACCOUNT_UUID_PREFIX)) {
                 int idx = name.indexOf(".");
-                Values.putString(AccountID.ACCOUNT_UUID, name.substring(0, idx));
-                Values.putString(COLUMN_NAME, name.substring(idx + 1));
+                contentValues.put(AccountID.ACCOUNT_UUID, name.substring(0, idx));
+                contentValues.put(COLUMN_NAME, name.substring(idx + 1));
                 tableName = AccountID.TBL_PROPERTIES;
             }
             else {
-                Values.putString(COLUMN_NAME, name);
+                contentValues.put(COLUMN_NAME, name);
             }
 
             // Insert the properties in DB, replace if exist
-            long rowId = mRdbStore.replace(tableName, Values);
+            long rowId = mDB.replace(tableName, null, contentValues);
             if (rowId == -1)
                 Timber.e("Failed to set non-system property: %s: %s <= %s", tableName, name, value);
 

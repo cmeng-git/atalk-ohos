@@ -5,14 +5,15 @@
  */
 package org.atalk.ohos.gui.authorization;
 
-import ohos.aafwk.content.Intent;
-import ohos.aafwk.content.Operation;
-import ohos.agp.components.Component;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.KeyEvent;
+import android.view.View;
 
-import org.atalk.ohos.BaseAbility;
-import org.atalk.ohos.ResourceTable;
+import org.atalk.ohos.BaseActivity;
+import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
-import org.atalk.ohos.util.ComponentUtil;
+import org.atalk.ohos.gui.util.ViewUtil;
 
 /**
  * This dialog is displayed in order to prepare the authorization request that has to be sent to
@@ -21,7 +22,7 @@ import org.atalk.ohos.util.ComponentUtil;
  * @author Pawel Domas
  * @author Eng Chong Meng
  */
-public class RequestAuthorizationDialog extends BaseAbility {
+public class RequestAuthorizationDialog extends BaseActivity {
     /**
      * Request identifier extra key.
      */
@@ -41,10 +42,10 @@ public class RequestAuthorizationDialog extends BaseAbility {
      * {@inheritDoc}
      */
     @Override
-    protected void onStart(Intent intent) {
-        super.onStart(intent);
-        setUIContent(ResourceTable.Layout_request_authorization);
-        long requestId = intent.getLongParam(EXTRA_REQUEST_ID, -1);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.request_authorization);
+        long requestId = getIntent().getLongExtra(EXTRA_REQUEST_ID, -1);
         if (requestId == -1)
             throw new IllegalArgumentException();
 
@@ -52,49 +53,52 @@ public class RequestAuthorizationDialog extends BaseAbility {
         String userID = request.contact.getProtocolProvider().getAccountID().getUserID();
         String contactId = request.contact.getAddress();
 
-        ComponentUtil.setTextViewValue(getContentView(), ResourceTable.Id_requestInfo,
-                getString(ResourceTable.String_request_authorization_prompt, userID, contactId));
+        ViewUtil.setTextViewValue(getContentView(), R.id.requestInfo,
+                getString(R.string.request_authorization_prompt, userID, contactId));
 
         // Prevents from closing the dialog on outside touch
         setFinishOnTouchOutside(false);
     }
 
     @Override
-    protected void onBackPressed() {
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
         // Prevent Back Key from closing the dialog
-        return;
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            return true;
+        }
+        return super.onKeyUp(keyCode, event);
     }
 
     /**
      * Method fired when the request button is clicked.
      *
-     * @param v the button's <code>Component.</code>
+     * @param v the button's <code>View</code>
      */
-    public void onRequestClicked(Component v) {
-        String requestText = ComponentUtil.getTextViewValue(getContentView(), ResourceTable.Id_requestText);
+    public void onRequestClicked(View v) {
+        String requestText = ViewUtil.getTextViewValue(getContentView(), R.id.requestText);
         request.submit(requestText);
         discard = false;
-        terminateAbility();
+        finish();
     }
 
     /**
      * Method fired when the cancel button is clicked.
      *
-     * @param v the button's <code>Component</code>
+     * @param v the button's <code>View</code>
      */
-    public void onCancelClicked(Component v) {
+    public void onCancelClicked(View v) {
         discard = true;
-        terminateAbility();
+        finish();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected void onStop() {
+    protected void onDestroy() {
         if (discard)
             request.discard();
-        super.onStop();
+        super.onDestroy();
     }
 
     /**
@@ -103,18 +107,12 @@ public class RequestAuthorizationDialog extends BaseAbility {
      *
      * @param requestId the id of authentication request.
      *
-     * @return <code>Intent</code> that start <code>RequestAuthorizationDialog</code> parametrized with given request
-     * id.
+     * @return <code>Intent</code> that start <code>RequestAuthorizationDialog</code> parametrized with given request id.
      */
     public static Intent getRequestAuthDialogIntent(long requestId) {
-        Intent intent = new Intent();
-        Operation operation = new Intent.OperationBuilder()
-                .withDeviceId("")
-                .withBundleName(aTalkApp.getInstance().getBundleName())
-                .withAbilityName(RequestAuthorizationDialog.class)
-                .build();
-        intent.setOperation(operation);
-        intent.setParam(EXTRA_REQUEST_ID, requestId);
+        Intent intent = new Intent(aTalkApp.getInstance(), RequestAuthorizationDialog.class);
+        intent.putExtra(EXTRA_REQUEST_ID, requestId);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         return intent;
     }
 }

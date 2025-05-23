@@ -9,6 +9,7 @@ import net.java.sip.communicator.service.contactsource.ContactQuery;
 import net.java.sip.communicator.service.contactsource.ExtendedContactSourceService;
 import net.java.sip.communicator.service.contactsource.PrefixedContactSourceService;
 
+import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 
 import java.util.regex.Pattern;
@@ -89,7 +90,7 @@ public class AndroidContactSource implements ExtendedContactSourceService, Prefi
     @Override
     public String getDisplayName()
     {
-        return aTalkApp.getResString(ResourceTable.String_phonebook);
+        return aTalkApp.getResString(R.string.phonebook);
     }
 
     /**

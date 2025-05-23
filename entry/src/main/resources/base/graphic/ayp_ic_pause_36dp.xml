@@ -1,4 +1,0 @@
-<vector ohos:height="36dp" ohos:viewportHeight="24.0"
-    ohos:viewportWidth="24.0" ohos:width="36dp" xmlns:ohos="http://schemas.ohos.com/apk/res/ohos">
-    <path ohos:fillColor="#fff" ohos:pathData="M6,19h4L10,5L6,5v14zM14,5v14h4L18,5h-4z"/>
-</vector>

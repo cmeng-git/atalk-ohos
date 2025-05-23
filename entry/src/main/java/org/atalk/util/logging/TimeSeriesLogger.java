@@ -16,9 +16,9 @@
 
 package org.atalk.util.logging;
 
-import java.util.Map;
+import org.json.JSONObject;
 
-import ohos.utils.zson.ZSONObject;
+import java.util.Map;
 
 /**
  * @author George Politis
@@ -93,7 +93,7 @@ public class TimeSeriesLogger
     public void trace(Map<String, Object> point)
     {
         if (point != null && !point.isEmpty()) {
-            logger.trace(new ZSONObject(point).toString());
+            logger.trace(new JSONObject(point).toString());
         }
     }
 
@@ -105,7 +105,7 @@ public class TimeSeriesLogger
     public void warn(Map<String, Object> point)
     {
         if (point != null && !point.isEmpty()) {
-            logger.warn(new ZSONObject(point).toString());
+            logger.warn(new JSONObject(point).toString());
         }
     }
 
@@ -117,7 +117,7 @@ public class TimeSeriesLogger
     public void info(Map<String, Object> point)
     {
         if (point != null && !point.isEmpty()) {
-            logger.info(new ZSONObject(point).toString());
+            logger.info(new JSONObject(point).toString());
         }
     }
 }

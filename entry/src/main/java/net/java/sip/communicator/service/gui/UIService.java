@@ -15,6 +15,8 @@
  */
 package net.java.sip.communicator.service.gui;
 
+import android.graphics.Point;
+
 import net.java.sip.communicator.service.contactlist.MetaContact;
 import net.java.sip.communicator.service.gui.event.ChatListener;
 import net.java.sip.communicator.service.muc.ChatRoomWrapper;
@@ -24,7 +26,6 @@ import net.java.sip.communicator.service.protocol.Contact;
 import net.java.sip.communicator.service.protocol.ProtocolProviderService;
 import net.java.sip.communicator.service.protocol.SecurityAuthority;
 import net.java.sip.communicator.util.account.LoginManager;
-import ohos.agp.utils.Point;
 
 import java.awt.Dimension;
 import java.util.Collection;

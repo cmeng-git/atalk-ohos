@@ -1,79 +1,66 @@
 /*
- * aTalk, ohos VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * Jitsi, the OpenSource Java VoIP and Instant Messaging client.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Distributable under LGPL license. See terms of license at gnu.org.
  */
 package org.atalk.ohos.gui.contactlist;
 
-import ohos.agp.components.Component;
-import ohos.agp.components.LayoutScatter;
-import ohos.app.Context;
+import android.app.Activity;
+import android.content.Context;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import net.java.sip.communicator.service.contactlist.MetaContactGroup;
 import net.java.sip.communicator.service.contactlist.MetaContactListException;
 import net.java.sip.communicator.service.contactlist.MetaContactListService;
 
-import org.atalk.ohos.ResourceTable;
+import org.atalk.ohos.BaseFragment;
+import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.AppGUIActivator;
-import org.atalk.ohos.gui.dialogs.DialogH;
+import org.atalk.ohos.gui.dialogs.DialogActivity;
+import org.atalk.ohos.gui.util.ViewUtil;
 import org.atalk.ohos.gui.util.event.EventListener;
-import org.atalk.ohos.util.ComponentUtil;
 
 import timber.log.Timber;
 
 /**
  * Dialog allowing user to create new contact group.
  *
+ * @author Pawel Domas
  * @author Eng Chong Meng
  */
-public class AddGroupDialog extends Component {
-    private final Context mContext;
-    private final Component mDialog;
-
+public class AddGroupDialog extends BaseFragment {
     /**
-     * Displays create contact group dialog. If the source wants to be notified about the result
-     * should pass the listener here or <code>null</code> otherwise.
-     *
-     * @param context the parent <code>Ability</code>
+     * {@inheritDoc}
      */
-    public AddGroupDialog(Context context) {
-        super(context);
-        mContext = context;
-
-        LayoutScatter inflater = LayoutScatter.getInstance(getContext());
-        mDialog = inflater.parse(ResourceTable.Layout_create_group, null, false);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.create_group, container, false);
     }
 
     /**
      * Displays create contact group dialog. If the source wants to be notified about the result
      * should pass the listener here or <code>null</code> otherwise.
      *
+     * @param parent the parent <code>Activity</code>
      * @param createListener listener for contact group created event that will receive newly created instance of
      * the contact group or <code>null</code> in case user cancels the dialog.
      */
-    public void show(EventListener<MetaContactGroup> createListener) {
-        DialogH.getInstance(mContext).showCustomDialog(mContext,
-                mContext.getString(ResourceTable.String_create_group),
-                mDialog, mContext.getString(ResourceTable.String_create),
+    public static void showCreateGroupDialog(Activity parent, EventListener<MetaContactGroup> createListener) {
+        DialogActivity.showCustomDialog(parent,
+                parent.getString(R.string.create_group),
+                AddGroupDialog.class.getName(), null,
+                parent.getString(R.string.create),
                 new DialogListenerImpl(createListener), null);
     }
 
     /**
-     * Implements <code>DialogH.DialogListener</code> interface and handles contact group creation process.
+     * Implements <code>DialogActivity.DialogListener</code> interface and handles contact group creation process.
      */
-    class DialogListenerImpl implements DialogH.DialogListener {
+    static class DialogListenerImpl implements DialogActivity.DialogListener {
         /**
          * Contact created event listener.
          */
@@ -101,13 +88,14 @@ public class AddGroupDialog extends Component {
         // private ProgressDialog progressDialog;
 
         @Override
-        public boolean onConfirmClicked(DialogH dialog) {
+        public boolean onConfirmClicked(DialogActivity dialog) {
             if (createThread != null)
                 return false;
 
-            String groupName = ComponentUtil.toString(mDialog.findComponentById(ResourceTable.Id_editText));
+            View view = dialog.getContentFragment().getView();
+            String groupName = (view == null) ? null : ViewUtil.toString(view.findViewById(R.id.editText));
             if (groupName == null) {
-                showErrorMessage(mContext.getString(ResourceTable.String_add_group_error_empty_name));
+                showErrorMessage(dialog.getString(R.string.add_group_error_empty_name));
                 return false;
             }
             else {
@@ -138,12 +126,11 @@ public class AddGroupDialog extends Component {
          */
         private void showErrorMessage(String errorMessage) {
             Context ctx = aTalkApp.getInstance();
-            DialogH.getInstance(ctx).showDialog(ctx, ctx.getString(ResourceTable.String_error), errorMessage);
+            DialogActivity.showDialog(ctx, ctx.getString(R.string.error), errorMessage);
         }
 
         @Override
-        public void onDialogCancelled(DialogH dialog) {
-            dialog.destroy();
+        public void onDialogCancelled(DialogActivity dialog) {
         }
 
         /**
@@ -182,19 +169,19 @@ public class AddGroupDialog extends Component {
                     int errorCode = ex.getErrorCode();
 
                     if (errorCode == MetaContactListException.CODE_GROUP_ALREADY_EXISTS_ERROR) {
-                        showErrorMessage(ctx.getString(ResourceTable.String_add_group_error_exist,
+                        showErrorMessage(ctx.getString(R.string.add_group_error_exist,
                                 groupName));
                     }
                     else if (errorCode == MetaContactListException.CODE_LOCAL_IO_ERROR) {
-                        showErrorMessage(ctx.getString(ResourceTable.String_add_group_error_local,
+                        showErrorMessage(ctx.getString(R.string.add_group_error_local,
                                 groupName));
                     }
                     else if (errorCode == MetaContactListException.CODE_NETWORK_ERROR) {
-                        showErrorMessage(ctx.getString(ResourceTable.String_add_group_error_network,
+                        showErrorMessage(ctx.getString(R.string.add_group_error_network,
                                 groupName));
                     }
                     else {
-                        showErrorMessage(ctx.getString(ResourceTable.String_add_group_failed,
+                        showErrorMessage(ctx.getString(R.string.add_group_failed,
                                 groupName));
                     }
                 }

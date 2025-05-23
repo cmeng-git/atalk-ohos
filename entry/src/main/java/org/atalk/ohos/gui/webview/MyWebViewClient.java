@@ -1,6 +1,6 @@
 /*
- * aTalk, ohos VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * aTalk, android VoIP and Instant Messaging client
+ * Copyright 2014 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,60 +16,51 @@
  */
 package org.atalk.ohos.gui.webview;
 
-import org.apache.http.util.TextUtils;
-import org.atalk.ohos.gui.dialogs.DialogA;
-import org.atalk.ohos.util.ComponentUtil;
-import org.atalk.ohos.ResourceTable;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.text.InputType;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.webkit.HttpAuthHandler;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.CheckBox;
+import android.widget.EditText;
+
+import androidx.appcompat.app.AlertDialog;
+
+import org.atalk.ohos.R;
+import org.atalk.ohos.gui.util.ViewUtil;
 
 import java.util.regex.Pattern;
-
-import ohos.aafwk.content.Intent;
-import ohos.agp.components.Checkbox;
-import ohos.agp.components.Component;
-import ohos.agp.components.LayoutScatter;
-import ohos.agp.components.TextField;
-import ohos.agp.components.webengine.AuthRequest;
-import ohos.agp.components.webengine.ResourceRequest;
-import ohos.agp.components.webengine.WebAgent;
-import ohos.agp.components.webengine.WebView;
-import ohos.app.Context;
-import ohos.utils.net.Uri;
 
 import timber.log.Timber;
 
 /**
- * The class implements the WebAgent for App internal web access
+ * The class implements the WebViewClient for App internal web access
+ * https://developer.android.com/guide/webapps/webview
  *
  * @author Eng Chong Meng
  */
-public class MyWebViewClient extends WebAgent {
+public class MyWebViewClient extends WebViewClient {
     // Domain match pattern for last two segments of host
     private final Pattern pattern = Pattern.compile("^.*?[.](.*?[.].+?)$");
 
-    private final WebViewSlice viewFragment;
+    private final WebViewFragment viewFragment;
     private final Context mContext;
 
-    private TextField mPasswordField;
+    private EditText mPasswordField;
 
-    public MyWebViewClient(WebViewSlice viewSlice) {
-        this.viewFragment = viewSlice;
-        mContext = viewSlice.getContext();
+    public MyWebViewClient(WebViewFragment viewFragment) {
+        this.viewFragment = viewFragment;
+        mContext = viewFragment.getContext();
     }
 
-    /**
-     * If you click on any link inside the webpage of the WebView, that page will not be loaded inside your WebView.
-     * In order to do that you need to extend your class from WebViewClient and override the method below.
-     * https://developer.android.com/guide/webapps/webview#HandlingNavigation
-     *
-     * @param webView The WebView that is initiating the callback.
-     * @param request Object containing the details of the request.
-     *
-     * @return {@code true} to cancel the current load, otherwise return {@code false}.
-     */
     @Override
-    public boolean isNeedLoadUrl(WebView webView, ResourceRequest request) {
-        String url = request.getRequestUrl().toString();
-
+    public boolean shouldOverrideUrlLoading(WebView webView, String url) {
         // Timber.d("shouldOverrideUrlLoading for url (webView url): %s (%s)", url, webView.getUrl());
         // This user clicked url is from the same website, so do not override; let MyWebViewClient load the page
         if (isDomainMatch(webView, url)) {
@@ -77,20 +68,36 @@ public class MyWebViewClient extends WebAgent {
             return false;
         }
 
-        // Otherwise, the link is not for a page on my site, so launch another Ability that handle it
+        // Otherwise, the link is not for a page on my site, so launch another Activity that handle it
         try {
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setData(Uri.parse(url));
-            viewFragment.startAbility(intent);
+            viewFragment.startActivity(intent);
         } catch (Exception e) {
             // catch ActivityNotFoundException for xmpp:info@example.com. so let own webView load and display the error
             Timber.w("Failed to load url '%s' : %s", url, e.getMessage());
-            String origin = Uri.parse(webView.getCurrentUrl()).getDecodedHost();
+            String origin = Uri.parse(webView.getUrl()).getHost();
             String originDomain = pattern.matcher(origin).replaceAll("$1");
             if (url.contains(originDomain))
                 return false;
         }
         return true;
+    }
+
+    /**
+     * If you click on any link inside the webpage of the WebView, that page will not be loaded inside your WebView.
+     * In order to do that you need to extend your class from WebViewClient and override the method below.
+     * https://developer.android.com/guide/webapps/webview#HandlingNavigation
+     *
+     * @param view The WebView that is initiating the callback.
+     * @param request Object containing the details of the request.
+     *
+     * @return {@code true} to cancel the current load, otherwise return {@code false}.
+     */
+    @Override
+    public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+        String url = request.getUrl().toString();
+        return shouldOverrideUrlLoading(view, url);
     }
 
     // public void onReceivedError(WebView view, int errorCode, String description, String failingUrl)
@@ -104,49 +111,50 @@ public class MyWebViewClient extends WebAgent {
     // }
 
     @Override
-    public void onAuthRequested(WebView webView, AuthRequest request, String host, String realm) {
+    public void onReceivedHttpAuthRequest(final WebView view, final HttpAuthHandler handler, final String host,
+            final String realm) {
         final String[] httpAuth = new String[2];
-        final String[] viewAuth = webView.getHttpAuthUsernamePassword(host, realm);
+        final String[] viewAuth = view.getHttpAuthUsernamePassword(host, realm);
 
         httpAuth[0] = (viewAuth != null) ? viewAuth[0] : "";
         httpAuth[1] = (viewAuth != null) ? viewAuth[1] : "";
 
-        if (request.isCredentialsStored()) {
-            request.respond(httpAuth[0], httpAuth[1]);
+        if (handler.useHttpAuthUsernamePassword()) {
+            handler.proceed(httpAuth[0], httpAuth[1]);
             return;
         }
 
-        LayoutScatter inflater = LayoutScatter.getInstance(mContext);
-        Component authView = inflater.parse(ResourceTable.Layout_http_login_dialog, null, false);
+        LayoutInflater inflater = LayoutInflater.from(mContext);
+        View authView = inflater.inflate(R.layout.http_login_dialog, view, false);
 
-        final TextField usernameInput = authView.findComponentById(ResourceTable.Id_username);
+        final EditText usernameInput = authView.findViewById(R.id.username);
         usernameInput.setText(httpAuth[0]);
 
-        mPasswordField = authView.findComponentById(ResourceTable.Id_passwordField);
-        // mPasswordField.setInputFilters(InputFilter.TYPE_CLASS_TEXT, InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        mPasswordField = authView.findViewById(R.id.passwordField);
+        mPasswordField.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         mPasswordField.setText(httpAuth[1]);
 
-        Checkbox showPasswordCheckBox = authView.findComponentById(ResourceTable.Id_show_password);
-        showPasswordCheckBox.setCheckedStateChangedListener(((buttonView, isChecked)
-                -> ComponentUtil.showPassword(mPasswordField, isChecked)));
+        CheckBox showPasswordCheckBox = authView.findViewById(R.id.show_password);
+        showPasswordCheckBox.setOnCheckedChangeListener((buttonView, isChecked)
+                -> ViewUtil.showPassword(mPasswordField, isChecked));
 
-        DialogA.Builder authDialog = new DialogA.Builder(mContext)
-                .setTitle(ResourceTable.String_user_login)
-                .setComponent(authView);
-                // .setCancelable(false);
-        final DialogA dialog = authDialog.create();
+        AlertDialog.Builder authDialog = new AlertDialog.Builder(mContext)
+                .setTitle(R.string.user_login)
+                .setView(authView)
+                .setCancelable(false);
+        final AlertDialog dialog = authDialog.show();
 
-        authView.findComponentById(ResourceTable.Id_button_signin).setClickedListener(v -> {
-            httpAuth[0] = ComponentUtil.toString(usernameInput);
-            httpAuth[1] = ComponentUtil.toString(mPasswordField);
-            // webView.setsetHttpAuthUsernamePassword(host, realm, httpAuth[0], httpAuth[1]);
-            request.respond(httpAuth[0], httpAuth[1]);
-            dialog.remove();
+        authView.findViewById(R.id.button_signin).setOnClickListener(v -> {
+            httpAuth[0] = ViewUtil.toString(usernameInput);
+            httpAuth[1] = ViewUtil.toString(mPasswordField);
+            view.setHttpAuthUsernamePassword(host, realm, httpAuth[0], httpAuth[1]);
+            handler.proceed(httpAuth[0], httpAuth[1]);
+            dialog.dismiss();
         });
 
-        authView.findComponentById(ResourceTable.Id_button_cancel).setClickedListener(v -> {
-            request.cancel();
-            dialog.remove();
+        authView.findViewById(R.id.button_cancel).setOnClickListener(v -> {
+            handler.cancel();
+            dialog.dismiss();
         });
     }
 
@@ -159,8 +167,8 @@ public class MyWebViewClient extends WebAgent {
      * @return true if match
      */
     private boolean isDomainMatch(WebView webView, String url) {
-        String origin = Uri.parse(webView.getCurrentUrl()).getDecodedHost();
-        String aim = Uri.parse(url).getDecodedHost();
+        String origin = Uri.parse(webView.getUrl()).getHost();
+        String aim = Uri.parse(url).getHost();
 
         // return true if this is the first time url loading or exact match of host
         if (TextUtils.isEmpty(origin) || origin.equalsIgnoreCase(aim))

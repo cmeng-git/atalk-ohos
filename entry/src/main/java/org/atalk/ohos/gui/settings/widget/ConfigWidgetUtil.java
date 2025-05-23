@@ -5,8 +5,21 @@
  */
 package org.atalk.ohos.gui.settings.widget;
 
-import org.atalk.impl.neomedia.codec.video.MediaDecoder;
-import org.atalk.impl.neomedia.codec.video.MediaEncoder;
+import android.content.Context;
+import android.content.res.TypedArray;
+import android.text.InputType;
+import android.util.AttributeSet;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
+
+import androidx.annotation.NonNull;
+import androidx.preference.EditTextPreference;
+import androidx.preference.EditTextPreference.OnBindEditTextListener;
+import androidx.preference.Preference;
+
+import org.atalk.impl.neomedia.codec.video.AndroidDecoder;
+import org.atalk.impl.neomedia.codec.video.AndroidEncoder;
+import org.atalk.ohos.R;
 import org.atalk.ohos.gui.AppGUIActivator;
 import org.atalk.service.configuration.ConfigurationService;
 
@@ -85,7 +98,7 @@ public class ConfigWidgetUtil implements OnBindEditTextListener {
     }
 
     @Override
-    public void onBindEditText(TextField editText) {
+    public void onBindEditText(@NonNull EditText editText) {
         mInputType = editText.getInputType();
     }
 
@@ -102,11 +115,11 @@ public class ConfigWidgetUtil implements OnBindEditTextListener {
                 ConfigurationService confService = AppGUIActivator.getConfigurationService();
                 if (confService != null) {
                     confService.setProperty(parent.getKey(), value);
-                    if (parent.getKey().equals(MediaDecoder.HW_DECODING_ENABLE_PROPERTY)) {
-                        setSurfaceOption(MediaDecoder.DIRECT_SURFACE_DECODE_PROPERTY, value);
+                    if (parent.getKey().equals(AndroidDecoder.HW_DECODING_ENABLE_PROPERTY)) {
+                        setSurfaceOption(AndroidDecoder.DIRECT_SURFACE_DECODE_PROPERTY, value);
                     }
-                    else if (parent.getKey().equals(MediaEncoder.HW_ENCODING_ENABLE_PROPERTY)) {
-                        setSurfaceOption(MediaEncoder.DIRECT_SURFACE_ENCODE_PROPERTY, value);
+                    else if (parent.getKey().equals(AndroidEncoder.HW_ENCODING_ENABLE_PROPERTY)) {
+                        setSurfaceOption(AndroidEncoder.DIRECT_SURFACE_ENCODE_PROPERTY, value);
                     }
                 }
             }

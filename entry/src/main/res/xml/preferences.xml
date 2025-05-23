@@ -1,265 +1,265 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:ohos="http://schemas.huawei.com/res/ohos"
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
-        ohos:key="pref.cat.settings.general"
-        ohos:title="$string:general">
+        android:key="pref.cat.settings.general"
+        android:title="@string/general">
 
         <org.atalk.ohos.gui.settings.widget.ConfigCheckBox
-            ohos:key="org.atalk.ohos.show_icon"
-            ohos:summaryOff="$string:settings_show_icon_summary_off"
-            ohos:summaryOn="$string:settings_show_icon_summary_on"
-            ohos:title="$string:settings_show_icon" />
+            android:key="org.atalk.ohos.show_icon"
+            android:summaryOff="@string/settings_show_icon_summary_off"
+            android:summaryOn="@string/settings_show_icon_summary_on"
+            android:title="@string/settings_show_icon" />
 
         <!-- aTalk auto start on next system reboot -->
         <CheckBoxPreference
-            ohos:key="org.atalk.ohos.auto_start"
-            ohos:summaryOff="$string:settings_auto_start_summary_disable"
-            ohos:summaryOn="$string:settings_auto_start_summary_enable"
-            ohos:title="$string:settings_auto_start" />
+            android:key="org.atalk.ohos.auto_start"
+            android:summaryOff="@string/settings_auto_start_summary_disable"
+            android:summaryOn="@string/settings_auto_start_summary_enable"
+            android:title="@string/settings_auto_start" />
 
         <EditTextPreference
-            ohos:dialogMessage="$string:settings_webview_dlg_title"
-            ohos:hint="https://demo.agayon.be/"
-            ohos:inputType="textWebEditText"
-            ohos:key="gui.WEB_PAGE_ACCESS"
-            ohos:summary="$string:settings_webView_summary"
-            ohos:title="$string:settings_webview_page" />
+            android:dialogMessage="@string/settings_webview_dlg_title"
+            android:hint="https://demo.agayon.be/"
+            android:inputType="textWebEditText"
+            android:key="gui.WEB_PAGE_ACCESS"
+            android:summary="@string/settings_webView_summary"
+            android:title="@string/settings_webview_page" />
 
         <ListPreference
-            ohos:dialogTitle="$string:settings_locale"
-            ohos:entries="@array/settings_language_entries"
-            ohos:entryValues="@array/settings_language_values"
-            ohos:key="pref.key.locale"
-            ohos:persistent="false"
-            ohos:title="$string:settings_locale" />
+            android:dialogTitle="@string/settings_locale"
+            android:entries="@array/settings_language_entries"
+            android:entryValues="@array/settings_language_values"
+            android:key="pref.key.locale"
+            android:persistent="false"
+            android:title="@string/settings_locale" />
 
         <ListPreference
-            ohos:dialogTitle="$string:settings_theme"
-            ohos:entries="@array/settings_theme_entries"
-            ohos:entryValues="@array/settings_theme_values"
-            ohos:key="pref.key.theme"
-            ohos:persistent="false"
-            ohos:title="$string:settings_theme" />
+            android:dialogTitle="@string/settings_theme"
+            android:entries="@array/settings_theme_entries"
+            android:entryValues="@array/settings_theme_values"
+            android:key="pref.key.theme"
+            android:persistent="false"
+            android:title="@string/settings_theme" />
 
     </PreferenceCategory>
 
     <!-- Chat Security Settings -->
     <PreferenceCategory
-        ohos:key="pref.cat.settings.security"
-        ohos:title="$string:security">
+        android:key="pref.cat.settings.security"
+        android:title="@string/security">
 
         <!-- Chat Security Setting -->
         <Preference
-            ohos:summary="$string:settings_messaging_security_summary"
-            ohos:title="$string:settings_messaging_security">
+            android:summary="@string/settings_messaging_security_summary"
+            android:title="@string/settings_messaging_security">
             <intent
-                ohos:action="android.intent.action.VIEW"
-                ohos:targetClass="org.atalk.ohos.gui.settings.ChatSecuritySettings"
-                ohos:targetPackage="org.atalk.ohos" />
+                android:action="android.intent.action.VIEW"
+                android:targetClass="org.atalk.ohos.gui.settings.ChatSecuritySettings"
+                android:targetPackage="org.atalk.ohos" />
         </Preference>
 
         <!-- SSL Certificates Management -->
         <Preference
-            ohos:summary="$string:settings_ssl_certificate_summary"
-            ohos:title="$string:settings_ssl_certificate">
+            android:summary="@string/settings_ssl_certificate_summary"
+            android:title="@string/settings_ssl_certificate">
             <intent
-                ohos:action="android.intent.action.VIEW"
-                ohos:targetClass="org.atalk.impl.ohoscertdialog.ohoscertdialog.ConnectionInfo"
-                ohos:targetPackage="org.atalk.ohos" />
+                android:action="android.intent.action.VIEW"
+                android:targetClass="org.atalk.impl.appcertdialog.ConnectionInfo"
+                android:targetPackage="org.atalk.ohos" />
         </Preference>
 
     </PreferenceCategory>
 
     <!-- Message settings -->
     <PreferenceCategory
-        ohos:key="pref.cat.settings.msg"
-        ohos:title="$string:settings_messaging">
+        android:key="pref.cat.settings.msg"
+        android:title="@string/settings_messaging">
 
         <!-- Group messages in one window -->
         <!--
             <CheckBoxPreference
-			ohos:title="$string:service_gui_settings_MULTICHAT_WINDOW"
-			ohos:key="pref.key.multichat_window"
-			ohos:summaryOn="$string:service_gui_settings_MULTICHAT_ON"
-			ohos:summaryOff="$string:service_gui_settings_MULTICHAT_OFF"
+			android:title="@string/service_gui_settings_MULTICHAT_WINDOW"
+			android:key="pref.key.multichat_window"
+			android:summaryOn="@string/service_gui_settings_MULTICHAT_ON"
+			android:summaryOff="@string/service_gui_settings_MULTICHAT_OFF"
 			/>
         -->
         <!-- Log chat history -->
         <CheckBoxPreference
-            ohos:key="pref.key.msg.history_logging"
-            ohos:summaryOff="$string:settings_history_log_off"
-            ohos:summaryOn="$string:settings_history_log_on"
-            ohos:title="$string:settings_history_logging" />
+            android:key="pref.key.msg.history_logging"
+            android:summaryOff="@string/settings_history_log_off"
+            android:summaryOn="@string/settings_history_log_on"
+            android:title="@string/settings_history_logging" />
 
         <!-- Show x recent messages in new chats -->
         <CheckBoxPreference
-            ohos:key="pref.key.msg.show_history"
-            ohos:summaryOff="$string:disabled"
-            ohos:summaryOn="$string:enabled"
-            ohos:title="$string:settings_history_show" />
+            android:key="pref.key.msg.show_history"
+            android:summaryOff="@string/disabled"
+            android:summaryOn="@string/enabled"
+            android:title="@string/settings_history_show" />
 
         <EditTextPreference
-            ohos:dependency="pref.key.msg.show_history"
-            ohos:dialogMessage="$string:settings_history_dlg_title"
-            ohos:inputType="number"
-            ohos:key="pref.key.msg.chat_history_size"
-            ohos:title="$string:settings_history_size" />
+            android:dependency="pref.key.msg.show_history"
+            android:dialogMessage="@string/settings_history_dlg_title"
+            android:inputType="number"
+            android:key="pref.key.msg.chat_history_size"
+            android:title="@string/settings_history_size" />
 
         <!-- Tell others when we have received and read the messages -->
         <CheckBoxPreference
-            ohos:key="pref.key.message_delivery_receipt"
-            ohos:summary="$string:settings_message_delivery_receipt_summary"
-            ohos:title="$string:settings_message_delivery_receipt" />
+            android:key="pref.key.message_delivery_receipt"
+            android:summary="@string/settings_message_delivery_receipt_summary"
+            android:title="@string/settings_message_delivery_receipt" />
 
         <!-- Tell others when we are writing to them -->
         <CheckBoxPreference
-            ohos:key="pref.key.msg.chat_state_notifications"
-            ohos:summaryOff="$string:disabled"
-            ohos:summaryOn="$string:enabled"
-            ohos:title="$string:settings_typing_notifications" />
+            android:key="pref.key.msg.chat_state_notifications"
+            android:summaryOff="@string/disabled"
+            android:summaryOn="@string/enabled"
+            android:title="@string/settings_typing_notifications" />
 
         <!-- Send file transfer thumbnail preview -->
         <CheckBoxPreference
-            ohos:key="pref.key.send_thumbnail"
-            ohos:summaryOff="$string:disabled"
-            ohos:summaryOn="$string:enabled"
-            ohos:title="$string:settings_thumbnail_option" />
+            android:key="pref.key.send_thumbnail"
+            android:summaryOff="@string/disabled"
+            android:summaryOn="@string/enabled"
+            android:title="@string/settings_thumbnail_option" />
 
         <!-- Attachment File Size Auto Accept -->
         <ListPreference
-            ohos:entries="@array/filesizes"
-            ohos:entryValues="@array/filesizes_values"
-            ohos:key="pref.key.auto_accept_file"
-            ohos:title="$string:settings_file_max_auto_accept" />
+            android:entries="@array/filesizes"
+            android:entryValues="@array/filesizes_values"
+            android:key="pref.key.auto_accept_file"
+            android:title="@string/settings_file_max_auto_accept" />
 
         <!-- Presence Subscription Mode - Auto or Manual -->
         <CheckBoxPreference
-            ohos:key="pref.key.presence_subscribe_mode"
-            ohos:summaryOff="$string:settings_presence_subscribe_approval_manual"
-            ohos:summaryOn="$string:settings_presence_subscribe_approval_auto"
-            ohos:title="$string:settings_presence_subscribe_approval_mode" />
+            android:key="pref.key.presence_subscribe_mode"
+            android:summaryOff="@string/settings_presence_subscribe_approval_manual"
+            android:summaryOn="@string/settings_presence_subscribe_approval_auto"
+            android:title="@string/settings_presence_subscribe_approval_mode" />
 
         <!--
         Use task bar / dock alerts on incoming calls and chats not implemented on Android
 		<CheckBoxPreference
-			ohos:title="$string:service_gui_settings_CHAT_ALERTS"
-			ohos:key="pref.key.chat_alerts"
-			ohos:summaryOn="$string:service_gui_settings_ENABLED_STR"
-			ohos:summaryOff="$string:service_gui_settings_DISABLED_STR"
+			android:title="@string/service_gui_settings_CHAT_ALERTS"
+			android:key="pref.key.chat_alerts"
+			android:summaryOn="@string/service_gui_settings_ENABLED_STR"
+			android:summaryOff="@string/service_gui_settings_DISABLED_STR"
 			/>
         -->
     </PreferenceCategory>
 
     <!-- Notifications -->
     <PreferenceCategory
-        ohos:key="pref.cat.settings.notifications"
-        ohos:title="$string:settings_notifications">
+        android:key="pref.cat.settings.notifications"
+        android:title="@string/settings_notifications">
 
         <!-- Popup notifications type -->
         <ListPreference
-            ohos:key="pref.key.notification.popup_handler"
-            ohos:title="$string:settings_popup_handler" />
+            android:key="pref.key.notification.popup_handler"
+            android:title="@string/settings_popup_handler" />
 
         <CheckBoxPreference
-            ohos:defaultValue="false"
-            ohos:key="pref.key.notification.heads_up_enable"
-            ohos:summary="$string:pref_heads_up_notifications_summary"
-            ohos:title="$string:pref_heads_up_notifications" />
+            android:defaultValue="false"
+            android:key="pref.key.notification.heads_up_enable"
+            android:summary="@string/pref_heads_up_notifications_summary"
+            android:title="@string/pref_heads_up_notifications" />
 
         <Preference
-            ohos:key="quiet_hours"
-            ohos:summary="$string:quiet_hours_summary"
-            ohos:title="$string:quiet_hours"
-            app:fragment="org.atalk.ohos.gui.settings.QuietTimeSlice" />
+            android:key="quiet_hours"
+            android:summary="@string/quiet_hours_summary"
+            android:title="@string/quiet_hours"
+            app:fragment="org.atalk.ohos.gui.settings.QuietTimeFragment" />
 
         <!-- Events -->
         <Preference
-            ohos:summary="$string:settings_event_summary"
-            ohos:title="$string:settings_event_title">
+            android:summary="@string/settings_event_summary"
+            android:title="@string/settings_event_title">
             <intent
-                ohos:action="android.intent.action.VIEW"
-                ohos:targetClass="org.atalk.ohos.gui.settings.notification.NotificationSettings"
-                ohos:targetPackage="org.atalk.ohos" />
+                android:action="android.intent.action.VIEW"
+                android:targetClass="org.atalk.ohos.gui.settings.notification.NotificationSettings"
+                android:targetPackage="org.atalk.ohos" />
         </Preference>
 
         <!-- Auto Software Version Check -->
-        CheckBoxPreference
-            ohos:key="pref.key.auto_update_check_enable"
-            ohos:summaryOff="$string:service_gui_settings_DISABLED_STR"
-            ohos:summaryOn="$string:service_gui_settings_ENABLED_STR"
-            ohos:title="$string:service_gui_settings_auto_update_check_status"
+        <!-- CheckBoxPreference
+            android:key="pref.key.auto_update_check_enable"
+            android:summaryOff="@string/service_gui_settings_DISABLED_STR"
+            android:summaryOn="@string/service_gui_settings_ENABLED_STR"
+            android:title="@string/service_gui_settings_auto_update_check_status" /-->
     </PreferenceCategory>
 
     <!-- Media Call Settings -->
     <PreferenceCategory
-        ohos:key="pref.cat.settings.media_call"
-        ohos:title="$string:media_call">
+        android:key="pref.cat.settings.media_call"
+        android:title="@string/media_call">
         <!-- Video Sections -->
         <ListPreference
-            ohos:key="pref.key.video.camera"
-            ohos:title="$string:settings_camera" />
+            android:key="pref.key.video.camera"
+            android:title="@string/settings_camera" />
 
         <ListPreference
-            ohos:key="pref.key.video.resolution"
-            ohos:title="$string:settings_video_resolution" />
+            android:key="pref.key.video.resolution"
+            android:title="@string/settings_video_resolution" />
 
         <Preference
-            ohos:summary="$string:settings_video_codec_summary"
-            ohos:title="$string:settings_video_codec">
+            android:summary="@string/settings_video_codec_summary"
+            android:title="@string/settings_video_codec">
             <intent
-                ohos:action="android.intent.action.VIEW"
-                ohos:targetClass="org.atalk.ohos.gui.settings.EncodingSettings"
-                ohos:targetPackage="org.atalk.ohos">
+                android:action="android.intent.action.VIEW"
+                android:targetClass="org.atalk.ohos.gui.settings.EncodingSettings"
+                android:targetPackage="org.atalk.ohos">
                 <extra
-                    ohos:name="media_type"
-                    ohos:value="media_type.VIDEO" />
+                    android:name="media_type"
+                    android:value="media_type.VIDEO" />
             </intent>
         </Preference>
 
         <!-- Audio Sections -->
         <Preference
-            ohos:summary="$string:settings_audio_codecs_summary"
-            ohos:title="$string:settings_audio_codecs">
+            android:summary="@string/settings_audio_codecs_summary"
+            android:title="@string/settings_audio_codecs">
             <intent
-                ohos:action="android.intent.action.VIEW"
-                ohos:targetClass="org.atalk.ohos.gui.settings.EncodingSettings"
-                ohos:targetPackage="org.atalk.ohos">
+                android:action="android.intent.action.VIEW"
+                android:targetClass="org.atalk.ohos.gui.settings.EncodingSettings"
+                android:targetPackage="org.atalk.ohos">
                 <extra
-                    ohos:name="media_type"
-                    ohos:value="media_type.AUDIO" />
+                    android:name="media_type"
+                    android:value="media_type.AUDIO" />
             </intent>
         </Preference>
     </PreferenceCategory>
 
     <!-- Phone Call Settings -->
     <PreferenceCategory
-        ohos:key="pref.cat.settings.call"
-        ohos:title="$string:call">
+        android:key="pref.cat.settings.call"
+        android:title="@string/call">
 
         <CheckBoxPreference
-            ohos:key="pref.key.call.remove.special"
-            ohos:summaryOff="$string:settings_normalize_off"
-            ohos:summaryOn="$string:settings_normalize_on"
-            ohos:title="$string:settings_normalize_number" />
+            android:key="pref.key.call.remove.special"
+            android:summaryOff="@string/settings_normalize_off"
+            android:summaryOn="@string/settings_normalize_on"
+            android:title="@string/settings_normalize_number" />
 
         <CheckBoxPreference
-            ohos:key="pref.key.call.convert.letters"
-            ohos:summaryOff="$string:settings_phone_alpha_no_allow"
-            ohos:summaryOn="$string:settings_phone_allow_alpha"
-            ohos:title="$string:settings_phone_alpha_allow" />
+            android:key="pref.key.call.convert.letters"
+            android:summaryOff="@string/settings_phone_alpha_no_allow"
+            android:summaryOn="@string/settings_phone_allow_alpha"
+            android:title="@string/settings_phone_alpha_allow" />
     </PreferenceCategory>
 
     <!-- Advanced Settings -->
     <PreferenceCategory
-        ohos:key="pref.cat.settings.advanced"
-        ohos:title="$string:advanced">
+        android:key="pref.cat.settings.advanced"
+        android:title="@string/advanced">
 
         <Preference
-            ohos:summary="$string:settings_expert_summary"
-            ohos:title="$string:settings_expert"
-            app:fragment="org.atalk.ohos.gui.settings.ExpertSettingsSlice" />
+            android:summary="@string/settings_expert_summary"
+            android:title="@string/settings_expert"
+            app:fragment="org.atalk.ohos.gui.settings.ExpertSettingsFragment" />
 
     </PreferenceCategory>
 </PreferenceScreen>

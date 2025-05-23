@@ -1,6 +1,6 @@
 /*
- * aTalk, ohos VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * aTalk, android VoIP and Instant Messaging client
+ * Copyright 2014 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,16 @@
  */
 package org.atalk.ohos.gui.chatroomslist.model;
 
-import ohos.media.image.PixelMap;
+import android.graphics.drawable.Drawable;
+
+import androidx.core.content.res.ResourcesCompat;
 
 import net.java.sip.communicator.service.muc.ChatRoomWrapper;
 
-import org.atalk.ohos.ResourceTable;
+import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.chat.ChatPanel;
 import org.atalk.ohos.gui.chat.ChatSessionManager;
-import org.atalk.ohos.util.AppImageUtil;
 import org.jivesoftware.smack.util.StringUtils;
 
 /**
@@ -35,7 +36,7 @@ import org.jivesoftware.smack.util.StringUtils;
 public class ChatRoomRenderer implements UIChatRoomRenderer {
     @Override
     public boolean isSelected(Object chatRoomWrapper) {
-        return ChatRoomListProvider.isChatRoomWrapperSelected(((ChatRoomWrapper) chatRoomWrapper).getChatRoomID());
+        return ChatRoomListAdapter.isChatRoomWrapperSelected(((ChatRoomWrapper) chatRoomWrapper).getChatRoomID());
     }
 
     @Override
@@ -69,8 +70,8 @@ public class ChatRoomRenderer implements UIChatRoomRenderer {
     }
 
     @Override
-    public PixelMap getChatRoomIcon(Object chatRoomWrapper) {
-        return AppImageUtil.getPixelMap(aTalkApp.getInstance(), ResourceTable.Media_ic_chatroom);
+    public Drawable getChatRoomIcon(Object chatRoomWrapper) {
+        return ResourcesCompat.getDrawable(aTalkApp.getAppResources(), R.drawable.ic_chatroom, null);
     }
 
     @Override

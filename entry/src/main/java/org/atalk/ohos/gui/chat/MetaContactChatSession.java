@@ -11,8 +11,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import ohos.utils.zson.ZSONArray;
-
 import net.java.sip.communicator.service.contactlist.MetaContact;
 import net.java.sip.communicator.service.contactlist.MetaContactListService;
 import net.java.sip.communicator.service.contactlist.event.MetaContactAvatarUpdateEvent;
@@ -38,9 +36,11 @@ import net.java.sip.communicator.service.protocol.event.MessageReceivedEvent;
 import net.java.sip.communicator.util.ConfigurationUtils;
 
 import org.apache.commons.lang3.StringUtils;
-import org.atalk.ohos.ResourceTable;
+import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.AppGUIActivator;
+import org.json.JSONArray;
+import org.json.JSONException;
 
 /**
  * An implementation of the <code>ChatSession</code> interface that represents a user-to-user chat session.
@@ -101,7 +101,7 @@ public class MetaContactChatSession extends ChatSession
     public String getChatEntity() {
         String entityJid = metaContact.getDefaultContact().getAddress();
         if (StringUtils.isEmpty(entityJid))
-            entityJid = aTalkApp.getResString(ResourceTable.String_unknown);
+            entityJid = aTalkApp.getResString(R.string.unknown);
         return entityJid;
     }
 
@@ -247,12 +247,17 @@ public class MetaContactChatSession extends ChatSession
      */
     @Override
     public String getDefaultSmsNumber() {
-        String smsNumber = null;
-        ZSONArray zonArray = metaContact.getDetails("mobile");
-        if (zonArray != null && zonArray.size() > 0) {
-            smsNumber = zonArray.getString(0);
+        String smsNumber;
+        JSONArray jsonArray = metaContact.getDetails("mobile");
+        if (jsonArray != null && jsonArray.length() > 0) {
+            try {
+                smsNumber = jsonArray.getString(0);
+                return smsNumber;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
-        return smsNumber;
+        return null;
     }
 
     /**

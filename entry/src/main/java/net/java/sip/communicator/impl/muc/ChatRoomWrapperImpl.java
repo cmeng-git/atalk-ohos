@@ -15,6 +15,8 @@
  */
 package net.java.sip.communicator.impl.muc;
 
+import androidx.annotation.NonNull;
+
 import net.java.sip.communicator.service.msghistory.MessageHistoryService;
 import net.java.sip.communicator.service.muc.ChatRoomListChangeEvent;
 import net.java.sip.communicator.service.muc.ChatRoomProviderWrapper;
@@ -539,7 +541,7 @@ public class ChatRoomWrapperImpl extends PropertyChangeNotifier implements ChatR
     }
 
     @Override
-    public int compareTo(ChatRoomWrapper o) {
+    public int compareTo(@NonNull ChatRoomWrapper o) {
         ChatRoomWrapperImpl target = (ChatRoomWrapperImpl) o;
 
 //		int isOnline = (contactsOnline > 0) ? 1 : 0;

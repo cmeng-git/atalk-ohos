@@ -5,12 +5,19 @@
  */
 package net.java.sip.communicator.service.protocol;
 
-import java.util.*;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.text.TextUtils;
 
-import ohos.app.Context;
-import ohos.data.rdb.RdbPredicates;
-import ohos.data.rdb.RdbStore;
-import ohos.data.resultset.ResultSet;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Queue;
+import java.util.Vector;
 
 import net.java.sip.communicator.impl.protocol.jabber.JabberActivator;
 import net.java.sip.communicator.service.credentialsstorage.CredentialsStorageService;
@@ -18,7 +25,6 @@ import net.java.sip.communicator.service.protocol.event.AccountManagerEvent;
 import net.java.sip.communicator.service.protocol.event.AccountManagerListener;
 import net.java.sip.communicator.util.ServiceUtils;
 
-import org.apache.http.util.TextUtils;
 import org.atalk.persistance.DatabaseBackend;
 import org.atalk.service.configuration.ConfigurationService;
 import org.atalk.service.osgi.OSGiService;
@@ -720,17 +726,16 @@ public class AccountManager {
 
     private Map<String, String> getStoredAccounts(ProtocolProviderFactory factory) {
         Map<String, String> accounts = new Hashtable<>();
-        RdbStore mDB = DatabaseBackend.getRdbStore();
+        SQLiteDatabase mDB = databaseBackend.getReadableDatabase();
+        String[] args = {factory.getProtocolName()};
 
-        RdbPredicates rdbPredicates = new RdbPredicates(AccountID.TABLE_NAME)
-                .equalTo(AccountID.PROTOCOL, factory.getProtocolName());
-        ResultSet resultSet = mDB.query(rdbPredicates, null);
-
-        while (resultSet.goToNextRow()) {
-            accounts.put(resultSet.getString(resultSet.getColumnIndexForName(AccountID.ACCOUNT_UID)),
-                    resultSet.getString(resultSet.getColumnIndexForName(AccountID.ACCOUNT_UUID)));
+        Cursor cursor = mDB.query(AccountID.TABLE_NAME, null, AccountID.PROTOCOL + "=?",
+                args, null, null, null);
+        while (cursor.moveToNext()) {
+            accounts.put(cursor.getString(cursor.getColumnIndexOrThrow(AccountID.ACCOUNT_UID)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(AccountID.ACCOUNT_UUID)));
         }
-        resultSet.close();
+        cursor.close();
         return accounts;
     }
 }

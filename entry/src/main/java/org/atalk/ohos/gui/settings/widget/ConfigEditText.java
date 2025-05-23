@@ -5,9 +5,16 @@
  */
 package org.atalk.ohos.gui.settings.widget;
 
-import ohos.app.Context;
+import android.content.Context;
+import android.content.res.TypedArray;
+import android.util.AttributeSet;
+
+import androidx.preference.EditTextPreference;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceManager;
 
 import org.apache.commons.lang3.StringUtils;
+import org.atalk.ohos.R;
 import org.atalk.ohos.gui.AppGUIActivator;
 import org.atalk.service.configuration.ConfigurationService;
 

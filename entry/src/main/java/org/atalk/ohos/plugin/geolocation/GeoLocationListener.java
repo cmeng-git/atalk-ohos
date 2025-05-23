@@ -1,6 +1,6 @@
 package org.atalk.ohos.plugin.geolocation;
 
-import ohos.location.Location;
+import android.location.Location;
 
 public interface GeoLocationListener
 {

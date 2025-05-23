@@ -1,22 +1,15 @@
 /*
- * aTalk, ohos VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * Jitsi, the OpenSource Java VoIP and Instant Messaging client.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Distributable under LGPL license. See terms of license at gnu.org.
  */
 package net.java.sip.communicator.impl.protocol.jabber;
 
-import ohos.app.Context;
+import static org.jivesoftware.smackx.omemo.util.OmemoConstants.OMEMO_NAMESPACE_V_AXOLOTL;
+
+import android.content.Context;
+import android.text.Html;
+import android.text.TextUtils;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -50,10 +43,9 @@ import net.java.sip.communicator.service.protocol.event.RegistrationStateChangeL
 import net.java.sip.communicator.util.ConfigurationUtils;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.http.util.TextUtils;
 import org.atalk.crypto.omemo.OmemoAuthenticateDialog;
 import org.atalk.impl.timberlog.TimberLog;
-import org.atalk.ohos.ResourceTable;
+import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.chat.ChatMessage;
 import org.atalk.ohos.gui.chat.ChatSessionManager;
@@ -114,8 +106,6 @@ import org.jxmpp.jid.EntityFullJid;
 import org.jxmpp.jid.Jid;
 
 import timber.log.Timber;
-
-import static org.jivesoftware.smackx.omemo.util.OmemoConstants.OMEMO_NAMESPACE_V_AXOLOTL;
 
 /**
  * A straightforward implementation of the basic instant messaging operation set.
@@ -320,7 +310,7 @@ public class OperationSetBasicInstantMessagingJabberImpl extends AbstractOperati
     }
 
     /**
-     * Remove from our <code>jidThreads</code> map all entries that have not seen any ability
+     * Remove from our <code>jidThreads</code> map all entries that have not seen any activity
      * (i.e. neither outgoing nor incoming messages) for more than JID_INACTIVITY_TIMEOUT.
      * Note that this method is not synchronous and that it is only meant for use by the
      * {@link #getThreadIDForAddress(BareJid, boolean)} and {@link #putJidForAddress(Jid, String)}
@@ -352,7 +342,7 @@ public class OperationSetBasicInstantMessagingJabberImpl extends AbstractOperati
      * <code>new ThreadID</code> if <code>null</code> and <code>generateNewIfNoExist</code> is true; otherwise
      * <code>null</code> if we don't have a jid for the specified <code>address</code> yet.
      * <p>
-     * The method would also purge all entries that haven't seen any ability (i.e. no one has
+     * The method would also purge all entries that haven't seen any activity (i.e. no one has
      * tried to get or remap it) for a delay longer than <code>JID_INACTIVITY_TIMEOUT</code>.
      *
      * @param bareJid the <code>Jid</code> that we'd like to obtain a threadID for.
@@ -609,13 +599,13 @@ public class OperationSetBasicInstantMessagingJabberImpl extends AbstractOperati
             OmemoAuthenticateListener omemoAuthListener
                     = new OmemoAuthenticateListener(to, resource, message, correctedMessageUID, omemoManager);
             Context ctx = aTalkApp.getInstance();
-            ctx.startAbility(OmemoAuthenticateDialog.createIntent(ctx, omemoManager, e.getUndecidedDevices(), omemoAuthListener), 0);
+            ctx.startActivity(OmemoAuthenticateDialog.createIntent(ctx, omemoManager, e.getUndecidedDevices(), omemoAuthListener));
             return;
         } catch (CryptoFailedException | InterruptedException | NotConnectedException | NoResponseException |
                  IOException e) {
-            errMessage = aTalkApp.getResString(ResourceTable.String_crypto_msg_omemo_session_setup_failed, e.getMessage());
+            errMessage = aTalkApp.getResString(R.string.crypto_msg_omemo_session_setup_failed, e.getMessage());
         } catch (SmackException.NotLoggedInException e) {
-            errMessage = aTalkApp.getResString(ResourceTable.String_message_delivery_not_registered);
+            errMessage = aTalkApp.getResString(R.string.message_delivery_not_registered);
         }
 
         if (!TextUtils.isEmpty(errMessage)) {
@@ -651,7 +641,7 @@ public class OperationSetBasicInstantMessagingJabberImpl extends AbstractOperati
                 sendInstantMessage(to, resource, message, correctedMessageUID, omemoManager);
             }
             else {
-                String errMessage = aTalkApp.getResString(ResourceTable.String_omemo_send_error,
+                String errMessage = aTalkApp.getResString(R.string.omemo_send_error,
                         "Undecided Omemo Identity: " + omemoDevices.toString());
                 Timber.w("%s", errMessage);
                 MessageDeliveryFailedEvent failedEvent = new MessageDeliveryFailedEvent(message, to,
@@ -857,8 +847,8 @@ public class OperationSetBasicInstantMessagingJabberImpl extends AbstractOperati
                 userFullJId = privateContactRoom.findMemberFromParticipant(userFullJId).getJabberId();
             }
         }
-        // Get the message type i.e. NONE; for chat message encryption indication
-        int encType = IMessage.ENCRYPTION_NONE;
+        // Get the message type i.e. OTR or NONE; for chat message encryption indication
+        int encType = msgBody.startsWith("?OTR") ? IMessage.ENCRYPTION_OTR : IMessage.ENCRYPTION_NONE;
 
         // set up default in case XHTMLExtension contains no message
         // if msgBody contains markup text then set as ENCODE_HTML mode

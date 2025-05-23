@@ -1,20 +1,12 @@
 /*
- * aTalk, ohos VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * Jitsi, the OpenSource Java VoIP and Instant Messaging client.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Distributable under LGPL license. See terms of license at gnu.org.
  */
 package org.atalk.impl.appnotification;
+
+import java.util.Arrays;
+import java.util.List;
 
 import net.java.sip.communicator.plugin.notificationwiring.NotificationManager;
 import net.java.sip.communicator.plugin.notificationwiring.SoundProperties;
@@ -26,9 +18,6 @@ import net.java.sip.communicator.util.ServiceUtils;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
-
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Android notifications wiring which overrides some default notifications and adds vibrate actions.
@@ -86,7 +75,7 @@ public class AppNotifications implements BundleActivator {
 
         // Incoming call: Adds basic vibrate notification for incoming call
         VibrateNotificationAction inCallVibrate
-                = new VibrateNotificationAction(NotificationManager.INCOMING_CALL, new int[]{1800, 1000}, 0);
+                = new VibrateNotificationAction(NotificationManager.INCOMING_CALL, new long[]{1800, 1000}, 0);
         notificationService.registerDefaultNotificationForEvent(NotificationManager.INCOMING_CALL, inCallVibrate);
 
         //  cmeng 20200525: added back for JingleMessage support

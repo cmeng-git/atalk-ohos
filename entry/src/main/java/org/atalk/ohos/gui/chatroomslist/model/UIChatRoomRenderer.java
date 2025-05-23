@@ -1,6 +1,6 @@
 /*
- * aTalk, ohos VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * aTalk, android VoIP and Instant Messaging client
+ * Copyright 2014 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  */
 package org.atalk.ohos.gui.chatroomslist.model;
 
-import ohos.media.image.PixelMap;
+import android.graphics.drawable.Drawable;
 
 /**
  * Interface used to obtain data required to display chatRoom information. Implementing classes can
@@ -68,7 +68,7 @@ public interface UIChatRoomRenderer {
      *
      * @return chatRoomWrapper avatar image.
      */
-    PixelMap getChatRoomIcon(Object chatRoomWrapper);
+    Drawable getChatRoomIcon(Object chatRoomWrapper);
 
     /**
      * Returns chatRoomID that can be used to establish an outgoing connection.

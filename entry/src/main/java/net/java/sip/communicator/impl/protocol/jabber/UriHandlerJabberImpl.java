@@ -36,7 +36,7 @@ import net.java.sip.communicator.service.protocol.event.ProviderPresenceStatusCh
 import net.java.sip.communicator.service.protocol.event.ProviderPresenceStatusListener;
 
 import org.atalk.ohos.aTalkApp;
-import org.atalk.ohos.gui.dialogs.DialogH;
+import org.atalk.ohos.gui.dialogs.DialogActivity;
 import org.atalk.impl.timberlog.TimberLog;
 import org.jxmpp.stringprep.XmppStringprepException;
 import org.osgi.framework.BundleContext;
@@ -52,8 +52,6 @@ import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
-
-import ohos.app.Context;
 
 import timber.log.Timber;
 
@@ -392,8 +390,7 @@ public class UriHandlerJabberImpl implements UriHandler, ServiceListener, Accoun
         //				.showMessagePopupDialog(message, "Failed to create chat!",
         //						PopupDialog.ERROR_MESSAGE);
 
-        Context ctx = aTalkApp.getInstance();
-        DialogH.getInstance(ctx).showDialog(ctx, "Failed to create chat!", message);
+        DialogActivity.showDialog(aTalkApp.getInstance(), "Failed to create chat!", message);
         Timber.e(exc, "%s", message);
     }
 

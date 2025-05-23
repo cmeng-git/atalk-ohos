@@ -1,37 +1,20 @@
 /*
- * aTalk, ohos VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * Jitsi, the OpenSource Java VoIP and Instant Messaging client.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Distributable under LGPL license. See terms of license at gnu.org.
  */
 package org.atalk.impl.appstray;
 
-import ohos.aafwk.content.Intent;
-import ohos.app.Context;
-import ohos.event.intentagent.IntentAgent;
-import ohos.event.intentagent.IntentAgentConstant.OperationType;
-import ohos.event.intentagent.IntentAgentHelper;
-import ohos.event.intentagent.IntentAgentInfo;
-import ohos.event.notification.NotificationHelper;
-import ohos.event.notification.NotificationRequest;
-import ohos.event.notification.NotificationRequest.NotificationContent;
-import ohos.event.notification.NotificationRequest.NotificationPictureContent;
-import ohos.media.image.PixelMap;
-import ohos.rpc.RemoteException;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
 
-import java.util.Collections;
+import androidx.core.app.NotificationCompat;
+
 import java.util.Hashtable;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -47,21 +30,21 @@ import net.java.sip.communicator.service.systray.SystrayService;
 import net.java.sip.communicator.util.ConfigurationUtils;
 
 import org.atalk.impl.appnotification.AppNotifications;
-import org.atalk.ohos.ResourceTable;
+import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.AppGUIActivator;
 import org.atalk.ohos.gui.chat.ChatPanel;
 import org.atalk.ohos.gui.chat.ChatSessionManager;
-import org.atalk.ohos.gui.dialogs.DialogH;
+import org.atalk.ohos.gui.dialogs.DialogActivity;
 import org.atalk.ohos.util.AppImageUtil;
 
-import timber.log.Timber;
 
-import static org.atalk.impl.appstray.NotificationPopupHandler.getIntentFlag;
+import timber.log.Timber;
 
 /**
  * Class manages displayed notification for given <code>PopupMessage</code>.
  *
+ * @author Pawel Domas
  * @author Eng Chong Meng
  */
 public class AppPopup {
@@ -126,30 +109,30 @@ public class AppPopup {
         switch (group) {
             case AppNotifications.MESSAGE_GROUP:
             case AppNotifications.SILENT_GROUP:
-                mSmallIcon = ResourceTable.Media_incoming_message;
+                mSmallIcon = R.drawable.incoming_message;
                 break;
 
             case AppNotifications.FILE_GROUP:
-                mSmallIcon = ResourceTable.Media_ic_attach_dark;
+                mSmallIcon = R.drawable.ic_attach_dark;
                 break;
 
             case AppNotifications.CALL_GROUP:
                 switch (popupMessage.getMessageType()) {
                     case SystrayService.WARNING_MESSAGE_TYPE:
-                        mSmallIcon = ResourceTable.Media_ic_alert_dark;
+                        mSmallIcon = R.drawable.ic_alert_dark;
                         break;
 
                     case SystrayService.JINGLE_INCOMING_CALL:
                     case SystrayService.JINGLE_MESSAGE_PROPOSE:
-                        mSmallIcon = ResourceTable.Media_call_incoming;
+                        mSmallIcon = R.drawable.call_incoming;
                         break;
 
                     case SystrayService.MISSED_CALL_MESSAGE_TYPE:
-                        mSmallIcon = ResourceTable.Media_call_incoming_missed;
+                        mSmallIcon = R.drawable.call_incoming_missed;
                         break;
 
                     default:
-                        mSmallIcon = ResourceTable.Media_ic_info_dark;
+                        mSmallIcon = R.drawable.ic_info_dark;
                         break;
                 }
                 break;
@@ -159,7 +142,7 @@ public class AppPopup {
             case AppNotifications.DEFAULT_GROUP:
             default:
                 nId = SystrayServiceImpl.getGeneralNotificationId();
-                mSmallIcon = ResourceTable.Media_ic_notification;
+                mSmallIcon = R.drawable.ic_notification;
                 break;
         }
         // Extract contained chat descriptor if any
@@ -175,8 +158,8 @@ public class AppPopup {
         return popupMessage;
     }
 
-    public PixelMap getPopupIcon() {
-        return AppImageUtil.getPixelMap(mContext, mSmallIcon);
+    public int getPopupIcon() {
+        return mSmallIcon;
     }
 
     /**
@@ -185,11 +168,8 @@ public class AppPopup {
     public void removeNotification(int id) {
         cancelTimeout();
         snoozeEndTimes.remove(id);
-        try {
-            NotificationHelper.cancelNotification(id);
-        } catch (RemoteException e) {
-            Timber.w("Remove notification id=$s failed", id);
-        }
+        NotificationManager notifyManager = aTalkApp.getNotificationManager();
+        notifyManager.cancel(nId);
     }
 
     /**
@@ -309,50 +289,64 @@ public class AppPopup {
      *
      * @return builder object describing current notification.
      */
-    NotificationRequest buildNotification(int nId) {
+    NotificationCompat.Builder buildNotification(int nId) {
+        NotificationCompat.Builder builder;
+        // Do not show heads-up notification when user has put the id notification in snooze
+        if (isSnooze(nId) || !ConfigurationUtils.isHeadsUpEnable()) {
+            builder = new NotificationCompat.Builder(mContext, AppNotifications.SILENT_GROUP);
+        }
+        else {
+            builder = new NotificationCompat.Builder(mContext, group);
+        }
+
+        builder.setSmallIcon(mSmallIcon)
+                .setContentTitle(popupMessage.getMessageTitle())
+                .setContentText(getMessage())
+                .setAutoCancel(true)        // will be cancelled once clicked
+                .setVibrate(new long[]{})   // no vibration
+                .setSound(null);            // no sound
+
+        Resources res = aTalkApp.getAppResources();
         // Preferred size
-        int prefWidth = 64;
-        int prefHeight = 64;
+        int prefWidth = (int) res.getDimension(android.R.dimen.notification_large_icon_width);
+        int prefHeight = (int) res.getDimension(android.R.dimen.notification_large_icon_height);
 
         // Use popup icon if provided
-        PixelMap iconPixelMap = null;
+        Bitmap iconBmp = null;
         byte[] icon = popupMessage.getIcon();
         if (icon != null) {
-            iconPixelMap = AppImageUtil.scaledPixelMapFromBytes(icon, prefWidth, prefHeight);
+            iconBmp = AppImageUtil.scaledBitmapFromBytes(icon, prefWidth, prefHeight);
         }
 
         // Set default avatar if none provided
-        if (iconPixelMap == null && mDescriptor != null) {
+        if (iconBmp == null && mDescriptor != null) {
             if (mDescriptor instanceof ChatRoom)
-                iconPixelMap = AppImageUtil.scaledPixelMapFromResource(mContext, ResourceTable.Media_ic_chatroom, prefWidth, prefHeight);
+                iconBmp = AppImageUtil.scaledBitmapFromResource(res, R.drawable.ic_chatroom, prefWidth, prefHeight);
             else
-                iconPixelMap = AppImageUtil.scaledPixelMapFromResource(mContext, ResourceTable.Media_contact_avatar, prefWidth, prefHeight);
+                iconBmp = AppImageUtil.scaledBitmapFromResource(res, R.drawable.contact_avatar, prefWidth, prefHeight);
         }
 
-        NotificationPictureContent pContent = new NotificationPictureContent();
-        onBuildInboxStyle(pContent);
-        pContent.setBigPicture(iconPixelMap)
-                .setBriefText(popupMessage.getMessageTitle());
+        if (iconBmp != null) {
+            if (iconBmp.getWidth() > prefWidth || iconBmp.getHeight() > prefHeight) {
+                iconBmp = Bitmap.createScaledBitmap(iconBmp, prefWidth, prefHeight, true);
+            }
+            builder.setLargeIcon(iconBmp);
+        }
 
-        // Do not show heads-up notification when user has put the id notification in snooze
-        String slotId = (isSnooze(nId) || !ConfigurationUtils.isHeadsUpEnable()) ? AppNotifications.SILENT_GROUP : group;
-        return new NotificationRequest(nId)
-                .setSlotId(slotId)
-                .setVisibleness(NotificationRequest.VISIBLENESS_TYPE_PRIVATE)
-                .setLittleIcon(getPopupIcon())
-                .setOnlyLocal(true)
-                .setAlertOneTime(true)
-                .setDeliveryTime(0)
-                .setContent(new NotificationContent(pContent));
+        // Build inbox style
+        NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
+        onBuildInboxStyle(inboxStyle);
+        builder.setStyle(inboxStyle);
+        return builder;
     }
 
     /**
-     * Returns the <code>IntentAgent</code> that should be trigger when user clicks the notification.
+     * Returns the <code>PendingIntent</code> that should be trigger when user clicks the notification.
      *
-     * @return the <code>IntentAgent</code> that should be trigger by notification
+     * @return the <code>PendingIntent</code> that should be trigger by notification
      */
-    public IntentAgent createContentIntent() {
-        Intent chatIntent = null;
+    public PendingIntent createContentIntent() {
+        Intent targetIntent = null;
         PopupMessage message = getPopupMessage();
 
         String group = (message != null) ? message.getGroup() : null;
@@ -365,7 +359,7 @@ public class AppPopup {
                     Timber.e("Meta contact not found for %s", contact);
                 }
                 else {
-                    chatIntent = ChatSessionManager.getChatIntent(metaContact);
+                    targetIntent = ChatSessionManager.getChatIntent(metaContact);
                 }
             }
             else if (tag instanceof ChatRoomJabberImpl) {
@@ -376,40 +370,36 @@ public class AppPopup {
                     Timber.e("ChatRoomWrapper not found for %s", chatRoom.getIdentifier());
                 }
                 else {
-                    chatIntent = ChatSessionManager.getChatIntent(chatRoomWrapper);
+                    targetIntent = ChatSessionManager.getChatIntent(chatRoomWrapper);
                 }
             }
         }
-        // Displays popup message details when the notification is clicked when chatIntent is null
-        if ((message != null) && (chatIntent == null)) {
-            chatIntent = DialogH.getDialogIntent(aTalkApp.getInstance(),
+        // Displays popup message details when the notification is clicked when targetIntent is null
+        if ((message != null) && (targetIntent == null)) {
+            targetIntent = DialogActivity.getDialogIntent(aTalkApp.getInstance(),
                     message.getMessageTitle(), message.getMessage());
         }
 
-        if (chatIntent == null)
-            return null;
-
         // Must be unique for each, so use the notification id as the request code
-        List<Intent> intentList = Collections.singletonList(chatIntent);
-        IntentAgentInfo intentInfo = new IntentAgentInfo(getId(), OperationType.START_ABILITY,
-                getIntentFlag(false, true), intentList, null);
-        return IntentAgentHelper.getIntentAgent(mContext, intentInfo);
+        return (targetIntent == null)
+                ? null : PendingIntent.getActivity(aTalkApp.getInstance(), getId(), targetIntent,
+                NotificationPopupHandler.getPendingIntentFlag(false, true));
     }
 
     /**
      * Method fired when large notification view using <code>InboxStyle</code> is being built.
      *
-     * @param pContent the NotificationPictureContent instance used for building large notification view.
+     * @param inboxStyle the inbox style instance used for building large notification view.
      */
-    protected void onBuildInboxStyle(NotificationPictureContent pContent) {
+    protected void onBuildInboxStyle(NotificationCompat.InboxStyle inboxStyle) {
+        inboxStyle.addLine(getMessage());
         // Summary
         if (mDescriptor instanceof Contact) {
             ProtocolProviderService pps = ((Contact) mDescriptor).getProtocolProvider();
             if (pps != null) {
-                pContent.setTitle(pps.getAccountID().getDisplayName());
+                inboxStyle.setSummaryText(pps.getAccountID().getDisplayName());
             }
         }
-        pContent.setText(getMessage());
     }
 
     /**

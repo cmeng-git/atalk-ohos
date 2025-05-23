@@ -1,6 +1,6 @@
 /*
- * aTalk, ohos VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * aTalk, android VoIP and Instant Messaging client
+ * Copyright 2014 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,15 @@
  */
 package org.atalk.ohos.gui;
 
-import ohos.aafwk.content.Intent;
-import ohos.agp.animation.AnimatorProperty;
-import ohos.agp.animation.AnimatorScatter;
-import ohos.agp.components.Image;
-import ohos.agp.components.ProgressBar;
+import android.os.Bundle;
+import android.os.Handler;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 
-import org.atalk.ohos.BaseAbility;
-import org.atalk.ohos.ResourceTable;
+import org.atalk.ohos.BaseActivity;
+import org.atalk.ohos.R;
 
 import timber.log.Timber;
 
@@ -32,32 +33,28 @@ import timber.log.Timber;
  *
  * @author Eng Chong Meng
  */
-public class Splash extends BaseAbility {
-
+public class Splash extends BaseActivity {
     private static boolean mFirstRun = true;
 
-    public void onStart(Intent intent) {
-        super.onStart(intent);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-        setUIContent(ResourceTable.Layout_splash);
-        ProgressBar mProgressBar = findComponentById(ResourceTable.Id_actionbar_progress);
-        mProgressBar.setIndeterminate(true);
+        setContentView(R.layout.splash);
+        ProgressBar mProgressBar = findViewById(R.id.progressBar);
         mProgressBar.setVisibility(ProgressBar.VISIBLE);
 
-
         // Starts fade in animation
-        Image myImageView = findComponentById(ResourceTable.Id_loadingImage);
-        AnimatorScatter scatter = AnimatorScatter.getInstance(getContext());
-        AnimatorProperty myFadeInAnimation = (AnimatorProperty) scatter.parse(ResourceTable.Animation_fade_in);
-        myFadeInAnimation.setTarget(myImageView);
-        myFadeInAnimation.start();
+        ImageView myImageView = findViewById(R.id.loadingImage);
+        Animation myFadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.fade_in);
+        myImageView.startAnimation(myFadeInAnimation);
         mFirstRun = false;
 
-        uiHandler.postTask(() -> {
+        new Handler().postDelayed(() -> {
             Timber.d("End of Splash screen Timer");
-            mProgressBar.setVisibility(ProgressBar.INVISIBLE);
-            myFadeInAnimation.stop();
-            terminateAbility();
+            mProgressBar.clearAnimation();
+            myImageView.clearAnimation();
+            // must exit splash screen
+            finish();
         }, 800);
     }
 

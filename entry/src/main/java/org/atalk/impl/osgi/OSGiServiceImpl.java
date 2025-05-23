@@ -1,22 +1,20 @@
 /*
- * aTalk, ohos VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * Jitsi, the OpenSource Java VoIP and Instant Messaging client.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Distributable under LGPL license. See terms of license at gnu.org.
  */
 package org.atalk.impl.osgi;
 
+import android.app.Service;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.res.AssetManager;
+import android.os.IBinder;
+import android.text.TextUtils;
+
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -28,20 +26,14 @@ import java.util.StringTokenizer;
 import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
 
-import ohos.aafwk.content.Intent;
-import ohos.app.Context;
-import ohos.bundle.ApplicationInfo;
-import ohos.bundle.ElementName;
-import ohos.rpc.IRemoteObject;
-
-import org.apache.http.util.TextUtils;
 import org.atalk.impl.osgi.framework.AsyncExecutor;
 import org.atalk.impl.osgi.framework.launch.FrameworkFactoryImpl;
-import org.atalk.ohos.ResourceTable;
+import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.service.configuration.ConfigurationService;
 import org.atalk.service.osgi.BundleContextHolder;
 import org.atalk.service.osgi.OSGiService;
+import org.atalk.util.OSUtils;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
 import org.osgi.framework.Constants;
@@ -52,6 +44,7 @@ import org.osgi.framework.startlevel.BundleStartLevel;
 /**
  * Implements the actual, internal functionality of {@link OSGiService}.
  *
+ * @author Lyubomir Marinov
  * @author Eng Chong Meng
  */
 public class OSGiServiceImpl {
@@ -71,7 +64,7 @@ public class OSGiServiceImpl {
     private final Object frameworkSyncRoot = new Object();
 
     /**
-     * The Ohos Service which uses this instance as its very implementation.
+     * The Android {@link Service} which uses this instance as its very implementation.
      */
     private final OSGiService service;
 
@@ -88,25 +81,25 @@ public class OSGiServiceImpl {
     /**
      * Invoked by the Android system to initialize a communication channel to {@link #service}.
      * Returns an implementation of the public API of the <code>OSGiService</code> i.e.
-     * {@link BundleContextHolder} in the form of an {@link IRemoteObject}.
+     * {@link BundleContextHolder} in the form of an {@link IBinder}.
      *
      * @param intent the <code>Intent</code> which was used to bind to <code>service</code>
      *
      * @return an <code>IBinder</code> through which clients may call on to the public API of <code>OSGiService</code>
+     *
+     * @see Service#onBind(Intent)
      */
-    public IRemoteObject onConnect(Intent intent) {
+    public IBinder onBind(Intent intent) {
         return bundleContextHolder;
-    }
-
-    public void onAbilityConnectDone(ElementName element, IRemoteObject object, int result) {
-
     }
 
     /**
      * Invoked by the Android system when {@link #service} is first created. Asynchronously starts
      * the OSGi framework (implementation) represented by this instance.
+     *
+     * @see Service#onCreate()
      */
-    public void onStart(Intent intent) {
+    public void onCreate() {
         try {
             setScHomeDir();
         } catch (Throwable t) {
@@ -126,8 +119,10 @@ public class OSGiServiceImpl {
     /**
      * Invoked by the Android system when {@link #service} is no longer used and is being removed.
      * Asynchronously stops the OSGi framework (implementation) represented by this instance.
+     *
+     * @see Service#onDestroy()
      */
-    public void onStop() {
+    public void onDestroy() {
         synchronized (executor) {
             executor.execute(new OnDestroyCommand());
             executor.shutdown();
@@ -136,17 +131,19 @@ public class OSGiServiceImpl {
 
     /**
      * Invoked by the Android system every time a client explicitly starts {@link #service} by
-     * calling {@link Context#startAbility(Intent, int)}. Always returns {@link // Service#START_STICKY}.
+     * calling {@link Context#startService(Intent)}. Always returns {@link Service#START_STICKY}.
      *
      * @param intent the <code>Intent</code> supplied to <code>Context.startService(Intent}</code>
-     * @param restart additional infoabout the start request
+     * @param flags additional data about the start request
      * @param startId a unique integer which represents this specific request to start
-     * <p>
-     * //     * @return a value which indicates what semantics the Android system should use for
-     * //     * <code>service</code>'s current started state
+     *
+     * @return a value which indicates what semantics the Android system should use for
+     * <code>service</code>'s current started state
+     *
+     * @see Service#onStartCommand(Intent, int, int)
      */
-    public void onCommand(Intent intent, boolean restart, int startId) {
-        // return Service.START_STICKY;
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        return Service.START_STICKY;
     }
 
     /**
@@ -171,7 +168,7 @@ public class OSGiServiceImpl {
                 ApplicationInfo info = service.getApplicationInfo();
                 name = info.name;
                 if (TextUtils.isEmpty(name))
-                    name = aTalkApp.getResString(ResourceTable.String_app_name);
+                    name = aTalkApp.getResString(R.string.app_name);
             }
             System.setProperty(ConfigurationService.PNAME_SC_HOME_DIR_NAME, name);
         }
@@ -194,9 +191,9 @@ public class OSGiServiceImpl {
          */
         String location = System.getProperty(ConfigurationService.PNAME_SC_HOME_DIR_LOCATION);
 
-        if ((location != null) && (location.length() != 0)) {
+        if ((location != null) && (!location.isEmpty())) {
             name = System.getProperty(ConfigurationService.PNAME_SC_HOME_DIR_NAME);
-            if ((name != null) && (name.length() != 0)) {
+            if ((name != null) && (!name.isEmpty())) {
                 System.setProperty("user.home", new File(location, name).getAbsolutePath());
             }
         }
@@ -255,16 +252,21 @@ public class OSGiServiceImpl {
          * application which is currently using it. And the corresponding start levels.
          */
         private TreeMap<Integer, List<String>> getBundlesConfig(Context context) {
-            String filePath = System.getProperty("osgi.config.properties");
-            if (filePath == null)
-                filePath = "lib/osgi.client.run.properties";
+            String fileName = System.getProperty("osgi.config.properties");
+            if (fileName == null)
+                fileName = "lib/osgi.client.run.properties";
 
             InputStream is = null;
             Properties props = new Properties();
 
             try {
-                if (context != null) {
-                    is = context.getResourceManager().getRawFileEntry(filePath).openRawFile();
+                if (OSUtils.IS_ANDROID) {
+                    if (context != null) {
+                        is = context.getAssets().open(fileName, AssetManager.ACCESS_UNKNOWN);
+                    }
+                }
+                else {
+                    is = new FileInputStream(fileName);
                 }
 
                 if (is != null)

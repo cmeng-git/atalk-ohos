@@ -9,7 +9,7 @@ import android.content.Context;
 import android.net.Uri;
 
 import org.atalk.ohos.aTalkApp;
-import org.atalk.impl.androidresources.AppResourceServiceImpl;
+import org.atalk.impl.androidresources.AndroidResourceServiceImpl;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -52,7 +52,7 @@ public class AudioStreamUtils
                 resourceUri = uri;
 
             // Must convert to proper androidResource for content access to aTalk raw/*.wav
-            if (uri.startsWith(AppResourceServiceImpl.PROTOCOL)) {
+            if (uri.startsWith(AndroidResourceServiceImpl.PROTOCOL)) {
                 resourceUri = "android.resource://" + context.getPackageName() + "/" + resourceUri;
             }
             audioStream = context.getContentResolver().openInputStream(Uri.parse(resourceUri));

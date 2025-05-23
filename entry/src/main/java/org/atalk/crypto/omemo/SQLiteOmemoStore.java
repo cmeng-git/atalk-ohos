@@ -1,6 +1,6 @@
 /*
- * aTalk, ohos VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * aTalk, android VoIP and Instant Messaging client
+ * Copyright 2014 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,8 @@
  */
 package org.atalk.crypto.omemo;
 
+import android.util.LruCache;
+
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Date;
@@ -25,12 +27,10 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeMap;
 
-import ohos.utils.LruBuffer;
-
 import net.java.sip.communicator.service.protocol.AccountID;
 import net.java.sip.communicator.service.protocol.ProtocolProviderService;
 
-import org.atalk.ohos.ResourceTable;
+import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.AppGUIActivator;
 import org.atalk.persistance.DatabaseBackend;
@@ -77,9 +77,6 @@ import timber.log.Timber;
  */
 
 public class SQLiteOmemoStore extends SignalOmemoStore {
-//        extends OmemoStore<IdentityKeyPair, IdentityKey, PreKeyRecord, SignedPreKeyRecord, SessionRecord,
-//        SignalProtocolAddress, ECPublicKey, PreKeyBundle, SessionCipher> {
-
     // omemoDevices Table
     public static final String OMEMO_DEVICES_TABLE_NAME = "omemo_devices";
     public static final String OMEMO_JID = "omemoJid"; // account user
@@ -128,7 +125,7 @@ public class SQLiteOmemoStore extends SignalOmemoStore {
 
     /*
      * mDevice is used by overridden method create(String fingerprint) for trustCache self update
-     * @see LruBuffer#createDefault(Object)
+     * @see LruCache#create(Object)
      */
     private OmemoDevice mDevice;
 
@@ -137,20 +134,13 @@ public class SQLiteOmemoStore extends SignalOmemoStore {
         mDB = DatabaseBackend.getInstance(aTalkApp.getInstance());
     }
 
-//    private final SignalOmemoKeyUtil signalKeyUtil = new SignalOmemoKeyUtil();
-//
-//    @Override
-//    public OmemoKeyUtil<IdentityKeyPair, IdentityKey, PreKeyRecord, SignedPreKeyRecord, SessionRecord, ECPublicKey, PreKeyBundle> keyUtil() {
-//        return signalKeyUtil;
-//    }
-
     /**
      * Cache of a map fingerPrint string to FingerprintStatus
      */
-    private final LruBuffer<String, FingerprintStatus> trustCache =
-            new LruBuffer<String, FingerprintStatus>(NUM_TRUSTS_TO_CACHE) {
+    private final LruCache<String, FingerprintStatus> trustCache =
+            new LruCache<String, FingerprintStatus>(NUM_TRUSTS_TO_CACHE) {
                 @Override
-                protected FingerprintStatus createDefault(String fingerprint) {
+                protected FingerprintStatus create(String fingerprint) {
                     return mDB.getFingerprintStatus(mDevice, fingerprint);
                 }
             };
@@ -168,7 +158,7 @@ public class SQLiteOmemoStore extends SignalOmemoStore {
      *
      * @return the fingerprint status for the specified device
      *
-     * @see LruBuffer #createDefault(Object)
+     * @see LruCache#create(Object)
      */
     public FingerprintStatus getFingerprintStatus(OmemoDevice device, String fingerprint) {
         /* Must setup mDevice for FingerprintStatus#create(String fingerprint) */
@@ -371,7 +361,7 @@ public class SQLiteOmemoStore extends SignalOmemoStore {
             throw new CorruptedOmemoKeyException(e.getMessage());
         }
         if (identityKeyPair == null) {
-            aTalkApp.showToastMessage(ResourceTable.String_omemo_identity_keypairs_missing, userDevice);
+            aTalkApp.showToastMessage(R.string.omemo_identity_keypairs_missing, userDevice);
         }
         return identityKeyPair;
     }
@@ -780,7 +770,7 @@ public class SQLiteOmemoStore extends SignalOmemoStore {
     @Override
     public void purgeOwnDeviceKeys(OmemoDevice userDevice) {
         mDB.purgeOmemoDb(userDevice);
-        trustCache.clear();
+        trustCache.evictAll();
     }
 
     /**
@@ -816,7 +806,7 @@ public class SQLiteOmemoStore extends SignalOmemoStore {
             pepManager.publish(nodeName, new PayloadItem<>(deviceList));
 
         } catch (SmackException | InterruptedException | XMPPException.XMPPErrorException e) {
-            aTalkApp.showToastMessage(ResourceTable.String_omemo_purge_inactive_device_error, omemoDevice);
+            aTalkApp.showToastMessage(R.string.omemo_purge_inactive_device_error, omemoDevice);
         }
 
         // Only then purge omemo preKeys table/bundles on server
@@ -828,7 +818,7 @@ public class SQLiteOmemoStore extends SignalOmemoStore {
                 pubsubManager.deleteNode(nodeName);
             }
         } catch (SmackException | InterruptedException | XMPPException.XMPPErrorException e) {
-            aTalkApp.showToastMessage(ResourceTable.String_omemo_purge_inactive_device_error, omemoDevice);
+            aTalkApp.showToastMessage(R.string.omemo_purge_inactive_device_error, omemoDevice);
         }
     }
 
@@ -857,7 +847,7 @@ public class SQLiteOmemoStore extends SignalOmemoStore {
 
                 // Purge all omemo devices info in the local database for the specified accountId
                 mDB.purgeOmemoDb(accountId);
-                trustCache.clear();
+                trustCache.evictAll();
 
                 // Create new omemoDeice
                 new AndroidOmemoService(pps).initOmemoDevice();
@@ -908,7 +898,7 @@ public class SQLiteOmemoStore extends SignalOmemoStore {
                 try {
                     omemoManager.purgeDeviceList();
                 } catch (SmackException | InterruptedException | XMPPException.XMPPErrorException | IOException e) {
-                    aTalkApp.showToastMessage(ResourceTable.String_omemo_purge_inactive_device_error, userJid);
+                    aTalkApp.showToastMessage(R.string.omemo_purge_inactive_device_error, userJid);
                 }
             }
         }
@@ -936,7 +926,7 @@ public class SQLiteOmemoStore extends SignalOmemoStore {
             try {
                 omemoManager.purgeDeviceList();
             } catch (SmackException | InterruptedException | XMPPException.XMPPErrorException | IOException e) {
-                aTalkApp.showToastMessage(ResourceTable.String_omemo_purge_inactive_device_error, omemoDevice);
+                aTalkApp.showToastMessage(R.string.omemo_purge_inactive_device_error, omemoDevice);
             }
         }
         ).start();
@@ -962,7 +952,7 @@ public class SQLiteOmemoStore extends SignalOmemoStore {
         // Must first remove the omemoDevice and associated data from local database
         // Purge local omemo database for the specified account
         mDB.purgeOmemoDb(accountId);
-        trustCache.clear();
+        trustCache.evictAll();
 
         // Purge server omemo bundle nodes for the deleted account (only if online and authenticated)
         ProtocolProviderService pps = accountId.getProtocolProvider();

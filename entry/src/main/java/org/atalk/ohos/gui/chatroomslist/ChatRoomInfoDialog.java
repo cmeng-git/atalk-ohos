@@ -1,6 +1,6 @@
 /*
- * aTalk, ohos VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * aTalk, android VoIP and Instant Messaging client
+ * Copyright 2014 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,14 @@
  */
 package org.atalk.ohos.gui.chatroomslist;
 
-import ohos.aafwk.content.Intent;
-import ohos.agp.components.Button;
-import ohos.agp.components.Checkbox;
-import ohos.agp.components.Component;
-import ohos.agp.components.LayoutScatter;
-import ohos.agp.components.Text;
-import ohos.agp.utils.Color;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.TextView;
 
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -32,9 +33,8 @@ import net.java.sip.communicator.service.muc.ChatRoomWrapper;
 import net.java.sip.communicator.service.protocol.ChatRoomMember;
 import net.java.sip.communicator.service.protocol.ProtocolProviderService;
 
-import org.atalk.ohos.BaseAbility;
-import org.atalk.ohos.ResourceTable;
-import org.atalk.ohos.gui.dialogs.DialogH;
+import org.atalk.ohos.R;
+import org.atalk.ohos.gui.dialogs.BaseDialogFragment;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smackx.muc.MultiUserChatManager;
@@ -49,8 +49,8 @@ import timber.log.Timber;
  *
  * @author Eng Chong Meng
  */
-public class ChatRoomInfoDialog extends DialogH {
-    private Component contentView;
+public class ChatRoomInfoDialog extends BaseDialogFragment {
+    private View contentView;
     private ChatRoomWrapper mChatRoomWrapper;
 
     public ChatRoomInfoDialog() {
@@ -63,16 +63,18 @@ public class ChatRoomInfoDialog extends DialogH {
     }
 
     @Override
-    public void onStart(Intent intent) {
-        LayoutScatter inflater = LayoutScatter.getInstance(getContext());
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (getDialog() != null)
-            getDialog().setTitle(ResourceTable.String_chatroom_info);
+            getDialog().setTitle(R.string.chatroom_info);
 
-        contentView = inflater.parse(ResourceTable.Layout_chatroom_info, container, false);
-        final Button buttonOk = contentView.findComponentById(ResourceTable.Id_button_ok);
-        buttonOk.setClickedListener(v -> dismiss());
+        contentView = inflater.inflate(R.layout.chatroom_info, container, false);
+        final Button buttonOk = contentView.findViewById(R.id.button_ok);
+        buttonOk.setOnClickListener(v -> dismiss());
 
         new getRoomInfo().execute();
+
+        // setCancelable(false);
+        return contentView;
     }
 
     /**
@@ -85,7 +87,7 @@ public class ChatRoomInfoDialog extends DialogH {
             Executors.newSingleThreadExecutor().execute(() -> {
                 final RoomInfo roomInfo = doInBackground();
 
-                BaseAbility.runOnUiThread(() -> {
+                runOnUiThread(() -> {
                     onPostExecute(roomInfo);
                 });
             });
@@ -114,17 +116,17 @@ public class ChatRoomInfoDialog extends DialogH {
         private void onPostExecute(RoomInfo chatRoomInfo) {
             String EMPTY = "";
             if (chatRoomInfo != null) {
-                Text textView = contentView.findComponentById(ResourceTable.Id_roominfo_name);
+                TextView textView = contentView.findViewById(R.id.roominfo_name);
                 textView.setText(chatRoomInfo.getName());
 
-                textView = contentView.findComponentById(ResourceTable.Id_roominfo_subject);
+                textView = contentView.findViewById(R.id.roominfo_subject);
                 textView.setText(toString(chatRoomInfo.getSubject(), EMPTY));
 
-                textView = contentView.findComponentById(ResourceTable.Id_roominfo_description);
+                textView = contentView.findViewById(R.id.roominfo_description);
                 textView.setText(toString(chatRoomInfo.getDescription(), mChatRoomWrapper.getBookmarkName()));
                 textView.setSelected(true);
 
-                textView = contentView.findComponentById(ResourceTable.Id_roominfo_occupants);
+                textView = contentView.findViewById(R.id.roominfo_occupants);
                 int count = chatRoomInfo.getOccupantsCount();
                 if (count == -1) {
                     List<ChatRoomMember> occupants = mChatRoomWrapper.getChatRoom().getMembers();
@@ -132,48 +134,48 @@ public class ChatRoomInfoDialog extends DialogH {
                 }
                 textView.setText(toValue(count, EMPTY));
 
-                textView = contentView.findComponentById(ResourceTable.Id_maxhistoryfetch);
+                textView = contentView.findViewById(R.id.maxhistoryfetch);
                 textView.setText(toValue(chatRoomInfo.getMaxHistoryFetch(),
-                        getString(ResourceTable.String_contactinfo_not_specified)));
+                        getString(R.string.contactinfo_not_specified)));
 
-                textView = contentView.findComponentById(ResourceTable.Id_roominfo_contactjid);
+                textView = contentView.findViewById(R.id.roominfo_contactjid);
                 try {
                     List<EntityBareJid> contactJids = chatRoomInfo.getContactJids();
                     if (!contactJids.isEmpty())
-                        textView.setText(contactJids.get(0).toString());
+                        textView.setText(contactJids.get(0));
                 } catch (NullPointerException e) {
                     Timber.e("Contact Jids exception: %s", e.getMessage());
                 }
 
-                textView = contentView.findComponentById(ResourceTable.Id_roominfo_lang);
+                textView = contentView.findViewById(R.id.roominfo_lang);
                 textView.setText(toString(chatRoomInfo.getLang(), EMPTY));
 
-                textView = contentView.findComponentById(ResourceTable.Id_roominfo_ldapgroup);
+                textView = contentView.findViewById(R.id.roominfo_ldapgroup);
                 textView.setText(toString(chatRoomInfo.getLdapGroup(), EMPTY));
 
-                Checkbox cbox = contentView.findComponentById(ResourceTable.Id_muc_membersonly);
+                CheckBox cbox = contentView.findViewById(R.id.muc_membersonly);
                 cbox.setChecked(chatRoomInfo.isMembersOnly());
 
-                cbox = contentView.findComponentById(ResourceTable.Id_muc_nonanonymous);
+                cbox = contentView.findViewById(R.id.muc_nonanonymous);
                 cbox.setChecked(chatRoomInfo.isNonanonymous());
 
-                cbox = contentView.findComponentById(ResourceTable.Id_muc_persistent);
+                cbox = contentView.findViewById(R.id.muc_persistent);
                 cbox.setChecked(chatRoomInfo.isPersistent());
 
-                cbox = contentView.findComponentById(ResourceTable.Id_muc_passwordprotected);
+                cbox = contentView.findViewById(R.id.muc_passwordprotected);
                 cbox.setChecked(chatRoomInfo.isPasswordProtected());
 
-                cbox = contentView.findComponentById(ResourceTable.Id_muc_moderated);
+                cbox = contentView.findViewById(R.id.muc_moderated);
                 cbox.setChecked(chatRoomInfo.isModerated());
 
-                cbox = contentView.findComponentById(ResourceTable.Id_room_subject_modifiable);
+                cbox = contentView.findViewById(R.id.room_subject_modifiable);
                 cbox.setChecked(toBoolean(chatRoomInfo.isSubjectModifiable()));
             }
             else {
-                Text textView = contentView.findComponentById(ResourceTable.Id_roominfo_name);
+                TextView textView = contentView.findViewById(R.id.roominfo_name);
                 textView.setText(XmppStringUtils.parseLocalpart(mChatRoomWrapper.getChatRoomID()));
 
-                textView = contentView.findComponentById(ResourceTable.Id_roominfo_subject);
+                textView = contentView.findViewById(R.id.roominfo_subject);
                 // Must not use getResources.getColor()
                 textView.setTextColor(Color.RED);
                 textView.setText(errMsg);

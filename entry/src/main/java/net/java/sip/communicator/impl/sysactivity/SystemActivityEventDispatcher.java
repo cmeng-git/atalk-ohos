@@ -120,8 +120,10 @@ public class SystemActivityEventDispatcher implements Runnable {
      */
     protected void fireSystemActivityEventCurrentThread(SystemActivityEvent evt) {
         List<SystemActivityChangeListener> listenersCopy = new ArrayList<>(listeners);
-        for (SystemActivityChangeListener systemActivityChangeListener : listenersCopy) {
-            fireSystemActivityEvent(evt, systemActivityChangeListener);
+        for (int i = 0; i < listenersCopy.size(); i++) {
+            fireSystemActivityEvent(
+                    evt,
+                    listenersCopy.get(i));
         }
     }
 
@@ -138,7 +140,7 @@ public class SystemActivityEventDispatcher implements Runnable {
 
             eventsToDispatch.notifyAll();
 
-            if (dispatcherThread == null && listeners.size() > 0) {
+            if (dispatcherThread == null && !listeners.isEmpty()) {
                 dispatcherThread = new Thread(this);
                 dispatcherThread.start();
             }
@@ -179,7 +181,7 @@ public class SystemActivityEventDispatcher implements Runnable {
                 List<SystemActivityChangeListener> listenersCopy;
 
                 synchronized (eventsToDispatch) {
-                    if (eventsToDispatch.size() == 0) {
+                    if (eventsToDispatch.isEmpty()) {
                         try {
                             eventsToDispatch.wait();
                         } catch (InterruptedException ignore) {
@@ -188,7 +190,7 @@ public class SystemActivityEventDispatcher implements Runnable {
 
                     //no point in dispatching if there's no one
                     //listening
-                    if (listeners.size() == 0)
+                    if (listeners.isEmpty())
                         continue;
 
                     //store the ref of the listener in case someone resets
@@ -211,8 +213,8 @@ public class SystemActivityEventDispatcher implements Runnable {
                             }
                         }
 
-                    for (SystemActivityChangeListener systemActivityChangeListener : listenersCopy) {
-                        fireSystemActivityEvent(eventToProcess.getKey(), systemActivityChangeListener);
+                    for (int i = 0; i < listenersCopy.size(); i++) {
+                        fireSystemActivityEvent(eventToProcess.getKey(), listenersCopy.get(i));
                     }
                 }
             }

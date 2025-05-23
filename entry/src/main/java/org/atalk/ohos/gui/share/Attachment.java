@@ -1,20 +1,40 @@
 /*
- * aTalk, ohos VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * Copyright (c) 2018, Daniel Gultsch All rights reserved.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * 1. Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ * this list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * 3. Neither the name of the copyright holder nor the names of its contributors
+ * may be used to endorse or promote products derived from this software without
+ * specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 package org.atalk.ohos.gui.share;
+
+import android.content.ClipData;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -22,36 +42,42 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-import ohos.aafwk.content.Intent;
-import ohos.app.Context;
-import ohos.miscservices.pasteboard.SystemPasteboard;
-import ohos.utils.Parcel;
-import ohos.utils.net.Uri;
-
 import org.atalk.persistance.FileBackend;
 
 import timber.log.Timber;
 
-public class Attachment extends Parcel {
-    private final Uri uri;
-    private final Type type;
-    private final UUID uuid;
-    private final String mime;
-
+public class Attachment implements Parcelable {
     Attachment(Parcel in) {
-        uri = (Uri) in.readParcelableEx(Uri.class.getClassLoader());
+        uri = in.readParcelable(Uri.class.getClassLoader());
         mime = in.readString();
         uuid = UUID.fromString(in.readString());
         type = Type.valueOf(in.readString());
     }
 
-//    @Override
-//    public void writeParcelableEx(ParcelableEx dest) {
-//        dest.writeParcelableEx((ParcelableEx) uri);
-//        dest.writeString(mime);
-//        dest.writeString(uuid.toString());
-//        dest.writeString(type.toString());
-//    }
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeParcelable(uri, flags);
+        dest.writeString(mime);
+        dest.writeString(uuid.toString());
+        dest.writeString(type.toString());
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<Attachment> CREATOR = new Creator<Attachment>() {
+        @Override
+        public Attachment createFromParcel(Parcel in) {
+            return new Attachment(in);
+        }
+
+        @Override
+        public Attachment[] newArray(int size) {
+            return new Attachment[size];
+        }
+    };
 
     public String getMime() {
         return mime;
@@ -64,6 +90,11 @@ public class Attachment extends Parcel {
     public enum Type {
         FILE, IMAGE, LOCATION, RECORDING
     }
+
+    private final Uri uri;
+    private final Type type;
+    private final UUID uuid;
+    private final String mime;
 
     private Attachment(UUID uuid, Uri uri, Type type, String mime) {
         this.uri = uri;
@@ -103,34 +134,34 @@ public class Attachment extends Parcel {
     }
 
     public static Attachment of(UUID uuid, final File file, String mime) {
-        return new Attachment(uuid, Uri.getUriFromFile(file), mime != null && (mime.startsWith("image/") || mime.startsWith("video/")) ? Type.IMAGE : Type.FILE, mime);
+        return new Attachment(uuid, Uri.fromFile(file), mime != null && (mime.startsWith("image/") || mime.startsWith("video/")) ? Type.IMAGE : Type.FILE, mime);
     }
 
     public static List<Attachment> extractAttachments(final Context context, final Intent intent, Type type) {
-        List<Attachment> attachments = new ArrayList<>();
+        List<Attachment> uris = new ArrayList<>();
         if (intent == null) {
-            return attachments;
+            return uris;
         }
 
         final String contentType = intent.getType();
         final Uri data = intent.getData();
         if (data == null) {
-            final SystemPasteboard clipData =  intent.getPgetgetClipData();
+            final ClipData clipData = intent.getClipData();
             if (clipData != null) {
                 for (int i = 0; i < clipData.getItemCount(); ++i) {
                     final Uri uri = clipData.getItemAt(i).getUri();
                     final String mime = FileBackend.getMimeType(context, uri, contentType);
                     Timber.d("uri = %s; contentType = %s; mime = %s", uri, contentType, mime);
-                    attachments.add(new Attachment(uri, type, mime));
+                    uris.add(new Attachment(uri, type, mime));
                 }
             }
         }
         else {
             // final String mime = MimeUtils.guessMimeTypeFromUriAndMime(context, data, contentType);
             String mime = FileBackend.getMimeType(context, data, contentType);
-            attachments.add(new Attachment(data, type, mime));
+            uris.add(new Attachment(data, type, mime));
         }
-        return attachments;
+        return uris;
     }
 
     public boolean renderThumbnail() {

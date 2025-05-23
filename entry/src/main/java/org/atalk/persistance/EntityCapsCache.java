@@ -16,12 +16,12 @@
  */
 package org.atalk.persistance;
 
-import ohos.data.rdb.RdbPredicates;
-import ohos.data.rdb.RdbStore;
-import ohos.data.rdb.ValuesBucket;
-import ohos.data.resultset.ResultSet;
+import android.annotation.SuppressLint;
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.text.TextUtils;
 
-import org.apache.http.util.TextUtils;
 import org.jivesoftware.smack.util.PacketParserUtils;
 import org.jivesoftware.smackx.caps.cache.EntityCapsPersistentCache;
 import org.jivesoftware.smackx.disco.packet.DiscoverInfo;
@@ -39,13 +39,13 @@ public class EntityCapsCache implements EntityCapsPersistentCache {
     public static final String ENTITY_NODE_VER = "nodeVer";
     public static final String ENTITY_DISC_INFO = "discInfo";
 
-    private final RdbStore mRdbStore;
+    private final SQLiteDatabase mDB;
 
     /**
      * Creates a new EntityCapsCache Object.
      */
     public EntityCapsCache() {
-        mRdbStore = DatabaseBackend.getRdbStore();
+        mDB = DatabaseBackend.getWritableDB();
     }
 
     /**
@@ -56,11 +56,11 @@ public class EntityCapsCache implements EntityCapsPersistentCache {
      */
     @Override
     public void addDiscoverInfoByNodePersistent(String nodeVer, DiscoverInfo info) {
-        ValuesBucket values = new ValuesBucket();
+        ContentValues values = new ContentValues();
 
-        values.putString(ENTITY_NODE_VER, nodeVer);
-        values.putString(ENTITY_DISC_INFO, info.toXML().toString());
-        mRdbStore.insert(TABLE_NAME, values);
+        values.put(ENTITY_NODE_VER, nodeVer);
+        values.put(ENTITY_DISC_INFO, info.toXML().toString());
+        mDB.insert(TABLE_NAME, null, values);
     }
 
     /**
@@ -70,33 +70,31 @@ public class EntityCapsCache implements EntityCapsPersistentCache {
      *
      * @return the restored DiscoverInfo
      */
+    @SuppressLint("Range")
     @Override
     public DiscoverInfo lookup(String nodeVer) {
+        String[] selectionArgs = {nodeVer};
+        Cursor cursor = mDB.query(TABLE_NAME, null, ENTITY_NODE_VER + "=?", selectionArgs, null, null, null);
+
         String content = null;
-        String[] columns = {ENTITY_DISC_INFO};
-
-        RdbPredicates rdbPredicates = new RdbPredicates(TABLE_NAME)
-                .equalTo(ENTITY_NODE_VER, nodeVer);
-        ResultSet resultSet = mRdbStore.query(rdbPredicates, columns);
-        while (resultSet.goToNextRow()) {
-            content = resultSet.getString(0);
+        while (cursor.moveToNext()) {
+            content = cursor.getString(cursor.getColumnIndex(ENTITY_DISC_INFO));
         }
-        resultSet.close();
+        cursor.close();
 
-       DiscoverInfo discInfo = null;
+        DiscoverInfo info = null;
         if (!TextUtils.isEmpty(content)) {
             try {
-                discInfo = PacketParserUtils.parseStanza(content);
+                info = PacketParserUtils.parseStanza(content);
             } catch (Exception e) {
-                Timber.w("Could not restore discInfo from DB: %s", e.getMessage());
+                Timber.w("Could not restore info from DB: %s", e.getMessage());
             }
         }
-        return discInfo;
+        return info;
     }
 
     @Override
     public void emptyCache() {
-        RdbPredicates rdbPredicates = new RdbPredicates(TABLE_NAME);
-        mRdbStore.delete(rdbPredicates);
+        mDB.delete(TABLE_NAME, null, null);
     }
 }

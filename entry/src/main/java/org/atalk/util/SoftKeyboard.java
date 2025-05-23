@@ -1,55 +1,43 @@
-/*
- * aTalk, ohos VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.atalk.util;
+
+/*
+ * Author: Felipe Herranz (felhr85@gmail.com)
+ * Contributors:Francesco Verheye (verheye.francesco@gmail.com)
+ * 		Israel Dominguez (dominguez.israel@gmail.com)
+ */
+
+import android.os.Handler;
+import android.os.Message;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import ohos.accessibility.ability.SoftKeyBoardController;
-import ohos.agp.components.Component;
-import ohos.agp.components.ComponentContainer;
-import ohos.agp.components.TextField;
-import ohos.eventhandler.EventHandler;
-
 import timber.log.Timber;
 
-import static ohos.accessibility.ability.AccessibleAbility.SHOW_MODE_AUTO;
-import static ohos.accessibility.ability.AccessibleAbility.SHOW_MODE_HIDE;
-
-public class SoftKeyboard implements Component.FocusChangedListener {
+public class SoftKeyboard implements View.OnFocusChangeListener {
     private static final int CLEAR_FOCUS = 0;
 
-    private final ComponentContainer mLayout;
+    private final ViewGroup layout;
     private int layoutBottom;
-    private final SoftKeyBoardController sKBController;
+    private final InputMethodManager imm;
     private final int[] coords;
     private boolean isKeyboardShow;
     private final SoftKeyboardChangesThread softKeyboardThread;
-    private List<TextField> editTextList;
+    private List<EditText> editTextList;
 
-    // reference to a focused TextField
-    private Component focusComponent;
+    // reference to a focused EditText
+    private View tempView;
 
-    public SoftKeyboard(ComponentContainer layout, SoftKeyBoardController skbController) {
-        mLayout = layout;
+    public SoftKeyboard(ViewGroup layout, InputMethodManager imm) {
+        this.layout = layout;
         keyboardHideByDefault();
         initEditTexts(layout);
-        this.sKBController = skbController;
+        this.imm = imm;
         this.coords = new int[2];
         this.isKeyboardShow = false;
         this.softKeyboardThread = new SoftKeyboardChangesThread();
@@ -59,7 +47,7 @@ public class SoftKeyboard implements Component.FocusChangedListener {
     public void openSoftKeyboard() {
         if (!isKeyboardShow) {
             layoutBottom = getLayoutCoordinates();
-            sKBController.setShowMode(SHOW_MODE_AUTO);
+            imm.toggleSoftInput(0, InputMethodManager.SHOW_IMPLICIT);
             softKeyboardThread.keyboardOpened();
             isKeyboardShow = true;
         }
@@ -67,7 +55,7 @@ public class SoftKeyboard implements Component.FocusChangedListener {
 
     public void closeSoftKeyboard() {
         if (isKeyboardShow) {
-            sKBController.setShowMode(SHOW_MODE_HIDE);
+            imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
             isKeyboardShow = false;
         }
     }
@@ -87,35 +75,35 @@ public class SoftKeyboard implements Component.FocusChangedListener {
     }
 
     private int getLayoutCoordinates() {
-        mLayout.getLocationOnScreen();
-        return coords[1] + mLayout.getHeight();
+        layout.getLocationOnScreen(coords);
+        return coords[1] + layout.getHeight();
     }
 
     private void keyboardHideByDefault() {
-        mLayout.setFocusable(Component.FOCUS_ENABLE);
-        // mLayout.setFocusableInTouchMode(true);
+        layout.setFocusable(true);
+        layout.setFocusableInTouchMode(true);
     }
 
     /*
      * InitEditTexts now handles EditTexts in nested views
      * Thanks to Francesco Verheye (verheye.francesco@gmail.com)
      */
-    private void initEditTexts(ComponentContainer viewgroup) {
+    private void initEditTexts(ViewGroup viewgroup) {
         if (editTextList == null)
             editTextList = new ArrayList<>();
 
         int childCount = viewgroup.getChildCount();
         for (int i = 0; i <= childCount - 1; i++) {
-            Component v = viewgroup.getComponentAt(i);
+            View v = viewgroup.getChildAt(i);
 
-            if (v instanceof ComponentContainer) {
-                initEditTexts((ComponentContainer) v);
+            if (v instanceof ViewGroup) {
+                initEditTexts((ViewGroup) v);
             }
 
-            if (v instanceof TextField) {
-                TextField editText = (TextField) v;
-                editText.setFocusChangedListener(this);
-                editText.setTextCursorVisible(true);
+            if (v instanceof EditText) {
+                EditText editText = (EditText) v;
+                editText.setOnFocusChangeListener(this);
+                editText.setCursorVisible(true);
                 editTextList.add(editText);
             }
         }
@@ -126,9 +114,9 @@ public class SoftKeyboard implements Component.FocusChangedListener {
      * Thanks to Israel Dominguez (dominguez.israel@gmail.com)
      */
     @Override
-    public void onFocusChange(Component v, boolean hasFocus) {
+    public void onFocusChange(View v, boolean hasFocus) {
         if (hasFocus) {
-            focusComponent = v;
+            tempView = v;
             if (!isKeyboardShow) {
                 layoutBottom = getLayoutCoordinates();
                 softKeyboardThread.keyboardOpened();
@@ -137,15 +125,15 @@ public class SoftKeyboard implements Component.FocusChangedListener {
         }
     }
 
-    // This handler will clear focus of selected TextField
-    private final EventHandler mHandler = new EventHandler() {
+    // This handler will clear focus of selected EditText
+    private final Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message m) {
             switch (m.what) {
                 case CLEAR_FOCUS:
-                    if (focusComponent != null) {
-                        focusComponent.clearFocus();
-                        focusComponent = null;
+                    if (tempView != null) {
+                        tempView.clearFocus();
+                        tempView = null;
                     }
                     break;
             }
@@ -188,7 +176,7 @@ public class SoftKeyboard implements Component.FocusChangedListener {
                 if (started.get())
                     mCallback.onSoftKeyboardShow();
 
-                // When keyboard is opened from TextField, initial bottom location is greater than
+                // When keyboard is opened from EditText, initial bottom location is greater than
                 // layoutBottom and at some moment later <= layoutBottom.
                 // That broke the previous logic, so I added this new loop to handle this.
                 while (currentBottomLocation >= layoutBottom && started.get()) {
@@ -211,11 +199,11 @@ public class SoftKeyboard implements Component.FocusChangedListener {
                 if (started.get())
                     mCallback.onSoftKeyboardHide();
 
-                // if keyboard has been opened clicking and TextField.
+                // if keyboard has been opened clicking and EditText.
                 if (isKeyboardShow && started.get())
                     isKeyboardShow = false;
 
-                // if an TextField is focused, remove its focus (on UI thread)
+                // if an EditText is focused, remove its focus (on UI thread)
                 if (started.get())
                     mHandler.obtainMessage(CLEAR_FOCUS).sendToTarget();
             }

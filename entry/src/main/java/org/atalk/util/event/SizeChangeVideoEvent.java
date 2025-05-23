@@ -15,11 +15,11 @@
  */
 package org.atalk.util.event;
 
-import org.atalk.ohos.agp.components.JComponent;
+import java.awt.Component;
 
 /**
  * Represents a <code>VideoEvent</code> which notifies about an update to the size
- * of a specific visual <code>JComponent</code> depicting video.
+ * of a specific visual <code>Component</code> depicting video.
  *
  * @author Lyubomir Marinov
  * @author Eng Chong Meng
@@ -32,26 +32,26 @@ public class SizeChangeVideoEvent extends VideoEvent
     private static final long serialVersionUID = 0L;
 
     /**
-     * The new height of the associated visual <code>JComponent</code>.
+     * The new height of the associated visual <code>Component</code>.
      */
     private final int height;
 
     /**
-     * The new width of the associated visual <code>JComponent</code>.
+     * The new width of the associated visual <code>Component</code>.
      */
     private final int width;
 
     /**
      * Initializes a new <code>SizeChangeVideoEvent</code> which is to notify about
-     * an update to the size of a specific visual <code>JComponent</code> depicting video.
+     * an update to the size of a specific visual <code>Component</code> depicting video.
      *
      * @param source the source of the new <code>SizeChangeVideoEvent</code>
-     * @param visualComponent the visual <code>JComponent</code> depicting video with the updated size
+     * @param visualComponent the visual <code>Component</code> depicting video with the updated size
      * @param origin the origin of the video the new <code>SizeChangeVideoEvent</code> is to notify about
      * @param width the new width of <code>visualComponent</code>
      * @param height the new height of <code>visualComponent</code>
      */
-    public SizeChangeVideoEvent(Object source, JComponent visualComponent, int origin, int width, int height)
+    public SizeChangeVideoEvent(Object source, Component visualComponent, int origin, int width, int height)
     {
         super(source, VIDEO_SIZE_CHANGE, visualComponent, origin);
         this.width = width;
@@ -71,9 +71,9 @@ public class SizeChangeVideoEvent extends VideoEvent
     }
 
     /**
-     * Gets the new height of the associated visual <code>JComponent</code>.
+     * Gets the new height of the associated visual <code>Component</code>.
      *
-     * @return the new height of the associated visual <code>JComponent</code>
+     * @return the new height of the associated visual <code>Component</code>
      */
     public int getHeight()
     {
@@ -81,9 +81,9 @@ public class SizeChangeVideoEvent extends VideoEvent
     }
 
     /**
-     * Gets the new width of the associated visual <code>JComponent</code>.
+     * Gets the new width of the associated visual <code>Component</code>.
      *
-     * @return the new width of the associated visual <code>JComponent</code>
+     * @return the new width of the associated visual <code>Component</code>
      */
     public int getWidth()
     {

@@ -1,6 +1,6 @@
 /*
- * aTalk, ohos VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * aTalk, android VoIP and Instant Messaging client
+ * Copyright 2014 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,17 +16,17 @@
  */
 package org.atalk.ohos.gui.chatroomslist.model;
 
-import net.java.sip.communicator.service.muc.ChatRoomProviderWrapper;
+import android.widget.ExpandableListView;
 
-import android.widget.ExpandableListContainer;
+import net.java.sip.communicator.service.muc.ChatRoomProviderWrapper;
 
 /**
  * Implements contact groups expand memory.
  *
  * @author Eng Chong Meng
  */
-public class ChatRoomGroupExpandHandler implements ExpandableListContainer.OnGroupExpandListener,
-        ExpandableListContainer.OnGroupCollapseListener {
+public class ChatRoomGroupExpandHandler implements ExpandableListView.OnGroupExpandListener,
+        ExpandableListView.OnGroupCollapseListener {
     /**
      * Data key used to remember group state.
      */
@@ -35,22 +35,22 @@ public class ChatRoomGroupExpandHandler implements ExpandableListContainer.OnGro
     /**
      * Meta contact list adapter used by this instance.
      */
-    private final ChatRoomListProvider chatRoomList;
+    private final ChatRoomListAdapter chatRoomList;
 
     /**
      * The contact list view.
      */
-    private final ExpandableListContainer chatRoomListContainer;
+    private final ExpandableListView chatRoomListView;
 
     /**
      * Creates new instance of <code>MetaGroupExpandHandler</code>.
      *
      * @param chatRoomList contact list data model.
-     * @param chatRoomListContainer contact list view.
+     * @param chatRoomListView contact list view.
      */
-    public ChatRoomGroupExpandHandler(ChatRoomListProvider chatRoomList, ExpandableListContainer chatRoomListContainer) {
+    public ChatRoomGroupExpandHandler(ChatRoomListAdapter chatRoomList, ExpandableListView chatRoomListView) {
         this.chatRoomList = chatRoomList;
-        this.chatRoomListContainer = chatRoomListContainer;
+        this.chatRoomListView = chatRoomListView;
     }
 
     /**
@@ -61,23 +61,23 @@ public class ChatRoomGroupExpandHandler implements ExpandableListContainer.OnGro
             ChatRoomProviderWrapper chatRoomProviderWrapperGroup
                     = (ChatRoomProviderWrapper) chatRoomList.getGroup(gIdx);
             if (Boolean.FALSE.equals(chatRoomProviderWrapperGroup.getData(KEY_EXPAND_MEMORY))) {
-                chatRoomListContainer.collapseGroup(gIdx);
+                chatRoomListView.collapseGroup(gIdx);
             }
             else {
                 // Will expand by default
-                chatRoomListContainer.expandGroup(gIdx);
+                chatRoomListView.expandGroup(gIdx);
             }
         }
-        chatRoomListContainer.setOnGroupExpandListener(this);
-        chatRoomListContainer.setOnGroupCollapseListener(this);
+        chatRoomListView.setOnGroupExpandListener(this);
+        chatRoomListView.setOnGroupCollapseListener(this);
     }
 
     /**
      * Unbinds the listener.
      */
     public void unbind() {
-        chatRoomListContainer.setOnGroupExpandListener(null);
-        chatRoomListContainer.setOnGroupCollapseListener(null);
+        chatRoomListView.setOnGroupExpandListener(null);
+        chatRoomListView.setOnGroupCollapseListener(null);
     }
 
     @Override

@@ -17,10 +17,10 @@ import net.java.sip.communicator.service.protocol.event.RegistrationStateChangeL
 import net.java.sip.communicator.service.protocol.globalstatus.GlobalStatusEnum;
 import net.java.sip.communicator.util.UtilActivator;
 
-import org.atalk.impl.timberlog.TimberLog;
-import org.atalk.ohos.ResourceTable;
+import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
-import org.atalk.ohos.gui.dialogs.DialogA;
+import org.atalk.ohos.gui.dialogs.DialogActivity;
+import org.atalk.impl.timberlog.TimberLog;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.ServiceEvent;
 import org.osgi.framework.ServiceListener;
@@ -109,6 +109,7 @@ public class LoginManager implements ServiceListener, RegistrationStateChangeLis
     public void registrationStateChanged(RegistrationStateChangeEvent evt) {
         RegistrationState newState = evt.getNewState();
         ProtocolProviderService protocolProvider = evt.getProvider();
+        AccountID accountID = protocolProvider.getAccountID();
 
         if (TimberLog.isTraceEnable)
             Timber.log(TimberLog.FINER, "Protocol provider: %s changes state to: %s Reason: %s",
@@ -126,6 +127,64 @@ public class LoginManager implements ServiceListener, RegistrationStateChangeLis
         if (newState.equals(RegistrationState.REGISTERED)) {
             loginRenderer.protocolProviderConnected(protocolProvider, System.currentTimeMillis());
         }
+//        else {
+//            ResourceManagementService mRMS = UtilActivator.getResources();
+//            String msgText = null;
+//
+//            if (newState.equals(RegistrationState.AUTHENTICATION_FAILED)) {
+//                switch (evt.getReasonCode()) {
+//                    case RegistrationStateChangeEvent.REASON_RECONNECTION_RATE_LIMIT_EXCEEDED:
+//                        msgText = mRMS.getI18NString("service.gui.RECONNECTION_LIMIT_EXCEEDED",
+//                                new String[]{accountID.getUserID(), accountID.getService()});
+//                        break;
+//
+//                    case RegistrationStateChangeEvent.REASON_NON_EXISTING_USER_ID:
+//                        msgText = mRMS.getI18NString("service.gui.NON_EXISTING_USER_ID",
+//                                new String[]{protocolProvider.getProtocolDisplayName()});
+//                        break;
+//                    case RegistrationStateChangeEvent.REASON_TLS_REQUIRED:
+//                        msgText = mRMS.getI18NString("service.gui.NON_SECURE_CONNECTION",
+//                                new String[]{accountID.getAccountJid()});
+//                        break;
+//                    default:
+//                        break;
+//                }
+//                Timber.log(TimberLog.FINER, "%s", evt.getReason());
+//            }
+//            // CONNECTION_FAILED events are now dispatched in reconnect plugin
+//            else if (newState.equals(RegistrationState.CONNECTION_FAILED)) {
+//                loginRenderer.protocolProviderConnectionFailed(protocolProvider, this);
+//                Timber.log(TimberLog.FINER, evt.getReason());
+//            }
+//            else if (newState.equals(RegistrationState.EXPIRED)) {
+//                msgText = mRMS.getI18NString("service.gui.CONNECTION_EXPIRED_MSG",
+//                        new String[]{protocolProvider.getProtocolDisplayName()});
+//                Timber.e(evt.getReason());
+//            }
+//            else if (newState.equals(RegistrationState.UNREGISTERED)) {
+//                if (!manuallyDisconnected) {
+//                    switch (evt.getReasonCode()) {
+//                        case RegistrationStateChangeEvent.REASON_MULTIPLE_LOGIN:
+//                            msgText = aTalkApp.getResString(R.string.multiple_login,
+//                                    accountID.getUserID(), accountID.getService());
+//                            break;
+//                        case RegistrationStateChangeEvent.REASON_CLIENT_LIMIT_REACHED_FOR_IP:
+//                            msgText = mRMS.getI18NString("service.gui.LIMIT_REACHED_FOR_IP",
+//                                    new String[]{protocolProvider.getProtocolDisplayName()});
+//                            break;
+//                        case RegistrationStateChangeEvent.REASON_USER_REQUEST:
+//                            // do nothing
+//                            break;
+//                        default:
+//                            msgText = aTalkApp.getResString(R.string.unregistered_message,
+//                                    accountID.getUserID(), accountID.getServerAddress());
+//                    }
+//                    Timber.log(TimberLog.FINER, evt.getReason());
+//                }
+//            }
+//            if (msgText != null)
+//                DialogActivity.showDialog(aTalkApp.getInstance(), aTalkApp.getResString(R.string.error), msgText);
+//        }
     }
 
     /**
@@ -141,7 +200,6 @@ public class LoginManager implements ServiceListener, RegistrationStateChangeLis
         // if the event is caused by a bundle being stopped, we don't want to know
         if (serviceRef.getBundle().getState() == Bundle.STOPPING)
             return;
-
 
         Object service = UtilActivator.bundleContext.getService(serviceRef);
 
@@ -276,13 +334,22 @@ public class LoginManager implements ServiceListener, RegistrationStateChangeLis
                 protocolProvider.unregister(true);
             } catch (OperationFailedException ex) {
                 Timber.e("Provider failed unRegistration with error: %s", ex.getMessage());
-                new DialogA.Builder(aTalkApp.getInstance())
-                        .setTitle(ResourceTable.String_error)
-                        .setContent(ResourceTable.String_logoff_failed,
-                                protocolProvider.getAccountID().getUserID(),
-                                protocolProvider.getAccountID().getService())
-                        .create()
-                        .show();
+
+//				String alertMsg = "Provider could not be unregistered due to ";
+//				int errorCode = ex.getErrorCode();
+//				if (errorCode == OperationFailedException.GENERAL_ERROR) {
+//					Timber.e(alertMsg + "general error: " + ex);
+//				}
+//				else if (errorCode == OperationFailedException.INTERNAL_ERROR) {
+//					Timber.e(alertMsg + "internal error: " + ex);
+//				}
+//				else if (errorCode == OperationFailedException.NETWORK_FAILURE) {
+//					Timber.e(alertMsg + "network failure: " + ex);
+//				}
+                DialogActivity.showDialog(aTalkApp.getInstance(),
+                        R.string.error, R.string.logoff_failed,
+                        protocolProvider.getAccountID().getUserID(),
+                        protocolProvider.getAccountID().getService());
             }
         }
     }

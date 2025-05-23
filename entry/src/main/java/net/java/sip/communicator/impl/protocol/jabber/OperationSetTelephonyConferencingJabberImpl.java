@@ -87,7 +87,7 @@ public class OperationSetTelephonyConferencingJabberImpl
     /**
      * Field indicates whether COIN notification are disabled or not.
      */
-    private final boolean isCoinDisabled;
+    private boolean isCoinDisabled;
 
     /**
      * Initializes a new <code>OperationSetTelephonyConferencingJabberImpl</code> instance which is to
@@ -100,8 +100,8 @@ public class OperationSetTelephonyConferencingJabberImpl
      */
     public OperationSetTelephonyConferencingJabberImpl(ProtocolProviderServiceJabberImpl parentProvider) {
         super(parentProvider);
-        mPPS.addRegistrationStateChangeListener(this);
-        isCoinDisabled = JabberActivator.getConfigurationService().getBoolean(DISABLE_COIN_PROP_NAME, false);
+        this.mPPS.addRegistrationStateChangeListener(this);
+        this.isCoinDisabled = JabberActivator.getConfigurationService().getBoolean(DISABLE_COIN_PROP_NAME, false);
     }
 
     /**

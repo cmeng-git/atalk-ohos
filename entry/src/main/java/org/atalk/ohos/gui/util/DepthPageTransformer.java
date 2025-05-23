@@ -1,12 +1,13 @@
 package org.atalk.ohos.gui.util;
 
-import ohos.agp.components.Component;
-import ohos.agp.components.ComponentTransition;
+import android.view.View;
 
-public class DepthPageTransformer extends ComponentTransition {
+import androidx.viewpager2.widget.ViewPager2;
+
+public class DepthPageTransformer implements ViewPager2.PageTransformer {
     private static final float MIN_SCALE = 0.75f;
 
-    public void transformPage(Component view, float position) {
+    public void transformPage(View view, float position) {
         int pageWidth = view.getWidth();
 
         if (position < -1) { // [-Infinity,-1)
@@ -27,6 +28,8 @@ public class DepthPageTransformer extends ComponentTransition {
 
             // Counteract the default slide transition
             view.setTranslationX(pageWidth * -position);
+            // Move it behind the left page
+            view.setTranslationZ(-1f);
 
             // Scale the page down (between MIN_SCALE and 1)
             float scaleFactor = MIN_SCALE + (1 - MIN_SCALE) * (1 - Math.abs(position));

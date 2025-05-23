@@ -5,6 +5,7 @@
  */
 package net.java.sip.communicator.service.protocol;
 
+import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 
 /**
@@ -47,7 +48,7 @@ public class CallPeerState
      * a default value for newly created call peer that don't yet have an attributed call state.
      */
     public static final CallPeerState UNKNOWN
-            = new CallPeerState(_UNKNOWN, aTalkApp.getResString(ResourceTable.String_unknown_state));
+            = new CallPeerState(_UNKNOWN, aTalkApp.getResString(R.string.unknown_state));
 
     /**
      * This constant value indicates a String representation of the INITIATING_CALL state.
@@ -61,7 +62,7 @@ public class CallPeerState
      * proxy or the remote side.
      */
     public static final CallPeerState INITIATING_CALL = new CallPeerState(_INITIATING_CALL,
-            aTalkApp.getResString(ResourceTable.String_call_initiating));
+            aTalkApp.getResString(R.string.call_initiating));
 
     /**
      * This constant value indicates a String representation of the CONNECTING call state.
@@ -73,7 +74,7 @@ public class CallPeerState
      * that a network connection to that peer is currently being established.
      */
     public static final CallPeerState CONNECTING = new CallPeerState(_CONNECTING,
-            aTalkApp.getResString(ResourceTable.String_connecting));
+            aTalkApp.getResString(R.string.connecting));
 
     /**
      * This constant value indicates a String representation of the CONNECTING call state
@@ -86,14 +87,14 @@ public class CallPeerState
      * that a network connection to that peer is currently being established.
      */
     public static final CallPeerState CONNECTING_WITH_EARLY_MEDIA = new CallPeerState(
-            _CONNECTING_WITH_EARLY_MEDIA, aTalkApp.getResString(ResourceTable.String_connecting_status));
+            _CONNECTING_WITH_EARLY_MEDIA, aTalkApp.getResString(R.string.connecting_status));
 
     /**
      * This constant value indicates that the state of the incoming call peer is CONNECTING - which
      * means that a network connection to that peer is currently being established.
      */
     public static final CallPeerState CONNECTING_INCOMING_CALL = new CallPeerState(
-            _CONNECTING_WITH_EARLY_MEDIA, aTalkApp.getResString(ResourceTable.String_connecting));
+            _CONNECTING_WITH_EARLY_MEDIA, aTalkApp.getResString(R.string.connecting));
 
     /**
      * This constant value indicates that the state of the incoming call peer is CONNECTING - which
@@ -101,7 +102,7 @@ public class CallPeerState
      * process before hearing the other peer we can still can hear media coming from the server for example.
      */
     public static final CallPeerState CONNECTING_INCOMING_CALL_WITH_MEDIA = new CallPeerState(
-            _CONNECTING_WITH_EARLY_MEDIA, aTalkApp.getResString(ResourceTable.String_connecting_status));
+            _CONNECTING_WITH_EARLY_MEDIA, aTalkApp.getResString(R.string.connecting_status));
 
     /**
      * This constant value indicates a String representation of the ALERTING_REMOTE_SIDE call state.
@@ -114,7 +115,7 @@ public class CallPeerState
      * currently alerting the remote user of the current call.
      */
     public static final CallPeerState ALERTING_REMOTE_SIDE = new CallPeerState(
-            _ALERTING_REMOTE_SIDE, aTalkApp.getResString(ResourceTable.String_ringing));
+            _ALERTING_REMOTE_SIDE, aTalkApp.getResString(R.string.ringing));
 
     /**
      * This constant value indicates a String representation of the INCOMING_CALL state.
@@ -127,7 +128,7 @@ public class CallPeerState
      * playing a sound or a graphical alert (the phone is ringing).
      */
     public static final CallPeerState INCOMING_CALL = new CallPeerState(_INCOMING_CALL,
-            aTalkApp.getResString(ResourceTable.String_call_incoming_status));
+            aTalkApp.getResString(R.string.call_incoming_status));
 
     /**
      * This constant value indicates a String representation of the CONNECTED call state.
@@ -139,7 +140,7 @@ public class CallPeerState
      * that there is an ongoing call with that peer.
      */
     public static final CallPeerState CONNECTED = new CallPeerState(_CONNECTED,
-            aTalkApp.getResString(ResourceTable.String_connected));
+            aTalkApp.getResString(R.string.connected));
 
     /**
      * This constant value indicates a String representation of the DISCONNECTED call state.
@@ -151,7 +152,7 @@ public class CallPeerState
      * means that this peer is not participating :) in the call anymore.
      */
     public static final CallPeerState DISCONNECTED = new CallPeerState(_DISCONNECTED,
-            aTalkApp.getResString(ResourceTable.String_disconnected));
+            aTalkApp.getResString(R.string.disconnected));
 
     /**
      * This constant value indicates a String representation of the REFERRED call state.
@@ -163,7 +164,7 @@ public class CallPeerState
      * that this peer has transferred us to another peer.
      */
     public static final CallPeerState REFERRED = new CallPeerState(_REFERRED,
-            aTalkApp.getResString(ResourceTable.String_referred));
+            aTalkApp.getResString(R.string.referred));
 
     /**
      * This constant value indicates a String representation of the BUSY call state.
@@ -176,7 +177,7 @@ public class CallPeerState
      * by them (e.g. because they were already in a call).
      */
     public static final CallPeerState BUSY = new CallPeerState(_BUSY,
-            aTalkApp.getResString(ResourceTable.String_busy));
+            aTalkApp.getResString(R.string.busy));
 
     /**
      * This constant value indicates a String representation of the FAILED call state.
@@ -187,7 +188,7 @@ public class CallPeerState
      * that an attempt to establish a call with that peer has failed for an unexpected reason.
      */
     public static final CallPeerState FAILED = new CallPeerState(_FAILED,
-            aTalkApp.getResString(ResourceTable.String_call_failed));
+            aTalkApp.getResString(R.string.call_failed));
 
     /**
      * The constant value being a String representation of the ON_HOLD_LOCALLY call peer state.
@@ -197,7 +198,7 @@ public class CallPeerState
      * The constant value indicating that the state of a call peer is locally put on hold.
      */
     public static final CallPeerState ON_HOLD_LOCALLY = new CallPeerState(_ON_HOLD_LOCALLY,
-            aTalkApp.getResString(ResourceTable.String_locally_on_hold));
+            aTalkApp.getResString(R.string.locally_on_hold));
 
     /**
      * The constant value being a String representation of the ON_HOLD_MUTUALLY call peer state.
@@ -208,7 +209,7 @@ public class CallPeerState
      * remotely - put on hold.
      */
     public static final CallPeerState ON_HOLD_MUTUALLY = new CallPeerState(_ON_HOLD_MUTUALLY,
-            aTalkApp.getResString(ResourceTable.String_mutually_on_hole));
+            aTalkApp.getResString(R.string.mutually_on_hole));
 
     /**
      * The constant value being a String representation of the ON_HOLD_REMOTELY call peer state.
@@ -219,7 +220,7 @@ public class CallPeerState
      * The constant value indicating that the state of a call peer is remotely put on hold.
      */
     public static final CallPeerState ON_HOLD_REMOTELY = new CallPeerState(_ON_HOLD_REMOTELY,
-            aTalkApp.getResString(ResourceTable.String_remotely_on_hold));
+            aTalkApp.getResString(R.string.remotely_on_hold));
 
     /**
      * Determines whether a specific <code>CallPeerState</code> value signal a call hold regardless of

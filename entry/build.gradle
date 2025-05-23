@@ -1,31 +1,31 @@
-apply plugin: 'com.huawei.ohos.hap'
-apply plugin: 'com.huawei.ohos.decctest'
-apply plugin: 'org.anarres.jarjar'
-
 buildscript {
     repositories {
+        google()
         mavenCentral()
-        // google()
         maven { url "https://jitpack.io" }
     }
 
     dependencies {
+        // gradle-1.0.1 not compatible with gradle 7.x; use master release instead
         classpath 'com.github.shevek.jarjar:jarjar-gradle:9a7eca7'
     }
 }
 
+apply plugin: 'com.android.application'
+apply plugin: 'org.anarres.jarjar'
+
 repositories {
+    google()
     mavenCentral()
     maven {
         // Git project library as local library project (ucrop) - see https://jitpack.io/docs/
         url 'https://jitpack.io'
     }
-    google()
 }
 
 configurations {
     // dependency libraries duplication conflict cause by smack-xmlparser-xpp3
-    // all*.exclude group: 'xpp3', module: 'xpp3_min'
+    all*.exclude group: 'xpp3', module: 'xpp3_min'
 }
 
 configurations.implementation {
@@ -42,165 +42,183 @@ configurations.implementation {
     exclude group: "org.igniterealtime.smack", module: "smack-omemo"
 }
 
-ohos {
-    compileSdkVersion 7
-    defaultConfig {
-        compatibleSdkVersion 7
+android {
+    compileSdk rootProject.compileSdk
+    buildToolsVersion rootProject.buildTools
 
-        // namespace 'org.atalk.ohos'
-        // applicationId "org.atalk.ohos"
+    defaultConfig {
+        namespace 'org.atalk.ohos'
+        applicationId "org.atalk.ohos"
         archivesBaseName = "aTalk"
 
-//        multiDexEnabled true
-//        externalNativeBuild {
-//            ndkBuild {
-//                arguments "-Cjni"
-//            }
-//        }
+        versionCode 7000
+        versionName "00.07.000"
 
-//        ndk {
-//            // Specifies the ABI configurations of your native libraries
-//            // Gradle should build and package with your APK.
-//            abiFilters 'x86', 'x86_64', 'armeabi-v7a', 'arm64-v8a'
-//        }
+        minSdkVersion rootProject.minSdk
+        targetSdkVersion rootProject.compileSdk
+
+        externalNativeBuild {
+            ndkBuild {
+                arguments "-Cjni"
+            }
+        }
+
+        ndk {
+            // Specifies the ABI configurations of your native libraries
+            // Gradle should build and package with your APK.
+            abiFilters 'x86', 'x86_64', 'armeabi-v7a', 'arm64-v8a'
+        }
     }
 
     // aTalk is only compatible to ndkVersion '20.0.5594570' max version
-//    ndkVersion '22.1.7171670'
-//
-//    /*
-//     * Is OK for release version, but when build for debug it throws the following message and hangs aTalk:
-//     * This file is not part of the project. Please include it in the appropriate build file
-//     * (build.gradle, CMakeLists.txt or Android.mk etc.) and sync the project.
-//     * See ReleaseNote for fix for aTalk
-//     */
-//    externalNativeBuild {
-//        ndkBuild {
-//            path file("jni/Android.mk")
-//        }
-//    }
+    ndkVersion '22.1.7171670'
 
-//    buildFeatures {
-//        dataBindingEnabled true
-//
-//        // for view binding:
-//        viewBindingEnabled true
-//    }
+    /*
+     * Is OK for release version, but when build for debug it throws the following message and hangs aTalk:
+     * This file is not part of the project. Please include it in the appropriate build file
+     * (build.gradle, CMakeLists.txt or Android.mk etc.) and sync the project.
+     * See ReleaseNote for fix for aTalk
+     */
+    externalNativeBuild {
+        ndkBuild {
+            path file("jni/Android.mk")
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    buildFeatures {
+        dataBinding true
+
+        // for view binding to replace butterKnife in PermissionsActivity:
+        viewBinding true
+
+        // Required for gradle version >= 8.0.0 and above
+        buildConfig true
+    }
 
     buildTypes {
-
         release {
-            proguardOpt {
-                proguardEnabled false
-                rulesFiles 'proguard-rules.pro'
-            }
+            // cannot enable for aTalk string resource as not all usages are per android style
+            shrinkResources false
+            // too many missing references when enable
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
         debug {
             debuggable true
-            // dataBindingEnabled true
+            minifyEnabled false
         }
     }
 
-//    File cfgFile = project.rootProject.file("settings.signing")
-//    if (cfgFile != null && cfgFile.exists()) {
-//        println "### Found settings.signing to prepare signingConfig for release signing"
-//        signingConfigs {
-//            release {
-//                Properties config = new Properties()
-//                config.load(new FileInputStream(cfgFile))
-//
-//                storeFile file(config.getProperty('keystore'))
-//                File propsFile = file(config.getProperty('secure_properties'))
-//                if (propsFile.exists()) {
-//                    Properties props = new Properties()
-//                    props.load(new FileInputStream(propsFile))
-//                    storePassword props.getProperty('key.store.password')
-//                    keyAlias props.getProperty('key.store.alias')
-//                    keyPassword props.getProperty('key.alias.password')
-//                }
-//            }
-//        }
-//        buildTypes.release.signingConfig signingConfigs.release
-//    }
+    File cfgFile = project.rootProject.file("settings.signing")
+    if (cfgFile != null && cfgFile.exists()) {
+        println "### Found settings.signing to prepare signingConfig for release signing"
+        signingConfigs {
+            release {
+                Properties config = new Properties()
+                config.load(new FileInputStream(cfgFile))
 
-//    sourceSets {
-//        main {
-//            java.srcDirs = ['src/main/java']
-//            resources.srcDirs = ['src']
-//
-//            // disable gradle automatic ndk-build call, which ignore our Android.mk
-//
-//            // This is necessary if you have pre-compiled libraries .jar/.so in your project.
-//            jniLibs.srcDirs = ['libs']
-//        }
-//
-//        release { java.srcDirs = ['src/release/java'] }
-//        debug { java.srcDirs = ['src/debug/java'] }
-//    }
+                storeFile file(config.getProperty('keystore'))
+                File propsFile = file(config.getProperty('secure_properties'))
+                if (propsFile.exists()) {
+                    Properties props = new Properties()
+                    props.load(new FileInputStream(propsFile))
+                    storePassword props.getProperty('key.store.password')
+                    keyAlias props.getProperty('key.store.alias')
+                    keyPassword props.getProperty('key.alias.password')
+                }
+            }
+        }
+        buildTypes.release.signingConfig signingConfigs.release
+    }
 
-//    lintOptions {
-//        abortOnError false
-//        checkDependencies true
-//        lintConfig file("lint.xml")
-//        disable 'NonConstantResourceId'
-//        // disable 'MissingTranslation', 'InvalidPackage', 'MissingQuantity', 'AppCompatResource'
-//    }
+    sourceSets {
+        main {
+            java.srcDirs = ['src/main/java']
+            resources.srcDirs = ['src']
 
-//    packagingOptions {
-//        exclude 'jni/**'
-//        exclude 'mozilla/public-suffix-list.txt'
-//        exclude 'LICENSE.txt'
-//        exclude 'META-INF/DEPENDENCIES'
-//        exclude 'META-INF/LICENSE'
-//        exclude 'META-INF/LICENSE.txt'
-//        exclude 'META-INF/NOTICE'
-//        exclude 'META-INF/NOTICE.txt'
-//        exclude 'META-INF/core_release.kotlin_module'
-//        exclude 'META-INF/kotlin-stdlib-jdk8.kotlin_module'
-//    }
+            // disable gradle automatic ndk-build call, which ignore our Android.mk
+
+            // This is necessary if you have pre-compiled libraries .jar/.so in your project.
+            jniLibs.srcDirs = ['libs']
+        }
+
+        release { java.srcDirs = ['src/release/java'] }
+        debug { java.srcDirs = ['src/debug/java'] }
+    }
+
+    lintOptions {
+        abortOnError false
+        checkDependencies true
+        lintConfig file("lint.xml")
+        disable 'NonConstantResourceId'
+        // disable 'MissingTranslation', 'InvalidPackage', 'MissingQuantity', 'AppCompatResource'
+    }
+
+    packagingOptions {
+        exclude 'jni/**'
+        exclude 'mozilla/public-suffix-list.txt'
+        exclude 'LICENSE.txt'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/core_release.kotlin_module'
+        exclude 'META-INF/kotlin-stdlib-jdk7.kotlin_module'
+    }
 }
 
 ext {
+    // for official maven release
+    // smackVersion = '4.5.0-alpha1'
     smackVersion = '4.4.8'
+
+    // May need manual cleanup for new SNAPSHOT update if same name with date change only:
+    // ~\.gradle\caches\modules-2\files-2.1\org.igniterealtime.smack
+    // Remove source reference in .idea/libraries if source mismatched with class jar
 }
 
 dependencies {
-    // implementation project(':android-youtube-player:core')
+    implementation project(':android-youtube-player:core')
+
+    // Fix Duplicate class
+    // implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
 
     // Java compilation dependency: ndkBuild & jarRepackage (avoid class conflict)
     // generated files in libs/$(TARGET_ARCH_ABI)/*.so and libs/*.jar
-    implementation fileTree(dir: 'libs', include: ['*.jar', '*.har'])
-    testImplementation 'junit:junit:4.13.2'
-    ohosTestImplementation 'com.huawei.ohos.testkit:runner:2.0.0.200'
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-//    // Java compilation dependency: ndkBuild & jarRepackage (avoid class conflict)
-//    // generated files in libs/$(TARGET_ARCH_ABI)/*.so and libs/*.jar
+    // 1.13.x is only compatible with API-34
+    implementation 'androidx.core:core-ktx:1.13.1'
 
-//    implementation 'com.huawei.middleplatform:ohos-metadata-annotation:1.0.0.0'
-//    implementation 'com.huawei.middleplatform:ohos-metadata-binding:1.0.0.0'
-//    annotationProcessor 'com.huawei.middleplatform:ohos-metadata-processor:1.0.0.0'
+    // 1.10.0 only compatible with API-35
+    implementation 'androidx.activity:activity-ktx:1.9.3'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
+    implementation 'androidx.fragment:fragment-ktx:1.8.6'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.legacy:legacy-support-v13:1.0.0'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    implementation 'androidx.preference:preference-ktx:1.2.1'
+    // 1.5.x only compatible with API-35
+    implementation 'androidx.media3:media3-exoplayer:1.4.1'
+    implementation 'androidx.media3:media3-ui:1.4.1'
 
-//    // 1.12.0 is only compatible with API-34
-//    implementation 'androidx.core:core-ktx:1.13.1'
-//
-//    implementation 'androidx.activity:activity-ktx:1.9.3
-//    implementation 'androidx.appcompat:appcompat:1.7.0'
-//    implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
-//    implementation 'androidx.fragment:fragment-ktx:1.8.6'
-//    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-//    implementation 'androidx.legacy:legacy-support-v13:1.0.0'
-//    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
-//    implementation 'androidx.preference:preference-ktx:1.2.1'
-//    implementation 'androidx.media3:media3-exoplayer:1.4.1'
-//    implementation 'androidx.media3:media3-ui:1.4.1'
+    implementation 'com.jakewharton:butterknife:10.2.3'
 
-    // implementation 'com.jakewharton:butterknife:10.2.3'
+    // Drop butterknife-compiler:10.2.3 for PermissionsActivity dependency, use View Binding instead;
+    // butterknife-compiler:10.2.3 is only compatible with jdk-15 max
+    // annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.3'
 
-    implementation 'com.jakewharton.timber:timber:5.0.1'
-//    implementation('com.jakewharton.timber:timber:5.0.1') {
-//        transitive = false
-//    }
+    implementation('com.jakewharton.timber:timber:5.0.1') {
+        transitive = false
+    }
     implementation 'com.karumi:dexter:6.2.3'
 
     annotationProcessor 'com.github.bumptech.glide:compiler:4.16.0'
@@ -209,7 +227,6 @@ dependencies {
     implementation 'com.github.evgenyneu:js-evaluator-for-android:v6.0.0'
 
     implementation 'com.github.yalantis:ucrop:2.2.10'
-    implementation 'com.google.android.exoplayer:exoplayer:2.19.1'
     // Do not update to 1.7.x or higher; has problem and reported need to use gradle 7 which is not compatible with aTalk.
     implementation 'com.google.android.material:material:1.12.0'
 
@@ -219,6 +236,7 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:4.12.0'
 
     implementation 'de.cketti.library.changelog:ckchangelog:1.2.2'
+    // implementation 'com.github.cketti:ckchangelog-core:2.0.0-beta02'
 
     // add to fix smack transformerFactory.setAttribute("indent-number", 2) error, but cause duplication class error
     // implementation 'xalan:xalan:2.7.2'
@@ -245,6 +263,19 @@ dependencies {
     //noinspection GradleDependency (define and use in smack)
     // implementation 'org.bouncycastle:bcprov-jdk15on:1.65'
 
+    // For debug and tracing for bouncycastle - AS allows direct copy and replacement of bc source for debug
+//    implementation jarjar.repackage {
+//        from('org.bouncycastle:bctls-jdk15on:1.65') {
+//            transitive = false
+//        }
+//        destinationDir new File("${projectDir}/libs")
+//        destinationName "bctls-jdk15on-1.65.jar"
+//
+//        classDelete 'org.bouncycastle.tls.DTLSServerProtocol**'
+//        classDelete 'org.bouncycastle.tls.DTLSClientProtocol**'
+//        classDelete 'org.bouncycastle.tls.TlsUtils**'
+//    }
+
     // Fix ZRTP X25519 key exchange - https://github.com/jitsi/zrtp4j/commit/f7575bf6301927a997675726002d309b2acdd5d9
     // Truncate ZRTP KDF output as per RFC - https://github.com/jitsi/zrtp4j/commit/0baa502b9269d0d8a31247d032ee4896f945a344
     // note: bcprov-jdk15on-1.66.jar -> Unsupported class file major version 59
@@ -252,11 +283,9 @@ dependencies {
 
     // Required for provisioning discovery
     implementation 'org.jmdns:jmdns:3.5.7'
-    implementation 'org.json:json:20231013'
     implementation 'org.opentelecoms.sdp:sdp-api:1.0'
 
     implementation "org.igniterealtime.smack:smack-android-extensions:$smackVersion"
-    // implementation "org.igniterealtime.smack:smack-bosh:$smackVersion"
     implementation "org.igniterealtime.jbosh:jbosh:0.9.2"
 
     implementation "org.igniterealtime.smack:smack-bosh:$smackVersion"
@@ -290,16 +319,26 @@ dependencies {
 
         // remove extracted modules for changes
         classDelete 'net.sf.fmj.media.RegistryDefaults'
-        classDelete 'javax.media.format.Format'
         classDelete 'javax.media.format.RGBFormat'
         classDelete 'javax.media.format.VideoFormat'
         classDelete 'javax.media.format.YUVFormat'
         classDelete 'javax.media.Manager**'
         classDelete 'javax.media.Player'
-
-        classRename 'java.awt.Component', 'org.atalk.ohos.agp.components.JComponent'
-        classRename 'java.awt.Rectangle', 'ohos.agp.utils.Rect'
     }
+
+//    task customFatJar(type: Jar) {
+//        baseName = 'all-in-one-jar'
+//        from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+//        with jar
+//    }
+
+//    implementation(files(JarjarController(project).repackage("fmj-1.0.1-jitsi.jar", closureOf<JarjarTask> {
+//        from('org.jitsi:fmj:1.0.1-jitsi')
+//
+//        classDelete 'net.sf.fmj.media.RegistryDefaults'
+//        classDelete 'javax.media.format.VideoFormat'
+//        classDelete 'javax.media.Manager**'
+//    })))
 
     // see NetaddrActivator#start(BundleContext) for the actual settings: (use ice4j 3.0-xx)
     implementation jarjar.repackage("ice4j-3.0-SNAPSHOT.jar") {
@@ -320,7 +359,7 @@ dependencies {
         classDelete 'org.ice4j.StackProperties**'
 
         classDelete 'org.ice4j.ice.Agent**'
-        classDelete 'org.ice4j.ice.JComponent'
+        classDelete 'org.ice4j.ice.Component'
         classDelete 'org.ice4j.ice.ConnectivityCheckServer'
         classDelete 'org.ice4j.ice.ConnectivityCheckClient**'
         classDelete 'org.ice4j.ice.IceMediaStream**'
@@ -463,32 +502,32 @@ task initJniLibs(type: Exec) {
  * Generate the version.properties file with the actual build versionName and versionCode.
  * The version.properties is retrieved during app update check to asses if there is a new update
  */
-//task updateVersionFile(type: Copy) {
-//    description '<!-- Generate version.properties file -->'
-//
-//    def versionName = ohos.defaultConfig.versionName
-//    def versionCode = ohos.defaultConfig.versionCode
-//    def date = new Date()
-//    // ******************************************
-//    println "*** " + description
-//    println "# Date: " + date
-//    println "# last_version = " + versionName
-//    println "# last_version_code = " + versionCode
-//
-//    outputs.upToDateWhen {
-//        false
-//    }
-//    from('lib/version.properties') {
-//        // Substitute property tokens in files
-//        expand(DATE: date, BUILD_VERSION: versionName, BUILD_VERSION_CODE: versionCode)
-//    }
-//    into 'release'
-//}
+task updateVersionFile(type: Copy) {
+    description '<!-- Generate version.properties file -->'
+
+    def versionName = android.defaultConfig.versionName
+    def versionCode = android.defaultConfig.versionCode
+    def date = new Date()
+    // ******************************************
+    println "*** " + description
+    println "# Date: " + date
+    println "# last_version = " + versionName
+    println "# last_version_code = " + versionCode
+
+    outputs.upToDateWhen {
+        false
+    }
+    from('lib/version.properties') {
+        // Substitute property tokens in files
+        expand(DATE: date, BUILD_VERSION: versionName, BUILD_VERSION_CODE: versionCode)
+    }
+    into 'release'
+}
 
 // Uncomment below lines if you want to show all deprecated warnings
-//tasks.withType(JavaCompile) {
-//    // options.compilerArgs << '-Xlint:unchecked'
-//    // options.deprecation = true
-//}
+tasks.withType(JavaCompile) {
+    // options.compilerArgs << '-Xlint:unchecked'
+    // options.deprecation = true
+}
 
 build.dependsOn 'updateVersionFile'

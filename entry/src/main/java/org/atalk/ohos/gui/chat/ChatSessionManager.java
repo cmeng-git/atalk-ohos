@@ -1,20 +1,13 @@
 /*
- * aTalk, ohos VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * Jitsi, the OpenSource Java VoIP and Instant Messaging client.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Distributable under LGPL license. See terms of license at gnu.org.
  */
 package org.atalk.ohos.gui.chat;
+
+import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -24,9 +17,6 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-import ohos.aafwk.content.Intent;
-import ohos.aafwk.content.Operation;
 
 import net.java.sip.communicator.impl.contactlist.MclStorageManager;
 import net.java.sip.communicator.impl.muc.MUCActivator;
@@ -44,7 +34,6 @@ import net.java.sip.communicator.service.protocol.OperationSetBasicInstantMessag
 import net.java.sip.communicator.service.protocol.OperationSetSmsMessaging;
 import net.java.sip.communicator.service.protocol.ProtocolProviderService;
 
-import org.atalk.ohos.BaseAbility;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.AppGUIActivator;
 import org.atalk.ohos.gui.chat.conference.AdHocChatRoomProviderWrapper;
@@ -170,7 +159,7 @@ public class ChatSessionManager {
      *
      * @return the list of active chats' identifiers
      */
-    public synchronized static List<String> getActiveChatIds() {
+    public synchronized static List<String> getActiveChatsIDs() {
         return new LinkedList<>(activeChats.keySet());
     }
 
@@ -336,15 +325,10 @@ public class ChatSessionManager {
             return null;
         }
 
-        Intent chatIntent = new Intent();
-        Operation operation = new Intent.OperationBuilder()
-                .withBundleName(aTalkApp.getInstance().getBundleName())
-                .withAbilityName(ChatAbility.class)
-                .build();
-
-        chatIntent.setOperation(operation);
-        chatIntent.setParam(CHAT_IDENTIFIER, chatId);
-        chatIntent.setParam(CHAT_MODE, chatMode);
+        Intent chatIntent = new Intent(aTalkApp.getInstance(), ChatActivity.class);
+        chatIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        chatIntent.putExtra(CHAT_IDENTIFIER, chatId);
+        chatIntent.putExtra(CHAT_MODE, chatMode);
         return chatIntent;
     }
 
@@ -749,9 +733,7 @@ public class ChatSessionManager {
          * @return the result chat panel.
          */
         public ChatPanel getChatPanel() {
-            BaseAbility.runOnUiThread(() -> {
-                chatPanel = createChatPanel();
-            });
+            new Handler(Looper.getMainLooper()).post(() -> chatPanel = createChatPanel());
             return chatPanel;
         }
 

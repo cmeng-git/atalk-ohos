@@ -21,7 +21,8 @@ import java.util.Map;
  * @author Lyubomir Marinov
  * @author Eng Chong Meng
  */
-public interface MediaFormat {
+public interface MediaFormat
+{
     /**
      * The constant returned by {@link #getRTPPayloadType()} when the <code>MediaFormat</code> instance
      * describes a format without an RTP payload type (number) known in RFC 3551 "RTP Profile for
@@ -85,7 +86,6 @@ public interface MediaFormat {
      * the same encoding, clock rate, format parameters, advanced attributes, etc.
      *
      * @param mediaFormat the <code>MediaFormat</code> to compare to this instance
-     *
      * @return <code>true</code> if <code>mediaFormat</code> is equal to this format and <code>false</code> otherwise.
      */
     @Override
@@ -95,7 +95,6 @@ public interface MediaFormat {
      * Determines whether the format parameters of this <code>MediaFormat</code> match a specific set of format parameters.
      *
      * @param fmtps the set of format parameters to match to the format parameters of this <code>MediaFormat</code>
-     *
      * @return <code>true</code> if this <code>MediaFormat</code> considers <code>fmtps</code> matching its
      * format parameters; otherwise, <code>false</code>
      */
@@ -113,7 +112,6 @@ public interface MediaFormat {
      * Check to see if advancedAttributes contains the specific parameter name-value pair
      *
      * @param parameterName the key of the <parameter/> name-value pair
-     *
      * @return true if the <parameter/> contains the specified key name
      */
     boolean hasParameter(String parameterName);
@@ -122,7 +120,6 @@ public interface MediaFormat {
      * Remove the specific parameter name-value pair from advancedAttributes
      *
      * @param parameterName the key of the <parameter/> name-value pair to be removed
-     *
      * @see org.atalk.impl.neomedia.format.MediaFormatImpl.FORMAT_PARAMETER_ATTR_IMAGEATTR
      */
     void removeParameter(String parameterName);
@@ -189,9 +186,9 @@ public interface MediaFormat {
      * @param clockRate the clock rate that we'd like the format to have.
      * @param channels the number of channels that expect to find in this format
      * @param formatParameters the format parameters expected to match these of the specified <code>format</code>
-     *
      * @return <code>true</code> if the specified <code>format</code> has specific values for its properties
      * <code>mediaType</code>, <code>encoding</code>, <code>clockRate</code> and <code>channels</code>; otherwise, <code>false</code>
      */
-    boolean matches(MediaType mediaType, String encoding, double clockRate, int channels, Map<String, String> formatParameters);
+    boolean matches(MediaType mediaType, String encoding, double clockRate, int channels,
+            Map<String, String> formatParameters);
 }

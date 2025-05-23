@@ -5,6 +5,8 @@
  */
 package net.java.sip.communicator.impl.protocol.jabber;
 
+import android.text.TextUtils;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -17,7 +19,6 @@ import net.java.sip.communicator.service.protocol.event.ContactResourceEvent;
 import net.java.sip.communicator.service.protocol.event.RegistrationStateChangeEvent;
 import net.java.sip.communicator.service.protocol.event.RegistrationStateChangeListener;
 
-import org.apache.http.util.TextUtils;
 import org.jivesoftware.smackx.caps.EntityCapsManager;
 import org.jxmpp.jid.FullJid;
 import org.jxmpp.jid.Jid;

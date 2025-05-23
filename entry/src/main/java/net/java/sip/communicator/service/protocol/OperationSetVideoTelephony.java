@@ -5,18 +5,18 @@
  */
 package net.java.sip.communicator.service.protocol;
 
+import org.atalk.service.neomedia.QualityControl;
+import org.atalk.service.neomedia.QualityPreset;
+import org.atalk.util.event.VideoListener;
+
+import java.awt.Component;
 import java.beans.PropertyChangeListener;
 import java.text.ParseException;
 import java.util.List;
 
-import org.atalk.service.neomedia.QualityControl;
-import org.atalk.service.neomedia.QualityPreset;
-import org.atalk.util.event.VideoListener;
-import org.atalk.ohos.agp.components.JComponent;
-
 /**
  * Represents an <code>OperationSet</code> giving access to video-specific functionality in telephony such as
- * visual <code>JComponent</code>s displaying video and listening to dynamic availability of such <code>JComponent</code>s.
+ * visual <code>Component</code>s displaying video and listening to dynamic availability of such <code>Component</code>s.
  *
  * @author Lyubomir Marinov
  * @author Sebastien Vincent
@@ -26,55 +26,55 @@ public interface OperationSetVideoTelephony extends OperationSet
 {
     /**
      * Adds a specific <code>VideoListener</code> to this telephony in order to receive notifications
-     * when visual/video <code>JComponent</code>s are being added and removed for a specific <code>CallPeer</code>.
+     * when visual/video <code>Component</code>s are being added and removed for a specific <code>CallPeer</code>.
      *
      * @param peer the <code>CallPeer</code> whose video the specified listener is to be notified about
-     * @param listener the <code>VideoListener</code> to be notified when visual/video <code>JComponent</code>s are
+     * @param listener the <code>VideoListener</code> to be notified when visual/video <code>Component</code>s are
      * being added or removed for <code>peer</code>
      */
     void addVideoListener(CallPeer peer, VideoListener listener);
 
     /**
-     * Gets the visual <code>JComponent</code> which depicts the local video being streamed to a specific <code>CallPeer</code>.
+     * Gets the visual <code>Component</code> which depicts the local video being streamed to a specific <code>CallPeer</code>.
      *
      * @param peer the <code>CallPeer</code> to whom the local video which is to be depicted by the returned
-     * visual <code>JComponent</code> is being streamed
-     * @return a visual <code>JComponent</code> which depicts the local video being streamed to the
+     * visual <code>Component</code> is being streamed
+     * @return a visual <code>Component</code> which depicts the local video being streamed to the
      * specified <code>CallPeer</code> if this telephony chooses to carry out the creation
      * synchronously; <code>null</code> if this telephony chooses to create the requested visual
-     * <code>JComponent</code> asynchronously
+     * <code>Component</code> asynchronously
      * @throws OperationFailedException if creating the component fails for whatever reason.
      */
-    JComponent getLocalVisualComponent(CallPeer peer)
+    Component getLocalVisualComponent(CallPeer peer)
             throws OperationFailedException;
 
     /**
-     * Gets the visual/video <code>JComponent</code> available in this telephony for a specific
+     * Gets the visual/video <code>Component</code> available in this telephony for a specific
      * <code>CallPeer</code>.
      *
      * @param peer the <code>CallPeer</code> whose video is to be retrieved
-     * @return the visual/video <code>JComponent</code> available in this telephony for the specified
+     * @return the visual/video <code>Component</code> available in this telephony for the specified
      * <code>peer</code> if any; otherwise, <code>null</code>
      */
     @Deprecated
-    JComponent getVisualComponent(CallPeer peer);
+    Component getVisualComponent(CallPeer peer);
 
     /**
-     * Gets the visual/video <code>JComponent</code>s available in this telephony for a specific <code>CallPeer</code>.
+     * Gets the visual/video <code>Component</code>s available in this telephony for a specific <code>CallPeer</code>.
      *
      * @param peer the <code>CallPeer</code> whose videos are to be retrieved
-     * @return the visual/video <code>JComponent</code>s available in this telephony for the specified <code>peer</code>
+     * @return the visual/video <code>Component</code>s available in this telephony for the specified <code>peer</code>
      */
-    List<JComponent> getVisualComponents(CallPeer peer);
+    List<Component> getVisualComponents(CallPeer peer);
 
     /**
      * Removes a specific <code>VideoListener</code> from this telephony in order to no longer have it
-     * receive notifications when visual/video <code>JComponent</code>s are being added and removed for a
+     * receive notifications when visual/video <code>Component</code>s are being added and removed for a
      * specific <code>CallPeer</code>.
      *
      * @param peer the <code>CallPeer</code> whose video the specified listener is to no longer be notified about
      * @param listener the <code>VideoListener</code> to no longer be notified when visual/video
-     * <code>JComponent</code>s are being added or removed for <code>peer</code>
+     * <code>Component</code>s are being added or removed for <code>peer</code>
      */
     void removeVideoListener(CallPeer peer, VideoListener listener);
 
@@ -223,15 +223,15 @@ public interface OperationSetVideoTelephony extends OperationSet
     /**
      * Determines the <code>ConferenceMember</code> which is participating in a telephony conference
      * with a specific <code>CallPeer</code> as its focus and which is sending a video content/RTP
-     * stream displayed in a specific visual <code>JComponent</code>.
+     * stream displayed in a specific visual <code>Component</code>.
      *
      * @param peer the <code>CallPeer</code> which is the conference focus of the telephony conference to be
      * examined in order to locate the <code>ConferenceMember</code> which is sending the video
      * content/RTP stream displayed in the specified <code>visualComponent</code>
-     * @param visualComponent the visual <code>JComponent</code> which displays the video content/RTP stream of the
+     * @param visualComponent the visual <code>Component</code> which displays the video content/RTP stream of the
      * <code>ConferenceMember</code> to be located
      * @return the <code>ConferenceMember</code>, if any, which is sending the video content/RTP stream
      * displayed in the specific <code>visualComponent</code>
      */
-    ConferenceMember getConferenceMember(CallPeer peer, JComponent visualComponent);
+    ConferenceMember getConferenceMember(CallPeer peer, Component visualComponent);
 }

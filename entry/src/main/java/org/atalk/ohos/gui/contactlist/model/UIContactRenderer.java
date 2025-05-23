@@ -5,7 +5,7 @@
  */
 package org.atalk.ohos.gui.contactlist.model;
 
-import ohos.media.image.PixelMap;
+import android.graphics.drawable.Drawable;
 
 /**
  * Interface used to obtain data required to display contacts. Implementing classes can expect to receive their
@@ -58,7 +58,7 @@ public interface UIContactRenderer {
      *
      * @return contact avatar image.
      */
-    PixelMap getAvatarImage(Object contactImpl);
+    Drawable getAvatarImage(Object contactImpl);
 
     /**
      * Returns contact status image.
@@ -67,7 +67,7 @@ public interface UIContactRenderer {
      *
      * @return contact status image.
      */
-    PixelMap getStatusImage(Object contactImpl);
+    Drawable getStatusImage(Object contactImpl);
 
     /**
      * Returns <code>true</code> if video call button should be displayed for given contact. That is if contact has valid

@@ -1,5 +1,11 @@
 package org.atalk.ohos.gui.call.telephony;
 
+import android.text.TextUtils;
+import android.text.util.Rfc822Token;
+import android.text.util.Rfc822Tokenizer;
+
+import androidx.annotation.VisibleForTesting;
+
 import org.apache.james.mime4j.codec.EncoderUtil;
 import org.jivesoftware.smack.util.StringUtils;
 
@@ -35,7 +41,6 @@ public class Address implements Serializable
     private Address(String address, String person, boolean parse)
     {
         if (parse) {
-            RegexTokenizer Rfc822Tokenizer = null;
             Rfc822Token[] tokens = Rfc822Tokenizer.tokenize(address);
             if (tokens.length > 0) {
                 Rfc822Token token = tokens[0];

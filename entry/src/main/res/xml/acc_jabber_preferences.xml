@@ -1,72 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<PreferenceScreen xmlns:ohos="http://schemas.huawei.com/res/ohos"
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
-        ohos:key="pref_cat_account"
-        ohos:title="$string:jbr_user_name_password">
+        android:key="pref_cat_account"
+        android:title="@string/jbr_user_name_password">
         <EditTextPreference
-            ohos:enabled="true"
-            ohos:key="pref_key_user_id"
-            ohos:title="$string:jbr_user_id" />
+            android:enabled="true"
+            android:key="pref_key_user_id"
+            android:title="@string/jbr_user_id" />
 
         <EditTextPreference
-            ohos:inputType="textPassword"
-            ohos:key="pref_key_password"
-            ohos:title="$string:jbr_password" />
+            android:inputType="textPassword"
+            android:key="pref_key_password"
+            android:title="@string/jbr_password" />
 
         <CheckBoxPreference
-            ohos:key="pref_key_store_password"
-            ohos:summary="$string:jbr_store_password_summary"
-            ohos:title="$string:jbr_store_password" />
+            android:key="pref_key_store_password"
+            android:summary="@string/jbr_store_password_summary"
+            android:title="@string/jbr_store_password" />
 
         <ListPreference
-            ohos:entries="@array/dnssec_Mode_name"
-            ohos:entryValues="@array/dnssec_Mode_value"
-            ohos:key="dns.DNSSEC_MODE"
-            ohos:title="$string:settings_dnssec_dane" />
+            android:entries="@array/dnssec_Mode_name"
+            android:entryValues="@array/dnssec_Mode_value"
+            android:key="dns.DNSSEC_MODE"
+            android:title="@string/settings_dnssec_dane" />
     </PreferenceCategory>
 
     <PreferenceCategory
-        ohos:key="pref.cat.jbr.advanced"
-        ohos:title="$string:advanced">
+        android:key="pref.cat.jbr.advanced"
+        android:title="@string/advanced">
         <Preference
-            ohos:key="pref_key_enable_encryption"
-            ohos:title="$string:call_encryption" />
+            android:key="pref_key_enable_encryption"
+            android:title="@string/call_encryption" />
 
         <Preference
-            ohos:key="pref.screen.jbr.connection"
-            ohos:summary="$string:jbr_connection_summary"
-            ohos:title="$string:jbr_connection"
+            android:key="pref.screen.jbr.connection"
+            android:summary="@string/jbr_connection_summary"
+            android:title="@string/jbr_connection"
             app:fragment="org.atalk.ohos.gui.account.settings.XmppConnectionFragment" />
 
         <Preference
-            ohos:key="Bosh_Configuration"
-            ohos:summary="$string:settings_bosh_proxy_summary"
-            ohos:title="$string:settings_bosh_proxy" />
+            android:key="Bosh_Configuration"
+            android:summary="@string/settings_bosh_proxy_summary"
+            android:title="@string/settings_bosh_proxy" />
 
         <Preference
-            ohos:key="pref.screen.jbr.ice"
-            ohos:summary="$string:jbr_ice_summary"
-            ohos:title="$string:ice"
+            android:key="pref.screen.jbr.ice"
+            android:summary="@string/jbr_ice_summary"
+            android:title="@string/ice"
             app:fragment="org.atalk.ohos.gui.account.settings.IceFragment" />
 
         <Preference
-            ohos:key="pref.screen.jbr.telephony"
-            ohos:summary="$string:jbr_telephony_summary"
-            ohos:title="$string:jbr_telephony_voip_pbx"
-            app:fragment="org.atalk.ohos.gui.account.settings.TelephonyFragment" />
+            android:key="pref.screen.jbr.telephony"
+            android:summary="@string/jbr_telephony_summary"
+            android:title="@string/jbr_telephony_voip_pbx"
+            app:fragment="org.atalk.ohos.gui.account.settings.TelephonySettingFragment" />
 
         <Preference
-            ohos:key="pref_cat_enc_video"
-            ohos:summary="$string:video_enc_global_override_summary"
-            ohos:title="$string:video_encoding" />
+            android:key="pref_cat_enc_video"
+            android:summary="@string/video_enc_global_override_summary"
+            android:title="@string/video_encoding" />
 
         <Preference
-            ohos:key="pref_cat_enc_audio"
-            ohos:summary="$string:audio_enc_global_override_summary"
-            ohos:title="$string:audio_encoding" />
+            android:key="pref_cat_enc_audio"
+            android:summary="@string/audio_enc_global_override_summary"
+            android:title="@string/audio_encoding" />
     </PreferenceCategory>
 </PreferenceScreen>
 

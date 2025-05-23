@@ -1,19 +1,15 @@
 package javax.media.format;
 
 import java.awt.Dimension;
+
 import javax.media.Format;
 
 /**
  * Encapsulates format information for video data. The attributes of a <code>VideoFormat</code>
  * include the encoding type, frame size, frame rate, and the data type.
  */
-public class VideoFormat extends Format {
-    private static final long serialVersionUID = 1L;
-
-    protected Dimension size = null;
-    protected int maxDataLength = NOT_SPECIFIED;
-    protected float frameRate = NOT_SPECIFIED;
-
+public class VideoFormat extends Format
+{
     // Standard video encoding strings
     /**
      * Cinepak format.
@@ -76,6 +72,7 @@ public class VideoFormat extends Format {
      */
     public static final String RLE = "rle";
     public static final String RPZA = "rpza";
+
     /**
      * Motion JPEG format.
      */
@@ -101,12 +98,19 @@ public class VideoFormat extends Format {
      */
     public static final String INDEO50 = "iv50";
 
+    private static final long serialVersionUID = 1L;
+
+    protected Dimension size = null;
+    protected int maxDataLength = NOT_SPECIFIED;
+    protected float frameRate = NOT_SPECIFIED;
+
     /**
      * Constructs a <code>VideoFormat</code> with the specified encoding type.
      *
      * @param encoding A <code>String</code> that describes the encoding type for this <code>VideoFormat</code>.
      */
-    public VideoFormat(String encoding) {
+    public VideoFormat(String encoding)
+    {
         super(encoding);
     }
 
@@ -119,12 +123,13 @@ public class VideoFormat extends Format {
      * @param dataType The type of data. For example, byte array.
      * @param frameRate The frame rate.
      */
-    public VideoFormat(String encoding, Dimension size, int maxDataLength, Class<?> dataType, float frameRate) {
+    public VideoFormat(String encoding, Dimension size, int maxDataLength, Class<?> dataType, float frameRate)
+    {
         this(encoding);
         if (size != null)
             this.size = new Dimension(size);
         this.maxDataLength = maxDataLength;
-        this.mDataType = dataType;
+        this.dataType = dataType;
         this.frameRate = frameRate;
     }
 
@@ -134,9 +139,10 @@ public class VideoFormat extends Format {
      * @return A clone of this <code>VideoFormat</code>.
      */
     @Override
-    public Object clone() {
+    public Object clone()
+    {
         super.clone();
-        VideoFormat f = new VideoFormat(mEncoding, size, maxDataLength, mDataType, frameRate);
+        VideoFormat f = new VideoFormat(encoding, size, maxDataLength, dataType, frameRate);
         f.copy(this);
         return f;
     }
@@ -147,7 +153,8 @@ public class VideoFormat extends Format {
      * @param f The <code>Format</code> to copy the attributes from.
      */
     @Override
-    protected void copy(Format f) {
+    protected void copy(Format f)
+    {
         super.copy(f);
         VideoFormat vf = (VideoFormat) f;
         if (vf.size != null)
@@ -163,11 +170,11 @@ public class VideoFormat extends Format {
      * the attributes in this <code>VideoFormat</code>.
      *
      * @param format The <code>Format</code> to compare.
-     *
      * @return true if the specified <code>Format</code> is the same as this one.
      */
     @Override
-    public boolean equals(Object format) {
+    public boolean equals(Object format)
+    {
         if (format instanceof VideoFormat) {
             VideoFormat vf = (VideoFormat) format;
 
@@ -191,7 +198,8 @@ public class VideoFormat extends Format {
      *
      * @return The frame rate.
      */
-    public float getFrameRate() {
+    public float getFrameRate()
+    {
         return frameRate;
     }
 
@@ -200,7 +208,8 @@ public class VideoFormat extends Format {
      *
      * @return The maximum length of a data chunk in this <code>VideoFormat</code>.
      */
-    public int getMaxDataLength() {
+    public int getMaxDataLength()
+    {
         return maxDataLength;
     }
 
@@ -209,7 +218,8 @@ public class VideoFormat extends Format {
      *
      * @return A <code>Dimension</code> that specifies the frame size.
      */
-    public Dimension getSize() {
+    public Dimension getSize()
+    {
         return size;
     }
 
@@ -226,14 +236,13 @@ public class VideoFormat extends Format {
      * the specified <code>Format</code> does not match this one, the result is undefined.
      *
      * @param format The matching <code>Format</code> to intersect with this <code>VideoFormat</code>.
-     *
      * @return A <code>Format</code> object with its attributes set to those
      * attributes common to both <code>Format</code> objects.
-     *
      * @see #matches
      */
     @Override
-    public Format intersects(Format format) {
+    public Format intersects(Format format)
+    {
         Format fmt;
         if ((fmt = super.intersects(format)) == null)
             return null;
@@ -258,11 +267,11 @@ public class VideoFormat extends Format {
      * compared attributes must still match, or <code>matches</code> fails.)
      *
      * @param format The <code>Format</code> to compare with this one.
-     *
      * @return <code>true</code> if the specified <code>Format</code> matches this one, <code>false</code> if it does not.
      */
     @Override
-    public boolean matches(Format format) {
+    public boolean matches(Format format)
+    {
         if (!super.matches(format))
             return false;
         if (!(format instanceof VideoFormat))
@@ -281,7 +290,8 @@ public class VideoFormat extends Format {
      * @return A <code>Format</code> that's less restrictive than this format.
      */
     @Override
-    public Format relax() {
+    public Format relax()
+    {
         VideoFormat fmt;
         if ((fmt = (VideoFormat) super.relax()) == null)
             return null;
@@ -300,7 +310,8 @@ public class VideoFormat extends Format {
      * @return A <code>String</code> that describes the <code>VideoFormat</code> attributes.
      */
     @Override
-    public String toString() {
+    public String toString()
+    {
         String s = "";
         if (getEncoding() != null)
             s += getEncoding().toUpperCase();
@@ -312,8 +323,8 @@ public class VideoFormat extends Format {
             s += ", FrameRate=" + ((int) (frameRate * 10) / 10f);
         if (maxDataLength != NOT_SPECIFIED)
             s += ", Length=" + maxDataLength;
-        if (mDataType != null && mDataType != Format.byteArray)
-            s += ", " + mDataType;
+        if (dataType != null && dataType != Format.byteArray)
+            s += ", " + dataType;
         return s;
     }
 }

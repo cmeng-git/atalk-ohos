@@ -5,12 +5,11 @@
  */
 package org.atalk.ohos.gui.chatroomslist;
 
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+
 import java.util.List;
 import java.util.Vector;
-
-import ohos.data.rdb.RdbPredicates;
-import ohos.data.rdb.RdbStore;
-import ohos.data.resultset.ResultSet;
 
 import net.java.sip.communicator.service.protocol.AccountID;
 import net.java.sip.communicator.service.protocol.AdHocChatRoom;
@@ -38,18 +37,19 @@ public class AdHocChatRoomList {
      */
     private final List<AdHocChatRoomProviderWrapper> providersList = new Vector<>();
 
-    private RdbStore mRdbStore;
+    private SQLiteDatabase mDB;
 
     /**
      * Initializes the list of ad-hoc chat rooms.
      */
     public void loadList() {
         BundleContext bundleContext = AppGUIActivator.bundleContext;
-        mRdbStore = DatabaseBackend.getRdbStore();
+        mDB = DatabaseBackend.getWritableDB();
 
         ServiceReference[] serRefs = null;
         try {
-            serRefs = bundleContext.getServiceReferences(ProtocolProviderService.class.getName(), null);
+            serRefs = bundleContext.getServiceReferences(
+                    ProtocolProviderService.class.getName(), null);
         } catch (InvalidSyntaxException e) {
             e.printStackTrace();
         }
@@ -77,20 +77,19 @@ public class AdHocChatRoomList {
         providersList.add(chatRoomProvider);
 
         String accountUid = pps.getAccountID().getAccountUid();
+        String[] args = {accountUid, String.valueOf(ChatSession.MODE_MULTI)};
         String[] columns = {ChatSession.ENTITY_JID};
 
-        RdbPredicates rdbPredicates = new RdbPredicates(ChatSession.TABLE_NAME)
-                .equalTo(ChatSession.ACCOUNT_UID, accountUid)
-                .and().equalTo(ChatSession.MODE, ChatSession.MODE_MULTI);
-        ResultSet resultSet = mRdbStore.query(rdbPredicates, columns);
+        Cursor cursor = mDB.query(ChatSession.TABLE_NAME, columns, ChatSession.ACCOUNT_UID
+                + "=? AND " + ChatSession.MODE + "=?", args, null, null, null);
 
-        while (resultSet.goToNextRow()) {
-            String chatRoomID = resultSet.getString(0);
+        while (cursor.moveToNext()) {
+            String chatRoomID = cursor.getString(0);
             AdHocChatRoomWrapper chatRoomWrapper
                     = new AdHocChatRoomWrapper(chatRoomProvider, chatRoomID);
             chatRoomProvider.addAdHocChatRoom(chatRoomWrapper);
         }
-        resultSet.close();
+        cursor.close();
     }
 
     /**
@@ -114,11 +113,10 @@ public class AdHocChatRoomList {
 
         AccountID accountID = adHocChatRoomProvider.getProtocolProvider().getAccountID();
         String accountUid = accountID.getAccountUid();
+        String[] args = {accountUid, String.valueOf(ChatSession.MODE_MULTI)};
 
-        RdbPredicates rdbPredicates = new RdbPredicates(ChatSession.TABLE_NAME)
-                .equalTo(ChatSession.ACCOUNT_UID, accountUid)
-                .and().equalTo(ChatSession.MODE, ChatSession.MODE_MULTI);
-        mRdbStore.delete(rdbPredicates);
+        mDB.delete(ChatSession.TABLE_NAME, ChatSession.ACCOUNT_UID + "=? AND "
+                + ChatSession.MODE + "=?", args);
     }
 
     /**

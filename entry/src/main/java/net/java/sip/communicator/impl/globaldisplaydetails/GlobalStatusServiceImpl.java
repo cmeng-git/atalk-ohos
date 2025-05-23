@@ -22,7 +22,7 @@ import net.java.sip.communicator.util.account.AccountUtils;
 import net.java.sip.communicator.util.account.LoginManager;
 
 import org.apache.commons.lang3.StringUtils;
-import org.atalk.ohos.ResourceTable;
+import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.service.configuration.ConfigurationService;
 
@@ -512,25 +512,25 @@ public class GlobalStatusServiceImpl implements GlobalStatusService, Registratio
                 Timber.e(e1, "Error - changing status");
             } catch (OperationFailedException e1) {
                 if (e1.getErrorCode() == OperationFailedException.GENERAL_ERROR) {
-                    String msgText = aTalkApp.getResString(ResourceTable.String_status_change_general_error,
+                    String msgText = aTalkApp.getResString(R.string.status_change_general_error,
                             protocolProvider.getAccountID().getUserID(), protocolProvider.getAccountID().getService());
 
                     GlobalDisplayDetailsActivator.getAlertUIService().showAlertDialog(
-                            aTalkApp.getResString(ResourceTable.String_general_error), msgText, e1);
+                            aTalkApp.getResString(R.string.general_error), msgText, e1);
                 }
                 else if (e1.getErrorCode() == OperationFailedException.NETWORK_FAILURE) {
-                    String msgText = aTalkApp.getResString(ResourceTable.String_status_change_network_failure,
+                    String msgText = aTalkApp.getResString(R.string.status_change_network_failure,
                             protocolProvider.getAccountID().getUserID(), protocolProvider.getAccountID().getService());
 
                     GlobalDisplayDetailsActivator.getAlertUIService().showAlertDialog(msgText,
-                            aTalkApp.getResString(ResourceTable.String_network_failure), e1);
+                            aTalkApp.getResString(R.string.network_failure), e1);
                 }
                 else if (e1.getErrorCode() == OperationFailedException.PROVIDER_NOT_REGISTERED) {
-                    String msgText = aTalkApp.getResString(ResourceTable.String_status_change_network_failure,
+                    String msgText = aTalkApp.getResString(R.string.status_change_network_failure,
                             protocolProvider.getAccountID().getUserID(), protocolProvider.getAccountID().getService());
 
                     GlobalDisplayDetailsActivator.getAlertUIService().showAlertDialog(
-                            aTalkApp.getResString(ResourceTable.String_network_failure), msgText, e1);
+                            aTalkApp.getResString(R.string.network_failure), msgText, e1);
                 }
                 Timber.e(e1, "Error - changing status");
             }

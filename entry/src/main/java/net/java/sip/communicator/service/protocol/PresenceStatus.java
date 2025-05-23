@@ -5,10 +5,6 @@
  */
 package net.java.sip.communicator.service.protocol;
 
-import ohos.agp.components.Component;
-
-import org.atalk.ohos.gui.aTalk;
-
 /**
  * The class is used to represent the state of the connection of a given ProtocolProvider or
  * Contact. It is up to the implementation to determine the exact states that an object might go
@@ -26,7 +22,7 @@ import org.atalk.ohos.gui.aTalk;
  *
  * @author Emil Ivov
  */
-public class PresenceStatus extends Component implements Comparable<PresenceStatus>
+public class PresenceStatus implements Comparable<PresenceStatus>
 {
     public static final int OFFLINE = 0;
 
@@ -109,7 +105,6 @@ public class PresenceStatus extends Component implements Comparable<PresenceStat
      */
     protected PresenceStatus(int status, String statusName, byte[] statusIcon)
     {
-        super(aTalk.getInstance());
         this.status = status;
         this.statusName = statusName;
         this.statusIcon = statusIcon;

@@ -1,6 +1,6 @@
 /*
- * aTalk, ohos VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * aTalk, android VoIP and Instant Messaging client
+ * Copyright 2014 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,54 +16,70 @@
  */
 package org.atalk.ohos.gui;
 
-import ohos.aafwk.ability.AbilitySlice;
-import ohos.aafwk.content.Intent;
-import ohos.aafwk.content.Operation;
-import ohos.agp.components.Component;
-import ohos.agp.components.ComponentContainer;
-import ohos.agp.components.PageSlider;
-import ohos.agp.components.PageSliderProvider;
-import ohos.app.Context;
-import ohos.bundle.ElementName;
-import ohos.bundle.IBundleManager;
-import ohos.rpc.RemoteException;
-import ohos.security.SystemPermission;
+import android.Manifest;
+import android.app.Activity;
+import android.app.SearchManager;
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Handler;
+
+import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Lifecycle;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
-import org.atalk.ohos.BaseAbility;
-import org.atalk.ohos.ResourceTable;
+import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
-import org.atalk.ohos.gui.actionbar.ActionBarStatusSlice;
-import org.atalk.ohos.gui.call.CallHistorySlice;
-import org.atalk.ohos.gui.chat.chatsession.ChatSessionSlice;
-import org.atalk.ohos.gui.chatroomslist.ChatRoomListSlice;
-import org.atalk.ohos.gui.contactlist.ContactListSlice;
-import org.atalk.ohos.gui.menu.MainMenuAbility;
-import org.atalk.ohos.gui.webview.WebViewSlice;
-import org.atalk.util.ChangeLog;
+import org.atalk.ohos.gui.actionbar.ActionBarStatusFragment;
+import org.atalk.ohos.gui.call.CallHistoryFragment;
+import org.atalk.ohos.gui.chat.chatsession.ChatSessionFragment;
+import org.atalk.ohos.gui.chatroomslist.ChatRoomListFragment;
+import org.atalk.ohos.gui.contactlist.ContactListFragment;
+import org.atalk.ohos.gui.menu.MainMenuActivity;
+import org.atalk.ohos.gui.util.DepthPageTransformer;
+import org.atalk.ohos.gui.webview.WebViewFragment;
+import org.atalk.service.osgi.OSGiService;
 import org.jetbrains.annotations.NotNull;
 import org.osgi.framework.BundleContext;
 
+import de.cketti.library.changelog.ChangeLog;
 import timber.log.Timber;
 
 /**
- * The main <code>Ability</code> for aTalk application with pager slider for both contact and chatRoom list windows.
+ * The main <code>Activity</code> for aTalk application with pager slider for both contact and chatRoom list windows.
  *
  * @author Eng Chong Meng
  */
-public class aTalk extends MainMenuAbility {
+public class aTalk extends MainMenuActivity {
     /**
-     * A map reference to find the FragmentPagerAdapter's fragmentTag (String) by a given position (Integer)
+     * A map reference to find the FragmentPagerAdapter's fragment by a given position (Integer).
      */
-    private static final Map<Integer, AbilitySlice> mFragmentTags = new HashMap<>();
+    private static final Map<Integer, Fragment> mFragments = new HashMap<>();
+
+    private static MainPagerAdapter mPagerAdapter;
 
     public final static int CL_FRAGMENT = 0;
     public final static int CRL_FRAGMENT = 1;
     public final static int CHAT_SESSION_FRAGMENT = 2;
     public final static int CALL_HISTORY_FRAGMENT = 3;
+    public final static int WP_FRAGMENT = 4;
+
+    /**
+     * The number of pages (wizard steps) to show.
+     */
+    private static final int NUM_PAGES = 5;
 
     // android Permission Request Code
     public static final int PRC_CAMERA = 2000;
@@ -73,161 +89,173 @@ public class aTalk extends MainMenuAbility {
 
     public final static int Theme_Change = 1;
     public final static int Locale_Change = 2;
+    public final static int HW_Codec_Change = 3;
     public static int mPrefChange = 0;
     private static final ArrayList<aTalk> mInstances = new ArrayList<>();
 
     /**
-     * The number of pages (wizard steps) to show.
+     * Variable caches instance state stored for example on rotate event to prevent from
+     * recreating the contact list after rotation. It is passed as second argument of
+     * {@link #handleIntent(Intent, Bundle)} when called from {@link #onNewIntent(Intent)}.
      */
-    private static final int NUM_PAGES = 5;
+    private Bundle mInstanceState;
 
     /**
      * The pager widget, which handles animation and allows swiping horizontally to access previous
      * and next wizard steps.
      */
-    private PageSlider mPager;
+    private ViewPager2 mPager;
 
     /**
      * Called when the activity is starting. Initializes the corresponding call interface.
      *
-     * @param intent <code>Ability</code> <code>Intent</code>.
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut down then this
+     * Bundle contains the data it most recently supplied in onSaveInstanceState(Bundle).
+     * Note: Otherwise it is null.
      */
     @Override
-    protected void onStart(Intent intent) {
-        super.onStart(intent);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-        // Checks if OSGi has been started and if not starts LauncherAbility which will restore this Ability from its Intent.
+        // Checks if OSGi has been started and if not starts LauncherActivity which will restore this Activity from its Intent.
         if (postRestoreIntent()) {
             return;
         }
 
-        setUIContent(ResourceTable.Layout_main_view);
+        setContentView(R.layout.main_view);
         if (savedInstanceState == null) {
             // Inserts ActionBar functionality
-            // getSupportFragmentManager().beginTransaction().add(new ActionBarStatusSlice(), "action_bar").commit();
-            setMainRoute(ActionBarStatusSlice.class.getCanonicalName());
+            getSupportFragmentManager().beginTransaction().add(new ActionBarStatusFragment(), "action_bar").commit();
         }
 
         // Instantiate a ViewPager and a PagerAdapter.
-        mPager = findComponentById(ResourceTable.Id_mainPageSlider);
+        mPager = findViewById(R.id.mainViewPager);
         // The pager adapter, which provides the pages to the view pager widget.
-        // mFragmentManager = getSupportFragmentManager();
-        PageSliderProvider mPagerAdapter = new MainPagerProvider();
-        mPager.setProvider(mPagerAdapter);
-        mPager.setReboundEffect(true);
-        // mPager.setComponentTransition(true, new DepthPageTransformer());
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        mPagerAdapter = new MainPagerAdapter(fragmentManager, getLifecycle());
+        mPager.setAdapter(mPagerAdapter);
+        mPager.setPageTransformer(new DepthPageTransformer());
 
-        handleIntent(intent);
+        handleIntent(getIntent(), savedInstanceState);
+        getOnBackPressedDispatcher().addCallback(backPressedCallback);
 
         // allow 15 seconds for first launch login to complete before showing history log if the activity is still active
         ChangeLog cl = new ChangeLog(this);
         if (cl.isFirstRun()) {
-            uiHandler.postTask(() -> {
-                if (!isTerminating()) {
+            runOnUiThread(() -> new Handler().postDelayed(() -> {
+                if (!isFinishing()) {
                     cl.getLogDialog().show();
                 }
-            }, 15000);
+            }, 15000));
         }
     }
 
     /**
-     * Called when new <code>Intent</code> is received(this <code>Ability</code> is launched in <code>singleTask</code> mode.
+     * Called when new <code>Intent</code> is received(this <code>Activity</code> is launched in <code>singleTask</code> mode.
      *
      * @param intent new <code>Intent</code> data.
      */
     @Override
-    protected void onNewIntent(Intent intent) {
+    protected void onNewIntent(@NonNull Intent intent) {
         super.onNewIntent(intent);
-        handleIntent(intent);
+        handleIntent(intent, mInstanceState);
     }
 
     /**
      * Decides what should be displayed based on supplied <code>Intent</code> and instance state.
      *
-     * @param intent <code>Ability</code> <code>Intent</code>.
+     * @param intent <code>Activity</code> <code>Intent</code>.
+     * @param instanceState <code>Activity</code> instance state.
      */
-    private void handleIntent(Intent intent) {
+    private void handleIntent(Intent intent, Bundle instanceState) {
         mInstances.add(this);
 
         String action = intent.getAction();
         if (Intent.ACTION_SEARCH.equals(action)) {
-            String query = intent.getStringParam(SearchBar.QUERY);
+            String query = intent.getStringExtra(SearchManager.QUERY);
             Timber.w("Search intent not handled for query: %s", query);
         }
         // Start aTalk with contactList UI for IM setup
-        if (BaseAbility.ACTION_SEND_TO.equals(action)) {
-            mPager.setCurrentPage(0);
+        if (Intent.ACTION_SENDTO.equals(action)) {
+            mPager.setCurrentItem(0);
         }
     }
 
     @Override
-    protected void onActive() {
-        super.onActive();
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mInstanceState = savedInstanceState;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mInstanceState = null;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         /*
          * Need to restart whole app to make aTalkApp Locale change working
-         * Note: Start aTalk Ability does not apply to aTalkApp Application class.
+         * Note: Start aTalk Activity does not apply to aTalkApp Application class.
          */
         if (mPrefChange >= Locale_Change) {
-            IBundleManager pm = getBundleManager();
-            try {
-                Intent intent = pm.getLaunchIntentForBundle(getBundleName());
-                // ProcessPhoenix.triggerRebirth(this, intent);
-                ElementName componentName = intent.getElement();
-                Intent mainIntent = Intent.makeRestartAbilityMission(componentName);
-                startAbility(mainIntent);
-            } catch (RemoteException e) {
-                throw new RuntimeException(e);
-            }
-            Runtime.getRuntime().exit(0);
-        }
+            // Shutdown the OSGi service
+            stopService(new Intent(this, OSGiService.class));
 
+            PackageManager pm = getPackageManager();
+            Intent intent = pm.getLaunchIntentForPackage(getPackageName());
+            if (intent != null) {
+                ComponentName componentName = intent.getComponent();
+                Intent mainIntent = Intent.makeRestartActivityTask(componentName);
+                mainIntent.setPackage(getPackageName());
+                startActivity(mainIntent);
+                Runtime.getRuntime().exit(0);
+            }
+        }
         // Re-init aTalk to refresh the newly user selected language and theme;
         // else the main option menu is not updated
         else if (mPrefChange == Theme_Change) {
             mPrefChange = 0;
-            terminateAbility();
-
-            Intent intent = new Intent();
-            Operation operation = new Intent.OperationBuilder()
-                    .withBundleName(getBundleName())
-                    .withAbilityName(aTalk.class)
-                    .build();
-            intent.setOperation(operation);
-            startAbility(intent, 0);
+            finish();
+            startActivity(aTalk.class);
         }
     }
 
     /*
      * If the user is currently looking at the first page, allow the system to handle the
      * Back button. If Telephony fragment is shown, backKey closes the fragment only.
-     * The call terminateAbility() on this activity and pops the back stack.
+     * The call finish() on this activity and pops the back stack.
      */
-    @Override
-    public void onBackPressed() {
-        if (mPager.getCurrentPage() == 0) {
-            // mTelephony is not null if Telephony is closed by Cancel button.
-            if (mTelephony != null) {
-                if (!mTelephony.closeFragment()) {
-                    terminateAbility();
+    OnBackPressedCallback backPressedCallback = new OnBackPressedCallback(true) {
+        @Override
+        public void handleOnBackPressed() {
+            if (mPager.getCurrentItem() == 0) {
+                // mTelephony is not null if Telephony is closed by Cancel button.
+                if (mTelephony != null) {
+                    if (!mTelephony.closeFragment()) {
+                        finish();
+                    }
+                    mTelephony = null;
                 }
-                mTelephony = null;
+                else {
+                    finish();
+                }
             }
             else {
-                terminateAbility();
+                // Otherwise, select the previous page.
+                mPager.setCurrentItem(mPager.getCurrentItem() - 1);
             }
         }
-        else {
-            // Otherwise, select the previous page.
-            mPager.setCurrentPage(mPager.getCurrentPage() - 1);
-        }
-    }
+    };
 
     /**
      * Called when an activity is destroyed.
      */
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onDestroy() {
+        super.onDestroy();
 
         synchronized (this) {
             BundleContext bundleContext = getBundleContext();
@@ -244,53 +272,54 @@ public class aTalk extends MainMenuAbility {
     }
 
     public static void setPrefChange(int change) {
-        if (Locale_Change == change)
-            aTalkApp.showToastMessage(ResourceTable.String_settings_restart_require);
-
+        if (Locale_Change <= change)
+            aTalkApp.showToastMessage(R.string.settings_restart_require);
         mPrefChange |= change;
     }
 
     /**
-     * A simple pager adapter that represents 3 Screen Slide PageFragment objects, in sequence.
+     * A simple pager adapter that represents Screen Slide PageFragment objects, in sequence.
      */
-    private static class MainPagerProvider extends PageSliderProvider {
+    private static class MainPagerAdapter extends FragmentStateAdapter {
+
+        public MainPagerAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
+            super(fragmentManager, lifecycle);
+        }
+
+        @NotNull
         @Override
-        public AbilitySlice createPageInContainer(ComponentContainer componentContainer, int position) {
-            AbilitySlice mSlice;
+        public Fragment createFragment(int position) {
+            if (mFragments.get(position) != null)
+                return Objects.requireNonNull(mFragments.get(position));
 
             switch (position) {
                 case CL_FRAGMENT:
-                    mSlice = new ContactListSlice(aTalk.getInstance());
+                    // The main pager view fragment containing the contact List
+                    mFragments.put(CL_FRAGMENT, new ContactListFragment());
+                    break;
 
                 case CRL_FRAGMENT:
-                    mSlice = new ChatRoomListSlice();
+                    mFragments.put(CRL_FRAGMENT, new ChatRoomListFragment());
+                    break;
 
                 case CHAT_SESSION_FRAGMENT:
-                    mSlice = new ChatSessionSlice();
+                    mFragments.put(CHAT_SESSION_FRAGMENT, new ChatSessionFragment());
+                    break;
 
                 case CALL_HISTORY_FRAGMENT:
-                    mSlice = new CallHistorySlice();
+                    mFragments.put(CALL_HISTORY_FRAGMENT, new CallHistoryFragment());
+                    break;
 
                 default: // if (position == WP_FRAGMENT){
-                    mSlice = new WebViewSlice();
+                    mFragments.put(WP_FRAGMENT, new WebViewFragment());
+                    break;
             }
-
-            mFragmentTags.put(position, mSlice);
-            return mSlice;
+            return Objects.requireNonNull(mFragments.get(position));
         }
 
         @Override
-        public int getCount() {
+        public int getItemCount() {
             return NUM_PAGES;
-        }
-
-        @Override
-        public void destroyPageFromContainer(ComponentContainer componentContainer, int i, Object o) {
-        }
-
-        @Override
-        public boolean isPageMatchToObject(Component component, Object o) {
-            return component.getClass().equals(o.getClass());
         }
     }
 
@@ -301,8 +330,8 @@ public class aTalk extends MainMenuAbility {
      *
      * @return the requested fragment for the specified position or null
      */
-    public static AbilitySlice getFragment(int position) {
-        return mFragmentTags.get(position);
+    public static Fragment getFragment(int position) {
+        return mPagerAdapter.createFragment(position);
     }
 
     public static aTalk getInstance() {
@@ -320,18 +349,23 @@ public class aTalk extends MainMenuAbility {
      *
      * @return the current WRITE_EXTERNAL_STORAGE permission state
      */
-    public static boolean hasWriteStoragePermission(Context callBack, boolean requestPermission) {
+    public static boolean hasWriteStoragePermission(Activity callBack, boolean requestPermission) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            return true;
+        }
         return hasPermission(callBack, requestPermission, PRC_WRITE_EXTERNAL_STORAGE,
-                SystemPermission.WRITE_USER_STORAGE);
+                Manifest.permission.WRITE_EXTERNAL_STORAGE);
     }
 
-    public static boolean hasPermission(Context callBack, boolean requestPermission, int requestCode, String permission) {
+    public static boolean hasPermission(Activity callBack, boolean requestPermission, int requestCode, String permission) {
         // Timber.d(new Exception(),"Callback: %s => %s (%s)", callBack, permission, requestPermission);
-        if (callBack.verifySelfPermission(permission) != IBundleManager.PERMISSION_GRANTED) {
-            if (requestPermission) {
-                if (callBack.canRequestPermission(permission)) {
-                    callBack.requestPermissionsFromUser(new String[]{permission}, requestCode);
-                } else {
+        // Do not use getInstance() as mInstances may be empty
+        if (ActivityCompat.checkSelfPermission(aTalkApp.getInstance(), permission) != PackageManager.PERMISSION_GRANTED) {
+            if (requestPermission && (callBack != null)) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(callBack, permission)) {
+                    ActivityCompat.requestPermissions(callBack, new String[]{permission}, requestCode);
+                }
+                else {
                     showHintMessage(requestCode, permission);
                 }
             }
@@ -343,36 +377,36 @@ public class aTalk extends MainMenuAbility {
     // ========== Media call resource permission requests ==========
     public static boolean isMediaCallAllowed(boolean isVideoCall) {
         // Check for resource permission before continue
-        if (hasPermission(getInstance(), true, PRC_RECORD_AUDIO, SystemPermission.MICROPHONE)) {
-            return !isVideoCall || hasPermission(getInstance(), true, PRC_CAMERA, SystemPermission.CAMERA);
+        if (hasPermission(getInstance(), true, PRC_RECORD_AUDIO, Manifest.permission.RECORD_AUDIO)) {
+            return !isVideoCall || hasPermission(getInstance(), true, PRC_CAMERA, Manifest.permission.CAMERA);
         }
         return false;
     }
 
     public static void showHintMessage(int requestCode, String permission) {
         if (requestCode == PRC_RECORD_AUDIO) {
-            aTalkApp.showToastMessage(ResourceTable.String_mic_permission_denied_feedback);
+            aTalkApp.showToastMessage(R.string.mic_permission_denied_feedback);
         }
         else if (requestCode == PRC_CAMERA) {
-            aTalkApp.showToastMessage(ResourceTable.String_camera_permission_denied_feedback);
+            aTalkApp.showToastMessage(R.string.camera_permission_denied_feedback);
         }
         else {
-            aTalkApp.showToastMessage(aTalkApp.getResString(ResourceTable.String_permission_rationale_title) + ": " + permission);
+            aTalkApp.showToastMessage(aTalkApp.getResString(R.string.permission_rationale_title) + ": " + permission);
         }
     }
 
     @Override
-    public void onRequestPermissionsFromUserResult(int requestCode, @NotNull String[] permissions,
-            @NotNull int[] grantResults) {
-        Timber.d("onRequestPermissionsFromUserResult: %s => %s", requestCode, permissions);
-        super.onRequestPermissionsFromUserResult(requestCode, permissions, grantResults);
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, int @NotNull [] grantResults) {
+        Timber.d("onRequestPermissionsResult: %s => %s", requestCode, permissions);
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == PRC_RECORD_AUDIO) {
-            if ((grantResults.length != 0) && (IBundleManager.PERMISSION_GRANTED != grantResults[0])) {
-                aTalkApp.showToastMessage(ResourceTable.String_mic_permission_denied_feedback);
+            if ((grantResults.length != 0) && (PackageManager.PERMISSION_GRANTED != grantResults[0])) {
+                aTalkApp.showToastMessage(R.string.mic_permission_denied_feedback);
             }
-        } else if (requestCode == PRC_CAMERA) {
-            if ((grantResults.length != 0) && (IBundleManager.PERMISSION_GRANTED != grantResults[0])) {
-                aTalkApp.showToastMessage(ResourceTable.String_camera_permission_denied_feedback);
+        }
+        else if (requestCode == PRC_CAMERA) {
+            if ((grantResults.length != 0) && (PackageManager.PERMISSION_GRANTED != grantResults[0])) {
+                aTalkApp.showToastMessage(R.string.camera_permission_denied_feedback);
             }
         }
     }

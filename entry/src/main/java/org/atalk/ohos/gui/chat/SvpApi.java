@@ -1,6 +1,6 @@
 /*
- * aTalk, ohos VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * aTalk, android VoIP and Instant Messaging client
+ * Copyright 2014 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,18 @@
  */
 package org.atalk.ohos.gui.chat;
 
-import java.util.List;
+import android.app.Activity;
 
-import ohos.aafwk.ability.Ability;
+import java.util.List;
 
 /**
  * @author Eng Chong Meng
  */
 public interface SvpApi
 {
-    void onSVPClick(Ability activity, double[] dblLocation);
+    void onSVPClick(Activity activity, double[] dblLocation);
 
-    void onSVPLongClick(Ability activity, List<double[]> dblLocations);
+    void onSVPLongClick(Activity activity, List<double[]> dblLocations);
 
     Object svpHandler(Object msvp, double[] dblLocation);
 }

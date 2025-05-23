@@ -3,18 +3,18 @@ package net.java.sip.communicator.plugin.provisioning;
 import net.java.sip.communicator.service.provisioning.ProvisioningService;
 import net.java.sip.communicator.util.OrderedProperties;
 
-import org.atalk.ohos.ResourceTable;
-import org.atalk.ohos.gui.dialogs.DialogH;
 import org.apache.commons.lang3.StringUtils;
+import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
+import org.atalk.ohos.gui.dialogs.DialogActivity;
 import org.atalk.service.configuration.ConfigurationService;
 import org.atalk.service.httputil.HttpUtils;
 import org.atalk.service.resources.ResourceManagementService;
 import org.atalk.util.OSUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleException;
-
-import timber.log.Timber;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -32,8 +32,7 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import ohos.app.Context;
-import ohos.utils.zson.ZSONObject;
+import timber.log.Timber;
 
 /**
  * Provisioning service.
@@ -41,7 +40,8 @@ import ohos.utils.zson.ZSONObject;
  * @author Sebastien Vincent
  * @author Eng Chong Meng
  */
-public class ProvisioningServiceImpl implements ProvisioningService {
+public class ProvisioningServiceImpl implements ProvisioningService
+{
     /**
      * Name of the UUID property.
      */
@@ -107,7 +107,8 @@ public class ProvisioningServiceImpl implements ProvisioningService {
     /**
      * Constructor.
      */
-    public ProvisioningServiceImpl() {
+    public ProvisioningServiceImpl()
+    {
         // check if UUID is already configured
         String uuid = (String) ProvisioningActivator.getConfigurationService().getProperty(PROVISIONING_UUID_PROP);
 
@@ -122,7 +123,8 @@ public class ProvisioningServiceImpl implements ProvisioningService {
      *
      * @param url provisioning URL
      */
-    void start(String url) {
+    void start(String url)
+    {
         if (url == null) {
             /* try to see if provisioning URL is stored in properties */
             url = getProvisioningUri();
@@ -147,7 +149,8 @@ public class ProvisioningServiceImpl implements ProvisioningService {
      *
      * @return <code>true</code> if the provisioning is enabled, <code>false</code> - otherwise
      */
-    public String getProvisioningMethod() {
+    public String getProvisioningMethod()
+    {
         String provMethod = ProvisioningActivator.getConfigurationService().getString(PROVISIONING_METHOD_PROP);
 
         if (provMethod == null || provMethod.length() <= 0) {
@@ -165,7 +168,8 @@ public class ProvisioningServiceImpl implements ProvisioningService {
      *
      * @param provisioningMethod the provisioning method
      */
-    public void setProvisioningMethod(String provisioningMethod) {
+    public void setProvisioningMethod(String provisioningMethod)
+    {
         ProvisioningActivator.getConfigurationService().setProperty(PROVISIONING_METHOD_PROP, provisioningMethod);
     }
 
@@ -174,7 +178,8 @@ public class ProvisioningServiceImpl implements ProvisioningService {
      *
      * @return the provisioning URI
      */
-    public String getProvisioningUri() {
+    public String getProvisioningUri()
+    {
         String provUri = ProvisioningActivator.getConfigurationService().getString(PROPERTY_PROVISIONING_URL);
         if (provUri == null || provUri.length() <= 0) {
             provUri = ProvisioningActivator.getResourceService()
@@ -191,7 +196,8 @@ public class ProvisioningServiceImpl implements ProvisioningService {
      *
      * @param uri the provisioning URI to set
      */
-    public void setProvisioningUri(String uri) {
+    public void setProvisioningUri(String uri)
+    {
         ProvisioningActivator.getConfigurationService().setProperty(PROPERTY_PROVISIONING_URL, uri);
     }
 
@@ -200,7 +206,8 @@ public class ProvisioningServiceImpl implements ProvisioningService {
      *
      * @return provisioning username
      */
-    public String getProvisioningUsername() {
+    public String getProvisioningUsername()
+    {
         return provUsername;
     }
 
@@ -209,7 +216,8 @@ public class ProvisioningServiceImpl implements ProvisioningService {
      *
      * @return provisioning password
      */
-    public String getProvisioningPassword() {
+    public String getProvisioningPassword()
+    {
         return provPassword;
     }
 
@@ -218,10 +226,10 @@ public class ProvisioningServiceImpl implements ProvisioningService {
      * configuration file is retrieved from the network or if an exception happen
      *
      * @param url provisioning URL
-     *
      * @return Stream of provisioning data
      */
-    private InputStream retrieveConfigurationFile(String url) {
+    private InputStream retrieveConfigurationFile(String url)
+    {
         return retrieveConfigurationFile(url, null);
     }
 
@@ -230,11 +238,11 @@ public class ProvisioningServiceImpl implements ProvisioningService {
      * configuration file is retrieved from the network or if an exception happen
      *
      * @param url provisioning URL
-     * @param zsonParameters the already filled parameters if any.
-     *
+     * @param jsonParameters the already filled parameters if any.
      * @return Stream of provisioning data
      */
-    private InputStream retrieveConfigurationFile(String url, ZSONObject zsonParameters) {
+    private InputStream retrieveConfigurationFile(String url, JSONObject jsonParameters)
+    {
         try {
             String arg;
             String[] args = null;
@@ -380,7 +388,7 @@ public class ProvisioningServiceImpl implements ProvisioningService {
 
             String username = null;
             String password = null;
-            ZSONObject zsonBody = new ZSONObject();
+            JSONObject jsonBody = new JSONObject();
 
             if (args != null && args.length > 0) {
                 String usernameParam = "${username}";
@@ -396,7 +404,7 @@ public class ProvisioningServiceImpl implements ProvisioningService {
                     }
 
                     // pre loaded value we will reuse.
-                    String preloadedParamValue = getParamValue(zsonParameters, paramName);
+                    String preloadedParamValue = getParamValue(jsonParameters, paramName);
 
                     // If we find the username or password parameter at this stage we replace it
                     // with an empty string. or if we have an already filled value we will reuse it.
@@ -408,7 +416,7 @@ public class ProvisioningServiceImpl implements ProvisioningService {
                         password = (preloadedParamValue != null) ? preloadedParamValue : paramValue;
                         continue;
                     }
-                    zsonBody.put(paramName, paramValue);
+                    jsonBody.put(paramName, paramValue);
                 }
             }
 
@@ -416,7 +424,7 @@ public class ProvisioningServiceImpl implements ProvisioningService {
             IOException errorWhileProvisioning = null;
             try {
                 res = HttpUtils.postForm(url, PROPERTY_PROVISIONING_USERNAME, PROPERTY_PROVISIONING_PASSWORD,
-                        zsonBody, username, password, null, null);
+                        jsonBody, username, password, null, null);
             } catch (IOException e) {
                 Timber.e("Error posting form: %s", e.getMessage());
                 errorWhileProvisioning = e;
@@ -432,9 +440,8 @@ public class ProvisioningServiceImpl implements ProvisioningService {
                     else
                         errorMsg = "";
 
-                    Context ctx = aTalkApp.getInstance();
-                    DialogH.getInstance(ctx).showDialog(ctx, ResourceTable.String_provisioning_failed,
-                            ResourceTable.String_provisioning_failed_message, errorMsg);
+                    DialogActivity.showDialog(aTalkApp.getInstance(), R.string.provisioning_failed,
+                            R.string.provisioning_failed_message, errorMsg);
 
                     // as shutdown service is not started and other bundles are scheduled to start, stop all of them
                     {
@@ -486,15 +493,21 @@ public class ProvisioningServiceImpl implements ProvisioningService {
     /**
      * Search param value for the supplied name.
      *
-     * @param zsonObject the ZSONOBject can be null.
+     * @param jsonObject the JSONOBject can be null.
      * @param paramName the name to search.
-     *
      * @return the corresponding parameter value.
      */
-    private static String getParamValue(ZSONObject zsonObject, String paramName) {
-        if (zsonObject == null || paramName == null)
+    private static String getParamValue(JSONObject jsonObject, String paramName)
+    {
+        if (jsonObject == null || paramName == null)
             return null;
-        return zsonObject.get(paramName).toString();
+
+        try {
+            return jsonObject.get(paramName).toString();
+        } catch (JSONException e) {
+            Timber.e("JSONObject exception: %s", e.getMessage());
+        }
+        return null;
     }
 
     /**
@@ -502,7 +515,8 @@ public class ProvisioningServiceImpl implements ProvisioningService {
      *
      * @param data Provisioning data
      */
-    private void updateConfiguration(final InputStream data) {
+    private void updateConfiguration(final InputStream data)
+    {
         Properties fileProps = new OrderedProperties();
         try (InputStream in = new BufferedInputStream(data)) {
             fileProps.load(in);
@@ -550,10 +564,10 @@ public class ProvisioningServiceImpl implements ProvisioningService {
      * Check if a property name belongs to the allowed prefixes.
      *
      * @param key property key name
-     *
      * @return true if key is allowed, false otherwise
      */
-    private boolean isPrefixAllowed(String key) {
+    private boolean isPrefixAllowed(String key)
+    {
         if (allowedPrefixes.size() > 0) {
             for (String s : allowedPrefixes) {
                 if (key.startsWith(s)) {
@@ -577,7 +591,8 @@ public class ProvisioningServiceImpl implements ProvisioningService {
      * @param key property key name
      * @param value property value
      */
-    private void processProperty(String key, Object value) {
+    private void processProperty(String key, Object value)
+    {
         if ((value instanceof String) && value.equals("${null}")) {
             ProvisioningActivator.getConfigurationService().removeProperty(key);
         }
@@ -590,7 +605,7 @@ public class ProvisioningServiceImpl implements ProvisioningService {
             return;
         }
         else if (key.startsWith(SYSTEM_PROP_PREFIX)) {
-            String sysKey = key.substring(SYSTEM_PROP_PREFIX.length());
+            String sysKey = key.substring(SYSTEM_PROP_PREFIX.length(), key.length());
             System.setProperty(sysKey, (String) value);
         }
         else {
@@ -605,7 +620,8 @@ public class ProvisioningServiceImpl implements ProvisioningService {
      *
      * @param enforcePrefix list of enforce prefix.
      */
-    private void checkEnforcePrefix(String enforcePrefix) {
+    private void checkEnforcePrefix(String enforcePrefix)
+    {
         ConfigurationService config = ProvisioningActivator.getConfigurationService();
         if (enforcePrefix == null) {
             return;

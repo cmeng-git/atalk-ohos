@@ -1,36 +1,27 @@
 /*
- * aTalk, ohos VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * Jitsi, the OpenSource Java VoIP and Instant Messaging client.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Distributable under LGPL license. See terms of license at gnu.org.
  */
 package org.atalk.ohos.gui.call.notification;
 
-import java.util.Iterator;
+import android.Manifest;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.content.Context;
+import android.content.pm.PackageManager;
 
-import ohos.app.Context;
-import ohos.bundle.IBundleManager;
-import ohos.event.notification.NotificationHelper;
-import ohos.event.notification.NotificationRequest;
-import ohos.security.SystemPermission;
+import androidx.core.content.ContextCompat;
 
 import net.java.sip.communicator.service.protocol.Call;
 import net.java.sip.communicator.service.protocol.CallPeer;
 import net.java.sip.communicator.util.GuiUtils;
 
-import org.atalk.ohos.ResourceTable;
+import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.call.CallManager;
+
+import java.util.Iterator;
 
 /**
  * Class runs the thread that updates call control notification.
@@ -38,7 +29,8 @@ import org.atalk.ohos.gui.call.CallManager;
  * @author Pawel Domas
  * @author Eng Chong Meng
  */
-class CtrlNotificationThread {
+class CtrlNotificationThread
+{
     /**
      * Notification update interval.
      */
@@ -54,7 +46,7 @@ class CtrlNotificationThread {
     /**
      * The call control notification that is being updated by this thread.
      */
-    private final NotificationRequest notificationRequest;
+    private final Notification notification;
     /**
      * The Android context.
      */
@@ -74,28 +66,31 @@ class CtrlNotificationThread {
      * @param ctx the Android context.
      * @param call the call that is controlled by current notification.
      * @param id the notification ID.
-     * @param notificationR call control notification that will be updated by this thread.
+     * @param notification call control notification that will be updated by this thread.
      */
-    public CtrlNotificationThread(Context ctx, Call call, int id, NotificationRequest notificationR) {
+    public CtrlNotificationThread(Context ctx, Call call, int id, Notification notification)
+    {
         this.ctx = ctx;
         this.call = call;
         this.id = id;
-        this.notificationRequest = notificationR;
+        this.notification = notification;
     }
 
     /**
      * Starts notification update thread.
      */
-    public void start() {
+    public void start()
+    {
         this.thread = new Thread(this::notificationLoop);
         thread.start();
     }
 
-    private void notificationLoop() {
-        NotificationHelper mNotificationManager
+    private void notificationLoop()
+    {
+        NotificationManager mNotificationManager
                 = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-        boolean micEnabled
-                = ctx.verifySelfPermission(SystemPermission.MICROPHONE) == IBundleManager.PERMISSION_GRANTED;
+        boolean micEnabled = ContextCompat.checkSelfPermission(ctx, Manifest.permission.RECORD_AUDIO)
+                == PackageManager.PERMISSION_GRANTED;
 
         while (run) {
             // Timber.log(TimberLog.FINER, "Running control notification thread " + hashCode());
@@ -107,29 +102,28 @@ class CtrlNotificationThread {
                 callStartDate = peers.next().getCallDurationStartTime();
             }
             if (callStartDate != CallPeer.CALL_DURATION_START_TIME_UNKNOWN) {
-                notificationRequest.getActionButtons();
-                notificationRequest.se.contentView.setTextViewText(ResourceTable.Id_call_duration,
+                notification.contentView.setTextViewText(R.id.call_duration,
                         GuiUtils.formatTime(callStartDate, System.currentTimeMillis()));
             }
 
             boolean isSpeakerphoneOn = aTalkApp.getAudioManager().isSpeakerphoneOn();
-            notificationRequest.contentView.setImageViewResource(ResourceTable.Id_button_speakerphone, isSpeakerphoneOn
-                    ? ResourceTable.Media_call_speakerphone_on_dark
-                    : ResourceTable.Media_call_receiver_on_dark);
+            notification.contentView.setImageViewResource(R.id.button_speakerphone, isSpeakerphoneOn
+                    ? R.drawable.call_speakerphone_on_dark
+                    : R.drawable.call_receiver_on_dark);
 
             // Update notification call mute status
             boolean isMute = (!micEnabled || CallManager.isMute(call));
 
-            notificationRequest.contentView.setImageViewResource(ResourceTable.Id_button_mute,
-                    isMute ? ResourceTable.Media_call_microphone_mute_dark : ResourceTable.Media_call_microphone_dark);
+            notification.contentView.setImageViewResource(R.id.button_mute,
+                    isMute ? R.drawable.call_microphone_mute_dark : R.drawable.call_microphone_dark);
 
             // Update notification call hold status
             boolean isOnHold = CallManager.isLocallyOnHold(call);
-            notificationRequest.contentView.setImageViewResource(ResourceTable.Id_button_hold,
-                    isOnHold ? ResourceTable.Media_call_hold_on_dark : ResourceTable.Media_call_hold_off_dark);
+            notification.contentView.setImageViewResource(R.id.button_hold,
+                    isOnHold ? R.drawable.call_hold_on_dark : R.drawable.call_hold_off_dark);
 
             if (run && (mNotificationManager != null)) {
-                mNotificationManager.notify(id, notificationRequest);
+                mNotificationManager.notify(id, notification);
             }
 
             synchronized (this) {
@@ -149,7 +143,8 @@ class CtrlNotificationThread {
     /**
      * Stops notification thread.
      */
-    public void stop() {
+    public void stop()
+    {
         run = false;
         synchronized (this) {
             this.notifyAll();

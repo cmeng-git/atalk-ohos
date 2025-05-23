@@ -1,27 +1,21 @@
 package javax.media.format;
 
-import java.awt.Dimension;
-import javax.media.Format;
+import java.awt.*;
+
+import javax.media.*;
 
 /**
  * Describes YUV image data.
  */
-public class YUVFormat extends VideoFormat {
-    /**
-     * YUV Planar 4:1:1 type.
-     */
+public class YUVFormat extends VideoFormat
+{
+    /** YUV Planar 4:1:1 type. */
     public static final int YUV_411 = 1;
-    /**
-     * YUV Planar 4:2:0 type.
-     */
+    /** YUV Planar 4:2:0 type. */
     public static final int YUV_420 = 2;
-    /**
-     * YUV Planar 4:2:2 type.
-     */
+    /** YUV Planar 4:2:2 type. */
     public static final int YUV_422 = 4;
-    /**
-     * YUV Planar 1:1:1 type.
-     */
+    /** YUV Planar 1:1:1 type. */
     public static final int YUV_111 = 8;
     /**
      * YUV Planar YVU9 type. Contains a Y value for every pixel and U and V
@@ -44,17 +38,11 @@ public class YUVFormat extends VideoFormat {
 
     /* 512 taken for YVU9 from Indeo 3.2 decoder */
 
-    /**
-     * The YUV format type
-     */
+    /** The YUV format type */
     protected int yuvType = NOT_SPECIFIED;
-    /**
-     * Length of a row of Y values. Would be >= width of the frame.
-     */
+    /** Length of a row of Y values. Would be >= width of the frame. */
     protected int strideY = NOT_SPECIFIED;
-    /**
-     * Length of a row of U or V values.
-     */
+    /** Length of a row of U or V values. */
     protected int strideUV = NOT_SPECIFIED;
     /**
      * When the YUV data is in planar format, specifies the offset into the data
@@ -78,7 +66,8 @@ public class YUVFormat extends VideoFormat {
     /**
      * Constructs a <tt>YUVFormat</tt> object that represents all YUV formats.
      */
-    public YUVFormat() {
+    public YUVFormat()
+    {
         super(ENCODING);
     }
 
@@ -87,23 +76,34 @@ public class YUVFormat extends VideoFormat {
      * constructor for planar YUV formats. (YUV_411, YUV_420, YUV_422, YUV_111,
      * or YUV_YVU9.)
      *
-     * @param size A <tt>Dimension</tt> that specifies the frame size.
-     * @param maxDataLength The maximum size of the data array.
-     * @param dataType The type of the data.
-     * @param frameRate The frame rate.
-     * @param yuvType The YUV ordering type.
-     * @param strideY The number of data elements between the first Y component in a
-     * row and the first Y component in the next row.
-     * @param strideUV The number of data elements between the first U component in a
-     * row and the first U component in the next row. The same value
-     * is expected for the V component.
-     * @param offsetY The offset into the data array where the Y plane begins.
-     * @param offsetU The offset into the data array where the U plane begins.
-     * @param offsetV The offset into the data array where the V plane begins.
+     * @param size
+     *            A <tt>Dimension</tt> that specifies the frame size.
+     * @param maxDataLength
+     *            The maximum size of the data array.
+     * @param dataType
+     *            The type of the data.
+     * @param frameRate
+     *            The frame rate.
+     * @param yuvType
+     *            The YUV ordering type.
+     * @param strideY
+     *            The number of data elements between the first Y component in a
+     *            row and the first Y component in the next row.
+     * @param strideUV
+     *            The number of data elements between the first U component in a
+     *            row and the first U component in the next row. The same value
+     *            is expected for the V component.
+     * @param offsetY
+     *            The offset into the data array where the Y plane begins.
+     * @param offsetU
+     *            The offset into the data array where the U plane begins.
+     * @param offsetV
+     *            The offset into the data array where the V plane begins.
      */
     public YUVFormat(Dimension size, int maxDataLength, Class<?> dataType,
             float frameRate, int yuvType, int strideY, int strideUV,
-            int offsetY, int offsetU, int offsetV) {
+            int offsetY, int offsetU, int offsetV)
+    {
         // Call VideoFormat constructor
         super(ENCODING, size, maxDataLength, dataType, frameRate);
         // Set YUV properties.
@@ -148,10 +148,12 @@ public class YUVFormat extends VideoFormat {
     /**
      * Constructs a <tt>YUVFormat</tt> object for a specific <tt>yuvType</tt>.
      *
-     * @param yuvType The YUV type for this <tt>YUVFormat</tt>: YUV_411, YUV_420,
-     * YUV_422, YUV_111, YUV_YVU9, or YUV_YUYV.
+     * @param yuvType
+     *            The YUV type for this <tt>YUVFormat</tt>: YUV_411, YUV_420,
+     *            YUV_422, YUV_111, YUV_YVU9, or YUV_YUYV.
      */
-    public YUVFormat(int yuvType) {
+    public YUVFormat(int yuvType)
+    {
         super(ENCODING);
         this.yuvType = yuvType;
     }
@@ -162,8 +164,9 @@ public class YUVFormat extends VideoFormat {
      * @return A clone of this <tt>YUVFormat</tt>.
      */
     @Override
-    public Object clone() {
-        YUVFormat f = new YUVFormat(size, maxDataLength, mDataType, frameRate,
+    public Object clone()
+    {
+        YUVFormat f = new YUVFormat(size, maxDataLength, dataType, frameRate,
                 yuvType, strideY, strideUV, offsetY, offsetU, offsetV);
         f.copy(this);
         return f;
@@ -173,12 +176,15 @@ public class YUVFormat extends VideoFormat {
      * Copies the attributes from the specified <tt>Format</tt> into this
      * <tt>YUVFormat</tt>.
      *
-     * @param f The <tt>Format</tt> to copy the attributes from.
+     * @param f
+     *            The <tt>Format</tt> to copy the attributes from.
      */
     @Override
-    protected void copy(Format f) {
+    protected void copy(Format f)
+    {
         super.copy(f);
-        if (f instanceof YUVFormat) {
+        if (f instanceof YUVFormat)
+        {
             YUVFormat other = (YUVFormat) f;
             yuvType = other.yuvType;
             strideY = other.strideY;
@@ -195,21 +201,22 @@ public class YUVFormat extends VideoFormat {
      * <tt>YUVFormat</tt> object and all of its attributes are identical to the
      * attributes in this <tt>YUVFormat</tt> .
      *
-     * @param format The <tt>Format</tt> to compare.
-     *
+     * @param format
+     *            The <tt>Format</tt> to compare.
      * @return true if the specified <tt>Format</tt> is the same as this one.
      */
     @Override
-    public boolean equals(Object format) {
-        if (format instanceof YUVFormat) {
+    public boolean equals(Object format)
+    {
+        if (format instanceof YUVFormat)
+        {
             YUVFormat other = (YUVFormat) format;
 
             return super.equals(format) && yuvType == other.yuvType
                     && strideY == other.strideY && strideUV == other.strideUV
                     && offsetY == other.offsetY && offsetU == other.offsetU
                     && offsetV == other.offsetV;
-        }
-        else
+        } else
             return false;
     }
 
@@ -218,7 +225,8 @@ public class YUVFormat extends VideoFormat {
      *
      * @return An integer representing the U offset.
      */
-    public int getOffsetU() {
+    public int getOffsetU()
+    {
         return offsetU;
     }
 
@@ -227,7 +235,8 @@ public class YUVFormat extends VideoFormat {
      *
      * @return An integer representing the V offset.
      */
-    public int getOffsetV() {
+    public int getOffsetV()
+    {
         return offsetV;
     }
 
@@ -236,7 +245,8 @@ public class YUVFormat extends VideoFormat {
      *
      * @return An integer representing the Y offset.
      */
-    public int getOffsetY() {
+    public int getOffsetY()
+    {
         return offsetY;
     }
 
@@ -245,7 +255,8 @@ public class YUVFormat extends VideoFormat {
      *
      * @return An integer representing the UV stride.
      */
-    public int getStrideUV() {
+    public int getStrideUV()
+    {
         return strideUV;
     }
 
@@ -254,7 +265,8 @@ public class YUVFormat extends VideoFormat {
      *
      * @return An integer representing the Y stride.
      */
-    public int getStrideY() {
+    public int getStrideY()
+    {
         return strideY;
     }
 
@@ -262,9 +274,10 @@ public class YUVFormat extends VideoFormat {
      * Gets the YUV data format.
      *
      * @return The YUV type: YUV_411, YUV_420, YUV_422, YUV_111, YUV_YVU9, or
-     * YUV_YUYV.
+     *         YUV_YUYV.
      */
-    public int getYuvType() {
+    public int getYuvType()
+    {
         return yuvType;
     }
 
@@ -275,14 +288,13 @@ public class YUVFormat extends VideoFormat {
      *
      * @param format The matching <tt>Format</tt> to intersect with this
      * <tt>YUVFormat</tt>.
-     *
      * @return A <tt>Format</tt> object with its attributes set to those
      * attributes common to both <tt>Format</tt> objects.
-     *
      * @see #matches
      */
     @Override
-    public Format intersects(Format format) {
+    public Format intersects(Format format)
+    {
         Format fmt;
         if ((fmt = super.intersects(format)) == null)
             return null;
@@ -311,13 +323,14 @@ public class YUVFormat extends VideoFormat {
      * possible if "A" is derived from "B" or "B" is derived from "A". (The
      * compared attributes must still match, or <tt>matches</tt> fails.)
      *
-     * @param format The <tt>Format</tt> to compare with this one.
-     *
+     * @param format
+     *            The <tt>Format</tt> to compare with this one.
      * @return <tt>true</tt> if the specified <tt>Format</tt> matches this one,
-     * <tt>false</tt> if it does not.
+     *         <tt>false</tt> if it does not.
      */
     @Override
-    public boolean matches(Format format) {
+    public boolean matches(Format format)
+    {
         if (!super.matches(format))
             return false;
         if (!(format instanceof YUVFormat))
@@ -330,7 +343,7 @@ public class YUVFormat extends VideoFormat {
 
                 (strideY == NOT_SPECIFIED || other.strideY == NOT_SPECIFIED || strideY == other.strideY)
                 && (strideUV == NOT_SPECIFIED
-                || other.strideUV == NOT_SPECIFIED || strideUV == other.strideUV)
+                        || other.strideUV == NOT_SPECIFIED || strideUV == other.strideUV)
                 &&
 
                 (offsetY == NOT_SPECIFIED || other.offsetY == NOT_SPECIFIED || offsetY == other.offsetY)
@@ -347,7 +360,8 @@ public class YUVFormat extends VideoFormat {
      * @return A <tt>Format</tt> that's less restrictive than the this format.
      */
     @Override
-    public Format relax() {
+    public Format relax()
+    {
         YUVFormat fmt;
         if ((fmt = (YUVFormat) super.relax()) == null)
             return null;
@@ -368,9 +382,10 @@ public class YUVFormat extends VideoFormat {
      * @return A <tt>String</tt> that describes the format attributes.
      */
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "YUV Video Format: Size = " + size + " MaxDataLength = "
-                + maxDataLength + " DataType = " + mDataType + " yuvType = "
+                + maxDataLength + " DataType = " + dataType + " yuvType = "
                 + yuvType + " StrideY = " + strideY + " StrideUV = " + strideUV
                 + " OffsetY = " + offsetY + " OffsetU = " + offsetU
                 + " OffsetV = " + offsetV + "\n";

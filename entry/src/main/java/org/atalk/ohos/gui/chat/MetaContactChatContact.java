@@ -18,7 +18,7 @@ package org.atalk.ohos.gui.chat;
 import net.java.sip.communicator.service.contactlist.MetaContact;
 
 import org.apache.commons.lang3.StringUtils;
-import org.atalk.ohos.ResourceTable;
+import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 
 /**
@@ -58,7 +58,7 @@ public class MetaContactChatContact extends ChatContact<MetaContact> {
         String name = descriptor.getDisplayName();
 
         if (StringUtils.isEmpty(name))
-            name = aTalkApp.getResString(ResourceTable.String_unknown_user);
+            name = aTalkApp.getResString(R.string.unknown_user);
 
         return name;
     }

@@ -5,18 +5,21 @@
  */
 package org.atalk.ohos.gui.widgets;
 
-import ohos.agp.components.Attr;
-import ohos.agp.components.DirectionalLayout;
-import ohos.app.Context;
+import android.content.Context;
+import android.util.AttributeSet;
+import android.view.View;
+import android.widget.Checkable;
+import android.widget.CheckedTextView;
+import android.widget.LinearLayout;
 
 /*
- * This class implements <code>Checkable</code> interface in order to provide custom <code>ListContainer</code> row layouts that can
- * be checked. The layout retrieves first child <code>CheckedTextView</code> and serves as a proxy between the ListContainer.
+ * This class implements <code>Checkable</code> interface in order to provide custom <code>ListView</code> row layouts that can
+ * be checked. The layout retrieves first child <code>CheckedTextView</code> and serves as a proxy between the ListView.
  *
  * @author Pawel Domas
  * @author Eng Chong Meng
  */
-public class CheckableLinearLayout extends DirectionalLayout implements Checkable
+public class CheckableLinearLayout extends LinearLayout implements Checkable
 {
 
     /**
@@ -30,7 +33,7 @@ public class CheckableLinearLayout extends DirectionalLayout implements Checkabl
      * @param context the context
      * @param attrs attributes set
      */
-    public CheckableLinearLayout(Context context, Attr attrs)
+    public CheckableLinearLayout(Context context, AttributeSet attrs)
     {
         super(context, attrs);
     }
@@ -45,7 +48,7 @@ public class CheckableLinearLayout extends DirectionalLayout implements Checkabl
 
         int chCount = getChildCount();
         for (int i = 0; i < chCount; ++i) {
-            Component v = getChildAt(i);
+            View v = getChildAt(i);
             if (v instanceof CheckedTextView) {
                 checkbox = (CheckedTextView) v;
             }

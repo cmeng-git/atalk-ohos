@@ -5,17 +5,6 @@
  */
 package org.atalk.impl.neomedia.device;
 
-import org.atalk.impl.timberlog.TimberLog;
-import org.atalk.impl.neomedia.MediaServiceImpl;
-import org.atalk.impl.neomedia.codec.video.AVFrameFormat;
-import org.atalk.service.configuration.ConfigurationService;
-import org.atalk.service.libjitsi.LibJitsi;
-import org.atalk.service.neomedia.MediaUseCase;
-import org.atalk.service.neomedia.codec.Constants;
-import org.atalk.util.MediaType;
-import org.atalk.util.OSUtils;
-import org.atalk.util.event.PropertyChangeNotifier;
-
 import java.awt.Dimension;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -32,6 +21,17 @@ import javax.media.Format;
 import javax.media.PlugInManager;
 import javax.media.Renderer;
 import javax.media.format.VideoFormat;
+
+import org.atalk.impl.neomedia.MediaServiceImpl;
+import org.atalk.impl.neomedia.codec.video.AVFrameFormat;
+import org.atalk.impl.timberlog.TimberLog;
+import org.atalk.service.configuration.ConfigurationService;
+import org.atalk.service.libjitsi.LibJitsi;
+import org.atalk.service.neomedia.MediaUseCase;
+import org.atalk.service.neomedia.codec.Constants;
+import org.atalk.util.MediaType;
+import org.atalk.util.OSUtils;
+import org.atalk.util.event.PropertyChangeNotifier;
 
 import timber.log.Timber;
 
@@ -455,7 +455,7 @@ public class DeviceConfiguration extends PropertyChangeNotifier implements Prope
         else {
             Format[] formats = new Format[]{
                     new AVFrameFormat(),
-                    new VideoFormat(Constants.OHOS_SURFACE),
+                    new VideoFormat(Constants.ANDROID_SURFACE),
                     new VideoFormat(VideoFormat.RGB),
                     new VideoFormat(VideoFormat.YUV),
                     new VideoFormat(Constants.H264)
@@ -561,7 +561,7 @@ public class DeviceConfiguration extends PropertyChangeNotifier implements Prope
     public List<CaptureDeviceInfo> getAvailableVideoCaptureDevices(MediaUseCase useCase) {
         Format[] formats = new Format[]{
                 new AVFrameFormat(),
-                new VideoFormat(Constants.OHOS_SURFACE),
+                new VideoFormat(Constants.ANDROID_SURFACE),
                 new VideoFormat(VideoFormat.RGB),
                 new VideoFormat(VideoFormat.YUV),
                 new VideoFormat(Constants.H264)

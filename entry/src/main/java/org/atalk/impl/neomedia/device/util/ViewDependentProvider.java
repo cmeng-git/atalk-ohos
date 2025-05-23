@@ -1,34 +1,22 @@
 /*
- * aTalk, ohos VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * Jitsi, the OpenSource Java VoIP and Instant Messaging client.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Distributable under LGPL license. See terms of license at gnu.org.
  */
 package org.atalk.impl.neomedia.device.util;
 
-import ohos.aafwk.ability.Ability;
-import ohos.agp.components.Component;
-import ohos.agp.components.ComponentContainer;
-
-import org.atalk.ohos.BaseAbility;
+import android.app.Activity;
+import android.view.View;
+import android.view.ViewGroup;
 
 import java.awt.Dimension;
+
 import timber.log.Timber;
 
 /**
  * <code>ViewDependentProvider</code> is used to implement classes that provide objects dependent on
- * <code>JComponent</code> visibility state. It means that they can provide it only when <code>JComponent</code> is
- * visible, and they have to release the object before <code>JComponent</code> is hidden.
+ * <code>View</code> visibility state. It means that they can provide it only when <code>View</code> is
+ * visible, and they have to release the object before <code>View</code> is hidden.
  *
  * @author Pawel Domas
  * @author Eng Chong Meng
@@ -45,19 +33,19 @@ public abstract class ViewDependentProvider<T> {
     private static final long CREATE_TIMEOUT = 5000L;
 
     /**
-     * <code>Ability</code> context.
+     * <code>Activity</code> context.
      */
-    protected final Ability mAbility;
+    protected final Activity mActivity;
 
     /**
      * The container that will hold maintained view.
      */
-    private final ComponentContainer mContainer;
+    private final ViewGroup mContainer;
 
     /**
      * The view (can either be SurfaceView or TextureView) maintained by this instance.
      */
-    protected Component mComponent;
+    protected View mView;
 
     /**
      * Use for surfaceCreation to set surface holder size for correct camera local preview aspect ratio
@@ -66,53 +54,53 @@ public abstract class ViewDependentProvider<T> {
     protected Dimension mVideoSize;
 
     /**
-     * Provided object created when <code>JComponent</code> is visible.
+     * Provided object created when <code>View</code> is visible.
      */
     protected T providedObject;
 
     /**
-     * Factory method that creates new <code>JComponent</code> instance.
+     * Factory method that creates new <code>View</code> instance.
      *
-     * @return new <code>JComponent</code> instance.
+     * @return new <code>View</code> instance.
      */
-    protected abstract Component createViewInstance();
+    protected abstract View createViewInstance();
 
     public abstract void setAspectRatio(int width, int height);
 
     /**
      * Create a new instance of <code>ViewDependentProvider</code>.
      *
-     * @param ability parent <code>Ability</code> that manages the <code>container</code>.
-     * @param container the container that will hold maintained <code>JComponent</code>.
+     * @param activity parent <code>Activity</code> that manages the <code>container</code>.
+     * @param container the container that will hold maintained <code>View</code>.
      */
-    public ViewDependentProvider(Ability ability, ComponentContainer container) {
-        mAbility = ability;
+    public ViewDependentProvider(Activity activity, ViewGroup container) {
+        mActivity = activity;
         mContainer = container;
     }
 
     /**
-     * Checks if the view is currently created. If not creates new <code>JComponent</code> and adds it to the
+     * Checks if the view is currently created. If not creates new <code>View</code> and adds it to the
      * <code>container</code>.
      */
     protected void ensureViewCreated() {
-        if (mComponent == null) {
-            BaseAbility.runOnUiThread(() -> {
-                mComponent = createViewInstance();
-                ComponentContainer.LayoutConfig params = new ComponentContainer.LayoutConfig(
-                        ComponentContainer.LayoutConfig.MATCH_PARENT, ComponentContainer.LayoutConfig.MATCH_PARENT);
-                mContainer.addComponent((Component) mComponent, params);
-                mContainer.setVisibility(Component.VISIBLE);
+        if (mView == null) {
+            mActivity.runOnUiThread(() -> {
+                mView = createViewInstance();
+                ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                mContainer.addView(mView, params);
+                mContainer.setVisibility(View.VISIBLE);
             });
         }
     }
 
     /**
-     * Returns maintained <code>JComponent</code> object.
+     * Returns maintained <code>View</code> object.
      *
-     * @return maintained <code>JComponent</code> object.
+     * @return maintained <code>View</code> object.
      */
-    public Component getComponent() {
-        return mComponent;
+    public View getView() {
+        return mView;
     }
 
     /**
@@ -132,13 +120,13 @@ public abstract class ViewDependentProvider<T> {
      * Checks if maintained view exists and removes if from the <code>container</code>.
      */
     protected void ensureViewDestroyed() {
-        if (mComponent != null) {
-            final Component viewToRemove = mComponent;
-            mComponent = null;
+        if (mView != null) {
+            final View viewToRemove = mView;
+            mView = null;
 
-            BaseAbility.runOnUiThread(() -> {
-                mContainer.removeComponent((Component) viewToRemove);
-                mContainer.setVisibility(Component.HIDE);
+            mActivity.runOnUiThread(() -> {
+                mContainer.removeView(viewToRemove);
+                mContainer.setVisibility(View.GONE);
             });
         }
     }
@@ -149,12 +137,12 @@ public abstract class ViewDependentProvider<T> {
      * @param obj provided object instance.
      */
     synchronized protected void onObjectCreated(T obj) {
-        providedObject = obj;
-        notifyAll();
+        this.providedObject = obj;
+        this.notifyAll();
     }
 
     /**
-     * Should be called by consumer to obtain the object. It is causing hidden <code>JComponent</code> to be
+     * Should be called by consumer to obtain the object. It is causing hidden <code>View</code> to be
      * displayed and eventually {@link #onObjectCreated(Object)} method to be called which results
      * in object creation.
      *
@@ -162,7 +150,7 @@ public abstract class ViewDependentProvider<T> {
      */
     synchronized public T obtainObject() {
         ensureViewCreated();
-        if (providedObject == null) {
+        if (this.providedObject == null) {
             try {
                 Timber.i("Waiting for object...%s", hashCode());
                 this.wait(CREATE_TIMEOUT);
@@ -215,7 +203,7 @@ public abstract class ViewDependentProvider<T> {
 
     /**
      * Blocks the current thread until subject object is released. It should be used to block UI thread
-     * before the <code>JComponent</code> is hidden.
+     * before the <code>View</code> is hidden.
      */
     synchronized public void waitForObjectRelease() {
         if (providedObject != null) {

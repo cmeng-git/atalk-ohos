@@ -5,10 +5,14 @@
  */
 package org.atalk.ohos.gui.widgets;
 
-import ohos.agp.components.AttrSet;
-import ohos.agp.components.DirectionalLayout;
-import ohos.agp.components.TableLayout;
-import ohos.app.Context;
+import android.content.Context;
+import android.util.AttributeSet;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+
+import org.atalk.ohos.R;
 
 /**
  * Custom layout that handles fixes table header, by measuring maximum column widths in both header and table body. Then
@@ -17,7 +21,7 @@ import ohos.app.Context;
  * @author Pawel Domas
  * @author Eng Chong Meng
  */
-public class ScrollingTable extends DirectionalLayout
+public class ScrollingTable extends LinearLayout
 {
     /**
      * Create a new instance of <code>ScrollingTable</code>
@@ -35,18 +39,18 @@ public class ScrollingTable extends DirectionalLayout
      * @param context the context
      * @param attrs the attribute set
      */
-    public ScrollingTable(Context context, AttrSet attrs)
+    public ScrollingTable(Context context, AttributeSet attrs)
     {
         super(context, attrs);
     }
 
     @Override
-    protected void onArrange(boolean changed, int left, int top, int right, int bottom)
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom)
     {
-        super.onArrange(changed, left, top, right, bottom);
+        super.onLayout(changed, left, top, right, bottom);
 
-        TableLayout header = findComponentById(ResourceTable.Id_table_header);
-        TableLayout body = findComponentById(ResourceTable.Id_table_body);
+        TableLayout header = findViewById(R.id.table_header);
+        TableLayout body = findViewById(R.id.table_body);
 
         // Find max column widths
         int[] headerWidths = findMaxWidths(header);
@@ -107,7 +111,7 @@ public class ScrollingTable extends DirectionalLayout
             TableRow row = (TableRow) table.getChildAt(rowNum);
 
             for (int colNum = 0; colNum < row.getChildCount(); colNum++) {
-                Component column = row.getChildAt(colNum);
+                View column = row.getChildAt(colNum);
                 TableRow.LayoutParams params = (TableRow.LayoutParams) column.getLayoutParams();
                 params.width = widths[colNum];
             }

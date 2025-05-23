@@ -1,30 +1,18 @@
 /*
- * aTalk, ohos VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * Jitsi, the OpenSource Java VoIP and Instant Messaging client.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Distributable under LGPL license. See terms of license at gnu.org.
  */
 package org.atalk.impl.neomedia.device.util;
 
-import ohos.agp.graphics.TextureHolder;
-import ohos.agp.render.opengl.GLES32;
-import ohos.agp.render.opengl.GLESExt;
-// import ohos.agp.utils.Matrix;
+import android.graphics.SurfaceTexture;
+import android.opengl.GLES11Ext;
+import android.opengl.GLES20;
+import android.opengl.Matrix;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
 
 /**
  * Code for rendering a texture onto a surface using OpenGL ES 2.0.
@@ -57,23 +45,22 @@ public class CameraSurfaceRenderer {
             1.0f, 1.0f, 0, 1.f, 1.f
     };
 
-    /**
-     * Triangle vertices.
-     */
+    // Triangle vertices.
     private final FloatBuffer triangleVertices;
-    private final IntBuffer intBuffer = IntBuffer.allocate(256);
-    private final StringBuffer strBuffer = new StringBuffer(512);
 
-    private static final String VERTEX_SHADER = "uniform mat4 uMVPMatrix;\n"
-            + "uniform mat4 uSTMatrix;\n"
-            + "attribute vec4 aPosition;\n"
-            + "attribute vec4 aTextureCoord;\n"
-            + "varying vec2 vTextureCoord;\n"
-            + "void main() {\n"
-            + "  gl_Position = uMVPMatrix * aPosition;\n"
-            + "  vTextureCoord = (uSTMatrix * aTextureCoord).xy;\n"
-            + "}\n";
+    //Create our vertex shader
+    private static final String VERTEX_SHADER =
+            "uniform mat4 uMVPMatrix;\n"
+                    + "uniform mat4 uSTMatrix;\n"
+                    + "attribute vec4 aPosition;\n"
+                    + "attribute vec4 aTextureCoord;\n"
+                    + "varying vec2 vTextureCoord;\n"
+                    + "void main() {\n"
+                    + "  gl_Position = uMVPMatrix * aPosition;\n"
+                    + "  vTextureCoord = (uSTMatrix * aTextureCoord).xy;\n"
+                    + "}\n";
 
+    //Fragment shader
     private static final String FRAGMENT_SHADER = "#extension GL_OES_EGL_image_external : require\n"
             + "precision mediump float;\n"
             + "varying vec2 vTextureCoord;\n"
@@ -97,47 +84,48 @@ public class CameraSurfaceRenderer {
                 .allocateDirect(triangleVerticesData.length * FLOAT_SIZE_BYTES)
                 .order(ByteOrder.nativeOrder()).asFloatBuffer();
         triangleVertices.put(triangleVerticesData).position(0);
-        // Matrix.setIdentityM(stMatrix, 0);
+
+        Matrix.setIdentityM(stMatrix, 0);
     }
 
     public int getTextureId() {
         return textureID;
     }
 
-    public void drawFrame(TextureHolder st) {
+    public void drawFrame(SurfaceTexture st) {
         checkGlError("onDrawFrame start");
-        st.getMatrixForTransform(stMatrix);
+        st.getTransformMatrix(stMatrix);
 
-        GLES32.glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
-        GLES32.glClear(GLES32.GL_DEPTH_BUFFER_BIT | GLES32.GL_COLOR_BUFFER_BIT);
+        GLES20.glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+        GLES20.glClear(GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_COLOR_BUFFER_BIT);
 
-        GLES32.glUseProgram(program);
+        GLES20.glUseProgram(program);
         checkGlError("glUseProgram");
 
-        GLES32.glActiveTexture(GLES32.GL_TEXTURE0);
-        GLES32.glBindTexture(GLESExt.GL_TEXTURE_EXTERNAL_OES, textureID);
+        GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
+        GLES20.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, textureID);
 
         triangleVertices.position(TRIANGLE_VERTICES_DATA_POS_OFFSET);
-        GLES32.glVertexAttribPointer(positionHandle, 3, GLES32.GL_FLOAT, false,
+        GLES20.glVertexAttribPointer(positionHandle, 3, GLES20.GL_FLOAT, false,
                 TRIANGLE_VERTICES_DATA_STRIDE_BYTES, triangleVertices);
         checkGlError("glVertexAttribPointer maPosition");
-        GLES32.glEnableVertexAttribArray(positionHandle);
+        GLES20.glEnableVertexAttribArray(positionHandle);
         checkGlError("glEnableVertexAttribArray positionHandle");
 
         triangleVertices.position(TRIANGLE_VERTICES_DATA_UV_OFFSET);
-        GLES32.glVertexAttribPointer(textureHandle, 2, GLES32.GL_FLOAT, false,
+        GLES20.glVertexAttribPointer(textureHandle, 2, GLES20.GL_FLOAT, false,
                 TRIANGLE_VERTICES_DATA_STRIDE_BYTES, triangleVertices);
         checkGlError("glVertexAttribPointer textureHandle");
-        GLES32.glEnableVertexAttribArray(textureHandle);
+        GLES20.glEnableVertexAttribArray(textureHandle);
         checkGlError("glEnableVertexAttribArray textureHandle");
 
-        // Matrix.setIdentityM(mvpMatrix, 0);
-        GLES32.glUniformMatrix4fv(mvpMatrixHandle, 1, false, mvpMatrix);
-        GLES32.glUniformMatrix4fv(stMatrixHandle, 1, false, stMatrix);
+        Matrix.setIdentityM(mvpMatrix, 0);
+        GLES20.glUniformMatrix4fv(mvpMatrixHandle, 1, false, mvpMatrix, 0);
+        GLES20.glUniformMatrix4fv(stMatrixHandle, 1, false, stMatrix, 0);
 
-        GLES32.glDrawArrays(GLES32.GL_TRIANGLE_STRIP, 0, 4);
+        GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, 4);
         checkGlError("glDrawArrays");
-        GLES32.glFinish();
+        GLES20.glFinish();
     }
 
     /**
@@ -148,87 +136,85 @@ public class CameraSurfaceRenderer {
         if (program == 0) {
             throw new RuntimeException("failed creating program");
         }
-        positionHandle = GLES32.glGetAttribLocation(program, "aPosition");
+        positionHandle = GLES20.glGetAttribLocation(program, "aPosition");
         checkGlError("glGetAttribLocation aPosition");
         if (positionHandle == -1) {
             throw new RuntimeException("Could not get attrib location for aPosition");
         }
-        textureHandle = GLES32.glGetAttribLocation(program, "aTextureCoord");
+        textureHandle = GLES20.glGetAttribLocation(program, "aTextureCoord");
         checkGlError("glGetAttribLocation aTextureCoord");
         if (textureHandle == -1) {
             throw new RuntimeException("Could not get attrib location for aTextureCoord");
         }
 
-        mvpMatrixHandle = GLES32.glGetUniformLocation(program, "uMVPMatrix");
+        mvpMatrixHandle = GLES20.glGetUniformLocation(program, "uMVPMatrix");
         checkGlError("glGetUniformLocation uMVPMatrix");
         if (mvpMatrixHandle == -1) {
             throw new RuntimeException("Could not get attrib location for uMVPMatrix");
         }
 
-        stMatrixHandle = GLES32.glGetUniformLocation(program, "uSTMatrix");
+        stMatrixHandle = GLES20.glGetUniformLocation(program, "uSTMatrix");
         checkGlError("glGetUniformLocation uSTMatrix");
         if (stMatrixHandle == -1) {
             throw new RuntimeException("Could not get attrib location for uSTMatrix");
         }
 
         int[] textures = new int[1];
-        GLES32.glGenTextures(1, textures);
+        GLES20.glGenTextures(1, textures, 0);
 
         textureID = textures[0];
-        GLES32.glBindTexture(GLESExt.GL_TEXTURE_EXTERNAL_OES, textureID);
+        GLES20.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, textureID);
         checkGlError("glBindTexture textureID");
 
-        GLES32.glTexParameterf(GLESExt.GL_TEXTURE_EXTERNAL_OES, GLES32.GL_TEXTURE_MIN_FILTER, GLES32.GL_NEAREST);
-        GLES32.glTexParameterf(GLESExt.GL_TEXTURE_EXTERNAL_OES, GLES32.GL_TEXTURE_MAG_FILTER, GLES32.GL_LINEAR);
-        GLES32.glTexParameteri(GLESExt.GL_TEXTURE_EXTERNAL_OES, GLES32.GL_TEXTURE_WRAP_S, GLES32.GL_CLAMP_TO_EDGE);
-        GLES32.glTexParameteri(GLESExt.GL_TEXTURE_EXTERNAL_OES, GLES32.GL_TEXTURE_WRAP_T, GLES32.GL_CLAMP_TO_EDGE);
+        GLES20.glTexParameterf(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_NEAREST);
+        GLES20.glTexParameterf(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
+        GLES20.glTexParameteri(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_CLAMP_TO_EDGE);
+        GLES20.glTexParameteri(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE);
         checkGlError("glTexParameter");
     }
 
     private int loadShader(int shaderType, String source) {
-        int shader = GLES32.glCreateShader(shaderType);
+        int shader = GLES20.glCreateShader(shaderType);
         checkGlError("glCreateShader type=" + shaderType);
-        GLES32.glShaderSource(shader, 512, new String[]{source}, intBuffer);
-        GLES32.glCompileShader(shader);
+        GLES20.glShaderSource(shader, source);
+        GLES20.glCompileShader(shader);
         int[] compiled = new int[1];
-        GLES32.glGetShaderiv(shader, GLES32.GL_COMPILE_STATUS, compiled);
+        GLES20.glGetShaderiv(shader, GLES20.GL_COMPILE_STATUS, compiled, 0);
         if (compiled[0] == 0) {
             System.err.println("Could not compile shader " + shaderType + ":");
-            GLES32.glGetShaderInfoLog(shader, 512, intBuffer, strBuffer);
-            System.err.println(strBuffer);
-            GLES32.glDeleteShader(shader);
+            System.err.println(" " + GLES20.glGetShaderInfoLog(shader));
+            GLES20.glDeleteShader(shader);
             shader = 0;
         }
         return shader;
     }
 
     private int createProgram(String vertexSource, String fragmentSource) {
-        int vertexShader = loadShader(GLES32.GL_VERTEX_SHADER, vertexSource);
+        int vertexShader = loadShader(GLES20.GL_VERTEX_SHADER, vertexSource);
         if (vertexShader == 0) {
             return 0;
         }
-        int pixelShader = loadShader(GLES32.GL_FRAGMENT_SHADER, fragmentSource);
+        int pixelShader = loadShader(GLES20.GL_FRAGMENT_SHADER, fragmentSource);
         if (pixelShader == 0) {
             return 0;
         }
 
-        int program = GLES32.glCreateProgram();
+        int program = GLES20.glCreateProgram();
         checkGlError("glCreateProgram");
         if (program == 0) {
             System.err.println("Could not create program");
         }
-        GLES32.glAttachShader(program, vertexShader);
+        GLES20.glAttachShader(program, vertexShader);
         checkGlError("glAttachShader");
-        GLES32.glAttachShader(program, pixelShader);
+        GLES20.glAttachShader(program, pixelShader);
         checkGlError("glAttachShader");
-        GLES32.glLinkProgram(program);
+        GLES20.glLinkProgram(program);
         int[] linkStatus = new int[1];
-        GLES32.glGetProgramiv(program, GLES32.GL_LINK_STATUS, linkStatus);
-        if (linkStatus[0] != GLES32.GL_TRUE) {
+        GLES20.glGetProgramiv(program, GLES20.GL_LINK_STATUS, linkStatus, 0);
+        if (linkStatus[0] != GLES20.GL_TRUE) {
             System.err.println("Could not link program: ");
-            GLES32.glGetProgramInfoLog(program, 512, intBuffer, strBuffer);
-            System.err.println(strBuffer);
-            GLES32.glDeleteProgram(program);
+            System.err.println(GLES20.glGetProgramInfoLog(program));
+            GLES20.glDeleteProgram(program);
             program = 0;
         }
         return program;
@@ -236,7 +222,7 @@ public class CameraSurfaceRenderer {
 
     public void checkGlError(String op) {
         int error;
-        if ((error = GLES32.glGetError()) != GLES32.GL_NO_ERROR) {
+        if ((error = GLES20.glGetError()) != GLES20.GL_NO_ERROR) {
             System.err.println(op + ": glError " + error);
             throw new RuntimeException(op + ": glError " + error);
         }
@@ -244,12 +230,12 @@ public class CameraSurfaceRenderer {
 
     public void release() {
         if (program != 0) {
-            GLES32.glDeleteProgram(program);
+            GLES20.glDeleteProgram(program);
             program = 0;
         }
 
         if (textureID != -12345) {
-            GLES32.glDeleteTextures(1, new int[]{textureID});
+            GLES20.glDeleteTextures(1, new int[]{textureID}, 0);
             textureID = -12345;
         }
     }

@@ -5,6 +5,12 @@
  */
 package org.atalk.impl.neomedia.jmfext.media.renderer.audio;
 
+import static android.media.AudioTrack.STATE_INITIALIZED;
+
+import android.media.AudioAttributes;
+import android.media.AudioManager;
+import android.media.AudioTrack;
+
 import com.google.common.primitives.Doubles;
 
 import org.atalk.impl.neomedia.MediaServiceImpl;
@@ -68,7 +74,7 @@ public class AudioTrackRenderer extends AbstractAudioRenderer<AudioSystem> {
      * Currently we use software gain control. Output volume is controlled using
      * <code>AudioManager</code> by adjusting stream volume. When the minimum value is reached we keep
      * lowering the volume using software gain control. The opposite happens for the maximum volume.
-     * See {@link CallVolumeCtrlSlice}.
+     * See {@link CallVolumeCtrlFragment}.
      */
     private static final boolean USE_SOFTWARE_GAIN = true;
 

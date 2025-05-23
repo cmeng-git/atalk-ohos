@@ -15,6 +15,8 @@
  */
 package net.java.sip.communicator.service.gui;
 
+import android.content.Context;
+
 import net.java.sip.communicator.service.protocol.OperationFailedException;
 import net.java.sip.communicator.service.protocol.ProtocolProviderService;
 import net.java.sip.communicator.util.UtilActivator;
@@ -24,8 +26,6 @@ import org.jxmpp.jid.Jid;
 
 import java.util.Iterator;
 import java.util.Map;
-
-import ohos.app.Context;
 
 /**
  * The <code>AccountRegistrationWizard</code> is meant to provide a wizard which will guide the user
@@ -200,7 +200,7 @@ public abstract class AccountRegistrationWizard
     {
     }
 
-    /* Define Result you would like to return from registerAccount on task completion */
+    /* Define Result you would like to return from registerAccount ASyncTask completion */
     public interface TaskCompleted
     {
         void onRegistrationCompleted(Boolean result);

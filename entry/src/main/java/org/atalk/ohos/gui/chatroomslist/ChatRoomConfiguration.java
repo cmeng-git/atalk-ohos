@@ -1,6 +1,6 @@
 /*
- * aTalk, ohos VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * aTalk, android VoIP and Instant Messaging client
+ * Copyright 2014 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,17 +16,24 @@
  */
 package org.atalk.ohos.gui.chatroomslist;
 
-import ohos.aafwk.content.Intent;
-import ohos.agp.components.BaseItemProvider;
-import ohos.agp.components.Button;
-import ohos.agp.components.Checkbox;
-import ohos.agp.components.Component;
-import ohos.agp.components.ComponentContainer;
-import ohos.agp.components.LayoutScatter;
-import ohos.agp.components.ListContainer;
-import ohos.agp.components.Text;
-import ohos.agp.components.TextField;
-import ohos.app.Context;
+import android.content.Context;
+import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.Spinner;
+import android.widget.TextView;
+
+import androidx.fragment.app.FragmentManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,11 +44,11 @@ import java.util.concurrent.Executors;
 
 import net.java.sip.communicator.service.muc.ChatRoomWrapper;
 
-import org.atalk.ohos.BaseAbility;
-import org.atalk.ohos.BaseSlice;
-import org.atalk.ohos.ResourceTable;
+import org.atalk.ohos.BaseFragment;
+import org.atalk.ohos.R;
 import org.atalk.ohos.gui.util.MultiSelectionSpinner;
-import org.atalk.ohos.util.ComponentUtil;
+import org.atalk.ohos.gui.util.ViewUtil;
+import org.jetbrains.annotations.NotNull;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smackx.muc.MultiUserChat;
@@ -61,7 +68,7 @@ import timber.log.Timber;
  *
  * @author Eng Chong Meng
  */
-public class ChatRoomConfiguration extends BaseSlice {
+public class ChatRoomConfiguration extends BaseFragment {
     /**
      * Declare as static to support rotation, otherwise crash when user rotate
      * Instead of using save Bundle approach
@@ -69,7 +76,6 @@ public class ChatRoomConfiguration extends BaseSlice {
     private static ChatRoomWrapper mChatRoomWrapper;
     private static ChatRoomConfigListener mCrcListener = null;
 
-    private Context mContext;
     private MultiUserChat multiUserChat;
 
     /**
@@ -90,18 +96,18 @@ public class ChatRoomConfiguration extends BaseSlice {
     /**
      * The Room configuration list view adapter for user selection
      */
-    private ConfigListProvider configListProvider;
+    private ConfigListAdapter configListAdapter;
 
     /**
-     * Component for room configuration title description from the room configuration form
+     * View for room configuration title description from the room configuration form
      */
-    private Text mTitle;
+    private TextView mTitle;
 
     /**
      * Constructs the <code>ChatRoomConfiguration</code>.
      *
      * @param chatRoomWrapper user joined ChatRoomWrapper for the <code>Chat Session</code>
-     * @param crcListener
+     * @param crcListener ChatRoomConfigListener
      */
     public static ChatRoomConfiguration getInstance(ChatRoomWrapper chatRoomWrapper, ChatRoomConfigListener crcListener) {
         ChatRoomConfiguration fragment = new ChatRoomConfiguration();
@@ -110,33 +116,34 @@ public class ChatRoomConfiguration extends BaseSlice {
         return fragment;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void onStart(Intent intent) {
-        mContext = getContext();
-        LayoutScatter inflater = LayoutScatter.getInstance(mContext);
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View contentView = inflater.inflate(R.layout.chatroom_config, container, false);
+        mTitle = contentView.findViewById(R.id.config_title);
 
-        Component contentView = inflater.parse(ResourceTable.Layout_chatroom_config, container, false);
-        mTitle = contentView.findComponentById(ResourceTable.Id_config_title);
+        ListView configListView = contentView.findViewById(R.id.formListView);
+        configListAdapter = new ConfigListAdapter(inflater);
+        configListView.setAdapter(configListAdapter);
 
-        ListContainer configListContainer = contentView.findComponentById(ResourceTable.Id_formListContainer);
-        configListProvider = new ConfigListProvider(inflater);
-        configListContainer.setItemProvider(configListProvider);
+        Button cancelButton = contentView.findViewById(R.id.rcb_Cancel);
+        cancelButton.setOnClickListener(v -> handleBackPressed());
 
-        Button cancelButton = contentView.findComponentById(ResourceTable.Id_rcb_Cancel);
-        cancelButton.setClickedListener(v -> onBackPressed());
-
-        Button submitButton = contentView.findComponentById(ResourceTable.Id_rcb_Submit);
-        submitButton.setClickedListener(v -> {
+        Button submitButton = contentView.findViewById(R.id.rcb_Submit);
+        submitButton.setOnClickListener(v -> {
             if (processRoomConfiguration())
-                onBackPressed();
+                handleBackPressed();
         });
+
+        return contentView;
     }
 
     /**
-     * Use internal or call from ChatAbility: method not supported in a fragment.
-     * AbilitySlice does not support onBackPressed method.
+     * Use locally or call from ChatActivity. Fragment does not support onBackPressed method.
      */
-    public void onBackPressed() {
+    public void handleBackPressed() {
         FragmentManager fm = getParentFragmentManager();
         if (fm.getBackStackEntryCount() > 0) {
             fm.popBackStack();
@@ -188,10 +195,10 @@ public class ChatRoomConfiguration extends BaseSlice {
     /**
      * Adapter displaying all the available room configuration properties for user selection.
      */
-    private class ConfigListProvider extends BaseItemProvider {
-        private LayoutScatter mInflater;
+    private class ConfigListAdapter extends BaseAdapter {
+        private final LayoutInflater mInflater;
 
-        private ConfigListProvider(LayoutScatter inflater) {
+        private ConfigListAdapter(LayoutInflater inflater) {
             mInflater = inflater;
             new RoomConfigInfo().execute();
         }
@@ -233,14 +240,14 @@ public class ChatRoomConfiguration extends BaseSlice {
         }
 
         @Override
-        public Component getComponent(int position, Component convertView, ComponentContainer parent) {
+        public View getView(int position, View convertView, ViewGroup parent) {
             List<Option> ffOptions;
             List<String> optionList = new ArrayList<>();
             List<String> valueList = new ArrayList<>();
             Map<String, String> mapOption = new HashMap<>();
 
-            Text textLabel;
-            TextField editText;
+            TextView textLabel;
+            EditText editText;
 
             FormField ff = formFields.get(position);
             if (ff != null) {
@@ -253,9 +260,9 @@ public class ChatRoomConfiguration extends BaseSlice {
                 try {
                     switch (formType) {
                         case bool:
-                            convertView = mInflater.parse(ResourceTable.Layout_chatroom_config_boolean, parent, false);
+                            convertView = mInflater.inflate(R.layout.chatroom_config_boolean, parent, false);
 
-                            Checkbox cb = convertView.findComponentById(ResourceTable.Id_cb_formfield);
+                            CheckBox cb = convertView.findViewById(R.id.cb_formfield);
                             cb.setText(label);
 
                             if (objValue instanceof Boolean) {
@@ -268,9 +275,9 @@ public class ChatRoomConfiguration extends BaseSlice {
                             break;
 
                         case list_multi:
-                            convertView = mInflater.parse(ResourceTable.Layout_chatroom_config_list_multi, parent, false);
+                            convertView = mInflater.inflate(R.layout.chatroom_config_list_multi, parent, false);
 
-                            textLabel = convertView.findComponentById(ResourceTable.Id_cr_attr_label);
+                            textLabel = convertView.findViewById(R.id.cr_attr_label);
                             textLabel.setText(label);
 
                             if (objValue instanceof ArrayList<?>) {
@@ -293,7 +300,7 @@ public class ChatRoomConfiguration extends BaseSlice {
                                 optionList.add(optLabel);
                             }
 
-                            MultiSelectionSpinner multiSelectionSpinner = convertView.findComponentById(ResourceTable.Id_cr_Spinner);
+                            MultiSelectionSpinner multiSelectionSpinner = convertView.findViewById(R.id.cr_Spinner);
                             multiSelectionSpinner.setItems(optionList, (multiSelectionSpinner1, selected) -> {
                                 List<String> selection = new ArrayList<>();
                                 for (int i = 0; i < optionList.size(); ++i) {
@@ -309,9 +316,9 @@ public class ChatRoomConfiguration extends BaseSlice {
                             break;
 
                         case list_single:
-                            convertView = mInflater.parse(ResourceTable.Layout_chatroom_config_list_single, parent, false);
+                            convertView = mInflater.inflate(R.layout.chatroom_config_list_single, parent, false);
 
-                            textLabel = convertView.findComponentById(ResourceTable.Id_cr_attr_label);
+                            textLabel = convertView.findViewById(R.id.cr_attr_label);
                             textLabel.setText(label);
 
                             ffOptions = ((ListSingleFormField) ff).getOptions();
@@ -324,69 +331,77 @@ public class ChatRoomConfiguration extends BaseSlice {
                                 optionList.add(optLabel);
                             }
 
-                            ListContainer spinner = convertView.findComponentById(ResourceTable.Id_cr_Spinner);
-                            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(mContext, ResourceTable.Layout_simple_spinner_item, optionList);
-                            arrayAdapter.setDropDownViewResource(ResourceTable.Layout_simple_spinner_dropdown_item);
-                            spinner.setItemProvider(arrayAdapter);
+                            Spinner spinner = convertView.findViewById(R.id.cr_Spinner);
+                            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(mContext, R.layout.simple_spinner_item, optionList);
+                            arrayAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
+                            spinner.setAdapter(arrayAdapter);
 
                             if (objValue instanceof String) {
                                 firstValue = (String) objValue;
                             }
 
-                            spinner.setSelectedItemIndex(valueList.indexOf(firstValue), false);
-                            spinner.setItemSelectedListener(new ListContainer.ItemSelectedListener() {
+                            spinner.setSelection(valueList.indexOf(firstValue), false);
+                            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                                 @Override
-                                public void onItemSelected(ListContainer parentView, Component selectedItemView, int position, long id) {
+                                public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                                     String optSelected = optionList.get(position);
                                     configUpdates.put(fieldName, mapOption.get(optSelected));
+                                }
+
+                                @Override
+                                public void onNothingSelected(AdapterView<?> parentView) {
+                                    // your code here
                                 }
                             });
                             break;
 
                         case text_private:
-                            convertView = mInflater.parse(ResourceTable.Layout_chatroom_config_text_private, parent, false);
+                            convertView = mInflater.inflate(R.layout.chatroom_config_text_private, parent, false);
 
-                            textLabel = convertView.findComponentById(ResourceTable.Id_cr_attr_label);
+                            textLabel = convertView.findViewById(R.id.cr_attr_label);
                             textLabel.setText(label);
 
                             if (objValue instanceof String) {
                                 firstValue = (String) objValue;
                             }
 
-                            editText = convertView.findComponentById(ResourceTable.Id_passwordField);
+                            editText = convertView.findViewById(R.id.passwordField);
                             editText.setText(firstValue);
 
-                            editText.addTextChangedListener(new Text.TextObserver() {
-                                @Override
-                                public void onTextUpdated(String s, int i, int i1, int i2) {
-
-                                }
-
+                            editText.addTextChangedListener(new TextWatcher() {
                                 @Override
                                 public void afterTextChanged(Editable s) {
                                     if (s != null) {
                                         configUpdates.put(fieldName, s.toString());
                                     }
                                 }
+
+                                @Override
+                                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                                }
+
+                                @Override
+                                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                }
                             });
 
-                            Checkbox pwdCheckBox = convertView.findComponentById(ResourceTable.Id_show_password);
+                            CheckBox pwdCheckBox = convertView.findViewById(R.id.show_password);
                             pwdCheckBox.setOnCheckedChangeListener((buttonView, isChecked)
-                                    -> ComponentUtil.showPassword(editText, isChecked));
+                                    -> ViewUtil.showPassword(editText, isChecked));
                             break;
 
                         case text_single:
                         case text_multi:
-                            convertView = mInflater.parse(ResourceTable.Layout_chatroom_config_text_single, parent, false);
+                            convertView = mInflater.inflate(R.layout.chatroom_config_text_single, parent, false);
 
-                            textLabel = convertView.findComponentById(ResourceTable.Id_cr_attr_label);
+                            textLabel = convertView.findViewById(R.id.cr_attr_label);
                             textLabel.setText(label);
 
                             if (objValue instanceof String) {
                                 firstValue = (String) objValue;
                             }
 
-                            editText = convertView.findComponentById(ResourceTable.Id_cr_attr_value);
+                            editText = convertView.findViewById(R.id.cr_attr_value);
                             editText.setText(firstValue);
 
                             editText.addTextChangedListener(new TextWatcher() {
@@ -414,12 +429,12 @@ public class ChatRoomConfiguration extends BaseSlice {
                                     fieldName, label, firstValue);
                         case hidden:
                             // convertView cannot be null, so just return an empty view
-                            convertView = mInflater.parse(ResourceTable.Layout_chatroom_config_none, parent, false);
+                            convertView = mInflater.inflate(R.layout.chatroom_config_none, parent, false);
                             break;
                     }
                     convertView.setTag(fieldName);
                 } catch (Exception e) {
-                    Timber.w("Exception in get Component for variable %s; %s=%s; %s %s", fieldName, label, firstValue,
+                    Timber.w("Exception in get View for variable %s; %s=%s; %s %s", fieldName, label, firstValue,
                             configUpdates.get(fieldName), e.getMessage());
                 }
             }
@@ -428,7 +443,7 @@ public class ChatRoomConfiguration extends BaseSlice {
 
         /**
          * Retrieve the chatRoom configuration fields from the server and init the default replyFrom
-         * Populate the fragment with the available options in getComponent()
+         * Populate the fragment with the available options in getView()
          */
         private class RoomConfigInfo {
             public RoomConfigInfo() {
@@ -448,7 +463,7 @@ public class ChatRoomConfiguration extends BaseSlice {
                             formFields = initForm.getDataForm().getFields();
                             replyForm = initForm.getFillableForm();
                         }
-                        configListProvider.notifyDataChanged();
+                        configListAdapter.notifyDataSetChanged();
                     });
                 });
             }

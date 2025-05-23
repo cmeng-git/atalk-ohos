@@ -82,7 +82,7 @@ public class OperationSetAutoAnswerJabberImpl extends AbstractOperationSetBasicA
     public boolean autoAnswer(Call call, Map<MediaType, MediaDirection> directions, Jingle jingleSessionInit)
     {
         // 2022/11/29 (v3.0.5): Allow proceed to auto-answer the call if it is already accepted in JingleMessageSessionImpl
-        // JingleMessage <propose/> will call via ReceivedCallAbility UI when android is in locked screen;
+        // JingleMessage <propose/> will call via ReceivedCallActivity UI when android is in locked screen;
         // Check aTalkApp.isForeground for incoming alert to continue.
 //        answerOnJingleMessageAccept = aTalkApp.isForeground && (jingleSessionInit != null)
 //                && JingleMessageSessionImpl.isJingleMessageAccept(jingleSessionInit);

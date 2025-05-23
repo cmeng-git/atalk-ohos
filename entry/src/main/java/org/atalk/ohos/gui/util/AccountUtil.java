@@ -1,61 +1,55 @@
 /*
- * aTalk, ohos VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * Jitsi, the OpenSource Java VoIP and Instant Messaging client.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Distributable under LGPL license. See terms of license at gnu.org.
  */
 package org.atalk.ohos.gui.util;
 
-import ohos.aafwk.ability.Ability;
-import ohos.app.Context;
-import ohos.media.image.PixelMap;
+import android.content.Context;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
+
+import androidx.core.content.res.ResourcesCompat;
 
 import net.java.sip.communicator.service.protocol.ProtocolNames;
 
-import org.atalk.ohos.ResourceTable;
+import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
-import org.atalk.ohos.util.AppImageUtil;
 
 /**
  * Class containing utility methods that may concern accounts. Provide default values for some fields.
  *
+ * @author Pawel Domas
  * @author Eng Chong Meng
  */
 public class AccountUtil
 {
     /**
-     * Returns {@link ohos.media.codec.PixelMap} representing default presence status for specified <code>protocolName</code>
+     * Returns {@link Drawable} representing default presence status for specified <code>protocolName</code>
      *
-     * @param context {@link Context} of current {@link Ability}
+     * @param context {@link Context} of current {@link android.app.Activity}
      * @param protocolName the name of the protocol
-     * @return {@link PixelMap} for default presence status or <code>null</code> otherwise
+     * @return {@link Drawable} for default presence status or <code>null</code> otherwise
      */
-    static public PixelMap getDefaultPresenceIcon(Context context, String protocolName)
+    static public Drawable getDefaultPresenceIcon(Context context, String protocolName)
     {
         if (protocolName.equals(ProtocolNames.JABBER)) {
-            return AppImageUtil.getPixelMap(aTalkApp.getInstance(), ResourceTable.Media_default_jabber_status);
+            return new BitmapDrawable(aTalkApp.getAppResources(),
+                    BitmapFactory.decodeResource(context.getResources(), R.drawable.default_jabber_status));
         }
         return null;
     }
 
     /**
-     * Returns the default avatar {@link PixelMap}
+     * Returns the default avatar {@link Drawable}
      *
      * @param context current application {@link Context}
-     * @return the default avatar {@link PixelMap}
+     * @return the default avatar {@link Drawable}
      */
-    static public PixelMap getDefaultAvatarIcon(Context context)
+    static public LayerDrawable getDefaultAvatarIcon(Context context)
     {
-        return AppImageUtil.getPixelMap (context, ResourceTable.Media_avatar);
+        return (LayerDrawable) ResourcesCompat.getDrawable(context.getResources(), R.drawable.avatar_layer_drawable, null);
     }
 }

@@ -1,6 +1,6 @@
 /*
- * aTalk, ohos VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * aTalk, android VoIP and Instant Messaging client
+ * Copyright 2014 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,11 @@
  */
 package org.atalk.persistance.migrations;
 
-import ohos.data.rdb.RdbStore;
+import android.database.sqlite.SQLiteDatabase;
 
 public class Migrations {
     @SuppressWarnings("fallthrough")
-    public static void upgradeDatabase(RdbStore db, MigrationsHelper migrationsHelper) {
+    public static void upgradeDatabase(SQLiteDatabase db, MigrationsHelper migrationsHelper) {
         switch (db.getVersion()) {
             case 1:
                 // OmemoDBCreate.createOmemoTables(db);

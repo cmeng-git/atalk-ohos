@@ -1,6 +1,6 @@
 /*
  * aTalk, android VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * Copyright 2014 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,8 @@
  */
 package org.atalk.ohos.plugin.permissions;
 
-import ohos.eventhandler.EventHandler;
-import ohos.eventhandler.EventRunner;
+import android.os.Handler;
+import android.os.Looper;
 
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
@@ -28,26 +28,25 @@ import com.karumi.dexter.listener.PermissionRequest;
  * Sample listener that shows how to handle permission request callbacks on a background thread
  */
 public class BackgroundThreadPermissionListener extends AppPermissionListener {
+    private final Handler handler = new Handler(Looper.getMainLooper());
 
-    private EventHandler handler = new EventHandler(EventRunner.getMainEventRunner());
-
-    public BackgroundThreadPermissionListener(PermissionsAbility activity) {
+    public BackgroundThreadPermissionListener(PermissionsActivity activity) {
         super(activity);
     }
 
     @Override
     public void onPermissionGranted(final PermissionGrantedResponse response) {
-        handler.postTask(() -> BackgroundThreadPermissionListener.super.onPermissionGranted(response));
+        handler.post(() -> BackgroundThreadPermissionListener.super.onPermissionGranted(response));
     }
 
     @Override
     public void onPermissionDenied(final PermissionDeniedResponse response) {
-        handler.postTask(() -> BackgroundThreadPermissionListener.super.onPermissionDenied(response));
+        handler.post(() -> BackgroundThreadPermissionListener.super.onPermissionDenied(response));
     }
 
     @Override
     public void onPermissionRationaleShouldBeShown(final PermissionRequest permission, final PermissionToken token) {
-        handler.postTask(()
+        handler.post(()
                 -> BackgroundThreadPermissionListener.super.onPermissionRationaleShouldBeShown(permission, token));
     }
 }

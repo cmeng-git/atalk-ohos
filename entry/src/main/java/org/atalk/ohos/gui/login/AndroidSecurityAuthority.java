@@ -5,11 +5,12 @@
  */
 package org.atalk.ohos.gui.login;
 
-import ohos.agp.components.Component;
-import ohos.agp.components.Picker;
-import ohos.app.Context;
-import ohos.eventhandler.EventRunner;
-import ohos.utils.PacMap;
+import android.content.Context;
+import android.os.Bundle;
+import android.os.Looper;
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.Spinner;
 
 import net.java.sip.communicator.impl.msghistory.MessageHistoryActivator;
 import net.java.sip.communicator.impl.msghistory.MessageHistoryServiceImpl;
@@ -17,11 +18,10 @@ import net.java.sip.communicator.service.protocol.AccountID;
 import net.java.sip.communicator.service.protocol.SecurityAuthority;
 import net.java.sip.communicator.service.protocol.UserCredentials;
 
-import org.apache.http.util.TextUtils;
-import org.atalk.ohos.ResourceTable;
+import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
-import org.atalk.ohos.gui.dialogs.DialogH;
-import org.atalk.ohos.util.ComponentUtil;
+import org.atalk.ohos.gui.dialogs.DialogActivity;
+import org.atalk.ohos.gui.util.ViewUtil;
 
 import timber.log.Timber;
 
@@ -64,10 +64,10 @@ public class AndroidSecurityAuthority implements SecurityAuthority {
         }
 
         Context ctx = aTalkApp.getInstance();
-        String errorMessage = ctx.getString(ResourceTable.String_connection_failed_message,
+        String errorMessage = aTalkApp.getResString(R.string.connection_failed_message,
                 defaultValues.getUserName(), defaultValues.getServerAddress());
 
-        DialogH.getInstance(ctx).showDialog(ctx, ctx.getString(ResourceTable.String_login_failed), errorMessage);
+        DialogActivity.showDialog(ctx, aTalkApp.getResString(R.string.login_failed), errorMessage);
         return defaultValues;
     }
 
@@ -82,75 +82,73 @@ public class AndroidSecurityAuthority implements SecurityAuthority {
      */
     public UserCredentials obtainCredentials(final AccountID accountID,
             final UserCredentials credentials, final Boolean isShowServerOption) {
-        if (EventRunner.current() == EventRunner.getMainEventRunner()) {
+        if (Looper.myLooper() == Looper.getMainLooper()) {
             Timber.e("Cannot obtain credentials from the main thread!");
             return credentials;
         }
 
-        // Insert DialogH arguments
-        PacMap args = new PacMap();
+        // Insert DialogActivity arguments
+        Bundle args = new Bundle();
         // Login userName and editable state
         String userName = credentials.getUserName();
         userNameLastEdited = userName;
-        args.putString(CredentialsComponent.ARG_LOGIN, userName);
-        args.putBooleanValue(CredentialsComponent.ARG_LOGIN_EDITABLE, isUserNameEditable);
+        args.putString(CredentialsFragment.ARG_LOGIN, userName);
+        args.putBoolean(CredentialsFragment.ARG_LOGIN_EDITABLE, isUserNameEditable);
 
         // Password argument
         char[] password = credentials.getPassword();
         if (password != null) {
-            args.putString(CredentialsComponent.ARG_PASSWORD, credentials.getPasswordAsString());
+            args.putString(CredentialsFragment.ARG_PASSWORD, credentials.getPasswordAsString());
         }
 
         String dnssecMode = accountID.getDnssMode();
-        args.putString(CredentialsComponent.ARG_DNSSEC_MODE, dnssecMode);
+        args.putString(CredentialsFragment.ARG_DNSSEC_MODE, dnssecMode);
 
         // Persistent password argument
-        args.putBooleanValue(CredentialsComponent.ARG_STORE_PASSWORD, credentials.isPasswordPersistent());
+        args.putBoolean(CredentialsFragment.ARG_STORE_PASSWORD, credentials.isPasswordPersistent());
 
         // InBand Registration argument
-        args.putBooleanValue(CredentialsComponent.ARG_IB_REGISTRATION, accountID.isIbRegistration());
-        args.putString(CredentialsComponent.ARG_CERT_ID, accountID.getTlsClientCertificate());
+        args.putBoolean(CredentialsFragment.ARG_IB_REGISTRATION, accountID.isIbRegistration());
+        args.putString(CredentialsFragment.ARG_CERT_ID, accountID.getTlsClientCertificate());
 
-        args.putBooleanValue(CredentialsComponent.ARG_IS_SHOWN_SERVER_OPTION, isShowServerOption);
+        args.putBoolean(CredentialsFragment.ARG_IS_SHOWN_SERVER_OPTION, isShowServerOption);
         if (isShowServerOption) {
             // Server overridden argument
-            args.putBooleanValue(CredentialsComponent.ARG_IS_SERVER_OVERRIDDEN, accountID.isServerOverridden());
-            args.putString(CredentialsComponent.ARG_SERVER_ADDRESS, accountID.getServerAddress());
-            args.putString(CredentialsComponent.ARG_SERVER_PORT, accountID.getServerPort());
+            args.putBoolean(CredentialsFragment.ARG_IS_SERVER_OVERRIDDEN, accountID.isServerOverridden());
+            args.putString(CredentialsFragment.ARG_SERVER_ADDRESS, accountID.getServerAddress());
+            args.putString(CredentialsFragment.ARG_SERVER_PORT, accountID.getServerPort());
         }
-        args.putString(CredentialsComponent.ARG_LOGIN_REASON, credentials.getLoginReason());
+        args.putString(CredentialsFragment.ARG_LOGIN_REASON, credentials.getLoginReason());
+        aTalkApp.waitForFocus();
 
-        Context ctx = aTalkApp.getInstance();
-        CredentialsComponent component = new CredentialsComponent(ctx, args);
         // Obtain credentials lock
         final Object credentialsLock = new Object();
 
-        aTalkApp.waitForFocus();
-
         // Displays the credentials dialog and waits for it to complete
-        DialogH.getInstance(ctx).showCustomDialog(ctx, ctx.getString(ResourceTable.String_login_credential), component,
-                ctx.getString(ResourceTable.String_sign_in), new DialogH.DialogListener() {
-                    public boolean onConfirmClicked(DialogH dialog) {
-                        Component dialogContent = component.findComponentById(ResourceTable.Id_alertContent);
-                        String userNameEntered = ComponentUtil.getTextViewValue(dialogContent, ResourceTable.Id_username);
-                        String password = ComponentUtil.getTextViewValue(dialogContent, ResourceTable.Id_password);
+        DialogActivity.showCustomDialog(aTalkApp.getInstance(),
+                aTalkApp.getResString(R.string.login_credential), CredentialsFragment.class.getName(),
+                args, aTalkApp.getResString(R.string.sign_in), new DialogActivity.DialogListener() {
+                    public boolean onConfirmClicked(DialogActivity dialog) {
+                        View dialogContent = dialog.findViewById(R.id.alertContent);
+                        String userNameEntered = ViewUtil.getTextViewValue(dialogContent, R.id.username);
+                        String password = ViewUtil.getTextViewValue(dialogContent, R.id.password);
 
-                        boolean storePassword = ComponentUtil.isCompoundChecked(dialogContent, ResourceTable.Id_store_password);
-                        boolean ibRegistration = ComponentUtil.isCompoundChecked(dialogContent, ResourceTable.Id_ib_registration);
+                        boolean storePassword = ViewUtil.isCompoundChecked(dialogContent, R.id.store_password);
+                        boolean ibRegistration = ViewUtil.isCompoundChecked(dialogContent, R.id.ib_registration);
 
                         if (!userNameLastEdited.equals(userNameEntered)) {
                             int msgCount = checkPurgedMsgCount(accountID.getAccountUid(), userNameEntered);
                             if (msgCount < 0) {
                                 userNameLastEdited = userName;
-                                ComponentUtil.setTextViewValue(dialogContent, ResourceTable.Id_reason_field,
-                                        ctx.getString(ResourceTable.String_username_password_null));
+                                ViewUtil.setTextViewValue(dialogContent, R.id.reason_field,
+                                        aTalkApp.getResString(R.string.username_password_null));
                                 return false;
                             }
                             else if (msgCount > 0) {
-                                String msgReason = ctx.getString(ResourceTable.String_username_change_warning,
+                                String msgReason = aTalkApp.getResString(R.string.username_change_warning,
                                         userNameEntered, msgCount, userName);
-                                ComponentUtil.setTextViewValue(dialogContent, ResourceTable.Id_reason_field, msgReason);
-                                ComponentUtil.setTextViewColor(dialogContent, ResourceTable.Id_reason_field, ResourceTable.Color_red);
+                                ViewUtil.setTextViewValue(dialogContent, R.id.reason_field, msgReason);
+                                ViewUtil.setTextViewColor(dialogContent, R.id.reason_field, R.color.red);
                                 userNameLastEdited = userNameEntered;
                                 return false;
                             }
@@ -162,17 +160,18 @@ public class AndroidSecurityAuthority implements SecurityAuthority {
                         credentials.setIbRegistration(ibRegistration);
 
                         // Translate dnssecMode label to dnssecMode value
-                        Picker spinnerDM = dialogContent.findComponentById(ResourceTable.Id_dnssecModeSpinner);
-                        String[] dnssecModeValues = ctx.getStringArray(ResourceTable.Strarray_dnssec_Mode_value);
-                        String selectedDnssecMode = dnssecModeValues[spinnerDM.getSelectorItemNum()];
+                        Spinner spinnerDM = dialogContent.findViewById(R.id.dnssecModeSpinner);
+                        String[] dnssecModeValues = aTalkApp.getInstance().getResources()
+                                .getStringArray(R.array.dnssec_Mode_value);
+                        String selectedDnssecMode = dnssecModeValues[spinnerDM.getSelectedItemPosition()];
                         credentials.setDnssecMode(selectedDnssecMode);
 
                         if (isShowServerOption) {
-                            boolean isServerOverridden = ComponentUtil.isCompoundChecked(dialogContent, ResourceTable.Id_serverOverridden);
-                            String serverAddress = ComponentUtil.getTextViewValue(dialogContent, ResourceTable.Id_serverIpField);
-                            String serverPort = ComponentUtil.getTextViewValue(dialogContent, ResourceTable.Id_serverPortField);
+                            boolean isServerOverridden = ViewUtil.isCompoundChecked(dialogContent, R.id.serverOverridden);
+                            String serverAddress = ViewUtil.getTextViewValue(dialogContent, R.id.serverIpField);
+                            String serverPort = ViewUtil.getTextViewValue(dialogContent, R.id.serverPortField);
                             if (serverAddress == null || serverPort == null) {
-                                aTalkApp.showToastMessage(ResourceTable.String_certconfig_incomplete);
+                                aTalkApp.showToastMessage(R.string.certconfig_incomplete);
                                 return false;
                             }
 
@@ -187,12 +186,11 @@ public class AndroidSecurityAuthority implements SecurityAuthority {
                         return true;
                     }
 
-                    public void onDialogCancelled(DialogH dialog) {
+                    public void onDialogCancelled(DialogActivity dialog) {
                         credentials.setUserCancel(true);
                         synchronized (credentialsLock) {
                             credentialsLock.notify();
                         }
-                        dialog.destroy();
                     }
                 }, null);
         try {

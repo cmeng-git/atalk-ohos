@@ -5,21 +5,21 @@
  */
 package org.atalk.ohos.gui.authorization;
 
-import ohos.aafwk.content.Intent;
-import ohos.aafwk.content.Operation;
-import ohos.agp.components.Button;
-import ohos.agp.components.Checkbox;
-import ohos.agp.components.Component;
-import ohos.agp.components.Picker;
-import ohos.app.Context;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.KeyEvent;
+import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.Spinner;
 
 import net.java.sip.communicator.service.protocol.AuthorizationResponse;
 
-import org.atalk.ohos.BaseAbility;
-import org.atalk.ohos.ResourceTable;
+import org.atalk.ohos.BaseActivity;
+import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
-import org.atalk.ohos.gui.contactlist.MetaContactGroupProvider;
-import org.atalk.ohos.util.ComponentUtil;
+import org.atalk.ohos.gui.contactlist.MetaContactGroupAdapter;
+import org.atalk.ohos.gui.util.ViewUtil;
 
 /**
  * The dialog is displayed when someone wants to add us to his contact list and the authorization
@@ -28,7 +28,7 @@ import org.atalk.ohos.util.ComponentUtil;
  * @author Pawel Domas
  * @author Eng Chong Meng
  */
-public class AuthorizationRequestedDialog extends BaseAbility {
+public class AuthorizationRequestedDialog extends BaseActivity {
     /**
      * Request id managed by <code>AuthorizationHandlerImpl</code>.
      */
@@ -48,29 +48,28 @@ public class AuthorizationRequestedDialog extends BaseAbility {
      * {@inheritDoc}
      */
     @Override
-    protected void onStart(Intent intent) {
-        super.onStart(intent);
-        setUIContent(ResourceTable.Layout_authorization_requested);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.authorization_requested);
 
-        long requestId = intent.getLongParam(EXTRA_REQUEST_ID, -1);
+        long requestId = getIntent().getLongExtra(EXTRA_REQUEST_ID, -1);
         if (requestId == -1)
             throw new IllegalArgumentException();
 
         this.request = AuthorizationHandlerImpl.getRequest(requestId);
         String contactId = request.contact.getAddress();
-        Component content = findComponentById(ResourceTable.Id_content);
-        ComponentUtil.setTextViewValue(content, ResourceTable.Id_requestInfo,
-                getString(ResourceTable.String_authorization_request_info, contactId));
+        View content = findViewById(android.R.id.content);
+        ViewUtil.setTextViewValue(content, R.id.requestInfo,
+                getString(R.string.authorization_request_info, contactId));
 
-        ComponentUtil.setTextViewValue(content, ResourceTable.Id_addToContacts,
-                getString(ResourceTable.String_add_contact_to_list, contactId));
+        ViewUtil.setTextViewValue(content, R.id.addToContacts,
+                getString(R.string.add_contact_to_list, contactId));
 
-        Picker contactGroupSpinner = findComponentById(ResourceTable.Id_selectGroupSpinner);
-        contactGroupSpinner.setItemProvider(new MetaContactGroupProvider(this, ResourceTable.Id_selectGroupSpinner,
-                true, true));
+        Spinner contactGroupSpinner = findViewById(R.id.selectGroupSpinner);
+        contactGroupSpinner.setAdapter(new MetaContactGroupAdapter(this, R.id.selectGroupSpinner, true, true));
 
-        Checkbox addToContactsCb = findComponentById(ResourceTable.Id_addToContacts);
-        addToContactsCb.setCheckedStateChangedListener((buttonView, isChecked)
+        CompoundButton addToContactsCb = findViewById(R.id.addToContacts);
+        addToContactsCb.setOnCheckedChangeListener((buttonView, isChecked)
                 -> updateAddToContactsStatus(isChecked));
 
         // Prevents from closing the dialog on outside touch
@@ -81,17 +80,20 @@ public class AuthorizationRequestedDialog extends BaseAbility {
      * {@inheritDoc}
      */
     @Override
-    protected void onActive() {
-        super.onActive();
+    protected void onResume() {
+        super.onResume();
 
         // Update add to contacts status
-        updateAddToContactsStatus(ComponentUtil.isCompoundChecked(getContentView(), ResourceTable.Id_addToContacts));
+        updateAddToContactsStatus(ViewUtil.isCompoundChecked(getContentView(), R.id.addToContacts));
     }
 
     @Override
-    protected void onBackPressed() {
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
         // Prevent Back Key from closing the dialog
-        return;
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            return true;
+        }
+        return super.onKeyUp(keyCode, event);
     }
 
     /**
@@ -100,53 +102,53 @@ public class AuthorizationRequestedDialog extends BaseAbility {
      * @param isChecked <code>true</code> if "add to contacts" checkbox is checked.
      */
     private void updateAddToContactsStatus(boolean isChecked) {
-        ComponentUtil.ensureEnabled(getContentView(), ResourceTable.Id_selectGroupSpinner, isChecked);
+        ViewUtil.ensureEnabled(getContentView(), R.id.selectGroupSpinner, isChecked);
     }
 
     /**
      * Method fired when user accept the request.
      *
-     * @param v the button's <code>Component.</code>
+     * @param v the button's <code>View</code>
      */
     @SuppressWarnings("unused")
-    public void onAcceptClicked(Component v) {
+    public void onAcceptClicked(View v) {
         responseCode = AuthorizationResponse.ACCEPT;
-        terminateAbility();
+        finish();
     }
 
     /**
      * Method fired when reject button is clicked.
      *
-     * @param v the button's <code>Component</code>
+     * @param v the button's <code>View</code>
      */
     @SuppressWarnings("unused")
-    public void onRejectClicked(Component v) {
+    public void onRejectClicked(View v) {
         responseCode = AuthorizationResponse.REJECT;
-        terminateAbility();
+        finish();
     }
 
     /**
      * Method fired when ignore button is clicked.
      *
-     * @param v the button's <code>Component.</code>
+     * @param v the button's <code>View</code>
      */
     @SuppressWarnings("unused")
-    public void onIgnoreClicked(Component v) {
-        terminateAbility();
+    public void onIgnoreClicked(View v) {
+        finish();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onDestroy() {
+        super.onDestroy();
 
         // cmeng - Handle in OperationSetPersistentPresenceJabberImpl#handleSubscribeReceived
-//		if (ComponentUtil.isCompoundChecked(getContentView(), ResourceTable.Id_addToContacts)
+//		if (ViewUtil.isCompoundChecked(getContentView(), R.id.addToContacts)
 //				&& responseCode.equals(AuthorizationResponse.ACCEPT)) {
 //			// Add to contacts
-//			Picker groupSpinner = findComponentById(ResourceTable.Id_selectGroupSpinner);
+//			Spinner groupSpinner = findViewById(R.id.selectGroupSpinner);
 //			ContactListUtils.addContact(request.contact.getProtocolProvider(),
 //					(MetaContactGroup) groupSpinner.getSelectedItem(), request.contact.getAddress());
 //		}
@@ -160,15 +162,9 @@ public class AuthorizationRequestedDialog extends BaseAbility {
      */
     public static void showDialog(Long id) {
         Context ctx = aTalkApp.getInstance();
-        Intent showIntent = new Intent();
-        Operation operation =
-                new Intent.OperationBuilder()
-                        .withDeviceId("")
-                        .withBundleName(ctx.getBundleName())
-                        .withAbilityName(AuthorizationRequestedDialog.class.getName())
-                        .build();
-        showIntent.setOperation(operation);
-        showIntent.setParam(EXTRA_REQUEST_ID, id);
-        ctx.startAbility(showIntent, 0);
+        Intent showIntent = new Intent(ctx, AuthorizationRequestedDialog.class);
+        showIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        showIntent.putExtra(EXTRA_REQUEST_ID, id);
+        ctx.startActivity(showIntent);
     }
 }

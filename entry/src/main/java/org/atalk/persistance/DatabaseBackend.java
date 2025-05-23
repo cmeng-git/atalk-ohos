@@ -1,6 +1,6 @@
 /*
- * aTalk, ohos VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * aTalk, android VoIP and Instant Messaging client
+ * Copyright 2014 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,18 @@
  */
 package org.atalk.persistance;
 
+import android.annotation.SuppressLint;
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.DatabaseUtils;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.text.TextUtils;
+import android.util.Base64;
+
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -27,14 +36,6 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
-
-import ohos.agp.render.render3d.BuildConfig;
-import ohos.app.Context;
-import ohos.data.DatabaseHelper;
-import ohos.data.rdb.*;
-import ohos.data.resultset.ResultSet;
-import ohos.hiviewdfx.HiLog;
-import ohos.hiviewdfx.HiLogLabel;
 
 import net.java.sip.communicator.impl.configuration.SQLiteConfigurationStore;
 import net.java.sip.communicator.impl.msghistory.MessageSourceService;
@@ -46,12 +47,12 @@ import net.java.sip.communicator.service.protocol.ProtocolProviderFactory;
 import net.java.sip.communicator.service.protocol.ProtocolProviderService;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.util.TextUtils;
 import org.atalk.crypto.omemo.FingerprintStatus;
 import org.atalk.crypto.omemo.SQLiteOmemoStore;
-import org.atalk.ohos.ResourceTable;
+import org.atalk.ohos.BuildConfig;
+import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
-import org.atalk.ohos.gui.chat.ChatSlice;
+import org.atalk.ohos.gui.chat.ChatFragment;
 import org.atalk.ohos.gui.chat.ChatMessage;
 import org.atalk.ohos.gui.chat.ChatSession;
 import org.atalk.persistance.migrations.Migrations;
@@ -77,20 +78,16 @@ import timber.log.Timber;
  *
  * @author Eng Chong Meng
  */
-public class DatabaseBackend extends DatabaseHelper {
+@SuppressLint("Range")
+public class DatabaseBackend extends SQLiteOpenHelper {
     /**
      * Name of the database and its version number
      * Increment DATABASE_VERSION when there is a change in database records
      */
-    public static final String DATABASE_NAME = "DbaTalk.db";
+    public static final String DATABASE_NAME = "dbRecords.db";
     private static final int DATABASE_VERSION = 1;
-    static final HiLogLabel LABEL = new HiLogLabel(HiLog.LOG_APP, 0x00201, "MY_TAG");
-
     private static DatabaseBackend instance = null;
-
-    private static RdbStore mRdbStore;
-
-    private ProtocolProviderService mProvider = null;
+    private ProtocolProviderService mProvider;
 
     // Create preKeys table
     public static String CREATE_OMEMO_DEVICES_STATEMENT = "CREATE TABLE "
@@ -159,7 +156,7 @@ public class DatabaseBackend extends DatabaseHelper {
             + ChatSession.ACCOUNT_UID + " TEXT, "
             + ChatSession.ENTITY_JID + " TEXT, "
             + ChatSession.CREATED + " NUMBER, "
-            + ChatSession.STATUS + " NUMBER DEFAULT " + ChatSlice.MSGTYPE_OMEMO + ", "
+            + ChatSession.STATUS + " NUMBER DEFAULT " + ChatFragment.MSGTYPE_OMEMO + ", "
             + ChatSession.MODE + " NUMBER, "
             + ChatSession.MAM_DATE + " NUMBER DEFAULT " + new Date().getTime() + ", "
             + ChatSession.ATTRIBUTES + " TEXT, FOREIGN KEY("
@@ -177,9 +174,7 @@ public class DatabaseBackend extends DatabaseHelper {
             + ") ON CONFLICT REPLACE);";
 
     private DatabaseBackend(Context context) {
-        // super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        super(context);
-        initDb(context);
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     /**
@@ -196,230 +191,222 @@ public class DatabaseBackend extends DatabaseHelper {
         return instance;
     }
 
-    private void initDb(Context context) {
-        StoreConfig config = StoreConfig.newDefaultConfig(DATABASE_NAME);
-
-        final RdbOpenCallback rdbCallback = new RdbOpenCallback() {
-            /**
-             * Create all the required virgin database tables and perform initial data migration
-             * a. System properties
-             * b. Account Tables: accountID & accountProperties
-             * c. Group Tables: metaContactGroup & childContacts
-             * d. contacts
-             * e. chatSessions
-             * f. chatMessages
-             * g. callHistory
-             * f. recentMessages
-     * i. Entity Caps
-     * j. Axolotl tables: identities, sessions, preKeys, signed_preKeys
-             * <p>
-             * # Initialize and initial data migration
-             *
-             * @param store SQLite database
-             */
-            @Override
-            public void onCreate(RdbStore store) {
-                // store.execSQL("PRAGMA foreign_keys=ON;");
-                String query = String.format("PRAGMA foreign_keys =%s", "ON");
-                store.executeSql(query);
-
-                // System properties table
-                store.executeSql("CREATE TABLE " + SQLiteConfigurationStore.TABLE_NAME + "("
-                        + SQLiteConfigurationStore.COLUMN_NAME + " TEXT PRIMARY KEY, "
-                        + SQLiteConfigurationStore.COLUMN_VALUE + " TEXT, UNIQUE("
-                        + SQLiteConfigurationStore.COLUMN_NAME
-                        + ") ON CONFLICT REPLACE);");
-
-                // Account info table
-                store.executeSql("CREATE TABLE " + AccountID.TABLE_NAME + "("
-                        + AccountID.ACCOUNT_UUID + " TEXT PRIMARY KEY, "
-                        + AccountID.PROTOCOL + " TEXT DEFAULT " + AccountID.PROTOCOL_DEFAULT + ", "
-                        + AccountID.USER_ID + " TEXT, "
-                        + AccountID.ACCOUNT_UID + " TEXT, "
-                        + AccountID.KEYS + " TEXT, UNIQUE(" + AccountID.ACCOUNT_UID
-                        + ") ON CONFLICT REPLACE);");
-
-                // Account properties table
-                store.executeSql("CREATE TABLE " + AccountID.TBL_PROPERTIES + "("
-                        + AccountID.ACCOUNT_UUID + " TEXT, "
-                        + AccountID.COLUMN_NAME + " TEXT, "
-                        + AccountID.COLUMN_VALUE + " TEXT, PRIMARY KEY("
-                        + AccountID.ACCOUNT_UUID + ", "
-                        + AccountID.COLUMN_NAME + "), FOREIGN KEY("
-                        + AccountID.ACCOUNT_UUID + ") REFERENCES "
-                        + AccountID.TABLE_NAME + "(" + AccountID.ACCOUNT_UUID
-                        + ") ON DELETE CASCADE);");
-
-                // Meta contact groups table
-                store.executeSql("CREATE TABLE " + MetaContactGroup.TABLE_NAME + "("
-                        + MetaContactGroup.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                        + MetaContactGroup.ACCOUNT_UUID + " TEXT, "
-                        + MetaContactGroup.MC_GROUP_NAME + " TEXT, "
-                        + MetaContactGroup.MC_GROUP_UID + " TEXT, "
-                        + MetaContactGroup.PARENT_PROTO_GROUP_UID + " TEXT, "
-                        + MetaContactGroup.PROTO_GROUP_UID + " TEXT, "
-                        + MetaContactGroup.PERSISTENT_DATA + " TEXT, FOREIGN KEY("
-                        + MetaContactGroup.ACCOUNT_UUID + ") REFERENCES "
-                        + AccountID.TABLE_NAME + "(" + AccountID.ACCOUNT_UUID
-                        + ") ON DELETE CASCADE, UNIQUE(" + MetaContactGroup.ACCOUNT_UUID + ", "
-                        + MetaContactGroup.MC_GROUP_UID + ", " + MetaContactGroup.PARENT_PROTO_GROUP_UID
-                        + ") ON CONFLICT REPLACE);");
-
-                /*
-                 * Meta contact group members table. The entries in the table are linked to the
-                 * MetaContactGroup.TABLE_NAME each entry by ACCOUNT_UUID && PROTO_GROUP_UID
-                 */
-                store.executeSql("CREATE TABLE " + MetaContactGroup.TBL_CHILD_CONTACTS + "("
-                        + MetaContactGroup.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                        + MetaContactGroup.MC_UID + " TEXT, "
-                        + MetaContactGroup.ACCOUNT_UUID + " TEXT, "
-                        + MetaContactGroup.PROTO_GROUP_UID + " TEXT, "
-                        + MetaContactGroup.CONTACT_JID + " TEXT, "
-                        + MetaContactGroup.MC_DISPLAY_NAME + " TEXT, "
-                        + MetaContactGroup.MC_USER_DEFINED + " TEXT DEFAULT 'false',"
-                        + MetaContactGroup.PERSISTENT_DATA + " TEXT, "
-                        + MetaContactGroup.MC_DETAILS + " TEXT, FOREIGN KEY("
-                        + MetaContactGroup.ACCOUNT_UUID + ") REFERENCES "
-                        + AccountID.TABLE_NAME + "(" + AccountID.ACCOUNT_UUID
-                        + ") ON DELETE CASCADE, UNIQUE(" + MetaContactGroup.ACCOUNT_UUID + ", "
-                        + MetaContactGroup.PROTO_GROUP_UID + ", " + MetaContactGroup.CONTACT_JID
-                        + ") ON CONFLICT REPLACE);");
-
-                // Contacts information table
-                store.executeSql("CREATE TABLE " + Contact.TABLE_NAME + "("
-                        + Contact.CONTACT_UUID + " TEXT PRIMARY KEY, "
-                        + Contact.PROTOCOL_PROVIDER + " TEXT, "
-                        + Contact.CONTACT_JID + " TEXT, "
-                        + Contact.SVR_DISPLAY_NAME + " TEXT, "
-                        + Contact.OPTIONS + " NUMBER, "
-                        + Contact.PHOTO_URI + " TEXT, "
-                        + Contact.AVATAR_HASH + " TEXT, "
-                        + Contact.LAST_PRESENCE + " TEXT, "
-                        + Contact.PRESENCE_STATUS + " INTEGER, "
-                        + Contact.LAST_SEEN + " NUMBER,"
-                        + Contact.KEYS + " TEXT, UNIQUE("
-                        + Contact.PROTOCOL_PROVIDER + ", " + Contact.CONTACT_JID
-                        + ") ON CONFLICT IGNORE);");
-
-                // Chat session information table
-                store.executeSql(CREATE_CHAT_SESSIONS_STATEMENT);
-
-                // chat / MUC message table
-                store.executeSql("CREATE TABLE " + ChatMessage.TABLE_NAME + "( "
-                        + ChatMessage.UUID + " TEXT, "
-                        + ChatMessage.SESSION_UUID + " TEXT, "
-                        + ChatMessage.TIME_STAMP + " NUMBER, "
-                        + ChatMessage.ENTITY_JID + " TEXT,"
-                        + ChatMessage.JID + " TEXT, "
-                        + ChatMessage.MSG_BODY + " TEXT, "
-                        + ChatMessage.ENC_TYPE + " TEXT, "
-                        + ChatMessage.MSG_TYPE + " TEXT, "
-                        + ChatMessage.DIRECTION + " TEXT, "
-                        + ChatMessage.STATUS + " TEXT,"
-                        + ChatMessage.FILE_PATH + " TEXT, "
-                        + ChatMessage.FINGERPRINT + " TEXT, "
-                        + ChatMessage.STEALTH_TIMER + "  INTEGER DEFAULT 0, "
-                        + ChatMessage.CARBON + " INTEGER DEFAULT 0, "
-                        + ChatMessage.READ + " INTEGER DEFAULT 0, "
-                        + ChatMessage.OOB + " INTEGER DEFAULT 0, "
-                        + ChatMessage.ERROR_MSG + " TEXT, "
-                        + ChatMessage.SERVER_MSG_ID + " TEXT, "
-                        + ChatMessage.REMOTE_MSG_ID + " TEXT, FOREIGN KEY("
-                        + ChatMessage.SESSION_UUID + ") REFERENCES "
-                        + ChatSession.TABLE_NAME + "(" + ChatSession.SESSION_UUID
-                        + ") ON DELETE CASCADE, UNIQUE(" + ChatMessage.UUID
-                        + ") ON CONFLICT REPLACE);");
-
-                // Call history table
-                store.executeSql("CREATE TABLE " + CallHistoryService.TABLE_NAME + " ("
-                        + CallHistoryService.UUID + " TEXT PRIMARY KEY, "
-                        + CallHistoryService.TIME_STAMP + " NUMBER, "
-                        + CallHistoryService.ACCOUNT_UID + " TEXT, "
-                        + CallHistoryService.CALL_START + " NUMBER, "
-                        + CallHistoryService.CALL_END + " NUMBER, "
-                        + CallHistoryService.DIRECTION + " TEXT, "
-                        + CallHistoryService.ENTITY_FULL_JID + " TEXT, "
-                        + CallHistoryService.ENTITY_CALL_START + " NUMBER, "
-                        + CallHistoryService.ENTITY_CALL_END + " NUMBER, "
-                        + CallHistoryService.ENTITY_CALL_STATE + " TEXT, "
-                        + CallHistoryService.CALL_END_REASON + " TEXT, "
-                        + CallHistoryService.ENTITY_JID + " TEXT, "
-                        + CallHistoryService.SEC_ENTITY_ID + " TEXT, FOREIGN KEY("
-                        + CallHistoryService.ACCOUNT_UID + ") REFERENCES "
-                        + AccountID.TABLE_NAME + "(" + AccountID.ACCOUNT_UID
-                        + ") ON DELETE CASCADE);");
-
-                // Recent message table
-                store.executeSql("CREATE TABLE " + MessageSourceService.TABLE_NAME + " ("
-                        + MessageSourceService.UUID + " TEXT PRIMARY KEY, "
-                        + MessageSourceService.ACCOUNT_UID + " TEXT, "
-                        + MessageSourceService.ENTITY_JID + " TEXT, "
-                        + MessageSourceService.TIME_STAMP + " NUMBER, "
-                        + MessageSourceService.VERSION + " TEXT, FOREIGN KEY("
-                        + MessageSourceService.ACCOUNT_UID + ") REFERENCES "
-                        + AccountID.TABLE_NAME + "(" + AccountID.ACCOUNT_UID
-                        + ") ON DELETE CASCADE);");
-
-                // Create Entity Caps DB
-                store.executeSql(CREATE_ENTITY_CAPS_STATEMENT);
-
-                // Create all relevant tables for OMEMO support
-                store.executeSql(CREATE_OMEMO_DEVICES_STATEMENT);
-                store.executeSql(CREATE_PREKEYS_STATEMENT);
-                store.executeSql(CREATE_SIGNED_PREKEYS_STATEMENT);
-                store.executeSql(CREATE_IDENTITIES_STATEMENT);
-                store.executeSql(CREATE_SESSIONS_STATEMENT);
-
-                // Perform the first data migration to SQLite database
-                initDatabase(store);
-            }
-
-            @Override
-            public void onUpgrade(final RdbStore store, int oldVersion, int newVersion) {
-                // Timber.i("Upgrading database from version %s to version %s", oldVersion, newVersion);
-                HiLog.info(LABEL, "Upgrading database from version %{public} to version %{public}", oldVersion, newVersion);
-
-                store.beginTransaction();
-                try {
-                    // cmeng: mProvider == null currently not use - must fixed if use
-                    mProvider = null;
-                    RealMigrationsHelper migrationsHelper = new RealMigrationsHelper(mProvider);
-                    Migrations.upgradeDatabase(store, migrationsHelper);
-                    // store.setTransactionSuccessful();
-                } catch (Exception e) {
-                    // Timber.e("Exception while upgrading database. Resetting the DB to original: %s", e.getMessage());
-                    HiLog.error(LABEL, "Exception while upgrading database. Resetting the DB to original: %{public}", e.getMessage());
-                    store.setVersion(oldVersion);
-
-                    if (BuildConfig.DEBUG) {
-                        store.endTransaction();
-                        throw new Error("Database upgrade failed! Exception: ", e);
-                    }
-                } finally {
-                    store.endTransaction();
-                }
-            }
-        };
-
-        DatabaseHelper helper = new DatabaseHelper(context);
-        mRdbStore = helper.getRdbStore(config, DATABASE_VERSION, rdbCallback, null);
+    public static SQLiteDatabase getWritableDB() {
+        return instance.getWritableDatabase();
     }
 
-    public static RdbStore getRdbStore() {
-        return mRdbStore;
+    public static SQLiteDatabase getReadableDB() {
+        return instance.getReadableDatabase();
+    }
+
+    @Override
+    public void onUpgrade(final SQLiteDatabase db, int oldVersion, int newVersion) {
+        Timber.i("Upgrading database from version %s to version %s", oldVersion, newVersion);
+
+        db.beginTransaction();
+        try {
+            // cmeng: mProvider == null currently not use - must fixed if use
+            RealMigrationsHelper migrationsHelper = new RealMigrationsHelper(mProvider);
+            Migrations.upgradeDatabase(db, migrationsHelper);
+            db.setTransactionSuccessful();
+        } catch (Exception e) {
+            Timber.e("Exception while upgrading database. Resetting the DB to original: %s", e.getMessage());
+            db.setVersion(oldVersion);
+
+            if (BuildConfig.DEBUG) {
+                db.endTransaction();
+                throw new Error("Database upgrade failed! Exception: ", e);
+            }
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    /**
+     * Create all the required virgin database tables and perform initial data migration
+     * a. System properties
+     * b. Account Tables: accountID & accountProperties
+     * c. Group Tables: metaContactGroup & childContacts
+     * d. contacts
+     * e. chatSessions
+     * f. chatMessages
+     * g. callHistory
+     * f. recentMessages
+     * i. Entity Caps
+     * j. Axolotl tables: identities, sessions, preKeys, signed_preKeys
+     * <p>
+     * # Initialize and initial data migration
+     *
+     * @param db SQLite database
+     */
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+        // db.execSQL("PRAGMA foreign_keys=ON;");
+        String query = String.format("PRAGMA foreign_keys =%s", "ON");
+        db.execSQL(query);
+
+        // System properties table
+        db.execSQL("CREATE TABLE " + SQLiteConfigurationStore.TABLE_NAME + "("
+                + SQLiteConfigurationStore.COLUMN_NAME + " TEXT PRIMARY KEY, "
+                + SQLiteConfigurationStore.COLUMN_VALUE + " TEXT, UNIQUE("
+                + SQLiteConfigurationStore.COLUMN_NAME
+                + ") ON CONFLICT REPLACE);");
+
+        // Account info table
+        db.execSQL("CREATE TABLE " + AccountID.TABLE_NAME + "("
+                + AccountID.ACCOUNT_UUID + " TEXT PRIMARY KEY, "
+                + AccountID.PROTOCOL + " TEXT DEFAULT " + AccountID.PROTOCOL_DEFAULT + ", "
+                + AccountID.USER_ID + " TEXT, "
+                + AccountID.ACCOUNT_UID + " TEXT, "
+                + AccountID.KEYS + " TEXT, UNIQUE(" + AccountID.ACCOUNT_UID
+                + ") ON CONFLICT REPLACE);");
+
+        // Account properties table
+        db.execSQL("CREATE TABLE " + AccountID.TBL_PROPERTIES + "("
+                + AccountID.ACCOUNT_UUID + " TEXT, "
+                + AccountID.COLUMN_NAME + " TEXT, "
+                + AccountID.COLUMN_VALUE + " TEXT, PRIMARY KEY("
+                + AccountID.ACCOUNT_UUID + ", "
+                + AccountID.COLUMN_NAME + "), FOREIGN KEY("
+                + AccountID.ACCOUNT_UUID + ") REFERENCES "
+                + AccountID.TABLE_NAME + "(" + AccountID.ACCOUNT_UUID
+                + ") ON DELETE CASCADE);");
+
+        // Meta contact groups table
+        db.execSQL("CREATE TABLE " + MetaContactGroup.TABLE_NAME + "("
+                + MetaContactGroup.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + MetaContactGroup.ACCOUNT_UUID + " TEXT, "
+                + MetaContactGroup.MC_GROUP_NAME + " TEXT, "
+                + MetaContactGroup.MC_GROUP_UID + " TEXT, "
+                + MetaContactGroup.PARENT_PROTO_GROUP_UID + " TEXT, "
+                + MetaContactGroup.PROTO_GROUP_UID + " TEXT, "
+                + MetaContactGroup.PERSISTENT_DATA + " TEXT, FOREIGN KEY("
+                + MetaContactGroup.ACCOUNT_UUID + ") REFERENCES "
+                + AccountID.TABLE_NAME + "(" + AccountID.ACCOUNT_UUID
+                + ") ON DELETE CASCADE, UNIQUE(" + MetaContactGroup.ACCOUNT_UUID + ", "
+                + MetaContactGroup.MC_GROUP_UID + ", " + MetaContactGroup.PARENT_PROTO_GROUP_UID
+                + ") ON CONFLICT REPLACE);");
+
+        /*
+         * Meta contact group members table. The entries in the table are linked to the
+         * MetaContactGroup.TABLE_NAME each entry by ACCOUNT_UUID && PROTO_GROUP_UID
+         */
+        db.execSQL("CREATE TABLE " + MetaContactGroup.TBL_CHILD_CONTACTS + "("
+                + MetaContactGroup.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + MetaContactGroup.MC_UID + " TEXT, "
+                + MetaContactGroup.ACCOUNT_UUID + " TEXT, "
+                + MetaContactGroup.PROTO_GROUP_UID + " TEXT, "
+                + MetaContactGroup.CONTACT_JID + " TEXT, "
+                + MetaContactGroup.MC_DISPLAY_NAME + " TEXT, "
+                + MetaContactGroup.MC_USER_DEFINED + " TEXT DEFAULT 'false',"
+                + MetaContactGroup.PERSISTENT_DATA + " TEXT, "
+                + MetaContactGroup.MC_DETAILS + " TEXT, FOREIGN KEY("
+                + MetaContactGroup.ACCOUNT_UUID + ") REFERENCES "
+                + AccountID.TABLE_NAME + "(" + AccountID.ACCOUNT_UUID
+                + ") ON DELETE CASCADE, UNIQUE(" + MetaContactGroup.ACCOUNT_UUID + ", "
+                + MetaContactGroup.PROTO_GROUP_UID + ", " + MetaContactGroup.CONTACT_JID
+                + ") ON CONFLICT REPLACE);");
+
+        // Contacts information table
+        db.execSQL("CREATE TABLE " + Contact.TABLE_NAME + "("
+                + Contact.CONTACT_UUID + " TEXT PRIMARY KEY, "
+                + Contact.PROTOCOL_PROVIDER + " TEXT, "
+                + Contact.CONTACT_JID + " TEXT, "
+                + Contact.SVR_DISPLAY_NAME + " TEXT, "
+                + Contact.OPTIONS + " NUMBER, "
+                + Contact.PHOTO_URI + " TEXT, "
+                + Contact.AVATAR_HASH + " TEXT, "
+                + Contact.LAST_PRESENCE + " TEXT, "
+                + Contact.PRESENCE_STATUS + " INTEGER, "
+                + Contact.LAST_SEEN + " NUMBER,"
+                + Contact.KEYS + " TEXT, UNIQUE("
+                + Contact.PROTOCOL_PROVIDER + ", " + Contact.CONTACT_JID
+                + ") ON CONFLICT IGNORE);");
+
+        // Chat session information table
+        db.execSQL(CREATE_CHAT_SESSIONS_STATEMENT);
+
+        // chat / MUC message table
+        db.execSQL("CREATE TABLE " + ChatMessage.TABLE_NAME + "( "
+                + ChatMessage.UUID + " TEXT, "
+                + ChatMessage.SESSION_UUID + " TEXT, "
+                + ChatMessage.TIME_STAMP + " NUMBER, "
+                + ChatMessage.ENTITY_JID + " TEXT,"
+                + ChatMessage.JID + " TEXT, "
+                + ChatMessage.MSG_BODY + " TEXT, "
+                + ChatMessage.ENC_TYPE + " TEXT, "
+                + ChatMessage.MSG_TYPE + " TEXT, "
+                + ChatMessage.DIRECTION + " TEXT, "
+                + ChatMessage.STATUS + " TEXT,"
+                + ChatMessage.FILE_PATH + " TEXT, "
+                + ChatMessage.FINGERPRINT + " TEXT, "
+                + ChatMessage.STEALTH_TIMER + "  INTEGER DEFAULT 0, "
+                + ChatMessage.CARBON + " INTEGER DEFAULT 0, "
+                + ChatMessage.READ + " INTEGER DEFAULT 0, "
+                + ChatMessage.OOB + " INTEGER DEFAULT 0, "
+                + ChatMessage.ERROR_MSG + " TEXT, "
+                + ChatMessage.SERVER_MSG_ID + " TEXT, "
+                + ChatMessage.REMOTE_MSG_ID + " TEXT, FOREIGN KEY("
+                + ChatMessage.SESSION_UUID + ") REFERENCES "
+                + ChatSession.TABLE_NAME + "(" + ChatSession.SESSION_UUID
+                + ") ON DELETE CASCADE, UNIQUE(" + ChatMessage.UUID
+                + ") ON CONFLICT REPLACE);");
+
+        // Call history table
+        db.execSQL("CREATE TABLE " + CallHistoryService.TABLE_NAME + " ("
+                + CallHistoryService.UUID + " TEXT PRIMARY KEY, "
+                + CallHistoryService.TIME_STAMP + " NUMBER, "
+                + CallHistoryService.ACCOUNT_UID + " TEXT, "
+                + CallHistoryService.CALL_START + " NUMBER, "
+                + CallHistoryService.CALL_END + " NUMBER, "
+                + CallHistoryService.DIRECTION + " TEXT, "
+                + CallHistoryService.ENTITY_FULL_JID + " TEXT, "
+                + CallHistoryService.ENTITY_CALL_START + " NUMBER, "
+                + CallHistoryService.ENTITY_CALL_END + " NUMBER, "
+                + CallHistoryService.ENTITY_CALL_STATE + " TEXT, "
+                + CallHistoryService.CALL_END_REASON + " TEXT, "
+                + CallHistoryService.ENTITY_JID + " TEXT, "
+                + CallHistoryService.SEC_ENTITY_ID + " TEXT, FOREIGN KEY("
+                + CallHistoryService.ACCOUNT_UID + ") REFERENCES "
+                + AccountID.TABLE_NAME + "(" + AccountID.ACCOUNT_UID
+                + ") ON DELETE CASCADE);");
+
+        // Recent message table
+        db.execSQL("CREATE TABLE " + MessageSourceService.TABLE_NAME + " ("
+                + MessageSourceService.UUID + " TEXT PRIMARY KEY, "
+                + MessageSourceService.ACCOUNT_UID + " TEXT, "
+                + MessageSourceService.ENTITY_JID + " TEXT, "
+                + MessageSourceService.TIME_STAMP + " NUMBER, "
+                + MessageSourceService.VERSION + " TEXT, FOREIGN KEY("
+                + MessageSourceService.ACCOUNT_UID + ") REFERENCES "
+                + AccountID.TABLE_NAME + "(" + AccountID.ACCOUNT_UID
+                + ") ON DELETE CASCADE);");
+
+        // Create Entity Caps DB
+        db.execSQL(CREATE_ENTITY_CAPS_STATEMENT);
+
+        // Create all relevant tables for OMEMO support
+        db.execSQL(CREATE_OMEMO_DEVICES_STATEMENT);
+        db.execSQL(CREATE_PREKEYS_STATEMENT);
+        db.execSQL(CREATE_SIGNED_PREKEYS_STATEMENT);
+        db.execSQL(CREATE_IDENTITIES_STATEMENT);
+        db.execSQL(CREATE_SESSIONS_STATEMENT);
+
+        // Perform the first data migration to SQLite database
+        initDatabase(db);
     }
 
     /**
      * Initialize, migrate and fill the database from old data implementation
      */
-    private void initDatabase(RdbStore store) {
+    private void initDatabase(SQLiteDatabase db) {
         Timber.i("### Starting Database migration! ###");
-        store.beginTransaction();
+        db.beginTransaction();
         try {
-            // store.setTransactionSuccessful();
+            db.setTransactionSuccessful();
             Timber.i("### Completed SQLite DataBase migration successfully! ###");
         } finally {
-            store.endTransaction();
+            db.endTransaction();
         }
     }
 
@@ -429,92 +416,105 @@ public class DatabaseBackend extends DatabaseHelper {
      * @param accountId AccountID to be replaced/inserted
      */
     public void createAccount(AccountID accountId) {
-        mRdbStore.replace(AccountID.TABLE_NAME, accountId.getValuesBucket());
+        SQLiteDatabase db = getWritableDatabase();
+        db.replace(AccountID.TABLE_NAME, null, accountId.getContentValues());
     }
 
     public List<String> getAllAccountIDs() {
         List<String> userIDs = new ArrayList<>();
+        SQLiteDatabase db = getReadableDatabase();
         String[] columns = {AccountID.USER_ID};
 
-        RdbPredicates rdbPredicates = new RdbPredicates(AccountID.TABLE_NAME);
-        ResultSet resultSet = mRdbStore.query(rdbPredicates, columns);
-        while (resultSet.goToNextRow()) {
-            userIDs.add(resultSet.getString(0));
+        Cursor cursor = db.query(AccountID.TABLE_NAME, columns, null, null, null, null, null);
+        while (cursor.moveToNext()) {
+            userIDs.add(cursor.getString(0));
         }
-        resultSet.close();
+        cursor.close();
         return userIDs;
     }
 
     public List<AccountID> getAccounts(ProtocolProviderFactory factory) {
+        SQLiteDatabase db = getReadableDatabase();
         List<AccountID> accountIDs = new ArrayList<>();
+        String[] args = {factory.getProtocolName()};
 
-        RdbPredicates rdbPredicates = new RdbPredicates(AccountID.TABLE_NAME)
-                .equalTo(AccountID.PROTOCOL, factory.getProtocolName());
-        ResultSet resultSet = mRdbStore.query(rdbPredicates, null);
-
-        while (resultSet.goToNextRow()) {
-            accountIDs.add(AccountID.fromResultSet(mRdbStore, resultSet, factory));
+        Cursor cursor = db.query(AccountID.TABLE_NAME, null, AccountID.PROTOCOL + "=?",
+                args, null, null, null);
+        while (cursor.moveToNext()) {
+            accountIDs.add(AccountID.fromCursor(db, cursor, factory));
         }
-        resultSet.close();
+        cursor.close();
         return accountIDs;
     }
 
     public boolean updateAccount(AccountID accountId) {
-        RdbPredicates rdbPredicates = new RdbPredicates(AccountID.TABLE_NAME)
-                .equalTo(AccountID.ACCOUNT_UUID, accountId.getAccountUuid());
-
-        final int rows = mRdbStore.update(accountId.getValuesBucket(), rdbPredicates);
+        SQLiteDatabase db = getWritableDatabase();
+        String[] args = {accountId.getAccountUuid()};
+        final int rows = db.update(AccountID.TABLE_NAME, accountId.getContentValues(),
+                AccountID.ACCOUNT_UUID + "=?", args);
         return (rows == 1);
     }
 
     public boolean deleteAccount(AccountID accountId) {
-        RdbPredicates rdbPredicates = new RdbPredicates(AccountID.TABLE_NAME)
-                .equalTo(AccountID.ACCOUNT_UUID, accountId.getAccountUuid());
+        SQLiteDatabase db = getWritableDatabase();
+        String[] args = {accountId.getAccountUuid()};
+        final int rows = db.delete(AccountID.TABLE_NAME, AccountID.ACCOUNT_UUID + "=?", args);
+        return rows == 1;
+    }
 
-        final int rows = mRdbStore.delete(rdbPredicates);
-        return (rows == 1);
+    @Override
+    public SQLiteDatabase getWritableDatabase() {
+        SQLiteDatabase db = super.getWritableDatabase();
+        // db.execSQL("PRAGMA foreign_keys=ON;");
+        String query = String.format("PRAGMA foreign_keys =%s", "ON");
+        db.execSQL(query);
+        return db;
     }
 
     // ========= OMEMO Devices =========
     public SortedSet<Integer> loadDeviceIdsOf(BareJid user) {
         SortedSet<Integer> deviceIds = new TreeSet<>();
         int registrationId;
+        String ORDER_ASC = SQLiteOmemoStore.OMEMO_REG_ID + " ASC";
+
+        SQLiteDatabase db = getReadableDatabase();
         String[] columns = {SQLiteOmemoStore.OMEMO_REG_ID};
+        String[] selectionArgs = {user.toString()};
 
-        RdbPredicates rdbPredicates = new RdbPredicates(SQLiteOmemoStore.OMEMO_DEVICES_TABLE_NAME)
-                .equalTo(SQLiteOmemoStore.OMEMO_JID, user.toString())
-                .orderByAsc(SQLiteOmemoStore.OMEMO_REG_ID);
-        ResultSet resultSet = mRdbStore.query(rdbPredicates, columns);
+        Cursor cursor = db.query(SQLiteOmemoStore.OMEMO_DEVICES_TABLE_NAME, columns,
+                SQLiteOmemoStore.OMEMO_JID + "=?", selectionArgs, null, null, ORDER_ASC);
 
-        while (resultSet.goToNextRow()) {
-            registrationId = resultSet.getInt(0);
+        while (cursor.moveToNext()) {
+            registrationId = cursor.getInt(0);
             deviceIds.add(registrationId);
         }
-        resultSet.close();
+        cursor.close();
         return deviceIds;
     }
 
     public HashMap<String, Integer> loadAllOmemoRegIds() {
         HashMap<String, Integer> registrationIds = new HashMap<>();
+        SQLiteDatabase db = getReadableDatabase();
         String[] columns = {SQLiteOmemoStore.OMEMO_JID, SQLiteOmemoStore.OMEMO_REG_ID};
 
-        RdbPredicates rdbPredicates = new RdbPredicates(SQLiteOmemoStore.OMEMO_DEVICES_TABLE_NAME);
-        ResultSet resultSet = mRdbStore.query(rdbPredicates, columns);
+        Cursor cursor = db.query(SQLiteOmemoStore.OMEMO_DEVICES_TABLE_NAME, columns,
+                null, null, null, null, null);
 
-        while (resultSet.goToNextRow()) {
-            registrationIds.put(resultSet.getString(0), resultSet.getInt(1));
+        while (cursor.moveToNext()) {
+            registrationIds.put(cursor.getString(0), cursor.getInt(1));
         }
-        resultSet.close();
+        cursor.close();
         return registrationIds;
     }
 
     public void storeOmemoRegId(BareJid user, int defaultDeviceId) {
-        ValuesBucket values = new ValuesBucket();
-        values.putString(SQLiteOmemoStore.OMEMO_JID, user.toString());
-        values.putInteger(SQLiteOmemoStore.OMEMO_REG_ID, defaultDeviceId);
-        values.putInteger(SQLiteOmemoStore.CURRENT_SIGNED_PREKEY_ID, 0);
+        SQLiteDatabase db = getWritableDatabase();
 
-        long row = mRdbStore.insert(SQLiteOmemoStore.OMEMO_DEVICES_TABLE_NAME, values);
+        ContentValues values = new ContentValues();
+        values.put(SQLiteOmemoStore.OMEMO_JID, user.toString());
+        values.put(SQLiteOmemoStore.OMEMO_REG_ID, defaultDeviceId);
+        values.put(SQLiteOmemoStore.CURRENT_SIGNED_PREKEY_ID, 0);
+        long row = db.insert(SQLiteOmemoStore.OMEMO_DEVICES_TABLE_NAME, null, values);
         if (row > 0)
             Timber.i("### Omemo device added for: %s; %s", user, defaultDeviceId);
         else
@@ -525,35 +525,36 @@ public class DatabaseBackend extends DatabaseHelper {
         int currentSignedPKeyId = getCurrentSignedPreKeyId(omemoManager);
         OmemoDevice device = omemoManager.getOwnDevice();
 
+        SQLiteDatabase db = getReadableDatabase();
         String[] columns = {SQLiteOmemoStore.CURRENT_SIGNED_PREKEY_ID};
-        RdbPredicates rdbPredicates = new RdbPredicates(SQLiteOmemoStore.OMEMO_DEVICES_TABLE_NAME)
-                .equalTo(SQLiteOmemoStore.OMEMO_JID, device.getJid().toString())
-                .and().equalTo(SQLiteOmemoStore.OMEMO_REG_ID, device.getDeviceId());
-        ResultSet resultSet = mRdbStore.query(rdbPredicates, columns);
+        String[] selectionArgs = {device.getJid().toString(), Integer.toString(device.getDeviceId())};
 
-        if (resultSet.getRowCount() != 0) {
-            resultSet.goToFirstRow();
-            currentSignedPKeyId = resultSet.getInt(resultSet.getColumnIndexForName(SQLiteOmemoStore.CURRENT_SIGNED_PREKEY_ID));
+        Cursor cursor = db.query(SQLiteOmemoStore.OMEMO_DEVICES_TABLE_NAME, columns,
+                SQLiteOmemoStore.OMEMO_JID + "=? AND " + SQLiteOmemoStore.OMEMO_REG_ID + "=?",
+                selectionArgs, null, null, null);
+
+        if (cursor.getCount() != 0) {
+            cursor.moveToFirst();
+            currentSignedPKeyId = cursor.getInt(cursor.getColumnIndex(SQLiteOmemoStore.CURRENT_SIGNED_PREKEY_ID));
         }
-        resultSet.close();
+        cursor.close();
         return currentSignedPKeyId;
     }
 
     public void storeCurrentSignedPKeyId(OmemoManager omemoManager, int currentSignedPreKeyId) {
+        SQLiteDatabase db = getWritableDatabase();
         OmemoDevice device = omemoManager.getOwnDevice();
+        String[] selectionArgs = {device.getJid().toString(), Integer.toString(device.getDeviceId())};
 
-        ValuesBucket values = new ValuesBucket();
-        values.putString(SQLiteOmemoStore.OMEMO_JID, device.getJid().toString());
-        values.putInteger(SQLiteOmemoStore.OMEMO_REG_ID, device.getDeviceId());
-        values.putInteger(SQLiteOmemoStore.CURRENT_SIGNED_PREKEY_ID, currentSignedPreKeyId);
+        ContentValues values = new ContentValues();
+        values.put(SQLiteOmemoStore.OMEMO_JID, device.getJid().toString());
+        values.put(SQLiteOmemoStore.OMEMO_REG_ID, device.getDeviceId());
+        values.put(SQLiteOmemoStore.CURRENT_SIGNED_PREKEY_ID, currentSignedPreKeyId);
 
-        RdbPredicates rdbPredicates = new RdbPredicates(SQLiteOmemoStore.OMEMO_DEVICES_TABLE_NAME)
-                .equalTo(SQLiteOmemoStore.OMEMO_JID, device.getJid().toString())
-                .and().equalTo(SQLiteOmemoStore.OMEMO_REG_ID, device.getDeviceId());
-
-        int row = mRdbStore.update(values, rdbPredicates);
+        int row = db.update(SQLiteOmemoStore.OMEMO_DEVICES_TABLE_NAME, values,
+                SQLiteOmemoStore.OMEMO_JID + "=? AND " + SQLiteOmemoStore.OMEMO_REG_ID + "=?", selectionArgs);
         if (row == 0) {
-            mRdbStore.insert(SQLiteOmemoStore.OMEMO_DEVICES_TABLE_NAME, values);
+            db.insert(SQLiteOmemoStore.OMEMO_DEVICES_TABLE_NAME, null, values);
         }
     }
 
@@ -563,151 +564,166 @@ public class DatabaseBackend extends DatabaseHelper {
         int lastPKeyId = getLastPreKeyId(omemoManager);
         OmemoDevice device = omemoManager.getOwnDevice();
 
+        SQLiteDatabase db = getReadableDatabase();
         String[] columns = {SQLiteOmemoStore.LAST_PREKEY_ID};
-        RdbPredicates rdbPredicates = new RdbPredicates(SQLiteOmemoStore.OMEMO_DEVICES_TABLE_NAME)
-                .equalTo(SQLiteOmemoStore.OMEMO_JID, device.getJid().toString())
-                .and().equalTo(SQLiteOmemoStore.OMEMO_REG_ID, device.getDeviceId());
-        ResultSet resultSet = mRdbStore.query(rdbPredicates, columns);
+        String[] selectionArgs = {device.getJid().toString(), Integer.toString(device.getDeviceId())};
 
-        if (resultSet.getRowCount() != 0) {
-            resultSet.goToFirstRow();
-            lastPKeyId = resultSet.getInt(resultSet.getColumnIndexForName(SQLiteOmemoStore.LAST_PREKEY_ID));
+        Cursor cursor = db.query(SQLiteOmemoStore.OMEMO_DEVICES_TABLE_NAME, columns,
+                SQLiteOmemoStore.OMEMO_JID + "=? AND " + SQLiteOmemoStore.OMEMO_REG_ID + "=?",
+                selectionArgs, null, null, null);
+
+        if (cursor.getCount() != 0) {
+            cursor.moveToFirst();
+            lastPKeyId = cursor.getInt(cursor.getColumnIndex(SQLiteOmemoStore.LAST_PREKEY_ID));
         }
-        resultSet.close();
+        cursor.close();
         return lastPKeyId;
     }
 
     public void storeLastPreKeyId(OmemoManager omemoManager, int lastPreKeyId) {
+        SQLiteDatabase db = getWritableDatabase();
         OmemoDevice device = omemoManager.getOwnDevice();
+        String[] selectionArgs = {device.getJid().toString(), Integer.toString(device.getDeviceId())};
 
-        ValuesBucket values = new ValuesBucket();
-        values.putString(SQLiteOmemoStore.OMEMO_JID, device.getJid().toString());
-        values.putInteger(SQLiteOmemoStore.OMEMO_REG_ID, device.getDeviceId());
-        values.putInteger(SQLiteOmemoStore.LAST_PREKEY_ID, lastPreKeyId);
+        ContentValues values = new ContentValues();
+        values.put(SQLiteOmemoStore.OMEMO_JID, device.getJid().toString());
+        values.put(SQLiteOmemoStore.OMEMO_REG_ID, device.getDeviceId());
+        values.put(SQLiteOmemoStore.LAST_PREKEY_ID, lastPreKeyId);
 
-        RdbPredicates rdbPredicates = new RdbPredicates(SQLiteOmemoStore.OMEMO_DEVICES_TABLE_NAME)
-                .equalTo(SQLiteOmemoStore.OMEMO_JID, device.getJid().toString())
-                .and().equalTo(SQLiteOmemoStore.OMEMO_REG_ID, device.getDeviceId());
-        int row = mRdbStore.update(values, rdbPredicates);
-
+        int row = db.update(SQLiteOmemoStore.OMEMO_DEVICES_TABLE_NAME, values,
+                SQLiteOmemoStore.OMEMO_JID + "=? AND " + SQLiteOmemoStore.OMEMO_REG_ID + "=?", selectionArgs);
         if (row == 0) {
-            mRdbStore.insert(SQLiteOmemoStore.OMEMO_DEVICES_TABLE_NAME, values);
+            db.insert(SQLiteOmemoStore.OMEMO_DEVICES_TABLE_NAME, null, values);
         }
     }
 
     // ========= OMEMO PreKey =========
-    private ResultSet getResultSetForPreKey(OmemoDevice userDevice, int preKeyId) {
-        String[] columns = {SQLiteOmemoStore.PRE_KEYS};
+    private Cursor getCursorForPreKey(OmemoDevice userDevice, int preKeyId) {
+        SQLiteDatabase db = getReadableDatabase();
 
-        RdbPredicates rdbPredicates = new RdbPredicates(SQLiteOmemoStore.PREKEY_TABLE_NAME)
-                .equalTo(SQLiteOmemoStore.BARE_JID, userDevice.getJid().toString())
-                .and().equalTo(SQLiteOmemoStore.DEVICE_ID, userDevice.getDeviceId())
-                .and().equalTo(SQLiteOmemoStore.PRE_KEY_ID, preKeyId);
-        return mRdbStore.query(rdbPredicates, columns);
+        String[] columns = {SQLiteOmemoStore.PRE_KEYS};
+        String[] selectionArgs = {userDevice.getJid().toString(),
+                Integer.toString(userDevice.getDeviceId()), Integer.toString(preKeyId)};
+
+        return db.query(SQLiteOmemoStore.PREKEY_TABLE_NAME, columns,
+                SQLiteOmemoStore.BARE_JID + "=? AND " + SQLiteOmemoStore.DEVICE_ID + "=? AND "
+                        + SQLiteOmemoStore.PRE_KEY_ID + "=?",
+                selectionArgs, null, null, null);
     }
 
     public TreeMap<Integer, PreKeyRecord> loadPreKeys(OmemoDevice userDevice) {
         int preKeyId;
         PreKeyRecord preKeyRecord;
+        String ORDER_ASC = SQLiteOmemoStore.PRE_KEY_ID + " ASC";
         TreeMap<Integer, PreKeyRecord> PreKeyRecords = new TreeMap<>();
+
+        SQLiteDatabase db = getReadableDatabase();
+
         String[] columns = {SQLiteOmemoStore.PRE_KEY_ID, SQLiteOmemoStore.PRE_KEYS};
+        String[] selectionArgs = {userDevice.getJid().toString(), Integer.toString(userDevice.getDeviceId())};
 
-        RdbPredicates rdbPredicates = new RdbPredicates(SQLiteOmemoStore.PREKEY_TABLE_NAME)
-                .equalTo(SQLiteOmemoStore.BARE_JID, userDevice.getJid().toString())
-                .and().equalTo(SQLiteOmemoStore.DEVICE_ID, userDevice.getDeviceId())
-                .orderByAsc(SQLiteOmemoStore.PRE_KEY_ID);
-        ResultSet resultSet = mRdbStore.query(rdbPredicates, columns);
+        Cursor cursor = db.query(SQLiteOmemoStore.PREKEY_TABLE_NAME, columns,
+                SQLiteOmemoStore.BARE_JID + "=? AND " + SQLiteOmemoStore.DEVICE_ID + "=?",
+                selectionArgs, null, null, ORDER_ASC);
 
-        while (resultSet.goToNextRow()) {
-            preKeyId = resultSet.getInt(0);
+        while (cursor.moveToNext()) {
+            preKeyId = cursor.getInt(0);
             try {
-                preKeyRecord = new PreKeyRecord(Base64.getDecoder().decode(resultSet.getString(1)));
+                preKeyRecord = new PreKeyRecord(Base64.decode(cursor.getString(1), Base64.DEFAULT));
                 PreKeyRecords.put(preKeyId, preKeyRecord);
             } catch (IOException e) {
                 Timber.w("Failed to deserialize preKey from store preky: %s: %s", preKeyId, e.getMessage());
             }
         }
-        resultSet.close();
+        cursor.close();
         return PreKeyRecords;
     }
 
     public PreKeyRecord loadPreKey(OmemoDevice userDevice, int preKeyId) {
         PreKeyRecord record = null;
-        ResultSet resultSet = getResultSetForPreKey(userDevice, preKeyId);
-        if (resultSet.getRowCount() != 0) {
-            resultSet.goToFirstRow();
+        Cursor cursor = getCursorForPreKey(userDevice, preKeyId);
+        if (cursor.getCount() != 0) {
+            cursor.moveToFirst();
             try {
-                record = new PreKeyRecord(Base64.getDecoder().decode(
-                        resultSet.getString(resultSet.getColumnIndexForName(SQLiteOmemoStore.PRE_KEYS))));
+                record = new PreKeyRecord(Base64.decode(
+                        cursor.getString(cursor.getColumnIndex(SQLiteOmemoStore.PRE_KEYS)), Base64.DEFAULT));
             } catch (IOException e) {
-                Timber.w("Failed to deserialize preKey from mStore. %s", e.getMessage());
+                Timber.w("Failed to deserialize preKey from store. %s", e.getMessage());
             }
         }
-        resultSet.close();
+        cursor.close();
         return record;
     }
 
     public void storePreKey(OmemoDevice userDevice, int preKeyId, PreKeyRecord record) {
-        ValuesBucket values = new ValuesBucket();
-        values.putString(SQLiteOmemoStore.BARE_JID, userDevice.getJid().toString());
-        values.putInteger(SQLiteOmemoStore.DEVICE_ID, userDevice.getDeviceId());
-        values.putInteger(SQLiteOmemoStore.PRE_KEY_ID, preKeyId);
-        values.putString(SQLiteOmemoStore.PRE_KEYS, Base64.getEncoder().encodeToString(record.serialize()));
-        mRdbStore.insert(SQLiteOmemoStore.PREKEY_TABLE_NAME, values);
+        SQLiteDatabase db = getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(SQLiteOmemoStore.BARE_JID, userDevice.getJid().toString());
+        values.put(SQLiteOmemoStore.DEVICE_ID, userDevice.getDeviceId());
+        values.put(SQLiteOmemoStore.PRE_KEY_ID, preKeyId);
+        values.put(SQLiteOmemoStore.PRE_KEYS, Base64.encodeToString(record.serialize(), Base64.DEFAULT));
+        db.insert(SQLiteOmemoStore.PREKEY_TABLE_NAME, null, values);
     }
 
     public void deletePreKey(OmemoDevice userDevice, int preKeyId) {
-        RdbPredicates rdbPredicates = new RdbPredicates(SQLiteOmemoStore.PREKEY_TABLE_NAME)
-                .equalTo(SQLiteOmemoStore.BARE_JID, userDevice.getJid().toString())
-                .and().equalTo(SQLiteOmemoStore.DEVICE_ID, userDevice.getDeviceId())
-                .and().equalTo(SQLiteOmemoStore.PRE_KEY_ID, preKeyId);
-        mRdbStore.delete(rdbPredicates);
+        SQLiteDatabase db = getWritableDatabase();
+        String[] args = {userDevice.getJid().toString(),
+                Integer.toString(userDevice.getDeviceId()), Integer.toString(preKeyId)};
+
+        db.delete(SQLiteOmemoStore.PREKEY_TABLE_NAME, SQLiteOmemoStore.BARE_JID + "=? AND "
+                + SQLiteOmemoStore.DEVICE_ID + "=? AND " + SQLiteOmemoStore.PRE_KEY_ID + "=?", args);
     }
 
     public int getLastPreKeyId(OmemoManager omemoManager) {
         int lastPreKeyId = 0;
+        String ORDER_DESC = SQLiteOmemoStore.PRE_KEY_ID + " DESC";
         OmemoDevice device = omemoManager.getOwnDevice();
 
+        SQLiteDatabase db = getReadableDatabase();
         String[] columns = {SQLiteOmemoStore.PRE_KEY_ID};
-        RdbPredicates rdbPredicates = new RdbPredicates(SQLiteOmemoStore.PREKEY_TABLE_NAME)
-                .equalTo(SQLiteOmemoStore.BARE_JID, device.getJid().toString())
-                .and().equalTo(SQLiteOmemoStore.DEVICE_ID, device.getDeviceId())
-                .orderByDesc(SQLiteOmemoStore.PRE_KEY_ID)
-                .limit(1);
-        ResultSet resultSet = mRdbStore.query(rdbPredicates, columns);
+        String[] selectionArgs = {device.getJid().toString(), Integer.toString(device.getDeviceId())};
 
-        if (resultSet.getRowCount() != 0) {
-            resultSet.goToFirstRow();
-            lastPreKeyId = resultSet.getInt(resultSet.getColumnIndexForName(SQLiteOmemoStore.PRE_KEY_ID));
+        Cursor cursor = db.query(SQLiteOmemoStore.PREKEY_TABLE_NAME, columns,
+                SQLiteOmemoStore.BARE_JID + "=? AND " + SQLiteOmemoStore.DEVICE_ID + "=?",
+                selectionArgs, null, null, ORDER_DESC, "1");
+
+        if (cursor.getCount() != 0) {
+            cursor.moveToFirst();
+            lastPreKeyId = cursor.getInt(cursor.getColumnIndex(SQLiteOmemoStore.PRE_KEY_ID));
         }
-        resultSet.close();
+        cursor.close();
         return lastPreKeyId;
     }
 
     // ========= OMEMO Signed PreKey =========
-    private ResultSet getResultSetForSignedPreKey(OmemoDevice userDevice, int signedPreKeyId) {
-        String[] columns = {SQLiteOmemoStore.SIGNED_PRE_KEYS};
-        RdbPredicates rdbPredicates = new RdbPredicates(SQLiteOmemoStore.SIGNED_PREKEY_TABLE_NAME)
-                .equalTo(SQLiteOmemoStore.BARE_JID, userDevice.getJid().toString())
-                .and().equalTo(SQLiteOmemoStore.DEVICE_ID, userDevice.getDeviceId())
-                .and().equalTo(SQLiteOmemoStore.SIGNED_PRE_KEY_ID, signedPreKeyId);
+    private Cursor getCursorForSignedPreKey(OmemoDevice userDevice, int signedPreKeyId) {
+        SQLiteDatabase db = getReadableDatabase();
 
-        return mRdbStore.query(rdbPredicates, columns);
+        String[] columns = {SQLiteOmemoStore.SIGNED_PRE_KEYS};
+        String[] selectionArgs = {userDevice.getJid().toString(),
+                Integer.toString(userDevice.getDeviceId()), Integer.toString(signedPreKeyId)};
+        Cursor cursor = db.query(SQLiteOmemoStore.SIGNED_PREKEY_TABLE_NAME, columns,
+                SQLiteOmemoStore.BARE_JID + "=? AND "
+                        + SQLiteOmemoStore.DEVICE_ID + "=? AND "
+                        + SQLiteOmemoStore.SIGNED_PRE_KEY_ID + "=?", selectionArgs, null, null,
+                null);
+        return cursor;
     }
 
     public SignedPreKeyRecord loadSignedPreKey(OmemoDevice userDevice, int signedPreKeyId) {
         SignedPreKeyRecord record = null;
-        ResultSet resultSet = getResultSetForSignedPreKey(userDevice, signedPreKeyId);
-        if (resultSet.getRowCount() != 0) {
-            resultSet.goToFirstRow();
+        Cursor cursor = getCursorForSignedPreKey(userDevice, signedPreKeyId);
+        if (cursor.getCount() != 0) {
+            cursor.moveToFirst();
             try {
-                record = new SignedPreKeyRecord(Base64.getDecoder().decode(
-                        resultSet.getString(resultSet.getColumnIndexForName(SQLiteOmemoStore.SIGNED_PRE_KEYS))));
+                record = new SignedPreKeyRecord(Base64.decode(
+                        cursor.getString(cursor.getColumnIndex(SQLiteOmemoStore.SIGNED_PRE_KEYS)), Base64.DEFAULT));
             } catch (IOException e) {
                 Timber.w("Could not deserialize signed preKey for %s: %s", userDevice, e.getMessage());
             }
         }
-        resultSet.close();
+        cursor.close();
         return record;
     }
 
@@ -716,66 +732,73 @@ public class DatabaseBackend extends DatabaseHelper {
         SignedPreKeyRecord signedPreKeysRecord;
         TreeMap<Integer, SignedPreKeyRecord> preKeys = new TreeMap<>();
 
+        SQLiteDatabase db = getReadableDatabase();
         String[] columns = {SQLiteOmemoStore.SIGNED_PRE_KEY_ID, SQLiteOmemoStore.SIGNED_PRE_KEYS};
-        RdbPredicates rdbPredicates = new RdbPredicates(SQLiteOmemoStore.SIGNED_PREKEY_TABLE_NAME)
-                .equalTo(SQLiteOmemoStore.BARE_JID, device.getJid().toString())
-                .and().equalTo(SQLiteOmemoStore.DEVICE_ID, device.getDeviceId());
-        ResultSet resultSet = mRdbStore.query(rdbPredicates, columns);
+        String[] selectionArgs = {device.getJid().toString(), Integer.toString(device.getDeviceId())};
+        Cursor cursor = db.query(SQLiteOmemoStore.SIGNED_PREKEY_TABLE_NAME, columns,
+                SQLiteOmemoStore.BARE_JID + "=? AND " + SQLiteOmemoStore.DEVICE_ID + "=?",
+                selectionArgs, null, null, null);
 
-        while (resultSet.goToNextRow()) {
+        while (cursor.moveToNext()) {
             try {
-                preKeyId = resultSet.getInt(resultSet.getColumnIndexForName(SQLiteOmemoStore.SIGNED_PRE_KEY_ID));
-                signedPreKeysRecord = new SignedPreKeyRecord(Base64.getDecoder().decode(resultSet.getString(
-                        resultSet.getColumnIndexForName(SQLiteOmemoStore.SIGNED_PRE_KEYS))));
+                preKeyId = cursor.getInt(cursor.getColumnIndex(SQLiteOmemoStore.SIGNED_PRE_KEY_ID));
+                signedPreKeysRecord = new SignedPreKeyRecord(Base64.decode(cursor.getString(
+                        cursor.getColumnIndex(SQLiteOmemoStore.SIGNED_PRE_KEYS)), Base64.DEFAULT));
                 preKeys.put(preKeyId, signedPreKeysRecord);
             } catch (IOException e) {
                 Timber.w("Could not deserialize signed preKey for %s: %s", device, e.getMessage());
             }
         }
-        resultSet.close();
+        cursor.close();
         return preKeys;
     }
 
     public void storeSignedPreKey(OmemoDevice device, int signedPreKeyId, SignedPreKeyRecord record) {
-        ValuesBucket values = new ValuesBucket();
-        values.putString(SQLiteOmemoStore.BARE_JID, device.getJid().toString());
-        values.putInteger(SQLiteOmemoStore.DEVICE_ID, device.getDeviceId());
-        values.putInteger(SQLiteOmemoStore.SIGNED_PRE_KEY_ID, signedPreKeyId);
-        values.putString(SQLiteOmemoStore.SIGNED_PRE_KEYS, Base64.getEncoder().encodeToString(record.serialize()));
-        values.putLong(SQLiteOmemoStore.LAST_RENEWAL_DATE, record.getTimestamp());
-        mRdbStore.insert(SQLiteOmemoStore.SIGNED_PREKEY_TABLE_NAME, values);
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(SQLiteOmemoStore.BARE_JID, device.getJid().toString());
+        values.put(SQLiteOmemoStore.DEVICE_ID, device.getDeviceId());
+        values.put(SQLiteOmemoStore.SIGNED_PRE_KEY_ID, signedPreKeyId);
+        values.put(SQLiteOmemoStore.SIGNED_PRE_KEYS, Base64.encodeToString(record.serialize(), Base64.DEFAULT));
+        values.put(SQLiteOmemoStore.LAST_RENEWAL_DATE, record.getTimestamp());
+        db.insert(SQLiteOmemoStore.SIGNED_PREKEY_TABLE_NAME, null, values);
     }
 
     public void deleteSignedPreKey(OmemoDevice userDevice, int signedPreKeyId) {
-        RdbPredicates rdbPredicates = new RdbPredicates(SQLiteOmemoStore.SIGNED_PREKEY_TABLE_NAME)
-                .equalTo(SQLiteOmemoStore.BARE_JID, userDevice.getJid().toString())
-                .and().equalTo(SQLiteOmemoStore.DEVICE_ID, userDevice.getDeviceId())
-                .and().equalTo(SQLiteOmemoStore.SIGNED_PRE_KEY_ID, signedPreKeyId);
-        ;
-        mRdbStore.delete(rdbPredicates);
+        SQLiteDatabase db = getWritableDatabase();
+
+        String[] args = {userDevice.getJid().toString(), Integer.toString(userDevice.getDeviceId()),
+                Integer.toString(signedPreKeyId)};
+        db.delete(SQLiteOmemoStore.SIGNED_PREKEY_TABLE_NAME,
+                SQLiteOmemoStore.BARE_JID + "=? AND " + SQLiteOmemoStore.DEVICE_ID + "=? AND "
+                        + SQLiteOmemoStore.SIGNED_PRE_KEY_ID + "=?", args);
     }
 
     public void setLastSignedPreKeyRenewal(OmemoDevice userDevice, Date date) {
-        ValuesBucket values = new ValuesBucket();
-        values.putLong(SQLiteOmemoStore.LAST_RENEWAL_DATE, date.getTime());
+        SQLiteDatabase db = getWritableDatabase();
 
-        RdbPredicates rdbPredicates = new RdbPredicates(SQLiteOmemoStore.SIGNED_PREKEY_TABLE_NAME)
-                .equalTo(SQLiteOmemoStore.BARE_JID, userDevice.getJid().toString())
-                .and().equalTo(SQLiteOmemoStore.DEVICE_ID, userDevice.getDeviceId());
-        mRdbStore.update(values, rdbPredicates);
+        ContentValues values = new ContentValues();
+        values.put(SQLiteOmemoStore.LAST_RENEWAL_DATE, date.getTime());
+
+        String[] selectionArgs = {userDevice.getJid().toString(), Integer.toString(userDevice.getDeviceId())};
+        db.update(SQLiteOmemoStore.SIGNED_PREKEY_TABLE_NAME, values,
+                SQLiteOmemoStore.BARE_JID + "=? AND " + SQLiteOmemoStore.DEVICE_ID + "=?", selectionArgs);
     }
 
     public Date getLastSignedPreKeyRenewal(OmemoDevice userDevice) {
-        String[] columns = {SQLiteOmemoStore.LAST_RENEWAL_DATE};
-        RdbPredicates rdbPredicates = new RdbPredicates(SQLiteOmemoStore.SIGNED_PREKEY_TABLE_NAME)
-                .equalTo(SQLiteOmemoStore.BARE_JID, userDevice.getJid().toString())
-                .and().equalTo(SQLiteOmemoStore.DEVICE_ID, userDevice.getDeviceId());
-        ResultSet resultSet = mRdbStore.query(rdbPredicates, columns);
+        SQLiteDatabase db = getReadableDatabase();
 
-        if (resultSet.getRowCount() != 0) {
-            resultSet.goToFirstRow();
-            Long ts = resultSet.getLong(resultSet.getColumnIndexForName(SQLiteOmemoStore.LAST_RENEWAL_DATE));
-            resultSet.close();
+        String[] columns = {SQLiteOmemoStore.LAST_RENEWAL_DATE};
+        String[] selectionArgs = {userDevice.getJid().toString(), Integer.toString(userDevice.getDeviceId())};
+
+        Cursor cursor = db.query(SQLiteOmemoStore.SIGNED_PREKEY_TABLE_NAME, columns,
+                SQLiteOmemoStore.BARE_JID + "=? AND " + SQLiteOmemoStore.DEVICE_ID + "=?",
+                selectionArgs, null, null, null);
+
+        if (cursor.getCount() != 0) {
+            cursor.moveToFirst();
+            Long ts = cursor.getLong(cursor.getColumnIndex(SQLiteOmemoStore.LAST_RENEWAL_DATE));
+            cursor.close();
             return (ts != null && ts > 0) ? new Date(ts) : null;
         }
         return null;
@@ -783,48 +806,59 @@ public class DatabaseBackend extends DatabaseHelper {
 
     private int getCurrentSignedPreKeyId(OmemoManager omemoManager) {
         int currentSignedPKId = 1;
+        SQLiteDatabase db = getReadableDatabase();
         OmemoDevice device = omemoManager.getOwnDevice();
 
         String[] columns = {SQLiteOmemoStore.SIGNED_PRE_KEY_ID};
-        RdbPredicates rdbPredicates = new RdbPredicates(SQLiteOmemoStore.SIGNED_PREKEY_TABLE_NAME)
-                .equalTo(SQLiteOmemoStore.BARE_JID, device.getJid().toString())
-                .and().equalTo(SQLiteOmemoStore.DEVICE_ID, device.getDeviceId());
-        ResultSet resultSet = mRdbStore.query(rdbPredicates, columns);
+        String[] selectionArgs = {device.getJid().toString(), Integer.toString(device.getDeviceId())};
 
-        if (resultSet.getRowCount() != 0) {
-            resultSet.goToFirstRow();
-            currentSignedPKId = resultSet.getInt(resultSet.getColumnIndexForName(SQLiteOmemoStore.SIGNED_PRE_KEY_ID));
+        Cursor cursor = db.query(SQLiteOmemoStore.SIGNED_PREKEY_TABLE_NAME, columns,
+                SQLiteOmemoStore.BARE_JID + "=? AND " + SQLiteOmemoStore.DEVICE_ID + "=?",
+                selectionArgs, null, null, null);
+
+        if (cursor.getCount() != 0) {
+            cursor.moveToFirst();
+            currentSignedPKId = cursor.getInt(cursor.getColumnIndex(SQLiteOmemoStore.SIGNED_PRE_KEY_ID));
         }
-        resultSet.close();
+        cursor.close();
         return currentSignedPKId;
     }
 
     // ========= OMEMO Identity =========
-    private ResultSet getIdentityKeyResultSet(OmemoDevice device, String fingerprint) {
-        RdbPredicates rdbPredicates = new RdbPredicates(SQLiteOmemoStore.IDENTITIES_TABLE_NAME)
-                .equalTo(SQLiteOmemoStore.BARE_JID, device.getJid().toString())
-                .and().equalTo(SQLiteOmemoStore.DEVICE_ID, device.getDeviceId());
+    private Cursor getIdentityKeyCursor(OmemoDevice device, String fingerprint) {
+        final SQLiteDatabase db = getReadableDatabase();
+        ArrayList<String> selectionArgs = new ArrayList<>(3);
+
+        selectionArgs.add(device.getJid().toString());
+        String selectionString = SQLiteOmemoStore.BARE_JID + "=?";
+
+        selectionArgs.add(Integer.toString(device.getDeviceId()));
+        selectionString += " AND " + SQLiteOmemoStore.DEVICE_ID + "=?";
+
         if (fingerprint != null) {
-            rdbPredicates.and().equalTo(SQLiteOmemoStore.FINGERPRINT, fingerprint);
+            selectionArgs.add(fingerprint);
+            selectionString += " AND " + SQLiteOmemoStore.FINGERPRINT + "=?";
         }
-        return mRdbStore.query(rdbPredicates, null);
+
+        return db.query(SQLiteOmemoStore.IDENTITIES_TABLE_NAME, null, selectionString,
+                selectionArgs.toArray(new String[0]), null, null, null);
     }
 
     public IdentityKeyPair loadIdentityKeyPair(OmemoDevice device)
             throws CorruptedOmemoKeyException {
         IdentityKeyPair identityKeyPair = null;
-        ResultSet resultSet = getIdentityKeyResultSet(device, null);
-        if (resultSet.getRowCount() != 0) {
-            resultSet.goToFirstRow();
-            String identityKP = resultSet.getString(resultSet.getColumnIndexForName(SQLiteOmemoStore.IDENTITY_KEY));
-            resultSet.close();
+        Cursor cursor = getIdentityKeyCursor(device, null);
+        if (cursor.getCount() != 0) {
+            cursor.moveToFirst();
+            String identityKP = cursor.getString(cursor.getColumnIndex(SQLiteOmemoStore.IDENTITY_KEY));
+            cursor.close();
             try {
                 if (StringUtils.isNotEmpty(identityKP)) {
-                    identityKeyPair = new IdentityKeyPair(Base64.getDecoder().decode(identityKP));
+                    identityKeyPair = new IdentityKeyPair(Base64.decode(identityKP, Base64.DEFAULT));
                 }
             } catch (InvalidKeyException e) {
                 // deleteIdentityKey(device); // may corrupt DB and out of sync with other data
-                String msg = aTalkApp.getResString(ResourceTable.String_omemo_identity_keypairs_invalid, device, e.getMessage());
+                String msg = aTalkApp.getResString(R.string.omemo_identity_keypairs_invalid, device, e.getMessage());
                 throw new CorruptedOmemoKeyException(msg);
             }
         }
@@ -834,19 +868,19 @@ public class DatabaseBackend extends DatabaseHelper {
     public IdentityKey loadIdentityKey(OmemoDevice device)
             throws CorruptedOmemoKeyException {
         IdentityKey identityKey = null;
-        ResultSet resultSet = getIdentityKeyResultSet(device, null);
-        if (resultSet.getRowCount() != 0) {
-            resultSet.goToFirstRow();
-            String key = resultSet.getString(resultSet.getColumnIndexForName(SQLiteOmemoStore.IDENTITY_KEY));
-            resultSet.close();
+        Cursor cursor = getIdentityKeyCursor(device, null);
+        if (cursor.getCount() != 0) {
+            cursor.moveToFirst();
+            String key = cursor.getString(cursor.getColumnIndex(SQLiteOmemoStore.IDENTITY_KEY));
+            cursor.close();
             try {
                 if (StringUtils.isNotEmpty(key)) {
-                    identityKey = new IdentityKey(Base64.getDecoder().decode(key), 0);
+                    identityKey = new IdentityKey(Base64.decode(key, Base64.DEFAULT), 0);
                 }
             } catch (InvalidKeyException e) {
                 // Delete corrupted identityKey, let omemo rebuilt this
                 deleteIdentityKey(device);
-                String msg = aTalkApp.getResString(ResourceTable.String_omemo_identity_key_invalid, device, e.getMessage());
+                String msg = aTalkApp.getResString(R.string.omemo_identity_key_invalid, device, e.getMessage());
                 throw new CorruptedOmemoKeyException(msg);
             }
         }
@@ -856,38 +890,43 @@ public class DatabaseBackend extends DatabaseHelper {
     // Use this to delete the device corrupted identityKeyPair/identityKey
     // - Later identityKeyPair gets rebuilt when device restart
     public void deleteIdentityKey(OmemoDevice device) {
-        RdbPredicates rdbPredicates = new RdbPredicates(SQLiteOmemoStore.IDENTITIES_TABLE_NAME)
-                .equalTo(SQLiteOmemoStore.BARE_JID, device.getJid().toString())
-                .and().equalTo(SQLiteOmemoStore.DEVICE_ID, device.getDeviceId());
-        mRdbStore.delete(rdbPredicates);
+        SQLiteDatabase db = getWritableDatabase();
+        String[] whereArgs = {device.getJid().toString(), Integer.toString(device.getDeviceId())};
+
+        db.delete(SQLiteOmemoStore.IDENTITIES_TABLE_NAME, SQLiteOmemoStore.BARE_JID + "=? AND "
+                + SQLiteOmemoStore.DEVICE_ID + "=?", whereArgs);
     }
 
     public void storeIdentityKeyPair(OmemoDevice userDevice, IdentityKeyPair identityKeyPair, String fingerprint) {
-        storeIdentityKey(userDevice, fingerprint, Base64.getEncoder().encodeToString(identityKeyPair.serialize()),
+        storeIdentityKey(userDevice, fingerprint,
+                Base64.encodeToString(identityKeyPair.serialize(), Base64.DEFAULT),
                 FingerprintStatus.createActiveVerified(false));
     }
 
-    public void storeIdentityKey(OmemoDevice device, IdentityKey identityKey, String fingerprint, FingerprintStatus status) {
-        storeIdentityKey(device, fingerprint, Base64.getEncoder().encodeToString(identityKey.serialize()), status);
+    public void storeIdentityKey(OmemoDevice device, IdentityKey identityKey, String fingerprint,
+            FingerprintStatus status) {
+        storeIdentityKey(device, fingerprint, Base64.encodeToString(identityKey.serialize(), Base64.DEFAULT), status);
     }
 
-    private void storeIdentityKey(OmemoDevice device, String fingerprint, String base64Serialized, FingerprintStatus status) {
+    private void storeIdentityKey(OmemoDevice device, String fingerprint,
+            String base64Serialized, FingerprintStatus status) {
+        SQLiteDatabase db = getWritableDatabase();
         String bareJid = device.getJid().toString();
-        int deviceId = device.getDeviceId();
+        String deviceId = Integer.toString(device.getDeviceId());
 
-        ValuesBucket values = new ValuesBucket();
-        values.putString(SQLiteOmemoStore.BARE_JID, bareJid);
-        values.putInteger(SQLiteOmemoStore.DEVICE_ID, deviceId);
-        values.putString(SQLiteOmemoStore.FINGERPRINT, fingerprint);
-        values.putString(SQLiteOmemoStore.IDENTITY_KEY, base64Serialized);
-        values.putValues(status.toValuesBucket());
+        ContentValues values = new ContentValues();
+        values.put(SQLiteOmemoStore.BARE_JID, bareJid);
+        values.put(SQLiteOmemoStore.DEVICE_ID, deviceId);
+        values.put(SQLiteOmemoStore.FINGERPRINT, fingerprint);
+        values.put(SQLiteOmemoStore.IDENTITY_KEY, base64Serialized);
+        values.putAll(status.toContentValues());
 
-        RdbPredicates rdbPredicates = new RdbPredicates(SQLiteOmemoStore.IDENTITIES_TABLE_NAME)
-                .equalTo(SQLiteOmemoStore.BARE_JID, bareJid)
-                .and().equalTo(SQLiteOmemoStore.DEVICE_ID, deviceId);
-        int rows = mRdbStore.update(values, rdbPredicates);
+        String where = SQLiteOmemoStore.BARE_JID + "=? AND " + SQLiteOmemoStore.DEVICE_ID + "=?";
+        String[] whereArgs = {bareJid, deviceId};
+
+        int rows = db.update(SQLiteOmemoStore.IDENTITIES_TABLE_NAME, values, where, whereArgs);
         if (rows == 0) {
-            mRdbStore.insert(SQLiteOmemoStore.IDENTITIES_TABLE_NAME, values);
+            db.insert(SQLiteOmemoStore.IDENTITIES_TABLE_NAME, null, values);
         }
     }
 
@@ -898,24 +937,25 @@ public class DatabaseBackend extends DatabaseHelper {
     public Set<IdentityKey> loadIdentityKeys(OmemoDevice device, FingerprintStatus status) {
         Set<IdentityKey> identityKeys = new HashSet<>();
         String key;
-        ResultSet resultSet = getIdentityKeyResultSet(device, null);
+        Cursor cursor = getIdentityKeyCursor(device, null);
 
-        while (resultSet.goToNextRow()) {
-            if (status != null && !status.equals(FingerprintStatus.fromResultSet(resultSet))) {
+        while (cursor.moveToNext()) {
+            if (status != null && !status.equals(FingerprintStatus.fromCursor(cursor))) {
                 continue;
             }
             try {
-                key = resultSet.getString(resultSet.getColumnIndexForName(SQLiteOmemoStore.IDENTITY_KEY));
+                key = cursor.getString(cursor.getColumnIndex(SQLiteOmemoStore.IDENTITY_KEY));
                 if (StringUtils.isNotEmpty(key)) {
-                    identityKeys.add(new IdentityKey(Base64.getDecoder().decode(key), 0));
-                } else {
+                    identityKeys.add(new IdentityKey(Base64.decode(key, Base64.DEFAULT), 0));
+                }
+                else {
                     Timber.d("Missing key (possibly pre-verified) in database for account: %s", device.getJid());
                 }
             } catch (InvalidKeyException e) {
                 Timber.d("Encountered invalid IdentityKey in DB for omemoDevice: %s", device);
             }
         }
-        resultSet.close();
+        cursor.close();
         return identityKeys;
     }
 
@@ -925,22 +965,25 @@ public class DatabaseBackend extends DatabaseHelper {
         }
 
         OmemoCachedDeviceList cachedDeviceList = new OmemoCachedDeviceList();
+        final SQLiteDatabase db = getReadableDatabase();
         String[] columns = {SQLiteOmemoStore.DEVICE_ID, SQLiteOmemoStore.ACTIVE};
-        RdbPredicates rdbPredicates = new RdbPredicates(SQLiteOmemoStore.IDENTITIES_TABLE_NAME)
-                .equalTo(SQLiteOmemoStore.BARE_JID, contact.toString());
-        ResultSet resultSet = mRdbStore.query(rdbPredicates, columns);
+        String[] selectionArgs = {contact.toString()};
+
+        Cursor cursor = db.query(SQLiteOmemoStore.IDENTITIES_TABLE_NAME, columns,
+                SQLiteOmemoStore.BARE_JID + "=?", selectionArgs, null, null, null);
 
         Set<Integer> activeDevices = cachedDeviceList.getActiveDevices();
         Set<Integer> inActiveDevices = cachedDeviceList.getInactiveDevices();
-        while (resultSet.goToNextRow()) {
-            int deviceId = resultSet.getInt(resultSet.getColumnIndexForName(SQLiteOmemoStore.DEVICE_ID));
-            if (resultSet.getInt(resultSet.getColumnIndexForName(SQLiteOmemoStore.ACTIVE)) == 1) {
+        while (cursor.moveToNext()) {
+            int deviceId = cursor.getInt(cursor.getColumnIndex(SQLiteOmemoStore.DEVICE_ID));
+            if (cursor.getInt(cursor.getColumnIndex(SQLiteOmemoStore.ACTIVE)) == 1) {
                 activeDevices.add(deviceId);
-            } else {
+            }
+            else {
                 inActiveDevices.add(deviceId);
             }
         }
-        resultSet.close();
+        cursor.close();
         return cachedDeviceList;
     }
 
@@ -949,16 +992,18 @@ public class DatabaseBackend extends DatabaseHelper {
             return;
         }
 
+        final SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+
         // Active devices
-        ValuesBucket values = new ValuesBucket();
-        values.putInteger(SQLiteOmemoStore.ACTIVE, 1);
+        values.put(SQLiteOmemoStore.ACTIVE, 1);
         Set<Integer> activeDevices = deviceList.getActiveDevices();
         // Timber.d("Identities table - updating for activeDevice: %s:%s", contact, activeDevices);
         for (int deviceId : activeDevices) {
-            RdbPredicates rdbPredicates = new RdbPredicates(SQLiteOmemoStore.IDENTITIES_TABLE_NAME)
-                    .equalTo(SQLiteOmemoStore.BARE_JID, contact.toString())
-                    .and().equalTo(SQLiteOmemoStore.DEVICE_ID, deviceId);
-            int row = mRdbStore.update(values, rdbPredicates);
+            String[] selectionArgs = {contact.toString(), Integer.toString(deviceId)};
+
+            int row = db.update(SQLiteOmemoStore.IDENTITIES_TABLE_NAME, values,
+                    SQLiteOmemoStore.BARE_JID + "=? AND " + SQLiteOmemoStore.DEVICE_ID + "=?", selectionArgs);
 
             if (row == 0) {
                 /*
@@ -966,9 +1011,9 @@ public class DatabaseBackend extends DatabaseHelper {
                  * AndroidOmemoService#buddyDeviceListUpdateListener()
                  */
                 Timber.d("Identities table - create new activeDevice: %s:%s ", contact, deviceId);
-                values.putString(SQLiteOmemoStore.BARE_JID, contact.toString());
-                values.putInteger(SQLiteOmemoStore.DEVICE_ID, deviceId);
-                mRdbStore.insert(SQLiteOmemoStore.IDENTITIES_TABLE_NAME, values);
+                values.put(SQLiteOmemoStore.BARE_JID, contact.toString());
+                values.put(SQLiteOmemoStore.DEVICE_ID, deviceId);
+                db.insert(SQLiteOmemoStore.IDENTITIES_TABLE_NAME, null, values);
             }
         }
 
@@ -979,87 +1024,91 @@ public class DatabaseBackend extends DatabaseHelper {
          * Worst it causes aTalk to crash on next access to omemo chat with the identity
          */
         values.clear();
-        values.putInteger(SQLiteOmemoStore.ACTIVE, 0);
+        values.put(SQLiteOmemoStore.ACTIVE, 0);
         Set<Integer> inActiveDevices = deviceList.getInactiveDevices();
         // Timber.i("Identities table updated for inactiveDevice: %s:%s", contact, inActiveDevices);
         for (int deviceId : inActiveDevices) {
-            RdbPredicates rdbPredicates = new RdbPredicates(SQLiteOmemoStore.IDENTITIES_TABLE_NAME)
-                    .equalTo(SQLiteOmemoStore.BARE_JID, contact.toString())
-                    .and().equalTo(SQLiteOmemoStore.DEVICE_ID, deviceId);
-            int row = mRdbStore.update(values, rdbPredicates);
+            String[] selectionArgs = {contact.toString(), Integer.toString(deviceId)};
 
+            int row = db.update(SQLiteOmemoStore.IDENTITIES_TABLE_NAME, values,
+                    SQLiteOmemoStore.BARE_JID + "=? AND " + SQLiteOmemoStore.DEVICE_ID + "=?", selectionArgs);
             if (row == 0) {
                 Timber.w("Identities table contains no inactiveDevice (create new): %s:%s", contact, deviceId);
-                values.putString(SQLiteOmemoStore.BARE_JID, contact.toString());
-                values.putInteger(SQLiteOmemoStore.DEVICE_ID, deviceId);
-                mRdbStore.insert(SQLiteOmemoStore.IDENTITIES_TABLE_NAME, values);
+                values.put(SQLiteOmemoStore.BARE_JID, contact.toString());
+                values.put(SQLiteOmemoStore.DEVICE_ID, deviceId);
+                db.insert(SQLiteOmemoStore.IDENTITIES_TABLE_NAME, null, values);
             }
         }
     }
 
     public int deleteNullIdentityKeyDevices() {
-        return mRdbStore.delete(new RdbPredicates(SQLiteOmemoStore.IDENTITIES_TABLE_NAME)
-                .isNull(SQLiteOmemoStore.IDENTITY_KEY));
+        final SQLiteDatabase db = getWritableDatabase();
+        return db.delete(SQLiteOmemoStore.IDENTITIES_TABLE_NAME, SQLiteOmemoStore.IDENTITY_KEY + " IS NULL", null);
     }
 
     public void setLastDeviceIdPublicationDate(OmemoDevice device, Date date) {
-        ValuesBucket values = new ValuesBucket();
-        values.putLong(SQLiteOmemoStore.LAST_MESSAGE_RX, date.getTime());
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(SQLiteOmemoStore.LAST_MESSAGE_RX, date.getTime());
 
-        RdbPredicates rdbPredicates = new RdbPredicates(SQLiteOmemoStore.IDENTITIES_TABLE_NAME)
-                .equalTo(SQLiteOmemoStore.BARE_JID, device.getJid().toString())
-                .and().equalTo(SQLiteOmemoStore.DEVICE_ID, device.getDeviceId());
-        mRdbStore.update(values, rdbPredicates);
+        String[] selectionArgs = {device.getJid().toString(), Integer.toString(device.getDeviceId())};
+
+        db.update(SQLiteOmemoStore.IDENTITIES_TABLE_NAME, values,
+                SQLiteOmemoStore.BARE_JID + "=? AND " + SQLiteOmemoStore.DEVICE_ID + "=?", selectionArgs);
     }
 
     public Date getLastDeviceIdPublicationDate(OmemoDevice device) {
-        ResultSet resultSet = getIdentityKeyResultSet(device, null);
-        if (resultSet.getRowCount() != 0) {
-            resultSet.goToFirstRow();
-            Long ts = resultSet.getLong(resultSet.getColumnIndexForName(SQLiteOmemoStore.LAST_MESSAGE_RX));
-            resultSet.close();
+        Cursor cursor = getIdentityKeyCursor(device, null);
+        if (cursor.getCount() != 0) {
+            cursor.moveToFirst();
+            Long ts = cursor.getLong(cursor.getColumnIndex(SQLiteOmemoStore.LAST_MESSAGE_RX));
+            cursor.close();
             return (ts != null && ts > 0) ? new Date(ts) : null;
         }
         return null;
     }
 
-    public void setLastMessageReceiveDate(OmemoDevice device, Date date) {
-        ValuesBucket values = new ValuesBucket();
-        values.putLong(SQLiteOmemoStore.LAST_MESSAGE_RX, date.getTime());
 
-        RdbPredicates rdbPredicates = new RdbPredicates(SQLiteOmemoStore.IDENTITIES_TABLE_NAME)
-                .equalTo(SQLiteOmemoStore.BARE_JID, device.getJid().toString())
-                .and().equalTo(SQLiteOmemoStore.DEVICE_ID, device.getDeviceId());
-        mRdbStore.update(values, rdbPredicates);
+    public void setLastMessageReceiveDate(OmemoDevice device, Date date) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(SQLiteOmemoStore.LAST_MESSAGE_RX, date.getTime());
+
+        String[] selectionArgs = {device.getJid().toString(), Integer.toString(device.getDeviceId())};
+
+        db.update(SQLiteOmemoStore.IDENTITIES_TABLE_NAME, values,
+                SQLiteOmemoStore.BARE_JID + "=? AND " + SQLiteOmemoStore.DEVICE_ID + "=?", selectionArgs);
     }
 
     public Date getLastMessageReceiveDate(OmemoDevice device) {
-        ResultSet resultSet = getIdentityKeyResultSet(device, null);
-        if (resultSet.getRowCount() != 0) {
-            resultSet.goToFirstRow();
-            long ts = resultSet.getLong(resultSet.getColumnIndexForName(SQLiteOmemoStore.LAST_MESSAGE_RX));
-            resultSet.close();
-            return (ts > 0) ? new Date(ts) : null;
+        Cursor cursor = getIdentityKeyCursor(device, null);
+        if (cursor.getCount() != 0) {
+            cursor.moveToFirst();
+            Long ts = cursor.getLong(cursor.getColumnIndex(SQLiteOmemoStore.LAST_MESSAGE_RX));
+            cursor.close();
+            return (ts != null && ts > 0) ? new Date(ts) : null;
         }
         return null;
     }
 
-    public void setOmemoMessageCounter(OmemoDevice device, int count) {
-        ValuesBucket values = new ValuesBucket();
-        values.putInteger(SQLiteOmemoStore.MESSAGE_COUNTER, count);
 
-        RdbPredicates rdbPredicates = new RdbPredicates(SQLiteOmemoStore.IDENTITIES_TABLE_NAME)
-                .equalTo(SQLiteOmemoStore.BARE_JID, device.getJid().toString())
-                .and().equalTo(SQLiteOmemoStore.DEVICE_ID, device.getDeviceId());
-        mRdbStore.update(values, rdbPredicates);
+    public void setOmemoMessageCounter(OmemoDevice device, int count) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(SQLiteOmemoStore.MESSAGE_COUNTER, count);
+
+        String[] selectionArgs = {device.getJid().toString(), Integer.toString(device.getDeviceId())};
+
+        db.update(SQLiteOmemoStore.IDENTITIES_TABLE_NAME, values,
+                SQLiteOmemoStore.BARE_JID + "=? AND " + SQLiteOmemoStore.DEVICE_ID + "=?", selectionArgs);
     }
 
     public int getOmemoMessageCounter(OmemoDevice device) {
-        ResultSet resultSet = getIdentityKeyResultSet(device, null);
-        if (resultSet.getRowCount() != 0) {
-            resultSet.goToFirstRow();
-            int count = resultSet.getInt(resultSet.getColumnIndexForName(SQLiteOmemoStore.MESSAGE_COUNTER));
-            resultSet.close();
+        Cursor cursor = getIdentityKeyCursor(device, null);
+        if (cursor.getCount() != 0) {
+            cursor.moveToFirst();
+            int count = cursor.getInt(cursor.getColumnIndex(SQLiteOmemoStore.MESSAGE_COUNTER));
+            cursor.close();
             return count;
         }
         return 0;
@@ -1068,78 +1117,77 @@ public class DatabaseBackend extends DatabaseHelper {
 
     // ========= Fingerprint =========
     public FingerprintStatus getFingerprintStatus(OmemoDevice device, String fingerprint) {
-        ResultSet resultSet = getIdentityKeyResultSet(device, fingerprint);
+        Cursor cursor = getIdentityKeyCursor(device, fingerprint);
         final FingerprintStatus status;
-        if (resultSet.getRowCount() > 0) {
-            resultSet.goToFirstRow();
-            status = FingerprintStatus.fromResultSet(resultSet);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            status = FingerprintStatus.fromCursor(cursor);
         }
         else {
             status = null;
         }
-        resultSet.close();
+        cursor.close();
         return status;
     }
 
+
     public long numTrustedKeys(String bareJid) {
-//        DatabaseUtils.queryNumEntries(mStore, SQLiteOmemoStore.IDENTITIES_TABLE_NAME,
-//                SQLiteOmemoStore.BARE_JID + "=? AND ("
-//                        + SQLiteOmemoStore.TRUST + "=? OR "
-//                        + SQLiteOmemoStore.TRUST + "=? OR "
-//                        + SQLiteOmemoStore.TRUST + "=?) AND "
-//                        + SQLiteOmemoStore.ACTIVE + ">0", args
-//        );
-
-        RdbPredicates rdbPredicates = new RdbPredicates(SQLiteOmemoStore.IDENTITIES_TABLE_NAME)
-                .equalTo(SQLiteOmemoStore.BARE_JID, bareJid)
-                .and().greaterThan(SQLiteOmemoStore.ACTIVE, 0)
-                .and()
-                .or().equalTo(SQLiteOmemoStore.TRUST, FingerprintStatus.Trust.TRUSTED.toString())
-                .or().equalTo(SQLiteOmemoStore.TRUST, FingerprintStatus.Trust.VERIFIED.toString())
-                .or().equalTo(SQLiteOmemoStore.TRUST, FingerprintStatus.Trust.VERIFIED_X509.toString());
-
-        return mRdbStore.count(rdbPredicates);
+        SQLiteDatabase db = getReadableDatabase();
+        String[] args = {bareJid,
+                FingerprintStatus.Trust.TRUSTED.toString(),
+                FingerprintStatus.Trust.VERIFIED.toString(),
+                FingerprintStatus.Trust.VERIFIED_X509.toString()
+        };
+        return DatabaseUtils.queryNumEntries(db, SQLiteOmemoStore.IDENTITIES_TABLE_NAME,
+                SQLiteOmemoStore.BARE_JID + "=? AND ("
+                        + SQLiteOmemoStore.TRUST + "=? OR "
+                        + SQLiteOmemoStore.TRUST + "=? OR "
+                        + SQLiteOmemoStore.TRUST + "=?) AND "
+                        + SQLiteOmemoStore.ACTIVE + ">0", args
+        );
     }
 
     public void storePreVerification(OmemoDevice device, String fingerprint, FingerprintStatus status) {
-        ValuesBucket values = new ValuesBucket();
-        values.putString(SQLiteOmemoStore.BARE_JID, device.getJid().toString());
-        values.putInteger(SQLiteOmemoStore.DEVICE_ID, device.getDeviceId());
-        values.putString(SQLiteOmemoStore.FINGERPRINT, fingerprint);
-        values.putValues(status.toValuesBucket());
-        mRdbStore.insert(SQLiteOmemoStore.IDENTITIES_TABLE_NAME, values);
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(SQLiteOmemoStore.BARE_JID, device.getJid().toString());
+        values.put(SQLiteOmemoStore.DEVICE_ID, device.getDeviceId());
+        values.put(SQLiteOmemoStore.FINGERPRINT, fingerprint);
+        values.putAll(status.toContentValues());
+        db.insert(SQLiteOmemoStore.IDENTITIES_TABLE_NAME, null, values);
     }
 
     public boolean setIdentityKeyTrust(OmemoDevice device, String fingerprint, FingerprintStatus fingerprintStatus) {
-        RdbPredicates rdbPredicates = new RdbPredicates(SQLiteOmemoStore.IDENTITIES_TABLE_NAME)
-                .equalTo(SQLiteOmemoStore.BARE_JID, device.getJid().toString())
-                .and().equalTo(SQLiteOmemoStore.DEVICE_ID, device.getDeviceId())
-                .and().equalTo(SQLiteOmemoStore.FINGERPRINT, fingerprint);
-        int rows = mRdbStore.update(fingerprintStatus.toValuesBucket(), rdbPredicates);
-        return (rows == 1);
+        SQLiteDatabase db = getWritableDatabase();
+        String[] selectionArgs = {device.getJid().toString(), Integer.toString((device.getDeviceId())), fingerprint};
+        int rows = db.update(SQLiteOmemoStore.IDENTITIES_TABLE_NAME,
+                fingerprintStatus.toContentValues(), SQLiteOmemoStore.BARE_JID + "=? AND "
+                        + SQLiteOmemoStore.DEVICE_ID + "=? AND " + SQLiteOmemoStore.FINGERPRINT + "=?", selectionArgs);
+        return rows == 1;
     }
 
     // ========= OMEMO session =========
-    private ResultSet getResultSetForSession(OmemoDevice omemoContact) {
-        RdbPredicates rdbPredicates = new RdbPredicates(SQLiteOmemoStore.IDENTITIES_TABLE_NAME)
-                .equalTo(SQLiteOmemoStore.BARE_JID, omemoContact.getJid().toString())
-                .and().equalTo(SQLiteOmemoStore.DEVICE_ID, omemoContact.getDeviceId());
-        return mRdbStore.query(rdbPredicates, null);
+    private Cursor getCursorForSession(OmemoDevice omemoContact) {
+        final SQLiteDatabase db = getReadableDatabase();
+        String[] selectionArgs = {omemoContact.getJid().toString(), Integer.toString(omemoContact.getDeviceId())};
+        return db.query(SQLiteOmemoStore.SESSION_TABLE_NAME, null,
+                SQLiteOmemoStore.BARE_JID + "=? AND " + SQLiteOmemoStore.DEVICE_ID + "=?",
+                selectionArgs, null, null, null);
     }
 
     public SessionRecord loadSession(OmemoDevice omemoContact) {
         SessionRecord sessionRecord = null;
-        ResultSet resultSet = getResultSetForSession(omemoContact);
-        if (resultSet.getRowCount() != 0) {
-            resultSet.goToFirstRow();
+        Cursor cursor = getCursorForSession(omemoContact);
+        if (cursor.getCount() != 0) {
+            cursor.moveToFirst();
             try {
-                sessionRecord = new SessionRecord(Base64.getDecoder().decode(
-                        resultSet.getString(resultSet.getColumnIndexForName(SQLiteOmemoStore.SESSION_KEY))));
+                sessionRecord = new SessionRecord(Base64.decode(
+                        cursor.getString(cursor.getColumnIndex(SQLiteOmemoStore.SESSION_KEY)), Base64.DEFAULT));
             } catch (IOException e) {
                 Timber.w("Could not deserialize raw session. %s", e.getMessage());
             }
         }
-        resultSet.close();
+        cursor.close();
         return sessionRecord;
     }
 
@@ -1147,25 +1195,26 @@ public class DatabaseBackend extends DatabaseHelper {
         int deviceId;
         SessionRecord session = null;
         HashMap<Integer, SessionRecord> deviceSessions = new HashMap<>();
+        final SQLiteDatabase db = getReadableDatabase();
 
         String[] columns = {SQLiteOmemoStore.DEVICE_ID, SQLiteOmemoStore.SESSION_KEY};
-        RdbPredicates rdbPredicates = new RdbPredicates(SQLiteOmemoStore.SESSION_TABLE_NAME)
-                .equalTo(SQLiteOmemoStore.BARE_JID, contact.toString());
-        ResultSet resultSet = mRdbStore.query(rdbPredicates, columns);
+        String[] selectionArgs = {contact.toString()};
+        Cursor cursor = db.query(SQLiteOmemoStore.SESSION_TABLE_NAME, columns,
+                SQLiteOmemoStore.BARE_JID + "=?", selectionArgs, null, null, null);
 
-        while (resultSet.goToNextRow()) {
-            deviceId = resultSet.getInt(resultSet.getColumnIndexForName(SQLiteOmemoStore.DEVICE_ID));
-            String sessionKey = resultSet.getString(resultSet.getColumnIndexForName(SQLiteOmemoStore.SESSION_KEY));
+        while (cursor.moveToNext()) {
+            deviceId = cursor.getInt(cursor.getColumnIndex(SQLiteOmemoStore.DEVICE_ID));
+            String sessionKey = cursor.getString(cursor.getColumnIndex(SQLiteOmemoStore.SESSION_KEY));
             if (StringUtils.isNotEmpty(sessionKey)) {
                 try {
-                    session = new SessionRecord(Base64.getDecoder().decode(sessionKey));
+                    session = new SessionRecord(Base64.decode(sessionKey, Base64.DEFAULT));
                 } catch (IOException e) {
                     Timber.w("Could not deserialize raw session. %s", e.getMessage());
                 }
                 deviceSessions.put(deviceId, session);
             }
         }
-        resultSet.close();
+        cursor.close();
         return deviceSessions;
     }
 
@@ -1177,23 +1226,24 @@ public class DatabaseBackend extends DatabaseHelper {
         String sJid;
         SessionRecord session;
         HashMap<OmemoDevice, SessionRecord> deviceSessions = new HashMap<>();
+        SQLiteDatabase db = getReadableDatabase();
 
         String[] columns = {SQLiteOmemoStore.BARE_JID, SQLiteOmemoStore.DEVICE_ID, SQLiteOmemoStore.SESSION_KEY};
-        RdbPredicates rdbPredicates = new RdbPredicates(SQLiteOmemoStore.SESSION_TABLE_NAME);
-        ResultSet resultSet = mRdbStore.query(rdbPredicates, columns);
+        Cursor cursor = db.query(SQLiteOmemoStore.SESSION_TABLE_NAME, columns,
+                null, null, null, null, null);
 
-        while (resultSet.goToNextRow()) {
-            String sessionKey = resultSet.getString(resultSet.getColumnIndexForName(SQLiteOmemoStore.SESSION_KEY));
+        while (cursor.moveToNext()) {
+            String sessionKey = cursor.getString(cursor.getColumnIndex(SQLiteOmemoStore.SESSION_KEY));
             if (StringUtils.isNotEmpty(sessionKey)) {
                 try {
-                    session = new SessionRecord(Base64.getDecoder().decode(sessionKey));
+                    session = new SessionRecord(Base64.decode(sessionKey, Base64.DEFAULT));
                 } catch (IOException e) {
                     Timber.w("Could not deserialize raw session! %s", e.getMessage());
                     continue;
                 }
 
-                deviceId = resultSet.getInt(resultSet.getColumnIndexForName(SQLiteOmemoStore.DEVICE_ID));
-                sJid = resultSet.getString(resultSet.getColumnIndexForName(SQLiteOmemoStore.BARE_JID));
+                deviceId = cursor.getInt(cursor.getColumnIndex(SQLiteOmemoStore.DEVICE_ID));
+                sJid = cursor.getString(cursor.getColumnIndex(SQLiteOmemoStore.BARE_JID));
                 try {
                     bareJid = JidCreate.bareFrom(sJid);
                     omemoDevice = new OmemoDevice(bareJid, deviceId);
@@ -1203,35 +1253,36 @@ public class DatabaseBackend extends DatabaseHelper {
                 }
             }
         }
-        resultSet.close();
+        cursor.close();
         return deviceSessions;
     }
 
     public void storeSession(OmemoDevice omemoContact, SessionRecord session) {
-        ValuesBucket values = new ValuesBucket();
-        values.putString(SQLiteOmemoStore.BARE_JID, omemoContact.getJid().toString());
-        values.putInteger(SQLiteOmemoStore.DEVICE_ID, omemoContact.getDeviceId());
-        values.putString(SQLiteOmemoStore.SESSION_KEY, Base64.getEncoder().encodeToString(session.serialize()));
-        mRdbStore.insert(SQLiteOmemoStore.SESSION_TABLE_NAME, values);
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(SQLiteOmemoStore.BARE_JID, omemoContact.getJid().toString());
+        values.put(SQLiteOmemoStore.DEVICE_ID, omemoContact.getDeviceId());
+        values.put(SQLiteOmemoStore.SESSION_KEY, Base64.encodeToString(session.serialize(), Base64.DEFAULT));
+        db.insert(SQLiteOmemoStore.SESSION_TABLE_NAME, null, values);
     }
 
     public void deleteSession(OmemoDevice omemoContact) {
-        RdbPredicates rdbPredicates = new RdbPredicates(SQLiteOmemoStore.SESSION_TABLE_NAME)
-                .equalTo(SQLiteOmemoStore.BARE_JID, omemoContact.getJid().toString())
-                .and().equalTo(SQLiteOmemoStore.DEVICE_ID, omemoContact.getDeviceId());
-        mRdbStore.delete(rdbPredicates);
+        SQLiteDatabase db = getWritableDatabase();
+        String[] args = {omemoContact.getJid().toString(), Integer.toString(omemoContact.getDeviceId())};
+        db.delete(SQLiteOmemoStore.SESSION_TABLE_NAME,
+                SQLiteOmemoStore.BARE_JID + "=? AND " + SQLiteOmemoStore.DEVICE_ID + "=?", args);
     }
 
     public void deleteAllSessions(BareJid contact) {
-        RdbPredicates rdbPredicates = new RdbPredicates(SQLiteOmemoStore.SESSION_TABLE_NAME)
-                .equalTo(SQLiteOmemoStore.BARE_JID, contact.toString());
-        mRdbStore.delete(rdbPredicates);
+        SQLiteDatabase db = getWritableDatabase();
+        String[] args = {contact.toString()};
+        db.delete(SQLiteOmemoStore.SESSION_TABLE_NAME, SQLiteOmemoStore.BARE_JID + "=?", args);
     }
 
     public boolean containsSession(OmemoDevice omemoContact) {
-        ResultSet resultSet = getResultSetForSession(omemoContact);
-        int count = resultSet.getRowCount();
-        resultSet.close();
+        Cursor cursor = getCursorForSession(omemoContact);
+        int count = cursor.getCount();
+        cursor.close();
         return (count != 0);
     }
 
@@ -1248,23 +1299,22 @@ public class DatabaseBackend extends DatabaseHelper {
      */
     public void purgeOmemoDb(AccountID accountId) {
         String accountJid = accountId.getAccountJid();
-        // Timber.d(">>> Wiping OMEMO database for account : %s", accountJid);
+        Timber.d(">>> Wiping OMEMO database for account : %s", accountJid);
 
-        mRdbStore.delete(new RdbPredicates(SQLiteOmemoStore.OMEMO_DEVICES_TABLE_NAME)
-                .equalTo(SQLiteOmemoStore.OMEMO_JID, accountJid));
-        mRdbStore.delete(new RdbPredicates(SQLiteOmemoStore.PREKEY_TABLE_NAME)
-                .equalTo(SQLiteOmemoStore.BARE_JID, accountJid));
-        mRdbStore.delete(new RdbPredicates(SQLiteOmemoStore.SIGNED_PREKEY_TABLE_NAME)
-                .equalTo(SQLiteOmemoStore.BARE_JID, accountJid));
+        SQLiteDatabase db = getWritableDatabase();
+        String[] args = {accountJid};
+
+        db.delete(SQLiteOmemoStore.OMEMO_DEVICES_TABLE_NAME, SQLiteOmemoStore.OMEMO_JID + "=?", args);
+        db.delete(SQLiteOmemoStore.PREKEY_TABLE_NAME, SQLiteOmemoStore.BARE_JID + "=?", args);
+        db.delete(SQLiteOmemoStore.SIGNED_PREKEY_TABLE_NAME, SQLiteOmemoStore.BARE_JID + "=?", args);
 
         // Cleanup all the session and identities records for own resources, and the contacts
         List<String> identityJids = getContactsForAccount(accountId.getAccountUuid());
         identityJids.add(0, accountJid); // first item to be deleted
         for (String identityJid : identityJids) {
-            mRdbStore.delete(new RdbPredicates(SQLiteOmemoStore.SESSION_TABLE_NAME)
-                    .equalTo(SQLiteOmemoStore.BARE_JID, identityJid));
-            mRdbStore.delete(new RdbPredicates(SQLiteOmemoStore.IDENTITIES_TABLE_NAME)
-                    .equalTo(SQLiteOmemoStore.BARE_JID, identityJid));
+            args = new String[]{identityJid};
+            db.delete(SQLiteOmemoStore.SESSION_TABLE_NAME, SQLiteOmemoStore.BARE_JID + "=?", args);
+            db.delete(SQLiteOmemoStore.IDENTITIES_TABLE_NAME, SQLiteOmemoStore.BARE_JID + "=?", args);
         }
     }
 
@@ -1278,51 +1328,45 @@ public class DatabaseBackend extends DatabaseHelper {
      * @param device the specified omemoDevice for cleanup
      */
     public void purgeOmemoDb(OmemoDevice device) {
-        // Timber.d(">>> Wiping OMEMO database for device : %s", device);
-        String bareJid = device.getJid().toString();
-        int deviceId = device.getDeviceId();
+        Timber.d(">>> Wiping OMEMO database for device : %s", device);
+        SQLiteDatabase db = getWritableDatabase();
+        String[] args = {device.getJid().toString(), Integer.toString(device.getDeviceId())};
 
-        mRdbStore.delete(new RdbPredicates(SQLiteOmemoStore.OMEMO_DEVICES_TABLE_NAME)
-                .equalTo(SQLiteOmemoStore.OMEMO_JID, bareJid)
-                .and().equalTo(SQLiteOmemoStore.OMEMO_REG_ID, deviceId));
+        db.delete(SQLiteOmemoStore.OMEMO_DEVICES_TABLE_NAME,
+                SQLiteOmemoStore.OMEMO_JID + "=? AND " + SQLiteOmemoStore.OMEMO_REG_ID + "=?", args);
+        db.delete(SQLiteOmemoStore.PREKEY_TABLE_NAME,
+                SQLiteOmemoStore.BARE_JID + "=? AND " + SQLiteOmemoStore.DEVICE_ID + "=?", args);
+        db.delete(SQLiteOmemoStore.SIGNED_PREKEY_TABLE_NAME,
+                SQLiteOmemoStore.BARE_JID + "=? AND " + SQLiteOmemoStore.DEVICE_ID + "=?", args);
 
-        mRdbStore.delete(new RdbPredicates(SQLiteOmemoStore.PREKEY_TABLE_NAME)
-                .equalTo(SQLiteOmemoStore.BARE_JID, bareJid)
-                .and().equalTo(SQLiteOmemoStore.DEVICE_ID, deviceId));
-
-        mRdbStore.delete(new RdbPredicates(SQLiteOmemoStore.SIGNED_PREKEY_TABLE_NAME)
-                .equalTo(SQLiteOmemoStore.BARE_JID, bareJid)
-                .and().equalTo(SQLiteOmemoStore.DEVICE_ID, deviceId));
-
-        mRdbStore.delete(new RdbPredicates(SQLiteOmemoStore.IDENTITIES_TABLE_NAME)
-                .equalTo(SQLiteOmemoStore.BARE_JID, bareJid)
-                .and().equalTo(SQLiteOmemoStore.DEVICE_ID, deviceId));
-
-        mRdbStore.delete(new RdbPredicates(SQLiteOmemoStore.SESSION_TABLE_NAME)
-                .equalTo(SQLiteOmemoStore.BARE_JID, bareJid)
-                .and().equalTo(SQLiteOmemoStore.DEVICE_ID, deviceId));
+        db.delete(SQLiteOmemoStore.IDENTITIES_TABLE_NAME,
+                SQLiteOmemoStore.BARE_JID + "=? AND " + SQLiteOmemoStore.DEVICE_ID + "=?", args);
+        db.delete(SQLiteOmemoStore.SESSION_TABLE_NAME,
+                SQLiteOmemoStore.BARE_JID + "=? AND " + SQLiteOmemoStore.DEVICE_ID + "=?", args);
     }
 
     /**
      * Fetch all the contacts of the specified accountUuid
      *
      * @param accountUuid Account Uuid
+     *
      * @return List of contacts for the specified accountUuid
      */
     public List<String> getContactsForAccount(String accountUuid) {
+        SQLiteDatabase db = getWritableDatabase();
         List<String> childContacts = new ArrayList<>();
 
         String[] columns = {MetaContactGroup.CONTACT_JID};
-        RdbPredicates rdbPredicates = new RdbPredicates(MetaContactGroup.TBL_CHILD_CONTACTS)
-                .equalTo(MetaContactGroup.ACCOUNT_UUID, accountUuid);
-        ResultSet resultSet = mRdbStore.query(rdbPredicates, columns);
+        String[] args = new String[]{accountUuid};
+        Cursor cursor = db.query(MetaContactGroup.TBL_CHILD_CONTACTS, columns,
+                MetaContactGroup.ACCOUNT_UUID + "=?", args, null, null, null);
 
-        while (resultSet.goToNextRow()) {
-            String contact = resultSet.getString(0);
+        while (cursor.moveToNext()) {
+            String contact = cursor.getString(0);
             if (!TextUtils.isEmpty(contact))
                 childContacts.add(contact);
         }
-        resultSet.close();
+        cursor.close();
         return childContacts;
     }
 
@@ -1343,5 +1387,10 @@ public class DatabaseBackend extends DatabaseHelper {
         public Context getContext() {
             return aTalkApp.getInstance();
         }
+
+        //        @Override
+        //        public String serializeFlags(List<Flag> flags) {
+        //            return LocalStore.serializeFlags(flags);
+        //        }
     }
 }

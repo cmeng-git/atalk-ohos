@@ -1,6 +1,6 @@
 /*
- * aTalk, ohos VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * aTalk, android VoIP and Instant Messaging client
+ * Copyright 2014 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import net.java.sip.communicator.service.protocol.Contact;
 import net.java.sip.communicator.service.protocol.OperationFailedException;
 import net.java.sip.communicator.service.protocol.event.FileTransferStatusChangeEvent;
 
+import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 import org.jivesoftware.smackx.jingle.component.JingleSessionImpl;
 import org.jivesoftware.smackx.jingle.component.JingleSessionImpl.SessionState;
@@ -82,7 +83,7 @@ public class IncomingFileTransferJingleImpl extends AbstractFileTransfer {
     }
 
     private void onCanceled() {
-        String reason = aTalkApp.getResString(ResourceTable.String_file_transfer_canceled);
+        String reason = aTalkApp.getResString(R.string.file_transfer_canceled);
         fireStatusChangeEvent(FileTransferStatusChangeEvent.CANCELED, reason);
     }
 

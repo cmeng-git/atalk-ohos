@@ -5,7 +5,7 @@
  */
 package org.atalk.ohos.gui.contactlist.model;
 
-import ohos.media.image.PixelMap;
+import android.graphics.drawable.Drawable;
 
 import net.java.sip.communicator.service.contactsource.SourceContact;
 
@@ -47,14 +47,14 @@ public class SourceContactRenderer implements UIContactRenderer {
     }
 
     @Override
-    public PixelMap getAvatarImage(Object contactImpl) {
+    public Drawable getAvatarImage(Object contactImpl) {
         SourceContact contact = (SourceContact) contactImpl;
 
         return MetaContactRenderer.getCachedAvatarFromBytes(contact.getImage());
     }
 
     @Override
-    public PixelMap getStatusImage(Object contactImpl) {
+    public Drawable getStatusImage(Object contactImpl) {
         return null;
     }
 

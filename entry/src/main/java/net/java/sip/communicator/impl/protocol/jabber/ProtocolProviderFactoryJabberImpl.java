@@ -5,6 +5,8 @@
  */
 package net.java.sip.communicator.impl.protocol.jabber;
 
+import android.text.TextUtils;
+
 import java.util.Map;
 
 import net.java.sip.communicator.service.protocol.AccountID;
@@ -13,7 +15,6 @@ import net.java.sip.communicator.service.protocol.ProtocolProviderFactory;
 import net.java.sip.communicator.service.protocol.ProtocolProviderService;
 import net.java.sip.communicator.service.protocol.jabber.JabberAccountID;
 
-import org.apache.http.util.TextUtils;
 import org.jxmpp.jid.EntityBareJid;
 import org.jxmpp.jid.impl.JidCreate;
 import org.jxmpp.stringprep.XmppStringprepException;

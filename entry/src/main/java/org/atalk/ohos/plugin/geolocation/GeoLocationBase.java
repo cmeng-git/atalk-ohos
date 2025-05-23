@@ -1,6 +1,6 @@
 /*
- * aTalk, ohos VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * aTalk, android VoIP and Instant Messaging client
+ * Copyright 2014 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,24 +16,28 @@
  */
 package org.atalk.ohos.plugin.geolocation;
 
-import java.util.Locale;
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
+import android.content.Intent;
+import android.graphics.Color;
+import android.location.Location;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.ProgressBar;
+import android.widget.SeekBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import ohos.aafwk.content.Intent;
-import ohos.agp.animation.Animator;
-import ohos.agp.animation.AnimatorProperty;
-import ohos.agp.animation.AnimatorValue;
-import ohos.agp.components.Button;
-import ohos.agp.components.Checkbox;
-import ohos.agp.components.Component;
-import ohos.agp.components.ProgressBar;
-import ohos.agp.components.Slider;
-import ohos.agp.components.Text;
-import ohos.location.Location;
-import ohos.utils.PacMap;
+import androidx.annotation.NonNull;
 
-import org.atalk.ohos.BaseAbility;
-import org.atalk.ohos.ResourceTable;
+import org.atalk.ohos.BaseActivity;
+import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
+
+import java.util.Locale;
 
 import timber.log.Timber;
 
@@ -42,14 +46,15 @@ import timber.log.Timber;
  *
  * @author Eng Chong Meng
  */
-public class GeoLocationBase extends BaseAbility implements Component.ClickedListener,
-        Slider.ValueChangedListener, GeoLocationListener {
+public class GeoLocationBase extends BaseActivity implements View.OnClickListener,
+        SeekBar.OnSeekBarChangeListener, GeoLocationListener
+{
     public static final String SHARE_ALLOW = "Share_Allow";
 
     private static LocationListener mCallBack;
     private static GeoLocationDelegate mGeoLocationDelegate;
     private Location mLocation = null;
-    private AnimatorProperty mAnimation;
+    private ObjectAnimator mAnimation;
     private static boolean isGpsShare = false;
     private boolean isFollowMe;
     private boolean mShareAllow = false;
@@ -62,92 +67,99 @@ public class GeoLocationBase extends BaseAbility implements Component.ClickedLis
     private final int gpsDistanceStep = 5;  // meters
     private final int timeIntervalStep = 10; // seconds
 
-    private Text mLatitudeTextView;
-    private Text mLongitudeTextView;
-    private Text mAltitudeTextView;
-    private Text mLocationAddressTextView;
-    private Slider mSeekDistanceInterval;
+    private TextView mLatitudeTextView;
+    private TextView mLongitudeTextView;
+    private TextView mAltitudeTextView;
+    private TextView mLocationAddressTextView;
+    private SeekBar mSeekDistanceInterval;
 
+    private Button mBtnSingleFix;
     private Button mBtnFollowMe;
-    private Checkbox mBtnGpsShare;
+    private CheckBox mBtnGpsShare;
 
     private boolean mDemo = false;
     private float delta = 0; // for demo
 
     @Override
-    protected void onStart(Intent intent) {
-        super.onStart(intent);
-        setMainTitle(ResourceTable.String_location);
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        setMainTitle(R.string.location);
         isFollowMe = (mGeoLocationDelegate != null);
         if (isFollowMe) {
-            mGeoLocationDelegate.unSubscribe();
+            mGeoLocationDelegate.unregisterLocationBroadcastReceiver();
             mGeoLocationDelegate = null;
         }
         mGeoLocationDelegate = new GeoLocationDelegate(this, this);
-        mGeoLocationDelegate.onStart(intent);
+        mGeoLocationDelegate.onCreate();
 
-        setUIContent(ResourceTable.Layout_geo_location);
-        mLatitudeTextView = findComponentById(ResourceTable.Id_latitude_textview);
-        mLongitudeTextView = findComponentById(ResourceTable.Id_longitude_textview);
-        mAltitudeTextView = findComponentById(ResourceTable.Id_altitude_textview);
-        mLocationAddressTextView = findComponentById(ResourceTable.Id_locationAddress_textview);
+        if (savedInstanceState != null) {
+            mShareAllow = savedInstanceState.getBoolean(SHARE_ALLOW);
+        }
+        else {
+            mShareAllow = getIntent().getExtras().getBoolean(SHARE_ALLOW, false);
+        }
 
-        Button mBtnSingleFix = findComponentById(ResourceTable.Id_btn_single_fix);
-        mBtnSingleFix.setClickedListener(this);
-        mBtnFollowMe = findComponentById(ResourceTable.Id_btn_follow_me);
-        mBtnFollowMe.setText(String.format(getString(ResourceTable.String_follow_me_start), gpsMinDistance, sendTimeInterval));
-        mBtnFollowMe.setClickedListener(this);
+        setContentView(R.layout.geo_location);
+        mLatitudeTextView = findViewById(R.id.latitude_textview);
+        mLongitudeTextView = findViewById(R.id.longitude_textview);
+        mAltitudeTextView = findViewById(R.id.altitude_textview);
+        mLocationAddressTextView = findViewById(R.id.locationAddress_textview);
 
-        mAnimation = new AnimatorProperty(mBtnFollowMe);
-        mAnimation.alphaFrom(0.0f).alpha(1.0f);
+        mBtnSingleFix = findViewById(R.id.btn_single_fix);
+        mBtnSingleFix.setOnClickListener(this);
+        mBtnFollowMe = findViewById(R.id.btn_follow_me);
+        mBtnFollowMe.setText(String.format(getString(R.string.follow_me_start), gpsMinDistance, sendTimeInterval));
+        mBtnFollowMe.setOnClickListener(this);
+
+        mAnimation = ObjectAnimator.ofInt(mBtnFollowMe, "textColor", Color.GREEN, Color.BLACK);
         mAnimation.setDuration(1000);
-        mAnimation.setLoopedCount(AnimatorValue.INFINITE);
-        mAnimation.setCurveType(Animator.CurveType.LINEAR);
+        mAnimation.setEvaluator(new ArgbEvaluator());
+        mAnimation.setRepeatCount(ValueAnimator.INFINITE);
+        mAnimation.setRepeatMode(ValueAnimator.REVERSE);
 
-        mBtnGpsShare = findComponentById(ResourceTable.Id_gps_share);
+        mBtnGpsShare = findViewById(R.id.gps_share);
         mBtnGpsShare.setEnabled(mShareAllow);
-        mBtnGpsShare.setCheckedStateChangedListener((buttonView, isChecked) -> {
+        mBtnGpsShare.setOnCheckedChangeListener((buttonView, isChecked) -> {
             isGpsShare = isChecked;
         });
         mBtnGpsShare.setChecked(mShareAllow && isGpsShare);
 
-        mSeekDistanceInterval = findComponentById(ResourceTable.Id_seekDistanceInterval);
-        mSeekDistanceInterval.setMaxValue(100);
-        mSeekDistanceInterval.setProgressValue(gpsMinDistance / gpsDistanceStep);
-        mSeekDistanceInterval.setValueChangedListener(this);
+        mSeekDistanceInterval = findViewById(R.id.seekDistanceInterval);
+        mSeekDistanceInterval.setMax(100);
+        mSeekDistanceInterval.setProgress(gpsMinDistance / gpsDistanceStep);
+        mSeekDistanceInterval.setOnSeekBarChangeListener(this);
 
-        Slider seekTimeInterval = findComponentById(ResourceTable.Id_seekTimeInterval);
-        seekTimeInterval.setMaxValue(100);
+        SeekBar seekTimeInterval = findViewById(R.id.seekTimeInterval);
+        seekTimeInterval.setMax(100);
         int progress = (sendTimeInterval - timeIntervalStep) / timeIntervalStep;
         if (progress < 0)
             progress = 0;
-        seekTimeInterval.setProgressValue(progress);
-        seekTimeInterval.setValueChangedListener(this);
+        seekTimeInterval.setProgress(progress);
+        seekTimeInterval.setOnSeekBarChangeListener(this);
 
         // Long press for demo at 0m and 2S interval
-        mBtnFollowMe.setLongClickedListener(v -> {
+        mBtnFollowMe.setOnLongClickListener(v -> {
             mDemo = true;
-            mSeekDistanceInterval.setProgressValue(0);
+            mSeekDistanceInterval.setProgress(0);
             sendTimeInterval = 2;
-            mBtnFollowMe.simulateClick();
+            mBtnFollowMe.performClick();
+            return true;
         });
     }
 
     @Override
-    public void onSaveAbilityState(PacMap outState) {
-        super.onSaveAbilityState(outState);
-        outState.putBooleanValue(SHARE_ALLOW, mShareAllow);
-    }
-
-    public void onRestoreAbilityState(PacMap inState) {
-        super.onRestoreAbilityState(inState);
-        mShareAllow = inState.getBooleanValue(SHARE_ALLOW, false);
+    protected void onSaveInstanceState(@NonNull Bundle outState)
+    {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(SHARE_ALLOW, mShareAllow);
     }
 
     @Override
-    protected void onActive() {
-        super.onActive();
-        aTalkApp.setCurrentAbility(this);
+    protected void onResume()
+    {
+        super.onResume();
+        aTalkApp.setCurrentActivity(this);
         mLocation = null;
         mSVP_Started = false;
         mShowMap = false;
@@ -160,18 +172,20 @@ public class GeoLocationBase extends BaseAbility implements Component.ClickedLis
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onDestroy()
+    {
+        super.onDestroy();
         if (!isFollowMe && (mGeoLocationDelegate != null)) {
-            mGeoLocationDelegate.unSubscribe();
+            mGeoLocationDelegate.unregisterLocationBroadcastReceiver();
             mGeoLocationDelegate = null;
         }
     }
 
     @Override
-    public void onClick(Component view) {
+    public void onClick(View view)
+    {
         switch (view.getId()) {
-            case ResourceTable.Id_btn_single_fix:
+            case R.id.btn_single_fix:
                 mLocationFetchMode = GeoConstants.SINGLE_FIX;
                 if (isFollowMe) {
                     updateSendButton(true);
@@ -181,15 +195,15 @@ public class GeoLocationBase extends BaseAbility implements Component.ClickedLis
                 GeoLocationRequest geoLocationRequest = new GeoLocationRequest.GeoLocationRequestBuilder()
                         .setLocationFetchMode(mLocationFetchMode)
                         .setAddressRequest(true)
-                        .setLocationUpdateMinTime(0)
-                        .setLocationUpdateMinDistance(0)
+                        .setLocationUpdateMinTime(0L)
+                        .setLocationUpdateMinDistance(0.0f)
                         .setFallBackToLastLocationTime(3000)
                         .build();
 
                 requestLocationUpdates(geoLocationRequest);
                 break;
 
-            case ResourceTable.Id_btn_follow_me:
+            case R.id.btn_follow_me:
                 mLocationFetchMode = (mDemo) ? GeoConstants.ZERO_FIX : GeoConstants.FOLLOW_ME_FIX;
                 if (isFollowMe) {
                     updateSendButton(true);
@@ -201,9 +215,9 @@ public class GeoLocationBase extends BaseAbility implements Component.ClickedLis
                     geoLocationRequest = new GeoLocationRequest.GeoLocationRequestBuilder()
                             .setLocationFetchMode(mLocationFetchMode)
                             .setAddressRequest(true)
-                            .setLocationUpdateMinTime(sendTimeInterval * 1000)
+                            .setLocationUpdateMinTime(sendTimeInterval * 1000L)
                             .setLocationUpdateMinDistance(gpsMinDistance)
-                            .setFallBackToLastLocationTime(sendTimeInterval * 500)
+                            .setFallBackToLastLocationTime(sendTimeInterval * 500L)
                             .build();
 
                     requestLocationUpdates(geoLocationRequest);
@@ -211,35 +225,41 @@ public class GeoLocationBase extends BaseAbility implements Component.ClickedLis
         }
     }
 
-    private void updateSendButton(boolean followMe) {
+    private void updateSendButton(boolean followMe)
+    {
         if (followMe) {
             isFollowMe = false;
-            mBtnFollowMe.setText(getString(ResourceTable.String_follow_me_start, gpsMinDistance, sendTimeInterval));
+            mBtnFollowMe.setText(getString(R.string.follow_me_start, gpsMinDistance, sendTimeInterval));
+            mBtnFollowMe.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
             mAnimation.end();
             mAnimation.cancel();
         }
         else {
             isFollowMe = true;
-            mBtnFollowMe.setText(getString(ResourceTable.String_follow_me_stop, gpsMinDistance, sendTimeInterval));
+            mBtnFollowMe.setText(getString(R.string.follow_me_stop, gpsMinDistance, sendTimeInterval));
             mAnimation.start();
         }
     }
 
-    public boolean isGpsShare() {
+    public boolean isGpsShare()
+    {
         return isFollowMe && isGpsShare;
     }
 
     @Override
-    public void onLocationPermissionGranted() {
-        aTalkApp.showToastMessage("Location permission granted");
+    public void onLocationPermissionGranted()
+    {
+        showToast("Location permission granted");
     }
 
     @Override
-    public void onLocationPermissionDenied() {
-        aTalkApp.showToastMessage("Location permission denied");
+    public void onLocationPermissionDenied()
+    {
+        showToast("Location permission denied");
     }
 
-    public void onLocationReceived(Location location, String locAddress) {
+    public void onLocationReceived(Location location, String locAddress)
+    {
         if (mDemo) {
             delta += 0.0001;
             location.setLatitude(location.getLatitude() + delta);
@@ -255,8 +275,8 @@ public class GeoLocationBase extends BaseAbility implements Component.ClickedLis
         mAltitudeTextView.setText(mAltitude);
         mLocationAddressTextView.setText(locAddress);
 
-        Timber.d("Update map needed: %s %s %s", isFollowMe, (mLocation != null) ? Location.calculateDistance(
-                location.getLatitude(), location.getLongitude(), mLocation.getLatitude(), mLocation.getLongitude()) : 0, location);
+        Timber.d("Update map needed: %s %s %s", isFollowMe,
+                (mLocation != null) ? location.distanceTo(mLocation) : 0, location);
         // aTalkApp.showToastMessage("on Location Received: " + ((mLocation != null) ? location.distanceTo(mLocation) : 0) + "; " + location);
         mLocation = location;
 
@@ -272,36 +292,41 @@ public class GeoLocationBase extends BaseAbility implements Component.ClickedLis
      *
      * @param location at which the pointer is place and map centered
      */
-    public void showStreetMap(Location location) {
+    public void showStreetMap(Location location)
+    {
     }
 
     @Override
-    public void onLocationReceivedNone() {
-        aTalkApp.showToastMessage("No location received");
+    public void onLocationReceivedNone()
+    {
+        showToast("No location received");
     }
 
     @Override
-    public void onLocationProviderEnabled() {
-        aTalkApp.showToastMessage("Location services are now ON");
+    public void onLocationProviderEnabled()
+    {
+        showToast("Location services are now ON");
     }
 
     @Override
-    public void onLocationProviderDisabled() {
-        aTalkApp.showToastMessage("Location services are still Off");
+    public void onLocationProviderDisabled()
+    {
+        showToast("Location services are still Off");
     }
 
     /**
      * Notification that the progress level has changed. Clients can use the fromUser parameter
      * to distinguish user-initiated changes from those that occurred programmatically.
      *
-     * @param slider The r whose progress has changed
+     * @param seekBar The SeekBar whose progress has changed
      * @param progress The current progress level. This will be in the range 0..max where max
-     * was set by {@link ProgressBar#setMaxValue(int)}. (The default value for max is 100.)
+     * was set by {@link ProgressBar#setMax(int)}. (The default value for max is 100.)
      * @param fromUser True if the progress change was initiated by the user.
      */
     @Override
-    public void onProgressUpdated(Slider slider, int progress, boolean fromUser) {
-        if (slider == mSeekDistanceInterval)
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser)
+    {
+        if (seekBar == mSeekDistanceInterval)
             gpsMinDistance = progress * gpsDistanceStep;
         else {
             if (progress == 0)
@@ -310,46 +335,66 @@ public class GeoLocationBase extends BaseAbility implements Component.ClickedLis
                 sendTimeInterval = (progress) * timeIntervalStep;
         }
 
-        mBtnFollowMe.setText(getString(ResourceTable.String_follow_me_start, gpsMinDistance, sendTimeInterval));
-        // mBtnFollowMe.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+        mBtnFollowMe.setText(getString(R.string.follow_me_start, gpsMinDistance, sendTimeInterval));
+        mBtnFollowMe.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
     }
 
     @Override
-    public void onTouchStart(Slider slider) {
+    public void onStartTrackingTouch(SeekBar seekBar)
+    {
     }
 
     @Override
-    public void onTouchEnd(Slider slider) {
+    public void onStopTrackingTouch(SeekBar seekBar)
+    {
         if (isFollowMe) {
-            mBtnFollowMe.setText(getString(ResourceTable.String_follow_me_stop, gpsMinDistance, sendTimeInterval));
+            mBtnFollowMe.setText(getString(R.string.follow_me_stop, gpsMinDistance, sendTimeInterval));
         }
-        aTalkApp.showToastMessage(ResourceTable.String_apply_new_location_setting);
+        showToast(getString(R.string.apply_new_location_setting));
     }
 
-    public static void registeredLocationListener(LocationListener listener) {
+    private void showToast(String message)
+    {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    public static void registeredLocationListener(LocationListener listener)
+    {
         mCallBack = listener;
     }
 
-    public interface LocationListener {
+    public interface LocationListener
+    {
         void onResult(Location location, String locAddress);
 
     }
 
-    protected Location getLastKnownLocation() {
+    protected Location getLastKnownLocation()
+    {
         return mGeoLocationDelegate.getLastKnownLocation();
     }
 
     @Override
-    public void onRequestPermissionsFromUserResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsFromUserResult(requestCode, permissions, grantResults);
-        mGeoLocationDelegate.onRequestPermissionsFromUserResult(requestCode, grantResults);
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        mGeoLocationDelegate.onActivityResult(requestCode);
     }
 
-    private void requestLocationUpdates(GeoLocationRequest geoLocationRequest) {
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
+    {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        mGeoLocationDelegate.onRequestPermissionsResult(requestCode, grantResults);
+    }
+
+    private void requestLocationUpdates(GeoLocationRequest geoLocationRequest)
+    {
         mGeoLocationDelegate.requestLocationUpdate(geoLocationRequest);
     }
 
-    private void stopLocationUpdates() {
+    private void stopLocationUpdates()
+    {
         mGeoLocationDelegate.stopLocationUpdates();
     }
 }

@@ -8,7 +8,7 @@ package org.atalk.impl.neomedia.transform.zrtp;
 import net.java.sip.communicator.service.protocol.AccountID;
 import net.java.sip.communicator.service.protocol.ProtocolProviderFactory;
 
-import org.atalk.ohos.ResourceTable;
+import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.impl.neomedia.AbstractRTPConnector;
 import org.atalk.service.neomedia.AbstractSrtpControl;
@@ -393,7 +393,7 @@ public class ZrtpControlImpl extends AbstractSrtpControl<ZRTPTransformEngine> im
             System.arraycopy(result, 0, zid, 0, 12);
 
         } catch (NumberFormatException e) {
-            aTalkApp.showToastMessage(ResourceTable.String_zid_reset_summary);
+            aTalkApp.showToastMessage(R.string.zid_reset_summary);
         } catch (NoSuchAlgorithmException e) {
             throw new IllegalArgumentException("generateMyZid");
         }

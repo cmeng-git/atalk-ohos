@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<PreferenceScreen xmlns:ohos="http://schemas.huawei.com/res/ohos" >
-
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <CheckBoxPreference
-        ohos:key="pref_key_calling_disabled"
-        ohos:summary="$string:jbr_jingle_summary"
-        ohos:title="$string:jbr_jingle_disable" />
+        android:key="pref_key_calling_disabled"
+        android:summary="@string/jbr_jingle_summary"
+        android:title="@string/jbr_jingle_disable" />
 
     <EditTextPreference
-        ohos:key="pref_key_override_phone_suffix"
-        ohos:title="$string:jbr_telephony_domain" />
+        android:key="pref_key_override_phone_suffix"
+        android:title="@string/jbr_telephony_domain" />
 
     <EditTextPreference
-        ohos:key="pref_key_tele_bypass_gtalk_caps"
-        ohos:title="$string:jbr_gtalk_domain" />
+        android:key="pref_key_tele_bypass_gtalk_caps"
+        android:title="@string/jbr_gtalk_domain" />
 </PreferenceScreen>

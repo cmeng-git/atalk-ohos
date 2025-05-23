@@ -1,3 +1,4 @@
 pluginManagement {
-    include (':entry', ':youtube_player')
+    include ':entry'
+    include ':android-youtube-player:core'
 }

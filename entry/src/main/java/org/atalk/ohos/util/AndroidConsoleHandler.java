@@ -5,7 +5,9 @@
  */
 package org.atalk.ohos.util;
 
-import org.atalk.ohos.ResourceTable;
+import android.util.Log;
+
+import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 
 import java.util.logging.Handler;
@@ -24,7 +26,7 @@ public class AndroidConsoleHandler extends Handler
     /**
      * Tag used for output(can be used to filter logcat).
      */
-    private final static String TAG = aTalkApp.getResString(ResourceTable.String_app_name);
+    private final static String TAG = aTalkApp.getResString(R.string.app_name);
 
     /**
      * Property indicates whether logger should translate logging levels to logcat levels.

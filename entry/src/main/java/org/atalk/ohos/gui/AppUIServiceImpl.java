@@ -5,6 +5,8 @@
  */
 package org.atalk.ohos.gui;
 
+import android.graphics.Point;
+
 import net.java.sip.communicator.service.contactlist.MetaContact;
 import net.java.sip.communicator.service.gui.Chat;
 import net.java.sip.communicator.service.gui.Container;
@@ -20,8 +22,6 @@ import net.java.sip.communicator.service.protocol.Contact;
 import net.java.sip.communicator.service.protocol.ProtocolProviderService;
 import net.java.sip.communicator.service.protocol.SecurityAuthority;
 import net.java.sip.communicator.util.account.LoginManager;
-
-import ohos.agp.utils.Point;
 
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.call.CallManager;
@@ -69,7 +69,7 @@ public class AppUIServiceImpl implements UIService
     @Override
     public boolean isVisible()
     {
-        return (aTalkApp.getCurrentAbility() != null);
+        return (aTalkApp.getCurrentActivity() != null);
     }
 
     /**

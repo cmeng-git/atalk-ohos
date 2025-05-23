@@ -1,6 +1,6 @@
 /*
- * aTalk, ohos VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * aTalk, android VoIP and Instant Messaging client
+ * Copyright 2014 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,21 +16,23 @@
  */
 package org.atalk.ohos.gui.util;
 
-import ohos.app.Context;
+import android.content.Context;
 
-import org.atalk.ohos.BaseAbility;
+import org.atalk.ohos.R;
 
 /**
  * ThemeHelper class that set the aTalk app Theme as specified by user
  *
  * @author Eng Chong Meng
  */
-public class ThemeHelper {
+public class ThemeHelper
+{
     /**
      * Possible values for the different theme settings. Important:
      * Do not change the order of the items! The ordinal value (position) is used when saving the settings.
      */
-    public enum Theme {
+    public enum Theme
+    {
         LIGHT,
         DARK
     }
@@ -43,30 +45,35 @@ public class ThemeHelper {
      *
      * @param ctx context
      */
-    public static void setTheme(BaseAbility ctx) {
+    public static void setTheme(Context ctx)
+    {
         ctx.setTheme(getAppThemeResourceId(mTheme));
     }
 
     /**
      * Set the aTalk theme as per specified
      *
-     * @param ctx   context
+     * @param ctx context
      * @param theme the new theme
      */
-    public static void setTheme(Context ctx, Theme theme) {
+    public static void setTheme(Context ctx, Theme theme)
+    {
         mTheme = theme;
         ctx.setTheme(getAppThemeResourceId(theme));
     }
 
-    public static Theme getAppTheme() {
+    public static Theme getAppTheme()
+    {
         return mTheme;
     }
 
-    public static void setAppTheme(Theme theme) {
+    public static void setAppTheme(Theme theme)
+    {
         mTheme = theme;
     }
 
-    public static int getAppThemeResourceId() {
+    public static int getAppThemeResourceId()
+    {
         return getAppThemeResourceId(mTheme);
     }
 
@@ -76,8 +83,9 @@ public class ThemeHelper {
      * @param theme the current theme
      * @return app android theme for use
      */
-    private static int getAppThemeResourceId(Theme theme) {
-        return (theme == Theme.LIGHT) ? ResourceTable.style.AppTheme_Light : ResourceTable.style.AppTheme_Dark;
+    private static int getAppThemeResourceId(Theme theme)
+    {
+        return (theme == Theme.LIGHT) ? R.style.AppTheme_Light : R.style.AppTheme_Dark;
     }
 
     /**
@@ -86,7 +94,8 @@ public class ThemeHelper {
      * @param theme the theme
      * @return true if the current aTalk mThem is the same as the specified mTheme
      */
-    public static boolean isAppTheme(Theme theme) {
+    public static boolean isAppTheme(Theme theme)
+    {
         return (mTheme == theme);
     }
 }

@@ -5,25 +5,15 @@
  */
 package net.java.sip.communicator.service.protocol.media;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import static org.atalk.impl.neomedia.transform.zrtp.ZrtpControlImpl.generateMyZid;
 
 import net.java.sip.communicator.service.protocol.AccountID;
 import net.java.sip.communicator.service.protocol.OperationFailedException;
 import net.java.sip.communicator.service.protocol.event.DTMFListener;
 import net.java.sip.communicator.service.protocol.event.DTMFReceivedEvent;
 
-import org.atalk.impl.neomedia.NeomediaServiceUtils;
 import org.atalk.impl.timberlog.TimberLog;
-import org.atalk.ohos.agp.components.JComponent;
+import org.atalk.impl.neomedia.NeomediaServiceUtils;
 import org.atalk.service.neomedia.AudioMediaStream;
 import org.atalk.service.neomedia.DTMFTone;
 import org.atalk.service.neomedia.MediaDirection;
@@ -49,9 +39,19 @@ import org.atalk.util.event.VideoEvent;
 import org.atalk.util.event.VideoListener;
 import org.atalk.util.event.VideoNotifierSupport;
 
-import timber.log.Timber;
+import java.awt.Component;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import static org.atalk.impl.neomedia.transform.zrtp.ZrtpControlImpl.generateMyZid;
+import timber.log.Timber;
 
 /**
  * Implements media control code which allows state sharing among multiple <code>CallPeerMediaHandler</code>s.
@@ -645,7 +645,7 @@ public class MediaHandler extends PropertyChangeNotifier
      * important because <code>Component</code>s belong to a single <code>Container</code> at a
      * time); otherwise, <code>false</code>
      */
-    protected boolean fireVideoEvent(int type, JComponent visualComponent, int origin)
+    protected boolean fireVideoEvent(int type, Component visualComponent, int origin)
     {
         return videoNotifierSupport.fireVideoEvent(type, visualComponent, origin, true);
     }
@@ -1174,7 +1174,7 @@ public class MediaHandler extends PropertyChangeNotifier
              * Make sure we will no longer notify the registered VideoListeners about changes in
              * the availability of video in the old videoStream.
              */
-            List<JComponent> oldVisualComponents = null;
+            List<Component> oldVisualComponents = null;
 
             if (mVideoStream != null) {
                 mVideoStream.removePropertyChangeListener(streamPropertyChangeListener);
@@ -1202,7 +1202,7 @@ public class MediaHandler extends PropertyChangeNotifier
              * Make sure we will notify the registered VideoListeners about changes in the
              * availability of video in the new videoStream.
              */
-            List<JComponent> newVisualComponents = null;
+            List<Component> newVisualComponents = null;
 
             if (mVideoStream != null) {
                 mVideoStream.addPropertyChangeListener(streamPropertyChangeListener);
@@ -1229,7 +1229,7 @@ public class MediaHandler extends PropertyChangeNotifier
                  */
                 if (newVisualComponents == null)
                     newVisualComponents = Collections.emptyList();
-                for (JComponent oldVisualComponent : oldVisualComponents) {
+                for (Component oldVisualComponent : oldVisualComponents) {
                     if (!newVisualComponents.remove(oldVisualComponent)) {
                         fireVideoEvent(VideoEvent.VIDEO_REMOVED, oldVisualComponent,
                                 VideoEvent.REMOTE);
@@ -1237,7 +1237,7 @@ public class MediaHandler extends PropertyChangeNotifier
                 }
             }
             if ((newVisualComponents != null) && !newVisualComponents.isEmpty()) {
-                for (JComponent newVisualComponent : newVisualComponents) {
+                for (Component newVisualComponent : newVisualComponents) {
                     fireVideoEvent(VideoEvent.VIDEO_ADDED, newVisualComponent, VideoEvent.REMOTE);
                 }
             }

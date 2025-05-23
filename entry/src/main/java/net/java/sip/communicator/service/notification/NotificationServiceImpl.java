@@ -566,9 +566,9 @@ class NotificationServiceImpl implements NotificationService {
                             Timber.e("Invalid pattern length: %s", patternLen);
                             continue;
                         }
-                        int[] pattern = new int[patternLen];
+                        long[] pattern = new long[patternLen];
                         for (int pIdx = 0; pIdx < patternLen; pIdx++) {
-                            pattern[pIdx] = configService.getInt(actionPropName + ".patternItem" + pIdx, -1);
+                            pattern[pIdx] = configService.getLong(actionPropName + ".patternItem" + pIdx, -1);
                             if (pattern[pIdx] == -1) {
                                 Timber.e("Invalid pattern interval: %s", (Object) pattern);
                             }
@@ -950,7 +950,7 @@ class NotificationServiceImpl implements NotificationService {
         else if (action instanceof VibrateNotificationAction) {
             VibrateNotificationAction vibrateAction = (VibrateNotificationAction) action;
             configProperties.put(actionTypeNodeName + ".descriptor", vibrateAction.getDescriptor());
-            int[] pattern = vibrateAction.getPattern();
+            long[] pattern = vibrateAction.getPattern();
             configProperties.put(actionTypeNodeName + ".patternLength", pattern.length);
 
             for (int pIdx = 0; pIdx < pattern.length; pIdx++) {

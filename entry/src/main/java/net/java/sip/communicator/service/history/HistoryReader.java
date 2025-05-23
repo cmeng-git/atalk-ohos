@@ -16,14 +16,14 @@ import java.util.Date;
  * @author Alexander Pelov
  * @author Damian Minkov
  */
-public interface HistoryReader {
+public interface HistoryReader
+{
+
     /**
      * Searches the history for all records with timestamp after <code>startDate</code>.
      *
      * @param startDate the date after all records will be returned
-     *
      * @return the found records
-     *
      * @throws RuntimeException Thrown if an exception occurs during the execution of the query, such as internal IO
      * error.
      */
@@ -34,9 +34,7 @@ public interface HistoryReader {
      * Searches the history for all records with timestamp before <code>endDate</code>.
      *
      * @param endDate the date before which all records will be returned
-     *
      * @return the found records
-     *
      * @throws RuntimeException Thrown if an exception occurs during the execution of the query, such as internal IO
      * error.
      */
@@ -49,9 +47,7 @@ public interface HistoryReader {
      *
      * @param startDate start of the interval in which we search
      * @param endDate end of the interval in which we search
-     *
      * @return the found records
-     *
      * @throws RuntimeException Thrown if an exception occurs during the execution of the query, such as internal IO
      * error.
      */
@@ -63,9 +59,7 @@ public interface HistoryReader {
      *
      * @param keyword the keyword to search for
      * @param field the field where to look for the keyword
-     *
      * @return the found records
-     *
      * @throws RuntimeException Thrown if an exception occurs during the execution of the query, such as internal IO
      * error.
      */
@@ -78,9 +72,7 @@ public interface HistoryReader {
      * @param keyword the keyword to search for
      * @param field the field where to look for the keyword
      * @param caseSensitive is keywords search case sensitive
-     *
      * @return the found records
-     *
      * @throws RuntimeException Thrown if an exception occurs during the execution of the query, such as internal IO
      * error.
      */
@@ -93,9 +85,7 @@ public interface HistoryReader {
      *
      * @param keywords array of keywords we search for
      * @param field the field where to look for the keyword
-     *
      * @return the found records
-     *
      * @throws RuntimeException Thrown if an exception occurs during the execution of the query, such as internal IO
      * error.
      */
@@ -108,9 +98,7 @@ public interface HistoryReader {
      * @param keywords array of keywords we search for
      * @param field the field where to look for the keyword
      * @param caseSensitive is keywords search case sensitive
-     *
      * @return the found records
-     *
      * @throws RuntimeException Thrown if an exception occurs during the execution of the query, such as internal IO
      * error.
      */
@@ -127,9 +115,7 @@ public interface HistoryReader {
      * @param endDate end of the interval in which we search
      * @param keywords array of keywords we search for
      * @param field the field where to look for the keyword
-     *
      * @return the found records
-     *
      * @throws UnsupportedOperationException Thrown if an exception occurs during the execution of the query, such as internal IO
      * error.
      */
@@ -147,9 +133,7 @@ public interface HistoryReader {
      * @param keywords array of keywords we search for
      * @param field the field where to look for the keyword
      * @param caseSensitive is keywords search case sensitive
-     *
      * @return the found records
-     *
      * @throws UnsupportedOperationException Thrown if an exception occurs during the execution of the query, such as internal IO
      * error.
      */
@@ -161,9 +145,7 @@ public interface HistoryReader {
      * Returns the supplied number of recent messages
      *
      * @param count messages count
-     *
      * @return the found records
-     *
      * @throws RuntimeException
      */
     QueryResultSet<HistoryRecord> findLast(int count)
@@ -176,9 +158,7 @@ public interface HistoryReader {
      * @param keywords array of keywords we search for
      * @param field the field where to look for the keyword
      * @param caseSensitive is keywords search case sensitive
-     *
      * @return the found records
-     *
      * @throws RuntimeException
      */
     QueryResultSet<HistoryRecord> findLast(int count, String[] keywords, String field, boolean
@@ -190,9 +170,7 @@ public interface HistoryReader {
      *
      * @param date messages after date
      * @param count messages count
-     *
      * @return QueryResultSet the found records
-     *
      * @throws RuntimeException
      */
     QueryResultSet<HistoryRecord> findFirstRecordsAfter(Date date, int count)
@@ -203,9 +181,7 @@ public interface HistoryReader {
      *
      * @param date messages before date
      * @param count messages count
-     *
      * @return QueryResultSet the found records
-     *
      * @throws RuntimeException
      */
     QueryResultSet<HistoryRecord> findLastRecordsBefore(Date date, int count)
@@ -229,7 +205,6 @@ public interface HistoryReader {
      * Total count of records that current history reader will read through
      *
      * @return the number of searched messages
-     *
      * @throws UnsupportedOperationException Thrown if an exception occurs during the execution of the query, such as internal IO
      * error.
      */

@@ -1,6 +1,6 @@
 /*
- * aTalk, ohos VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * aTalk, android VoIP and Instant Messaging client
+ * Copyright 2014 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,39 +16,23 @@
  */
 package org.atalk.crypto;
 
-import ohos.aafwk.content.Intent;
-import ohos.agp.components.BaseItemProvider;
-import ohos.agp.components.Component;
-import ohos.agp.components.ComponentContainer;
-import ohos.agp.components.LayoutScatter;
-import ohos.agp.components.ListContainer;
-import ohos.data.rdb.RdbPredicates;
-import ohos.data.rdb.RdbStore;
-import ohos.data.resultset.ResultSet;
-import ohos.miscservices.pasteboard.PasteData;
-import ohos.miscservices.pasteboard.SystemPasteboard;
+import static org.atalk.ohos.R.id.fingerprint;
 
-import net.java.sip.communicator.service.protocol.Contact;
-import net.java.sip.communicator.service.protocol.ProtocolProviderService;
-import net.java.sip.communicator.util.account.AccountUtils;
-
-import org.atalk.crypto.omemo.FingerprintStatus;
-import org.atalk.crypto.omemo.SQLiteOmemoStore;
-import org.atalk.ohos.BaseAbility;
-import org.atalk.ohos.ResourceTable;
-import org.atalk.ohos.aTalkApp;
-import org.atalk.ohos.agp.components.MenuInflater;
-import org.atalk.ohos.agp.components.MenuItem;
-import org.atalk.ohos.gui.util.ThemeHelper;
-import org.atalk.ohos.gui.util.ThemeHelper.Theme;
-import org.atalk.ohos.util.ComponentUtil;
-import org.atalk.persistance.DatabaseBackend;
-import org.atalk.util.CryptoHelper;
-import org.jivesoftware.smackx.omemo.OmemoManager;
-import org.jivesoftware.smackx.omemo.internal.OmemoDevice;
-import org.jivesoftware.smackx.omemo.signal.SignalOmemoService;
-import org.jivesoftware.smackx.omemo.trust.OmemoFingerprint;
-import org.jivesoftware.smackx.omemo.trust.TrustState;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -58,19 +42,38 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import net.java.sip.communicator.service.protocol.Contact;
+import net.java.sip.communicator.service.protocol.ProtocolProviderService;
+import net.java.sip.communicator.util.account.AccountUtils;
+
+import org.atalk.crypto.omemo.FingerprintStatus;
+import org.atalk.crypto.omemo.SQLiteOmemoStore;
+import org.atalk.ohos.BaseActivity;
+import org.atalk.ohos.R;
+import org.atalk.ohos.gui.util.ThemeHelper;
+import org.atalk.ohos.gui.util.ThemeHelper.Theme;
+import org.atalk.ohos.gui.util.ViewUtil;
+import org.atalk.persistance.DatabaseBackend;
+import org.atalk.util.CryptoHelper;
+import org.jivesoftware.smackx.omemo.OmemoManager;
+import org.jivesoftware.smackx.omemo.internal.OmemoDevice;
+import org.jivesoftware.smackx.omemo.signal.SignalOmemoService;
+import org.jivesoftware.smackx.omemo.trust.OmemoFingerprint;
+import org.jivesoftware.smackx.omemo.trust.TrustState;
+
 /**
  * Settings screen with known user account and its associated fingerprints
  *
  * @author Eng Chong Meng
  */
-public class CryptoDeviceFingerPrints extends BaseAbility {
+public class CryptoDeviceFingerPrints extends BaseActivity {
     private static final String OMEMO = "OMEMO:";
 
-    private RdbStore mRdbStore;
+    private SQLiteDatabase mDB;
     private SQLiteOmemoStore mOmemoStore;
 
-    /* Fingerprints provider instance. */
-    private FingerprintListProvider fpListProvider;
+    /* Fingerprints adapter instance. */
+    private FingerprintListAdapter fpListAdapter;
 
     /* Map contains omemo devices and theirs associated fingerPrint */
     private final Map<String, String> deviceFingerprints = new TreeMap<>();
@@ -86,15 +89,15 @@ public class CryptoDeviceFingerPrints extends BaseAbility {
     private Contact contact;
 
     @Override
-    protected void onStart(Intent intent) {
-        super.onStart(intent);
-        mRdbStore = DatabaseBackend.getRdbStore();
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mDB = DatabaseBackend.getReadableDB();
         mOmemoStore = (SQLiteOmemoStore) SignalOmemoService.getInstance().getOmemoStoreBackend();
-        setUIContent(ResourceTable.Layout_list_layout);
+        setContentView(R.layout.list_layout);
 
-        fpListProvider = new FingerprintListProvider(getDeviceFingerPrints());
-        ListContainer fingerprintsList = findComponentById(ResourceTable.Id_list);
-        fingerprintsList.setItemProvider(fpListProvider);
+        fpListAdapter = new FingerprintListAdapter(getDeviceFingerPrints());
+        ListView fingerprintsList = findViewById(R.id.list);
+        fingerprintsList.setAdapter(fpListAdapter);
         registerForContextMenu(fingerprintsList);
     }
 
@@ -126,20 +129,22 @@ public class CryptoDeviceFingerPrints extends BaseAbility {
     /**
      * {@inheritDoc}
      */
-    public void onCreateContextMenu(Menu menu, Component v, ContextMenu.ContextMenuInfo menuInfo) {
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         boolean isVerified = false;
         boolean keyExists = true;
 
-        MenuInflater inflater = new MenuInflater(getContext());
-        inflater.parse(ResourceTable.Layout_menu_fingerprint, menu);
-        MenuItem mTrust = menu.findComponenetById(ResourceTable.Id_trust);
-        MenuItem mDistrust = menu.findItem(ResourceTable.Id_distrust);
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.fingerprint_ctx_menu, menu);
+        MenuItem mTrust = menu.findItem(R.id.trust);
+        MenuItem mDistrust = menu.findItem(R.id.distrust);
 
-        ListContainer.AdapterContextMenuInfo ctxInfo = (ComponentContainer.AdapterContextMenuInfo) menuInfo;
+        ListView.AdapterContextMenuInfo ctxInfo = (AdapterView.AdapterContextMenuInfo) menuInfo;
         int pos = ctxInfo.position;
 
-        String remoteFingerprint = fpListProvider.getFingerprintFromRow(pos);
-        String bareJid = fpListProvider.getBareJidFromRow(pos);
+        String remoteFingerprint = fpListAdapter.getFingerprintFromRow(pos);
+        String bareJid = fpListAdapter.getBareJidFromRow(pos);
         if (bareJid.startsWith(OMEMO)) {
             isVerified = isOmemoFPVerified(bareJid, remoteFingerprint);
         }
@@ -159,43 +164,42 @@ public class CryptoDeviceFingerPrints extends BaseAbility {
      */
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        ListContainer.AdapterContextMenuInfo info = (ComponentContainer.AdapterContextMenuInfo) item.getMenuInfo();
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
 
         int pos = info.position;
-        String bareJid = fpListProvider.getBareJidFromRow(pos);
-        String remoteFingerprint = fpListProvider.getFingerprintFromRow(pos);
+        String bareJid = fpListAdapter.getBareJidFromRow(pos);
+        String remoteFingerprint = fpListAdapter.getFingerprintFromRow(pos);
         contact = contactList.get(bareJid);
 
-        int id = item.getId();
+        int id = item.getItemId();
         switch (id) {
-            case ResourceTable.Id_trust:
+            case R.id.trust:
                 if (bareJid.startsWith(OMEMO)) {
                     trustOmemoFingerPrint(bareJid, remoteFingerprint);
-                    String msg = getString(ResourceTable.String_crypto_omemo_trust_messaging_resume, bareJid);
-                    aTalkApp.showToastMessage(msg);
+                    String msg = getString(R.string.crypto_omemo_trust_messaging_resume, bareJid);
+                    Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
                 }
-                fpListProvider.notifyDataChanged();
+                fpListAdapter.notifyDataSetChanged();
                 return true;
 
-            case ResourceTable.Id_distrust:
+            case R.id.distrust:
                 if (bareJid.startsWith(OMEMO)) {
                     distrustOmemoFingerPrint(bareJid, remoteFingerprint);
-                    String msg = getString(ResourceTable.String_crypto_omemo_distrust_messaging_stop, bareJid);
-                    aTalkApp.showToastMessage(msg);
+                    String msg = getString(R.string.crypto_omemo_distrust_messaging_stop, bareJid);
+                    Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
                 }
-                fpListProvider.notifyDataChanged();
+                fpListAdapter.notifyDataSetChanged();
                 return true;
 
-            case ResourceTable.Id_copy:
-                SystemPasteboard sPasteboard = SystemPasteboard.getSystemPasteboard(getContext());
-                if (sPasteboard != null) {
-                    PasteData pData = new PasteData();
-                    pData.addTextRecord(CryptoHelper.prettifyFingerprint(remoteFingerprint));
-                    sPasteboard.setPasteData(pData);
-                    aTalkApp.showToastMessage(ResourceTable.String_crypto_fingerprint_copy);
+            case R.id.copy:
+                ClipboardManager cbManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                if (cbManager != null) {
+                    cbManager.setPrimaryClip(ClipData.newPlainText(null,
+                            CryptoHelper.prettifyFingerprint(remoteFingerprint)));
+                    Toast.makeText(this, R.string.crypto_fingerprint_copy, Toast.LENGTH_SHORT).show();
                 }
                 return true;
-            case ResourceTable.Id_cancel:
+            case R.id.cancel:
                 return true;
         }
         return super.onContextItemSelected(item);
@@ -209,19 +213,18 @@ public class CryptoDeviceFingerPrints extends BaseAbility {
      */
     private void getOmemoDeviceFingerprintStatus() {
         FingerprintStatus fpStatus;
-        RdbPredicates rdbPredicates = new RdbPredicates(SQLiteOmemoStore.IDENTITIES_TABLE_NAME);
+        Cursor cursor = mDB.query(SQLiteOmemoStore.IDENTITIES_TABLE_NAME, null,
+                null, null, null, null, null);
 
-        ResultSet resultSet = mRdbStore.query(rdbPredicates, null);
-
-        while (resultSet.goToNextRow()) {
-            fpStatus = FingerprintStatus.fromResultSet(resultSet);
+        while (cursor.moveToNext()) {
+            fpStatus = FingerprintStatus.fromCursor(cursor);
             if (fpStatus != null) {
                 String bareJid = OMEMO + fpStatus.getOmemoDevice();
                 omemoDeviceFPStatus.put(bareJid, fpStatus);
                 deviceFingerprints.put(bareJid, fpStatus.getFingerPrint());
             }
         }
-        resultSet.close();
+        cursor.close();
     }
 
     /**
@@ -282,7 +285,7 @@ public class CryptoDeviceFingerPrints extends BaseAbility {
     /**
      * Adapter displays fingerprints for given list of <code>omemoDevices</code>s and <code>contacts</code>.
      */
-    private class FingerprintListProvider extends BaseItemProvider {
+    private class FingerprintListAdapter extends BaseAdapter {
         /**
          * The list of currently displayed devices and FingerPrints.
          */
@@ -290,11 +293,11 @@ public class CryptoDeviceFingerPrints extends BaseAbility {
         private final List<String> deviceFP;
 
         /**
-         * Creates new instance of <code>FingerprintListProvider</code>.
+         * Creates new instance of <code>FingerprintListAdapter</code>.
          *
          * @param linkedHashMap list of <code>device</code> for which OMEMO fingerprints will be displayed.
          */
-        FingerprintListProvider(Map<String, String> linkedHashMap) {
+        FingerprintListAdapter(Map<String, String> linkedHashMap) {
             deviceJid = new ArrayList<>(linkedHashMap.keySet());
             deviceFP = new ArrayList<>(linkedHashMap.values());
         }
@@ -327,39 +330,36 @@ public class CryptoDeviceFingerPrints extends BaseAbility {
          * {@inheritDoc}
          */
         @Override
-        public Component getComponent(int position, Component rowView, ComponentContainer parent) {
-            if (rowView == null) {
-                LayoutScatter inflater = LayoutScatter.getInstance(getContext());
-                rowView = inflater.parse(ResourceTable.Layout_crypto_fingerprint_row, parent, false);
-            }
+        public View getView(int position, View rowView, ViewGroup parent) {
+            if (rowView == null)
+                rowView = getLayoutInflater().inflate(R.layout.crypto_fingerprint_row, parent, false);
 
             boolean isVerified = false;
-            int fingerprint = ResourceTable.Id_fingerprint;
             String bareJid = getBareJidFromRow(position);
             String remoteFingerprint = getFingerprintFromRow(position);
 
-            ComponentUtil.setTextViewValue(rowView, ResourceTable.Id_protocolProvider, bareJid);
-            ComponentUtil.setTextViewValue(rowView, fingerprint, CryptoHelper.prettifyFingerprint(remoteFingerprint));
+            ViewUtil.setTextViewValue(rowView, R.id.protocolProvider, bareJid);
+            ViewUtil.setTextViewValue(rowView, fingerprint, CryptoHelper.prettifyFingerprint(remoteFingerprint));
 
             // Color for active fingerPrints
-            ComponentUtil.setTextViewColor(rowView, fingerprint,
-                    ThemeHelper.isAppTheme(Theme.DARK) ? ResourceTable.Color_textColorWhite : ResourceTable.Color_textColorBlack);
+            ViewUtil.setTextViewColor(rowView, fingerprint,
+                    ThemeHelper.isAppTheme(Theme.DARK) ? R.color.textColorWhite : R.color.textColorBlack);
 
             if (bareJid.startsWith(OMEMO)) {
                 if (isOwnOmemoDevice(bareJid))
-                    ComponentUtil.setTextViewColor(rowView, fingerprint, ResourceTable.Color_blue);
+                    ViewUtil.setTextViewColor(rowView, fingerprint, R.color.blue);
                 else if (!isOmemoDeviceActive(bareJid))
-                    ComponentUtil.setTextViewColor(rowView, fingerprint, ResourceTable.Color_grey500);
+                    ViewUtil.setTextViewColor(rowView, fingerprint, R.color.grey500);
 
                 isVerified = isOmemoFPVerified(bareJid, remoteFingerprint);
             }
 
-            int status = isVerified ? ResourceTable.String_yes : ResourceTable.String_no;
-            String verifyStatus = getString(ResourceTable.String_crypto_fingerprint_status, getString(status));
-            ComponentUtil.setTextViewValue(rowView, ResourceTable.Id_fingerprint_status, verifyStatus);
-            ComponentUtil.setTextViewColor(rowView, ResourceTable.Id_fingerprint_status, isVerified ?
-                    (ThemeHelper.isAppTheme(Theme.DARK) ? ResourceTable.Color_textColorWhite : ResourceTable.Color_textColorBlack)
-                    : ResourceTable.Color_orange500);
+            int status = isVerified ? R.string.yes : R.string.no;
+            String verifyStatus = getString(R.string.crypto_fingerprint_status, getString(status));
+            ViewUtil.setTextViewValue(rowView, R.id.fingerprint_status, verifyStatus);
+            ViewUtil.setTextViewColor(rowView, R.id.fingerprint_status, isVerified ?
+                    (ThemeHelper.isAppTheme(Theme.DARK) ? R.color.textColorWhite : R.color.textColorBlack)
+                    : R.color.orange500);
             return rowView;
         }
 

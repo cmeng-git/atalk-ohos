@@ -5,12 +5,18 @@
  */
 package org.atalk.service.audionotifier;
 
+import android.content.Context;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
+import android.os.Build;
+
+import org.atalk.ohos.aTalkApp;
+import org.atalk.impl.androidresources.AndroidResourceServiceImpl;
+
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import org.atalk.impl.androidresources.AppResourceServiceImpl;
-import org.atalk.ohos.aTalkApp;
 
 import timber.log.Timber;
 
@@ -205,7 +211,7 @@ public abstract class AbstractSCAudioClip implements SCAudioClip
                                 if (!equals(command))
                                     return;
                             }
-                            if (uri.startsWith(AppResourceServiceImpl.PROTOCOL)) {
+                            if (uri.startsWith(AndroidResourceServiceImpl.PROTOCOL)) {
                                 // setNotificationVolume();
                                 runInPlayThread(loopCondition);
                             }
@@ -526,7 +532,7 @@ public abstract class AbstractSCAudioClip implements SCAudioClip
 
     private void ringToneStop()
     {
-        if (!uri.startsWith(AppResourceServiceImpl.PROTOCOL)) {
+        if (!uri.startsWith(AndroidResourceServiceImpl.PROTOCOL)) {
             if (ringtone != null) {
                 // Timber.d("Ring tone playback stopping: %s = %s", ringtone.getTitle(aTalkApp.getInstance()), uri);
                 try {

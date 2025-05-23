@@ -1,36 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<PreferenceScreen xmlns:ohos="http://schemas.huawei.com/res/ohos"
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:custom="http://schemas.android.com/apk/res-auto">
     <org.atalk.ohos.gui.settings.widget.ConfigListPreference
-        ohos:entries="@array/pref_opus_bandwidth"
-        ohos:entryValues="@array/pref_opus_bandwidth_values"
-        ohos:key="neomedia.codec.audio.opus.encoder.AUDIO_BANDWIDTH"
-        ohos:title="$string:opus_sampling_rate" />
+        android:entries="@array/pref_opus_bandwidth"
+        android:entryValues="@array/pref_opus_bandwidth_values"
+        android:key="neomedia.codec.audio.opus.encoder.AUDIO_BANDWIDTH"
+        android:title="@string/opus_sampling_rate" />
 
     <org.atalk.ohos.gui.settings.widget.ConfigEditText
-        ohos:inputType="number"
-        ohos:key="neomedia.codec.audio.opus.encoder.BITRATE"
-        ohos:title="$string:opus_bitrate" />
+        android:inputType="number"
+        android:key="neomedia.codec.audio.opus.encoder.BITRATE"
+        android:title="@string/opus_bitrate" />
 
     <org.atalk.ohos.gui.settings.widget.ConfigCheckBox
-        ohos:key="neomedia.codec.audio.opus.encoder.DTX"
-        ohos:title="$string:opus_use_dtx" />
+        android:key="neomedia.codec.audio.opus.encoder.DTX"
+        android:title="@string/opus_use_dtx" />
 
     <org.atalk.ohos.gui.settings.widget.ConfigCheckBox
-        ohos:key="neomedia.codec.audio.opus.encoder.FEC"
-        ohos:title="$string:opus_use_fec" />
+        android:key="neomedia.codec.audio.opus.encoder.FEC"
+        android:title="@string/opus_use_fec" />
 
     <org.atalk.ohos.gui.settings.widget.ConfigEditText
-        ohos:inputType="number"
-        ohos:key="neomedia.codec.audio.opus.encoder.MIN_EXPECTED_PACKET_LOSS"
-        ohos:title="$string:opus_min_expected_packet_loss"
+        android:inputType="number"
+        android:key="neomedia.codec.audio.opus.encoder.MIN_EXPECTED_PACKET_LOSS"
+        android:title="@string/opus_min_expected_packet_loss"
         custom:intMax="100"
         custom:intMin="1" />
 
     <org.atalk.ohos.gui.settings.widget.ConfigListPreference
-        ohos:entries="@array/pref_opus_complexity"
-        ohos:entryValues="@array/pref_opus_complexity"
-        ohos:key="neomedia.codec.audio.opus.encoder.COMPLEXITY"
-        ohos:title="$string:opus_complexity" />
+        android:entries="@array/pref_opus_complexity"
+        android:entryValues="@array/pref_opus_complexity"
+        android:key="neomedia.codec.audio.opus.encoder.COMPLEXITY"
+        android:title="@string/opus_complexity" />
 </PreferenceScreen>

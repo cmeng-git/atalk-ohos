@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<animatorProperty
-    xmlns:ohos="http://schemas.huawei.com/res/ohos"
-    ohos:duration="1000"
-    ohos:moveFromX="0"
-    ohos:moveFromY="0"
-    ohos:moveToX="0"
-    ohos:moveToY="100"/>

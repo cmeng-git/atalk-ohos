@@ -5,14 +5,15 @@
  */
 package org.atalk.ohos.gui.settings.widget;
 
-import org.atalk.ohos.gui.AppGUIActivator;
-import org.atalk.service.configuration.ConfigurationService;
-
 import android.content.Context;
 import android.util.AttributeSet;
+
 import androidx.annotation.Nullable;
 import androidx.preference.CheckBoxPreference;
 import androidx.preference.PreferenceManager;
+
+import org.atalk.ohos.gui.AppGUIActivator;
+import org.atalk.service.configuration.ConfigurationService;
 
 /**
  * Checkbox preference that persists the value through <code>ConfigurationService</code>.

@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<PreferenceScreen xmlns:ohos="http://schemas.huawei.com/res/ohos"
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:custom="http://schemas.android.com/apk/res-auto">
     <org.atalk.ohos.gui.settings.widget.ConfigCheckBox
-        ohos:key="neomedia.codec.audio.silk.encoder.USE_FEC"
-        ohos:title="$string:silk_use_fec" />
+        android:key="neomedia.codec.audio.silk.encoder.USE_FEC"
+        android:title="@string/silk_use_fec" />
 
     <org.atalk.ohos.gui.settings.widget.ConfigCheckBox
-        ohos:key="neomedia.codec.audio.silk.encoder.AWLAYS_ASSUME_PACKET_LOSS"
-        ohos:title="$string:silk_assume_pl" />
+        android:key="neomedia.codec.audio.silk.encoder.AWLAYS_ASSUME_PACKET_LOSS"
+        android:title="@string/silk_assume_pl" />
 
     <org.atalk.ohos.gui.settings.widget.ConfigEditText
-        ohos:inputType="numberDecimal"
-        ohos:key="neomedia.codec.audio.silk.encoder.SPEECH_ACTIVITY_THRESHOLD"
-        ohos:title="$string:silk_fec_sat"
+        android:inputType="numberDecimal"
+        android:key="neomedia.codec.audio.silk.encoder.SPEECH_ACTIVITY_THRESHOLD"
+        android:title="@string/silk_fec_sat"
         custom:floatMax="1"
         custom:floatMin="0" />
 
     <org.atalk.ohos.gui.settings.widget.ConfigCheckBox
-        ohos:key="neomedia.codec.audio.silk.ADVERTISE_FEC"
-        ohos:title="$string:silk_fec_advertise" />
+        android:key="neomedia.codec.audio.silk.ADVERTISE_FEC"
+        android:title="@string/silk_fec_advertise" />
 </PreferenceScreen>

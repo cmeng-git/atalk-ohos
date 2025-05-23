@@ -1,4 +1,0 @@
-<shape xmlns:ohos="http://schemas.ohos.com/apk/res/ohos">
-    <solid ohos:color="@ohos:color/white" />
-    <corners ohos:radius="2dp" />
-</shape>

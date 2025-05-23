@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<PreferenceScreen xmlns:ohos="http://schemas.huawei.com/res/ohos">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory
-        ohos:key="quiet_hour_details"
-        ohos:title="$string:quiet_hours">
+        android:key="quiet_hour_details"
+        android:title="@string/quiet_hours">
 
         <CheckBoxPreference
-            ohos:defaultValue="true"
-            ohos:key="pref.key.quiet_hours_enable"
-            ohos:summary="$string:quiet_hours_summary"
-            ohos:title="$string:quiet_hours_enable" />
+            android:defaultValue="true"
+            android:key="pref.key.quiet_hours_enable"
+            android:summary="@string/quiet_hours_summary"
+            android:title="@string/quiet_hours_enable" />
 
         <org.atalk.ohos.gui.settings.TimePreference
-            ohos:dependency="pref.key.quiet_hours_enable"
-            ohos:key="pref.key.quiet_hours_start"
-            ohos:negativeButtonText="$string:cancel"
-            ohos:positiveButtonText="$string:set"
-            ohos:title="$string:quiet_hours_start_time" />
+            android:dependency="pref.key.quiet_hours_enable"
+            android:key="pref.key.quiet_hours_start"
+            android:negativeButtonText="@string/cancel"
+            android:positiveButtonText="@string/set"
+            android:title="@string/quiet_hours_start_time" />
 
         <org.atalk.ohos.gui.settings.TimePreference
-            ohos:dependency="pref.key.quiet_hours_enable"
-            ohos:key="pref.key.quiet_hours_end"
-            ohos:negativeButtonText="$string:cancel"
-            ohos:positiveButtonText="$string:set"
-            ohos:title="$string:quiet_hours_end_time" />
+            android:dependency="pref.key.quiet_hours_enable"
+            android:key="pref.key.quiet_hours_end"
+            android:negativeButtonText="@string/cancel"
+            android:positiveButtonText="@string/set"
+            android:title="@string/quiet_hours_end_time" />
 
     </PreferenceCategory>
 </PreferenceScreen>
