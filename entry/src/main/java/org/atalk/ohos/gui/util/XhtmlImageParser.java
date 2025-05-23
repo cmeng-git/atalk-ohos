@@ -1,6 +1,6 @@
 /*
- * aTalk, ohos VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * aTalk, android VoIP and Instant Messaging client
+ * Copyright 2014 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,39 +16,38 @@
  */
 package org.atalk.ohos.gui.util;
 
+import android.graphics.drawable.Drawable;
+import android.os.Handler;
+import android.os.Looper;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
+import android.widget.TextView;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.concurrent.Executors;
 
-import ohos.agp.components.Text;
-import ohos.media.image.ImageSource;
-import ohos.media.image.PixelMap;
-import ohos.media.image.common.PixelFormat;
-import ohos.media.image.common.Size;
-
-import org.atalk.ohos.BaseAbility;
-
 /**
  * Utility class that implements <code>Html.ImageGetter</code> interface and can be used
- * to display url images in <code>Text</code> through the HTML syntax.
+ * to display url images in <code>TextView</code> through the HTML syntax.
  *
  * @author Eng Chong Meng
  */
 public class XhtmlImageParser implements Html.ImageGetter {
-    private final Text mText;
+    private final TextView mTextView;
     private final String XhtmlString;
 
     /**
-     * Construct the XhtmlImageParser which will execute in async and refresh the Text
+     * Construct the XhtmlImageParser which will execute in async and refresh the TextView
      * Usage: htmlTextView.setText(Html.fromHtml(HtmlString, new XhtmlImageParser(htmlTextView, HtmlString), null));
      *
      * @param tv the textView to be populated with return result
      * @param str the xhtml string
      */
-    public XhtmlImageParser(Text tv, String str) {
-        mText = tv;
+    public XhtmlImageParser(TextView tv, String str) {
+        mTextView = tv;
         XhtmlString = str;
     }
 
@@ -56,7 +55,7 @@ public class XhtmlImageParser implements Html.ImageGetter {
      * {@inheritDoc}
      */
     @Override
-    public PixelMap getDrawable(String source) {
+    public Drawable getDrawable(String source) {
         HttpGetDrawableTask httpGetDrawableTask = new HttpGetDrawableTask();
         httpGetDrawableTask.execute(source);
         return null;
@@ -69,16 +68,16 @@ public class XhtmlImageParser implements Html.ImageGetter {
         public void execute(String... params) {
             Executors.newSingleThreadExecutor().execute(() -> {
                 String urlString = params[0];
-                final PixelMap urlDrawable = getDrawable(urlString);
+                final Drawable urlDrawable = getDrawable(urlString);
 
-                BaseAbility.runOnUiThread(() -> {
+                new Handler(Looper.getMainLooper()).post(() -> {
                     if (urlDrawable != null) {
-                        mText.setText(Html.fromHtml(XhtmlString, Html.FROM_HTML_MODE_LEGACY, source -> urlDrawable, null));
+                        mTextView.setText(Html.fromHtml(XhtmlString, Html.FROM_HTML_MODE_LEGACY, source -> urlDrawable, null));
                     }
                     else {
-                        mText.setText(Html.fromHtml(XhtmlString, Html.FROM_HTML_MODE_LEGACY, null, null));
+                        mTextView.setText(Html.fromHtml(XhtmlString, Html.FROM_HTML_MODE_LEGACY, null, null));
                     }
-                    mText.setMovementMethod(LinkMovementMethod.getInstance());
+                    mTextView.setMovementMethod(LinkMovementMethod.getInstance());
                 });
             });
         }
@@ -90,7 +89,7 @@ public class XhtmlImageParser implements Html.ImageGetter {
          * @param urlString url string
          * @return drawable
          */
-        public PixelMap getPixelMap(String urlString) {
+        public Drawable getDrawable(String urlString) {
             try {
                 // urlString = "https://cmeng-git.github.io/atalk/img/09.atalk_avatar.png";
                 urlString = urlString.replace("http:", "https:");
@@ -100,15 +99,11 @@ public class XhtmlImageParser implements Html.ImageGetter {
                 urlConnection.connect();
                 InputStream inputStream = urlConnection.getInputStream();
 
-                ImageSource.SourceOptions srcOptions = new ImageSource.SourceOptions();
-                ImageSource imageSrc = ImageSource.create(inputStream, srcOptions);
-                Size imageSize = imageSrc.getImageInfo().size;
+                Drawable drawable = Drawable.createFromStream(inputStream, "src");
+                if (drawable != null)
+                    drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
 
-                ImageSource.DecodingOptions decodingOpts = new ImageSource.DecodingOptions();
-                decodingOpts.desiredSize = new Size(imageSize.width, imageSize.height);
-                decodingOpts.desiredPixelFormat = PixelFormat.ARGB_8888;
-                decodingOpts.rotateDegrees = 0;
-                return imageSrc.createPixelmap(decodingOpts);
+                return drawable;
             } catch (IOException e) {
                 return null;
             }

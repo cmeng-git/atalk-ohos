@@ -1,53 +1,46 @@
 /*
- * aTalk, ohos VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * Jitsi, the OpenSource Java VoIP and Instant Messaging client.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Distributable under LGPL license. See terms of license at gnu.org.
  */
 package org.atalk.ohos.gui.widgets;
 
-import ohos.agp.components.AttrSet;
-import ohos.agp.components.Component;
-import ohos.agp.components.Image;
-import ohos.agp.components.ListComponent;
-import ohos.agp.components.ListContainer;
-import ohos.agp.components.element.ShapeElement;
-import ohos.agp.utils.Rect;
-import ohos.app.Context;
-import ohos.media.image.PixelMap;
-import ohos.multimodalinput.event.TouchEvent;
+import android.content.Context;
+import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.PixelFormat;
+import android.graphics.Rect;
+import android.util.AttributeSet;
+import android.view.Gravity;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewConfiguration;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ImageView;
+import android.widget.ListView;
 
-import org.atalk.ohos.ResourceTable;
+import org.atalk.ohos.R;
 
 import timber.log.Timber;
-
-import static org.bouncycastle.asn1.eac.ECDSAPublicKey.R;
 
 /**
  * Modified version of class of the same name from android source of the music app. The widget displays a list of items.
  * User can set order of items by dragging them on the screen.<br/>
- * This <code>Component.</code> requires following XML attributes:<br/>
+ * This <code>View</code> requires following XML attributes:<br/>
  * - <code>itemHeight</code> the height of list item<br/>
  * - <code>itemExpandedHeight</code> the height that will be set to expanded item(the one tha makes space for dragged item)<br/>
  * - <code>dragRegionStartX</code> and <code>dragRegionEndX</code> item can be grabbed when start x coordinate is between them
  *
+ * @author Pawel Domas
  * @author Eng Chong Meng
  */
-public class TouchInterceptor extends ListComponent {
+public class TouchInterceptor extends ListView {
     /**
      * The view representing dragged item
      */
-    private Image dragView;
+    private ImageView dragView;
     /**
      * The {@link android.view.WindowManager} used to display dragged view
      */
@@ -97,17 +90,17 @@ public class TouchInterceptor extends ListComponent {
      */
     private int lowerBound;
     /**
-     * Component.'s height
+     * View's height
      */
     private int height;
     /**
      *
      */
-    private Rect tempRect = new Rect();
+    private final Rect tempRect = new Rect();
     /**
-     * The background of dragged <code>Component.</code>
+     * The background of dragged <code>View</code>
      */
-    private PixelMap dragBitmap;
+    private Bitmap dragBitmap;
     /**
      * The touch slop
      */
@@ -140,14 +133,14 @@ public class TouchInterceptor extends ListComponent {
      * - <code>dragRegionStartX</code> and <code>dragRegionEndX</code> item can be grabbed when start x coordinate is between
      * them
      *
-     * @param context the Context
-     * @param attrset the AttrSet
+     * @param context the {@link android.content.Context}
+     * @param attrs the {@link android.util.AttributeSet}
      */
-    public TouchInterceptor(Context context, AttrSet attrset) {
-        super(context, attrset);
+    public TouchInterceptor(Context context, AttributeSet attrs) {
+        super(context, attrs);
 
         touchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
-        TypedArray a = context.getTheme().obtainStyledAttributes(attrset, R.styleable.TouchInterceptor, 0, 0);
+        TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.TouchInterceptor, 0, 0);
         try {
             itemHeightNormal = a.getDimensionPixelSize(R.styleable.TouchInterceptor_itemHeight, -1);
             itemHeightHalf = itemHeightNormal / 2;
@@ -181,10 +174,10 @@ public class TouchInterceptor extends ListComponent {
                     int x = (int) ev.getX();
                     int y = (int) ev.getY();
                     int itemnum = pointToPosition(x, y);
-                    if (itemnum == ListContainer.INVALID_POSITION) {
+                    if (itemnum == AdapterView.INVALID_POSITION) {
                         break;
                     }
-                    Component item = getChildAt(itemnum - getFirstVisiblePosition());
+                    View item = getChildAt(itemnum - getFirstVisiblePosition());
                     dragPointX = x - ((item == null) ? 0 : item.getLeft());
                     dragPointY = y - ((item == null) ? 0 : item.getTop());
                     xOffset = ((int) ev.getRawX()) - x;
@@ -230,7 +223,7 @@ public class TouchInterceptor extends ListComponent {
         Rect frame = tempRect;
         final int count = getChildCount();
         for (int i = count - 1; i >= 0; i--) {
-            final Component child = getChildAt(i);
+            final View child = getChildAt(i);
             child.getHitRect(frame);
             if (frame.contains(x, y)) {
                 return getFirstVisiblePosition() + i;
@@ -271,7 +264,7 @@ public class TouchInterceptor extends ListComponent {
         int y0 = (getChildAt(0) == null) ? 0 : getChildAt(0).getTop();
 
         for (int i = 0; ; i++) {
-            Component v = getChildAt(i);
+            View v = getChildAt(i);
             if (v == null) {
                 if (deletion) {
                     // HACK force update of mItemCount
@@ -294,10 +287,10 @@ public class TouchInterceptor extends ListComponent {
                     return;
                 }
             }
-            ComponentContainer.LayoutParams params = v.getLayoutParams();
+            ViewGroup.LayoutParams params = v.getLayoutParams();
             params.height = itemHeightNormal;
             v.setLayoutParams(params);
-            v.setVisibility(Component.VISIBLE);
+            v.setVisibility(View.VISIBLE);
         }
     }
 
@@ -315,20 +308,20 @@ public class TouchInterceptor extends ListComponent {
         }
         int numheaders = getHeaderViewsCount();
 
-        Component first = getChildAt(srcDragPos - getFirstVisiblePosition());
+        View first = getChildAt(srcDragPos - getFirstVisiblePosition());
         for (int i = 0; ; i++) {
-            Component vv = getChildAt(i);
+            View vv = getChildAt(i);
             if (vv == null) {
                 break;
             }
 
             int height = itemHeightNormal;
-            int visibility = Component.VISIBLE;
+            int visibility = View.VISIBLE;
             if (dragPos < numheaders && i == numheaders) {
                 // dragging on top of the header item, so adjust the item below
                 // instead
                 if (vv.equals(first)) {
-                    visibility = Component.INVISIBLE;
+                    visibility = View.INVISIBLE;
                 }
                 else {
                     height = itemHeightExpanded;
@@ -338,7 +331,7 @@ public class TouchInterceptor extends ListComponent {
                 // processing the item that is being dragged
                 if (dragPos == srcDragPos || getPositionForView(vv) == getCount() - 1) {
                     // hovering over the original location
-                    visibility = Component.INVISIBLE;
+                    visibility = View.INVISIBLE;
                 }
                 else {
                     // not hovering over it
@@ -353,15 +346,11 @@ public class TouchInterceptor extends ListComponent {
                     height = itemHeightExpanded;
                 }
             }
-            ComponentContainer.LayoutParams params = vv.getLayoutParams();
+            ViewGroup.LayoutParams params = vv.getLayoutParams();
             params.height = height;
             vv.setLayoutParams(params);
             vv.setVisibility(visibility);
         }
-    }
-
-    public boolean onTouchEvent(Component component, TouchEvent touchEvent) {
-        return false;
     }
 
     @Override
@@ -410,7 +399,7 @@ public class TouchInterceptor extends ListComponent {
                             speed = y < upperBound / 2 ? -16 : -4;
 
                             int y0 = (getChildAt(0) == null) ? 0 : getChildAt(0).getTop();
-                            if ((getFirstVisiblePosition() == 0) && (y0 >= gettop_padding())) {
+                            if ((getFirstVisiblePosition() == 0) && (y0 >= getPaddingTop())) {
                                 // if we're already at the top, don't try to
                                 // scroll, because it causes the framework to
                                 // do some extra drawing that messes up our animation
@@ -428,7 +417,7 @@ public class TouchInterceptor extends ListComponent {
         return super.onTouchEvent(ev);
     }
 
-    private void startDragging(PixelMap bm, int x, int y) {
+    private void startDragging(Bitmap bm, int x, int y) {
         stopDragging();
 
         windowParams = new WindowManager.LayoutParams();
@@ -445,10 +434,11 @@ public class TouchInterceptor extends ListComponent {
         windowParams.windowAnimations = 0;
 
         Context context = getContext();
-        Image v = new Image(context);
-        v.setBackground(new ShapeElement(context, ResourceTable.Color_blue));
+        ImageView v = new ImageView(context);
+        int backGroundColor = context.getResources().getColor(R.color.blue, null);
+        v.setBackgroundColor(backGroundColor);
         v.setPadding(0, 0, 0, 0);
-        v.setPixelMap(bm);
+        v.setImageBitmap(bm);
         dragBitmap = bm;
 
         windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
@@ -464,7 +454,7 @@ public class TouchInterceptor extends ListComponent {
 
     private void stopDragging() {
         if (dragView != null) {
-            dragView.setVisibility(Component.HIDE);
+            dragView.setVisibility(GONE);
             WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
             wm.removeView(dragView);
             dragView.setImageDrawable(null);
