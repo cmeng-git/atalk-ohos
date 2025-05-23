@@ -5,10 +5,6 @@
  */
 package org.atalk.ohos.gui;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Vector;
-
 import net.java.sip.communicator.service.contactlist.MetaContactListService;
 import net.java.sip.communicator.service.contactsource.ContactSourceService;
 import net.java.sip.communicator.service.contactsource.DemuxContactSourceService;
@@ -28,8 +24,8 @@ import net.java.sip.communicator.util.ConfigurationUtils;
 import net.java.sip.communicator.util.ServiceUtils;
 import net.java.sip.communicator.util.account.LoginManager;
 
-import org.atalk.crypto.CryptoFragment;
-import org.atalk.ohos.gui.account.AndroidLoginRenderer;
+import org.atalk.crypto.CryptoSlice;
+import org.atalk.ohos.gui.account.AppLoginRenderer;
 import org.atalk.ohos.gui.chat.ChatSessionManager;
 import org.atalk.ohos.gui.login.AndroidSecurityAuthority;
 import org.atalk.service.configuration.ConfigurationService;
@@ -38,9 +34,13 @@ import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Vector;
+
 /**
  * Creates <code>LoginManager</code> and registers <code>AlertUIService</code>. It's moved here from
- * launcher <code>Activity</code> because it could be created multiple times and result in multiple
+ * launcher <code>Ability</code> because it could be created multiple times and result in multiple
  * objects/registrations for those services. It also guarantees that they wil be registered
  * each time OSGI service starts.
  *
@@ -67,7 +67,7 @@ public class AppGUIActivator implements BundleActivator {
     /**
      * Android login renderer impl.
      */
-    private static AndroidLoginRenderer loginRenderer;
+    private static AppLoginRenderer loginRenderer;
 
     /**
      * Configuration service instance.
@@ -119,7 +119,7 @@ public class AppGUIActivator implements BundleActivator {
         this.presenceStatusHandler = new PresenceStatusHandler();
         presenceStatusHandler.start(bundleContext);
 
-        loginRenderer = new AndroidLoginRenderer(securityAuthority);
+        loginRenderer = new AppLoginRenderer(securityAuthority);
         loginManager = new LoginManager(loginRenderer);
 
         AccountManager accountManager = ServiceUtils.getService(bundleContext, AccountManager.class);
@@ -132,7 +132,7 @@ public class AppGUIActivator implements BundleActivator {
         ConfigurationUtils.loadGuiConfigurations();
 
         // Register show history settings OMEMO link listener
-        ChatSessionManager.addChatLinkListener(new CryptoFragment.ShowHistoryLinkListener());
+        ChatSessionManager.addChatLinkListener(new CryptoSlice.ShowHistoryLinkListener());
     }
 
     /**
@@ -244,7 +244,7 @@ public class AppGUIActivator implements BundleActivator {
      *
      * @return Android login renderer.
      */
-    public static AndroidLoginRenderer getLoginRenderer() {
+    public static AppLoginRenderer getLoginRenderer() {
         return loginRenderer;
     }
 

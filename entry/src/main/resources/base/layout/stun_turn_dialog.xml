@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DirectionalLayout xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:width="match_parent"
+    ohos:height="match_content"
+    ohos:orientation="vertical"
+    ohos:padding="$float:screen_padding">
+
+    <DirectionalLayout
+        ohos:width="match_parent"
+        ohos:height="match_content"
+        ohos:orientation="horizontal"
+        ohos:bottom_padding="5vp">
+
+        <Text
+            ohos:text_size="$float:medium_font"
+            ohos:width="110vp"
+            ohos:height="match_content"
+            ohos:text_alignment="vertical_center"
+            ohos:text="$string:ip_address" />
+
+        <TextField
+            ohos:id="$+id:ipAddress"
+            ohos:background_element="$graphic:bg_text_field"
+            ohos:width="match_parent" />
+    </DirectionalLayout>
+
+    <DirectionalLayout
+        ohos:width="match_parent"
+        ohos:height="match_content"
+        ohos:orientation="horizontal"
+        ohos:bottom_padding="5vp">
+
+        <Text
+            ohos:text_size="$float:medium_font"
+            ohos:width="110vp"
+            ohos:height="match_content"
+            ohos:text_alignment="vertical_center"
+            ohos:text="$string:server_port" />
+
+        <TextField
+            ohos:id="$+id:serverPort"
+            ohos:background_element="$graphic:bg_text_field"
+            ohos:width="match_parent"
+            ohos:text_input_type="pattern_number" />
+    </DirectionalLayout>
+
+    <Checkbox
+        ohos:id="$+id:useTurnCheckbox"
+        ohos:width="match_content"
+        ohos:height="match_content"
+        ohos:text="$string:turn_supported" />
+
+    <DirectionalLayout
+        ohos:id="$+id:turnSetting"
+        ohos:width="match_parent"
+        ohos:height="match_content"
+        ohos:orientation="vertical"
+        ohos:bottom_padding="5vp">
+
+        <DirectionalLayout
+            ohos:width="match_parent"
+            ohos:height="match_content"
+            ohos:orientation="horizontal"
+            ohos:bottom_padding="5vp">
+
+            <Text
+                ohos:text_size="$float:medium_font"
+                ohos:width="110vp"
+                ohos:height="match_content"
+                ohos:text_alignment="vertical_center"
+                ohos:text="$string:protocol" />
+
+            <Picker
+                ohos:id="$+id:TURNProtocol"
+                ohos:background_element="$media:spinner_dark"
+                ohos:width="0vp"
+                ohos:weight="1" />
+        </DirectionalLayout>
+
+        <DirectionalLayout
+            ohos:width="match_parent"
+            ohos:height="match_content"
+            ohos:orientation="horizontal"
+            ohos:bottom_padding="5vp">
+
+            <Text
+                ohos:text_size="$float:medium_font"
+                ohos:width="110vp"
+                ohos:height="match_content"
+                ohos:text_alignment="vertical_center"
+                ohos:text="$string:username" />
+
+            <TextField
+                ohos:id="$+id:usernameField"
+                ohos:background_element="$graphic:bg_text_field"
+                ohos:width="match_parent"
+                ohos:text_input_type="pattern_text" />
+        </DirectionalLayout>
+
+        <DirectionalLayout
+            ohos:width="match_parent"
+            ohos:height="match_content"
+            ohos:orientation="horizontal"
+            ohos:bottom_padding="8vp">
+
+            <Text
+                ohos:text_size="$float:medium_font"
+                ohos:width="110vp"
+                ohos:height="match_content"
+                ohos:text_alignment="vertical_center"
+                ohos:text="$string:password" />
+
+            <DependentLayout
+                ohos:width="match_content"
+                ohos:height="match_content"
+                ohos:orientation="horizontal">
+
+                <TextField
+                    ohos:id="$+id:passwordField"
+                    ohos:background_element="$graphic:bg_text_field"
+                    ohos:width="match_parent"
+                    ohos:hint="$string:password"
+                    ohos:text_input_type="pattern_password" />
+
+                <Checkbox
+                    ohos:id="$+id:show_password"
+                    ohos:check_element="$graphic:checkbox_password_view"
+                    ohos:width="match_content"
+                    ohos:height="match_content"
+                    ohos:align_end="$id:passwordField"
+                    ohos:layout_alignment="vertical_center"
+                    ohos:end_margin="5vp" />
+            </DependentLayout>
+
+        </DirectionalLayout>
+    </DirectionalLayout>
+
+</DirectionalLayout>

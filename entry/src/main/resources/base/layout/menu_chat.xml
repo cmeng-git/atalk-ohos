@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.huawei.com/apk/res-auto"
+    xmlns:ohos="http://schemas.huawei.com/res/ohos">
+
+    <item
+        ohos:id="$+id:send_file"
+        ohos:icon="$media:ic_attach_dark"
+        ohos:title="$string:file_attachment"
+        app:showAsAction="ifRoom" />
+    <item
+        ohos:id="$+id:muc_invite"
+        ohos:icon="$media:ic_add_to_chat_dark"
+        ohos:title="$string:invite"
+        app:showAsAction="ifRoom" />
+    <item
+        ohos:id="$+id:share_location"
+        ohos:icon="$media:ic_location_dark"
+        ohos:title="$string:geo_send"
+        app:showAsAction="ifRoom" />
+    <item
+        ohos:id="$+id:chat_tts_enable"
+        ohos:title="$string:tts_enable"/>
+    <item
+        ohos:id="$+id:call_contact_audio"
+        ohos:icon="$media:chatcall_dark"
+        ohos:title="$string:call_audio" />
+    <item
+        ohos:id="$+id:call_contact_video"
+        ohos:icon="$media:chat_call_video_dark"
+        ohos:title="$string:call_video" />
+    <item
+        ohos:id="$+id:erase_chat_history"
+        ohos:title="$string:history_erase_for_contact" />
+    <item
+        ohos:id="$+id:leave_chat_room"
+        ohos:title="$string:leave_chat_room" />
+    <item
+        ohos:id="$+id:destroy_chat_room"
+        ohos:title="$string:chatroom_destroy_title" />
+    <item
+        ohos:id="$+id:chatroom_info"
+        ohos:title="$string:chatroom_info" />
+    <item
+        ohos:id="$+id:chatroom_info_change"
+        ohos:title="$string:chatroom_change_info" />
+    <item
+        ohos:id="$+id:chatroom_config"
+        ohos:title="$string:chatroom_configuration" />
+    <item
+        ohos:id="$+id:room_status_enable"
+        ohos:title="$string:chatroom_status_disable" />
+    <item
+        ohos:id="$+id:show_chatroom_occupant"
+        ohos:title="$string:chatroom_occupant" />
+</menu>

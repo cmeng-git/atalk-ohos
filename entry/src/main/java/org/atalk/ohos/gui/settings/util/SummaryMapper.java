@@ -5,28 +5,25 @@
  */
 package org.atalk.ohos.gui.settings.util;
 
-import android.content.SharedPreferences;
-
-import androidx.preference.ListPreference;
-import androidx.preference.Preference;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import ohos.data.preferences.Preferences;
 
 /**
  * The class can be used to set {@link Preference} value as its summary text. Optionally the empty string can be
  * provided that will be used when value is <code>null</code> or empty <code>String</code>. To make it work it has to be
- * registered to the {@link SharedPreferences} instance containing preferences we want to handle.
+ * registered to the {@link Preferences} instance containing preferences we want to handle.
  * Single instance can map multiple {@link Preference} at one time.
  *
  * @author Pawel Domas
  * @author Eng Chong Meng
  */
-public class SummaryMapper implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class SummaryMapper implements Preferences.PreferencesObserver {
     /**
      * The key to {@link androidx.preference.Preference} mapping
      */
-    private final Map<String, Preference> mappedPreferences = new HashMap<>();
+    private final Map<String, Preferences> mappedPreferences = new HashMap<>();
 
     /**
      * Mapping containing optional {@link SummaryConverter} that can provide custom operation on
@@ -58,7 +55,7 @@ public class SummaryMapper implements SharedPreferences.OnSharedPreferenceChange
 
         if (converter != null)
             convertersMap.put(pref.getKey(), converter);
-        setSummary(pref.getSharedPreferences(), pref);
+        setSummary(pref.getPreferences(), pref);
     }
 
     /**
@@ -66,7 +63,7 @@ public class SummaryMapper implements SharedPreferences.OnSharedPreferenceChange
      */
     public void updatePreferences() {
         for (Preference pref : mappedPreferences.values()) {
-            setSummary(pref.getSharedPreferences(), pref);
+            setSummary(pref.getPreferences(), pref);
         }
     }
 
@@ -82,10 +79,10 @@ public class SummaryMapper implements SharedPreferences.OnSharedPreferenceChange
     /**
      * Sets the summary basing on actual {@link Preference} value
      *
-     * @param sharedPrefs the {@link SharedPreferences} that manages the <code>preference</code>
-     * @param preference Android Preference
+     * @param sharedPrefs the {@link Preferences} that manages the <code>preference</code>
+     * @param preference ohos Preference
      */
-    private void setSummary(SharedPreferences sharedPrefs, Preference preference) {
+    private void setSummary(Preferences sharedPrefs, Preference preference) {
         String key = preference.getKey();
         String value = sharedPrefs.getString(key, "");
 
@@ -106,10 +103,10 @@ public class SummaryMapper implements SharedPreferences.OnSharedPreferenceChange
         preference.setSummary(value);
     }
 
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        Preference pref = mappedPreferences.get(key);
+    public void onChange(Preferences prefs, String key) {
+        Preferences pref = mappedPreferences.get(key);
         if (pref != null) {
-            setSummary(sharedPreferences, pref);
+            setSummary(prefs, pref);
         }
     }
 

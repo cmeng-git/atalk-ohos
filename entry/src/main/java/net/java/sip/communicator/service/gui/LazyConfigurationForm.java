@@ -131,11 +131,7 @@ public class LazyConfigurationForm implements ConfigurationForm
             return Class
                     .forName(getFormClassName(), true, getFormClassLoader())
                     .newInstance();
-        } catch (ClassNotFoundException ex) {
-            exception = ex;
-        } catch (IllegalAccessException ex) {
-            exception = ex;
-        } catch (InstantiationException ex) {
+        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException ex) {
             exception = ex;
         }
         throw new UndeclaredThrowableException(exception);

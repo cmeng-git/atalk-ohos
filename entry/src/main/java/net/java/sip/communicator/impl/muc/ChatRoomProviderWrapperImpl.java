@@ -15,8 +15,6 @@
  */
 package net.java.sip.communicator.impl.muc;
 
-import android.text.TextUtils;
-
 import net.java.sip.communicator.service.muc.ChatRoomProviderWrapper;
 import net.java.sip.communicator.service.muc.ChatRoomWrapper;
 import net.java.sip.communicator.service.protocol.ChatRoom;
@@ -26,6 +24,8 @@ import net.java.sip.communicator.service.protocol.ProtocolProviderService;
 
 import java.util.LinkedList;
 import java.util.List;
+
+import org.apache.http.util.TextUtils;
 
 /**
  * @author Yana Stamcheva

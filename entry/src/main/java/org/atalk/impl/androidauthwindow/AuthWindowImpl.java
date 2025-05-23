@@ -5,9 +5,9 @@
  */
 package org.atalk.impl.androidauthwindow;
 
-import android.content.Context;
-import android.content.Intent;
-import android.os.Looper;
+import ohos.aafwk.content.Intent;
+import ohos.app.Context;
+import ohos.eventhandler.EventRunner;
 
 import net.java.sip.communicator.service.gui.AuthenticationWindowService;
 
@@ -16,7 +16,7 @@ import org.atalk.ohos.aTalkApp;
 import timber.log.Timber;
 
 /**
- * Android <code>AuthenticationWindow</code> impl. Serves as a static data model for <code>AuthWindowActivity</code>. Is
+ * Android <code>AuthenticationWindow</code> impl. Serves as a static data model for <code>AuthWindowAbility</code>. Is
  * identified by the request id passed as an intent extra. All requests are mapped in <code>AuthWindowServiceImpl</code>.
  *
  * @author Pawel Domas
@@ -94,16 +94,16 @@ public class AuthWindowImpl implements AuthenticationWindowService.Authenticatio
         if (!isVisible)
             return;
 
-        if (Looper.myLooper() == Looper.getMainLooper()) {
+        if (EventRunner.current() == EventRunner.getMainEventRunner()) {
             Timber.e("AuthWindow cannot be called from main thread!");
             return;
         }
 
         Context ctx = aTalkApp.getInstance();
-        Intent authWindowIntent = new Intent(ctx, AuthWindowActivity.class);
-        authWindowIntent.putExtra(AuthWindowActivity.REQUEST_ID_EXTRA, requestId);
+        Intent authWindowIntent = new Intent(ctx, AuthWindowAbility.class);
+        authWindowIntent.putExtra(AuthWindowAbility.REQUEST_ID_EXTRA, requestId);
         authWindowIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        ctx.startActivity(authWindowIntent);
+        ctx.startAbility(authWindowIntent);
 
         // This will freeze UI if allow to execute from main thread
         synchronized (notifyLock) {

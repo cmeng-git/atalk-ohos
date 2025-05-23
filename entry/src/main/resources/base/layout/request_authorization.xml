@@ -1,0 +1,45 @@
+<DirectionalLayout xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:width="match_parent"
+    ohos:height="match_parent"
+    ohos:orientation="vertical"
+    ohos:padding="$float:screen_padding">
+
+    <Text
+        ohos:id="$+id:requestInfo"
+        ohos:text_size="$float:medium_font"
+        ohos:width="match_content"
+        ohos:height="match_content"
+        ohos:horizontal_center="true"
+        ohos:text="$string:request_authorization_prompt" />
+
+    <TextField
+        ohos:id="$+id:requestText"
+        ohos:width="match_parent"
+        ohos:height="match_content"
+        ohos:top_margin="$float:between_padding"
+        ohos:hint="$string:type_your_request_reason" />
+
+    <DirectionalLayout
+        ohos:width="match_parent"
+        ohos:height="match_content"
+        ohos:top_margin="$float:between_padding"
+        ohos:orientation="horizontal">
+
+        <Button
+            ohos:id="$+id:ignore"
+            ohos:background_element="$graphic:btn_state_action"
+            ohos:text="$string:cancel" />
+
+        <Component
+            ohos:id="$+id:centerShim"
+            ohos:width="0vp"
+            ohos:height="0vp"
+            ohos:margin="2vp"
+            ohos:visibility="invisible" />
+
+        <Button
+            ohos:id="$+id:authorize"
+            ohos:background_element="$graphic:btn_state_action"
+            ohos:text="$string:request" />
+    </DirectionalLayout>
+</DirectionalLayout>

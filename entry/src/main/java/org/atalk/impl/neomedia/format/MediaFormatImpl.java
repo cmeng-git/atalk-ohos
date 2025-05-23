@@ -23,12 +23,11 @@ import javax.media.format.VideoFormat;
  * Implements <code>MediaFormat</code> for the JMF <code>Format</code>.
  *
  * @param <T> the type of the wrapped <code>Format</code>
+ *
  * @author Lyubomir Marinov
  * @author Eng Chong Meng
  */
-public abstract class MediaFormatImpl<T extends Format>
-        implements MediaFormat
-{
+public abstract class MediaFormatImpl<T extends Format> implements MediaFormat {
     /**
      * The name of the <code>clockRate</code> property of <code>MediaFormatImpl</code>.
      */
@@ -65,10 +64,10 @@ public abstract class MediaFormatImpl<T extends Format>
      * Creates a new <code>MediaFormat</code> instance for a specific JMF <code>Format</code>.
      *
      * @param format the JMF <code>Format</code> the new instance is to provide an implementation of <code>MediaFormat</code>
+     *
      * @return a new <code>MediaFormat</code> instance for the specified JMF <code>Format</code>
      */
-    public static MediaFormat createInstance(Format format)
-    {
+    public static MediaFormat createInstance(Format format) {
         MediaFormat mediaFormat = MediaUtils.getMediaFormat(format);
 
         if (mediaFormat == null) {
@@ -88,12 +87,12 @@ public abstract class MediaFormatImpl<T extends Format>
      * @param clockRate the clock rate of the new instance
      * @param formatParameters the set of format-specific parameters of the new instance
      * @param advancedAttributess advanced attributes of the new instance
+     *
      * @return a new <code>MediaFormat</code> instance for the specified JMF <code>Format</code> and with
      * the specified clock rate and set of format-specific parameters
      */
     public static MediaFormatImpl<? extends Format> createInstance(Format format, double clockRate,
-            Map<String, String> formatParameters, Map<String, String> advancedAttributess)
-    {
+            Map<String, String> formatParameters, Map<String, String> advancedAttributess) {
         if (format instanceof AudioFormat) {
             AudioFormat audioFormat = (AudioFormat) format;
             AudioFormat clockRateAudioFormat = new AudioFormat(
@@ -135,15 +134,17 @@ public abstract class MediaFormatImpl<T extends Format>
      * @param encoding the encoding (name) related to the two sets of format parameters to be tested for equality
      * @param fmtps1 the first set of format parameters to be tested for equality
      * @param fmtps2 the second set of format parameters to be tested for equality
+     *
      * @return <code>true</code> if the specified sets of format parameters are equal; <code>false</code>, otherwise
      */
     public static boolean formatParametersAreEqual(String encoding, Map<String, String> fmtps1,
-            Map<String, String> fmtps2)
-    {
+            Map<String, String> fmtps2) {
         if (fmtps1 == null)
             return (fmtps2 == null) || fmtps2.isEmpty();
+
         if (fmtps2 == null)
-            return (fmtps1 == null) || fmtps1.isEmpty();
+            return fmtps1.isEmpty();
+
         if (fmtps1.size() == fmtps2.size()) {
             for (Map.Entry<String, String> fmtp1 : fmtps1.entrySet()) {
                 String key1 = fmtp1.getKey();
@@ -196,8 +197,7 @@ public abstract class MediaFormatImpl<T extends Format>
      *
      * @param format the JMF <code>Format</code> the new instance is to provide an implementation of <code>MediaFormat</code>
      */
-    protected MediaFormatImpl(T format)
-    {
+    protected MediaFormatImpl(T format) {
         this(format, null, null);
     }
 
@@ -210,8 +210,7 @@ public abstract class MediaFormatImpl<T extends Format>
      * @param formatParameters any codec-specific parameters that have been received via SIP/SDP or XMPP/Jingle
      * @param advancedAttributes any parameters that have been received via SIP/SDP or XMPP/Jingle
      */
-    protected MediaFormatImpl(T format, Map<String, String> formatParameters, Map<String, String> advancedAttributes)
-    {
+    protected MediaFormatImpl(T format, Map<String, String> formatParameters, Map<String, String> advancedAttributes) {
         if (format == null)
             throw new NullPointerException("format");
 
@@ -233,10 +232,10 @@ public abstract class MediaFormatImpl<T extends Format>
      *
      * @param adv the first set of advanced attributes to be tested for equality
      * @param adv2 the second set of advanced attributes to be tested for equality
+     *
      * @return <code>true</code> if the specified sets of advanced attributes equal; <code>false</code>, otherwise
      */
-    public boolean advancedAttributesAreEqual(Map<String, String> adv, Map<String, String> adv2)
-    {
+    public boolean advancedAttributesAreEqual(Map<String, String> adv, Map<String, String> adv2) {
         if (adv == null && adv2 != null || adv != null && adv2 == null)
             return false;
 
@@ -260,12 +259,12 @@ public abstract class MediaFormatImpl<T extends Format>
      * Implements MediaFormat#equals(Object) and actually compares the encapsulated JMF <code>Format</code> instances.
      *
      * @param mediaFormat the object that we'd like to compare <code>this</code> one to. 8*
+     *
      * @return <code>true</code> if the JMF <code>Format</code> instances encapsulated by this class are
      * equal and <code>false</code> otherwise.
      */
     @Override
-    public boolean equals(Object mediaFormat)
-    {
+    public boolean equals(Object mediaFormat) {
         if (this == mediaFormat)
             return true;
 
@@ -295,10 +294,10 @@ public abstract class MediaFormatImpl<T extends Format>
      *
      * @param fmtps1 the first set of format parameters to be tested for equality
      * @param fmtps2 the second set of format parameters to be tested for equality
+     *
      * @return <code>true</code> if the specified sets of format parameters are equal; <code>false</code>, otherwise
      */
-    protected boolean formatParametersAreEqual(Map<String, String> fmtps1, Map<String, String> fmtps2)
-    {
+    protected boolean formatParametersAreEqual(Map<String, String> fmtps1, Map<String, String> fmtps2) {
         return formatParametersAreEqual(getEncoding(), fmtps1, fmtps2);
     }
 
@@ -309,8 +308,7 @@ public abstract class MediaFormatImpl<T extends Format>
      * format parameters in general do not cause the distinction of payload types.
      * </p>
      */
-    public boolean formatParametersMatch(Map<String, String> fmtps)
-    {
+    public boolean formatParametersMatch(Map<String, String> fmtps) {
         return true;
     }
 
@@ -319,8 +317,7 @@ public abstract class MediaFormatImpl<T extends Format>
      *
      * @return additional settings represented by a map.
      */
-    public Map<String, String> getAdditionalCodecSettings()
-    {
+    public Map<String, String> getAdditionalCodecSettings() {
         return codecSettings;
     }
 
@@ -332,8 +329,7 @@ public abstract class MediaFormatImpl<T extends Format>
      * @return a copy of the attribute properties of this instance. Modifications to the returned
      * Map do no affect the format properties of this instance.
      */
-    public Map<String, String> getAdvancedAttributes()
-    {
+    public Map<String, String> getAdvancedAttributes() {
         return new HashMap<>(advancedAttributes);
     }
 
@@ -341,10 +337,10 @@ public abstract class MediaFormatImpl<T extends Format>
      * Check to see if advancedAttributes contains the specific parameter name-value pair
      *
      * @param parameterName the key of the <parameter/> name-value pair
+     *
      * @return true if the <parameter/> contains the specified key name
      */
-    public boolean hasParameter(String parameterName)
-    {
+    public boolean hasParameter(String parameterName) {
         return advancedAttributes.containsKey(parameterName);
     }
 
@@ -352,10 +348,10 @@ public abstract class MediaFormatImpl<T extends Format>
      * Remove the specific parameter name-value pair from advancedAttributes
      *
      * @param parameterName the key of the <parameter/> name-value pair to be removed
+     *
      * @see #FORMAT_PARAMETER_ATTR_IMAGEATTR
      */
-    public void removeParameter(String parameterName)
-    {
+    public void removeParameter(String parameterName) {
         advancedAttributes.remove(parameterName);
     }
 
@@ -366,8 +362,7 @@ public abstract class MediaFormatImpl<T extends Format>
      *
      * @return a <code>String</code> representation of the clock rate associated with this <code>MediaFormat</code>.
      */
-    public String getClockRateString()
-    {
+    public String getClockRateString() {
         double clockRate = getClockRate();
         long clockRateL = (long) clockRate;
 
@@ -383,8 +378,7 @@ public abstract class MediaFormatImpl<T extends Format>
      *
      * @return the RFC-known encoding of the JMF <code>Format</code> that we are encapsulating
      */
-    public String getEncoding()
-    {
+    public String getEncoding() {
         String jmfEncoding = getJMFEncoding();
         String encoding = MediaUtils.jmfEncodingToEncoding(jmfEncoding);
 
@@ -407,8 +401,7 @@ public abstract class MediaFormatImpl<T extends Format>
      *
      * @return a reference to that JMF <code>Format</code> instance that this class is wrapping.
      */
-    public T getFormat()
-    {
+    public T getFormat() {
         return format;
     }
 
@@ -419,8 +412,7 @@ public abstract class MediaFormatImpl<T extends Format>
      * @return a copy of the format properties of this instance. Modifications to the returned Map
      * do no affect the format properties of this instance.
      */
-    public Map<String, String> getFormatParameters()
-    {
+    public Map<String, String> getFormatParameters() {
         return (formatParameters == EMPTY_FORMAT_PARAMETERS)
                 ? EMPTY_FORMAT_PARAMETERS
                 : new HashMap<>(formatParameters);
@@ -433,8 +425,7 @@ public abstract class MediaFormatImpl<T extends Format>
      * @return the encoding of the JMF <code>Format</code> represented by this instance as it is known
      * to JMF (in contrast to its RFC name)
      */
-    public String getJMFEncoding()
-    {
+    public String getJMFEncoding() {
         return format.getEncoding();
     }
 
@@ -448,8 +439,7 @@ public abstract class MediaFormatImpl<T extends Format>
      * @return a <code>String</code> representation of the real used clock rate associated with this
      * <code>MediaFormat</code>.
      */
-    public String getRealUsedClockRateString()
-    {
+    public String getRealUsedClockRateString() {
         // RFC 1890 erroneously assigned 8 kHz to the RTP clock rate for the
         // G722 payload format. The actual sampling rate for G.722 audio is 16 kHz.
         if (this.getEncoding().equalsIgnoreCase("G722")) {
@@ -464,10 +454,10 @@ public abstract class MediaFormatImpl<T extends Format>
      *
      * @return the RTP payload type of this <code>MediaFormat</code> if it is known in RFC 3551 "RTP
      * Profile for Audio and Video Conferences with Minimal Control"; otherwise, {@link #RTP_PAYLOAD_TYPE_UNKNOWN}
+     *
      * @see MediaFormat#getRTPPayloadType()
      */
-    public byte getRTPPayloadType()
-    {
+    public byte getRTPPayloadType() {
         return MediaUtils.getRTPPayloadType(getJMFEncoding(), getClockRate());
     }
 
@@ -477,8 +467,7 @@ public abstract class MediaFormatImpl<T extends Format>
      * @return a hash code value for this <code>MediaFormat</code>.
      */
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         /*
          * XXX We've experienced a case of JMF's VideoFormat#hashCode() returning different values
          * for instances which are reported equal by VideoFormat#equals(Object) which is
@@ -497,8 +486,7 @@ public abstract class MediaFormatImpl<T extends Format>
      *
      * @param format the {@link MediaFormat} whose properties we'd like to examine and compare with ours.
      */
-    public boolean matches(MediaFormat format)
-    {
+    public boolean matches(MediaFormat format) {
         if (format == null)
             return false;
 
@@ -523,13 +511,13 @@ public abstract class MediaFormatImpl<T extends Format>
      * @param clockRate the clock rate that we'd like the format to have.
      * @param channels the number of channels that expect to find in this format
      * @param fmtps the format parameters expected to match these of the specified <code>format</code>
+     *
      * @return <code>true</code> if the specified <code>format</code> has specific values for its
      * properties <code>mediaType</code>, <code>encoding</code>, <code>clockRate</code> and <code>channels</code>;
      * otherwise, <code>false</code>
      */
     public boolean matches(MediaType mediaType, String encoding, double clockRate, int channels,
-            Map<String, String> fmtps)
-    {
+            Map<String, String> fmtps) {
         // mediaType encoding
         if (!getMediaType().equals(mediaType) || !getEncoding().equals(encoding))
             return false;
@@ -563,8 +551,7 @@ public abstract class MediaFormatImpl<T extends Format>
      *
      * @param settings additional settings represented by a map.
      */
-    public void setAdditionalCodecSettings(Map<String, String> settings)
-    {
+    public void setAdditionalCodecSettings(Map<String, String> settings) {
         codecSettings = ((settings == null) || settings.isEmpty())
                 ? EMPTY_FORMAT_PARAMETERS : settings;
     }
@@ -576,8 +563,7 @@ public abstract class MediaFormatImpl<T extends Format>
      * @return a <code>String</code> representation of this <code>MediaFormat</code>.
      */
     @Override
-    public String toString()
-    {
+    public String toString() {
         StringBuilder str = new StringBuilder();
 
         str.append("rtpmap:");

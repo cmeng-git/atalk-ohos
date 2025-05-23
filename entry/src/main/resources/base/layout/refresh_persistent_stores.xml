@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<DirectionalLayout
+    xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:height="match_parent"
+    ohos:width="match_parent"
+    ohos:orientation="vertical">
+
+    <Text
+        ohos:id="$+id:textHint"
+        ohos:height="match_content"
+        ohos:width="match_parent"
+        ohos:text="$string:refresh_store_hint"
+        ohos:text_size="$float:medium_font"/>
+
+    <Checkbox
+        ohos:id="$+id:cb_roster"
+        ohos:height="match_content"
+        ohos:width="match_parent"
+        ohos:text="$string:refresh_store_roster"/>
+
+    <Checkbox
+        ohos:id="$+id:cb_caps"
+        ohos:height="match_content"
+        ohos:width="match_parent"
+        ohos:text="$string:refresh_store_caps"/>
+
+    <Checkbox
+        ohos:id="$+id:cb_discoInfo"
+        ohos:height="match_content"
+        ohos:width="match_parent"
+        ohos:text="$string:refresh_store_disc_info"/>
+
+    <Checkbox
+        ohos:id="$+id:cb_avatar"
+        ohos:height="match_content"
+        ohos:width="match_parent"
+        ohos:text="$string:refresh_store_avatar"/>
+
+    <Checkbox
+        ohos:id="$+id:cb_omemo"
+        ohos:height="match_content"
+        ohos:width="match_parent"
+        ohos:text="$string:refresh_store_omemo"/>
+
+    <Checkbox
+        ohos:id="$+id:cb_export_database"
+        ohos:height="match_content"
+        ohos:width="match_parent"
+        ohos:text="$string:export_sql_db"
+        ohos:visibility="hide"/>
+
+    <Checkbox
+        ohos:id="$+id:cb_del_database"
+        ohos:height="match_content"
+        ohos:width="match_parent"
+        ohos:text="$string:purge_sql_db"
+        ohos:visibility="hide"/>
+
+    <Checkbox
+        ohos:id="$+id:cb_debug_log"
+        ohos:height="match_content"
+        ohos:width="match_parent"
+        ohos:text="$string:purge_debug_log"/>
+
+</DirectionalLayout>

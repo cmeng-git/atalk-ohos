@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu
+    xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    xmlns:app="http://schemas.huawei.com/res/ohos">
+
+    <item
+        ohos:id="$+id:remove"
+        ohos:icon="$media:ic_account_delete_dark"
+        ohos:title="$string:remove_account"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        ohos:id="$+id:account_settings"
+        ohos:icon="$media:ic_account_edit_dark"
+        ohos:title="$string:account_settings"
+        app:showAsAction="ifRoom"/>
+</menu>

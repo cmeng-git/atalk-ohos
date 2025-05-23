@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animatorProperty
+    xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:duration="1000"
+    ohos:alphaFrom="1.0"
+    ohos:interpolator="accelerate"
+    ohos:toAlpha="0.0"/>
+

@@ -13,7 +13,7 @@
  */
 package org.atalk.ohos.gui.contactlist;
 
-import android.graphics.drawable.Drawable;
+import ohos.media.image.PixelMap;
 
 import net.java.sip.communicator.service.gui.UIContact;
 
@@ -64,7 +64,7 @@ public abstract class UIContactImpl extends UIContact {
      *
      * @return an <code>ImageIcon</code> which represents the avatar of the specified <code>MetaContact</code>
      */
-    public abstract Drawable getScaledAvatar(boolean isSelected, int width, int height);
+    public abstract PixelMap getScaledAvatar(boolean isSelected, int width, int height);
 
     /**
      * Gets the avatar of a specific <code>UIContact</code> in the form of an <code>ImageIcon</code> value.

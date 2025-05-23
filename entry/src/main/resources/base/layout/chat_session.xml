@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DirectionalLayout xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:width="match_parent"
+    ohos:height="match_parent"
+    ohos:background_element="$color:background_light"
+    ohos:clickable="true"
+    ohos:focusable="focus_adaptable"
+    ohos:orientation="vertical">
+
+    <Text
+        ohos:id="$+id:chat_session"
+        ohos:text_size="$float:medium_font"
+        ohos:width="match_parent"
+        ohos:height="match_content"
+        ohos:background_element="$color:background_dark"
+        ohos:padding="5vp"
+        ohos:text="$string:recent_messages"
+        ohos:text_color="$color:textColorWhite" />
+
+    <ListContainer
+        ohos:id="$+id:chat_sessionListContainer"
+        ohos:width="match_parent"
+        ohos:height="0vp"
+        ohos:top_margin="8vp"
+        ohos:weight="1"/>
+
+</DirectionalLayout>

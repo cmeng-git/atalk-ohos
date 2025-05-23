@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DependentLayout xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    xmlns:app="http://schemas.huawei.com/apk/res-auto"
+    xmlns:tools="http://schemas.huawei.com/tools"
+    ohos:id="$+id:chatTypingArea"
+    ohos:width="match_parent"
+    ohos:height="match_content"
+    ohos:background_element="$color:msg_input_bar_bg"
+    ohos:padding="6vp" >
+
+    <ListContainer
+        ohos:id="$+id:media_preview"
+        ohos:width="match_parent"
+        ohos:height="match_content"
+        ohos:background_element="$graphic:bg_text_field"
+        ohos:align_start="$id:chatWriteTextBg"
+        ohos:align_end="$+id:chatWriteText"
+        ohos:top_padding="8vp"
+        ohos:visibility="hide"
+        app:layoutManager="huaweix.recyclerview.widget.DirectionalLayoutManager"
+        ohos:orientation="horizontal"
+        tools:listitem="$layout:media_preview" />
+
+    <Text
+        ohos:id="$+id:chatMsgReply"
+        ohos:text_size="$float:small_font"
+        ohos:width="match_parent"
+        ohos:height="match_content"
+        ohos:align_end="$+id:chatWriteTextBg"
+        ohos:start_of="$id:chatReplyCancel"
+        ohos:end_padding="24vp"
+        ohos:start_padding="5vp"
+        ohos:background_element="$graphic:background_quote" />
+
+    <Image
+        ohos:id="$+id:chatReplyCancel"
+        ohos:width="match_content"
+        ohos:height="match_content"
+        ohos:margin="10vp"
+        ohos:align_end="$+id:chatWriteTextBg"
+        ohos:image_src="$media:ic_cancel_light" />
+
+    <Image
+        ohos:id="$+id:chatWriteTextBg"
+        ohos:width="match_parent"
+        ohos:height="0vp"
+        ohos:align_bottom="$id:chatWriteText"
+        ohos:align_top="$id:chatWriteText"
+        ohos:scale_mode="center"
+        ohos:start_of="$id:sendMessageButton"
+        ohos:background_element="$graphic:bg_text_field"/>
+
+    <org.atalk.ohos.gui.util.ContentEditText
+        ohos:id="$+id:chatWriteText"
+        ohos:text_size="$float:medium_font"
+        ohos:width="match_parent"
+        ohos:height="match_content"
+        ohos:alignment="vertical_center"
+        ohos:below="$id:chatMsgReply"
+        ohos:end_of="$id:cancelCorrectionBtn"
+        ohos:align_end="$+id:chatWriteTextBg"
+        ohos:background_element="@null"
+        ohos:text_input_type="textMultiLine|textCapSentences"
+        ohos:max_text_lines="4"
+        ohos:min_height="40vp"
+        ohos:minLines="1"
+        ohos:padding="3vp"
+        ohos:text_color="$color:black"
+        ohos:textColorHighlight="$color:blue"
+        ohos:textCursorDrawable="@null"/>
+
+    <DependentLayout
+        ohos:id="$+id:recordView"
+        ohos:width="match_parent"
+        ohos:height="40vp"
+        ohos:start_of="$id:audioMicButton"
+        ohos:background_element="$graphic:bg_text_field"
+        ohos:orientation="horizontal"
+        ohos:visibility="hide">
+
+        <Image
+            ohos:id="$+id:ic_mic_trash"
+            ohos:width="match_content"
+            ohos:height="match_content"
+            ohos:scale_mode="center"
+            ohos:end_margin="10vp"
+            ohos:background_element="$graphic:trash_animate"
+            ohos:min_height="32vp"
+            ohos:min_width="32vp"
+            ohos:image_src="$media:ic_record"/>
+
+        <org.atalk.ohos.plugin.audioservice.SoundMeter
+              ohos:id="$+id:sound_meter"
+              ohos:width="match_parent"
+              ohos:alignment="vertical_center"
+              ohos:start_of="$id:recordCancel"
+              ohos:end_of="$id:ic_mic_trash"
+              ohos:align_parent_top="true"
+              ohos:height="24vp" />
+
+        <Text
+            ohos:id="$+id:recordTimer"
+            ohos:width="match_content"
+            ohos:height="match_content"
+            ohos:align_bottom="$id:recordCancel"
+            ohos:end_of="$id:ic_mic_trash"
+            ohos:text="$string:chat_timeZero"
+            ohos:text_color="$color:red"/>
+
+        <Text
+            ohos:id="$+id:dBTextView"
+            ohos:width="match_content"
+            ohos:height="match_content"
+            ohos:start_of="$id:recordCancel"
+            ohos:align_bottom="$id:recordCancel"
+            ohos:text="$string:chat_dbZero"
+            ohos:text_color="$color:black"/>
+
+        <Text
+            ohos:id="$+id:recordCancel"
+            ohos:text_size="$float:medium_font"
+            ohos:start_margin="10vp"
+            ohos:end_margin="5vp"
+            ohos:width="match_content"
+            ohos:height="match_content"
+            ohos:text_alignment="end|vertical_center|end"
+            ohos:text="$string:chat_audio_cancel"
+            ohos:text_color="$color:blue"
+            ohos:align_parent_end="true" />
+    </DependentLayout>
+
+    <Button
+        ohos:id="$+id:sendMessageButton"
+        ohos:width="match_content"
+        ohos:height="match_content"
+        ohos:align_bottom="$id:chatWriteText"
+        ohos:align_parent_end="true"
+        ohos:start_margin="5vp"
+        ohos:background_element="@null"
+        ohos:min_height="40vp"
+        ohos:min_width="40vp"
+        ohos:image_src="$media:send_message_dark"/>
+
+    <Button
+        ohos:id="$+id:chatBackToCallButton"
+        ohos:width="match_content"
+        ohos:height="match_content"
+        ohos:align_bottom="$id:chatWriteText"
+        ohos:align_parent_end="true"
+        ohos:start_margin="5vp"
+        ohos:background_element="@null"
+        ohos:min_height="40vp"
+        ohos:min_width="40vp"
+        ohos:image_src="$media:send_call_dark"/>
+
+    <Image
+        ohos:id="$+id:audioMicButton"
+        ohos:width="match_content"
+        ohos:height="match_content"
+        ohos:align_bottom="$id:chatWriteText"
+        ohos:align_parent_end="true"
+        ohos:start_margin="5vp"
+        ohos:background_element="@null"
+        ohos:min_height="40vp"
+        ohos:min_width="40vp" />
+
+    <Image
+        ohos:id="$+id:cancelCorrectionBtn"
+        ohos:width="match_content"
+        ohos:height="match_content"
+        ohos:align_bottom="$id:chatWriteText"
+        ohos:align_start="$id:chatWriteTextBg"
+        ohos:left_margin="6vp"
+        ohos:end_margin="6vp"
+        ohos:background_element="@null"
+        ohos:min_height="40vp"
+        ohos:min_width="24vp"
+        ohos:image_src="$media:correction_cancel"/>
+
+</DependentLayout>

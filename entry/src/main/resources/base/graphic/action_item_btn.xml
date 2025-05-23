@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<state-container
+    xmlns:ohos="http://schemas.huawei.com/res/ohos">
+
+    <item
+        ohos:element="@ohos:color/transparent"
+        ohos:state="component_state_empty"/>
+
+    <item
+        ohos:element="$media:action_item_selected"
+        ohos:state="component_state_pressed"/>
+
+    <item
+        ohos:element="$media:action_item_selected"
+        ohos:state="component_state_focused"/>
+
+    <item ohos:element="@ohos:color/transparent"/>
+</state-container>

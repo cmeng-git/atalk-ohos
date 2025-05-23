@@ -1,6 +1,6 @@
 /*
- * aTalk, android VoIP and Instant Messaging client
- * Copyright 2014 Eng Chong Meng
+ * aTalk, ohos VoIP and Instant Messaging client
+ * Copyright 2024 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,12 +23,13 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import ohos.utils.zson.ZSONObject;
+
 import net.java.sip.communicator.service.msghistory.MessageHistoryService;
 import net.java.sip.communicator.service.protocol.AccountID;
 import net.java.sip.communicator.service.protocol.OperationSet;
 
 import org.jivesoftware.smackx.muc.MultiUserChat;
-import org.json.JSONObject;
 
 /**
  * @author Yana Stamcheva
@@ -42,7 +43,7 @@ public abstract class ChatSession {
     public static final String ACCOUNT_UID = "accountUid";  // AccountUID
     public static final String ENTITY_JID = "entityJid";    // entityJid for contact or chatRoom
     public static final String CREATED = "created";         // time stamp
-    public static final String STATUS = "status";           // see ChatFragment#chatType (MSGTYPE_) | SESSION_HIDDEN Bit
+    public static final String STATUS = "status";           // see ChatSlice#chatType (MSGTYPE_) | SESSION_HIDDEN Bit
     public static final String MODE = "mode";               // muc = 1
     public static final String MAM_DATE = "mamDate";        // mam last access date
     public static final String ATTRIBUTES = "attributes";   // see below ATTR_*
@@ -67,12 +68,12 @@ public abstract class ChatSession {
     public static final int MODE_MULTI = 1;
     public static final int MODE_NPE = 2;    // non-persistent entity
 
-    private JSONObject attributes = new JSONObject();
+    private final ZSONObject attributes = new ZSONObject();
     private static ChatSession chatSession;
     public final ArrayList<ChatMessageImpl> messages = new ArrayList<>();
-    private AccountID accountId = null;
+    private final AccountID accountId = null;
     private String nextMessage;
-    private transient MultiUserChat mucOptions = null;
+    private final transient MultiUserChat mucOptions = null;
 
     /**
      * The persistable address of the contact from the session.

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape
+    xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:shape="rectangle">
+
+    <gradient
+        ohos:shader_type="linear_gradient"
+        ohos:start_angle="90"
+        ohos:background_start_color="#adecfd"
+        ohos:background_end_color="#42cef6" />
+</shape>

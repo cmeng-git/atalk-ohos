@@ -5,21 +5,19 @@
  */
 package org.atalk.impl.neomedia.device;
 
-import androidx.annotation.NonNull;
-
-import org.atalk.impl.timberlog.TimberLog;
 import org.atalk.impl.neomedia.MediaServiceImpl;
+import org.atalk.impl.timberlog.TimberLog;
 import org.atalk.util.MediaType;
 import org.atalk.util.OSUtils;
 import org.atalk.util.event.PropertyChangeNotifier;
 
+import androidx.annotation.NonNull;
 import java.io.IOException;
 import java.lang.reflect.UndeclaredThrowableException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
 import javax.media.CaptureDeviceInfo;
 import javax.media.CaptureDeviceManager;
 import javax.media.Format;
@@ -27,7 +25,6 @@ import javax.media.MediaLocator;
 import javax.media.Renderer;
 import javax.media.format.AudioFormat;
 import javax.media.format.VideoFormat;
-
 import timber.log.Timber;
 
 /**
@@ -53,11 +50,7 @@ public abstract class DeviceSystem extends PropertyChangeNotifier {
      */
     public static final int FEATURE_REINITIALIZE = 1;
 
-    public static final String LOCATOR_PROTOCOL_ANDROIDCAMERA = "androidcamera";
-
-    public static final String LOCATOR_PROTOCOL_CIVIL = "civil";
-
-    public static final String LOCATOR_PROTOCOL_DIRECTSHOW = "directshow";
+    public static final String LOCATOR_PROTOCOL_OHOSCAMERA = "ohoscamera";
 
     public static final String LOCATOR_PROTOCOL_IMGSTREAMING = "imgstreaming";
 
@@ -65,10 +58,6 @@ public abstract class DeviceSystem extends PropertyChangeNotifier {
      * The protocol of the <code>MediaLocator</code>s identifying <code>MediaRecorder</code> capture devices.
      */
     public static final String LOCATOR_PROTOCOL_MEDIARECORDER = "mediarecorder";
-
-    public static final String LOCATOR_PROTOCOL_QUICKTIME = "quicktime";
-
-    public static final String LOCATOR_PROTOCOL_VIDEO4LINUX2 = "video4linux2";
 
     /**
      * The list of <code>CaptureDeviceInfo</code>s representing the devices of this instance at the time
@@ -174,7 +163,7 @@ public abstract class DeviceSystem extends PropertyChangeNotifier {
                 classNames = new String[]{
                         // MediaRecorderSystem not working for API-23; so remove the support
                         // OSUtils.IS_ANDROID ? ".MediaRecorderSystem" : null,
-                        ".AndroidCameraSystem"
+                        ".OhosCameraSystem"
                 };
                 break;
             default:
@@ -535,10 +524,7 @@ public abstract class DeviceSystem extends PropertyChangeNotifier {
                 List<CaptureDeviceInfo> postInitializeDevices = new ArrayList<>(cdis);
 
                 if (preInitializeDevices != null) {
-                    for (Iterator<CaptureDeviceInfo> preIter = preInitializeDevices.iterator(); preIter.hasNext(); ) {
-                        if (postInitializeDevices.remove(preIter.next()))
-                            preIter.remove();
-                    }
+                    preInitializeDevices.removeIf(postInitializeDevices::remove);
                 }
                 /*
                  * Fire a PropertyChangeEvent but only if there is an actual change in the value of

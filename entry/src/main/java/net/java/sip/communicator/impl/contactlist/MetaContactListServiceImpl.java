@@ -1,5 +1,6 @@
 /*
- * Jitsi, the OpenSource Java VoIP and Instant Messaging client.
+ * aTalk, ohos VoIP and Instant Messaging client
+ * Copyright 2024 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -7,17 +8,13 @@
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the
- * License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for
- * the specific language governing permissions
- * and limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package net.java.sip.communicator.impl.contactlist;
-
-import android.text.TextUtils;
-
-import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.EventObject;
@@ -27,6 +24,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+
+import ohos.utils.zson.ZSONObject;
 
 import net.java.sip.communicator.service.contactlist.MetaContact;
 import net.java.sip.communicator.service.contactlist.MetaContactGroup;
@@ -62,9 +61,9 @@ import net.java.sip.communicator.service.protocol.event.SubscriptionEvent;
 import net.java.sip.communicator.service.protocol.event.SubscriptionListener;
 import net.java.sip.communicator.service.protocol.event.SubscriptionMovedEvent;
 
+import org.apache.http.util.TextUtils;
 import org.atalk.impl.timberlog.TimberLog;
 import org.jivesoftware.smackx.avatar.AvatarManager;
-import org.json.JSONObject;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceEvent;
@@ -1581,7 +1580,7 @@ public class MetaContactListServiceImpl implements MetaContactListService, Servi
      *
      * @return true if the contact is in the contact event ignore list and false otherwise.
      */
-    private boolean isContactInEventIgnoreList(@NonNull String contact, ProtocolProviderService ownerProvider) {
+    private boolean isContactInEventIgnoreList(String contact, ProtocolProviderService ownerProvider) {
         List<ProtocolProviderService> existingProvList = mContactEventIgnoreList.get(contact);
         return (existingProvList != null) && existingProvList.contains(ownerProvider);
     }
@@ -2302,7 +2301,7 @@ public class MetaContactListServiceImpl implements MetaContactListService, Servi
      * @return the loaded meta contact.
      */
     public MetaContactImpl loadStoredMetaContact(MetaContactGroupImpl parentGroup, String metaUID, String displayName,
-            JSONObject details, List<MclStorageManager.StoredProtoContactDescriptor> protoContacts, String accountID) {
+            ZSONObject details, List<MclStorageManager.StoredProtoContactDescriptor> protoContacts, String accountID) {
         // first check if the meta contact exists already.
         MetaContactImpl newMetaContact = (MetaContactImpl) findMetaContactByMetaUID(metaUID);
 

@@ -34,9 +34,9 @@ import net.java.sip.communicator.service.protocol.event.RegistrationStateChangeL
 import net.java.sip.communicator.service.protocol.event.ScFileTransferListener;
 import net.java.sip.communicator.service.protocol.jabberconstants.JabberStatusEnum;
 
-import org.atalk.ohos.R;
+import org.atalk.ohos.ResourceTable;
 import org.atalk.ohos.aTalkApp;
-import org.atalk.ohos.gui.chat.ChatFragment;
+import org.atalk.ohos.gui.chat.ChatSlice;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPConnectionRegistry;
@@ -125,7 +125,7 @@ public class OperationSetFileTransferJabberImpl implements OperationSetFileTrans
      *
      * @param contact the contact that should receive the file
      * @param file file to send
-     * @param chatType ChatFragment.MSGTYPE_OMEMO or MSGTYPE_NORMAL
+     * @param chatType ChatSlice.MSGTYPE_OMEMO or MSGTYPE_NORMAL
      * @param msgUuid the id that uniquely identifies this file transfer and saved DB record
      *
      * @return the transfer object
@@ -134,20 +134,20 @@ public class OperationSetFileTransferJabberImpl implements OperationSetFileTrans
             throws IllegalStateException, IllegalArgumentException, OperationNotSupportedException {
 
         // Legacy si File Transfer cannot support encrypted file sending.
-        if (ChatFragment.MSGTYPE_OMEMO == chatType) {
-            throw new OperationNotSupportedException(aTalkApp.getResString(R.string.file_transfer_not_secure));
+        if (ChatSlice.MSGTYPE_OMEMO == chatType) {
+            throw new OperationNotSupportedException(aTalkApp.getResString(ResourceTable.String_file_transfer_not_secure));
         }
 
         assertConnected();
         if (file.length() > getMaximumFileLength())
-            throw new IllegalArgumentException(aTalkApp.getResString(R.string.file_size_too_big, mPPS.getOurJid()));
+            throw new IllegalArgumentException(aTalkApp.getResString(ResourceTable.String_file_size_too_big, mPPS.getOurJid()));
 
         // null if the contact is offline, or file transfer is not supported by this contact;
         // Then throws OperationNotSupportedException for caller to try alternative method
         EntityFullJid mContactJid = getFullJid(contact,
                 StreamInitiation.NAMESPACE, StreamInitiation.NAMESPACE + "/profile/file-transfer");
         if (mContactJid == null) {
-            throw new OperationNotSupportedException(aTalkApp.getResString(R.string.file_transfer_not_supported,
+            throw new OperationNotSupportedException(aTalkApp.getResString(ResourceTable.String_file_transfer_not_supported,
                     opSetPersPresence.getPresenceStatus().getStatusName()));
         }
 
@@ -174,7 +174,7 @@ public class OperationSetFileTransferJabberImpl implements OperationSetFileTrans
         } catch (SmackException e) {
             Timber.e("Failed to send file: %s", e.getMessage());
             throw new OperationNotSupportedException(
-                    aTalkApp.getResString(R.string.file_transfer_send_error, mContactJid));
+                    aTalkApp.getResString(ResourceTable.String_file_transfer_send_error, mContactJid));
         }
         return oFileTransfer;
     }

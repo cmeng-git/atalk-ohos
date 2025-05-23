@@ -16,7 +16,14 @@
  */
 package org.atalk.service.httputil;
 
-import android.text.TextUtils;
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.GeneralSecurityException;
+import java.util.List;
+
+import javax.net.ssl.SSLContext;
+
+import ohos.utils.zson.ZSONObject;
 
 import net.java.sip.communicator.service.gui.AuthenticationWindowService;
 
@@ -27,14 +34,7 @@ import org.apache.http.auth.AuthenticationException;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.protocol.HttpClientContext;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.security.GeneralSecurityException;
-import java.util.List;
-
-import javax.net.ssl.SSLContext;
+import org.apache.http.util.TextUtils;
 
 import okhttp3.Call;
 import okhttp3.Credentials;
@@ -53,8 +53,7 @@ import timber.log.Timber;
  * @author Damian Minkov
  * @author Eng Chong Meng
  */
-public class HttpUtils
-{
+public class HttpUtils {
     /**
      * The prefix used when storing credentials for sites when no property is provided.
      */
@@ -76,14 +75,12 @@ public class HttpUtils
      *
      * @param httpClient the configured http client to use.
      * @param postRequest the request for now it is get or post.
-     * @param redirectHandler handles redirection, should we redirect and the actual redirect.
-     * @param parameters if we are redirecting we can use already filled
      * username and password in order to avoid asking the user twice.
+     *
      * @return the result http entity.
      */
     private static ResponseBody executeMethod(OkHttpClient httpClient, Request postRequest)
-            throws Throwable
-    {
+            throws Throwable {
         // do it when response (first execution) or till we are unauthorized
         Response response = null;
         Call cancelableCall;
@@ -124,26 +121,26 @@ public class HttpUtils
      * if protected site is hit, for username ConfigurationService service is used.
      * @param passwordPropertyName the property to use to retrieve/store password value
      * if protected site is hit, for password CredentialsStorageService service is used.
-     * @param jsonBody the Json parameter to include in post.
+     * @param zsonObject the ZSON parameter to include in post.
      * @param username the username parameter if any, otherwise null
      * @param password the password parameter if any, otherwise null
      * @param headerParamNames additional header name to include
      * @param headerParamValues corresponding header value to include
+     *
      * @return the result or throws IOException
      */
     public static HTTPResponseResult postForm(String url, String usernamePropertyName, String passwordPropertyName,
-            JSONObject jsonObject, String username, String password,
+            ZSONObject zsonObject, String username, String password,
             List<String> headerParamNames, List<String> headerParamValues)
-            throws IOException
-    {
-        RequestBody requestJsonBody = RequestBody.create(
-                jsonObject.toString(),
-                MediaType.parse("application/json")
+            throws IOException {
+        RequestBody requestZsonBody = RequestBody.create(
+                zsonObject.toString(),
+                MediaType.parse("application/zson")
         );
 
         Request.Builder prBuilder = new Request.Builder()
                 .url(url)
-                .post(requestJsonBody);
+                .post(requestZsonBody);
 
         if (!TextUtils.isEmpty(username) && !TextUtils.isEmpty(password))
             prBuilder.addHeader("Authorization", Credentials.basic(username, password));
@@ -164,19 +161,10 @@ public class HttpUtils
      * hostname verifier, proxy settings are used from global java settings,
      * if protected site is hit asks for credentials using util.swing.AuthenticationWindow.
      *
-     * @param usernamePropertyName the property uses to retrieve/store username value
-     * if protected site is hit; for username retrieval, the ConfigurationService service is used.
-     * @param passwordPropertyName the property uses to retrieve/store password value
-     * if protected site is hit, for password retrieval, the  CredentialsStorageService service is used.
-     * @param credentialsProvider if not null provider will bre reused in the new client
      * @param url the HTTP url we will be connecting to
      */
-//    public static DefaultHttpClient getHttpClient(final String url,
-//            CredentialsProvider credentialsProvider, RedirectStrategy redirectStrategy)
-//            throws IOException
     public static OkHttpClient getHttpClient(final String url)
-            throws IOException
-    {
+            throws IOException {
 
         SSLContext sslContext = null;
         try {
@@ -192,8 +180,7 @@ public class HttpUtils
     /**
      * The provider asking for the password that is inserted into httpclient.
      */
-    private static class HTTPCredentialsProvider implements CredentialsProvider
-    {
+    private static class HTTPCredentialsProvider implements CredentialsProvider {
         /**
          * Should we continue retrying, this is set when user hits cancel.
          */
@@ -240,8 +227,7 @@ public class HttpUtils
          * @param passwordPropertyName the property uses to retrieve/store password value
          * if protected site is hit, for password retrieval, the  CredentialsStorageService service is used.
          */
-        HTTPCredentialsProvider(String usernamePropertyName, String passwordPropertyName)
-        {
+        HTTPCredentialsProvider(String usernamePropertyName, String passwordPropertyName) {
             this.usernamePropertyName = usernamePropertyName;
             this.passwordPropertyName = passwordPropertyName;
         }
@@ -250,20 +236,20 @@ public class HttpUtils
          * Not used.
          */
         @Override
-        public void setCredentials(AuthScope authscope, org.apache.http.auth.Credentials credentials)
-        {
+        public void setCredentials(AuthScope authscope, org.apache.http.auth.Credentials credentials) {
         }
 
         /**
          * Get the {@link org.apache.hc.client5.http.auth.Credentials Credentials} for the given authentication scope.
          *
          * @param authScope the {@link org.apache.hc.client5.http.auth.AuthScope authentication scope}
+         *
          * @return the credentials
+         *
          * @see #setCredentials(org.apache.hc.client5.http.auth.AuthScope, org.apache.hc.client5.http.auth.Credentials)
          */
         // @Override
-        public org.apache.http.auth.Credentials getCredentials(AuthScope authScope)
-        {
+        public org.apache.http.auth.Credentials getCredentials(AuthScope authScope) {
             this.usedScope = authScope;
 
             // Use specified password and username property if provided, else create one from the scope/site we are connecting to.
@@ -320,8 +306,7 @@ public class HttpUtils
          * Clear saved password. Used when we are in a situation that
          * saved username and password are no longer valid.
          */
-        public void clear()
-        {
+        public void clear() {
             if (usedScope != null) {
                 if (passwordPropertyName == null)
                     passwordPropertyName = getCredentialProperty(usedScope, PASSWORD);
@@ -341,10 +326,10 @@ public class HttpUtils
          * Its in the form HTTP_CREDENTIALS_PREFIX.host.realm.port
          *
          * @param authscope the scope, holds host,realm, port info about the host we are reaching.
+         *
          * @return return the constructed property.
          */
-        private static String getCredentialProperty(AuthScope authscope)
-        {
+        private static String getCredentialProperty(AuthScope authscope) {
             String pref = HTTP_CREDENTIALS_PREFIX + authscope.getHost() +
                     "." + authscope.getRealm() +
                     "." + authscope.getPort();
@@ -356,10 +341,10 @@ public class HttpUtils
          * It's in the form HTTP_CREDENTIALS_PREFIX.host.realm.port
          *
          * @param authScope the scope, holds host,realm, port info about the host we are reaching.
+         *
          * @return return the constructed property.
          */
-        private static String getCredentialProperty(AuthScope authScope, String propertyName)
-        {
+        private static String getCredentialProperty(AuthScope authScope, String propertyName) {
             String pref = HTTP_CREDENTIALS_PREFIX + authScope.getHost() +
                     "." + authScope.getRealm() +
                     "." + authScope.getPort() +
@@ -372,8 +357,7 @@ public class HttpUtils
          *
          * @return whether we need to continue retrying.
          */
-        boolean retry()
-        {
+        boolean retry() {
             return retry;
         }
 
@@ -382,8 +366,7 @@ public class HttpUtils
          *
          * @return authentication username or null
          */
-        public String getAuthenticationUsername()
-        {
+        public String getAuthenticationUsername() {
             return authUsername;
         }
 
@@ -392,8 +375,7 @@ public class HttpUtils
          *
          * @return authentication password or null
          */
-        public String getAuthenticationPassword()
-        {
+        public String getAuthenticationPassword() {
             return authPassword;
         }
     }
@@ -401,8 +383,7 @@ public class HttpUtils
     /**
      * Utility class wraps the http requests result and some utility methods for retrieving info and content for the result.
      */
-    public static class HTTPResponseResult
-    {
+    public static class HTTPResponseResult {
         /**
          * The httpclient entity.
          */
@@ -419,8 +400,7 @@ public class HttpUtils
          * @param responseBody the httpclient responseBody.
          * @param httpClient the httpclient.
          */
-        HTTPResponseResult(ResponseBody responseBody, OkHttpClient httpClient)
-        {
+        HTTPResponseResult(ResponseBody responseBody, OkHttpClient httpClient) {
             this.mRespondBody = responseBody;
             this.httpClient = httpClient;
         }
@@ -431,8 +411,7 @@ public class HttpUtils
          * @return the number of bytes of the content, or a negative number if unknown. If the content length
          * is known but exceeds {@link Long#MAX_VALUE Long.MAX_VALUE}, a negative number is returned.
          */
-        public long getContentLength()
-        {
+        public long getContentLength() {
             return mRespondBody.contentLength();
         }
 
@@ -440,12 +419,12 @@ public class HttpUtils
          * Returns a content stream of the entity.
          *
          * @return content stream of the entity.
+         *
          * @throws IOException if the stream could not be created
          * @throws IllegalStateException if content stream cannot be created.
          */
         public InputStream getContent()
-                throws IOException, IllegalStateException
-        {
+                throws IOException, IllegalStateException {
             return mRespondBody.byteStream();
         }
 
@@ -453,11 +432,11 @@ public class HttpUtils
          * Returns a content string of the entity.
          *
          * @return content string of the entity.
+         *
          * @throws IOException if the stream could not be created
          */
         public String getContentString()
-                throws IOException
-        {
+                throws IOException {
             try {
                 return mRespondBody.string();
             } catch (ParseException e) {
@@ -471,8 +450,7 @@ public class HttpUtils
          *
          * @return the credentials (login at index 0 and password at index 1)
          */
-        public String[] getCredentials()
-        {
+        public String[] getCredentials() {
             String[] cred = new String[2];
 
             if (httpClient != null) {

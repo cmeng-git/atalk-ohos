@@ -15,26 +15,23 @@
  */
 package org.atalk.util.swing;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.event.ContainerEvent;
-import java.awt.event.ContainerListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import javax.swing.SwingUtilities;
+import ohos.agp.colors.Color;
+
+import org.atalk.ohos.agp.components.JComponent;
+import org.atalk.util.event.ContainerEvent;
 
 /**
- * Implements a <code>Container</code> for video/visual <code>Component</code>s.
+ * Implements a <code>Container</code> for video/visual <code>JComponent</code>s.
  * <code>VideoContainer</code> uses {@link VideoLayout} to layout the video/visual
- * <code>Component</code>s it contains. A specific <code>Component</code> can be
+ * <code>JComponent</code>s it contains. A specific <code>JComponent</code> can be
  * displayed by default at {@link VideoLayout#CENTER_REMOTE}.
  *
- * @author Lyubomir Marinov
- * @author Yana Stamcheva
  * @author Eng Chong Meng
  */
-public class VideoContainer extends TransparentPanel {
+public class VideoContainer extends JComponent {
     /**
      * Serial version UID.
      */
@@ -42,7 +39,7 @@ public class VideoContainer extends TransparentPanel {
 
     /**
      * The default background color of <code>VideoContainer</code> when it contains
-     * <code>Component</code> instances other than {@link #noVideoComponent}.
+     * <code>JComponent</code> instances other than {@link #noVideoComponent}.
      */
     public static final Color DEFAULT_BACKGROUND_COLOR = Color.BLACK;
 
@@ -56,12 +53,12 @@ public class VideoContainer extends TransparentPanel {
     private int inAddOrRemove;
 
     /**
-     * The <code>Component</code> to be displayed by this <code>VideoContainer</code>
-     * at {@link VideoLayout#CENTER_REMOTE} when no other <code>Component</code> has
+     * The <code>JComponent</code> to be displayed by this <code>VideoContainer</code>
+     * at {@link VideoLayout#CENTER_REMOTE} when no other <code>JComponent</code> has
      * been added to it to be displayed there. For example, the avatar of the  remote peer
 	 * may be displayed in place of the remote video when the remote video is not available.
      */
-    private final Component noVideoComponent;
+    private final JComponent noVideoComponent;
 
     private final PropertyChangeListener propertyChangeListener = new PropertyChangeListener() {
         public void propertyChange(PropertyChangeEvent ev) {
@@ -80,34 +77,34 @@ public class VideoContainer extends TransparentPanel {
 
     /**
      * Initializes a new <code>VideoContainer</code> with a specific
-     * <code>Component</code> to be displayed when no remote video is available.
+     * <code>JComponent</code> to be displayed when no remote video is available.
      *
      * @param noVideoComponent the component to be displayed when no remote video is available
      * @param conference <code>true</code> to dedicate the new instance to a
      * telephony conferencing user interface; otherwise, <code>false</code>
      */
-    public VideoContainer(Component noVideoComponent, boolean conference) {
+    public VideoContainer(JComponent noVideoComponent, boolean conference) {
+        super(noVideoComponent.getContext());
+
         setLayout(new VideoLayout(conference));
-
         this.noVideoComponent = noVideoComponent;
-
         if (DEFAULT_BACKGROUND_COLOR != null)
             setBackground(DEFAULT_BACKGROUND_COLOR);
 
-        addContainerListener(
-                new ContainerListener() {
-                    public void componentAdded(ContainerEvent ev) {
-                        VideoContainer.this.onContainerEvent(ev);
-                    }
-
-                    public void componentRemoved(ContainerEvent ev) {
-                        VideoContainer.this.onContainerEvent(ev);
-                    }
-                }
-        );
+//        addContainerListener(
+//                new ContainerListener() {
+//                    public void componentAdded(ContainerEvent ev) {
+//                        VideoContainer.this.onContainerEvent(ev);
+//                    }
+//
+//                    public void componentRemoved(ContainerEvent ev) {
+//                        VideoContainer.this.onContainerEvent(ev);
+//                    }
+//                }
+//        );
 
         if (this.noVideoComponent != null)
-            add(this.noVideoComponent, VideoLayout.CENTER_REMOTE, -1);
+            addComponent(this.noVideoComponent, VideoLayout.CENTER_REMOTE, -1);
     }
 
     /**
@@ -117,21 +114,18 @@ public class VideoContainer extends TransparentPanel {
      *
      * @return the added component
      */
-    @Override
-    public Component add(Component comp) {
-        add(comp, VideoLayout.CENTER_REMOTE);
+    public JComponent addComponent(JComponent comp) {
+        addComponent(comp, VideoLayout.CENTER_REMOTE);
         return comp;
     }
 
-    @Override
-    public Component add(Component comp, int index) {
-        add(comp, null, index);
+    public JComponent addComponent(JComponent comp, int index) {
+        addComponent(comp, null, index);
         return comp;
     }
 
-    @Override
-    public void add(Component comp, Object constraints) {
-        add(comp, constraints, -1);
+    public void addComponent(JComponent comp, Object constraints) {
+        addComponent(comp, constraints, -1);
     }
 
     /**
@@ -142,8 +136,7 @@ public class VideoContainer extends TransparentPanel {
      * @param constraints
      * @param index
      */
-    @Override
-    public void add(Component comp, Object constraints, int index) {
+    public void addComponent(JComponent comp, Object constraints, int index) {
         enterAddOrRemove();
         try {
             if (VideoLayout.CENTER_REMOTE.equals(constraints)
@@ -153,7 +146,8 @@ public class VideoContainer extends TransparentPanel {
                     && noVideoComponent.getParent() != null)) {
                 remove(noVideoComponent);
             }
-            super.add(comp, constraints, index);
+            // super.add(comp, constraints, index);
+            super.addComponent(comp, index);
         } finally {
             exitAddOrRemove();
         }
@@ -190,17 +184,17 @@ public class VideoContainer extends TransparentPanel {
     }
 
     /**
-     * Notifies this instance that a specific <code>Component</code> has been added
+     * Notifies this instance that a specific <code>JComponent</code> has been added
      * to or removed from this <code>Container</code>.
      *
      * @param ev a <code>ContainerEvent</code> which details the specifics of the
-     * notification such as the <code>Component</code> that has been added or removed
+     * notification such as the <code>JComponent</code> that has been added or removed
      */
     private void onContainerEvent(ContainerEvent ev) {
         try {
-            Component component = ev.getChild();
+            JComponent component = ev.getChild();
 
-            switch (ev.getID()) {
+            switch (ev.getId()) {
                 case ContainerEvent.COMPONENT_ADDED:
                     component.addPropertyChangeListener(PREFERRED_SIZE_PROPERTY_NAME, propertyChangeListener);
                     break;
@@ -210,18 +204,18 @@ public class VideoContainer extends TransparentPanel {
             }
 
             /*
-             * If an explicit background color is to be displayed by this Component, make sure
+             * If an explicit background color is to be displayed by this JComponent, make sure
              * that its opaque property i.e. transparency does not interfere with that display.
              */
             if (DEFAULT_BACKGROUND_COLOR != null) {
-                int componentCount = getComponentCount();
+                int componentCount = getChildCount();
 
                 if ((componentCount == 1)
-                        && (getComponent(0) == VideoContainer.this.noVideoComponent)) {
+                        && (getComponentAt(0) == VideoContainer.this.noVideoComponent)) {
                     componentCount = 0;
                 }
-
-                setOpaque(componentCount > 0);
+                // setOpaque(componentCount > 0);
+                setAlpha(componentCount > 0 ? 0: 255);
             }
         } finally {
             synchronized (syncRoot) {
@@ -233,15 +227,15 @@ public class VideoContainer extends TransparentPanel {
 
     /**
      * Notifies this instance about a change in the value of a property of a
-     * <code>Component</code> contained by this <code>Container</code>. Since the
+     * <code>JComponent</code> contained by this <code>Container</code>. Since the
      * <code>VideoLayout</code> of this <code>Container</code> sizes the contained
-     * <code>Component</code>s based on their <code>preferredSize</code>s, this
+     * <code>JComponent</code>s based on their <code>preferredSize</code>s, this
      * <code>Container</code> invokes {@link #doLayout()}, {@link #repaint()} and/or
      * {@link #validate()} upon changes in the values of the property in question.
      *
      * @param ev a <code>PropertyChangeEvent</code> which details the specifics of
      * the notification such as the name of the property whose value changed and
-     * the <code>Component</code> which fired the notification
+     * the <code>JComponent</code> which fired the notification
      */
     private void propertyChange(PropertyChangeEvent ev) {
         if (PREFERRED_SIZE_PROPERTY_NAME.equals(ev.getPropertyName())
@@ -267,16 +261,16 @@ public class VideoContainer extends TransparentPanel {
      * @param comp the component to remove
      */
     @Override
-    public void remove(Component comp) {
+    public void remove(JComponent comp) {
         enterAddOrRemove();
         try {
-            super.remove(comp);
+            super.removeComponent(comp);
 
-            Component[] components = getComponents();
+            JComponent[] components = getComponents();
             VideoLayout videoLayout = (VideoLayout) getLayout();
             boolean hasComponentsAtCenterRemote = false;
 
-            for (Component c : components) {
+            for (JComponent c : components) {
                 if (!c.equals(noVideoComponent)
                         && VideoLayout.CENTER_REMOTE.equals(
                         videoLayout.getComponentConstraints(c))) {
@@ -288,7 +282,7 @@ public class VideoContainer extends TransparentPanel {
             if (!hasComponentsAtCenterRemote
                     && (noVideoComponent != null)
                     && !noVideoComponent.equals(comp)) {
-                add(noVideoComponent, VideoLayout.CENTER_REMOTE);
+                addComponent(noVideoComponent, VideoLayout.CENTER_REMOTE);
             }
         } finally {
             exitAddOrRemove();
@@ -299,10 +293,10 @@ public class VideoContainer extends TransparentPanel {
      * Ensures noVideoComponent is displayed even when the clients of the
      * videoContainer invoke its #removeAll() to remove their previous visual
      * Components representing video. Just adding noVideoComponent upon
-     * ContainerEvent#COMPONENT_REMOVED when there is no other Component left in
+     * ContainerEvent#COMPONENT_REMOVED when there is no other JComponent left in
      * the Container will cause an infinite loop because Container#removeAll()
-     * will detect that a new Component has been added while dispatching the
-     * event and will then try to remove the new Component.
+     * will detect that a new JComponent has been added while dispatching the
+     * event and will then try to remove the new JComponent.
      */
     @Override
     public void removeAll() {
@@ -311,7 +305,7 @@ public class VideoContainer extends TransparentPanel {
             super.removeAll();
 
             if (noVideoComponent != null)
-                add(noVideoComponent, VideoLayout.CENTER_REMOTE);
+                addComponent(noVideoComponent, VideoLayout.CENTER_REMOTE);
         } finally {
             exitAddOrRemove();
         }

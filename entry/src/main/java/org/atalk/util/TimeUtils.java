@@ -15,9 +15,12 @@
  */
 package org.atalk.util;
 
+import java.util.Calendar;
+import java.util.Date;
+
 /**
  * Provides utility methods for converting between different time formats.
- *
+ * <p>
  * Two of the methods are taken from the Apache Commons Net package, and are
  * copied here to avoid pulling in the whole package as a dependency.
  *
@@ -89,7 +92,7 @@ public class TimeUtils
     /**
      * Taken from from org.apache.commons.net.ntp.TimeStamp#toNtpTime(long)
      * Convert 64-bit NTP timestamp to Java standard time.
-     *
+     * <p>
      * Note that java time (milliseconds) by definition has less precision
      * then NTP time (picoseconds) so converting NTP timestamp to java time and back
      * to NTP timestamp loses precision. For example, Tue, Dec 17 2002 09:07:24.810 EST
@@ -188,62 +191,19 @@ public class TimeUtils
         return ntpTime & 0xFFFFFFFFL;
     }
 
-     // Required android-O (API-26) - cannot be used for aTalk (API-21 min)
-//    /**
-//     * Format string for formatTimeAsFullMillis to print milliseconds-per-second
-//     */
-//    @TargetApi(Build.VERSION_CODES.O)
-//    // DecimalFormat is NOT thread safe!
-//    private static final ThreadLocal<DecimalFormat> trailingMilliFormat
-//            = ThreadLocal.withInitial(() -> new DecimalFormat("000"));
-//
-//    /**
-//     * Format string for formatTimeAsFullMillis to print nanoseconds-per-millisecond
-//     */
-//    @TargetApi(Build.VERSION_CODES.O)
-//    private static final ThreadLocal<DecimalFormat> nanosPerMilliFormat
-//            = ThreadLocal.withInitial(() -> {
-//        DecimalFormatSymbols dfs = new DecimalFormatSymbols();
-//        dfs.setDecimalSeparator('.');
-//        return new DecimalFormat(".######", dfs);
-//    });
-//
-//    /**
-//     * Formats a time -- represented by (long seconds, int nanos) -- as
-//     * a String of floating-point milliseconds, in full precision.
-//     *
-//     * This is designed to format the java.time.Duration and java.time.Interval
-//     * classes, without being dependent on them.
-//     *
-//     * This should return a correct result for every valid (secs, nanos) pair.
-//     */
-//    @TargetApi(Build.VERSION_CODES.O)
-//    public static String formatTimeAsFullMillis(long secs, int nanos)
-//    {
-//        assert (nanos >= 0 && nanos < 1_000_000_000);
-//
-//        StringBuilder builder = new StringBuilder();
-//
-//        if (secs < 0 && nanos != 0) {
-//            secs = -secs - 1;
-//            nanos = 1_000_000_000 - nanos;
-//            builder.append('-');
-//        }
-//
-//        int millis = nanos / 1_000_000;
-//        int nanosPerMilli = nanos % 1_000_000;
-//
-//        if (secs != 0) {
-//            builder.append(secs);
-//            builder.append(trailingMilliFormat.get().format(millis));
-//        }
-//        else {
-//            builder.append(millis);
-//        }
-//        if (nanosPerMilli != 0) {
-//            builder.append(nanosPerMilliFormat.get().format(nanosPerMilli / 1e6));
-//        }
-//
-//        return builder.toString();
-//    }
+    /**
+     * Checks whether <code>sTime</code> is today.
+     *
+     * @param sTime the date to check
+     * @return whether <code>sTime</code> is today.
+     */
+    public static boolean isToday(Date sTime) {
+        Calendar today = Calendar.getInstance();
+        Calendar sDate = Calendar.getInstance();
+        sDate.setTime(sTime);
+
+        return (today.get(Calendar.ERA) == sDate.get(Calendar.ERA)
+                && today.get(Calendar.YEAR) == sDate.get(Calendar.YEAR)
+                && today.get(Calendar.DAY_OF_YEAR) == sDate.get(Calendar.DAY_OF_YEAR));
+    }
 }

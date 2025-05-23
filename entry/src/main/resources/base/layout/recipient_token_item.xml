@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DirectionalLayout xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    xmlns:tools="http://schemas.huawei.com/tools"
+    ohos:width="match_parent"
+    ohos:height="$float:item_height"
+    ohos:orientation="horizontal">
+
+    <Image
+        ohos:id="$+id:contact_photo"
+        ohos:width="32vp"
+        ohos:height="32vp"
+        ohos:layout_alignment="vertical_center" />
+
+    <DirectionalLayout
+        xmlns:tools="http://schemas.huawei.com/tools"
+        ohos:width="match_parent"
+        ohos:height="32vp"
+        ohos:left_margin="8vp"
+        ohos:end_margin="8vp"
+        ohos:layout_alignment="vertical_center"
+        ohos:orientation="vertical">
+
+        <Text
+            ohos:id="$+id:text1"
+            ohos:text_size="$float:small_font"
+            ohos:text_color="$color:black"
+            ohos:height="match_content"
+            ohos:width="match_parent"
+            ohos:truncation_mode="ellipsis_at_end"
+            ohos:max_text_lines="1"
+            tools:text="Name" />
+
+        <Text
+            ohos:id="$+id:text2"
+            ohos:text_size="$float:small_font"
+            ohos:text_color="$color:black"
+            ohos:width="match_parent"
+            ohos:height="match_content"
+            ohos:truncation_mode="ellipsis_at_end"
+            ohos:max_text_lines="1"
+            ohos:text="+6598763657" />
+    </DirectionalLayout>
+</DirectionalLayout>

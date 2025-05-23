@@ -8,12 +8,11 @@ package org.atalk.impl.neomedia.codec.video;
 
 /**
  * A wrapper for the libvpx native library.
- * See {@link "http://www.webmproject.org/docs/"}
+ * See {@link "<a href="http://www.webmproject.org/docs/">...</a>"}
  *
  * @author Boris Grozev
  */
-public class VPX
-{
+public class VPX {
     /**
      * Operation completed without error.
      * Corresponds to <code>VPX_CODEC_OK</code> from <code>vpx/vpx_codec.h</code>
@@ -39,10 +38,8 @@ public class VPX
 
     /**
      * Improve resiliency against losses of whole frames.
-     *
      * To set this option for an encoder, enable this bit in the value passed
      * to <code>vpx_enc_cft_set_error_resilient</code> for the encoder's configuration.
-     *
      * Corresponds to <code>VPX_ERROR_RESILIENT_DEFAULT</code> from <code>vpx/vpx_encoder.h</code>
      */
     public static final int ERROR_RESILIENT_DEFAULT = 0x01;
@@ -51,10 +48,8 @@ public class VPX
      * The frame partitions are independently decodable by the bool decoder, meaning that
      * partitions can be decoded even though earlier partitions have been lost. Note that intra
      * prediction is still done over the partition boundary.
-     *
      * To set this option for encoder, enable this bit in the value passed
      * to <code>vpx_enc_cft_set_error_resilient</code> for the encoder's configuration.
-     *
      * Corresponds to <code>VPX_ERROR_RESILIENT_PARTITIONS</code> from <code>vpx/vpx_encoder.h</code>
      */
     public static final int ERROR_RESILIENT_PARTITIONS = 0x02;
@@ -112,7 +107,7 @@ public class VPX
      * Force this frame to be a keyframe
      * Corresponds to <code>VPX_EFLAG_FORCE_KF</code> from <code>vpx/vpx_encoder.h</code>
      */
-    public static final int EFLAG_FORCE_KF = (1 << 0);
+    public static final int EFLAG_FORCE_KF = 1;
 
     /**
      * Process and return as soon as possible ('realtime' deadline)
@@ -131,14 +126,14 @@ public class VPX
 
     /**
      * brief Codec control function to set encoder internal speed settings.
-     *
+     * <p>
      * Changes in this value influences, among others, the encoder's selection
      * of motion estimation methods. Values greater than 0 will increase encoder
      * speed at the expense of quality.
-     *
+     * <p>
      * \note Valid range for VP8: -16..16
      * \note Valid range for VP9: -9..9
-     *
+     * <p>
      * Supported in codecs: VP8, VP9
      */
     public static final int VP8E_SET_CPUUSED = 13;
@@ -181,6 +176,7 @@ public class VPX
      * @param iface Interface to be used. Has to be one of the <code>VPX.INTERFACE_*</code> constants.
      * @param cfg Pointer to a pre-allocated <code>vpx_codec_dec_cfg_t</code>, may be 0.
      * @param flags Flags.
+     *
      * @return <code>CODEC_OK</code> on success, or an error code otherwise. The error code can be
      * converted to a <code>String</code> with {@link VPX#codec_err_to_string(int)}
      */
@@ -196,6 +192,7 @@ public class VPX
      * @param user_priv Application specific data to associate with this frame.
      * @param deadline Soft deadline the decoder should attempt to meet,
      * in microseconds. Set to zero for unlimited.
+     *
      * @return <code>CODEC_OK</code> on success, or an error code otherwise. The
      * error code can be converted to a <code>String</code> with {@link VPX#codec_err_to_string(int)}
      */
@@ -213,6 +210,7 @@ public class VPX
      *
      * @param context The decoder context to use.
      * @param iter Iterator storage, initialized by setting its first element to 0.
+     *
      * @return Pointer to a <code>vpx_image_t</code> describing the decoded frame, or 0 if no more frames are available
      */
     public static native long codec_get_frame(long context, long[] iter);
@@ -221,6 +219,7 @@ public class VPX
      * Destroys a codec context, freeing any associated memory buffers.
      *
      * @param context Pointer to the <code>vpx_codec_ctx_t</code> context to destroy.
+     *
      * @return <code>CODEC_OK</code> on success, or an error code otherwise. The error code can be
      * converted to a <code>String</code> with {@link VPX#codec_err_to_string(int)}
      */
@@ -233,6 +232,7 @@ public class VPX
      * @param iface Interface to be used. Has to be one of the <code>VPX.INTERFACE_*</code> constants.
      * @param cfg Pointer to a pre-allocated <code>vpx_codec_enc_cfg_t</code>, may be 0.
      * @param flags Flags.
+     *
      * @return <code>CODEC_OK</code> on success, or an error code otherwise. The error code can be
      * converted to a <code>String</code> with {@link VPX#codec_err_to_string(int)}
      */
@@ -251,6 +251,7 @@ public class VPX
     /**
      * @param context Pointer to the codec context on which to set the configuration
      * @param cfg Pointer to a <code>vpx_codec_enc_cfg_t</code> to set.
+     *
      * @return <code>CODEC_OK</code> on success, or an error code otherwise. The error code can be
      * converted to a <code>String</code> with {@link VPX#codec_err_to_string(int)}
      */
@@ -259,10 +260,10 @@ public class VPX
     /**
      * Encodes the frame described by <code>img</code>, <code>buf</code>,
      * <code>offset0</code>, <code>offset1</code> and <code>offset2</code>.
-     *
+     * <p>
      * Note that <code>buf</code> and the offsets describe where the frames is stored, but
      * <code>img</code> has to have all of its other parameters (format, dimensions, strides) already set.
-     *
+     * <p>
      * The reason <code>buf</code> and the offsets are treated differently is to allow for the
      * encoder to operate on java memory and avoid copying the raw frame to native memory.
      *
@@ -276,6 +277,7 @@ public class VPX
      * @param duration Duration to show frame, in timebase units.
      * @param flags Flags to use for encoding this frame.
      * @param deadline Time to spend encoding, in microseconds. (0=infinite)
+     *
      * @return <code>CODEC_OK</code> on success, or an error code otherwise. The error code can be
      * converted to a <code>String</code> with {@link VPX#codec_err_to_string(int)}
      */
@@ -293,6 +295,7 @@ public class VPX
      *
      * @param context The codec context to use.
      * @param iter Iterator storage, initialized by setting its first element to 0.
+     *
      * @return Pointer to a vpx_codec_cx_pkt_t containing the output data
      * packet, or 0 to indicate the end of available packets
      */
@@ -302,6 +305,7 @@ public class VPX
      * Returns the <code>kind</code> of the <code>vpx_codec_cx_pkt_t</code> pointed to by <code>pkt</code>.
      *
      * @param pkt Pointer to the <code>vpx_codec_cx_pkt_t</code> to return the <code>kind</code> of.
+     *
      * @return The kind of <code>pkt</code>.
      */
     public static native int codec_cx_pkt_get_kind(long pkt);
@@ -311,6 +315,7 @@ public class VPX
      * to by <code>pkt</code>. Can only be used for packets of <code>kind</code> <code>CODEC_CX_FRAME_PKT</code>.
      *
      * @param pkt Pointer to a <code>vpx_codec_cx_pkt_t</code>.
+     *
      * @return The size of the data of <code>pkt</code>.
      */
     public static native int codec_cx_pkt_get_size(long pkt);
@@ -320,11 +325,13 @@ public class VPX
      * Can only be used for packets of <code>kind</code> <code>CODEC_CX_FRAME_PKT</code>.
      *
      * @param pkt Pointer to the <code>vpx_codec_cx_pkt_t</code>.
+     *
      * @return Pointer to the data of <code>pkt</code>.
      */
     public static native long codec_cx_pkt_get_data(long pkt);
 
     //============ img ============
+
     /**
      * Allocates memory for a <code>vpx_image_t</code> on the heap.
      *
@@ -338,6 +345,7 @@ public class VPX
      * Returns the value of the <code>w</code> (width) field of a <code>vpx_image_t</code>.
      *
      * @param img Pointer to a <code>vpx_image_t</code>.
+     *
      * @return The <code>w</code> (width) field of <code>img</code>.
      */
     public static native int img_get_w(long img);
@@ -346,6 +354,7 @@ public class VPX
      * Returns the value of the <code>h</code> (height) field of a <code>vpx_image_t</code>.
      *
      * @param img Pointer to a <code>vpx_image_t</code>.
+     *
      * @return The <code>h</code> (height) field of <code>img</code>.
      */
     public static native int img_get_h(long img);
@@ -354,6 +363,7 @@ public class VPX
      * Returns the value of the <code>d_w</code> (displayed width) field of a <code>vpx_image_t</code>.
      *
      * @param img Pointer to a <code>vpx_image_t</code>.
+     *
      * @return The <code>d_w</code> (displayed width) field of <code>img</code>.
      */
     public static native int img_get_d_w(long img);
@@ -362,6 +372,7 @@ public class VPX
      * Returns the value of the <code>d_h</code> (displayed height) field of a <code>vpx_image_t</code>.
      *
      * @param img Pointer to a <code>vpx_image_t</code>.
+     *
      * @return The <code>d_h</code> (displayed height) field of <code>img</code>.
      */
     public static native int img_get_d_h(long img);
@@ -370,6 +381,7 @@ public class VPX
      * Returns the value of the <code>planes[0]</code> field of a <code>vpx_image_t</code>.
      *
      * @param img Pointer to a <code>vpx_image_t</code>.
+     *
      * @return The <code>planes[0]</code> field of <code>img</code>.
      */
     public static native long img_get_plane0(long img);
@@ -378,6 +390,7 @@ public class VPX
      * Returns the value of the <code>planes[1]</code> field of a <code>vpx_image_t</code>.
      *
      * @param img Pointer to a <code>vpx_image_t</code>.
+     *
      * @return The <code>planes[1]</code> field of <code>img</code>.
      */
     public static native long img_get_plane1(long img);
@@ -386,6 +399,7 @@ public class VPX
      * Returns the value of the <code>planes[2]</code> field of a <code>vpx_image_t</code>.
      *
      * @param img Pointer to a <code>vpx_image_t</code>.
+     *
      * @return The <code>planes[2]</code> field of <code>img</code>.
      */
     public static native long img_get_plane2(long img);
@@ -394,6 +408,7 @@ public class VPX
      * Returns the value of the <code>stride[0]</code> field of a <code>vpx_image_t</code>.
      *
      * @param img Pointer to a <code>vpx_image_t</code>.
+     *
      * @return The <code>stride[0]</code> field of <code>img</code>.
      */
     public static native int img_get_stride0(long img);
@@ -402,6 +417,7 @@ public class VPX
      * Returns the value of the <code>stride[1]</code> field of a <code>vpx_image_t</code>.
      *
      * @param img Pointer to a <code>vpx_image_t</code>.
+     *
      * @return The <code>stride[1]</code> field of <code>img</code>.
      */
     public static native int img_get_stride1(long img);
@@ -410,6 +426,7 @@ public class VPX
      * Returns the value of the <code>stride[2]</code> field of a <code>vpx_image_t</code>.
      *
      * @param img Pointer to a <code>vpx_image_t</code>.
+     *
      * @return The <code>stride[2]</code> field of <code>img</code>.
      */
     public static native int img_get_stride2(long img);
@@ -418,6 +435,7 @@ public class VPX
      * Returns the value of the <code>fmt</code> field of a <code>vpx_image_t</code>.
      *
      * @param img Pointer to a <code>vpx_image_t</code>.
+     *
      * @return The <code>fmt</code> field of <code>img</code>.
      */
     public static native int img_get_fmt(long img);
@@ -504,7 +522,7 @@ public class VPX
 
     /**
      * Open a descriptor, using existing storage for the underlying image.
-     *
+     * <p>
      * Returns a descriptor for storing an image of the given format. The storage for descriptor
      * has been allocated elsewhere, and a descriptor is desired to "wrap" that storage.
      *
@@ -553,6 +571,7 @@ public class VPX
      * @param iface Interface. Should be one of the <code>INTERFACE_*</code> constants
      * @param cfg Pointer to the vpx_codec_enc_cfg_t to initialize
      * @param usage End usage. Set to 0 or use codec specific values.
+     *
      * @return <code>CODEC_OK</code> on success, or an error code otherwise. The
      * error code can be converted to a <code>String</code> with
      * {@link VPX#codec_err_to_string(int)}
@@ -592,6 +611,7 @@ public class VPX
     public static native void codec_enc_cfg_set_h(long cfg, int value);
 
     public static native void codec_enc_cfg_set_tbnum(long cfg, int value);
+
     public static native void codec_enc_cfg_set_tbden(long cfg, int value);
 
     /**
@@ -604,7 +624,7 @@ public class VPX
 
     /**
      * Sets the <code>g_lag_in_frames</code> field of a <code>vpx_codec_enc_cfg_t</code>.
-     * https://chromium.googlesource.com/webm/libvpx/+/refs/tags/v1.10.0/vpx/vpx_encoder.h#362
+     * <a href="https://chromium.googlesource.com/webm/libvpx/+/refs/tags/v1.10.0/vpx/vpx_encoder.h#362">...</a>
      * Set to allow lagged encoding
      *
      * @param cfg Pointer to a <code>vpx_codec_enc_cfg_t</code>.
@@ -751,6 +771,7 @@ public class VPX
      * Returns the <code>w</code> field of a <code>vpx_codec_stream_info_t</code>.
      *
      * @param stream_info Pointer to a <code>vpx_codec_stream_info_t</code>.
+     *
      * @return The <code>w</code> field of a <code>stream_info</code>.
      */
     public static native int stream_info_get_w(long stream_info);
@@ -759,6 +780,7 @@ public class VPX
      * Returns the <code>h</code> field of a <code>vpx_codec_stream_info_t</code>.
      *
      * @param stream_info Pointer to a <code>vpx_codec_stream_info_t</code>.
+     *
      * @return The <code>h</code> field of a <code>stream_info</code>.
      */
     public static native int stream_info_get_h(long stream_info);
@@ -768,6 +790,7 @@ public class VPX
      * Returns the <code>is_kf</code> field of a <code>vpx_codec_stream_info_t</code>.
      *
      * @param stream_info Pointer to a <code>vpx_codec_stream_info_t</code>.
+     *
      * @return The <code>w</code> field of a <code>stream_info</code>.
      */
     public static native int stream_info_get_is_kf(long stream_info);
@@ -783,6 +806,7 @@ public class VPX
      * @param buf_size Size of the compressed frame.
      * @param si_ptr Pointer to a <code>vpx_codec_stream_info_t</code> which will
      * be filled with information about the compressed frame.
+     *
      * @return <code>CODEC_OK</code> on success, or an error code otherwise. The error code can be
      * converted to a <code>String</code> with {@link VPX#codec_err_to_string(int)}
      */
@@ -796,6 +820,7 @@ public class VPX
      * Allocates memory on the heap (a simple wrapped around the native <code>malloc()</code>)
      *
      * @param s Number of bytes to allocate
+     *
      * @return Pointer to the memory allocated.
      */
     public static native long malloc(long s);
@@ -825,6 +850,7 @@ public class VPX
      * @param err Error code
      * @param buf Buffer to copy the string into
      * @param buf_size Buffer size
+     *
      * @return The number of bytes written to <code>buf</code>
      */
     public static native int codec_err_to_string(int err,
@@ -834,10 +860,10 @@ public class VPX
      * Returns a <code>String</code> describing the error code <code>err</code>.
      *
      * @param err Error code
+     *
      * @return A <code>String</code> describing the error code <code>err</code>.
      */
-    public static String codec_err_to_string(int err)
-    {
+    public static String codec_err_to_string(int err) {
         byte[] buf = new byte[100];
         codec_err_to_string(err, buf, buf.length);
 
@@ -852,8 +878,7 @@ public class VPX
      * Java wrapper around vpx_codec_stream_info_t. Contains basic information,
      * obtainable from an encoded frame without a decoder context.
      */
-    static class StreamInfo
-    {
+    static class StreamInfo {
         /**
          * Width
          */
@@ -877,8 +902,7 @@ public class VPX
          * @param buf_offset Offset into buffer where the compressed frame begins.
          * @param buf_size Size of the compressed frame.
          */
-        StreamInfo(int iface, byte[] buf, int buf_offset, int buf_size)
-        {
+        StreamInfo(int iface, byte[] buf, int buf_offset, int buf_size) {
             long si = stream_info_malloc();
 
             if (codec_peek_stream_info(iface, buf, buf_offset, buf_size, si) != CODEC_OK)
@@ -897,8 +921,7 @@ public class VPX
          *
          * @return the <code>w</code> (width) field of this instance.
          */
-        public int getW()
-        {
+        public int getW() {
             return w;
         }
 
@@ -907,8 +930,7 @@ public class VPX
          *
          * @return the <code>h</code> (height) field of this instance.
          */
-        public int getH()
-        {
+        public int getH() {
             return h;
         }
 
@@ -917,8 +939,7 @@ public class VPX
          *
          * @return the <code>is_kf</code> (is keyframe) field of this instance.
          */
-        public boolean isKf()
-        {
+        public boolean isKf() {
             return is_kf;
         }
     }

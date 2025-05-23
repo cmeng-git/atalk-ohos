@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DirectionalLayout xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:width="match_parent"
+    ohos:height="match_content"
+    ohos:alignment="vertical_center"
+    ohos:orientation="horizontal">
+
+    <Button
+        ohos:id="$+id:button_accept"
+        ohos:background_element="$graphic:btn_state_action"
+        ohos:element_start="$media:ic_accept"
+        ohos:text="$string:accept" />
+
+    <Button
+        ohos:id="$+id:button_decline"
+        ohos:background_element="$graphic:btn_state_action"
+        ohos:start_margin="2vp"
+        ohos:element_start="$media:ic_cancel"
+        ohos:text="$string:decline" />
+
+    <Button
+        ohos:id="$+id:button_retry"
+        ohos:background_element="$graphic:btn_state_action"
+        ohos:start_margin="2vp"
+        ohos:element_start="$media:ic_retry"
+        ohos:text="$string:retry" />
+
+    <Button
+        ohos:id="$+id:buttonCancel"
+        ohos:background_element="$graphic:btn_state_action"
+        ohos:start_margin="2vp"
+        ohos:element_start="$media:ic_cancel"
+        ohos:text="$string:cancel" />
+
+</DirectionalLayout>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:android="http://schemas.android.com/apk/res/android">
+<resources xmlns:ohos="http://schemas.huawei.com/res/ohos">
 
     <style name="AppTheme.Dark" parent="Theme.AppCompat">
         <item name="colorPrimary">@color/color_primary</item>
@@ -7,12 +7,12 @@
         <item name="colorAccent">@color/color_accent</item>
 
         <!-- Action menu background -->
-        <item name="android:colorBackground">@color/background_dark</item>
-        <item name="android:windowBackground">@color/background_dark</item>
+        <item name="ohos:colorBackground">@color/background_dark</item>
+        <item name="ohos:windowBackground">@color/background_dark</item>
 
         <!-- Enable this get the alertDialog to have the correct background theme;
              but also affects all display items background -->
-        <!--  <item name="android:background">@color/background_dark</item> -->
+        <!--  <item name="ohos:background">@color/background_dark</item> -->
 
         <!-- app ref attributes -->
         <item name="colorBackground">@color/background_dark</item>
@@ -25,18 +25,18 @@
         <item name="textColorSecondary">@color/textColorWhite</item>
 
         <!-- Menu item attributes; enable will lead to action menu item not highlighted when selected -->
-        <!-- <item name="android:itemBackground">@color/background_dark</item>-->
-        <!-- <item name="android:itemTextAppearance">@style/MenuItemTextAppearance</item>-->
+        <!-- <item name="ohos:itemBackground">@color/background_dark</item>-->
+        <!-- <item name="ohos:itemTextAppearance">@style/MenuItemTextAppearance</item>-->
 
         <!-- ActionBar - must include to have actionBar (not required in Theme.AppCompat -->
-        <!-- <item name="android:actionBarStyle">@style/AppTheme.ActionBar</item>-->
+        <!-- <item name="ohos:actionBarStyle">@style/AppTheme.ActionBar</item>-->
         <item name="actionOverflowButtonStyle">@style/actionOverflowButtonStyle</item>
 
         <!-- Theme for inflating Preference objects -->
         <!-- <item name="preferenceTheme">@style/PreferenceThemeOverlay</item> -->
 
         <!-- Preference Dialog attributes normal dialog / ListPreference dialog extensions e.g. BoshProxyDialog-->
-        <item name="android:dialogTheme">@style/Dialog_Dark</item>
+        <item name="ohos:dialogTheme">@style/Dialog_Dark</item>
         <item name="alertDialogTheme">@style/AlertDialog_Dark</item>
 
         <!-- Actual ListPreference Dialog layout attr - private unable to override -->
@@ -48,7 +48,7 @@
         <item name="iconCryptoOmemo">@drawable/crypto_omemo_dark</item>
         <item name="iconFolder">@drawable/ic_folder_dark</item>
 
-        <!--item name="android:textColor">@color/color_text_white_std</item>
+        <!--item name="ohos:textColor">@color/color_text_white_std</item>
         <item name="MainGroup">@style/RosterGroupName.Dark</item>
         <item name="MainChild">@style/RosterGroupItem.Dark</item>
         <item name="MainChildPhoto">@style/MainChildPhotoDark</item>
@@ -80,8 +80,8 @@
         <item name="colorPrimaryDark">@color/color_primary_dark</item>
         <item name="colorAccent">@color/color_accent</item>
 
-        <item name="android:colorBackground">@color/background_light</item>
-        <item name="android:windowBackground">@color/background_light</item>
+        <item name="ohos:colorBackground">@color/background_light</item>
+        <item name="ohos:windowBackground">@color/background_light</item>
 
         <item name="colorBackground">@color/background_light</item>
         <item name="colorForeground">@color/foreground_light</item>
@@ -93,19 +93,19 @@
         <item name="textColorSecondary">@color/textColorBlack</item>
 
         <!-- Menu item attributes -->
-        <!-- <item name="android:itemBackground">@color/background_light</item>-->
-        <!-- <item name="android:itemTextAppearance">@style/MenuItemTextAppearance</item>-->
+        <!-- <item name="ohos:itemBackground">@color/background_light</item>-->
+        <!-- <item name="ohos:itemTextAppearance">@style/MenuItemTextAppearance</item>-->
 
-        <!-- <item name="android:actionBarStyle">@style/AppTheme.ActionBar</item>-->
+        <!-- <item name="ohos:actionBarStyle">@style/AppTheme.ActionBar</item>-->
         <item name="actionOverflowButtonStyle">@style/actionOverflowButtonStyle</item>
 
         <item name="actionModeStyle">@style/ActionMode</item>
         <item name="actionModeCloseDrawable">@drawable/ic_cab_done_holo_dark</item>
 
-        <!--item name="android:listSeparatorTextViewStyle">@style/PreferenceListHeader</item-->
+        <!--item name="ohos:listSeparatorTextViewStyle">@style/PreferenceListHeader</item-->
 
         <!-- override the default theme for DialogFragments -->
-        <item name="android:dialogTheme">@style/Dialog_Light</item>
+        <item name="ohos:dialogTheme">@style/Dialog_Light</item>
         <item name="alertDialogTheme">@style/AlertDialog_Light</item>
 
         <!-- icon attributes -->
@@ -141,95 +141,95 @@
     </style>
 
     <style name="AppTheme" parent="AppTheme.Dark">
-<!--        <item name="android:actionBarStyle">@style/AppTheme.ActionBar</item>-->
+<!--        <item name="ohos:actionBarStyle">@style/AppTheme.ActionBar</item>-->
     </style>
 
     <style name="AppTheme_NoActionBar" parent="@style/Theme.AppCompat.NoActionBar">
-        <item name="android:windowBackground">@color/color_primary</item>
+        <item name="ohos:windowBackground">@color/color_primary</item>
     </style>
 
-    <style name="AppTheme_ActionBarLight" parent="android:Widget.Holo.Light">
-        <!-- <item name="android:background">#3000</item>
+    <style name="AppTheme_ActionBarLight" parent="ohos:Widget.Holo.Light">
+        <!-- <item name="ohos:background">#3000</item>
         <item name="background">#3000</item> -->
-        <item name="android:indeterminateProgressStyle">@style/IndeterminateProgress</item>
+        <item name="ohos:indeterminateProgressStyle">@style/IndeterminateProgress</item>
     </style>
 
-    <style name="AppTheme_ActionBarDark" parent="android:Widget.Holo">
-        <item name="android:indeterminateProgressStyle">@style/IndeterminateProgress</item>
+    <style name="AppTheme_ActionBarDark" parent="ohos:Widget.Holo">
+        <item name="ohos:indeterminateProgressStyle">@style/IndeterminateProgress</item>
     </style>
 
     <!-- App ActionBar Themes : unable to remove alertDialog window wrapper with background value set -->
-    <style name="AppTheme_ActionBar" parent="@android:style/Widget.Holo.ActionBar">
-        <item name="android:background">@drawable/actionbar_bg</item>
-        <item name="android:popupBackground">@color/background_dark</item>
-        <item name="android:displayOptions">useLogo|showHome|homeAsUp|showCustom</item>
-        <item name="android:icon">@drawable/ic_notification</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:customNavigationLayout">@layout/action_bar</item>
+    <style name="AppTheme_ActionBar" parent="@ohos:style/Widget.Holo.ActionBar">
+        <item name="ohos:background">@drawable/actionbar_bg</item>
+        <item name="ohos:popupBackground">@color/background_dark</item>
+        <item name="ohos:displayOptions">useLogo|showHome|homeAsUp|showCustom</item>
+        <item name="ohos:icon">@drawable/ic_notification</item>
+        <item name="ohos:textColor">@color/white</item>
+        <item name="ohos:customNavigationLayout">@layout/action_bar</item>
     </style>
 
     <!-- OverflowButtonStyle force to white always -->
-    <style name="actionOverflowButtonStyle" parent="@android:style/Widget.Holo.ActionButton.Overflow">
-        <item name="android:src">@drawable/ic_menu_overflow_dark</item>
+    <style name="actionOverflowButtonStyle" parent="@ohos:style/Widget.Holo.ActionButton.Overflow">
+        <item name="ohos:src">@drawable/ic_menu_overflow_dark</item>
     </style>
 
-    <style name="IndeterminateProgress" parent="android:Widget.ProgressBar.Horizontal">
-        <item name="android:minWidth">32dip</item>
-        <item name="android:maxWidth">32dip</item>
-        <item name="android:minHeight">32dip</item>
-        <item name="android:maxHeight">32dip</item>
+    <style name="IndeterminateProgress" parent="ohos:Widget.ProgressBar.Horizontal">
+        <item name="ohos:minWidth">32dip</item>
+        <item name="ohos:maxWidth">32dip</item>
+        <item name="ohos:minHeight">32dip</item>
+        <item name="ohos:maxHeight">32dip</item>
     </style>
 
     <!-- ActionMode menu background color -->
-    <style name="ActionMode" parent="@android:style/Widget.Holo.ActionMode">
-        <item name="android:background">@color/background_dark</item>
-        <item name="android:titleTextStyle">@style/TextAppearance_ActionMode_Title</item>
+    <style name="ActionMode" parent="@ohos:style/Widget.Holo.ActionMode">
+        <item name="ohos:background">@color/background_dark</item>
+        <item name="ohos:titleTextStyle">@style/TextAppearance_ActionMode_Title</item>
     </style>
 
     <!-- Main menu text color and size -->
     <style name="MenuItemTextAppearance">
-        <item name="android:textColor">?attr/textColorPrimary</item>
+        <item name="ohos:textColor">?attr/textColorPrimary</item>
     </style>
 
     <!-- ActionMode menu Title text color and size -->
-    <style name="TextAppearance_ActionMode_Title" parent="android:TextAppearance.Medium">
-        <item name="android:textColor">@color/textColorWhite</item>
+    <style name="TextAppearance_ActionMode_Title" parent="ohos:TextAppearance.Medium">
+        <item name="ohos:textColor">@color/textColorWhite</item>
     </style>
 
-    <!-- App Dialog Themes; android:windowNoTitle false to have Title -->
+    <!-- App Dialog Themes; ohos:windowNoTitle false to have Title -->
     <style name="Dialog_Dark" parent="@style/Theme.AppCompat.Dialog.MinWidth">
-        <item name="android:colorBackground">@color/background_dark</item>
-        <item name="android:windowBackground">@color/background_dark</item>
-        <item name="android:windowTitleStyle">@style/DialogWindowTitle</item>
-        <item name="android:windowNoTitle">false</item>
+        <item name="ohos:colorBackground">@color/background_dark</item>
+        <item name="ohos:windowBackground">@color/background_dark</item>
+        <item name="ohos:windowTitleStyle">@style/DialogWindowTitle</item>
+        <item name="ohos:windowNoTitle">false</item>
     </style>
 
     <style name="Dialog_Light" parent="Theme.AppCompat.Light.Dialog.MinWidth" >
-        <item name="android:windowTitleStyle">@style/DialogWindowTitle</item>
-        <item name="android:windowNoTitle">false</item>
+        <item name="ohos:windowTitleStyle">@style/DialogWindowTitle</item>
+        <item name="ohos:windowNoTitle">false</item>
     </style>
 
-    <!-- ListPreference Dialog Theme Theme.AppCompat.Dialog.Alert; android:windowNoTitle will add extra Title space -->
+    <!-- ListPreference Dialog Theme Theme.AppCompat.Dialog.Alert; ohos:windowNoTitle will add extra Title space -->
     <style name="AlertDialog_Dark" parent="@style/ThemeOverlay.AppCompat.Dialog.Alert">
-        <item name="android:colorBackground">@color/background_dark</item>
-        <item name="android:background">@color/background_dark</item>
-        <item name="android:windowTitleStyle">@style/DialogWindowTitle</item>
+        <item name="ohos:colorBackground">@color/background_dark</item>
+        <item name="ohos:background">@color/background_dark</item>
+        <item name="ohos:windowTitleStyle">@style/DialogWindowTitle</item>
     </style>
 
     <style name="AlertDialog_Light" parent="Theme.AppCompat.Light.Dialog.MinWidth">
-        <item name="android:windowTitleStyle">@style/DialogWindowTitle</item>
+        <item name="ohos:windowTitleStyle">@style/DialogWindowTitle</item>
     </style>
 
     <style name="DialogWindowTitle" parent="TextAppearance.AppCompat.Title">
-        <item name="android:textColor">@color/color_accent</item>
+        <item name="ohos:textColor">@color/color_accent</item>
     </style>
 
     <style name="DialogAlertDarkButtonBarStyle">
-        <item name="android:background">@color/background_dark</item>
-        <item name="android:textSize">22sp</item>
+        <item name="ohos:background">@color/background_dark</item>
+        <item name="ohos:textSize">22sp</item>
         <item name="dividerPadding">0dp</item>
     </style>
 
-    <style name="AppTheme_Transparent" parent="@android:style/Theme.NoDisplay" />
+    <style name="AppTheme_Transparent" parent="@ohos:style/Theme.NoDisplay" />
 
 </resources>

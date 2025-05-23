@@ -5,9 +5,6 @@
  */
 package org.atalk.impl.osgi;
 
-import android.content.ComponentName;
-import android.content.Intent;
-
 import org.atalk.service.osgi.BundleContextHolder;
 import org.atalk.service.osgi.OSGiService;
 import org.osgi.framework.BundleActivator;

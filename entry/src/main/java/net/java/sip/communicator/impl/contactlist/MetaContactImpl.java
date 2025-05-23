@@ -24,6 +24,9 @@ import java.util.Set;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 
+import ohos.utils.zson.ZSONArray;
+import ohos.utils.zson.ZSONObject;
+
 import net.java.sip.communicator.impl.protocol.jabber.ProtocolProviderServiceJabberImpl;
 import net.java.sip.communicator.service.contactlist.MetaContact;
 import net.java.sip.communicator.service.contactlist.MetaContactGroup;
@@ -40,9 +43,6 @@ import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smackx.avatar.AvatarManager;
 import org.jivesoftware.smackx.disco.packet.DiscoverInfo;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.jxmpp.jid.BareJid;
 import org.jxmpp.jid.Jid;
 
@@ -120,9 +120,9 @@ public class MetaContactImpl extends DataObject implements MetaContact {
     private MetaContactGroupImpl parentGroup = null;
 
     /**
-     * JSONObject containing the contact details i.e. Name -> JSONArray.
+     * ZSONObject containing the contact details i.e. Name -> ZSONArray.
      */
-    private final JSONObject details;
+    private final ZSONObject details;
 
     /**
      * Whether user has renamed this meta contact.
@@ -135,7 +135,7 @@ public class MetaContactImpl extends DataObject implements MetaContact {
     MetaContactImpl() {
         // create the uid
         this.mcUid = String.valueOf(System.currentTimeMillis()) + hashCode();
-        this.details = new JSONObject();
+        this.details = new ZSONObject();
     }
 
     /**
@@ -145,7 +145,7 @@ public class MetaContactImpl extends DataObject implements MetaContact {
      * @param metaUID the meta uid that this meta contact should have.
      * @param details the already stored details for the contact.
      */
-    MetaContactImpl(String metaUID, JSONObject details) {
+    MetaContactImpl(String metaUID, ZSONObject details) {
         this.mcUid = metaUID;
         this.details = details;
     }
@@ -493,7 +493,7 @@ public class MetaContactImpl extends DataObject implements MetaContact {
      * (contactsOnline - o.contactsOnline) * 1 000 000 <br>
      * + getDisplayName().compareTo(o.getDisplayName()) * 100 000
      * + getMetaUID().compareTo(o.getMetaUID())<br>
-     *
+     * <p>
      * Or in other words ordering of meta accounts would be first done by presence status,, and
      * finally (in order to avoid then display name equalities) be the fairly random meta contact metaUID.
      *
@@ -897,14 +897,10 @@ public class MetaContactImpl extends DataObject implements MetaContact {
      * @param value the value of the detail.
      */
     public void addDetail(String name, String value) {
-        try {
-            JSONArray jsonArray = (JSONArray) details.get(name);
-            jsonArray.put(value);
-            details.put(name, jsonArray);
-            fireMetaContactModified(name, null, value);
-        } catch (JSONException e) {
-            Timber.e("Add detail: %s", e.getMessage());
-        }
+        ZSONArray zsonArray = (ZSONArray) details.get(name);
+        zsonArray.add(value);
+        details.put(name, zsonArray);
+        fireMetaContactModified(name, null, value);
     }
 
     /**
@@ -914,17 +910,13 @@ public class MetaContactImpl extends DataObject implements MetaContact {
      * @param value value of the detail to be removed.
      */
     public void removeDetail(String name, String value) {
-        try {
-            JSONArray jsonArray = (JSONArray) details.get(name);
-            for (int i = 0; i < jsonArray.length(); i++) {
-                if (value.equals(jsonArray.getString(i))) {
-                    jsonArray.remove(i);
-                    fireMetaContactModified(name, value, null);
-                    break;
-                }
+        ZSONArray zsonArray = (ZSONArray) details.get(name);
+        for (int i = 0; i < zsonArray.size(); i++) {
+            if (value.equals(zsonArray.getString(i))) {
+                zsonArray.remove(i);
+                fireMetaContactModified(name, value, null);
+                break;
             }
-        } catch (JSONException e) {
-            Timber.e("Remove detail: %s", e.getMessage());
         }
     }
 
@@ -947,26 +939,22 @@ public class MetaContactImpl extends DataObject implements MetaContact {
      * @param newValue the new value of the detail.
      */
     public void changeDetail(String name, String oldValue, String newValue) {
-        try {
-            JSONArray jsonArray = (JSONArray) details.get(name);
-            for (int i = 0; i < jsonArray.length(); i++) {
-                if (oldValue.equals(jsonArray.getString(i))) {
-                    jsonArray.put(i, newValue);
-                    fireMetaContactModified(name, oldValue, newValue);
-                    break;
-                }
+        ZSONArray zsonArray = (ZSONArray) details.get(name);
+        for (int i = 0; i < zsonArray.size(); i++) {
+            if (oldValue.equals(zsonArray.getString(i))) {
+                zsonArray.add(i, newValue);
+                fireMetaContactModified(name, oldValue, newValue);
+                break;
             }
-        } catch (JSONException e) {
-            Timber.e("Change detail: %s", e.getMessage());
         }
     }
 
     /**
-     * Gets the JSONObject details.
+     * Gets the ZSONObject details.
      *
-     * @return the JSONObject which represent the details of the metaContactImpl
+     * @return the ZSONObject which represent the details of the metaContactImpl
      */
-    public JSONObject getDetails() {
+    public ZSONObject getDetails() {
         return details;
     }
 
@@ -975,17 +963,10 @@ public class MetaContactImpl extends DataObject implements MetaContact {
      *
      * @param name the name of the details we are searching for
      *
-     * @return a JSONArray which represent the details with the specified
-     * <code>name</code>
+     * @return a ZSONArray which represent the details with the specified <code>name</code>
      */
-    public JSONArray getDetails(String name) {
-        JSONArray jsonArray = new JSONArray();
-        try {
-            jsonArray = (JSONArray) details.get(name);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return jsonArray;
+    public ZSONArray getDetails(String name) {
+        return (ZSONArray) details.get(name);
     }
 
     /**

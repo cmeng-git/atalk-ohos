@@ -1,7 +1,18 @@
 /*
- * Jitsi, the OpenSource Java VoIP and Instant Messaging client.
+ * aTalk, ohos VoIP and Instant Messaging client
+ * Copyright 2024 Eng Chong Meng
  *
- * Distributable under LGPL license. See terms of license at gnu.org.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.atalk.impl.appstray;
 
@@ -37,7 +48,7 @@ public class SystrayServiceImpl extends AbstractSystrayService
     /**
      * <code>BroadcastReceiver</code> that catches "on click" and "clear" events for displayed notifications.
      */
-    private final PopupClickReceiver clickReceiver;
+    private final PopupClickCallBack clickReceiver;
 
     /**
      * Creates new instance of <code>SystrayServiceImpl</code>.
@@ -47,7 +58,7 @@ public class SystrayServiceImpl extends AbstractSystrayService
         super(AppTrayActivator.bundleContext);
         AppTrayActivator.bundleContext.registerService(PopupMessageHandler.class, trayPopupHandler, null);
         initHandlers();
-        this.clickReceiver = new PopupClickReceiver(trayPopupHandler);
+        this.clickReceiver = new PopupClickCallBack(trayPopupHandler);
     }
 
     /**
@@ -73,7 +84,7 @@ public class SystrayServiceImpl extends AbstractSystrayService
      */
     public void start()
     {
-        clickReceiver.registerReceiver();
+        // clickReceiver.registerReceiver();
     }
 
     /**
@@ -81,8 +92,7 @@ public class SystrayServiceImpl extends AbstractSystrayService
      */
     public void stop()
     {
-        clickReceiver.unregisterReceiver();
-
+        // clickReceiver.unregisterReceiver();
         trayPopupHandler.dispose();
     }
 
@@ -137,7 +147,7 @@ public class SystrayServiceImpl extends AbstractSystrayService
 
     /**
      * Class implements <code>SystrayPopupMessageListener</code> in order to display chat
-     * <code>Activity</code> when popup is clicked.
+     * <code>Ability</code> when popup is clicked.
      */
     private class PopupListenerImpl implements SystrayPopupMessageListener
     {
@@ -168,12 +178,12 @@ public class SystrayServiceImpl extends AbstractSystrayService
              * if(targetIntent == null) { Timber.e( "Failed to create chat with " + metaContact); } } else { //
              * TODO: add call history intent here targetIntent = null; }
              *
-             * if(targetIntent != null) { aTalkApp .getInstance().startActivity(targetIntent); }
+             * if(targetIntent != null) { aTalkApp .getGlobalContext().startAbility(targetIntent); }
              *
              * return; }
              *
              * // Displays popup message details when the notification is clicked if(message != null) {
-             * DialogActivity.showDialog( aTalkApp.getInstance(), message.getMessageTitle(),
+             * DialogH.showDialog( aTalkApp.getInstance(), message.getMessageTitle(),
              * message.getMessage()); }
              */
         }

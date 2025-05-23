@@ -1,0 +1,1165 @@
+{
+  "strarray": [
+    {
+      "name": "pref_sip_preferred_transport",
+      "value": [
+        {
+          "value": "UDP"
+        },
+        {
+          "value": "TCP"
+        },
+        {
+          "value": "TLS"
+        }
+      ]
+    },
+    {
+      "name": "pref_sip_keep_alive_method",
+      "value": [
+        {
+          "value": "NONE"
+        },
+        {
+          "value": "OPTIONS"
+        },
+        {
+          "value": "REGISTER"
+        },
+        {
+          "value": "CRLF"
+        }
+      ]
+    },
+    {
+      "name": "pref_sip_clist_type",
+      "value": [
+        {
+          "value": "Local"
+        },
+        {
+          "value": "XCAP"
+        },
+        {
+          "value": "XiVO"
+        }
+      ]
+    },
+    {
+      "name": "pref_sip_dtmf_method",
+      "value": [
+        {
+          "value": "Auto: RTP or Inband (no SIP INFO)"
+        },
+        {
+          "value": "RTP ( RFC2833 / RFC 4733 )"
+        },
+        {
+          "value": "SIP INFO"
+        },
+        {
+          "value": "Inband"
+        }
+      ]
+    },
+    {
+      "name": "pref_sip_dtmf_method_values",
+      "value": [
+        {
+          "value": "AUTO_DTMF"
+        },
+        {
+          "value": "RTP_DTMF"
+        },
+        {
+          "value": "SIP_INFO_DTMF"
+        },
+        {
+          "value": "INBAND_DTMF"
+        }
+      ]
+    },
+    {
+      "name": "pref_dtls_srtp_cert_sa",
+      "value": [
+        {
+          "value": "SHA256withECDSA"
+        },
+        {
+          "value": "SHA384withECDSA"
+        },
+        {
+          "value": "SHA512withECDSA"
+        },
+        {
+          "value": "SHA256withRSA"
+        },
+        {
+          "value": "SHA384withRSA"
+        },
+        {
+          "value": "SHA512withRSA"
+        }
+      ]
+    },
+    {
+      "name": "pref_savp_option_desc",
+      "value": [
+        {
+          "value": "Off (indicate RTP/AVP only)"
+        },
+        {
+          "value": "Mandatory (offer and accept only RTP/SAVP)"
+        },
+        {
+          "value": "Optional (offer RTP/SAVP first, then RTP/AVP)"
+        }
+      ]
+    },
+    {
+      "name": "pref_jabber_dtmf_method",
+      "value": [
+        {
+          "value": "Auto: RTP or Inband"
+        },
+        {
+          "value": "RTP ( RFC2833 / RFC 4733 )"
+        },
+        {
+          "value": "Inband"
+        }
+      ]
+    },
+    {
+      "name": "pref_jabber_dtmf_method_values",
+      "value": [
+        {
+          "value": "AUTO_DTMF"
+        },
+        {
+          "value": "RTP_DTMF"
+        },
+        {
+          "value": "INBAND_DTMF"
+        }
+      ]
+    },
+    {
+      "name": "pref_opus_bandwidth",
+      "value": [
+        {
+          "value": "Auto"
+        },
+        {
+          "value": "Fullband (48kHz)"
+        },
+        {
+          "value": "Super-wideband (24kHz)"
+        },
+        {
+          "value": "Wideband (16kHz)"
+        },
+        {
+          "value": "Medium-band (12kHz)"
+        },
+        {
+          "value": "Narrowband (8kHz)"
+        }
+      ]
+    },
+    {
+      "name": "pref_opus_bandwidth_values",
+      "value": [
+        {
+          "value": "auto"
+        },
+        {
+          "value": "fb"
+        },
+        {
+          "value": "swb"
+        },
+        {
+          "value": "wb"
+        },
+        {
+          "value": "mb"
+        },
+        {
+          "value": "nb"
+        }
+      ]
+    },
+    {
+      "name": "pref_opus_complexity",
+      "value": [
+        {
+          "value": "10"
+        },
+        {
+          "value": "9"
+        },
+        {
+          "value": "8"
+        },
+        {
+          "value": "7"
+        },
+        {
+          "value": "6"
+        },
+        {
+          "value": "5"
+        },
+        {
+          "value": "4"
+        },
+        {
+          "value": "3"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "name": "bosh_proxy_type",
+      "value": [
+        {
+          "value": "NONE"
+        },
+        {
+          "value": "BOSH"
+        },
+        {
+          "value": "HTTP"
+        },
+        {
+          "value": "SOCKS4"
+        },
+        {
+          "value": "SOCKS5"
+        }
+      ]
+    },
+    {
+      "name": "dnssec_Mode_name",
+      "value": [
+        {
+          "value": "SSL Certificate Authentication"
+        },
+        {
+          "value": "DNSSEC only"
+        },
+        {
+          "value": "DNSSEC and DANE"
+        }
+      ]
+    },
+    {
+      "name": "dnssec_Mode_value",
+      "value": [
+        {
+          "value": "disabled"
+        },
+        {
+          "value": "needsDnssec"
+        },
+        {
+          "value": "needsDnssecAndDane"
+        }
+      ]
+    },
+    {
+      "name": "pref_dnssec_default_behaviour",
+      "value": [
+        {
+          "value": "Ignore"
+        },
+        {
+          "value": "Required"
+        },
+        {
+          "value": "Required for signed zones"
+        },
+        {
+          "value": "Ask on bogus reply"
+        },
+        {
+          "value": "Ask on unsigned or bogus reply"
+        }
+      ]
+    },
+    {
+      "name": "pref_dnssec_default_behaviour_values",
+      "value": [
+        {
+          "value": "IgnoreDnssec"
+        },
+        {
+          "value": "SecureOnly"
+        },
+        {
+          "value": "SecureOrUnsigned"
+        },
+        {
+          "value": "WarnIfBogus"
+        },
+        {
+          "value": "WarnIfBogusOrUnsigned"
+        }
+      ]
+    },
+    {
+      "name": "pref_provisioning_method",
+      "value": [
+        {
+          "value": "None"
+        },
+        {
+          "value": "DHCP"
+        },
+        {
+          "value": "Bonjour"
+        },
+        {
+          "value": "Manual"
+        }
+      ]
+    },
+    {
+      "name": "pref_provisioning_method_values",
+      "value": [
+        {
+          "value": "NONE"
+        },
+        {
+          "value": "DHCP"
+        },
+        {
+          "value": "Bonjour"
+        },
+        {
+          "value": "Manual"
+        }
+      ]
+    },
+    {
+      "name": "vibrate_values",
+      "value": [
+        {
+          "value": "OFF"
+        },
+        {
+          "value": "SYSTEM"
+        },
+        {
+          "value": "ALWAYS"
+        }
+      ]
+    },
+    {
+      "name": "networks_array",
+      "value": [
+        {
+          "value": "XMPP"
+        },
+        {
+          "value": "SIP - Not Implemented"
+        }
+      ]
+    },
+    {
+      "name": "networks_array_values",
+      "value": [
+        {
+          "value": "Jabber"
+        },
+        {
+          "value": "SIP"
+        }
+      ]
+    },
+    {
+      "name": "filesizes",
+      "value": [
+        {
+          "value": "Never"
+        },
+        {
+          "value": "256 KB"
+        },
+        {
+          "value": "512 KB"
+        },
+        {
+          "value": "1 MB"
+        },
+        {
+          "value": "5 MB"
+        },
+        {
+          "value": "10 MB"
+        },
+        {
+          "value": "50 MB"
+        }
+      ]
+    },
+    {
+      "name": "filesizes_values",
+      "value": [
+        {
+          "value": "0"
+        },
+        {
+          "value": "262144"
+        },
+        {
+          "value": "524288"
+        },
+        {
+          "value": "1048576"
+        },
+        {
+          "value": "5242880"
+        },
+        {
+          "value": "10485760"
+        },
+        {
+          "value": "524288000"
+        }
+      ]
+    },
+    {
+      "name": "settings_theme_entries",
+      "value": [
+        {
+          "value": "$string:settings_theme_light"
+        },
+        {
+          "value": "$string:settings_theme_dark"
+        }
+      ]
+    },
+    {
+      "name": "settings_theme_values",
+      "value": [
+        {
+          "value": "light"
+        },
+        {
+          "value": "dark"
+        }
+      ]
+    },
+    {
+      "name": "settings_language_entries",
+      "value": [
+        {
+          "value": "$string:settings_locale_system"
+        },
+        {
+          "value": "Afrikaans"
+        },
+        {
+          "value": "Azərbaycan"
+        },
+        {
+          "value": "Bahasa Indonesia"
+        },
+        {
+          "value": "Bahasa Melayu"
+        },
+        {
+          "value": "Bamanankan"
+        },
+        {
+          "value": "Brezhoneg"
+        },
+        {
+          "value": "Català"
+        },
+        {
+          "value": "Čeština"
+        },
+        {
+          "value": "Cymraeg"
+        },
+        {
+          "value": "Dansk"
+        },
+        {
+          "value": "Deutsch"
+        },
+        {
+          "value": "Eesti"
+        },
+        {
+          "value": "English"
+        },
+        {
+          "value": "Español"
+        },
+        {
+          "value": "Esperanto"
+        },
+        {
+          "value": "Euskera"
+        },
+        {
+          "value": "Ɛʋɛ"
+        },
+        {
+          "value": "Français"
+        },
+        {
+          "value": "Français (Canada)"
+        },
+        {
+          "value": "Fulfulde, Pulaar, Pular"
+        },
+        {
+          "value": "Gaeilge"
+        },
+        {
+          "value": "Gàidhlig"
+        },
+        {
+          "value": "Galego"
+        },
+        {
+          "value": "Hausa"
+        },
+        {
+          "value": "Hrvatski"
+        },
+        {
+          "value": "isiXhosa"
+        },
+        {
+          "value": "isiZulu"
+        },
+        {
+          "value": "Íslenska"
+        },
+        {
+          "value": "Italiano"
+        },
+        {
+          "value": "Kinyarwanda"
+        },
+        {
+          "value": "Kirundi"
+        },
+        {
+          "value": "Kiswahili"
+        },
+        {
+          "value": "Latviešu"
+        },
+        {
+          "value": "Lietuvių"
+        },
+        {
+          "value": "Magyar"
+        },
+        {
+          "value": "Malti"
+        },
+        {
+          "value": "Nederlands"
+        },
+        {
+          "value": "Norsk"
+        },
+        {
+          "value": "Norsk Bokmål"
+        },
+        {
+          "value": "O'zbek"
+        },
+        {
+          "value": "Polski"
+        },
+        {
+          "value": "Português"
+        },
+        {
+          "value": "Português (Brasil)"
+        },
+        {
+          "value": "Pyccĸий"
+        },
+        {
+          "value": "Română"
+        },
+        {
+          "value": "Shqip"
+        },
+        {
+          "value": "Slovenčina"
+        },
+        {
+          "value": "Slovenščina"
+        },
+        {
+          "value": "Somali"
+        },
+        {
+          "value": "Suomi"
+        },
+        {
+          "value": "Svenska"
+        },
+        {
+          "value": "Tiếng Việt"
+        },
+        {
+          "value": "Tϋrkçe"
+        },
+        {
+          "value": "Wolof"
+        },
+        {
+          "value": "Yorùbá"
+        },
+        {
+          "value": "Ελληνικά"
+        },
+        {
+          "value": "аҧсуа бызшәа"
+        },
+        {
+          "value": "Беларуская"
+        },
+        {
+          "value": "Български"
+        },
+        {
+          "value": "Кыргыз"
+        },
+        {
+          "value": "Қазақ"
+        },
+        {
+          "value": "Македонски"
+        },
+        {
+          "value": "Српски"
+        },
+        {
+          "value": "Українська"
+        },
+        {
+          "value": "Հայերեն"
+        },
+        {
+          "value": "עברית"
+        },
+        {
+          "value": "اردو"
+        },
+        {
+          "value": "العربية"
+        },
+        {
+          "value": "پښتو"
+        },
+        {
+          "value": "فارسی"
+        },
+        {
+          "value": "አማርኛ"
+        },
+        {
+          "value": "हिंदी"
+        },
+        {
+          "value": "తెలుగు"
+        },
+        {
+          "value": "ಕನ್ನಡ"
+        },
+        {
+          "value": "ภาษาไทย"
+        },
+        {
+          "value": "한국어"
+        },
+        {
+          "value": "中文(简体)"
+        },
+        {
+          "value": "中文(繁體)"
+        },
+        {
+          "value": "日本語"
+        }
+      ]
+    },
+    {
+      "name": "settings_language_values",
+      "value": [
+        {
+          "value": "af"
+        },
+        {
+          "value": "az"
+        },
+        {
+          "value": "in"
+        },
+        {
+          "value": "ms"
+        },
+        {
+          "value": "bm"
+        },
+        {
+          "value": "br"
+        },
+        {
+          "value": "ca"
+        },
+        {
+          "value": "cs"
+        },
+        {
+          "value": "cy"
+        },
+        {
+          "value": "da"
+        },
+        {
+          "value": "de"
+        },
+        {
+          "value": "et"
+        },
+        {
+          "value": "en"
+        },
+        {
+          "value": "es"
+        },
+        {
+          "value": "eo"
+        },
+        {
+          "value": "eu"
+        },
+        {
+          "value": "ee"
+        },
+        {
+          "value": "fr"
+        },
+        {
+          "value": "fr_CA"
+        },
+        {
+          "value": "ff"
+        },
+        {
+          "value": "ga"
+        },
+        {
+          "value": "gd"
+        },
+        {
+          "value": "gl"
+        },
+        {
+          "value": "ha"
+        },
+        {
+          "value": "hr"
+        },
+        {
+          "value": "xs"
+        },
+        {
+          "value": "zu"
+        },
+        {
+          "value": "is"
+        },
+        {
+          "value": "it"
+        },
+        {
+          "value": "rw"
+        },
+        {
+          "value": "rn"
+        },
+        {
+          "value": "sw"
+        },
+        {
+          "value": "lv"
+        },
+        {
+          "value": "lt"
+        },
+        {
+          "value": "hu"
+        },
+        {
+          "value": "mt"
+        },
+        {
+          "value": "nl"
+        },
+        {
+          "value": "no"
+        },
+        {
+          "value": "nb"
+        },
+        {
+          "value": "uz"
+        },
+        {
+          "value": "pl"
+        },
+        {
+          "value": "pt_PT"
+        },
+        {
+          "value": "pt_BR"
+        },
+        {
+          "value": "ru"
+        },
+        {
+          "value": "ro"
+        },
+        {
+          "value": "sq"
+        },
+        {
+          "value": "sk"
+        },
+        {
+          "value": "sl"
+        },
+        {
+          "value": "so"
+        },
+        {
+          "value": "fi"
+        },
+        {
+          "value": "sv"
+        },
+        {
+          "value": "vi"
+        },
+        {
+          "value": "tr"
+        },
+        {
+          "value": "wo"
+        },
+        {
+          "value": "yo"
+        },
+        {
+          "value": "el"
+        },
+        {
+          "value": "ab"
+        },
+        {
+          "value": "be"
+        },
+        {
+          "value": "bg"
+        },
+        {
+          "value": "ky"
+        },
+        {
+          "value": "kk"
+        },
+        {
+          "value": "mk"
+        },
+        {
+          "value": "sr"
+        },
+        {
+          "value": "uk"
+        },
+        {
+          "value": "hy"
+        },
+        {
+          "value": "iw"
+        },
+        {
+          "value": "ur"
+        },
+        {
+          "value": "ar"
+        },
+        {
+          "value": "ps"
+        },
+        {
+          "value": "fa"
+        },
+        {
+          "value": "am"
+        },
+        {
+          "value": "hi"
+        },
+        {
+          "value": "te"
+        },
+        {
+          "value": "kn"
+        },
+        {
+          "value": "th"
+        },
+        {
+          "value": "ko"
+        },
+        {
+          "value": "zh_CN"
+        },
+        {
+          "value": "zh_TW"
+        },
+        {
+          "value": "ja"
+        }
+      ]
+    },
+    {
+      "name": "supported_languages_full",
+      "value": [
+        {
+          "value": "in"
+        },
+        {
+          "value": "br"
+        },
+        {
+          "value": "ca"
+        },
+        {
+          "value": "cs"
+        },
+        {
+          "value": "cy"
+        },
+        {
+          "value": "da"
+        },
+        {
+          "value": "de"
+        },
+        {
+          "value": "et"
+        },
+        {
+          "value": "en"
+        },
+        {
+          "value": "es"
+        },
+        {
+          "value": "eo"
+        },
+        {
+          "value": "eu"
+        },
+        {
+          "value": "fr"
+        },
+        {
+          "value": "gd"
+        },
+        {
+          "value": "gl"
+        },
+        {
+          "value": "hr"
+        },
+        {
+          "value": "is"
+        },
+        {
+          "value": "it"
+        },
+        {
+          "value": "lv"
+        },
+        {
+          "value": "lt"
+        },
+        {
+          "value": "hu"
+        },
+        {
+          "value": "nl"
+        },
+        {
+          "value": "nb"
+        },
+        {
+          "value": "pl"
+        },
+        {
+          "value": "pt_PT"
+        },
+        {
+          "value": "pt_BR"
+        },
+        {
+          "value": "ru"
+        },
+        {
+          "value": "ro"
+        },
+        {
+          "value": "sq"
+        },
+        {
+          "value": "sk"
+        },
+        {
+          "value": "sl"
+        },
+        {
+          "value": "fi"
+        },
+        {
+          "value": "sv"
+        },
+        {
+          "value": "tr"
+        },
+        {
+          "value": "el"
+        },
+        {
+          "value": "bg"
+        },
+        {
+          "value": "sr"
+        },
+        {
+          "value": "uk"
+        },
+        {
+          "value": "iw"
+        },
+        {
+          "value": "fa"
+        },
+        {
+          "value": "ko"
+        },
+        {
+          "value": "zh_CN"
+        },
+        {
+          "value": "zh_TW"
+        },
+        {
+          "value": "ja"
+        }
+      ]
+    },
+    {
+      "name": "supported_languages",
+      "value": [
+        {
+          "value": "in"
+        },
+        {
+          "value": "de"
+        },
+        {
+          "value": "en"
+        },
+        {
+          "value": "es"
+        },
+        {
+          "value": "pt_BR"
+        },
+        {
+          "value": "ru"
+        },
+        {
+          "value": "sk"
+        },
+        {
+          "value": "zh_CN"
+        }
+      ]
+    },
+    {
+      "name": "TLS_version_name",
+      "value": [
+        {
+          "value": "TLS 1.3"
+        },
+        {
+          "value": "TLS 1.2"
+        },
+        {
+          "value": "TLS 1.1"
+        },
+        {
+          "value": "TLS 1.0"
+        }
+      ]
+    },
+    {
+      "name": "TLS_version_value",
+      "value": [
+        {
+          "value": "TLSv1.3"
+        },
+        {
+          "value": "TLSv1.2"
+        },
+        {
+          "value": "TLSv1.1"
+        },
+        {
+          "value": "TLSv1"
+        }
+      ]
+    },
+    {
+      "name": "TURN_protocol",
+      "value": [
+        {
+          "value": "UDP"
+        },
+        {
+          "value": "TCP"
+        },
+        {
+          "value": "DTLS"
+        },
+        {
+          "value": "TLS"
+        }
+      ]
+    }
+  ]
+}

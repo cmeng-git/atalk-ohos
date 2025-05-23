@@ -1,6 +1,6 @@
 /*
- * aTalk, android VoIP and Instant Messaging client
- * Copyright 2014 Eng Chong Meng
+ * aTalk, ohos VoIP and Instant Messaging client
+ * Copyright 2024 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ import net.java.sip.communicator.service.protocol.event.FileTransferCreatedEvent
 import net.java.sip.communicator.service.protocol.event.FileTransferRequestEvent;
 import net.java.sip.communicator.util.ConfigurationUtils;
 
-import org.atalk.ohos.R;
+import org.atalk.ohos.ResourceTable;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.chat.filetransfer.FileReceiveConversation;
 import org.jivesoftware.smack.SmackException;

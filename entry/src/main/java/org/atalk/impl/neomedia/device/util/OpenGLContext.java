@@ -1,81 +1,95 @@
 /*
- * Jitsi, the OpenSource Java VoIP and Instant Messaging client.
+ * aTalk, ohos VoIP and Instant Messaging client
+ * Copyright 2024 Eng Chong Meng
  *
- * Distributable under LGPL license. See terms of license at gnu.org.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.atalk.impl.neomedia.device.util;
 
-import android.opengl.EGL14;
-import android.opengl.EGLConfig;
-import android.opengl.EGLContext;
-import android.opengl.EGLDisplay;
-import android.opengl.EGLExt;
-import android.opengl.EGLSurface;
-import android.opengl.GLUtils;
+import ohos.agp.components.textureprovider.TextureProvider;
+import ohos.agp.render.opengl.EGL;
+import ohos.agp.render.opengl.EGLConfig;
+import ohos.agp.render.opengl.EGLContext;
+import ohos.agp.render.opengl.EGLDisplay;
+import ohos.agp.render.opengl.EGLSurface;
+
+import org.atalk.ohos.aTalkApp;
 
 import timber.log.Timber;
 
 /**
  * Code for EGL context handling
  */
-public class OpenGLContext {
+public class OpenGLContext extends TextureProvider {
     private static final int EGL_RECORDABLE_ANDROID = 0x3142;
-
-    private EGLDisplay mEGLDisplay = EGL14.EGL_NO_DISPLAY;
-    private EGLContext mEGLContext = EGL14.EGL_NO_CONTEXT;
-    private EGLSurface mEGLSurface = EGL14.EGL_NO_SURFACE;
+    private static final int EGL_OPENGL_ES2_BIT = 0x0004;
+    private static final int EGL_DRAW = 0x3059;
+    private EGLDisplay mEGLDisplay;
+    private EGLContext mEGLContext;
+    private EGLSurface mEGLSurface;
 
     /**
      * Prepares EGL. We want a GLES 2.0 context and a surface that supports recording.
      */
     public OpenGLContext(boolean recorder, Object objSurface, EGLContext sharedContext) {
-        mEGLDisplay = EGL14.eglGetDisplay(EGL14.EGL_DEFAULT_DISPLAY);
-        if (mEGLDisplay == EGL14.EGL_NO_DISPLAY) {
-            throw new RuntimeException("unable to get EGL14 display");
+        super(aTalkApp.getInstance());
+        mEGLDisplay = EGL.eglGetDisplay(EGL.EGL_DEFAULT_DISPLAY);
+        if (mEGLDisplay == EGL.EGL_NO_DISPLAY) {
+            throw new RuntimeException("unable to get EGL display");
         }
-        int[] majorVersion = new int[1];
-        int[] minorVersion = new int[1];
-        if (!EGL14.eglInitialize(mEGLDisplay, majorVersion, 0, minorVersion, 0)) {
-            mEGLDisplay = null;
-            throw new RuntimeException("unable to initialize EGL14");
+
+        int[] majorVersion = new int[]{0};
+        int[] minorVersion = new int[]{0};
+        if (!EGL.eglInitialize(mEGLDisplay, majorVersion,minorVersion)) {
+            mEGLDisplay = EGL.EGL_NO_DISPLAY;
+            throw new RuntimeException("unable to initialize EGL");
         }
-        // Timber.i("EGL version: %s.%s", majorVersion[0], minorVersion[0]);
+        Timber.i("EGL version: %s.%s", majorVersion[0], minorVersion[0]);
+
+        EGLConfig eglConfig = chooseEglConfig(mEGLDisplay, recorder);
 
         // Configure context for OpenGL ES 2.0.
-        EGLConfig eglConfig = chooseEglConfig(mEGLDisplay, recorder);
-        int[] attrib_list = {EGL14.EGL_CONTEXT_CLIENT_VERSION, 2, EGL14.EGL_NONE};
-        mEGLContext = EGL14.eglCreateContext(mEGLDisplay, eglConfig, sharedContext, attrib_list, 0);
+        int[] attrib_list = {EGL.EGL_VERSION, 3, EGL.EGL_NONE};
+        mEGLContext = EGL.eglCreateContext(mEGLDisplay, eglConfig, sharedContext, attrib_list);
         checkEglError("eglCreateContext");
 
-        // Create a window surface with default values, and attach it to the Surface we received.
-        int[] surfaceAttribs = {EGL14.EGL_NONE};
-        mEGLSurface = EGL14.eglCreateWindowSurface(mEGLDisplay, eglConfig, objSurface, surfaceAttribs, 0);
+        // Create a window surface, and attach it to the Surface we received.
+        int[] surfaceAttribs = {EGL.EGL_NONE};
+        mEGLSurface = EGL.eglCreateWindowSurface(mEGLDisplay, eglConfig, objSurface, surfaceAttribs);
         checkEglError("eglCreateWindowSurface");
     }
 
     private EGLConfig chooseEglConfig(EGLDisplay eglDisplay, boolean recorder) {
         EGLConfig[] configs = new EGLConfig[1];
         int[] attribList;
+
         if (recorder) {
             // Configure EGL for recording and OpenGL ES 2.0.
-            attribList = new int[]{EGL14.EGL_RED_SIZE, 8, EGL14.EGL_GREEN_SIZE, 8,
-                    EGL14.EGL_BLUE_SIZE, 8, EGL14.EGL_RENDERABLE_TYPE, EGL14.EGL_OPENGL_ES2_BIT,
-                    EGL_RECORDABLE_ANDROID, 1, EGL14.EGL_NONE};
+            attribList = new int[]{EGL.EGL_RED_SIZE, 8, EGL.EGL_GREEN_SIZE, 8, EGL.EGL_BLUE_SIZE, 8,
+                    EGL.EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT, EGL_RECORDABLE_ANDROID, 1, EGL.EGL_NONE};
         }
         else {
             // Configure EGL for OpenGL ES 2.0 only.
-            attribList = new int[]{EGL14.EGL_RED_SIZE, 8, EGL14.EGL_GREEN_SIZE, 8,
-                    EGL14.EGL_BLUE_SIZE, 8, EGL14.EGL_RENDERABLE_TYPE, EGL14.EGL_OPENGL_ES2_BIT,
-                    EGL14.EGL_NONE};
+            attribList = new int[]{EGL.EGL_RED_SIZE, 8, EGL.EGL_GREEN_SIZE, 8, EGL.EGL_BLUE_SIZE, 8,
+                    EGL.EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT, EGL.EGL_NONE};
         }
 
         int[] numconfigs = new int[1];
-        if (!EGL14.eglChooseConfig(eglDisplay, attribList, 0, configs, 0, configs.length,
-                numconfigs, 0)) {
-            throw new IllegalArgumentException("eglChooseConfig failed " + GLUtils.getEGLErrorString(EGL14.eglGetError()));
+        if (!EGL.eglChooseConfig(eglDisplay, attribList, configs, configs.length, numconfigs)) {
+            throw new IllegalArgumentException("eglChooseConfig failed " + EGL.eglGetError());
         }
         else if (numconfigs[0] <= 0) {
-            throw new IllegalArgumentException("eglChooseConfig failed " + GLUtils.getEGLErrorString(EGL14.eglGetError()));
+            throw new IllegalArgumentException("eglChooseConfig failed " + EGL.eglGetError());
         }
         return configs[0];
     }
@@ -85,27 +99,26 @@ public class OpenGLContext {
      * that was passed to our constructor.
      */
     public void release() {
-        if (mEGLDisplay != EGL14.EGL_NO_DISPLAY) {
+        if (mEGLDisplay != EGL.EGL_NO_DISPLAY) {
             // Android is unusual in that it uses a reference-counted EGLDisplay.
             // So for every eglInitialize() we need an eglTerminate().
-            EGL14.eglMakeCurrent(mEGLDisplay, EGL14.EGL_NO_SURFACE, EGL14.EGL_NO_SURFACE, EGL14.EGL_NO_CONTEXT);
-            EGL14.eglDestroySurface(mEGLDisplay, mEGLSurface);
-            EGL14.eglDestroyContext(mEGLDisplay, mEGLContext);
-            EGL14.eglTerminate(mEGLDisplay);
-            EGL14.eglReleaseThread();
+            EGL.eglMakeCurrent(mEGLDisplay, EGL.EGL_NO_SURFACE, EGL.EGL_NO_SURFACE, EGL.EGL_NO_CONTEXT);
+            EGL.eglDestroySurface(mEGLDisplay, mEGLSurface);
+            EGL.eglDestroyContext(mEGLDisplay, mEGLContext);
+            EGL.eglReleaseThread();
+            EGL.eglTerminate(mEGLDisplay);
         }
-        mEGLDisplay = EGL14.EGL_NO_DISPLAY;
-        mEGLContext = EGL14.EGL_NO_CONTEXT;
-        mEGLSurface = EGL14.EGL_NO_SURFACE;
+        mEGLDisplay = EGL.EGL_NO_DISPLAY;
+        mEGLContext = EGL.EGL_NO_CONTEXT;
+        mEGLSurface = EGL.EGL_NO_SURFACE;
     }
 
     public void makeCurrent() {
-        EGLContext ctx = EGL14.eglGetCurrentContext();
-        EGLSurface surface = EGL14.eglGetCurrentSurface(EGL14.EGL_DRAW);
+        EGLContext ctx = EGL.eglGetCurrentContext();
+        EGLSurface surface = EGL.eglGetCurrentSurface(EGL_DRAW);
         if (!mEGLContext.equals(ctx) || !mEGLSurface.equals(surface)) {
-            if (!EGL14.eglMakeCurrent(mEGLDisplay, mEGLSurface, mEGLSurface, mEGLContext)) {
-                throw new RuntimeException("eglMakeCurrent failed "
-                        + GLUtils.getEGLErrorString(EGL14.eglGetError()));
+            if (!EGL.eglMakeCurrent(mEGLDisplay, mEGLSurface, mEGLSurface, mEGLContext)) {
+                throw new RuntimeException("eglMakeCurrent failed " + EGL.eglGetError());
             }
         }
     }
@@ -114,8 +127,8 @@ public class OpenGLContext {
      * Sets "no surface" and "no context" on the current display.
      */
     public void releaseEGLSurfaceContext() {
-        if (mEGLDisplay != EGL14.EGL_NO_DISPLAY) {
-            EGL14.eglMakeCurrent(mEGLDisplay, EGL14.EGL_NO_SURFACE, EGL14.EGL_NO_SURFACE, EGL14.EGL_NO_CONTEXT);
+        if (mEGLDisplay != EGL.EGL_NO_DISPLAY) {
+            EGL.eglMakeCurrent(mEGLDisplay, EGL.EGL_NO_SURFACE, EGL.EGL_NO_SURFACE, EGL.EGL_NO_CONTEXT);
         }
     }
 
@@ -123,7 +136,7 @@ public class OpenGLContext {
      * Calls eglSwapBuffers. Use this to "publish" the current frame.
      */
     public void swapBuffers() {
-        if (!EGL14.eglSwapBuffers(mEGLDisplay, mEGLSurface)) {
+        if (!EGL.eglSwapBuffers(mEGLDisplay, mEGLSurface)) {
             throw new RuntimeException("Cannot swap buffers");
         }
         checkEglError("opSwapBuffers");
@@ -133,7 +146,7 @@ public class OpenGLContext {
      * Sends the presentation time stamp to EGL. Time is expressed in nanoseconds.
      */
     public void setPresentationTime(long nsecs) {
-        EGLExt.eglPresentationTimeANDROID(mEGLDisplay, mEGLSurface, nsecs);
+        // EGLExt.eglPresentationTimeANDROID(mEGLDisplay, mEGLSurface, nsecs);
         checkEglError("eglPresentationTimeANDROID");
     }
 
@@ -142,13 +155,12 @@ public class OpenGLContext {
      */
     private void checkEglError(String msg) {
         int error;
-        if ((error = EGL14.eglGetError()) != EGL14.EGL_SUCCESS) {
-            // aTalkApp.showToastMessage(msg + ": EGL error: 0x" + Integer.toHexString(error));
+        if ((error = EGL.eglGetError()) != EGL.EGL_SUCCESS) {
             throw new RuntimeException(msg + ": EGL error: 0x" + Integer.toHexString(error));
         }
     }
 
-    public EGLContext getContext() {
+    public EGLContext getEGLContext() {
         return mEGLContext;
     }
 }

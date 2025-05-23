@@ -1,6 +1,6 @@
 /*
  * aTalk, android VoIP and Instant Messaging client
- * Copyright 2014 Eng Chong Meng
+ * Copyright 2024 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,19 @@
  */
 package org.atalk.ohos.plugin.certconfig;
 
-import android.content.Context;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.Spinner;
+import ohos.aafwk.content.Intent;
+import ohos.agp.components.Button;
+import ohos.agp.components.Checkbox;
+import ohos.agp.components.Component;
+import ohos.agp.components.LayoutScatter;
+import ohos.agp.components.Picker;
+import ohos.app.Context;
 
-import androidx.fragment.app.FragmentTransaction;
+import net.java.sip.communicator.service.certificate.CertificateConfigEntry;
+import net.java.sip.communicator.service.certificate.CertificateService;
+
+import org.atalk.ohos.BaseSlice;
+import org.atalk.ohos.ResourceTable;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -38,12 +38,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.java.sip.communicator.service.certificate.CertificateConfigEntry;
-import net.java.sip.communicator.service.certificate.CertificateService;
-
-import org.atalk.ohos.BaseFragment;
-import org.atalk.ohos.R;
-
 import timber.log.Timber;
 
 /**
@@ -51,9 +45,9 @@ import timber.log.Timber;
  *
  * @author Eng Chong Meng
  */
-public class TLS_Configuration extends BaseFragment
-        implements View.OnClickListener, CompoundButton.OnCheckedChangeListener,
-        AdapterView.OnItemSelectedListener, PropertyChangeListener, CertConfigEntryDialog.OnFinishedCallback {
+public class TLS_Configuration extends BaseSlice
+        implements Component.ClickedListener, Component.CheckedChangedListener,
+        ListContainer.OnItemSelectedListener, PropertyChangeListener, CertConfigEntryDialog.OnFinishedCallback {
     private CertificateService cvs;
 
     /**
@@ -62,7 +56,7 @@ public class TLS_Configuration extends BaseFragment
     private final List<String> mCertList = new ArrayList<>();
     private ArrayAdapter<String> certAdapter;
 
-    private Spinner certSpinner;
+    private Picker certSpinner;
     private CertificateConfigEntry mCertEntry = null;
 
     /**
@@ -70,44 +64,46 @@ public class TLS_Configuration extends BaseFragment
      */
     private final Map<Integer, CertificateConfigEntry> mCertEntryList = new LinkedHashMap<>();
 
-    private CheckBox chkEnableOcsp;
+    private Checkbox chkEnableOcsp;
 
     private Button cmdRemove;
     private Button cmdEdit;
 
+    private Context mContext;
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public void onStart(Intent intent) {
+        LayoutScatter inflater = LayoutScatter.getInstance(getContext());
+        mContext = getContext();
         cvs = CertConfigActivator.getCertService();
         CertConfigActivator.getConfigService().addPropertyChangeListener(this);
 
-        View content = inflater.inflate(R.layout.cert_tls_config, container, false);
+        Component content = inflater.parse(ResourceTable.Layout_cert_tls_config, container, false);
 
-        CheckBox chkEnableRevocationCheck = content.findViewById(R.id.cb_crl);
+        Checkbox chkEnableRevocationCheck = content.findComponentById(ResourceTable.Id_cb_crl);
         chkEnableRevocationCheck.setOnCheckedChangeListener(this);
 
-        chkEnableOcsp = content.findViewById(R.id.cb_ocsp);
+        chkEnableOcsp = content.findComponentById(ResourceTable.Id_cb_ocsp);
         chkEnableOcsp.setOnCheckedChangeListener(this);
 
-        certSpinner = content.findViewById(R.id.cboCert);
+        certSpinner = content.findComponentById(ResourceTable.Id_cboCert);
         initCertSpinner();
 
-        Button mAdd = content.findViewById(R.id.cmd_add);
-        mAdd.setOnClickListener(this);
+        Button mAdd = content.findComponentById(ResourceTable.Id_cmd_add);
+        mAdd.setClickedListener(this);
 
-        cmdRemove = content.findViewById(R.id.cmd_remove);
-        cmdRemove.setOnClickListener(this);
+        cmdRemove = content.findComponentById(ResourceTable.Id_cmd_remove);
+        cmdRemove.setClickedListener(this);
 
-        cmdEdit = content.findViewById(R.id.cmd_edit);
-        cmdEdit.setOnClickListener(this);
-
-        return content;
+        cmdEdit = content.findComponentById(ResourceTable.Id_cmd_edit);
+        cmdEdit.setClickedListener(this);
     }
 
     private void initCertSpinner() {
         initCertList();
-        certAdapter = new ArrayAdapter<>(mContext, R.layout.simple_spinner_item, mCertList);
-        certAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
-        certSpinner.setAdapter(certAdapter);
+        certAdapter = new ArrayAdapter<>(mContext, ResourceTable.Layout_simple_spinner_item, mCertList);
+        certAdapter.setDropDownViewResource(ResourceTable.Layout_simple_spinner_dropdown_item);
+        certSpinner.setItemProvider(certAdapter);
         certSpinner.setOnItemSelectedListener(this);
     }
 
@@ -122,25 +118,25 @@ public class TLS_Configuration extends BaseFragment
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(Component v) {
         CertConfigEntryDialog dialog;
         FragmentTransaction ft = getParentFragmentManager().beginTransaction();
         ft.addToBackStack(null);
 
         switch (v.getId()) {
-            case R.id.cmd_add:
+            case ResourceTable.Id_cmd_add:
                 dialog = CertConfigEntryDialog.getInstance(CertificateConfigEntry.CERT_NONE, this);
                 dialog.show(ft, "CertConfigEntry");
                 break;
 
-            case R.id.cmd_remove:
+            case ResourceTable.Id_cmd_remove:
                 if (mCertEntry != null) {
                     Timber.d("Certificate Entry removed: %s", mCertEntry.getId());
                     CertConfigActivator.getCertService().removeClientAuthCertificateConfig(mCertEntry.getId());
                 }
                 break;
 
-            case R.id.cmd_edit:
+            case ResourceTable.Id_cmd_edit:
                 if (mCertEntry != null) {
                     dialog = CertConfigEntryDialog.getInstance(mCertEntry, this);
                     dialog.show(ft, "CertConfigEntry");
@@ -150,10 +146,10 @@ public class TLS_Configuration extends BaseFragment
     }
 
     @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+    public void onCheckedChanged(Button buttonView, boolean isChecked) {
         String enabled = Boolean.valueOf(isChecked).toString();
         switch (buttonView.getId()) {
-            case R.id.cb_crl:
+            case ResourceTable.Id_cb_crl:
                 CertConfigActivator.getConfigService().setProperty(
                         CertificateService.PNAME_REVOCATION_CHECK_ENABLED, isChecked);
 
@@ -162,7 +158,7 @@ public class TLS_Configuration extends BaseFragment
                 chkEnableOcsp.setEnabled(isChecked);
                 break;
 
-            case R.id.cb_ocsp:
+            case ResourceTable.Id_cb_ocsp:
                 CertConfigActivator.getConfigService().setProperty(
                         CertificateService.PNAME_OCSP_ENABLED, isChecked);
                 Security.setProperty(CertificateService.SECURITY_OCSP_ENABLE, enabled);
@@ -171,8 +167,8 @@ public class TLS_Configuration extends BaseFragment
     }
 
     @Override
-    public void onItemSelected(AdapterView<?> adapter, View view, int pos, long id) {
-        if (adapter.getId() == R.id.cboCert) {
+    public void onItemSelected(ListContainer<?> adapter, Component view, int pos, long id) {
+        if (adapter.getId() == ResourceTable.Id_cboCert) {
             certSpinner.setSelection(pos);
 
             mCertEntry = mCertEntryList.get(pos);
@@ -182,14 +178,14 @@ public class TLS_Configuration extends BaseFragment
     }
 
     @Override
-    public void onNothingSelected(AdapterView<?> parent) {
+    public void onNothingSelected(ListContainer<?> parent) {
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().startsWith(CertificateService.PNAME_CLIENTAUTH_CERTCONFIG_BASE)) {
             initCertList();
-            certAdapter.notifyDataSetChanged();
+            certAdapter.notifyDataChanged();
         }
     }
 

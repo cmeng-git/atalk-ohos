@@ -5,16 +5,16 @@
  */
 package org.atalk.ohos.gui.contactlist;
 
-import android.content.Context;
+import ohos.app.Context;
 
 import net.java.sip.communicator.service.contactlist.MetaContactGroup;
 import net.java.sip.communicator.service.contactlist.MetaContactListException;
 import net.java.sip.communicator.service.protocol.ProtocolProviderService;
 
-import org.atalk.ohos.R;
+import org.atalk.ohos.ResourceTable;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.AppGUIActivator;
-import org.atalk.ohos.gui.dialogs.DialogActivity;
+import org.atalk.ohos.gui.dialogs.DialogH;
 
 import timber.log.Timber;
 
@@ -39,25 +39,25 @@ public class ContactListUtils {
                 } catch (MetaContactListException ex) {
                     Timber.e("Add Contact error: %s", ex.getMessage());
                     Context ctx = aTalkApp.getInstance();
-                    String title = ctx.getString(R.string.add_contact_error);
+                    String title = ctx.getString(ResourceTable.String_add_contact_error);
 
                     String msg;
                     int errorCode = ex.getErrorCode();
                     switch (errorCode) {
                         case MetaContactListException.CODE_CONTACT_ALREADY_EXISTS_ERROR:
-                            msg = ctx.getString(R.string.add_contact_error_exist, contactAddress);
+                            msg = ctx.getString(ResourceTable.String_add_contact_error_exist, contactAddress);
                             break;
                         case MetaContactListException.CODE_NETWORK_ERROR:
-                            msg = ctx.getString(R.string.add_contact_error_network, contactAddress);
+                            msg = ctx.getString(ResourceTable.String_add_contact_error_network, contactAddress);
                             break;
                         case MetaContactListException.CODE_NOT_SUPPORTED_OPERATION:
-                            msg = ctx.getString(R.string.add_contact_error_not_supported, contactAddress);
+                            msg = ctx.getString(ResourceTable.String_add_contact_error_not_supported, contactAddress);
                             break;
                         default:
-                            msg = ctx.getString(R.string.add_contact_failed, contactAddress);
+                            msg = ctx.getString(ResourceTable.String_add_contact_failed, contactAddress);
                             break;
                     }
-                    DialogActivity.showDialog(ctx, title, msg);
+                    DialogH.getInstance(ctx).showDialog(ctx, title, msg);
                 }
             }
         }.start();

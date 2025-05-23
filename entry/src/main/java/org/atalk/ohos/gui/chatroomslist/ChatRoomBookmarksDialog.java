@@ -1,6 +1,6 @@
 /*
- * aTalk, android VoIP and Instant Messaging client
- * Copyright 2014 Eng Chong Meng
+ * aTalk, ohos VoIP and Instant Messaging client
+ * Copyright 2024 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,12 @@
  */
 package org.atalk.ohos.gui.chatroomslist;
 
-import android.app.Dialog;
-import android.content.Context;
-import android.os.Bundle;
-import android.text.TextUtils;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.Spinner;
+import ohos.agp.components.Checkbox;
+import ohos.agp.components.Component;
+import ohos.agp.components.LayoutScatter;
+import ohos.agp.components.ListContainer;
+import ohos.agp.components.TextField;
+import ohos.app.Context;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -42,13 +36,16 @@ import net.java.sip.communicator.service.muc.ChatRoomWrapper;
 import net.java.sip.communicator.service.protocol.ProtocolProviderService;
 
 import org.apache.commons.lang3.StringUtils;
-import org.atalk.ohos.R;
+import org.apache.http.util.TextUtils;
+import org.atalk.ohos.BaseAbility;
+import org.atalk.ohos.ResourceTable;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.AppGUIActivator;
-import org.atalk.ohos.gui.dialogs.DialogActivity;
-import org.atalk.ohos.gui.menu.MainMenuActivity;
+import org.atalk.ohos.gui.dialogs.DialogA;
+import org.atalk.ohos.gui.dialogs.DialogH;
+import org.atalk.ohos.gui.menu.MainMenuAbility;
 import org.atalk.ohos.gui.util.ThemeHelper;
-import org.atalk.ohos.gui.util.ViewUtil;
+import org.atalk.ohos.util.ComponentUtil;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smackx.bookmarks.BookmarkManager;
@@ -66,22 +63,22 @@ import timber.log.Timber;
  *
  * @author Eng Chong Meng
  */
-public class ChatRoomBookmarksDialog extends Dialog implements OnItemSelectedListener, DialogActivity.DialogListener {
-    private final MainMenuActivity mParent;
+public class ChatRoomBookmarksDialog implements ListContainer.ItemSelectedListener, DialogH.DialogListener {
+    private final MainMenuAbility mParent;
     private final MUCServiceImpl mucService;
 
     /**
      * The account list view.
      */
-    private Spinner accountsSpinner;
-    private Spinner chatRoomSpinner;
+    private ListContainer accountsSpinner;
+    private ListContainer chatRoomSpinner;
 
-    private EditText mucNameField;
-    private EditText nicknameField;
-    private CheckBox mAutoJoin;
-    private CheckBox mBookmark;
+    private TextField mucNameField;
+    private TextField nicknameField;
+    private Checkbox mAutoJoin;
+    private Checkbox mBookmark;
 
-    private EditText mPasswordField;
+    private TextField mPasswordField;
 
     private boolean hasChanges = false;
 
@@ -113,64 +110,68 @@ public class ChatRoomBookmarksDialog extends Dialog implements OnItemSelectedLis
      * @param mContext the <code>ChatPanel</code> corresponding to the <code>ChatRoom</code>, where the contact is invited.
      */
     public ChatRoomBookmarksDialog(Context mContext) {
-        super(mContext);
-        mParent = (MainMenuActivity) mContext;
+        mParent = (MainMenuAbility) mContext;
         mucService = MUCActivator.getMUCService();
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public DialogA create() {
         ThemeHelper.setTheme(mParent);
-        super.onCreate(savedInstanceState);
 
-        setTitle(R.string.chatroom_bookmark_title);
-        this.setContentView(R.layout.chatroom_bookmarks);
+        LayoutScatter scatter = LayoutScatter.getInstance(mParent);
+        Component bmComponent = scatter.parse(ResourceTable.Layout_chatroom_bookmarks, null, false);
 
-        accountsSpinner = this.findViewById(R.id.jid_Accounts_Spinner);
+        accountsSpinner = bmComponent.findComponentById(ResourceTable.Id_jid_Accounts_Spinner);
         initAccountSpinner();
 
-        mucNameField = this.findViewById(R.id.mucName_Edit);
-        nicknameField = this.findViewById(R.id.nickName_Edit);
-        mAutoJoin = this.findViewById(R.id.cb_autojoin);
-        mBookmark = this.findViewById(R.id.cb_bookmark);
+        mucNameField = bmComponent.findComponentById(ResourceTable.Id_mucName_Edit);
+        nicknameField = bmComponent.findComponentById(ResourceTable.Id_nickName_Edit);
+        mAutoJoin = bmComponent.findComponentById(ResourceTable.Id_cb_autojoin);
+        mBookmark = bmComponent.findComponentById(ResourceTable.Id_cb_bookmark);
 
-        mPasswordField = this.findViewById(R.id.passwordField);
-        CheckBox mShowPasswordCheckBox = this.findViewById(R.id.show_password);
-        mShowPasswordCheckBox.setOnCheckedChangeListener((buttonView, isChecked)
-                -> ViewUtil.showPassword(mPasswordField, isChecked));
+        mPasswordField = bmComponent.findComponentById(ResourceTable.Id_passwordField);
+        Checkbox mShowPasswordCheckBox = bmComponent.findComponentById(ResourceTable.Id_show_password);
+        mShowPasswordCheckBox.setCheckedStateChangedListener((buttonView, isChecked)
+                -> ComponentUtil.showPassword(mPasswordField, isChecked));
 
-        chatRoomSpinner = this.findViewById(R.id.chatRoom_Spinner);
+        chatRoomSpinner = bmComponent.findComponentById(ResourceTable.Id_chatRoom_Spinner);
         // chatRoomSpinner.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
-        new InitBookmarkedConference().execute();
+        new initBookmarkedConference().execute();
 
-        Button mApplyButton = this.findViewById(R.id.button_Apply);
-        mApplyButton.setOnClickListener(v -> {
+        DialogA.Builder builder = new DialogA.Builder(mParent);
+        builder.setTitle(ResourceTable.String_chatroom_bookmark_title)
+                .setComponent(bmComponent)
+                .setNegativeButton(ResourceTable.String_ok, dialog -> {
+                    if (hasChanges) {
+                        DialogH.getInstance(mParent).showConfirmDialog(mParent,
+                                ResourceTable.String_chatroom_bookmark_title,
+                                ResourceTable.String_unsaved_changes,
+                                ResourceTable.String_exit, this);
+                    }
+                    else
+                        dialog.remove();
+                });
+
+        builder.setPositiveButton(ResourceTable.String_apply, dialog -> {
             if (updateBookmarkedConference())
-                closeDialog();
+                dialog.remove();
         });
 
-        Button mCancelButton = this.findViewById(R.id.button_Cancel);
-        mCancelButton.setOnClickListener(v -> {
-            if (hasChanges) {
-                DialogActivity.showConfirmDialog(mParent,
-                        R.string.chatroom_bookmark_title,
-                        R.string.unsaved_changes,
-                        R.string.exit, this);
-            }
-            else
-                closeDialog();
-        });
-        setCancelable(false);
+        DialogA sDialog = builder.create();
+        sDialog.setSwipeToDismiss(true);
+        sDialog.setAutoClosable(false);
+        sDialog.siteRemovable(false);
+        return sDialog;
     }
 
     @Override
-    public boolean onConfirmClicked(DialogActivity dialog) {
-        closeDialog();
+    public boolean onConfirmClicked(DialogH dialog) {
+        dialog.destroy();
         return true;
     }
 
     @Override
-    public void onDialogCancelled(DialogActivity dialog) {
+    public void onDialogCancelled(DialogH dialog) {
+        dialog.destroy();
     }
 
     // add items into accountsSpinner dynamically
@@ -186,12 +187,12 @@ public class ChatRoomBookmarksDialog extends Dialog implements OnItemSelectedLis
         }
 
         // Create an ArrayAdapter using the string array and aTalk default spinner layout
-        ArrayAdapter<String> mAdapter = new ArrayAdapter<>(mParent, R.layout.simple_spinner_item, ppsList);
+        ArrayAdapter<String> mAdapter = new ArrayAdapter<>(mParent, ResourceTable.Layout_simple_spinner_item, ppsList);
         // Specify the layout to use when the list of choices appears
-        mAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
+        mAdapter.setDropDownViewResource(ResourceTable.Layout_simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
-        accountsSpinner.setAdapter(mAdapter);
-        accountsSpinner.setOnItemSelectedListener(this);
+        accountsSpinner.setItemProvider(mAdapter);
+        accountsSpinner.setItemSelectedListener(this);
     }
 
 
@@ -199,7 +200,7 @@ public class ChatRoomBookmarksDialog extends Dialog implements OnItemSelectedLis
      * Creates the providers comboBox and filling its content with the current available chatRooms
      * Add available server chatRooms to the chatRoomList when providers changes
      */
-    private class InitBookmarkedConference {
+    private class initBookmarkedConference {
         List<BookmarkedConference> bookmarkedList = new ArrayList<>();
         List<BookmarkConference> bookmarkList = new ArrayList<>();
         BookmarkConference bookmarkConference;
@@ -208,8 +209,8 @@ public class ChatRoomBookmarksDialog extends Dialog implements OnItemSelectedLis
             Executors.newSingleThreadExecutor().execute(() -> {
                 doInBackground();
 
-                mParent.runOnUiThread(() -> {
-                    if (!mAccountBookmarkConferencesList.isEmpty()) {
+                BaseAbility.runOnUiThread(() -> {
+                    if (mAccountBookmarkConferencesList.size() > 0) {
                         Object[] keySet = mAccountBookmarkConferencesList.keySet().toArray();
                         if (keySet.length > 0) {
                             String accountId = (String) keySet[0];
@@ -300,28 +301,24 @@ public class ChatRoomBookmarksDialog extends Dialog implements OnItemSelectedLis
         }
 
         // Create an ArrayAdapter using the string array and aTalk default spinner layout
-        ArrayAdapter<String> mAdapter = new ArrayAdapter<>(mParent, R.layout.simple_spinner_item, mChatRoomList);
-        mAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<String> mAdapter = new ArrayAdapter<>(mParent, ResourceTable.Layout_simple_spinner_item, mChatRoomList);
+        mAdapter.setDropDownViewResource(ResourceTable.Layout_simple_spinner_dropdown_item);
 
         // Apply the adapter to the spinner
-        chatRoomSpinner.setAdapter(mAdapter);
-        chatRoomSpinner.setOnItemSelectedListener(this);
+        chatRoomSpinner.setItemProvider(mAdapter);
+        chatRoomSpinner.setItemSelectedListener(this);
 
-        if (!mChatRoomList.isEmpty()) {
+        if (mChatRoomList.size() > 0) {
             String chatRoom = mChatRoomList.get(0);
             initBookMarkForm(chatRoom);
         }
     }
 
-    private void closeDialog() {
-        this.cancel();
-    }
-
     @Override
-    public void onItemSelected(AdapterView<?> adapter, View view, int pos, long id) {
+    public void onItemSelected(ListContainer adapter, Component view, int pos, long id) {
         switch (adapter.getId()) {
-            case R.id.jid_Accounts_Spinner:
-                String userId = (String) adapter.getItemAtPosition(pos);
+            case ResourceTable.Id_jid_Accounts_Spinner:
+                String userId = adapter.getComponentAt(pos).toString();
                 ChatRoomProviderWrapper protocol = mucRoomWrapperList.get(userId);
 
                 ProtocolProviderService pps = (protocol == null) ? null : protocol.getProtocolProvider();
@@ -332,18 +329,13 @@ public class ChatRoomBookmarksDialog extends Dialog implements OnItemSelectedLis
                 }
                 break;
 
-            case R.id.chatRoom_Spinner:
+            case ResourceTable.Id_chatRoom_Spinner:
                 String oldChatRoom = (mBookmarkFocus != null) ? mBookmarkFocus.getJid().toString() : "";
-                String chatRoom = (String) adapter.getItemAtPosition(pos);
+                String chatRoom = (String) adapter.getComponentAt(pos).toString();
                 if (!initBookMarkForm(chatRoom)) {
-                    chatRoomSpinner.setSelection(mChatRoomList.indexOf(oldChatRoom));
+                    chatRoomSpinner.setSelectedItemIndex(mChatRoomList.indexOf(oldChatRoom));
                 }
         }
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-        // Another interface callback
     }
 
     /**
@@ -369,7 +361,7 @@ public class ChatRoomBookmarksDialog extends Dialog implements OnItemSelectedLis
             mBookmarkFocus = mBookmarkConferenceList.get(chatRoom);
             if (mBookmarkFocus != null) {
                 mucNameField.setText(mBookmarkFocus.getName());
-                nicknameField.setText(mBookmarkFocus.getNickname());
+                nicknameField.setText(mBookmarkFocus.getNickname().toString());
                 mPasswordField.setText(mBookmarkFocus.getPassword());
                 mAutoJoin.setChecked(mBookmarkFocus.isAutoJoin());
                 mBookmark.setChecked(mBookmarkFocus.isBookmark());
@@ -382,24 +374,24 @@ public class ChatRoomBookmarksDialog extends Dialog implements OnItemSelectedLis
     private boolean updateBookmarkFocus() {
         if (mBookmarkFocus != null) {
             String nickName = (mBookmarkFocus.getNickname() != null) ? mBookmarkFocus.getNickname().toString() : null;
-            hasChanges = !(isEqual(mBookmarkFocus.getName(), ViewUtil.toString(mucNameField))
-                    && isEqual(nickName, ViewUtil.toString(nicknameField))
-                    && isEqual(mBookmarkFocus.getPassword(), ViewUtil.toString(mPasswordField))
+            hasChanges = !(isEqual(mBookmarkFocus.getName(), ComponentUtil.toString(mucNameField))
+                    && isEqual(nickName, ComponentUtil.toString(nicknameField))
+                    && isEqual(mBookmarkFocus.getPassword(), ComponentUtil.toString(mPasswordField))
                     && (mBookmarkFocus.isAutoJoin() == mAutoJoin.isChecked()
                     && (mBookmarkFocus.isBookmark() == mBookmark.isChecked())));
 
             // Timber.w("Fields have changes: %s", hasChanges);
             if (hasChanges) {
-                mBookmarkFocus.setName(ViewUtil.toString(mucNameField));
-                mBookmarkFocus.setPassword(ViewUtil.toString(mPasswordField));
+                mBookmarkFocus.setName(ComponentUtil.toString(mucNameField));
+                mBookmarkFocus.setPassword(ComponentUtil.toString(mPasswordField));
                 mBookmarkFocus.setAutoJoin(mAutoJoin.isChecked());
                 mBookmarkFocus.setBookmark(mBookmark.isChecked());
 
                 try {
                     // nickName cannot be null => exception
-                    mBookmarkFocus.setNickname(Resourcepart.from(ViewUtil.toString(nicknameField)));
+                    mBookmarkFocus.setNickname(Resourcepart.from(ComponentUtil.toString(nicknameField)));
                 } catch (XmppStringprepException e) {
-                    aTalkApp.showToastMessage(R.string.change_nickname_error,
+                    aTalkApp.showToastMessage(ResourceTable.String_change_nickname_error,
                             mBookmarkFocus.getJid(), e.getMessage());
                     return false;
                 }
@@ -467,20 +459,10 @@ public class ChatRoomBookmarksDialog extends Dialog implements OnItemSelectedLis
 
                             if (autoJoin) {
                                 mucService.joinChatRoom(chatRoomEntity.toString(), crpWrapper);
-                                // nick???
                             }
 
                             // save info to local chatRoomWrapper if present
                             chatRoomWrapper = crpWrapper.findChatRoomWrapperForChatRoomID(chatRoomEntity.toString());
-
-                            // Create new chatRoom if none and user enabled autoJoin
-//                            if (autoJoin) {
-//                                mucService.joinChatRoom(chatRoomWrapper);
-//
-//                                chatRoomWrapper = createChatRoom(pps, bookmarkConference);
-//                                if (chatRoomWrapper != null)
-//                                    crpWrapper.addChatRoom(chatRoomWrapper);
-//                            }
 
                             if (chatRoomWrapper != null) {
                                 chatRoomWrapper.setBookmarkName(name);
@@ -488,15 +470,12 @@ public class ChatRoomBookmarksDialog extends Dialog implements OnItemSelectedLis
                                 chatRoomWrapper.setNickName(nick.toString());
                                 chatRoomWrapper.setBookmark(bookmark);
                                 chatRoomWrapper.setAutoJoin(autoJoin);
-
-                                // cmeng - testing for clearing unwanted values i.e. MUCService.OPEN_ON_ACTIVITY
-                                // MUCService.setChatRoomAutoOpenOption(pps, chatRoomEntity.toString(), null);
                             }
                         }
                     }
                 } catch (SmackException.NoResponseException | SmackException.NotConnectedException
                          | XMPPException.XMPPErrorException | InterruptedException e) {
-                    String errMag = aTalkApp.getResString(R.string.chatroom_bookmark_update_failed,
+                    String errMag = aTalkApp.getResString(ResourceTable.String_chatroom_bookmark_update_failed,
                             chatRoomWrapper, e.getMessage());
                     Timber.w(errMag);
                     aTalkApp.showToastMessage(errMag);

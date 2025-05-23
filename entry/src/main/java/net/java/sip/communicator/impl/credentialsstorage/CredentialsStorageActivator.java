@@ -63,8 +63,7 @@ public class CredentialsStorageActivator implements BundleActivator {
         impl = new CredentialsStorageServiceImpl();
         impl.start(bundleContext);
 
-        bundleContext.registerService(
-                CredentialsStorageService.class.getName(), impl, null);
+        bundleContext.registerService(CredentialsStorageService.class.getName(), impl, null);
 
         Timber.i("Service Impl: %s [REGISTERED]", getClass().getName());
     }

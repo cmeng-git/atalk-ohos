@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DependentLayout
+    xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:height="match_parent"
+    ohos:width="match_parent"
+    ohos:background_element="$color:call_background">
+
+    <org.atalk.ohos.gui.call.RemoteVideoLayout
+        ohos:id="$+id:remoteVideoContainer"
+        ohos:height="match_parent"
+        ohos:width="match_parent"
+        ohos:align_parent_start="true"
+        ohos:align_parent_top="true"
+        ohos:background_element="$color:black"
+        ohos:visibility="hide"/>
+
+    <DirectionalLayout
+        ohos:id="$+id:localPreviewContainer"
+        ohos:height="match_content"
+        ohos:width="match_content"
+        ohos:align_parent_bottom="true"
+        ohos:align_parent_end="true"
+        ohos:background_element="$graphic:border_blue"
+        ohos:bottom_margin="70vp"
+        ohos:end_margin="10vp"
+        ohos:orientation="vertical"
+        ohos:visibility="hide"/>
+
+    <DependentLayout
+        ohos:height="match_parent"
+        ohos:width="match_parent"
+        ohos:above="$id:button_Container">
+
+        <DirectionalLayout
+            ohos:id="$+id:callInfoGroup"
+            ohos:height="match_content"
+            ohos:width="match_content"
+            ohos:layout_alignment="center"
+            ohos:orientation="vertical">
+
+            <Image
+                ohos:id="$+id:calleeAvatar"
+                ohos:height="$float:avatar_height"
+                ohos:width="$float:avatar_height"
+                ohos:bottom_padding="$float:between_padding"
+                ohos:component_description="$string:call_audio"
+                ohos:image_src="$media:person_photo"
+                ohos:scale_mode="zoom_center"/>
+
+            <DependentLayout
+                ohos:height="match_content"
+                ohos:width="match_content"
+                ohos:alignment="center"
+                ohos:background_element="$graphic:call_status_bg"
+                ohos:layout_alignment="vertical_center"
+                ohos:padding="10vp"
+                ohos:top_margin="$float:between_padding">
+
+                <DependentLayout
+                    ohos:id="$+id:security_group"
+                    ohos:height="match_content"
+                    ohos:width="match_content"
+                    ohos:background_element="$color:padlock_orange">
+
+                    <Text
+                        ohos:id="$+id:security_protocol"
+                        ohos:height="match_content"
+                        ohos:width="match_content"
+                        ohos:text_alignment="vertical_center"
+                        ohos:text_color="$color:textColorWhite"
+                        ohos:text_size="$float:label_text_size"/>
+
+                    <Image
+                        ohos:id="$+id:security_padlock"
+                        ohos:height="match_content"
+                        ohos:width="match_content"
+                        ohos:end_of="$id:security_protocol"
+                        ohos:image_src="$media:secure_off_dark"
+                        ohos:scale_mode="center"/>
+                </DependentLayout>
+
+                <Text
+                    ohos:id="$+id:callStatus"
+                    ohos:height="match_content"
+                    ohos:width="match_content"
+                    ohos:end_of="$id:security_group"
+                    ohos:start_margin="5vp"
+                    ohos:text="{call status}"
+                    ohos:text_alignment="vertical_center"
+                    ohos:text_color="$color:textColorWhite"
+                    ohos:text_size="$float:label_text_size"/>
+
+                <Text
+                    ohos:id="$+id:callTime"
+                    ohos:height="match_content"
+                    ohos:width="match_content"
+                    ohos:end_of="$id:callStatus"
+                    ohos:start_margin="5vp"
+                    ohos:text="00:00:00"
+                    ohos:text_color="$color:textColorWhite"
+                    ohos:text_size="$float:label_text_size"/>
+            </DependentLayout>
+
+            <Text
+                ohos:id="$+id:callEndReason"
+                ohos:height="match_content"
+                ohos:width="match_content"
+                ohos:background_element="$graphic:call_status_bg"
+                ohos:end_margin="10vp"
+                ohos:horizontal_center="true"
+                ohos:left_margin="10vp"
+                ohos:padding="5vp"
+                ohos:text="call ended reason description"
+                ohos:text_alignment="vertical_center"
+                ohos:text_color="$color:textColorWhite"
+                ohos:text_size="$float:label_text_size"
+                ohos:top_margin="10vp"
+                ohos:visibility="visible"/>
+        </DirectionalLayout>
+
+        <include
+            ohos:id="$+id:clickable_toast"
+            ohos:height="match_content"
+            ohos:width="match_content"
+            ohos:align_parent_bottom="true"
+            ohos:bottom_margin="15vp"
+            ohos:horizontal_center="true"
+            layout="$layout:clickable_toast"/>
+    </DependentLayout>
+
+    <DirectionalLayout
+        ohos:id="$+id:button_Container"
+        ohos:height="60vp"
+        ohos:width="match_parent"
+        ohos:align_parent_bottom="true"
+        ohos:background_element="#40000000"
+        ohos:orientation="horizontal">
+
+        <Button
+            ohos:id="$+id:button_call_back_to_chat"
+            ohos:height="match_content"
+            ohos:width="0vp"
+            ohos:background_element="$graphic:image_button_background"
+            ohos:component_description="$string:call_on_hold"
+            ohos:focusable="focus_adaptable"
+            ohos:image_src="$media:call_back_to_chat_dark"
+            ohos:layout_alignment="center"
+            ohos:start_margin="5vp"
+            ohos:weight="1"/>
+
+        <Button
+            ohos:id="$+id:button_speakerphone"
+            ohos:height="match_content"
+            ohos:width="0vp"
+            ohos:background_element="$graphic:image_button_background"
+            ohos:component_description="$string:volume_control_tooltip"
+            ohos:focusable="focus_adaptable"
+            ohos:image_src="$media:call_receiver_on_dark"
+            ohos:start_margin="5vp"
+            ohos:text_alignment="center"
+            ohos:weight="1"/>
+
+        <Button
+            ohos:id="$+id:button_call_microphone"
+            ohos:height="match_content"
+            ohos:width="0vp"
+            ohos:background_element="$graphic:image_button_background"
+            ohos:component_description="$string:btn_mute_tooltip"
+            ohos:focusable="focus_adaptable"
+            ohos:image_src="$media:call_microphone_dark"
+            ohos:start_margin="5vp"
+            ohos:text_alignment="center"
+            ohos:weight="1"/>
+
+        <Button
+            ohos:id="$+id:button_call_video"
+            ohos:height="match_content"
+            ohos:width="0vp"
+            ohos:background_element="$graphic:image_button_background"
+            ohos:component_description="$string:btn_video_tooltip"
+            ohos:focusable="focus_adaptable"
+            ohos:image_src="$media:call_video_dark"
+            ohos:start_margin="5vp"
+            ohos:text_alignment="center"
+            ohos:weight="1"/>
+
+        <Button
+            ohos:id="$+id:button_call_hold"
+            ohos:height="match_content"
+            ohos:width="0vp"
+            ohos:background_element="$graphic:image_button_background"
+            ohos:component_description="$string:call_on_hold"
+            ohos:focusable="focus_adaptable"
+            ohos:image_src="$media:call_hold_on_dark"
+            ohos:start_margin="5vp"
+            ohos:text_alignment="center"
+            ohos:weight="1"/>
+
+        <Button
+            ohos:id="$+id:button_call_transfer"
+            ohos:height="match_content"
+            ohos:width="0vp"
+            ohos:background_element="$graphic:image_button_background"
+            ohos:component_description="$string:call_transfer_call"
+            ohos:focusable="focus_adaptable"
+            ohos:image_src="$media:call_transfer_dark"
+            ohos:start_margin="5vp"
+            ohos:text_alignment="center"
+            ohos:weight="1"/>
+
+        <Button
+            ohos:id="$+id:button_call_hangup"
+            ohos:height="match_content"
+            ohos:width="0vp"
+            ohos:background_element="$graphic:image_button_background"
+            ohos:component_description="$string:call_hang_up"
+            ohos:focusable="focus_adaptable"
+            ohos:image_src="$media:call_hangup"
+            ohos:start_margin="5vp"
+            ohos:text_alignment="center"
+            ohos:weight="1"/>
+    </DirectionalLayout>
+
+</DependentLayout>

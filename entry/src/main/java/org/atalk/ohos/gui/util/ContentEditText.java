@@ -1,17 +1,10 @@
 package org.atalk.ohos.gui.util;
 
-import android.content.Context;
-import android.os.Build;
-import android.util.AttributeSet;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputConnection;
+import ohos.agp.components.AttrSet;
+import ohos.agp.components.TextField;
+import ohos.app.Context;
 
-import androidx.appcompat.widget.AppCompatEditText;
-import androidx.core.view.inputmethod.EditorInfoCompat;
-import androidx.core.view.inputmethod.InputConnectionCompat;
-import androidx.core.view.inputmethod.InputContentInfoCompat;
-
-public class ContentEditText extends AppCompatEditText
+public class ContentEditText extends TextField
 {
     private static final String MIME_TYPE_GIF = "image/gif";
     private static final String MIME_TYPE_PNG = "image/png";
@@ -24,15 +17,15 @@ public class ContentEditText extends AppCompatEditText
         super(context);
     }
 
-    public ContentEditText(Context context, AttributeSet attrs)
+    public ContentEditText(Context context, AttrSet attrs)
     {
         super(context, attrs);
     }
 
-    public ContentEditText(Context context, AttributeSet attrs, int defStyleAttr)
-    {
-        super(context, attrs, defStyleAttr);
-    }
+//    public ContentEditText(Context context, AttrSet attrs, int defStyleAttr)
+//    {
+//        super(context, attrs, defStyleAttr);
+//    }
 
     @Override
     public InputConnection onCreateInputConnection(EditorInfo editorInfo)

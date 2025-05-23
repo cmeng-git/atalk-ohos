@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<DirectionalLayout xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:width="match_parent"
+    ohos:height="match_content"
+    ohos:margin="20vp"
+    ohos:clickable="true"
+    ohos:focusable="focus_adaptable"
+    ohos:orientation="vertical"
+    ohos:padding="$float:screen_padding">
+
+    <Text
+        ohos:id="$+id:contactPhoneName"
+        ohos:text_size="$float:medium_font"
+        ohos:width="match_content"
+        ohos:height="match_content"
+        ohos:bottom_margin="$float:label_padding"
+        ohos:text="$string:contact_phone" />
+
+    <org.atalk.ohos.gui.call.telephony.RecipientSelectView
+        ohos:id="$+id:address"
+        ohos:background_element="$graphic:bg_text_field"
+        ohos:width="match_parent"
+        ohos:bottom_margin="$float:between_padding"
+        ohos:dropDownWidth="match_content"
+        ohos:imeOptions="actionNext"
+        ohos:text_input_type="pattern_null" />
+
+    <Text
+        ohos:id="$+id:telephony"
+        ohos:text_size="$float:medium_font"
+        ohos:width="match_content"
+        ohos:height="match_content"
+        ohos:bottom_margin="$float:label_padding"
+        ohos:text="$string:jbr_telephony_domain" />
+
+    <Text
+        ohos:id="$+id:telephonyDomain"
+        ohos:background_element="$graphic:bg_text_field"
+        ohos:width="match_parent"
+        ohos:bottom_margin="$float:between_padding"/>
+
+    <Text
+        ohos:id="$+id:contactService"
+        ohos:text_size="$float:medium_font"
+        ohos:width="match_content"
+        ohos:height="match_content"
+        ohos:bottom_margin="$float:label_padding"
+        ohos:text="$string:call_via" />
+
+    <Picker
+        ohos:id="$+id:selectAccountSpinner"
+        ohos:background_element="$media:spinner_dark"
+        ohos:bottom_margin="$float:between_padding" />
+
+    <DirectionalLayout
+        ohos:width="match_parent"
+        ohos:height="match_content"
+        ohos:orientation="horizontal">
+
+        <Button
+            ohos:id="$+id:button_cancel"
+            ohos:background_element="$graphic:btn_state_action"
+            ohos:text="$string:cancel" />
+
+        <Button
+            ohos:id="$+id:button_video"
+            ohos:background_element="$graphic:btn_state_action"
+            ohos:start_margin="4vp"
+            ohos:text="$string:call_video" />
+
+        <Button
+            ohos:id="$+id:button_audio"
+            ohos:background_element="$graphic:btn_state_action"
+            ohos:start_margin="4vp"
+            ohos:text="$string:call_audio" />
+    </DirectionalLayout>
+
+</DirectionalLayout>

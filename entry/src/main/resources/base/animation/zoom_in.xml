@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animatorProperty
+    xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:duration="1000"
+    ohos:pivot_X="0.5"
+    ohos:pivot_Y="0.5"
+    ohos:scaleXBy="-0.1"
+    ohos:scaleXFrom="1"
+    ohos:scaleYBy="-0.1"
+    ohos:scaleYFrom="1"/>
+

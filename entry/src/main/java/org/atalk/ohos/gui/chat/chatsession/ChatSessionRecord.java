@@ -1,6 +1,6 @@
 /*
- * aTalk, android VoIP and Instant Messaging client
- * Copyright 2014 Eng Chong Meng
+ * aTalk, ohos VoIP and Instant Messaging client
+ * Copyright 2024 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,8 @@ package org.atalk.ohos.gui.chat.chatsession;
 
 import java.util.Date;
 
-import org.atalk.ohos.gui.chat.ChatFragment;
 import org.atalk.ohos.gui.chat.ChatSession;
+import org.atalk.ohos.gui.chat.ChatSlice;
 import org.jxmpp.jid.EntityBareJid;
 
 /**
@@ -46,14 +46,14 @@ public class ChatSessionRecord {
     /**
      * 0 = 1:1 chat or 1 = multi chat session.
      *
-     * @see ChatSession#MODE_XXX
+     * @see ChatSession #MODE_XXX
      */
     protected int chatMode;
 
     /**
-     * Chat encryption mode: ChatSession.STATUS to store ChatFragment#chatType
+     * Chat encryption mode: ChatSession.STATUS to store ChatSlice#chatType
      *
-     * @see ChatFragment#MSGTYPE_XXX
+     * @see ChatSlice #MSGTYPE_XXX
      */
     protected int chatType;
 
@@ -71,7 +71,7 @@ public class ChatSessionRecord {
      * @param accountUid user account Uid e.g. jabber.xxx@ipserver.com
      * @param entityBareJid contact bare jid
      * @param chatMode single or multi mode
-     * @param chatType ChatFragment MSTYPE
+     * @param chatType ChatSlice MSTYPE
      * @param createTime session record creation time
      * @param mamDate last mamQuery update date
      */

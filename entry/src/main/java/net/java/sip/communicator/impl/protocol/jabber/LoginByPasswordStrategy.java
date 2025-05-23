@@ -5,11 +5,6 @@
  */
 package net.java.sip.communicator.impl.protocol.jabber;
 
-import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
-import android.text.TextUtils;
-
 import net.java.sip.communicator.service.certificate.CertificateService;
 import net.java.sip.communicator.service.protocol.AbstractProtocolProviderService;
 import net.java.sip.communicator.service.protocol.AccountID;
@@ -19,6 +14,7 @@ import net.java.sip.communicator.service.protocol.SecurityAuthority;
 import net.java.sip.communicator.service.protocol.UserCredentials;
 import net.java.sip.communicator.service.protocol.event.RegistrationStateChangeEvent;
 
+import org.atalk.ohos.BaseAbility;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.login.IBRCaptchaProcessDialog;
 import org.jivesoftware.smack.AbstractXMPPConnection;
@@ -33,9 +29,12 @@ import org.jxmpp.jid.parts.Resourcepart;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.logging.Handler;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.X509TrustManager;
+
+import ohos.app.Context;
 
 /**
  * Login to Jabber using username & password.
@@ -129,8 +128,8 @@ public class LoginByPasswordStrategy implements JabberLoginStrategy
         // Wait for right moment before proceed, otherwise captcha dialog will be
         // obscured by other launching activities in progress on first aTalk launch.
         aTalkApp.waitForFocus();
-        new Handler(Looper.getMainLooper()).post(() -> {
-            Context context = aTalkApp.getCurrentActivity();
+        BaseAbility.uiHandler(() -> {
+            Context context = aTalkApp.getCurrentAbility();
             if ((context != null) && (pps.getConnection() != null)) {
                 IBRCaptchaProcessDialog mCaptchaDialog = new IBRCaptchaProcessDialog(context, pps, accountId, password);
                 mCaptchaDialog.show();

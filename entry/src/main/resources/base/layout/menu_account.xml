@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<DirectionalLayout
+    xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:id="$+id:menu"
+    ohos:height="match_content"
+    ohos:width="match_content"
+    ohos:margin="$float:between_padding"
+    ohos:orientation="vertical">
+
+    <Text
+        ohos:id="$+id:remove"
+        ohos:title="$string:remove_account"/>
+
+    <Text
+        ohos:id="$+id:account_settings"
+        ohos:title="$string:account_settings"/>
+
+    <Text
+        ohos:id="$+id:account_info"
+        ohos:title="$string:accountinfo_title"/>
+
+    <Text
+        ohos:id="$+id:account_cancel"
+        ohos:title="$string:cancel"/>
+
+</DirectionalLayout>

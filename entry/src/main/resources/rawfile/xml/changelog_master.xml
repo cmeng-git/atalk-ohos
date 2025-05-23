@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?><?xml-stylesheet type="text/xsl" href="changelog_style.xsl"?><!--
+     The master change log is kept in res/xml/changelog_master.xml.
+     Locale specific versions are kept in res/xml-<locale qualifier>/changelog.xml.
+
+     Don't edit the changelog_<name>_branch.xml files in the gh-pages branch.
+     They are automatically updated with "ant bump-version".
+-->
+<changelog>
+    <release version="00.02.030 (01/26/2024)" versioncode="0002030">
+        <change>Fix user login problem due to incorrect startAbility on user create new</change>
+        <change>Change chat session action options on user single and multiple items selection</change>
+        <change>Use implementation jarjar.repackage("filename.jar") to ensure destinationName is set correctly</change>
+    </release>
+    <release version="00.02.020 (12/30/2023)" versioncode="0002020">
+        <change>Move directory 'aTalk' to 'entry', preparation for ohos porting</change>
+    </release>
+    <release version="00.02.010 (12/29/2023)" versioncode="0002010">
+        <change>Update aTalk-ohos for android API-34 support; needs jarjar-gradle (master)</change>
+        <change>Use jarjar-gradle from github master i.e. '9a7eca7'(1.1.1); require gradle-8.2-bin.zip and precompiled smack jars</change>
+        <change>Update source to support API-34 ContextCompat.registerReceiver with RECEIVER_EXPORTED/RECEIVER_NOT_EXPORTED option</change>
+        <change>Update to 'com.android.tools.build:gradle:7.4.2' and 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.22'</change>
+        <change>Upgrade Android Studio to Giraffe | 2022.3.1 - but with Gradle-JDK using jdk-15</change>
+        <change>butterknife-compiler:10.2.3 is required for PermissionsActivity, but only compatible with jdk-15 max</change>
+    </release>
+
+    <release version="00.02.000 (12/25/2023)" versioncode="0002000">
+        <change>Rename aTalk project namespace to org.atalk.ohos</change>
+        <change>Strings/Strings_NT: cleanup and simplify string name id</change>
+        <change>Cleanup resources.languages.resources.properties</change>
+    </release>
+
+    <release version="00.01.000 (12/20/2023)" versioncode="0001000">
+        <change>Add user selectable option 'Delete account on server' when user remove an account; user must login to perform this action</change>
+        <change>While user is login, changing local password will also change password on the server</change>
+        <change>Upgrade smack library to version 4.4.7</change>
+        <change>Remove Desktop, SIP and ICQ protocols and preference settings support</change>
+        <change>Remove aTalk unused codec, audio system and unused classes: portaudio, pulseaudio, quicktime, and video4Linux</change>
+        <change>Merged CallEnded with VideoCallAbility; Auto return to contactList 3 seconds after call has ended</change>
+        <change>Remove OTR encryption and Desktop support</change>
+        <change>Update osmdroid-ohos:6.1.14 to 6.1.17</change>
+        <change>Update all aTalk JNI libraries build to use NDK '22.1.7171670'</change>
+        <change>Upgrade jni libraries sources for:libvpx 1.13.0 to 1.13.1; ffmpeg 5.1.2 to 5.1.4</change>
+        <change>Clean up JNI scripts for all native libraries built, and use prebuilt toolchain</change>
+        <change>Build openssl jni library without installing the man document</change>
+        <change>Move project name space to org.atalk.ohos</change>
+        <change>Rebase org.atalk.ohos version to 0.1.0</change>
+        <change>Change minimum API support to 24 (android-7)</change>
+        <change>Migrate ice4j to only compatible with API-24</change>
+        <change>Bug fixes and enhancements</change>
+    </release>
+
+</changelog>

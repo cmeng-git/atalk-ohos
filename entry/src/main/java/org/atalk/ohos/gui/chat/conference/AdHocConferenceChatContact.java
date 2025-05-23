@@ -15,7 +15,6 @@ package org.atalk.ohos.gui.chat.conference;
 import net.java.sip.communicator.service.protocol.Contact;
 
 import org.apache.commons.lang3.StringUtils;
-import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.chat.ChatContact;
 
@@ -54,7 +53,7 @@ public class AdHocConferenceChatContact extends ChatContact<Contact>
     {
         String name = descriptor.getDisplayName();
         if (StringUtils.isEmpty(name))
-            name = aTalkApp.getResString(R.string.unknown_user);
+            name = aTalkApp.getResString(ResourceTable.String_unknown_user);
         return name;
     }
 

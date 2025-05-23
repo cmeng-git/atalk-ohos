@@ -5,22 +5,13 @@
  */
 package org.atalk.ohos.gui.settings.notification;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.TextView;
-
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContract;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import ohos.aafwk.content.Intent;
+import ohos.aafwk.content.Operation;
+import ohos.agp.components.Button;
+import ohos.agp.components.Component;
+import ohos.agp.components.Text;
+import ohos.app.Context;
+import ohos.utils.net.Uri;
 
 import net.java.sip.communicator.plugin.notificationwiring.SoundProperties;
 import net.java.sip.communicator.service.notification.NotificationAction;
@@ -31,11 +22,10 @@ import net.java.sip.communicator.service.notification.event.NotificationActionTy
 import net.java.sip.communicator.service.notification.event.NotificationEventTypeEvent;
 import net.java.sip.communicator.util.ServiceUtils;
 
-import org.atalk.impl.androidresources.AndroidResourceServiceImpl;
-import org.atalk.ohos.BaseActivity;
-import org.atalk.ohos.R;
+import org.atalk.impl.androidresources.AppResourceServiceImpl;
+import org.atalk.ohos.BaseAbility;
 import org.atalk.ohos.gui.AppGUIActivator;
-import org.atalk.ohos.gui.actionbar.ActionBarToggleFragment;
+import org.atalk.ohos.gui.actionbar.ActionBarToggleSlice;
 import org.atalk.ohos.gui.actionbar.ActionBarUtil;
 import org.atalk.service.resources.ResourceManagementService;
 
@@ -46,8 +36,8 @@ import org.atalk.service.resources.ResourceManagementService;
  * @author Pawel Domas
  * @author Eng Chong Meng
  */
-public class NotificationDetails extends BaseActivity
-        implements NotificationChangeListener, ActionBarToggleFragment.ActionBarToggleModel {
+public class NotificationDetails extends BaseAbility
+        implements NotificationChangeListener, ActionBarToggleSlice.ActionBarToggleModel {
     /**
      * Event type extra key
      */
@@ -69,29 +59,29 @@ public class NotificationDetails extends BaseActivity
     private ResourceManagementService rms;
 
     /**
-     * The description <code>View</code>
+     * The description <code>Component.</code>
      */
-    private TextView description;
+    private Text description;
 
     /**
-     * Popup handler checkbox <code>View</code>
+     * Popup handler checkbox <code>Component</code>
      */
-    private CompoundButton popup;
+    private Button popup;
 
     /**
-     * Sound notification handler checkbox <code>View</code>
+     * Sound notification handler checkbox <code>Component.</code>
      */
-    private CompoundButton soundNotification;
+    private Button soundNotification;
 
     /**
-     * Sound playback handler checkbox <code>View</code>
+     * Sound playback handler checkbox <code>Component.</code>
      */
-    private CompoundButton soundPlayback;
+    private Button soundPlayback;
 
     /**
-     * Vibrate handler checkbox <code>View</code>
+     * Vibrate handler checkbox <code>Component.</code>
      */
-    private CompoundButton vibrate;
+    private Button vibrate;
 
     // Sound Descriptor variable
     private Button mSoundDescriptor;
@@ -108,8 +98,8 @@ public class NotificationDetails extends BaseActivity
      * {@inheritDoc}
      */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onStart(Intent intent) {
+        super.onStart(intent);
         this.eventType = getIntent().getStringExtra(EVENT_TYPE_EXTRA);
         if (eventType == null)
             throw new IllegalArgumentException();
@@ -117,16 +107,16 @@ public class NotificationDetails extends BaseActivity
         this.notificationService = ServiceUtils.getService(AppGUIActivator.bundleContext, NotificationService.class);
         this.rms = ServiceUtils.getService(AppGUIActivator.bundleContext, ResourceManagementService.class);
 
-        setContentView(R.layout.notification_details);
-        this.description = findViewById(R.id.description);
-        this.popup = findViewById(R.id.popup);
-        this.soundNotification = findViewById(R.id.soundNotification);
-        this.soundPlayback = findViewById(R.id.soundPlayback);
-        this.vibrate = findViewById(R.id.vibrate);
+        setUIContent(ResourceTable.Layout_notification_details);
+        this.description = findComponentById(ResourceTable.Id_description);
+        this.popup = findComponentById(ResourceTable.Id_popup);
+        this.soundNotification = findComponentById(ResourceTable.Id_soundNotification);
+        this.soundPlayback = findComponentById(ResourceTable.Id_soundPlayback);
+        this.vibrate = findComponentById(ResourceTable.Id_vibrate);
 
-        ActivityResultLauncher<Integer> mPickRingTone = pickRingTone();
-        mSoundDescriptor = findViewById(R.id.sound_descriptor);
-        mSoundDescriptor.setOnClickListener(view -> {
+        AbilityResultLauncher<Integer> mPickRingTone = pickRingTone();
+        mSoundDescriptor = findComponentById(ResourceTable.Id_sound_descriptor);
+        mSoundDescriptor.setClickedListener(view -> {
             // set RingTone picker to show only the relevant notification or ringtone
             if (soundHandler.getLoopInterval() < 0)
                 mPickRingTone.launch(RingtoneManager.TYPE_NOTIFICATION);
@@ -142,7 +132,7 @@ public class NotificationDetails extends BaseActivity
         initSoundNotification();
 
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().add(ActionBarToggleFragment.newInstance(""),
+            getSupportFragmentManager().beginTransaction().add(ActionBarToggleSlice.newInstance(""),
                     "action_bar_toggle").commit();
         }
     }
@@ -159,7 +149,7 @@ public class NotificationDetails extends BaseActivity
             soundDefaultUri = Uri.parse(soundFile);
 
             String descriptor = soundHandler.getDescriptor();
-            if (descriptor.startsWith(AndroidResourceServiceImpl.PROTOCOL)) {
+            if (descriptor.startsWith(AppResourceServiceImpl.PROTOCOL)) {
                 soundDescriptorUri = soundDefaultUri;
                 ringToneTitle = eventTitle;
             }
@@ -174,8 +164,8 @@ public class NotificationDetails extends BaseActivity
      * {@inheritDoc}
      */
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onActive() {
+        super.onActive();
         updateDisplay();
         notificationService.addNotificationChangeListener(this);
     }
@@ -184,8 +174,8 @@ public class NotificationDetails extends BaseActivity
      * {@inheritDoc}
      */
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onInactive() {
+        super.onInactive();
         notificationService.removeNotificationChangeListener(this);
         if (ringTone != null) {
             ringTone.stop();
@@ -221,7 +211,7 @@ public class NotificationDetails extends BaseActivity
             mSoundDescriptor.setText(ringToneTitle);
         }
         else {
-            findViewById(R.id.soundAttributes).setVisibility(View.GONE);
+            findComponentById(ResourceTable.Id_soundAttributes).setVisibility(Component.HIDE);
         }
 
         // Vibrate action
@@ -235,9 +225,9 @@ public class NotificationDetails extends BaseActivity
     /**
      * Fired when popup checkbox is clicked.
      *
-     * @param v popup checkbox <code>View</code>
+     * @param v popup checkbox <code>Component</code>
      */
-    public void onPopupClicked(View v) {
+    public void onPopupClicked(Component v) {
         boolean enabled = ((CompoundButton) v).isChecked();
 
         NotificationAction action
@@ -249,9 +239,9 @@ public class NotificationDetails extends BaseActivity
     /**
      * Fired when sound notification checkbox is clicked.
      *
-     * @param v sound notification checkbox <code>View</code>
+     * @param v sound notification checkbox <code>Component</code>
      */
-    public void onSoundNotificationClicked(View v) {
+    public void onSoundNotificationClicked(Component v) {
         boolean enabled = ((CompoundButton) v).isChecked();
         soundHandler.setSoundNotificationEnabled(enabled);
         notificationService.registerNotificationForEvent(eventType, soundHandler);
@@ -260,9 +250,9 @@ public class NotificationDetails extends BaseActivity
     /**
      * Fired when sound playback checkbox is clicked.
      *
-     * @param v sound playback checkbox <code>View</code>
+     * @param v sound playback checkbox <code>Component</code>
      */
-    public void onSoundPlaybackClicked(View v) {
+    public void onSoundPlaybackClicked(Component v) {
         boolean enabled = ((CompoundButton) v).isChecked();
         soundHandler.setSoundPlaybackEnabled(enabled);
         notificationService.registerNotificationForEvent(eventType, soundHandler);
@@ -271,9 +261,9 @@ public class NotificationDetails extends BaseActivity
     /**
      * Fired when vibrate notification checkbox is clicked.
      *
-     * @param v vibrate notification checkbox <code>View</code>
+     * @param v vibrate notification checkbox <code>Component</code>
      */
-    public void onVibrateClicked(View v) {
+    public void onVibrateClicked(Component v) {
         boolean enabled = ((CompoundButton) v).isChecked();
 
         NotificationAction action
@@ -287,7 +277,7 @@ public class NotificationDetails extends BaseActivity
      *
      * @param v playback view
      */
-    public void onPlayBackClicked(View v) {
+    public void onPlayBackClicked(Component v) {
         if (ringTone == null) {
             ringTone = RingtoneManager.getRingtone(this, soundDescriptorUri);
         }
@@ -301,26 +291,25 @@ public class NotificationDetails extends BaseActivity
     }
 
     /**
-     * PIckRingtone class ActivityResultContract implementation, with ringtoneType of either:
+     * PIckRingtone class AbilityResultContract implementation, with ringtoneType of either:
      * 1. RingtoneManager.TYPE_NOTIFICATION
      * 2. RingtoneManager.TYPE_RINGTONE
      */
-    public class PickRingtone extends ActivityResultContract<Integer, Uri> {
+    public class PickRingtone extends AbilityResultContract<Integer, Uri> {
         @NonNull
         @Override
-        public Intent createIntent(@NonNull Context context, @NonNull Integer ringtoneType) {
+        public Intent createIntent(Context context, Integer ringtoneType) {
             final Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
-            intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, eventTitle);
-
-            intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, ringtoneType);
-            intent.putExtra(RingtoneManager.EXTRA_RINGTONE_DEFAULT_URI, soundDefaultUri);
-            intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, soundDescriptorUri);
+            intent.setParam(RingtoneManager.EXTRA_RINGTONE_TITLE, eventTitle);
+            intent.setParam(RingtoneManager.EXTRA_RINGTONE_TYPE, ringtoneType);
+            intent.setParam(RingtoneManager.EXTRA_RINGTONE_DEFAULT_URI, soundDefaultUri);
+            intent.setParam(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, soundDescriptorUri);
             return intent;
         }
 
         @Override
         public Uri parseResult(int resultCode, @Nullable Intent result) {
-            if (resultCode != Activity.RESULT_OK || result == null) {
+            if (BaseAbility.RESULT_OK !=  resultCode || result == null) {
                 return null;
             }
             return result.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
@@ -330,8 +319,8 @@ public class NotificationDetails extends BaseActivity
     /**
      * Opens a FileChooserDialog to let the user pick attachments
      */
-    private ActivityResultLauncher<Integer> pickRingTone() {
-        return registerForActivityResult(new PickRingtone(), ringToneUri -> {
+    private AbilityResultLauncher<Integer> pickRingTone() {
+        return registerForAbilityResult(new PickRingtone(), ringToneUri -> {
             if (ringToneUri == null) {
                 ringToneUri = soundDefaultUri;
             }
@@ -407,7 +396,7 @@ public class NotificationDetails extends BaseActivity
     /**
      * {@inheritDoc}
      * <p>
-     * If removed event is the one currently displayed, closes the <code>Activity</code>.
+     * If removed event is the one currently displayed, closes the <code>Ability</code>.
      */
     @Override
     public void eventTypeRemoved(NotificationEventTypeEvent event) {
@@ -415,20 +404,26 @@ public class NotificationDetails extends BaseActivity
             return;
 
         // Event no longer exists
-        runOnUiThread(this::finish);
+        runOnUiThread(this::terminateAbility);
     }
 
     /**
-     * Gets the <code>Intent</code> for starting <code>NotificationDetails</code> <code>Activity</code>.
+     * Gets the <code>Intent</code> for starting <code>NotificationDetails</code> <code>Ability</code>.
      *
      * @param ctx the context
      * @param eventType name of the event that will be displayed by <code>NotificationDetails</code>.
      *
-     * @return the <code>Intent</code> for starting <code>NotificationDetails</code> <code>Activity</code>.
+     * @return the <code>Intent</code> for starting <code>NotificationDetails</code> <code>Ability</code>.
      */
     public static Intent getIntent(Context ctx, String eventType) {
-        Intent intent = new Intent(ctx, NotificationDetails.class);
-        intent.putExtra(EVENT_TYPE_EXTRA, eventType);
+        Operation operation = new Intent.OperationBuilder()
+                .withBundleName(ctx.getBundleName())
+                .withAbilityName(NotificationDetails.class)
+                .build();
+
+        Intent intent = new Intent();
+        intent.setParam(EVENT_TYPE_EXTRA, eventType);
+        intent.setOperation(operation);
         return intent;
     }
 

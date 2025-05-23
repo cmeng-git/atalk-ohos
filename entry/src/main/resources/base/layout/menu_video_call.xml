@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:ohos="http://schemas.huawei.com/res/ohos">
+    <!-- Show ZRTP call info -->
+    <item ohos:id="$+id:call_zrtp_info_item"
+          ohos:title="$string:call_info_zrtp"/>
+    <!-- Show call info -->
+    <item ohos:id="$+id:call_info_item"
+          ohos:title="$string:call_info"/>
+    <item ohos:id="$+id:video_resolution"
+          ohos:title="$string:settings_video_resolution">
+        <menu ohos:id="$+id:video_dimension">
+        </menu>
+    </item>
+</menu>

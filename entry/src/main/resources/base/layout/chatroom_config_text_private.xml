@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DirectionalLayout xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:width="match_parent"
+    ohos:height="match_parent"
+    ohos:top_margin="$float:between_padding"
+    ohos:orientation="vertical">
+
+    <Text
+        ohos:id="$+id:cr_attr_label"
+        ohos:text_size="$float:medium_font"
+        ohos:width="match_content"
+        ohos:height="match_content" />
+
+    <DependentLayout
+        ohos:id="$+id:pwdTypingArea"
+        ohos:width="match_content"
+        ohos:height="match_content"
+        ohos:layout_alignment="center"
+        ohos:orientation="horizontal">
+
+        <TextField
+            ohos:id="$+id:passwordField"
+            ohos:background_element="$graphic:bg_text_field"
+            ohos:width="match_parent"
+            ohos:hint="$string:password"
+            ohos:text_input_type="pattern_password" />
+
+        <Checkbox
+            ohos:id="$+id:show_password"
+            ohos:width="match_content"
+            ohos:height="match_content"
+            ohos:align_end="$id:passwordField"
+            ohos:top_margin="10vp"
+            ohos:background_element="$graphic:checkbox_password_view" />
+    </DependentLayout>
+</DirectionalLayout>

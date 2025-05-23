@@ -10,15 +10,16 @@ import static org.jivesoftware.smack.roster.packet.RosterPacket.ItemType.from;
 import static org.jivesoftware.smack.roster.packet.RosterPacket.ItemType.none;
 import static org.jivesoftware.smack.roster.packet.RosterPacket.ItemType.to;
 
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
+
+import ohos.data.rdb.RdbPredicates;
+import ohos.data.rdb.RdbStore;
+import ohos.data.resultset.ResultSet;
 
 import net.java.sip.communicator.impl.protocol.jabber.OperationSetPersistentPresenceJabberImpl.ContactChangesListener;
 import net.java.sip.communicator.service.contactlist.MetaContactGroup;
@@ -477,19 +478,22 @@ public class ServerStoredContactListJabberImpl {
             }
         }
 
-        String[] args = {accountUuid, mcGroupName, contactJid.toString()};
-        SQLiteDatabase mDB = DatabaseBackend.getWritableDB();
-        Cursor cursor = mDB.query(MetaContactGroup.TBL_CHILD_CONTACTS, null,
-                MetaContactGroup.ACCOUNT_UUID + "=? AND " + MetaContactGroup.PROTO_GROUP_UID
-                        + "=? AND " + MetaContactGroup.CONTACT_JID + "=?", args, null, null, null);
-        if (cursor.getCount() > 0) {
-            cursor.close();
+        RdbStore mDB = DatabaseBackend.getRdbStore();
+
+        RdbPredicates rdbPredicates = new RdbPredicates(MetaContactGroup.TBL_CHILD_CONTACTS)
+                .equalTo(MetaContactGroup.ACCOUNT_UUID, accountUuid)
+                .and().equalTo(MetaContactGroup.PROTO_GROUP_UID, mcGroupName)
+                .and().equalTo(MetaContactGroup.CONTACT_JID, contactJid.toString());
+        ResultSet resultSet = mDB.query(rdbPredicates, null);
+
+        if (resultSet.getRowCount() > 0) {
+            resultSet.close();
 
             Timber.w("Contact %s already exists in group %s", contactJid, findContactGroup(contactJid.toString()));
             throw new OperationFailedException("Contact " + contactJid + " already exist",
                     OperationFailedException.SUBSCRIPTION_ALREADY_EXISTS);
         }
-        cursor.close();
+        resultSet.close();
 
         // @see <a href="https://xmpp.org/extensions/xep-0172.html">XEP-0172: User Nickname</a>
         xmppConnection.addPresenceInterceptor(presenceBuilder -> {
@@ -700,9 +704,6 @@ public class ServerStoredContactListJabberImpl {
     void removeContact(ContactJabberImpl contactToRemove)
             throws OperationFailedException {
         // Allow direct removal of any VolatileContactJabberImpl if it is not DomainBareJid
-        // Allow removal of DomainBareJid contact
-        // if (contactToRemove.getJid() instanceof DomainBareJid)
-        //    return;
 
         // aTalk implementation is ContactGroup.VOLATILE_GROUP is equivalent to "VolatileContactJabberImpl"
         if ((contactToRemove instanceof VolatileContactJabberImpl) || ((contactToRemove.getParentContactGroup() != null)

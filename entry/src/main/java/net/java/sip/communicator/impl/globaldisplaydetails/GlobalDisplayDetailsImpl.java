@@ -7,8 +7,6 @@ package net.java.sip.communicator.impl.globaldisplaydetails;
 
 import static org.atalk.ohos.gui.call.CallUIUtils.DEFAULT_PERSONAL_PHOTO;
 
-import android.text.TextUtils;
-
 import net.java.sip.communicator.service.globaldisplaydetails.GlobalDisplayDetailsService;
 import net.java.sip.communicator.service.globaldisplaydetails.event.GlobalAvatarChangeEvent;
 import net.java.sip.communicator.service.globaldisplaydetails.event.GlobalDisplayDetailsListener;
@@ -28,6 +26,7 @@ import net.java.sip.communicator.service.protocol.event.ServerStoredDetailsChang
 import net.java.sip.communicator.util.account.AccountUtils;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.util.TextUtils;
 import org.jivesoftware.smackx.avatar.AvatarManager;
 import org.jxmpp.jid.BareJid;
 import org.jxmpp.jid.EntityBareJid;

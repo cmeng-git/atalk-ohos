@@ -1,6 +1,6 @@
 /*
- * aTalk, android VoIP and Instant Messaging client
- * Copyright 2014 Eng Chong Meng
+ * aTalk, ohos VoIP and Instant Messaging client
+ * Copyright 2024 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,6 @@
 
 package org.atalk.ohos.gui.chat;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 import net.java.sip.communicator.service.protocol.ChatRoom;
 import net.java.sip.communicator.service.protocol.event.ChatStateNotificationEvent;
 
@@ -28,6 +25,9 @@ import org.jivesoftware.smackx.muc.MultiUserChat;
 import org.jxmpp.jid.EntityFullJid;
 import org.jxmpp.jid.Jid;
 import org.jxmpp.jid.parts.Resourcepart;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * The <code>ChatStateNotificationHandler</code> is the class that handles chat state notification
@@ -42,9 +42,9 @@ public class ChatStateNotificationHandler {
      * Informs the user what is the chat state of his chat contacts.
      *
      * @param evt the event containing details on the chat state notification
-     * @param chatFragment the chat parent fragment
+     * @param chatSlice the chat parent fragment
      */
-    public static void handleChatStateNotificationReceived(ChatStateNotificationEvent evt, ChatFragment chatFragment) {
+    public static void handleChatStateNotificationReceived(ChatStateNotificationEvent evt, ChatSlice chatSlice) {
         chatStateTimer.cancel();
         chatStateTimer = new Timer();
 
@@ -52,15 +52,13 @@ public class ChatStateNotificationHandler {
          * If the given event doesn't concern the chat fragment chatDescriptor we have nothing more to do here.
          */
         Object chatDescriptor = evt.getChatDescriptor();
-        if (chatFragment != null) {
-            ChatSession chatSession = chatFragment.getChatPanel().getChatSession();
+        if (chatSlice != null) {
+            ChatSession chatSession = chatSlice.getChatPanel().getChatSession();
             ChatTransport chatTransport = chatSession.getCurrentChatTransport();
             // return if event is not for the chatDescriptor session
-            Object descriptor = chatTransport.getDescriptor();
-            if (!chatDescriptor.equals(descriptor))
+            if ((chatTransport == null) || !chatDescriptor.equals(chatTransport.getDescriptor()))
                 return;
 
-            // ((ChatRoomJabberImpl) chatTransport.getDescriptor()).getIdentifier()
             // return if receive own chat state notification
             if (chatDescriptor instanceof ChatRoom) {
                 Jid entityJid = evt.getMessage().getFrom();
@@ -72,9 +70,9 @@ public class ChatStateNotificationHandler {
                     return;
             }
 
-            if ((chatFragment.getChatListView() != null) && (chatFragment.getChatListAdapter() != null)) {
+            if ((chatSlice.getChatListContainer() != null) && (chatSlice.getChatListAdapter() != null)) {
                 if (evt.getMessage().getBody() != null) {
-                    chatFragment.setChatState(null, null);
+                    chatSlice.setChatState(null, null);
                 }
                 else {
                     EntityFullJid fullFrom = (EntityFullJid) evt.getMessage().getFrom();
@@ -85,8 +83,8 @@ public class ChatStateNotificationHandler {
 
                     // Display current chatState for a 10-seconds duration
                     ChatState chatState = evt.getChatState();
-                    chatFragment.setChatState(chatState, sender);
-                    chatStateTimer.schedule(new ChatTimerTask(chatFragment), 10000);
+                    chatSlice.setChatState(chatState, sender);
+                    chatStateTimer.schedule(new ChatTimerTask(chatSlice), 10000);
                 }
             }
         }
@@ -96,15 +94,15 @@ public class ChatStateNotificationHandler {
      * Clear the chat state display message after display timer expired.
      */
     private static class ChatTimerTask extends TimerTask {
-        private final ChatFragment chatFragment;
+        private final ChatSlice chatSlice;
 
-        public ChatTimerTask(ChatFragment chatFragment) {
-            this.chatFragment = chatFragment;
+        public ChatTimerTask(ChatSlice chatSlice) {
+            this.chatSlice = chatSlice;
         }
 
         @Override
         public void run() {
-            chatFragment.setChatState(null, null);
+            chatSlice.setChatState(null, null);
         }
     }
 }

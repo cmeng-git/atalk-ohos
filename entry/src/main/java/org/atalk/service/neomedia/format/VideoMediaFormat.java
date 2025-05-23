@@ -13,8 +13,7 @@ import java.awt.Dimension;
  *
  * @author Emil Ivov
  */
-public interface VideoMediaFormat extends MediaFormat
-{
+public interface VideoMediaFormat extends MediaFormat {
     /**
      * Returns the size of the image that this <code>VideoMediaFormat</code> describes.
      *

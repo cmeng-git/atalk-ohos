@@ -1,13 +1,20 @@
 /*
- * Jitsi, the OpenSource Java VoIP and Instant Messaging client.
+ * aTalk, ohos VoIP and Instant Messaging client
+ * Copyright 2024 Eng Chong Meng
  *
- * Distributable under LGPL license. See terms of license at gnu.org.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.atalk.ohos.gui.chat.conference;
-
-import android.app.Activity;
-import android.os.Handler;
-import android.os.Looper;
 
 import java.util.Collection;
 import java.util.Date;
@@ -36,7 +43,8 @@ import net.java.sip.communicator.service.protocol.event.MessageReceivedEvent;
 import net.java.sip.communicator.service.protocol.globalstatus.GlobalStatusEnum;
 import net.java.sip.communicator.util.ConfigurationUtils;
 
-import org.atalk.ohos.R;
+import org.atalk.ohos.BaseAbility;
+import org.atalk.ohos.ResourceTable;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.AppGUIActivator;
 import org.atalk.ohos.gui.chat.ChatContact;
@@ -349,7 +357,7 @@ public class ConferenceChatSession extends ChatSession implements ChatRoomMember
      * @param evt the <code>ChatRoomMemberPresenceChangeEvent</code> that notified us
      */
     public void memberPresenceChanged(final ChatRoomMemberPresenceChangeEvent evt) {
-        new Handler(Looper.getMainLooper()).post(() -> {
+        BaseAbility.runOnUiThread(() -> {
             ChatRoom sourceChatRoom = evt.getChatRoom();
             ChatRoom room = chatRoomWrapper.getChatRoom();
             // return if this is not for this chatRoomWrapper session
@@ -381,7 +389,7 @@ public class ConferenceChatSession extends ChatSession implements ChatRoomMember
                  */
                 if (!evt.isReasonUserList()) {
                     statusMessage = aTalkApp.getResString(
-                            R.string.chatroom_user_joined, sourceChatRoom.getName());
+                            ResourceTable.String_chatroom_user_joined, sourceChatRoom.getName());
                     sessionRenderer.updateChatContactStatus(chatContact, statusMessage);
                 }
             }
@@ -391,15 +399,15 @@ public class ConferenceChatSession extends ChatSession implements ChatRoomMember
                 switch (eventType) {
                     case ChatRoomMemberPresenceChangeEvent.MEMBER_LEFT:
                         statusMessage = aTalkApp.getResString(
-                                R.string.chatroom_user_left, sourceChatRoom.getName());
+                                ResourceTable.String_chatroom_user_left, sourceChatRoom.getName());
                         break;
                     case ChatRoomMemberPresenceChangeEvent.MEMBER_KICKED:
                         statusMessage = aTalkApp.getResString(
-                                R.string.chatroom_user_kicked, sourceChatRoom.getName());
+                                ResourceTable.String_chatroom_user_kicked, sourceChatRoom.getName());
                         break;
                     case ChatRoomMemberPresenceChangeEvent.MEMBER_QUIT:
                         statusMessage = aTalkApp.getResString(
-                                R.string.chatroom_user_quit, sourceChatRoom.getName());
+                                ResourceTable.String_chatroom_user_quit, sourceChatRoom.getName());
                         break;
                 }
 
@@ -497,7 +505,7 @@ public class ConferenceChatSession extends ChatSession implements ChatRoomMember
      */
     @Override
     public byte[] getChatAvatar() {
-        return AppImageUtil.getImageBytes(aTalkApp.getInstance(), R.drawable.ic_chatroom);
+        return AppImageUtil.getImageBytes(aTalkApp.getInstance(), ResourceTable.Media_ic_chatroom);
     }
 
     /**
@@ -574,7 +582,7 @@ public class ConferenceChatSession extends ChatSession implements ChatRoomMember
      * <code>ConferenceDescription</code> involved.
      */
     public void conferencePublished(final ChatRoomConferencePublishedEvent evt) {
-        (new Activity()).runOnUiThread(() -> {
+        BaseAbility.runOnUiThread(() -> {
             ChatRoom room = evt.getChatRoom();
             if (!room.equals(chatRoomWrapper.getChatRoom()))
                 return;

@@ -1,6 +1,6 @@
 /*
  * aTalk, android VoIP and Instant Messaging client
- * Copyright 2014 Eng Chong Meng
+ * Copyright 2024 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,26 +16,19 @@
  */
 package org.atalk.crypto.omemo;
 
-import static org.atalk.ohos.R.id.fingerprint;
+import ohos.aafwk.content.Intent;
+import ohos.aafwk.content.Operation;
+import ohos.agp.components.BaseItemProvider;
+import ohos.agp.components.Checkbox;
+import ohos.agp.components.Component;
+import ohos.agp.components.ComponentContainer;
+import ohos.agp.components.LayoutScatter;
+import ohos.agp.components.ListContainer;
+import ohos.app.Context;
 
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.CheckBox;
-import android.widget.ListView;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
-
-import org.atalk.ohos.BaseActivity;
-import org.atalk.ohos.R;
-import org.atalk.ohos.gui.util.ViewUtil;
+import org.atalk.ohos.BaseAbility;
+import org.atalk.ohos.ResourceTable;
+import org.atalk.ohos.util.ComponentUtil;
 import org.atalk.util.CryptoHelper;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smackx.omemo.OmemoManager;
@@ -47,14 +40,21 @@ import org.jivesoftware.smackx.omemo.trust.OmemoFingerprint;
 import org.jivesoftware.smackx.omemo.trust.TrustState;
 import org.jxmpp.jid.BareJid;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
 import timber.log.Timber;
+
+import static org.atalk.ohos.gui.actionbar.ActionBarUtil.setTitle;
 
 /**
  * OMEMO buddy authenticate dialog.
  *
  * @author Eng Chong Meng
  */
-public class OmemoAuthenticateDialog extends BaseActivity {
+public class OmemoAuthenticateDialog extends BaseAbility {
     public final static String Corrupted_OmemoKey = "Corrupted OmemoKey, purge?";
 
     private static OmemoManager mOmemoManager;
@@ -68,11 +68,6 @@ public class OmemoAuthenticateDialog extends BaseActivity {
     private final HashMap<OmemoDevice, Boolean> fingerprintCheck = new HashMap<>();
 
     /**
-     * Fingerprints adapter instance.
-     */
-    private FingerprintListAdapter fpListAdapter;
-
-    /**
      * Creates parametrized <code>Intent</code> of buddy authenticate dialog.
      *
      * @param omemoManager the omemoManager to handle the session.
@@ -81,14 +76,16 @@ public class OmemoAuthenticateDialog extends BaseActivity {
      */
     public static Intent createIntent(Context context, OmemoManager omemoManager, Set<OmemoDevice> omemoDevices,
             AuthenticateListener listener) {
-        Intent intent = new Intent(context, OmemoAuthenticateDialog.class);
-
         mOmemoManager = omemoManager;
         mOmemoDevices = omemoDevices;
         mListener = listener;
 
-        // Started not from Activity
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Intent intent = new Intent();
+        Operation operation = new Intent.OperationBuilder()
+                .withBundleName(context.getBundleName())
+                .withAbilityName(OmemoAuthenticateDialog.class)
+                .build();
+        intent.setOperation(operation);
         return intent;
     }
 
@@ -96,36 +93,41 @@ public class OmemoAuthenticateDialog extends BaseActivity {
      * {@inheritDoc}
      */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onStart(Intent intent) {
+        super.onStart(intent);
         try {
             mOmemoStore = (SQLiteOmemoStore) SignalOmemoService.getInstance().getOmemoStoreBackend();
             // IllegalStateException from the field?
         } catch (IllegalStateException ex) {
-            finish();
+            terminateAbility();
         }
 
-        setContentView(R.layout.omemo_authenticate_dialog);
-        setTitle(R.string.omemo_authbuddy_authenticate_buddy);
+        setUIContent(ResourceTable.Layout_omemo_authenticate_dialog);
+        setTitle(ResourceTable.String_omemo_authbuddy_authenticate_buddy);
 
-        fpListAdapter = new FingerprintListAdapter(getBuddyFingerPrints());
-        ListView fingerprintsList = findViewById(R.id.fp_list);
-        fingerprintsList.setAdapter(fpListAdapter);
+        /**
+         * Fingerprints adapter instance.
+         */
+        FingerprintListProvider fpListAdapter = new FingerprintListProvider(getBuddyFingerPrints());
+        ListContainer fingerprintsList = findComponentById(ResourceTable.Id_fp_list);
+        fingerprintsList.setItemProvider(fpListAdapter);
 
         String localFingerprint = null;
         BareJid userJid = null;
-        // mOmemoManager can never be null from caller??? NPE from FFR: OmemoAuthenticateDialog.onCreate (OmemoAuthenticateDialog.java:122)
+        // mOmemoManager can never be null from caller??? NPE from FFR: OmemoAuthenticateDialog.onStart
+        // (OmemoAuthenticateDialog.java:122)
         // anyway move into try/catch with NullPointerException loop (20220329)
         try {
             userJid = mOmemoManager.getOwnJid();
             localFingerprint = mOmemoManager.getOwnFingerprint().toString();
-        } catch (SmackException.NotLoggedInException | CorruptedOmemoKeyException | IOException | NullPointerException e) {
+        } catch (SmackException.NotLoggedInException | CorruptedOmemoKeyException | IOException |
+                 NullPointerException e) {
             Timber.w("Get own fingerprint exception: %s", e.getMessage());
         }
 
-        View content = findViewById(android.R.id.content);
-        ViewUtil.setTextViewValue(content, R.id.localFingerprintLbl,
-                getString(R.string.omemo_authbuddy_local_fingerprint, userJid,
+        Component content = findComponentById(ResourceTable.Id_content);
+        ComponentUtil.setTextViewValue(content, ResourceTable.Id_localFingerprintLbl,
+                getString(ResourceTable.String_omemo_authbuddy_local_fingerprint, userJid,
                         CryptoHelper.prettifyFingerprint(localFingerprint)));
     }
 
@@ -163,9 +165,9 @@ public class OmemoAuthenticateDialog extends BaseActivity {
     /**
      * Method fired when the ok button is clicked.
      *
-     * @param v ok button's <code>View</code>.
+     * @param v ok button's <code>Component.</code>.
      */
-    public void onOkClicked(View v) {
+    public void onOkClicked(Component v) {
         boolean allTrusted = true;
         String fingerprint;
 
@@ -191,18 +193,18 @@ public class OmemoAuthenticateDialog extends BaseActivity {
         }
         if (mListener != null)
             mListener.onAuthenticate(allTrusted, mOmemoDevices);
-        finish();
+        terminateAbility();
     }
 
     /**
      * Method fired when the cancel button is clicked.
      *
-     * @param v the cancel button's <code>View</code>
+     * @param v the cancel button's <code>Component.</code>
      */
-    public void onCancelClicked(View v) {
+    public void onCancelClicked(Component v) {
         if (mListener != null)
             mListener.onAuthenticate(false, mOmemoDevices);
-        finish();
+        terminateAbility();
     }
 
     // ============== OMEMO Buddy FingerPrints Handlers ================== //
@@ -225,18 +227,18 @@ public class OmemoAuthenticateDialog extends BaseActivity {
     /**
      * Adapter displays fingerprints for given list of <code>Contact</code>s.
      */
-    private class FingerprintListAdapter extends BaseAdapter {
+    private class FingerprintListProvider extends BaseItemProvider {
         /**
          * The list of currently displayed buddy FingerPrints.
          */
         private final Map<OmemoDevice, String> buddyFPs;
 
         /**
-         * Creates a new instance of <code>FingerprintListAdapter</code>.
+         * Creates a new instance of <code>FingerprintListProvider</code>.
          *
          * @param linkedHashMap list of <code>Contact</code> for which OMEMO fingerprints will be displayed.
          */
-        FingerprintListAdapter(Map<OmemoDevice, String> linkedHashMap) {
+        FingerprintListProvider(Map<OmemoDevice, String> linkedHashMap) {
             buddyFPs = linkedHashMap;
         }
 
@@ -268,21 +270,23 @@ public class OmemoAuthenticateDialog extends BaseActivity {
          * {@inheritDoc}
          */
         @Override
-        public View getView(int position, View rowView, ViewGroup parent) {
+        public Component getComponent(int position, Component rowView, ComponentContainer parent) {
             if (rowView == null)
-                rowView = getLayoutInflater().inflate(R.layout.omemo_fingerprint_row, parent, false);
+                rowView = LayoutScatter.getInstance(getContext())
+                        .parse(ResourceTable.Layout_omemo_fingerprint_row, parent, false);
 
             final OmemoDevice device = getOmemoDeviceFromRow(position);
             String remoteFingerprint = getFingerprintFromRow(position);
 
-            ViewUtil.setTextViewValue(rowView, R.id.protocolProvider, device.toString());
-            ViewUtil.setTextViewValue(rowView, fingerprint, CryptoHelper.prettifyFingerprint(remoteFingerprint));
+            ComponentUtil.setTextViewValue(rowView, ResourceTable.Id_protocolProvider, device.toString());
+            ComponentUtil.setTextViewValue(rowView, ResourceTable.Id_fingerprint,
+                    CryptoHelper.prettifyFingerprint(remoteFingerprint));
 
             boolean isVerified = isOmemoFPVerified(device, remoteFingerprint);
-            final CheckBox cb_fingerprint = rowView.findViewById(R.id.fingerprint);
+            final Checkbox cb_fingerprint = rowView.findComponentById(ResourceTable.Id_fingerprint);
             cb_fingerprint.setChecked(isVerified);
 
-            cb_fingerprint.setOnClickListener(v -> fingerprintCheck.put(device, cb_fingerprint.isChecked()));
+            cb_fingerprint.setClickedListener(v -> fingerprintCheck.put(device, cb_fingerprint.isChecked()));
             return rowView;
         }
 

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<DirectionalLayout
+    xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:height="match_parent"
+    ohos:width="match_parent"
+    ohos:orientation="vertical"
+    ohos:padding="$float:screen_padding">
+
+    <Picker
+        ohos:id="$+id:networkSpinner"
+        ohos:bottom_margin="$float:between_padding"
+        ohos:background_element="$media:spinner_dark" />
+
+    <TextField
+        ohos:id="$+id:usernameField"
+        ohos:width="match_parent"
+        ohos:background_element="$graphic:bg_text_field"
+        ohos:bottom_margin="$float:between_padding"
+        ohos:hint="$string:username_hint"
+        ohos:text_input_type="pattern_null"/>
+
+    <DependentLayout
+        ohos:id="$+id:pwdTypingArea"
+        ohos:height="match_content"
+        ohos:width="match_content"
+        ohos:alignment="center"
+        ohos:bottom_margin="$float:between_padding"
+        ohos:orientation="horizontal">
+
+        <TextField
+            ohos:id="$+id:passwordField"
+            ohos:width="match_parent"
+            ohos:background_element="$graphic:bg_text_field"
+            ohos:hint="$string:password"
+            ohos:text_input_type="pattern_password"/>
+
+        <Checkbox
+            ohos:id="$+id:show_password"
+            ohos:height="match_content"
+            ohos:width="match_content"
+            ohos:align_end="$id:passwordField"
+            ohos:element_end="$graphic:checkbox_password_view"
+            ohos:end_margin="5vp"
+            ohos:top_margin="10vp"/>
+    </DependentLayout>
+
+    <Checkbox
+        ohos:id="$+id:store_password"
+        ohos:height="match_content"
+        ohos:width="match_parent"
+        ohos:text="$string:save_password"/>
+
+    <Checkbox
+        ohos:id="$+id:ibRegistration"
+        ohos:height="match_content"
+        ohos:width="match_parent"
+        ohos:text="$string:account_ibr_on_server"/>
+
+    <Checkbox
+        ohos:id="$+id:clientCertEnable"
+        ohos:height="match_content"
+        ohos:width="match_parent"
+        ohos:text="$string:tls_cert"/>
+
+    <Picker
+        ohos:id="$+id:clientCertEntry"
+        ohos:background_element="$media:spinner_dark" />
+
+    <Checkbox
+        ohos:id="$+id:serverOverridden"
+        ohos:height="match_content"
+        ohos:width="match_parent"
+        ohos:text="$string:account_server_override"/>
+
+    <DirectionalLayout
+        ohos:height="match_content"
+        ohos:width="match_parent"
+        ohos:bottom_margin="$float:between_padding"
+        ohos:orientation="horizontal">
+
+        <TextField
+            ohos:id="$+id:serverIpField"
+            ohos:width="0vp"
+            ohos:background_element="$graphic:bg_text_field"
+            ohos:hint="$string:account_server_ip"
+            ohos:text_input_type="pattern_null"
+            ohos:weight="7"/>
+
+        <TextField
+            ohos:id="$+id:serverPortField"
+            ohos:width="0vp"
+            ohos:background_element="$graphic:bg_text_field"
+            ohos:start_margin="$float:between_padding"
+            ohos:text="$string:xmpp_server_port"
+            ohos:text_input_type="pattern_null"
+            ohos:weight="3"/>
+    </DirectionalLayout>
+
+    <Picker
+        ohos:id="$+id:dnssecModeSpinner"
+        ohos:bottom_margin="$float:between_padding"
+        ohos:background_element="$media:spinner_dark" />
+
+    <DirectionalLayout
+        ohos:height="match_content"
+        ohos:width="match_parent"
+        ohos:orientation="horizontal">
+
+        <Button
+            ohos:id="$+id:buttonCancel"
+            ohos:background_element="$graphic:btn_state_action"
+            ohos:text="$string:cancel"/>
+
+        <Button
+            ohos:id="$+id:buttonSignIn"
+            ohos:background_element="$graphic:btn_state_action"
+            ohos:focusable="focus_adaptable"
+            ohos:start_margin="4vp"
+            ohos:text="$string:sign_in"/>
+    </DirectionalLayout>
+</DirectionalLayout>

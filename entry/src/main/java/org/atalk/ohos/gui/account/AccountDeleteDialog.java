@@ -1,6 +1,6 @@
 /*
- * aTalk, android VoIP and Instant Messaging client
- * Copyright 2014~2024 Eng Chong Meng
+ * aTalk, ohos VoIP and Instant Messaging client
+ * Copyright 2024 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,10 @@
  */
 package org.atalk.ohos.gui.account;
 
-import android.content.Context;
-import android.os.Bundle;
-import android.widget.CheckBox;
+import ohos.agp.components.Checkbox;
+import ohos.agp.components.Component;
+import ohos.app.Context;
+import ohos.utils.PacMap;
 
 import net.java.sip.communicator.impl.protocol.jabber.ProtocolProviderServiceJabberImpl;
 import net.java.sip.communicator.service.protocol.AccountID;
@@ -26,10 +27,10 @@ import net.java.sip.communicator.service.protocol.ProtocolProviderFactory;
 import net.java.sip.communicator.util.account.AccountUtils;
 
 import org.atalk.crypto.omemo.SQLiteOmemoStore;
-import org.atalk.ohos.R;
+import org.atalk.ohos.ResourceTable;
 import org.atalk.ohos.gui.AppGUIActivator;
-import org.atalk.ohos.gui.dialogs.CustomDialogCbox;
-import org.atalk.ohos.gui.dialogs.DialogActivity;
+import org.atalk.ohos.gui.dialogs.DialogComponent;
+import org.atalk.ohos.gui.dialogs.DialogH;
 import org.jivesoftware.smackx.omemo.OmemoService;
 
 /**
@@ -41,30 +42,31 @@ import org.jivesoftware.smackx.omemo.OmemoService;
  */
 public class AccountDeleteDialog {
     public static void create(Context ctx, final Account account, final OnAccountRemovedListener listener) {
-        String title = ctx.getString(R.string.remove_account);
+        String title = ctx.getString(ResourceTable.String_remove_account);
+        String message = ctx.getString(ResourceTable.String_remove_account_prompt, account.getAccountID());
+        String cbMessage = ctx.getString(ResourceTable.String_account_delete_on_server);
+        String btnText = ctx.getString(ResourceTable.String_delete);
 
-        String message = ctx.getString(R.string.remove_account_prompt, account.getAccountID());
-        String cbMessage = ctx.getString(R.string.account_delete_on_server);
-        String btnText = ctx.getString(R.string.delete);
-
-        Bundle args = new Bundle();
-        args.putString(CustomDialogCbox.ARG_MESSAGE, message);
-        args.putString(CustomDialogCbox.ARG_CB_MESSAGE, cbMessage);
-        args.putBoolean(CustomDialogCbox.ARG_CB_CHECK, false);
-        args.putBoolean(CustomDialogCbox.ARG_CB_ENABLE, true);
+        PacMap pacMap = new PacMap();
+        pacMap.putString(DialogComponent.ARG_MESSAGE, message);
+        pacMap.putString(DialogComponent.ARG_CB_MESSAGE, cbMessage);
+        pacMap.putBooleanValue(DialogComponent.ARG_CB_CHECK, false);
+        pacMap.putBooleanValue(DialogComponent.ARG_CB_ENABLE, true);
+        Component component = new DialogComponent(ctx, pacMap);
 
         // Displays the history delete dialog and waits for user confirmation
-        DialogActivity.showCustomDialog(ctx, title, CustomDialogCbox.class.getName(), args, btnText,
-                new DialogActivity.DialogListener() {
-                    public boolean onConfirmClicked(DialogActivity dialog) {
-                        CheckBox cbAccountDelete = dialog.findViewById(R.id.cb_option);
+        DialogH.getInstance(ctx).showCustomDialog(ctx, title, component, btnText,
+                new DialogH.DialogListener() {
+                    public boolean onConfirmClicked(DialogH dialog) {
+                        Checkbox cbAccountDelete = component.findComponentById(ResourceTable.Id_cb_option);
                         boolean accountDelete = cbAccountDelete.isChecked();
                         onRemoveClicked(account, accountDelete, listener);
                         return true;
                     }
 
                     @Override
-                    public void onDialogCancelled(DialogActivity dialog) {
+                    public void onDialogCancelled(DialogH dialog) {
+                        dialog.destroy();
                     }
                 }, null);
     }
@@ -80,7 +82,7 @@ public class AccountDeleteDialog {
                 omemoStore.purgeUserOmemoData(accountId);
 
                 // purge persistent storage must happen before removeAccount action
-                AccountsListActivity.removeAccountPersistentStore(accountId);
+                AccountsListAbility.removeAccountPersistentStore(accountId);
 
                 // Delete account on server
                 if (serverAccountDelete) {

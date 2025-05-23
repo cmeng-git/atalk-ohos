@@ -1,6 +1,6 @@
 /*
- * aTalk, android VoIP and Instant Messaging client
- * Copyright 2014 Eng Chong Meng
+ * aTalk, ohos VoIP and Instant Messaging client
+ * Copyright 2024 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,6 @@
  */
 package net.java.sip.communicator.impl.msghistory;
 
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-
-import androidx.annotation.NonNull;
-
 import java.beans.PropertyChangeEvent;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,6 +26,11 @@ import java.util.EventObject;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
+import ohos.data.rdb.RdbPredicates;
+import ohos.data.rdb.RdbStore;
+import ohos.data.rdb.ValuesBucket;
+import ohos.data.resultset.ResultSet;
 
 import net.java.sip.communicator.service.contactlist.MetaContact;
 import net.java.sip.communicator.service.contactlist.event.MetaContactListAdapter;
@@ -71,8 +70,6 @@ import net.java.sip.communicator.service.protocol.event.SubscriptionListener;
 import net.java.sip.communicator.service.protocol.event.SubscriptionMovedEvent;
 
 import org.apache.commons.lang3.StringUtils;
-import org.atalk.ohos.R;
-import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.chat.ChatMessage;
 import org.atalk.persistance.DatabaseBackend;
 import org.atalk.service.configuration.ConfigurationService;
@@ -160,15 +157,15 @@ public class MessageSourceService extends MetaContactListAdapter implements Cont
     private final MessageHistoryServiceImpl messageHistoryService;
 
     // SQLite database variables
-    private final SQLiteDatabase mDB;
-    private final ContentValues contentValues = new ContentValues();
+    private final RdbStore mRdbStore;
+    private final ValuesBucket valuesBucket = new ValuesBucket();
 
     /**
      * Constructs MessageSourceService.
      */
     public MessageSourceService(MessageHistoryServiceImpl messageHistoryService) {
         this.messageHistoryService = messageHistoryService;
-        mDB = DatabaseBackend.getWritableDB();
+        mRdbStore = DatabaseBackend.getRdbStore();
 
         ConfigurationService conf = MessageHistoryActivator.getConfigurationService();
         if (conf.getBoolean(IN_HISTORY_PROPERTY, false)) {
@@ -496,27 +493,20 @@ public class MessageSourceService extends MetaContactListAdapter implements Cont
      */
     private List<String> getRecentContactIDs(String accountUid, Date startDate) {
         List<String> contacts = new ArrayList<>();
-        List<String> argList = new ArrayList<>();
 
+        // Retrieve all the entityJid for the given accountUid and startDate (if not null)
         String[] columns = {ENTITY_JID};
-        String whereCondition = ACCOUNT_UID + "=?";
-        argList.add(accountUid);
-
-        // add startDate if not null as additional search condition
+        RdbPredicates rdbPredicates = new RdbPredicates(MessageSourceService.TABLE_NAME)
+                .equalTo(ACCOUNT_UID, accountUid);
         if (startDate != null) {
-            whereCondition += " AND " + TIME_STAMP + ">=?";
-            argList.add(String.valueOf(startDate.getTime()));
+            rdbPredicates.and().equalTo(TIME_STAMP, startDate.getTime());
         }
-        String[] args = argList.toArray(new String[0]);
+        ResultSet resultSet = mRdbStore.query(rdbPredicates, columns);
 
-        // Retrieve all the entityJid for the given accountUid and startDate
-        Cursor cursor = mDB.query(MessageSourceService.TABLE_NAME, columns,
-                whereCondition, args, null, null, null);
-
-        while (cursor.moveToNext()) {
-            contacts.add(cursor.getString(0));
+        while (resultSet.goToNextRow()) {
+            contacts.add(resultSet.getString(0));
         }
-        cursor.close();
+        resultSet.close();
         return contacts;
     }
 
@@ -526,44 +516,49 @@ public class MessageSourceService extends MetaContactListAdapter implements Cont
      */
     private void saveRecentMessageToHistory(ComparableEvtObj msc) {
         // Keep the record size to within the specified NUMBER_OF_MSGS_IN_HISTORY
-        Cursor cursor = mDB.query(MessageSourceService.TABLE_NAME, null, null, null,
-                null, null, ORDER_DESC);
-        int excess = cursor.getCount() - NUMBER_OF_MSGS_IN_HISTORY;
+        RdbPredicates rdbPredicates = new RdbPredicates(MessageSourceService.TABLE_NAME)
+                .orderByDesc(TIME_STAMP);
+        ResultSet resultSet = mRdbStore.query(rdbPredicates, null);
+
+        int excess = resultSet.getRowCount() - NUMBER_OF_MSGS_IN_HISTORY;
         if (excess > 0) {
-            cursor.move(excess + 12);
-            String[] args = {cursor.getString(cursor.getColumnIndexOrThrow(TIME_STAMP))};
-            int count = mDB.delete(MessageSourceService.TABLE_NAME, TIME_STAMP + "<?", args);
+            resultSet.goTo(excess + 12);
+            int count = mRdbStore.delete(new RdbPredicates(MessageSourceService.TABLE_NAME)
+                    .lessThan(TIME_STAMP, resultSet.getString(resultSet.getColumnIndexForName(TIME_STAMP))));
             Timber.d("No of recent old messages deleted : %s", count);
         }
-        cursor.close();
+        resultSet.close();
 
         Date date = new Date();
         String uuid = String.valueOf(date.getTime()) + Math.abs(date.hashCode());
         String accountUid = msc.getProtocolProviderService().getAccountID().getAccountUid();
 
-        contentValues.clear();
-        contentValues.put(UUID, uuid);
-        contentValues.put(ACCOUNT_UID, accountUid);
-        contentValues.put(ENTITY_JID, msc.getContactAddress());
-        contentValues.put(TIME_STAMP, msc.getTimestamp().getTime());
-        contentValues.put(VERSION, RECENT_MSGS_VER);
+        valuesBucket.clear();
+        valuesBucket.putString(UUID, uuid);
+        valuesBucket.putString(ACCOUNT_UID, accountUid);
+        valuesBucket.putString(ENTITY_JID, msc.getContactAddress());
+        valuesBucket.putLong(TIME_STAMP, msc.getTimestamp().getTime());
+        valuesBucket.putString(VERSION, RECENT_MSGS_VER);
 
-        mDB.insert(MessageSourceService.TABLE_NAME, null, contentValues);
+        mRdbStore.insert(MessageSourceService.TABLE_NAME, valuesBucket);
     }
 
     /**
      * Updates recent message in history.
      */
     private void updateRecentMessageToHistory(ComparableEvtObj msg) {
-        contentValues.clear();
-        contentValues.put(TIME_STAMP, msg.getTimestamp().getTime());
-        contentValues.put(VERSION, RECENT_MSGS_VER);
+        valuesBucket.clear();
+        valuesBucket.putLong(TIME_STAMP, msg.getTimestamp().getTime());
+        valuesBucket.putString(VERSION, RECENT_MSGS_VER);
 
         String accountUid = msg.getProtocolProviderService().getAccountID().getAccountUid();
         String entityJid = msg.getContactAddress();
         String[] args = {accountUid, entityJid};
 
-        mDB.update(MessageSourceService.TABLE_NAME, contentValues, ACCOUNT_UID + "=? AND " + ENTITY_JID + "=?", args);
+        RdbPredicates rdbPredicates = new RdbPredicates(MessageSourceService.TABLE_NAME)
+                .equalTo(ACCOUNT_UID, accountUid)
+                .and().equalTo(ENTITY_JID, entityJid);
+        mRdbStore.update(valuesBucket, rdbPredicates);
     }
 
     // ================ Message events handlers =======================
@@ -812,7 +807,7 @@ public class MessageSourceService extends MetaContactListAdapter implements Cont
      */
     @Override
     public String getDisplayName() {
-        return aTalkApp.getResString(R.string.recent_messages);
+        return aTalkApp.getResString(ResourceTable.String_recent_messages);
     }
 
     /**
@@ -1030,7 +1025,7 @@ public class MessageSourceService extends MetaContactListAdapter implements Cont
          * @return 0, less than zero, greater than zero, if equals, less or greater.
          */
         @Override
-        public int compareTo(@NonNull ComparableEvtObj o) {
+        public int compareTo(ComparableEvtObj o) {
             if (o.getTimestamp() == null)
                 return 1;
 

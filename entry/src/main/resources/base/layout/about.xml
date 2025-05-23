@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<DependentLayout
+    xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:height="match_content"
+    ohos:width="match_parent"
+    ohos:margin="5vp"
+    ohos:orientation="vertical"
+    ohos:divider_lines_enabled="true"
+    ohos:top_padding="10vp">
+
+    <ScrollView
+        ohos:height="match_parent"
+        ohos:width="match_parent"
+        ohos:above="$id:button_Container">
+
+        <DirectionalLayout
+            ohos:height="match_parent"
+            ohos:width="match_parent"
+            ohos:orientation="vertical">
+
+            <DirectionalLayout
+                ohos:height="match_content"
+                ohos:width="match_parent"
+                ohos:layout_alignment="center"
+                ohos:orientation="horizontal">
+
+                <Image
+                    ohos:id="$+id:atalk_link"
+                    ohos:height="match_content"
+                    ohos:width="match_content"
+                    ohos:image_src="$media:ic_icon"
+                    ohos:scale_mode="center"/>
+
+                <DirectionalLayout
+                    ohos:height="match_content"
+                    ohos:width="match_content"
+                    ohos:orientation="vertical">
+
+                    <Text
+                        ohos:height="match_content"
+                        ohos:width="match_parent"
+                        ohos:padding="5vp"
+                        ohos:text="$string:app_name"
+                        ohos:horizontal_center="true"
+                        ohos:text_size="20fp"
+                        ohos:text_weight="1"
+                        ohos:text_font="bold"/>
+
+                    <Text
+                        ohos:id="$+id:AboutDialog_Version"
+                        ohos:height="match_content"
+                        ohos:width="match_parent"
+                        ohos:horizontal_center="true"
+                        ohos:text="$string:version_"
+                        ohos:text_size="$float:large_font"/>
+                </DirectionalLayout>
+            </DirectionalLayout>
+
+            <Text
+                ohos:height="match_content"
+                ohos:width="match_parent"
+                ohos:horizontal_center="true"
+                ohos:padding="5vp"
+                ohos:text="$string:AboutDialog_Copyright"
+                ohos:top_padding="5vp"
+                ohos:text_color="$color:grey"/>
+
+            <Text
+                ohos:id="$+id:atalk_help"
+                ohos:height="match_content"
+                ohos:width="match_parent"
+                ohos:bottom_margin="20vp"
+                ohos:horizontal_center="true"
+                ohos:text="$string:aboutDialog_help"
+                ohos:top_margin="10vp"/>
+
+            <WebView
+                ohos:id="$+id:AboutDialog_Info"
+                ohos:height="match_parent"
+                ohos:width="match_parent"
+                ohos:horizontal_center="true"
+                ohos:text_color="$color:grey"/>
+
+        </DirectionalLayout>
+    </ScrollView>
+
+    <DirectionalLayout
+        ohos:id="$+id:button_Container"
+        ohos:height="match_content"
+        ohos:width="match_parent"
+        ohos:align_parent_bottom="true"
+        ohos:alignment="vertical_center">
+
+        <Button
+            ohos:id="$+id:history_log"
+            ohos:text="$string:show_history_log"
+            ohos:background_element="$graphic:btn_state_action"/>
+
+        <Button
+            ohos:id="$+id:submit_logs"
+            ohos:start_margin="2vp"
+            ohos:text="$string:send_log"
+            ohos:background_element="$graphic:btn_state_action"/>
+
+        <Button
+            ohos:id="$+id:check_new_version"
+            ohos:start_margin="2vp"
+            ohos:text="$string:check_new_version"
+            ohos:visibility="hide"
+            ohos:background_element="$graphic:btn_state_action"/>
+
+        <Button
+            ohos:id="$+id:ok_button"
+            ohos:height="match_parent"
+            ohos:start_margin="2vp"
+            ohos:text="$string:ok"
+            ohos:background_element="$graphic:btn_state_action"/>
+    </DirectionalLayout>
+</DependentLayout>

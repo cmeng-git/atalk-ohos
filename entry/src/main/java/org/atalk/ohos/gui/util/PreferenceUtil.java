@@ -5,11 +5,6 @@
  */
 package org.atalk.ohos.gui.util;
 
-import androidx.preference.CheckBoxPreference;
-import androidx.preference.EditTextPreference;
-import androidx.preference.ListPreference;
-import androidx.preference.PreferenceScreen;
-
 /**
  * Utility class exposing methods to operate on <code>Preference</code> subclasses.
  *

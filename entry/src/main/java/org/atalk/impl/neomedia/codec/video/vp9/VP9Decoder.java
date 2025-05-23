@@ -1,6 +1,6 @@
 /*
- * aTalk, android VoIP and Instant Messaging client
- * Copyright 2014 Eng Chong Meng
+ * aTalk, ohos VoIP and Instant Messaging client
+ * Copyright 2024 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -170,7 +170,7 @@ public class VP9Decoder extends AbstractCodec2
                 //             buf_data, buf_offset, buf_size);
                 // if (frameErrors < 4) {
                 //     Timber.d(new Exception());
-                //     aTalkApp.showToastMessage(R.string.service_gui_CALL_NO_MATCHING_FORMAT_H, VPX.codec_err_to_string(ret));
+                //     aTalkApp.showToastMessage(ResourceTable.String_service_gui_CALL_NO_MATCHING_FORMAT_H, VPX.codec_err_to_string(ret));
                 // }
                 outputBuffer.setDiscard(true);
                 return BUFFER_PROCESSED_OK;

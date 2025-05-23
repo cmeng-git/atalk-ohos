@@ -1,0 +1,15 @@
+<DirectionalLayout xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:id="$+id:statusLayout"
+    ohos:width="match_parent"
+    ohos:height="match_content"
+    ohos:orientation="vertical"
+    ohos:bottom_padding="15vp"
+    ohos:start_padding="10vp"
+    ohos:end_padding="10vp"
+    ohos:top_padding="10vp">
+
+    <ListContainer
+        ohos:id="$+id:attach_optionlist"
+        ohos:width="match_parent"
+        ohos:height="match_parent" />
+</DirectionalLayout>

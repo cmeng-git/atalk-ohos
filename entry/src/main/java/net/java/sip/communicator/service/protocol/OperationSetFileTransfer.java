@@ -25,7 +25,7 @@ public interface OperationSetFileTransfer extends OperationSet
      *
      * @param toContact the contact that should receive the file
      * @param file the file to send
-     * @param chatType ChatFragment.MSGTYPE_OMEMO or MSGTYPE_NORMAL
+     * @param chatType ChatSlice.MSGTYPE_OMEMO or MSGTYPE_NORMAL
      * @param uuid the uuid of the message that trigger the send file request
      *
      * @return the transfer object

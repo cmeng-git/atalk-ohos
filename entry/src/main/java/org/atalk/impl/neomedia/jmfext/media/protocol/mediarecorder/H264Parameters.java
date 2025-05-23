@@ -1,13 +1,23 @@
 /*
- * Jitsi, the OpenSource Java VoIP and Instant Messaging client.
+ * aTalk, ohos VoIP and Instant Messaging client
+ * Copyright 2024 Eng Chong Meng
  *
- * Distributable under LGPL license. See terms of license at gnu.org.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.atalk.impl.neomedia.jmfext.media.protocol.mediarecorder;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.util.Base64;
+import ohos.data.DatabaseHelper;
+import ohos.data.preferences.Preferences;
 
 import org.atalk.ohos.aTalkApp;
 
@@ -21,7 +31,7 @@ import timber.log.Timber;
 
 /**
  * The class finds SPS and PPS parameters in mp4 video file. It is also responsible for caching them
- * in <code>SharedPreferences</code>, so that the parameters are read only once for the device.
+ * in <code>Preferences</code>, so that the parameters are read only once for the device.
  *
  * @author Pawel Domas
  * @author Eng Chong Meng
@@ -293,8 +303,8 @@ public class H264Parameters implements Serializable
      */
     static H264Parameters getStoredParameters(VideoFormat formatUsed)
     {
-        SharedPreferences config = aTalkApp.getInstance().getSharedPreferences(
-                STORE_ID, Context.MODE_PRIVATE);
+        DatabaseHelper dbHelper = new DatabaseHelper(aTalkApp.getInstance());
+        Preferences config = dbHelper.getPreferences(STORE_ID);
 
         // Checks if the video size matches
         String storedSizeStr = config.getString(VIDEO_SIZE_STORE_ID, null);
@@ -318,13 +328,14 @@ public class H264Parameters implements Serializable
     }
 
     /**
-     * Stores given <code>H264Parameters</code> instance using <code>SharedPreferences</code>.
+     * Stores given <code>H264Parameters</code> instance using <code>Preferences</code>.
      *
      * @param params the <code>H264Parameters</code> instance to be stored.
      */
     static void storeParameters(H264Parameters params, VideoFormat formatUsed)
     {
-        SharedPreferences config = aTalkApp.getInstance().getSharedPreferences(STORE_ID, Context.MODE_PRIVATE);
+        DatabaseHelper dbHelper = new DatabaseHelper(aTalkApp.getInstance());
+        Preferences config = dbHelper.getPreferences(STORE_ID);
 
         if (params.seq_parameter_set_rbsp == null || params.pic_parameter_set_rbsp == null) {
             return;
@@ -334,6 +345,6 @@ public class H264Parameters implements Serializable
         String ppsStr = Base64.encodeToString(params.pic_parameter_set_rbsp, Base64.DEFAULT);
         String storeString = spsStr + "," + ppsStr;
 
-        config.edit().putString(STORE_ID, storeString).putString(VIDEO_SIZE_STORE_ID, formatUsed.getSize().toString()).apply();
+        config.putString(STORE_ID, storeString).putString(VIDEO_SIZE_STORE_ID, formatUsed.getSize().toString()).flush();
     }
 }

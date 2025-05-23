@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<DirectionalLayout xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:width="match_parent"
+    ohos:height="match_parent"
+    ohos:alignment="horizontal_center"
+    ohos:orientation="vertical"
+    ohos:padding="$float:screen_padding">
+
+    <Text
+        ohos:id="$+id:accountOwner"
+        ohos:text_size="$float:medium_font"
+        ohos:width="match_parent"
+        ohos:height="match_content"
+        ohos:bottom_margin="$float:between_padding" />
+
+    <Text
+        ohos:id="$+id:Text"
+        ohos:width="match_parent"
+        ohos:height="match_content"
+        ohos:text="$string:contact_rename"
+        ohos:text_size="$float:medium_font"/>
+
+    <TextField
+        ohos:id="$+id:editName"
+        ohos:width="match_parent"
+        ohos:height="match_content"
+        ohos:hint="$string:contact_rename_tooltip" />
+
+</DirectionalLayout>

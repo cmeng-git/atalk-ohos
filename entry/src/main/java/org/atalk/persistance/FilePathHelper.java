@@ -1,6 +1,6 @@
 /*
  * aTalk, android VoIP and Instant Messaging client
- * Copyright 2014 Eng Chong Meng
+ * Copyright 2024 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,25 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.atalk.persistance;
 
-import android.annotation.SuppressLint;
-import android.content.ContentResolver;
-import android.content.ContentUris;
-import android.content.Context;
-import android.database.Cursor;
-import android.net.Uri;
-import android.provider.DocumentsContract;
-import android.provider.MediaStore;
-import android.text.TextUtils;
-
+import org.apache.http.util.TextUtils;
 import org.atalk.ohos.gui.share.Attachment;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+
+import ohos.app.Context;
+import ohos.utils.net.Uri;
 
 import timber.log.Timber;
 
@@ -294,7 +287,6 @@ public class FilePathHelper
     }
 
     /* Return uri represented document file real local path.*/
-    @SuppressLint("Recycle")
     private static String getRealPath(ContentResolver contentResolver, Uri uri, String whereClause)
             throws Exception
     {

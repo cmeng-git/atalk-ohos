@@ -1,6 +1,6 @@
 /*
- * aTalk, android VoIP and Instant Messaging client
- * Copyright 2014 Eng Chong Meng
+ * aTalk, ohos VoIP and Instant Messaging client
+ * Copyright 2024 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,10 @@
  */
 package org.atalk.ohos.gui.chatroomslist;
 
-import android.content.Context;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
+import ohos.agp.components.Component;
+import ohos.agp.components.LayoutScatter;
+import ohos.agp.components.Text;
+import ohos.app.Context;
 
 import net.java.sip.communicator.impl.msghistory.MessageHistoryActivator;
 import net.java.sip.communicator.impl.msghistory.MessageHistoryServiceImpl;
@@ -29,13 +27,12 @@ import net.java.sip.communicator.impl.muc.MUCActivator;
 import net.java.sip.communicator.service.muc.ChatRoomWrapper;
 import net.java.sip.communicator.service.protocol.ChatRoom;
 
-import org.atalk.ohos.BaseFragment;
-import org.atalk.ohos.R;
+import org.atalk.ohos.ResourceTable;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.chat.ChatPanel;
 import org.atalk.ohos.gui.chat.ChatSessionManager;
-import org.atalk.ohos.gui.dialogs.DialogActivity;
-import org.atalk.ohos.gui.util.ViewUtil;
+import org.atalk.ohos.gui.dialogs.DialogH;
+import org.atalk.ohos.util.ComponentUtil;
 import org.jxmpp.jid.EntityBareJid;
 import org.jxmpp.jid.impl.JidCreate;
 import org.jxmpp.stringprep.XmppStringprepException;
@@ -45,24 +42,12 @@ import org.jxmpp.stringprep.XmppStringprepException;
  *
  * @author Eng Chong Meng
  */
-public class ChatRoomDestroyDialog extends BaseFragment {
-    private ChatRoomWrapper chatRoomWrapper;
-    private ChatPanel chatPanel;
+public class ChatRoomDestroyDialog extends Component {
+    private final Context mContext;
+    private final Component mDialog;
+    private final ChatRoomWrapper mChatRoomWrapper;
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.muc_room_destroy_dialog, container, false);
-
-        Bundle bundle = getArguments();
-        String message = bundle.getString(DialogActivity.EXTRA_MESSAGE);
-        TextView msgWarn = view.findViewById(R.id.textAlert);
-        msgWarn.setText(message);
-
-        return view;
-    }
+    private final ChatPanel mChatPanel;
 
     /**
      * Create chatRoom destroy dialog
@@ -71,56 +56,62 @@ public class ChatRoomDestroyDialog extends BaseFragment {
      * @param crWrapper chatRoom wrapper
      * @param cPanel the chatPanel to send message
      */
-    public void show(Context context, ChatRoomWrapper crWrapper, ChatPanel cPanel) {
-        chatRoomWrapper = crWrapper;
-        chatPanel = cPanel;
+    public ChatRoomDestroyDialog(Context context, ChatRoomWrapper crWrapper, ChatPanel cPanel) {
+        super(context);
 
-        String msgWarn = context.getString(R.string.chatroom_destroy_prompt,
-                chatRoomWrapper.getUser(), chatRoomWrapper.getChatRoomID());
-        Bundle fragmentBundle = new Bundle();
-        fragmentBundle.putString(DialogActivity.EXTRA_MESSAGE, msgWarn);
+        mContext = context;
+        mChatRoomWrapper = crWrapper;
+        mChatPanel = cPanel;
 
-        DialogActivity.showCustomDialog(context,
-                context.getString(R.string.chatroom_destroy_title),
-                ChatRoomDestroyDialog.class.getName(), fragmentBundle,
-                context.getString(R.string.remove),
+        LayoutScatter inflater = LayoutScatter.getInstance(getContext());
+        mDialog = inflater.parse(ResourceTable.Layout_muc_room_destroy_dialog, null, false);
+
+        String message = context.getString(ResourceTable.String_chatroom_destroy_prompt,
+                crWrapper.getUser(), crWrapper.getChatRoomID());
+        Text msgWarn = mDialog.findComponentById(ResourceTable.Id_textAlert);
+        msgWarn.setText(message);
+    }
+
+    public void show() {
+        DialogH.getInstance(mContext).showCustomDialog(mContext, mContext.getString(ResourceTable.String_chatroom_destroy_title),
+                mDialog, mContext.getString(ResourceTable.String_remove),
                 new DialogListenerImpl(), null);
     }
 
     /**
-     * Implements <code>DialogActivity.DialogListener</code> interface and handles refresh stores process.
+     * Implements <code>DialogH.DialogListener</code> interface and handles refresh stores process.
      */
-    public class DialogListenerImpl implements DialogActivity.DialogListener {
+    public class DialogListenerImpl implements DialogH.DialogListener {
         @Override
-        public boolean onConfirmClicked(DialogActivity dialog) {
-            View view = dialog.getContentFragment().getView();
-            String reason = ViewUtil.toString(view.findViewById(R.id.ReasonDestroy));
-            String venue = ViewUtil.toString(view.findViewById(R.id.VenueAlternate));
+        public boolean onConfirmClicked(DialogH dialog) {
+            String reason = ComponentUtil.toString(mDialog.findComponentById(ResourceTable.Id_ReasonDestroy));
+            String venue = ComponentUtil.toString(mDialog.findComponentById(ResourceTable.Id_VenueAlternate));
 
             EntityBareJid entityBareJid = null;
             if (venue != null) {
                 try {
                     entityBareJid = JidCreate.entityBareFrom(venue);
                 } catch (XmppStringprepException ex) {
-                    aTalkApp.showToastMessage(R.string.invalid_address, venue);
+                    aTalkApp.showToastMessage(ResourceTable.String_invalid_address, venue);
                     return false;
                 }
             }
 
             // When a room is destroyed, purge all the chat messages and room chat session from the database.
-            ChatRoom chatRoom = chatRoomWrapper.getChatRoom();
+            ChatRoom chatRoom = mChatRoomWrapper.getChatRoom();
             MessageHistoryServiceImpl MHS = MessageHistoryActivator.getMessageHistoryService();
             MHS.eraseLocallyStoredChatHistory(chatRoom, null);
 
-            MUCActivator.getMUCService().destroyChatRoom(chatRoomWrapper, reason, entityBareJid);
-            if (chatPanel != null) {
-                ChatSessionManager.removeActiveChat(chatPanel);
+            MUCActivator.getMUCService().destroyChatRoom(mChatRoomWrapper, reason, entityBareJid);
+            if (mChatPanel != null) {
+                ChatSessionManager.removeActiveChat(mChatPanel);
             }
             return true;
         }
 
         @Override
-        public void onDialogCancelled(DialogActivity dialog) {
+        public void onDialogCancelled(DialogH dialog) {
+            dialog.destroy();
         }
     }
 }

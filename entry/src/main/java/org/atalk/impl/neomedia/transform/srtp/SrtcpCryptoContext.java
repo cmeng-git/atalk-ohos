@@ -37,16 +37,14 @@ import timber.log.Timber;
  * be multiple SRTCP sources in one SRTP session. And each SRTCP stream has a
  * corresponding SrtcpCryptoContext object, identified by sender SSRC. In this way,
  * different sources can be protected independently.
- *
+ * <p>
  * SrtcpCryptoContext class acts as a manager class and maintains all the
  * information used in SRTCP transformation. It is responsible for deriving
  * encryption/salting/authentication keys from master keys. And it will invoke
  * certain class to encrypt/decrypt (transform/reverse transform) RTCP packets.
  * It will hold a replay check db and do replay check against incoming packets.
- *
- * Refer to section 3.2 in RFC3711 for detailed description of cryptographic
- * context.
- *
+ * <p>
+ * Refer to section 3.2 in RFC3711 for detailed description of cryptographic context.
  * Cryptographic related parameters, i.e. encryption mode / authentication mode,
  * master encryption key and master salt key are determined outside the scope of
  * SRTP implementation. They can be assigned manually, or can be assigned

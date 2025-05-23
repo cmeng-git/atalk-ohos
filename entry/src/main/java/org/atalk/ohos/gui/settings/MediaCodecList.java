@@ -1,30 +1,40 @@
 /*
- * Jitsi, the OpenSource Java VoIP and Instant Messaging client.
+ * aTalk, ohos VoIP and Instant Messaging client
+ * Copyright 2024 Eng Chong Meng
  *
- * Distributable under LGPL license. See terms of license at gnu.org.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.atalk.ohos.gui.settings;
 
-import android.content.res.Resources;
-import android.os.Bundle;
-import android.util.TypedValue;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
-
-import java.util.ArrayList;
+import ohos.aafwk.content.Intent;
+import ohos.agp.components.BaseItemProvider;
+import ohos.agp.components.Component;
+import ohos.agp.components.ComponentContainer;
+import ohos.agp.components.LayoutScatter;
+import ohos.agp.components.ListContainer;
+import ohos.agp.components.Text;
+import ohos.agp.utils.Color;
 
 import org.atalk.impl.neomedia.codec.video.CodecInfo;
-import org.atalk.ohos.BaseActivity;
-import org.atalk.ohos.R;
+import org.atalk.ohos.BaseAbility;
+import org.atalk.ohos.ResourceTable;
 import org.atalk.ohos.gui.util.ThemeHelper;
 import org.atalk.ohos.gui.util.ThemeHelper.Theme;
 
+import java.util.ArrayList;
+
 /**
- * Activity that lists video <code>MediaCodec</code>s available in the system.
+ * Ability that lists video <code>Codec</code>s available in the system.
  * <p>
  * Meaning of the colors:</br><br/>
  * * blue - codec will be used in call<br/>
@@ -35,34 +45,33 @@ import org.atalk.ohos.gui.util.ThemeHelper.Theme;
  * Click on codec to toggle it's banned state. Changes are not persistent between
  * aTalk restarts so restarting aTalk restores default values.
  *
- * @author Pawel Domas
  * @author Eng Chong Meng
  */
-public class MediaCodecList extends BaseActivity implements AdapterView.OnItemClickListener {
+public class MediaCodecList extends BaseAbility implements ListContainer.ItemClickedListener {
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.list_layout);
+    protected void onStart(Intent intent) {
+        super.onStart(intent);
+        setUIContent(ResourceTable.Layout_list_layout);
 
-        ListView list = findViewById(R.id.list);
-        list.setAdapter(new MediaCodecAdapter());
-        list.setOnItemClickListener(this);
+        ListContainer list = findComponentById(ResourceTable.Id_list);
+        list.setItemProvider(new MediaCodecProvider());
+        list.setItemClickedListener(this);
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        MediaCodecAdapter adapter = (MediaCodecAdapter) parent.getAdapter();
+    public void onItemClicked(ListContainer parent, Component component, int position, long id) {
+        MediaCodecProvider adapter = (MediaCodecProvider) parent.getItemProvider();
         CodecInfo codec = (CodecInfo) adapter.getItem(position);
 
         // Toggle codec banned state
         codec.setBanned(!codec.isBanned());
-        adapter.notifyDataSetChanged();
+        adapter.notifyDataChanged();
     }
 
-    class MediaCodecAdapter extends BaseAdapter {
+    class MediaCodecProvider extends BaseItemProvider {
         private final ArrayList<CodecInfo> codecs;
 
-        MediaCodecAdapter() {
+        MediaCodecProvider() {
             codecs = new ArrayList<>(CodecInfo.getSupportedCodecs());
         }
 
@@ -82,27 +91,25 @@ public class MediaCodecList extends BaseActivity implements AdapterView.OnItemCl
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            TextView row = (TextView) convertView;
+        public Component getComponent(int position, Component convertView, ComponentContainer parent) {
+            Text row = (Text) convertView;
             if (row == null) {
-                row = (TextView) getLayoutInflater().inflate(android.R.layout.simple_list_item_1, parent, false);
+                row = (Text) LayoutScatter.getInstance(getContext()).parse(ResourceTable.Layout_simple_list_item, parent, false);
             }
 
-            row.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+            row.setTextSize(15, Text.TextSizeType.PX);
             CodecInfo codec = codecs.get(position);
             String codecStr = codec.toString();
             row.setText(codecStr);
 
-            Resources res = getResources();
-            int color = codec.isBanned() ? R.color.grey500 : R.color.textColorWhite;
+            int color = codec.isBanned() ? ResourceTable.Color_grey500 : ResourceTable.Color_textColorWhite;
             if (ThemeHelper.isAppTheme(Theme.LIGHT)) {
-                color = codec.isBanned() ? R.color.grey500 : R.color.textColorBlack;
+                color = codec.isBanned() ? ResourceTable.Color_grey500 : ResourceTable.Color_textColorBlack;
             }
-
             if (codec.isNominated()) {
-                color = R.color.blue;
+                color = ResourceTable.Color_blue;
             }
-            row.setTextColor(res.getColor(color, null));
+            row.setTextColor(new Color(getColor(color)));
             return row;
         }
     }

@@ -35,10 +35,10 @@ public class Constants
     public static final String AMR_WB_RTP = AMR_WB + _RTP;
 
     /**
-     * The Android Surface constant. It is used as VideoFormat pseudo encoding in which case the
+     * The OHOS Surface constant. It is used as VideoFormat pseudo encoding in which case the
      * object is passed through the buffers instead of byte array (image) for example.
      */
-    public static final String ANDROID_SURFACE = "android_surface";
+    public static final String OHOS_SURFACE = "ohos_surface";
 
     /**
      * The list of well-known sample rates of audio data used throughout neomedia.

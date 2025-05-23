@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<DirectionalLayout
+    xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:height="match_parent"
+    ohos:width="match_parent"
+    ohos:orientation="vertical"
+    ohos:padding="$float:screen_padding">
+
+    <Text
+        ohos:id="$+id:reason_label"
+        ohos:height="match_content"
+        ohos:width="match_content"
+        ohos:text="$string:reason"
+        ohos:text_size="$float:medium_font"/>
+
+    <Text
+        ohos:id="$+id:reason_field"
+        ohos:background_element="$graphic:bg_text"
+        ohos:bottom_margin="$float:between_padding"
+        ohos:text_input_type="pattern_text_web_email_address"/>
+
+    <Image
+        ohos:id="$+id:captcha"
+        ohos:height="match_content"
+        ohos:width="match_content"
+        ohos:image_src="$media:captcha"
+        ohos:scale_mode="center"/>
+
+    <TextField
+        ohos:id="$+id:input"
+        ohos:height="match_content"
+        ohos:width="match_parent"
+        ohos:hint="$string:captcha_ibr_hint"
+        ohos:text_input_type="pattern_null"
+        ohos:top_margin="8vp"/>
+
+</DirectionalLayout>

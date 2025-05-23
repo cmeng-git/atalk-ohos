@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DirectionalLayout xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:width="match_parent"
+    ohos:height="match_parent"
+    ohos:background_element="$color:background_light"
+    ohos:orientation="vertical"
+    ohos:padding="$float:screen_padding_small">
+
+    <DirectionalLayout
+        ohos:width="match_parent"
+        ohos:height="match_content"
+        ohos:horizontal_center="true"
+        ohos:align_baseline="false"
+        ohos:orientation="horizontal">
+
+        <Text
+            ohos:id="$+id:text_reason_title"
+            ohos:width="match_content"
+            ohos:height="match_content"
+            ohos:text_alignment="vertical_center"
+            ohos:start_margin="5vp"
+            ohos:text="$string:invite_reason"
+            ohos:text_color="$color:black"
+            ohos:text_size="14fp"
+            ohos:text_weight="$float:text_bold" />
+
+        <TextField
+            ohos:id="$+id:text_reason"
+            ohos:width="match_parent"
+            ohos:height="match_content"
+            ohos:text_alignment="vertical_center"
+            ohos:max_text_lines="1"
+            ohos:text="$string:invite_group_chat"
+            ohos:text_color="$color:black"
+            ohos:text_size="14fp" />
+    </DirectionalLayout>
+
+    <DirectionalLayout
+        ohos:width="match_parent"
+        ohos:height="3vp"
+        ohos:bottom_margin="5vp"
+        ohos:background_element="$color:contact_list_divider" />
+
+    <ListContainer
+        ohos:id="$+id:ContactListContainer"
+        ohos:width="match_parent"
+        ohos:height="0vp"
+        ohos:weight="1" />
+
+    <DirectionalLayout
+        ohos:width="match_parent"
+        ohos:height="3vp"
+        ohos:top_margin="5vp"
+        ohos:background_element="$color:contact_list_divider" />
+
+    <DirectionalLayout
+        ohos:width="match_parent"
+        ohos:height="match_content"
+        ohos:horizontal_center="true"
+        ohos:align_baseline="false"
+        ohos:orientation="horizontal">
+
+        <Button
+            ohos:id="$+id:buttonCancel"
+            ohos:background_element="$graphic:btn_state_action"
+            ohos:enabled="true"
+            ohos:text="$string:cancel" />
+
+        <Component
+            ohos:id="$+id:centerShim"
+            ohos:width="0vp"
+            ohos:height="0vp"
+            ohos:margin="2vp"
+            ohos:visibility="invisible" />
+
+        <Button
+            ohos:id="$+id:button_invite"
+            ohos:background_element="$graphic:btn_state_action"
+            ohos:enabled="false"
+            ohos:text="$string:invite" />
+    </DirectionalLayout>
+
+</DirectionalLayout>

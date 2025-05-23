@@ -1,40 +1,42 @@
 /*
- * Jitsi, the OpenSource Java VoIP and Instant Messaging client.
+ * aTalk, ohos VoIP and Instant Messaging client
+ * Copyright 2024 Eng Chong Meng
  *
- * Distributable under LGPL license. See terms of license at gnu.org.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.atalk.ohos.gui.call;
 
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.SeekBar;
-
-import androidx.annotation.Nullable;
+import ohos.agp.components.Component;
+import ohos.agp.components.LayoutScatter;
+import ohos.agp.components.ProgressBar;
+import ohos.agp.components.Slider;
+import ohos.agp.window.dialog.CommonDialog;
+import ohos.app.Context;
 
 import org.atalk.impl.neomedia.MediaServiceImpl;
 import org.atalk.impl.neomedia.NeomediaActivator;
-import org.atalk.ohos.R;
-import org.atalk.ohos.gui.dialogs.BaseDialogFragment;
+import org.atalk.ohos.ResourceTable;
 import org.atalk.service.neomedia.VolumeControl;
 import org.atalk.service.neomedia.event.VolumeChangeEvent;
 import org.atalk.service.neomedia.event.VolumeChangeListener;
 
 /**
- * The dialog allows user to manipulate input or output volume gain level. To specify which one will be manipulated by
- * current instance the {@link #ARG_DIRECTION} should be specified with one of direction values:
- * {@link #DIRECTION_INPUT} or {@link #DIRECTION_OUTPUT}. Static factory methods are convenient for creating
- * parametrized dialogs.
+ * The dialog allows user to manipulate input or output volume gain level. To specify which one will be
+ * manipulated by current instance the DIRECTION_XX should be specified with one of direction values.
  *
- * @author Pawel Domas
+ * @author Eng Chong Meng
  */
-public class VolumeControlDialog extends BaseDialogFragment implements VolumeChangeListener, SeekBar.OnSeekBarChangeListener {
-    /**
-     * The argument specifies whether output or input volume gain will be manipulated by this dialog.
-     */
-    public static final String ARG_DIRECTION = "ARG_DIRECTION";
-
+public class VolumeControlDialog extends CommonDialog implements VolumeChangeListener, Slider.ValueChangedListener {
     /**
      * The direction argument value for output volume gain.
      */
@@ -48,103 +50,71 @@ public class VolumeControlDialog extends BaseDialogFragment implements VolumeCha
     /**
      * Abstract volume control used by this dialog.
      */
-    private VolumeControl volumeControl;
+    private final VolumeControl volumeControl;
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        MediaServiceImpl mediaService = NeomediaActivator.getMediaServiceImpl();
+    private final Slider volumeSlider;
+
+    public VolumeControlDialog(Context context, int direction) {
+        super(context);
+        LayoutScatter inflater = LayoutScatter.getInstance(context);
+        Component content = inflater.parse(ResourceTable.Layout_volume_control, null, false);
+
+        volumeSlider = content.findComponentById(ResourceTable.Id_seekBar);
+        volumeSlider.setValueChangedListener(this);
 
         // Selects input or output volume control based on the arguments.
-        int direction = getArguments().getInt(ARG_DIRECTION, 0);
+        int titleStrId = -1;
+        MediaServiceImpl mediaService = NeomediaActivator.getMediaServiceImpl();
         if (direction == DIRECTION_OUTPUT) {
-            this.volumeControl = mediaService.getOutputVolumeControl();
+            titleStrId = ResourceTable.String_volume_control_title;
+            volumeControl = mediaService.getOutputVolumeControl();
         }
         else if (direction == DIRECTION_INPUT) {
-            this.volumeControl = mediaService.getInputVolumeControl();
+            titleStrId = ResourceTable.String_mic_control_title;
+            volumeControl = mediaService.getInputVolumeControl();
         }
         else {
             throw new IllegalArgumentException();
         }
+
+        setTitleText(context.getString(titleStrId));
+        setContentCustomComponent(content);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public void onResume() {
-        super.onResume();
-
+    protected void onShow() {
+        super.onShow();
         volumeControl.addVolumeChangeListener(this);
 
-        SeekBar bar = getVolumeBar();
         // Initialize volume bar
-        int progress = getVolumeBarProgress(bar, volumeControl.getVolume());
-        bar.setProgress(progress);
+        int progress = getVolumeBarProgress(volumeSlider, volumeControl.getVolume());
+        volumeSlider.setProgressValue(progress);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public void onPause() {
-        super.onPause();
-
+    protected void onDestroy() {
+        super.onDestroy();
         volumeControl.removeVolumeChangeListener(this);
     }
 
     /**
      * {@inheritDoc}
      */
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View content = inflater.inflate(R.layout.volume_control, container, false);
-
-        SeekBar bar = content.findViewById(R.id.seekBar);
-        bar.setOnSeekBarChangeListener(this);
-
-        int titleStrId = R.string.volume_control_title;
-        if (getArguments().getInt(ARG_DIRECTION) == DIRECTION_INPUT) {
-            titleStrId = R.string.mic_control_title;
-        }
-        getDialog().setTitle(titleStrId);
-
-        return content;
-    }
-
-    /**
-     * Returns the <code>SeekBar</code> used to control the volume.
-     *
-     * @return the <code>SeekBar</code> used to control the volume.
-     */
-    private SeekBar getVolumeBar() {
-        return (SeekBar) getView().findViewById(R.id.seekBar);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public void volumeChange(VolumeChangeEvent volumeChangeEvent) {
-        SeekBar seekBar = getVolumeBar();
-
-        int progress = getVolumeBarProgress(seekBar, volumeChangeEvent.getLevel());
-        seekBar.setProgress(progress);
+        int progress = getVolumeBarProgress(volumeSlider, volumeChangeEvent.getLevel());
+        volumeSlider.setProgressValue(progress);
     }
 
     /**
-     * Calculates the progress value suitable for given <code>SeekBar</code> from the device volume level.
+     * Calculates the progress value suitable for given <code>Slider</code> from the device volume level.
      *
-     * @param volumeBar the <code>SeekBar</code> for which the progress value will be calculated.
-     * @param volLevel actual volume level from <code>VolumeControl</code>. Value <code>-1.0</code> means the level is invalid and
-     * default progress value should be provided.
+     * @param volumeBar the <code>Slider</code> for which the progress value will be calculated.
+     * @param volLevel actual volume level from <code>VolumeControl</code>. Value <code>-1.0</code> means
+	 * the level is invalid and default progress value should be provided.
      *
-     * @return the progress value calculated from given volume level that will be suitable for specified
-     * <code>SeekBar</code>.
+     * @return the progress value calculated from given volume level that will be suitable for specified <code>Slider</code>.
      */
-    private int getVolumeBarProgress(SeekBar volumeBar, float volLevel) {
+    private int getVolumeBarProgress(ProgressBar volumeBar, float volLevel) {
         if (volLevel == -1.0) {
             // If the volume is invalid position at the middle
             volLevel = getVolumeCtrlRange() / 2;
@@ -166,7 +136,7 @@ public class VolumeControlDialog extends BaseDialogFragment implements VolumeCha
     /**
      * {@inheritDoc}
      */
-    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+    public void onProgressUpdated(Slider seekBar, int progress, boolean fromUser) {
         if (!fromUser)
             return;
 
@@ -177,44 +147,12 @@ public class VolumeControlDialog extends BaseDialogFragment implements VolumeCha
     /**
      * {@inheritDoc}
      */
-    public void onStartTrackingTouch(SeekBar seekBar) {
-
+    public void onTouchStart(Slider seekBar) {
     }
 
     /**
      * {@inheritDoc}
      */
-    public void onStopTrackingTouch(SeekBar seekBar) {
-
-    }
-
-    /**
-     * Creates the <code>VolumeControlDialog</code> that can be used to control output volume gain level.
-     *
-     * @return the <code>VolumeControlDialog</code> for output volume gain level.
-     */
-    static public VolumeControlDialog createOutputVolCtrlDialog() {
-        VolumeControlDialog dialog = new VolumeControlDialog();
-
-        Bundle args = new Bundle();
-        args.putInt(ARG_DIRECTION, DIRECTION_OUTPUT);
-        dialog.setArguments(args);
-
-        return dialog;
-    }
-
-    /**
-     * Creates the <code>VolumeControlDialog</code> for controlling microphone gain level.
-     *
-     * @return the <code>VolumeControlDialog</code> that can be used to set microphone gain level.
-     */
-    static public VolumeControlDialog createInputVolCtrlDialog() {
-        VolumeControlDialog dialog = new VolumeControlDialog();
-
-        Bundle args = new Bundle();
-        args.putInt(ARG_DIRECTION, DIRECTION_INPUT);
-        dialog.setArguments(args);
-
-        return dialog;
+    public void onTouchEnd(Slider seekBar) {
     }
 }

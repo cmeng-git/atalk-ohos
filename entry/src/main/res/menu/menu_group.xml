@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:ohos="http://schemas.huawei.com/res/ohos">
+    <item ohos:id="$+id:remove_group"
+          ohos:title="$string:remove_group">
+    </item>
+</menu>

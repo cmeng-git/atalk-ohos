@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DirectionalLayout
+    xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:id="$+id:shareView"
+    ohos:height="match_parent"
+    ohos:width="match_parent"
+    ohos:align_baseline="false"
+    ohos:background_element="$color:color_bg_share"
+    ohos:orientation="vertical">
+
+    <PageSlider
+        ohos:id="$+id:sharePageSlider"
+        ohos:height="0vp"
+        ohos:width="match_parent"
+        ohos:bottom_padding="3vp"
+        ohos:end_padding="0vp"
+        ohos:start_padding="3vp"
+        ohos:weight="1"/>
+
+</DirectionalLayout>

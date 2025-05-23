@@ -34,19 +34,18 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-public class Base64
-{
+public class Base64 {
     private static final Base64Encoder encoder = new Base64Encoder();
 
     /**
      * encode the input data producing a base 64 encoded byte array.
      *
      * @param data the byte array to encode
+     *
      * @return a byte array containing the base 64 encoded data.
      */
     public static byte[] encode(
-            byte[] data)
-    {
+            byte[] data) {
         ByteArrayOutputStream bOut = new ByteArrayOutputStream();
 
         try {
@@ -63,12 +62,13 @@ public class Base64
      *
      * @param data the byte array to encode
      * @param out the output stream where the result is to be written.
+     *
      * @return the number of bytes produced.
+     *
      * @throws IOException if the output stream throws one
      */
     public static int encode(byte[] data, OutputStream out)
-            throws IOException
-    {
+            throws IOException {
         return encoder.encode(data, 0, data.length, out);
     }
 
@@ -79,12 +79,13 @@ public class Base64
      * @param off offset
      * @param length length
      * @param out OutputStream
+     *
      * @return the number of bytes produced.
+     *
      * @throws IOException
      */
     public static int encode(byte[] data, int off, int length, OutputStream out)
-            throws IOException
-    {
+            throws IOException {
         return encoder.encode(data, off, length, out);
     }
 
@@ -92,10 +93,10 @@ public class Base64
      * decode the base 64 encoded input data. It is assumed the input data is valid.
      *
      * @param data the byte array to encode
+     *
      * @return a byte array representing the decoded data.
      */
-    public static byte[] decode(byte[] data)
-    {
+    public static byte[] decode(byte[] data) {
         ByteArrayOutputStream bOut = new ByteArrayOutputStream();
         try {
             encoder.decode(data, 0, data.length, bOut);
@@ -109,10 +110,10 @@ public class Base64
      * decode the base 64 encoded String data - whitespace will be ignored.
      *
      * @param data the byte array to encode
+     *
      * @return a byte array representing the decoded data.
      */
-    public static byte[] decode(String data)
-    {
+    public static byte[] decode(String data) {
         ByteArrayOutputStream bOut = new ByteArrayOutputStream();
         try {
             encoder.decode(data, bOut);
@@ -128,26 +129,25 @@ public class Base64
      *
      * @param data the data to decode
      * @param out OutputStream
+     *
      * @return the number of bytes produced.
+     *
      * @throws IOException if an exception occurs while writing to the specified output stream
      */
     public static int decode(
             String data,
             OutputStream out)
-            throws IOException
-    {
+            throws IOException {
         return encoder.decode(data, out);
     }
 
     /**
      * Prevents the initialization of <code>Base64</code> instances.
      */
-    private Base64()
-    {
+    private Base64() {
     }
 
-    public static class Base64Encoder
-    {
+    public static class Base64Encoder {
         protected final byte[] encodingTable =
                 {
                         (byte) 'A', (byte) 'B', (byte) 'C', (byte) 'D', (byte) 'E', (byte) 'F', (byte) 'G',
@@ -171,15 +171,13 @@ public class Base64
          */
         protected final byte[] decodingTable = new byte[128];
 
-        protected void initialiseDecodingTable()
-        {
+        protected void initialiseDecodingTable() {
             for (int i = 0; i < encodingTable.length; i++) {
                 decodingTable[encodingTable[i]] = (byte) i;
             }
         }
 
-        public Base64Encoder()
-        {
+        public Base64Encoder() {
             initialiseDecodingTable();
         }
 
@@ -190,11 +188,12 @@ public class Base64
          * @param off offset
          * @param length length
          * @param out OutputStream
+         *
          * @return the number of bytes produced.
+         *
          * @throws IOException if an exception occurs while writing to the stream.
          */
-        public int encode(byte[] data, int off, int length, OutputStream out) throws IOException
-        {
+        public int encode(byte[] data, int off, int length, OutputStream out) throws IOException {
             int modulus = length % 3;
             int dataLength = (length - modulus);
             int a1, a2, a3;
@@ -246,8 +245,7 @@ public class Base64
             return (dataLength / 3) * 4 + ((modulus == 0) ? 0 : 4);
         }
 
-        private boolean ignore(char c)
-        {
+        private boolean ignore(char c) {
             return (c == '\n' || c == '\r' || c == '\t' || c == ' ');
         }
 
@@ -259,12 +257,13 @@ public class Base64
          * @param off offset
          * @param length length
          * @param out OutputStream
+         *
          * @return the number of bytes produced.
+         *
          * @throws IOException if an exception occurs while wrinting to the
          * stream.
          */
-        public int decode(byte[] data, int off, int length, OutputStream out) throws IOException
-        {
+        public int decode(byte[] data, int off, int length, OutputStream out) throws IOException {
             byte b1, b2, b3, b4;
             int outLen = 0;
 
@@ -305,8 +304,7 @@ public class Base64
             return outLen;
         }
 
-        private int nextI(byte[] data, int i, int finish)
-        {
+        private int nextI(byte[] data, int i, int finish) {
             while ((i < finish) && ignore((char) data[i])) {
                 i++;
             }
@@ -319,11 +317,12 @@ public class Base64
          *
          * @param data the byte array to encode
          * @param out OutputStream
+         *
          * @return the number of bytes produced.
+         *
          * @throws IOException if an exception occurs while writing to the stream
          */
-        public int decode(String data, OutputStream out) throws IOException
-        {
+        public int decode(String data, OutputStream out) throws IOException {
             byte b1, b2, b3, b4;
             int length = 0;
 
@@ -365,8 +364,7 @@ public class Base64
             return length;
         }
 
-        private int decodeLastBlock(OutputStream out, char c1, char c2, char c3, char c4) throws IOException
-        {
+        private int decodeLastBlock(OutputStream out, char c1, char c2, char c3, char c4) throws IOException {
             byte b1, b2, b3, b4;
 
             if (c3 == padding) {
@@ -401,8 +399,7 @@ public class Base64
             }
         }
 
-        private int nextI(String data, int i, int finish)
-        {
+        private int nextI(String data, int i, int finish) {
             while ((i < finish) && ignore(data.charAt(i))) {
                 i++;
             }

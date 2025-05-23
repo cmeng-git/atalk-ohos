@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<set xmlns:android="http://schemas.android.com/apk/res/android">
+<set xmlns:ohos="http://schemas.huawei.com/res/ohos">
 
 	<alpha
-		android:interpolator="@android:anim/decelerate_interpolator"
-		android:fromAlpha="1.0" android:toAlpha="0.0"
-		android:duration="400"
+		ohos:interpolator="@ohos:anim/decelerate_interpolator"
+		ohos:fromAlpha="1.0" ohos:toAlpha="0.0"
+		ohos:duration="400"
 	/>
 </set>

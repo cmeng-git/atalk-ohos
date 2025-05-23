@@ -5,14 +5,9 @@
  */
 package org.atalk.ohos.gui.settings.widget;
 
-import android.content.Context;
-import android.content.res.TypedArray;
-import android.util.AttributeSet;
+import ohos.agp.components.AttrSet;
+import ohos.app.Context;
 
-import androidx.preference.ListPreference;
-import androidx.preference.PreferenceManager;
-
-import org.atalk.ohos.R;
 import org.atalk.ohos.gui.AppGUIActivator;
 import org.atalk.service.configuration.ConfigurationService;
 
@@ -33,7 +28,7 @@ public class ConfigListPreference extends ListPreference {
      */
     private boolean disableOnNotEqual;
 
-    public ConfigListPreference(Context context, AttributeSet attrs) {
+    public ConfigListPreference(Context context, AttrSet attrs) {
         super(context, attrs);
         initAttributes(context, attrs);
     }
@@ -48,7 +43,7 @@ public class ConfigListPreference extends ListPreference {
      * @param context Android context.
      * @param attrs attribute set.
      */
-    private void initAttributes(Context context, AttributeSet attrs) {
+    private void initAttributes(Context context, AttrSet attrs) {
         TypedArray attArray = context.obtainStyledAttributes(attrs, R.styleable.ConfigListPreference);
 
         for (int i = 0; i < attArray.getIndexCount(); i++) {

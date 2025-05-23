@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DirectionalLayout xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:width="match_parent"
+    ohos:height="match_parent"
+    ohos:orientation="vertical"
+    ohos:padding="5vp" >
+
+    <Text
+        ohos:id="$+id:description"
+        ohos:width="match_content"
+        ohos:height="match_content"
+        ohos:text_alignment="vertical_center"
+        ohos:padding="10vp"
+        ohos:text="[Some detailed event description text explaining when it&apos;s being fired]"
+        ohos:text_size="$float:medium_font"
+        ohos:visibility="hide" />
+
+    <Checkbox
+        ohos:id="$+id:popup"
+        ohos:width="match_parent"
+        ohos:height="match_content"
+        ohos:text_alignment="vertical_center"
+        ohos:margin="5vp"
+        ohos:text="$string:notificationconfig_popup_notification"
+        ohos:text_size="$float:medium_font"/>
+
+    <Checkbox
+        ohos:id="$+id:soundNotification"
+        ohos:width="match_parent"
+        ohos:height="match_content"
+        ohos:text_alignment="vertical_center"
+        ohos:margin="5vp"
+        ohos:text="$string:notificationconfig_notification_sound"
+        ohos:text_size="$float:medium_font"/>
+
+    <Checkbox
+        ohos:id="$+id:sounvplayback"
+        ohos:width="match_parent"
+        ohos:height="match_content"
+        ohos:text_alignment="vertical_center"
+        ohos:margin="5vp"
+        ohos:text="$string:notificationconfig_playback_sound"
+        ohos:text_size="$float:medium_font"/>
+
+    <Checkbox
+        ohos:id="$+id:vibrate"
+        ohos:width="match_parent"
+        ohos:height="match_content"
+        ohos:text_alignment="vertical_center"
+        ohos:margin="5vp"
+        ohos:text="$string:notificationconfig_vibration"
+        ohos:text_size="$float:medium_font"/>
+
+    <DirectionalLayout
+        ohos:id="$+id:soundAttributes"
+        ohos:width="match_parent"
+        ohos:height="match_content"
+        ohos:orientation="vertical"
+        ohos:padding="10vp">
+
+        <Text
+            ohos:text_size="$float:medium_font"
+            ohos:width="80vp"
+            ohos:height="match_content"
+            ohos:margin="2vp"
+            ohos:text_alignment="vertical_center"
+            ohos:text="$string:notificationconfig_sound_file" />
+
+        <DirectionalLayout
+            ohos:width="match_parent"
+            ohos:height="match_content"
+            ohos:bottom_margin="$float:between_padding"
+            ohos:orientation="horizontal">
+
+            <Button
+                ohos:id="$+id:button_Play"
+                ohos:background_element="$graphic:btn_state_action"
+                ohos:element_start="$media:ic_play_pause" />
+
+            <Button
+                ohos:id="$+id:sound_descriptor"
+                ohos:background_element="$graphic:btn_state_action"
+                ohos:weight="4"
+                ohos:width="0vp"
+                ohos:start_margin="5vp"
+                ohos:element_start="$media:ic_ringtone"/>
+        </DirectionalLayout>
+
+    </DirectionalLayout>
+</DirectionalLayout>

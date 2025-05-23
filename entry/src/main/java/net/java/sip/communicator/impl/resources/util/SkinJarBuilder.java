@@ -24,6 +24,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -92,8 +93,7 @@ public class SkinJarBuilder
             throw new IOException("Unable to build resource pack.");
         }
 
-        OutputStream out = new FileOutputStream(
-            new File(dest, "SkinResourcePack.class"));
+        OutputStream out = Files.newOutputStream(new File(dest, "SkinResourcePack.class").toPath());
 
         copy(in, out);
 
@@ -107,7 +107,7 @@ public class SkinJarBuilder
             throw new IOException("Unable to build resource pack.");
         }
 
-        out = new FileOutputStream(new File(dest, "MANIFEST.MF"));
+        out = Files.newOutputStream(new File(dest, "MANIFEST.MF").toPath());
 
         copy(in, out);
     }

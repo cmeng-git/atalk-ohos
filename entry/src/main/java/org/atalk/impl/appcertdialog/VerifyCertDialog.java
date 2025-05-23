@@ -1,23 +1,34 @@
 /*
- * Jitsi, the OpenSource Java VoIP and Instant Messaging client.
+ * aTalk, ohos VoIP and Instant Messaging client
+ * Copyright 2024 Eng Chong Meng
  *
- * Distributable under LGPL license. See terms of license at gnu.org.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.atalk.impl.appcertdialog;
-
-import android.content.Context;
-import android.content.Intent;
-
-import java.security.cert.Certificate;
 
 import net.java.sip.communicator.service.certificate.VerifyCertificateDialogService;
 
 import org.atalk.ohos.aTalkApp;
 
+import java.security.cert.Certificate;
+
+import ohos.aafwk.content.Intent;
+import ohos.app.Context;
+
 /**
  * Implementation of <code>VerifyCertificateDialog</code>. Serves as dialog data model for GUI components.
  *
- * @author Pawel Domas
+ * @author Eng Chong Meng
  */
 class VerifyCertDialog implements VerifyCertificateDialogService.VerifyCertificateDialog {
     /**
@@ -82,8 +93,8 @@ class VerifyCertDialog implements VerifyCertificateDialogService.VerifyCertifica
 
         // starts the dialog and waits on the lock until finish
         Context ctx = aTalkApp.getInstance();
-        Intent verifyIntent = VerifyCertificateActivity.createIntent(ctx, requestId);
-        ctx.startActivity(verifyIntent);
+        Intent verifyIntent = VerifyCertificateAbility.createIntent(ctx, requestId);
+        ctx.startAbility(verifyIntent, 0);
 
         synchronized (finishLock) {
             try {

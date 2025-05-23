@@ -1,5 +1,7 @@
 package javax.media;
 
+import org.atalk.ohos.agp.components.JComponent;
+
 /**
  * Standard JMF class -- see <a href=
  * "http://java.sun.com/products/java-media/jmf/2.1.1/apidocs/javax/media/Player.html"
@@ -13,13 +15,13 @@ public interface Player extends MediaHandler, Controller
     void addController(Controller newController)
             throws IncompatibleTimeBaseException;
 
-    java.awt.Component getControlPanelComponent();
+    JComponent getControlPanelComponent();
 
     GainControl getGainControl();
 
-    java.awt.Component getVisualComponent();
+    JComponent getVisualComponent();
 
     void removeController(Controller oldController);
 
-    void start();
+    public void start();
 }

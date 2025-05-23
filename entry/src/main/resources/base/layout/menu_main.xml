@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:app="http://schemas.huawei.com/res/ohos"
+    xmlns:ohos="http://schemas.huawei.com/res/ohos">
+    <item
+        ohos:id="$+id:search"
+        ohos:icon="$media:search_dark"
+        ohos:title="$string:enter_name_or_number"
+        app:showAsAction="always|collapseActionView"
+        app:actionViewClass="ohos.agp.components.SearchBar" />
+    <item
+        ohos:id="$+id:add_chat_room"
+        ohos:icon="$media:ic_chat_room_add_dark"
+        ohos:title="$string:chatroom_create_join"
+        app:showAsAction="ifRoom" />
+    <item
+        ohos:id="$+id:show_location"
+        ohos:icon="$media:ic_location_dark"
+        ohos:title="$string:geo_street_views_map"
+        app:showAsAction="ifRoom" />
+    <item
+        ohos:id="$+id:telephony"
+        ohos:icon="$media:ic_external_phone_dark"
+        ohos:title="$string:jbr_telephony_voip_pbx"
+        app:showAsAction="ifRoom" />
+    <item
+        ohos:id="$+id:create_videobridge"
+        ohos:icon="$media:ic_videobridge"
+        ohos:title="$string:create_videoBridge"
+        ohos:visible="false" />
+    <item
+        ohos:id="$+id:muc_bookmarks"
+        ohos:title="$string:chatroom_bookmark_title" />
+    <item
+        ohos:id="$+id:app_info"
+        ohos:title="$string:app_info" />
+    <item
+        ohos:id="$+id:main_settings"
+        ohos:title="$string:system_settings" />
+    <item
+        ohos:id="$+id:account_settings"
+        ohos:title="$string:account_settings" />
+    <item
+        ohos:id="$+id:tts_settings"
+        ohos:title="$string:tts_settings" />
+    <item
+        ohos:id="$+id:notification_setting"
+        ohos:title="$string:notification_setting"
+        ohos:visible="false" />
+    <item
+        ohos:id="$+id:block_list"
+        ohos:title="$string:block_list_show" />
+    <item
+        ohos:id="$+id:add_contact"
+        ohos:icon="$media:add_contact_dark"
+        ohos:title="$string:add_contact" />
+    <item
+        ohos:id="$+id:show_hide_offline"
+        ohos:icon="$media:show_hide_offline_light"
+        ohos:title="$string:contact_offline_hide" />
+    <item
+        ohos:id="$+id:sign_in_off"
+        ohos:title="$string:sign_out" />
+</menu>

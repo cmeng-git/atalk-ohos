@@ -21,9 +21,8 @@ import net.java.sip.communicator.service.protocol.ProtocolProviderService;
 import net.java.sip.communicator.service.protocol.event.FileTransferStatusChangeEvent;
 import net.java.sip.communicator.service.protocol.event.MessageListener;
 
-import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
-import org.atalk.ohos.gui.chat.ChatFragment;
+import org.atalk.ohos.gui.chat.ChatSlice;
 import org.atalk.ohos.gui.chat.ChatMessage;
 import org.atalk.ohos.gui.chat.ChatSession;
 import org.atalk.ohos.gui.chat.ChatTransport;
@@ -183,7 +182,7 @@ public class AdHocConferenceChatTransport implements ChatTransport {
     public void sendInstantFTMessage(String messageText, int encType, String msgId) {
         // If this chat transport does not support instant messaging we do nothing here.
         if (!allowsInstantMessage()) {
-            aTalkApp.showToastMessage(R.string.send_message_not_supported, getName());
+            aTalkApp.showToastMessage(ResourceTable.String_send_message_not_supported, getName());
             return;
         }
 
@@ -246,7 +245,7 @@ public class AdHocConferenceChatTransport implements ChatTransport {
      * Sends the given sticker through this chat transport file will always use http file upload
      *
      * @param file the file to send
-     * @param chatType ChatFragment.MSGTYPE_OMEMO or MSGTYPE_NORMAL
+     * @param chatType ChatSlice.MSGTYPE_OMEMO or MSGTYPE_NORMAL
      * @param xferCon and instance of #FileSendConversation
      *
      * @return the HTTPFileUpload object charged to transfer the given <code>file</code>.
@@ -277,7 +276,7 @@ public class AdHocConferenceChatTransport implements ChatTransport {
      * Sending files through a chat room will always use http file upload
      *
      * @param file the file to send
-     * @param chatType ChatFragment.MSGTYPE_OMEMO or MSGTYPE_NORMAL
+     * @param chatType ChatSlice.MSGTYPE_OMEMO or MSGTYPE_NORMAL
      * @param xferCon and instance of #FileSendConversation
      *
      * @return the HTTPFileUpload object charged to transfer the given <code>file</code>.
@@ -303,7 +302,7 @@ public class AdHocConferenceChatTransport implements ChatTransport {
             int encryption = IMessage.ENCRYPTION_NONE;
             Object url;
             try {
-                if (ChatFragment.MSGTYPE_OMEMO == chatType) {
+                if (ChatSlice.MSGTYPE_OMEMO == chatType) {
                     encryption = IMessage.ENCRYPTION_OMEMO;
                     url = httpFileUploadManager.uploadFileEncrypted(file, xferCon);
                 }
@@ -317,7 +316,7 @@ public class AdHocConferenceChatTransport implements ChatTransport {
             }
         }
         else
-            throw new OperationNotSupportedException(aTalkApp.getResString(R.string.file_transfer_not_supported, "chatRoom"));
+            throw new OperationNotSupportedException(aTalkApp.getResString(ResourceTable.String_file_transfer_not_supported, "chatRoom"));
     }
 
     /**

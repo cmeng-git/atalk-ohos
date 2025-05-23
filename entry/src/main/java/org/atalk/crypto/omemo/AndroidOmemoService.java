@@ -1,6 +1,6 @@
 /*
  * aTalk, android VoIP and Instant Messaging client
- * Copyright 2014 Eng Chong Meng
+ * Copyright 2024 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,9 +24,9 @@ import net.java.sip.communicator.service.protocol.OperationSetBasicInstantMessag
 import net.java.sip.communicator.service.protocol.OperationSetMultiUserChat;
 import net.java.sip.communicator.service.protocol.ProtocolProviderService;
 
-import org.atalk.ohos.R;
+import org.atalk.ohos.ResourceTable;
 import org.atalk.ohos.aTalkApp;
-import org.atalk.ohos.gui.dialogs.DialogActivity;
+import org.atalk.ohos.gui.dialogs.DialogH;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smackx.omemo.OmemoManager;
 import org.jivesoftware.smackx.omemo.OmemoService;
@@ -122,17 +122,17 @@ public class AndroidOmemoService implements OmemoManager.InitializationFinishedC
     public void initializationFailed(Exception cause) {
         isOmemoInitSuccessful = false;
 
-        String title = aTalkApp.getResString(R.string.omemo_init_failed_title);
+        String title = aTalkApp.getResString(ResourceTable.String_omemo_init_failed_title);
         String errMsg = cause.getMessage();
         Timber.w("%s: %s", title, errMsg);
         if (errMsg != null) {
             if (errMsg.contains("Invalid IdentityKeyPairs") || errMsg.contains("CorruptedOmemoKeyException")) {
-                String msg = aTalkApp.getResString(R.string.omemo_init_failed_corrupted_omemoKey_exception,
+                String msg = aTalkApp.getResString(ResourceTable.String_omemo_init_failed_corrupted_omemoKey_exception,
                         mOmemoManager.getOwnDevice(), errMsg);
-                DialogActivity.showDialog(aTalkApp.getInstance(), title, msg);
+                DialogH.showDialog(aTalkApp.getInstance(), title, msg);
             }
             else {
-                aTalkApp.showToastMessage(R.string.omemo_init_failed_no_response, mOmemoManager.getOwnDevice());
+                aTalkApp.showToastMessage(ResourceTable.String_omemo_init_failed_no_response, mOmemoManager.getOwnDevice());
             }
         }
     }

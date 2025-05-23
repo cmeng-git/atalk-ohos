@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.huawei.com/apk/res-auto"
+    xmlns:ohos="http://schemas.huawei.com/res/ohos">
+    <item
+        ohos:id="$+id:crypto_choice"
+        ohos:icon="$media:crypto_unsecure"
+        ohos:title="$string:encrypt_choices"
+        ohos:enabled="true"
+        app:showAsAction="always">
+        <menu>
+            <group ohos:checkableBehavior="single">
+                <item
+                    ohos:id="$+id:encryption_none"
+                    ohos:icon="?attr/iconCryptoNone"
+                    ohos:title="$string:encrypt_unencrypted" />
+                <item
+                    ohos:id="$+id:encryption_omemo"
+                    ohos:icon="?attr/iconCryptoOmemo"
+                    ohos:title="$string:encryption_omemo" />
+            </group>
+        </menu>
+    </item>
+</menu>

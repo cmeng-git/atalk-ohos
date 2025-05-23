@@ -1,6 +1,6 @@
 /*
- * aTalk, android VoIP and Instant Messaging client
- * Copyright 2014 Eng Chong Meng
+ * aTalk, ohos VoIP and Instant Messaging client
+ * Copyright 2024 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,39 +16,32 @@
  */
 package org.atalk.ohos.gui;
 
-import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.os.Bundle;
-import android.view.View;
-import android.webkit.WebView;
-import android.widget.TextView;
+import ohos.aafwk.content.Intent;
+import ohos.agp.components.Component;
+import ohos.agp.components.Text;
+import ohos.agp.components.webengine.WebView;
+import ohos.agp.render.render3d.BuildConfig;
+import ohos.agp.utils.Color;
+import ohos.app.Context;
+import ohos.bundle.BundleInfo;
+import ohos.utils.net.Uri;
 
-import net.java.sip.communicator.service.update.UpdateService;
-import net.java.sip.communicator.util.ServiceUtils;
-
-import org.atalk.ohos.BaseActivity;
-import org.atalk.ohos.BuildConfig;
-import org.atalk.ohos.R;
+import org.atalk.impl.appupdate.UpdateServiceImpl;
+import org.atalk.ohos.BaseAbility;
+import org.atalk.ohos.ResourceTable;
 import org.atalk.ohos.aTalkApp;
-
-import de.cketti.library.changelog.ChangeLog;
+import org.atalk.util.ChangeLog;
 
 /**
  * About activity
  *
  * @author Eng Chong Meng
  */
-public class About extends BaseActivity implements View.OnClickListener {
+public class About extends BaseAbility implements Component.ClickedListener {
     private static final String[][] USED_LIBRARIES = new String[][]{
             new String[]{"Android Support Library", "https://developer.android.com/topic/libraries/support-library/index.html"},
-            new String[]{"android-betterpickers", "https://github.com/code-troopers/android-betterpickers"},
-            new String[]{"Android-EasyLocation", "https://github.com/akhgupta/Android-EasyLocation"},
             new String[]{"annotations-java5", "https://mvnrepository.com/artifact/org.jetbrains/annotations"},
             new String[]{"bouncycastle", "https://github.com/bcgit/bc-java"},
-            new String[]{"ckChangeLog", "https://github.com/cketti/ckChangeLog"},
             new String[]{"commons-lang", "https://commons.apache.org/proper/commons-lang/"},
             new String[]{"Dexter", "https://github.com/Karumi/Dexter"},
             new String[]{"dhcp4java", "https://github.com/ggrandes-clones/dhcp4java"},
@@ -156,89 +149,83 @@ public class About extends BaseActivity implements View.OnClickListener {
             // new String[]{"", ""},
     };
 
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.about);
-        // crash if enabled under FragmentActivity
+    public void onStart(Intent intent) {
+        super.onStart(intent);
+        setUIContent(ResourceTable.Layout_about);
+        // crash if enabled under AbilitySlice
         // requestWindowFeature(Window.FEATURE_LEFT_ICON);
-        // setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, android.R.drawable.ic_dialog_info);
-        setMainTitle(R.string.About);
+        // setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, android.ResourceTable.Media_ic_dialog_info);
+        setMainTitle(ResourceTable.String_About);
 
-        View atakUrl = findViewById(R.id.atalk_link);
-        atakUrl.setOnClickListener(this);
+        Component atakUrl = findComponentById(ResourceTable.Id_atalk_link);
+        atakUrl.setClickedListener(this);
 
-        TextView atalkHelp = findViewById(R.id.atalk_help);
-        atalkHelp.setTextColor(getResources().getColor(R.color.blue50, null));
-        atalkHelp.setOnClickListener(this);
+        Text atalkHelp = findComponentById(ResourceTable.Id_atalk_help);
+        Color Color;
+        atalkHelp.setTextColor(new Color(getColor(ResourceTable.Color_blue50)));
+        atalkHelp.setClickedListener(this);
 
-        findViewById(R.id.ok_button).setOnClickListener(this);
-        findViewById(R.id.history_log).setOnClickListener(this);
+        findComponentById(ResourceTable.Id_ok_button).setClickedListener(this);
+        findComponentById(ResourceTable.Id_history_log).setClickedListener(this);
 
-        View btn_submitLogs = findViewById(R.id.submit_logs);
-        btn_submitLogs.setOnClickListener(this);
+        Component btn_submitLogs = findComponentById(ResourceTable.Id_submit_logs);
+        btn_submitLogs.setClickedListener(this);
 
         if (BuildConfig.DEBUG) {
-            View btn_update = findViewById(R.id.check_new_version);
-            btn_update.setVisibility(View.VISIBLE);
-            btn_update.setOnClickListener(this);
+            Component btn_update = findComponentById(ResourceTable.Id_check_new_version);
+            btn_update.setVisibility(Component.VISIBLE);
+            btn_update.setClickedListener(this);
         }
 
         String aboutInfo = getAboutInfo();
-        WebView wv = findViewById(R.id.AboutDialog_Info);
-        wv.loadDataWithBaseURL("file:///android_res/drawable/", aboutInfo, "text/html", "utf-8", null);
-
-        try {
-            PackageInfo pi = getPackageManager().getPackageInfo(getPackageName(), 0);
-
-            TextView textView = findViewById(R.id.AboutDialog_Version);
-            textView.setText(String.format(getString(R.string.version_), pi.versionName));
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
+        WebView wv = findComponentById(ResourceTable.Id_AboutDialog_Info);
+        wv.load(aboutInfo, "text/html", "utf-8", "file:///android_res/drawable/", null);
+        Text textView = findComponentById(ResourceTable.Id_AboutDialog_Version);
+        textView.setText(String.format(getString(ResourceTable.String_version_), new BundleInfo().getVersionName()));
     }
 
     @Override
-    public void onClick(View view) {
+    public void onClick(Component view) {
         switch (view.getId()) {
-            case R.id.ok_button:
-                finish();
+            case ResourceTable.Id_ok_button:
+                terminateAbility();
                 break;
-            case R.id.check_new_version:
+
+            case ResourceTable.Id_check_new_version:
                 new Thread() {
                     @Override
                     public void run() {
-                        UpdateService updateService
-                                = ServiceUtils.getService(AppGUIActivator.bundleContext, UpdateService.class);
+                        UpdateServiceImpl updateService = UpdateServiceImpl.getInstance();
                         if (updateService != null) {
                             updateService.checkForUpdates();
                         }
                     }
                 }.start();
                 break;
-            case R.id.submit_logs:
+            case ResourceTable.Id_submit_logs:
                 aTalkApp.showSendLogsDialog();
                 break;
-            case R.id.history_log:
+            case ResourceTable.Id_history_log:
                 ChangeLog cl = new ChangeLog(this);
                 cl.getFullLogDialog().show();
                 break;
-            case R.id.atalk_help:
-            case R.id.atalk_link:
-                atalkUrlAccess(this, getString(R.string.AboutDialog_Link));
+            case ResourceTable.Id_atalk_help:
+            case ResourceTable.Id_atalk_link:
+                atalkUrlAccess(this, getString(ResourceTable.String_AboutDialog_Link));
                 break;
             default:
-                finish();
+                terminateAbility();
                 break;
         }
     }
 
     public static void atalkUrlAccess(Context context, String url) {
         if (url == null)
-            url = context.getString(R.string.AboutDialog_Link);
+            url = context.getString(ResourceTable.String_AboutDialog_Link);
+
         Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse(url));
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
+        intent.setUri(Uri.parse(url));
+        context.startAbility(intent);
     }
 
     private String getAboutInfo() {
@@ -257,7 +244,7 @@ public class About extends BaseActivity implements View.OnClickListener {
         }
         xeps.append("</ul>");
 
-        html.append(String.format(getString(R.string.app_xep), xeps))
+        html.append(String.format(getString(ResourceTable.String_app_xep), xeps.toString()))
                 .append("</p><hr/><p>");
 
         StringBuilder libs = new StringBuilder().append("<ul>");
@@ -270,7 +257,7 @@ public class About extends BaseActivity implements View.OnClickListener {
         }
         libs.append("</ul>");
 
-        html.append(String.format(getString(R.string.app_libraries), libs))
+        html.append(String.format(getString(ResourceTable.String_app_libraries), libs.toString()))
                 .append("</p><hr/><p>");
         html.append("</body></html>");
 

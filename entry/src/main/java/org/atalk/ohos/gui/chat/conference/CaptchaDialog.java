@@ -1,6 +1,6 @@
 /*
- * aTalk, android VoIP and Instant Messaging client
- * Copyright 2014 Eng Chong Meng
+ * aTalk, ohos VoIP and Instant Messaging client
+ * Copyright 2024 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,24 +16,29 @@
  */
 package org.atalk.ohos.gui.chat.conference;
 
-import android.app.Dialog;
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextUtils;
-import android.util.DisplayMetrics;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 
-import org.atalk.ohos.R;
+import ohos.agp.components.Button;
+import ohos.agp.components.Component;
+import ohos.agp.components.Image;
+import ohos.agp.components.LayoutScatter;
+import ohos.agp.components.Text;
+import ohos.agp.components.TextField;
+import ohos.agp.window.service.Display;
+import ohos.app.Context;
+import ohos.media.image.ImageSource;
+import ohos.media.image.PixelMap;
+import ohos.media.image.common.Size;
+
+import org.apache.http.util.TextUtils;
+import org.atalk.ohos.ResourceTable;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.chat.ChatMessage;
-import org.atalk.ohos.gui.util.ViewUtil;
+import org.atalk.ohos.gui.dialogs.DialogA;
+import org.atalk.ohos.util.AppImageUtil;
+import org.atalk.ohos.util.ComponentUtil;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.StanzaCollector;
 import org.jivesoftware.smack.XMPPConnection;
@@ -50,11 +55,6 @@ import org.jivesoftware.smackx.xdata.FormField;
 import org.jivesoftware.smackx.xdata.TextSingleFormField;
 import org.jivesoftware.smackx.xdata.packet.DataForm;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-
 import timber.log.Timber;
 
 /**
@@ -63,7 +63,7 @@ import timber.log.Timber;
  *
  * @author Eng Chong Meng
  */
-public class CaptchaDialog extends Dialog {
+public class CaptchaDialog {
     /* Captcha response state */
     public static final int unknown = -1;
     public static final int validated = 0;
@@ -71,15 +71,15 @@ public class CaptchaDialog extends Dialog {
     public static final int failed = 2;
     public static final int cancel = 3;
 
-    private EditText mCaptchaText;
-    private TextView mReason;
+    private TextField mCaptchaText;
+    private Text mReason;
 
-    private ImageView mImageView;
+    private Image mImageView;
     private Button mAcceptButton;
     private Button mCancelButton;
     private Button mOKButton;
 
-    private Bitmap mCaptcha;
+    private PixelMap mCaptcha;
     private DataForm mDataForm;
     private DataForm.Builder formBuilder;
     private String mReasonText;
@@ -89,6 +89,8 @@ public class CaptchaDialog extends Dialog {
     private final Context mContext;
     private final CaptchaDialogListener callBack;
 
+    private DialogA sDialog;
+
     public interface CaptchaDialogListener {
         void onResult(int state);
 
@@ -96,37 +98,56 @@ public class CaptchaDialog extends Dialog {
     }
 
     public CaptchaDialog(Context context, MultiUserChat multiUserChat, Message message, CaptchaDialogListener listener) {
-        super(context);
         mContext = context;
         mConnection = multiUserChat.getXmppConnection();
         mMessage = message;
         callBack = listener;
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.captcha_challenge);
-        setTitle(R.string.captcha_challenge);
+    public DialogA create() {
+        LayoutScatter scatter = LayoutScatter.getInstance(mContext);
+        Component component = scatter.parse(ResourceTable.Layout_captcha_challenge, null, false);
 
-        mImageView = findViewById(R.id.captcha);
-        mCaptchaText = findViewById(R.id.input);
-        mReason = findViewById(R.id.reason_field);
+        mImageView = component.findComponentById(ResourceTable.Id_captcha);
+        mCaptchaText = component.findComponentById(ResourceTable.Id_input);
+        mReason = component.findComponentById(ResourceTable.Id_reason_field);
 
-        // initial visibility states in xml
-        mAcceptButton = findViewById(R.id.button_accept);
-        mOKButton = findViewById(R.id.button_ok);
-        mCancelButton = findViewById(R.id.button_cancel);
+        DialogA.Builder builder = new DialogA.Builder(mContext);
+        builder.setTitle(ResourceTable.Layout_captcha_challenge)
+                .setComponent(component)
+                .setNegativeButton(ResourceTable.String_cancel, dialog -> {
+                    if (onAcceptClicked(true))
+                        showResult();
+                    else
+                        dialog.remove();
+                })
+                .setNeutralButton(ResourceTable.String_submit, dialog -> {
+                    if (TextUtils.isEmpty(ComponentUtil.toString(mCaptchaText))) {
+                        aTalkApp.showToastMessage(ResourceTable.String_captcha_text_empty);
+                    }
+                    else {
+                        if (onAcceptClicked(false))
+                            showResult();
+                        else
+                            dialog.remove();
+                    }
+                })
+                .setPositiveButton(ResourceTable.String_ok, DialogA::remove);
+
+        sDialog = builder.create();
+        // initial buttons visibility states
+        mCancelButton = sDialog.getButton(DialogA.BUTTON_NEGATIVE);
+        mAcceptButton = sDialog.getButton(DialogA.BUTTON_NEUTRAL);
+        mOKButton = sDialog.getButton(DialogA.BUTTON_POSITIVE);
 
         if (initCaptchaData()) {
             showCaptchaContent();
-            initializeViewListeners();
+            mImageView.setClickedListener(v -> mCaptchaText.requestFocus());
         }
-        setCancelable(false);
-    }
 
-    private void closeDialog() {
-        this.cancel();
+        sDialog.setSwipeToDismiss(true);
+        sDialog.setAutoClosable(false);
+        return sDialog;
     }
 
     /*
@@ -134,11 +155,10 @@ public class CaptchaDialog extends Dialog {
      */
     private void showCaptchaContent() {
         // Scale the captcha to the display resolution
-        DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
-        Bitmap captcha = Bitmap.createScaledBitmap(mCaptcha,
-                (int) (mCaptcha.getWidth() * metrics.scaledDensity),
-                (int) (mCaptcha.getHeight() * metrics.scaledDensity), false);
-        mImageView.setImageBitmap(captcha);
+        int density = (int) new Display().getRealAttributes().scalDensity;
+        Size size = mCaptcha.getFitDensitySize(density);
+        PixelMap captcha = AppImageUtil.scaledPixelMap(mCaptcha, size.width, size.height);
+        mImageView.setPixelMap(captcha);
 
         Body bodyExt = mMessage.getExtension(Body.class);
         if (bodyExt != null)
@@ -148,26 +168,6 @@ public class CaptchaDialog extends Dialog {
 
         mReason.setText(mReasonText);
         mCaptchaText.requestFocus();
-    }
-
-    /**
-     * Setup all the dialog buttons. listeners for the required actions on user click
-     */
-    private void initializeViewListeners() {
-        mImageView.setOnClickListener(v -> mCaptchaText.requestFocus());
-
-        mAcceptButton.setOnClickListener(v -> {
-            if (TextUtils.isEmpty(ViewUtil.toString(mCaptchaText))) {
-                aTalkApp.showToastMessage(R.string.captcha_text_empty);
-            } else {
-                showResult(onAcceptClicked(false));
-            }
-        });
-
-        // force terminate smack wait loop early by sending empty reply
-        mCancelButton.setOnClickListener(v -> showResult(onAcceptClicked(true)));
-
-        mOKButton.setOnClickListener(v -> closeDialog());
     }
 
     /**
@@ -200,9 +200,9 @@ public class CaptchaDialog extends Dialog {
         String userName = mMessage.getTo().toString();
         addFormField(CaptchaExtension.USER_NAME, userName);
 
-        Editable rc = mCaptchaText.getText();
+        String rc = mCaptchaText.getText();
         if (rc != null) {
-            addFormField(CaptchaExtension.OCR, rc.toString());
+            addFormField(CaptchaExtension.OCR, rc);
         }
 
         /*
@@ -219,18 +219,11 @@ public class CaptchaDialog extends Dialog {
             createStanzaCollectorAndSend(iqCaptcha).nextResultOrThrow();
             callBack.onResult(validated);
 
-            mReasonText = mContext.getString(R.string.captcha_verification_valid);
+            mReasonText = mContext.getString(ResourceTable.String_captcha_verification_valid);
             callBack.addMessage(mReasonText, ChatMessage.MESSAGE_SYSTEM);
             return true;
         } catch (SmackException.NoResponseException | XMPPException.XMPPErrorException
-                | SmackException.NotConnectedException | InterruptedException ex) {
-
-            // Not required. The return error message will contain the descriptive text
-            // if (ex instanceof XMPPException.XMPPErrorException) {
-            //    StanzaError xmppError = ((XMPPException.XMPPErrorException) ex).getStanzaError();
-            //    errMsg += "\n: " + xmppError.getDescriptiveText();
-            // }
-
+                 | SmackException.NotConnectedException | InterruptedException ex) {
             mReasonText = ex.getMessage();
             if (isCancel) {
                 callBack.addMessage(mReasonText, ChatMessage.MESSAGE_ERROR);
@@ -281,12 +274,17 @@ public class CaptchaDialog extends Dialog {
                 return false;
             }
 
-            Bitmap bmCaptcha = null;
+            PixelMap bmCaptcha = null;
             BoBDataExtension bob = mMessage.getExtension(BoBDataExtension.class);
+            ImageSource.SourceOptions srcOptions = new ImageSource.SourceOptions();
+            srcOptions.formatHint = "image/jpeg";
+
+            ImageSource.DecodingOptions decOptions = new ImageSource.DecodingOptions();
+            ImageSource imageSource = null;
             if (bob != null) {
                 byte[] bytData = bob.getBobData().getContent();
-                InputStream stream = new ByteArrayInputStream(bytData);
-                bmCaptcha = BitmapFactory.decodeStream(stream);
+                // InputStream stream = new ByteArrayInputStream(bytData);
+                imageSource = ImageSource.create(bytData, srcOptions);
             }
             else {
                 /*
@@ -305,10 +303,15 @@ public class CaptchaDialog extends Dialog {
                     String urlString = urlField.getFirstValue();
                     if (urlString.contains("https://")) {
                         URL uri = new URL(urlString);
-                        bmCaptcha = BitmapFactory.decodeStream(uri.openConnection().getInputStream());
+                        InputStream inStream = uri.openConnection().getInputStream();
+                        imageSource = ImageSource.create(inStream, srcOptions);
                     }
                 }
             }
+
+            if (imageSource != null)
+                bmCaptcha = imageSource.createPixelmap(decOptions);
+
             mDataForm = dataForm;
             mCaptcha = bmCaptcha;
 
@@ -321,27 +324,20 @@ public class CaptchaDialog extends Dialog {
         } catch (IOException e) {
             mReasonText = e.getMessage();
             callBack.onResult(failed);
-            showResult(false);
+            sDialog.remove();;
         }
         return false;
     }
 
     /**
      * Shows IBR registration result.
-     *
-     * @param success Captcha reply return result
      */
-    private void showResult(boolean success) {
-        if (success) {
-            mReason.setText(mReasonText);
-            mCaptchaText.setEnabled(false);
+    private void showResult() {
+        mReason.setText(mReasonText);
+        mCaptchaText.setEnabled(false);
 
-            mAcceptButton.setVisibility(View.GONE);
-            mCancelButton.setVisibility(View.GONE);
-            mOKButton.setVisibility(View.VISIBLE);
-        }
-        else {
-            closeDialog();
-        }
+        mAcceptButton.setVisibility(Component.HIDE);
+        mCancelButton.setVisibility(Component.HIDE);
+        mOKButton.setVisibility(Component.VISIBLE);
     }
 }

@@ -1,47 +1,57 @@
 /*
- * Jitsi, the OpenSource Java VoIP and Instant Messaging client.
+ * aTalk, ohos VoIP and Instant Messaging client
+ * Copyright 2024 Eng Chong Meng
  *
- * Distributable under LGPL license. See terms of license at gnu.org.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.atalk.ohos.gui.settings;
 
-import android.os.Bundle;
-import android.view.KeyEvent;
-
-import java.util.List;
+import ohos.aafwk.content.Intent;
 
 import org.atalk.impl.neomedia.MediaServiceImpl;
 import org.atalk.impl.neomedia.NeomediaActivator;
-import org.atalk.ohos.BaseActivity;
-import org.atalk.ohos.R;
-import org.atalk.ohos.gui.account.settings.MediaEncodingActivity;
-import org.atalk.ohos.gui.account.settings.MediaEncodingsFragment;
+import org.atalk.ohos.BaseAbility;
+import org.atalk.ohos.ResourceTable;
+import org.atalk.ohos.gui.account.settings.MediaEncodingAbility;
+import org.atalk.ohos.gui.account.settings.MediaEncodingsSlice;
 import org.atalk.service.neomedia.codec.EncodingConfiguration;
 import org.atalk.service.neomedia.format.MediaFormat;
 import org.atalk.util.MediaType;
+
+import java.util.List;
 
 /**
  * @author Pawel Domas
  * @author Eng Chong Meng
  */
-public class EncodingSettings extends BaseActivity {
+public class EncodingSettings extends BaseAbility {
     public static final String EXTRA_MEDIA_TYPE = "media_type";
     public static final String MEDIA_TYPE_AUDIO = "media_type.AUDIO";
     public static final String MEDIA_TYPE_VIDEO = "media_type.VIDEO";
-    private MediaEncodingsFragment mMediaEncodings;
+    private MediaEncodingsSlice mMediaEncodings;
     private MediaType mMediaType;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        String mediaTypeStr = getIntent().getStringExtra(EXTRA_MEDIA_TYPE);
+    public void onStart(Intent intent) {
+        super.onStart(intent);
+        String mediaTypeStr = intent.getStringParam(EXTRA_MEDIA_TYPE);
         if (MEDIA_TYPE_AUDIO.equals(mediaTypeStr)) {
             mMediaType = MediaType.AUDIO;
-            setMainTitle(R.string.settings_audio_codecs);
+            setMainTitle(ResourceTable.String_settings_audio_codecs);
         }
         else if (MEDIA_TYPE_VIDEO.equals(mediaTypeStr)) {
             mMediaType = MediaType.VIDEO;
-            setMainTitle(R.string.settings_video_codec);
+            setMainTitle(ResourceTable.String_settings_video_codec);
         }
 
         if (savedInstanceState == null) {
@@ -49,16 +59,16 @@ public class EncodingSettings extends BaseActivity {
             if (mediaSrvc != null) {
                 EncodingConfiguration encConfig = mediaSrvc.getCurrentEncodingConfiguration();
 
-                List<MediaFormat> formats = MediaEncodingActivity.getEncodings(encConfig, mMediaType);
-                List<String> encodings = MediaEncodingActivity.getEncodingsStr(formats.iterator());
-                List<Integer> priorities = MediaEncodingActivity.getPriorities(formats, encConfig);
+                List<MediaFormat> formats = MediaEncodingAbility.getEncodings(encConfig, mMediaType);
+                List<String> encodings = MediaEncodingAbility.getEncodingsStr(formats.iterator());
+                List<Integer> priorities = MediaEncodingAbility.getPriorities(formats, encConfig);
 
-                mMediaEncodings = MediaEncodingsFragment.newInstance(encodings, priorities);
-                getSupportFragmentManager().beginTransaction().add(android.R.id.content, mMediaEncodings).commit();
+                mMediaEncodings = MediaEncodingsSlice.newInstance(encodings, priorities);
+                getSupportFragmentManager().beginTransaction().add(ResourceTable.Id_content, mMediaEncodings).commit();
             }
         }
         else {
-            mMediaEncodings = (MediaEncodingsFragment) getSupportFragmentManager().findFragmentById(android.R.id.content);
+            mMediaEncodings = (MediaEncodingsFragment) getSupportFragmentManager().findFragmentById(android.ResourceTable.Id_content);
         }
     }
 
@@ -66,16 +76,15 @@ public class EncodingSettings extends BaseActivity {
      * {@inheritDoc}
      */
     @Override
-    public boolean onKeyUp(int keyCode, KeyEvent event) {
+    protected void onBackPressed() {
         MediaServiceImpl mediaSrvc = NeomediaActivator.getMediaServiceImpl();
 
-        if ((keyCode == KeyEvent.KEYCODE_BACK) && (mediaSrvc != null)) {
-            MediaEncodingActivity.commitPriorities(
+        if (mediaSrvc != null) {
+            MediaEncodingAbility.commitPriorities(
                     NeomediaActivator.getMediaServiceImpl().getCurrentEncodingConfiguration(),
                     mMediaType, mMediaEncodings);
-            finish();
-            return true;
+            terminateAbility();
         }
-        return super.onKeyUp(keyCode, event);
+        super.onBackPressed();
     }
 }

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<DirectionalLayout xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:width="match_parent"
+    ohos:height="match_content"
+    ohos:orientation="horizontal"
+    ohos:bottom_padding="5vp"
+    ohos:alignment="vertical_center">
+
+    <Text
+        ohos:id="$+id:field_label"
+        ohos:text_size="$float:medium_font"
+        ohos:width="80vp"
+        ohos:height="match_content"
+        ohos:text="$string:username_" />
+
+    <Image
+        ohos:id="$+id:star"
+        ohos:width="match_content"
+        ohos:height="match_content"
+        ohos:image_src="$media:ic_star" />
+
+    <TextField
+        ohos:id="$+id:field_value"
+        ohos:background_element="$graphic:bg_text_field"
+        ohos:width="0vp"
+        ohos:weight="1" />
+
+</DirectionalLayout>

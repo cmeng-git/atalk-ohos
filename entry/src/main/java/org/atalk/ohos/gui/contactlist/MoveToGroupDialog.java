@@ -5,23 +5,22 @@
  */
 package org.atalk.ohos.gui.contactlist;
 
-import android.content.DialogInterface;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.TextView;
+import ohos.agp.components.Component;
+import ohos.agp.components.LayoutScatter;
+import ohos.agp.components.ListContainer;
+import ohos.agp.components.Text;
+import ohos.app.Context;
 
 import net.java.sip.communicator.service.contactlist.MetaContact;
 import net.java.sip.communicator.service.contactlist.MetaContactGroup;
 import net.java.sip.communicator.service.contactlist.MetaContactListException;
 
-import org.atalk.ohos.R;
+import org.atalk.ohos.ResourceTable;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.AppGUIActivator;
-import org.atalk.ohos.gui.dialogs.BaseDialogFragment;
-import org.atalk.ohos.gui.dialogs.DialogActivity;
+import org.atalk.ohos.gui.dialogs.DialogA;
+import org.atalk.ohos.gui.dialogs.DialogH;
+import org.atalk.ohos.util.ComponentUtil;
 
 import timber.log.Timber;
 
@@ -31,16 +30,8 @@ import timber.log.Timber;
  * @author Pawel Domas
  * @author Eng Chong Meng
  */
-public class MoveToGroupDialog extends BaseDialogFragment implements DialogInterface.OnClickListener {
-    /**
-     * Meta UID arg key.
-     */
-    private static final String META_CONTACT_UID = "meta_uid";
-
-    /**
-     * Meta account UserID.
-     */
-    private static final String USER_ID = "userId";
+public class MoveToGroupDialog {
+    private final Context mContext;
 
     /**
      * The meta contact that will be moved.
@@ -50,67 +41,53 @@ public class MoveToGroupDialog extends BaseDialogFragment implements DialogInter
     /**
      * Creates a new instance of <code>MoveToGroupDialog</code>.
      *
-     * @param metaContact the contact that will be moved.
-     *
-     * @return parametrized instance of <code>MoveToGroupDialog</code>.
+     * @param context the context instance.
+     * @param contact the contact that will be moved.
      */
-    public static MoveToGroupDialog getInstance(MetaContact metaContact) {
-        MoveToGroupDialog dialog = new MoveToGroupDialog();
-
-        Bundle args = new Bundle();
-        String userName = metaContact.getDefaultContact().getProtocolProvider().getAccountID().getUserID();
-        args.putString(USER_ID, userName);
-        args.putString(META_CONTACT_UID, metaContact.getMetaUID());
-
-        dialog.setArguments(args);
-        return dialog;
+    public MoveToGroupDialog(Context context, MetaContact contact) {
+        mContext = context;
+        metaContact = contact;
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View contentView = inflater.inflate(R.layout.move_to_group, container, false);
+    public DialogA create() {
+        LayoutScatter inflater = LayoutScatter.getInstance(mContext);
+        Component moveToGroupComponent = inflater.parse(ResourceTable.Layout_move_to_group, null, false);
 
-        getDialog().setTitle(R.string.move_contact);
-        this.metaContact = AppGUIActivator.getContactListService()
-                .findMetaContactByMetaUID(getArguments().getString(META_CONTACT_UID));
+        Text accountOwner = moveToGroupComponent.findComponentById(ResourceTable.Id_accountOwner);
+        String userId = metaContact.getDefaultContact().getProtocolProvider().getAccountID().getUserID();
+        accountOwner.setText(mContext.getString(ResourceTable.String_contact_owner, userId));
 
-        String UserId = getArguments().getString(USER_ID);
-        TextView accountOwner = contentView.findViewById(R.id.accountOwner);
-        accountOwner.setText(getString(R.string.contact_owner, UserId));
+        ListContainer groupListContainer = moveToGroupComponent.findComponentById(ResourceTable.Id_selectGroupSpinner);
+        MetaContactGroupProvider contactGroupAdapter = new MetaContactGroupProvider(mContext, groupListContainer, true, true);
+        groupListContainer.setItemProvider(contactGroupAdapter);
 
-        final AdapterView groupListView = contentView.findViewById(R.id.selectGroupSpinner);
-        MetaContactGroupAdapter contactGroupAdapter
-                = new MetaContactGroupAdapter(getActivity(), groupListView, true, true);
-        groupListView.setAdapter(contactGroupAdapter);
+        DialogA.Builder builder = new DialogA.Builder(mContext);
+        builder.setTitle(ResourceTable.String_move_contact)
+                .setComponent(moveToGroupComponent)
+                .setNegativeButton(ResourceTable.String_cancel, DialogA::remove);
 
-        contentView.findViewById(R.id.move).setOnClickListener(v -> {
-            MetaContactGroup newGroup = (MetaContactGroup) groupListView.getSelectedItem();
+        builder.setPositiveButton(ResourceTable.String_move, dialog -> {
+            MetaContactGroup newGroup = (MetaContactGroup) groupListContainer.getComponentAt(groupListContainer.getSelectedItemIndex());
             if (!(newGroup.equals(metaContact.getParentMetaContactGroup()))) {
                 moveContact(newGroup);
             }
-            dismiss();
+            dialog.remove();
         });
-
-        contentView.findViewById(R.id.cancel).setOnClickListener(v -> dismiss());
-        return contentView;
+        return builder.create();
     }
 
-    private void moveContact(final MetaContactGroup selectedItem) {
+    private void moveContact(final MetaContactGroup newGroup) {
         new Thread() {
             @Override
             public void run() {
                 try {
-                    AppGUIActivator.getContactListService().moveMetaContact(metaContact, selectedItem);
+                    AppGUIActivator.getContactListService().moveMetaContact(metaContact, newGroup);
                 } catch (MetaContactListException e) {
+                    Context ctx = aTalkApp.getInstance();
                     Timber.e(e, "%s", e.getMessage());
-                    DialogActivity.showDialog(aTalkApp.getInstance(),
-                            aTalkApp.getResString(R.string.error), e.getMessage());
+                    DialogH.getInstance(ctx).showDialog(ctx, mContext.getString(ResourceTable.String_error), e.getMessage());
                 }
             }
         }.start();
-    }
-
-    @Override
-    public void onClick(DialogInterface dialog, int which) {
     }
 }

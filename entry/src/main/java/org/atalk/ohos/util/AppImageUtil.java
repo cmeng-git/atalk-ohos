@@ -1,6 +1,6 @@
 /*
- * aTalk, android VoIP and Instant Messaging client
- * Copyright 2014~2024 Eng Chong Meng
+ * aTalk, ohos VoIP and Instant Messaging client
+ * Copyright 2024 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,25 +16,25 @@
  */
 package org.atalk.ohos.util;
 
-import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.Rect;
-import android.graphics.RectF;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
+import ohos.agp.components.element.PixelMapElement;
+import ohos.agp.render.Canvas;
+import ohos.agp.render.Paint;
+import ohos.agp.render.Texture;
+import ohos.agp.utils.Color;
+import ohos.agp.utils.Rect;
+import ohos.agp.utils.RectFloat;
+import ohos.app.Context;
+import ohos.global.resource.NotExistException;
+import ohos.global.resource.Resource;
+import ohos.media.image.ImageSource;
+import ohos.media.image.PixelMap;
+import ohos.media.image.common.PixelFormat;
+import ohos.media.image.common.Size;
+import ohos.utils.net.Uri;
 
-import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-
-import org.atalk.ohos.aTalkApp;
+import java.nio.ByteBuffer;
 
 /**
  * Class containing utility methods for Android's Displayable and Bitmap
@@ -43,50 +43,26 @@ import org.atalk.ohos.aTalkApp;
  */
 public class AppImageUtil {
     /**
-     * Converts given array of bytes to {@link Bitmap}
+     * Converts given array of bytes to {@link PixelMap}
      *
      * @param imageBlob array of bytes with raw image data
      *
-     * @return {@link Bitmap} created from <code>imageBlob</code>
+     * @return {@link PixelMap} created from <code>imageBlob</code>
      */
-    static public Bitmap bitmapFromBytes(byte[] imageBlob) {
+    static public PixelMap pixelMapFromBytes(byte[] imageBlob) {
         if (imageBlob != null) {
-            return BitmapFactory.decodeByteArray(imageBlob, 0, imageBlob.length);
+            ImageSource.SourceOptions sourceOptions = new ImageSource.SourceOptions();
+            sourceOptions.formatHint = "image/png";
+            ImageSource imageSource = ImageSource.create(imageBlob, sourceOptions);
+
+//            ImageSource.DecodingOptions decodingOpts = new ImageSource.DecodingOptions();
+//            // decodingOpts.desiredPixelFormat = PixelFormat.ARGB_8888;
+//            decodingOpts.desiredSize = new Size(0, 0);
+//            decodingOpts.rotateDegrees = 0;
+//            return imageSource.createPixelmap(decodingOpts);
+            return imageSource.createPixelmap(null);
         }
         return null;
-    }
-
-    /**
-     * Creates the {@link Drawable} from raw image data
-     *
-     * @param imageBlob the array of bytes containing raw image data
-     *
-     * @return the {@link Drawable} created from given <code>imageBlob</code>
-     */
-    static public Drawable drawableFromBytes(byte[] imageBlob) {
-        Bitmap bmp = bitmapFromBytes(imageBlob);
-        if (bmp == null)
-            return null;
-
-        return new BitmapDrawable(aTalkApp.getAppResources(), bmp);
-    }
-
-    /**
-     * Creates a <code>Drawable</code> from the given image byte array and scales it to the given
-     * <code>width</code> and <code>height</code>.
-     *
-     * @param imageBytes the raw image data
-     * @param width the width to which to scale the image
-     * @param height the height to which to scale the image
-     *
-     * @return the newly created <code>Drawable</code>
-     */
-    static public Drawable scaledDrawableFromBytes(byte[] imageBytes, int width, int height) {
-        Bitmap bmp = scaledBitmapFromBytes(imageBytes, width, height);
-        if (bmp == null)
-            return null;
-
-        return new BitmapDrawable(aTalkApp.getAppResources(), bmp);
     }
 
     /**
@@ -97,75 +73,65 @@ public class AppImageUtil {
      * @param reqWidth the width to which to scale the image
      * @param reqHeight the height to which to scale the image
      *
-     * @return the newly created <code>Bitmap</code>
+     * @return the newly created <code>PixelMap</code>
      */
-    static public Bitmap scaledBitmapFromBytes(byte[] imageBytes, int reqWidth, int reqHeight) {
-        // First decode with inJustDecodeBounds=true to check dimensions
-        final BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length, options);
+    static public PixelMap scaledPixelMapFromBytes(byte[] imageBytes, int reqWidth, int reqHeight) {
+        if (imageBytes != null) {
+            ImageSource.SourceOptions sourceOptions = new ImageSource.SourceOptions();
+            sourceOptions.formatHint = "image/png";
+            ImageSource imageSource = ImageSource.create(imageBytes, sourceOptions);
 
-        // Calculate inSampleSize
-        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
-
-        // Decode bitmap with inSampleSize set
-        options.inJustDecodeBounds = false;
-        return BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length, options);
+            ImageSource.DecodingOptions decodingOpts = new ImageSource.DecodingOptions();
+            decodingOpts.desiredSize = new Size(reqWidth, reqHeight);
+            decodingOpts.desiredPixelFormat = PixelFormat.ARGB_8888;
+            decodingOpts.rotateDegrees = 0;
+            return imageSource.createPixelmap(decodingOpts);
+        }
+        return null;
     }
 
-    /**
-     * Calculates <code>options.inSampleSize</code> for requested width and height.
-     *
-     * @param options the <code>Options</code> object that contains image <code>outWidth</code> and <code>outHeight</code>.
-     * @param reqWidth requested width.
-     * @param reqHeight requested height.
-     *
-     * @return <code>options.inSampleSize</code> for requested width and height.
-     */
-    public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
-        // Raw height and width of image
-        final int height = options.outHeight;
-        final int width = options.outWidth;
-        int inSampleSize = 1;
+    static public PixelMap scaledPixelMap(PixelMap pixelMap, int reqWidth, int reqHeight) {
+        if (pixelMap != null) {
+            final Paint paint = new Paint();
+            paint.setColor(new Color(0xff424242));
+            paint.setAntiAlias(true);
 
-        if (height > reqHeight || width > reqWidth) {
+            Texture texture = new Texture(pixelMap);
+            Canvas canvas = new Canvas(texture);
 
-            final int halfHeight = height / 2;
-            final int halfWidth = width / 2;
-
-            // Calculate the largest inSampleSize value that is a power of 2
-            // and keeps both height and width larger than the requested height
-            // and width.
-            while ((halfHeight / inSampleSize) > reqHeight
-                    && (halfWidth / inSampleSize) > reqWidth) {
-                inSampleSize *= 2;
-            }
+            final Rect rect = new Rect(0, 0, reqWidth, reqHeight);
+            canvas.drawRect(rect, paint);
+            return texture.getPixelMap();
         }
-        return inSampleSize;
+        return null;
     }
 
     /**
      * Decodes <code>Bitmap</code> identified by given <code>resId</code> scaled to requested width and height.
      *
-     * @param res the <code>Resources</code> object.
+     * @param ctx the <code>Context</code> object.
      * @param resId bitmap resource id.
      * @param reqWidth requested width.
      * @param reqHeight requested height.
      *
      * @return <code>Bitmap</code> identified by given <code>resId</code> scaled to requested width and height.
      */
-    public static Bitmap scaledBitmapFromResource(Resources res, int resId, int reqWidth, int reqHeight) {
-        // First decode with inJustDecodeBounds=true to check dimensions
-        final BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeResource(res, resId, options);
+    public static PixelMap scaledPixelMapFromResource(Context ctx, int resId, int reqWidth, int reqHeight) {
+        ImageSource.SourceOptions srcOptions = new ImageSource.SourceOptions();
+        srcOptions.formatHint = "image/png";
+        try {
+            Resource resource = ctx.getResourceManager().getResource(resId);
+            ImageSource source = ImageSource.create(resource, srcOptions);
+            ImageSource.DecodingOptions decodingOpts = new ImageSource.DecodingOptions();
+            decodingOpts.desiredSize = new Size(reqWidth, reqHeight);
+            decodingOpts.desiredPixelFormat = PixelFormat.ARGB_8888;
+            decodingOpts.rotateDegrees = 0;
 
-        // Calculate inSampleSize
-        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
-
-        // Decode bitmap with inSampleSize set
-        options.inJustDecodeBounds = false;
-        return BitmapFactory.decodeResource(res, resId, options);
+            return source.createPixelmap(decodingOpts);
+        } catch (IOException | NotExistException e) {
+            LogUtil.error("AppImageUtil", "read error");
+        }
+        return null;
     }
 
     /**
@@ -174,117 +140,111 @@ public class AppImageUtil {
      * given values, because only powers of 2 are used as scale factor. Algorithm tries to scale image down
      * as long as the output size stays larger than requested value.
      *
-     * @param ctx the context used to create <code>ContentResolver</code>.
      * @param uri the <code>Uri</code> that points to the image.
      * @param reqWidth requested width.
      * @param reqHeight requested height.
      *
      * @return <code>Bitmap</code> from given <code>uri</code> retrieved using <code>ContentResolver</code>
      * and down sampled as close as possible to match requested width and height.
-     * @throws IOException
      */
-    public static Bitmap scaledBitmapFromContentUri(Context ctx, Uri uri, int reqWidth, int reqHeight)
-            throws IOException {
-        InputStream imageStream = null;
+    public static PixelMap scaledPixelMapFromContentUri(Uri uri, int reqWidth, int reqHeight) {
         try {
-            // First decode with inJustDecodeBounds=true to check dimensions
-            imageStream = ctx.getContentResolver().openInputStream(uri);
-            if (imageStream == null)
-                return null;
+            File file = new File(uri.getDecodedPath());
+            ImageSource.SourceOptions srcOptions = new ImageSource.SourceOptions();
+            ImageSource imageSrc = ImageSource.create(file, srcOptions);
 
-            final BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inJustDecodeBounds = true;
-            BitmapFactory.decodeStream(imageStream, null, options);
-            imageStream.close();
+            ImageSource.DecodingOptions decodingOpts = new ImageSource.DecodingOptions();
+            decodingOpts.desiredSize = new Size(reqWidth, reqHeight);
+            decodingOpts.desiredPixelFormat = PixelFormat.ARGB_8888;
+            decodingOpts.rotateDegrees = 0;
 
-            // Calculate inSampleSize
-            options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
-
-            // Decode bitmap with inSampleSize set
-            options.inJustDecodeBounds = false;
-            imageStream = ctx.getContentResolver().openInputStream(uri);
-
-            return BitmapFactory.decodeStream(imageStream, null, options);
-        } finally {
-            if (imageStream != null) {
-                imageStream.close();
-            }
+            // Decode pixelMap with image Size set
+            // decOptions.sampleSize = calculateInSampleSize(imageSrc.getImageInfo(), reqWidth, reqHeight);
+            return imageSrc.createPixelmap(decodingOpts);
+        } catch (Exception e) {
+            return null;
         }
     }
 
     /**
      * Encodes given <code>Bitmap</code> to array of bytes using given compression <code>quality</code> in PNG format.
      *
-     * @param bmp the bitmap to encode.
-     * @param quality encoding quality in range 0-100.
+     * @param pixelMap the bitmap to encode.
      *
      * @return raw bitmap data PNG encoded using given <code>quality</code>.
      */
-    public static byte[] convertToBytes(Bitmap bmp, int quality) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bmp.compress(Bitmap.CompressFormat.PNG, quality, stream);
-        return stream.toByteArray();
+    public static byte[] convertPixelMapToBytes(PixelMap pixelMap) {
+        Size size = pixelMap.getImageInfo().size;
+        ByteBuffer byteBuffer = ByteBuffer.allocate(size.width * size.height * 4);
+        pixelMap.readPixels(byteBuffer);
+        byteBuffer.flip();
+        return byteBuffer.array();
     }
 
     /**
      * Loads an image from a given image identifier and return bytes of the image.
      *
-     * @param imageID The identifier of the image i.e. R.drawable.
+     * @param resId The identifier of the image i.e. ResourceTable.Media_
      *
      * @return The image bytes for the given identifier.
      */
-    public static byte[] getImageBytes(Context ctx, int imageID) {
-        Bitmap bitmap = BitmapFactory.decodeResource(ctx.getResources(), imageID);
-        return convertToBytes(bitmap, 100);
+    public static byte[] getImageBytes(Context ctx, int resId) {
+        PixelMap pixelMap = getPixelMap(ctx, resId);
+        return (pixelMap != null) ? convertPixelMapToBytes(pixelMap) : new byte[0];
+    }
+
+    public static PixelMap getPixelMap(Context ctx, int resId) {
+        try {
+            Resource resource = ctx.getResourceManager().getResource(resId);
+            PixelMapElement pixelMapElement = new PixelMapElement(resource);
+            return pixelMapElement.getPixelMap();
+        } catch (IOException | NotExistException e) {
+            LogUtil.error("AppImageUtil", e.getMessage());
+        }
+        return null;
     }
 
     /**
-     * Creates a <code>Bitmap</code> with rounded corners.
+     * Creates a <code>PixelMap</code> with rounded corners.
      *
-     * @param bitmap the bitmap that will have it's corners rounded.
+     * @param pixelMap the bitmap that will have it's corners rounded.
      * @param factor factor used to calculate corners radius based on width and height of the image.
      *
-     * @return a <code>Bitmap</code> with rounded corners created from given <code>bitmap</code>.
+     * @return a <code>PixelMap</code> with rounded corners created from given <code>pixelmap</code>.
      */
-    public static Bitmap getRoundedCornerBitmap(Bitmap bitmap, float factor) {
-        Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(output);
-
-        final int color = 0xff424242;
+    public static PixelMap getRoundedCornerPixelMap(PixelMap pixelMap, float factor) {
         final Paint paint = new Paint();
-        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
-        final RectF rectF = new RectF(rect);
-
+        paint.setColor(new Color(0xff424242));
         paint.setAntiAlias(true);
-        canvas.drawARGB(0, 0, 0, 0);
-        paint.setColor(color);
+        // paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
 
-        float rX = ((float) bitmap.getWidth() / 2); // * factor;
-        float rY = ((float) bitmap.getHeight() / 2); // * factor ;
-        // float r = (rX+rY)/2;
+        Size size = pixelMap.getImageInfo().size;
+        final Rect rect = new Rect(0, 0, size.width, size.height);
+        final RectFloat rectF = new RectFloat(rect);
 
-        //canvas.drawRoundRect(rectF, rX, rY, paint);
-        canvas.drawCircle(rX, rY, rX, paint);
+        Texture texture = new Texture(pixelMap);
+        Canvas canvas = new Canvas(texture);
 
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-        canvas.drawBitmap(bitmap, rect, rect, paint);
+        canvas.drawRoundRect(rectF, factor, factor, paint);
 
-        return output;
+//        canvas.drawARGB(0, 0, 0, 0);
+//        PixelMap output = PixelMap.createBitmap(size.width, size.height, PixelFormat.ARGB_8888);
+//        canvas.drawBitmap(pixelmap, rect, rect, paint);
+        return texture.getPixelMap();
     }
 
     /**
-     * Creates <code>BitmapDrawable</code> with rounded corners from raw image data.
+     * Creates <code>PixelMap</code> with rounded corners from raw image data.
      *
      * @param rawData raw bitmap data
      *
-     * @return <code>BitmapDrawable</code> with rounded corners from raw image data.
+     * @return <code>PixelMap</code> with rounded corners from raw image data.
      */
-    public static BitmapDrawable roundedDrawableFromBytes(byte[] rawData) {
-        Bitmap bmp = bitmapFromBytes(rawData);
-        if (bmp == null)
+    public static PixelMap getRoundedCornerPixelMapFromBytes(byte[] rawData) {
+        PixelMap pixelMap = pixelMapFromBytes(rawData);
+        if (pixelMap == null)
             return null;
-        bmp = getRoundedCornerBitmap(bmp, 0.10f);
-        return new BitmapDrawable(aTalkApp.getAppResources(), bmp);
+        return getRoundedCornerPixelMap(pixelMap, 0.10f);
     }
 
     /**
@@ -296,8 +256,92 @@ public class AppImageUtil {
      *
      * @return The rounded corner scaled image.
      */
-    public static Drawable getScaledRoundedIcon(byte[] imageBytes, int width, int height) {
-        Bitmap bmp = getRoundedCornerBitmap(scaledBitmapFromBytes(imageBytes, width, height), 0.1f);
-        return new BitmapDrawable(aTalkApp.getAppResources(), bmp);
+    public static PixelMap getScaledRoundedIcon(byte[] imageBytes, int width, int height) {
+        return getRoundedCornerPixelMap(scaledPixelMapFromBytes(imageBytes, width, height), 0.1f);
     }
+
+    /**
+     * Creates a circular <code>PixelMap</code>.
+     *
+     * @param pixelmap the bitmap that will have circular mack.
+     *
+     * @return a circular <code>PixelMap</code> created from given <code>pixelmap</code>.
+     */
+    public static PixelMap getCircularPixelMap(PixelMap pixelmap) {
+        final Paint paint = new Paint();
+        paint.setColor(new Color(0xff424242));
+        paint.setAntiAlias(true);
+        // paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+
+        Size size = pixelmap.getImageInfo().size;
+        final float rX = (float) size.width / 2.0f;
+        final float rY = (float) size.height / 2.0f;
+
+        Texture texture = new Texture(pixelmap);
+        Canvas canvas = new Canvas(texture);
+        canvas.drawCircle(rX, rY, rX, paint);
+
+//        canvas.drawARGB(0, 0, 0, 0);
+//        PixelMap output = PixelMap.createBitmap(size.width, size.height, PixelFormat.ARGB_8888);
+//        canvas.drawBitmap(pixelmap, rect, rect, paint);
+        return texture.getPixelMap();
+    }
+
+    /**
+     * Creates a circular <code>PixelMap</code> from raw image data.
+     *
+     * @param rawData raw bitmap data
+     *
+     * @return a circular <code>PixelMap</code> from raw image data.
+     */
+    public static PixelMap getCircularPixelMapFromBytes(byte[] rawData) {
+        PixelMap pixelMap = pixelMapFromBytes(rawData);
+        if (pixelMap == null)
+            return null;
+        return getCircularPixelMap(pixelMap);
+    }
+
+    /**
+     * Creates a circular scaled image.
+     *
+     * @param imageBytes The bytes of the image to be scaled.
+     * @param width The maximum width of the scaled image.
+     * @param height The maximum height of the scaled image.
+     *
+     * @return The circular scaled image.
+     */
+    public static PixelMap getScaledCircularIcon(byte[] imageBytes, int width, int height) {
+        return getCircularPixelMap(scaledPixelMapFromBytes(imageBytes, width, height));
+    }
+
+//    /**
+//     * Calculates <code>options.inSampleSize</code> for requested width and height.
+//     *
+//     * @param imgInfo the <code>ImageInfo</code> object that contains image <code>size</code>.
+//     * @param reqWidth requested width.
+//     * @param reqHeight requested height.
+//     *
+//     * @return <code>options.inSampleSize</code> for requested width and height.
+//     */
+//    public static int calculateInSampleSize(ImageInfo imgInfo, int reqWidth, int reqHeight) {
+//        // Raw height and width of image
+//        Size size = imgInfo.size;
+//        final int height = size.height;
+//        final int width = size.width;
+//        int inSampleSize = 1;
+//
+//        if (height > reqHeight || width > reqWidth) {
+//            final int halfHeight = height / 2;
+//            final int halfWidth = width / 2;
+//
+//            // Calculate the largest inSampleSize value that is a power of 2
+//            // and keeps both height and width larger than the requested height
+//            // and width.
+//            while ((halfHeight / inSampleSize) > reqHeight
+//                    && (halfWidth / inSampleSize) > reqWidth) {
+//                inSampleSize *= 2;
+//            }
+//        }
+//        return inSampleSize;
+//    }
 }
