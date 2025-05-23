@@ -1,23 +1,360 @@
 Project aTalk-ohos Release Notes
 =========================================================================
-Version:        00.03.000 (0003000)
-Release Date:   05/23/2024
+Version:        00.07.000 (0007000)
+Release Date:   05/20/2025
 Author:         cmeng
-- First release of aTalk source for OHOS based on aTalk-ohos 00.07.000 (0007000) data 05/20/2025
+- Show Badge indicator on incoming file request; to ease user identification of the sender in contact list main UI.
+- Enable HeadsUp notification for incoming file transfer request to alert user when device is in standby;
+  Launch 'App Info...' settings, user must update the File Transfer Notification settings.
+  See https://developer.android.com/develop/ui/views/notifications/channels#UpdateChannel.
+- Ensure multiple files send/receive for HTTPFileUpload, JingleFileSend and Legacy Bytestream transfer protocols are handled properly; improve UI and process reliability.
+- Must re-init all UI button actions whenever the xFileConversationForm is called on UI refresh; as inflateViewForFileTransfer() will change their references.
+- Fix ConcurrentModificationException in JingleS5BTransportCandidateImpl#connectToCandidates() checking.
+- Change to use TOTAL_CONNECTION_TIMEOUT (10s) for each candidate in establishBytestreamSession checking.
+- Do not set file sending/receiving state as History Record while it is still active;
+  else any UI refresh will interrupt file transfer, although file transfer may still running in background.
+  This happen when send/receive new text or during multiple files receiving.
+- Must create file record in DB for proper HTTP file download process update; else the cached info is destroyed when user closes the chat session.
+- Use Math.max(COLUMN_TOTAL_SIZE_BYTES, COLUMN_BYTES_DOWNLOADED_SO_FAR) for HttpFileDownloadJabberImpl#queryFileSize();
+  later is found to contain file size, and COLUMN_TOTAL_SIZE_BYTES always return 0. Download Manager implementation error?
+- Improve and clean up HttpFileDownloadJabberImpl implementation e.g. progress query by Id instead of status.
+- Must implement HttpFileDownloadJabberImpl#getTransferredBytes for proper HttpFileDownload progressBar update.
+- Implement and support XEP-0066: Out of Band Data sending in Http file transfer in contact or muc chat session.
+- Ensure the file transfer UI is shown (post delay 0.5S) before proceed to auto accept file transfer if enabled.
+- Fix progressBar indicator not properly updated when the received file size in unknown in HttpFileDownload process.
+- Do not constraint the IncomingFileTransferJingleImpl#progress() update with 10mS UPDATE_INTERVAL;
+  else final rwBytes may not be reflected in the UI progressBar.
+- Ensure all message event ID's in outgoing file transfer are in sync with the file record saved in database for proper status update.
+- When file transfer form is first created, it must check that (getXferStatus() == FileTransferStatusChangeEvent.UNKNOWN)
+  before start any file send/received process. else file transfer may get repeated in UI.
+- Ensure all status definitions in both FileTransferStatusChangeEvent and FileRecord are in sync for correct status tracking.
+- Ensure the transport candidates use in file transfer are properly refreshed when the device active network connection is changed.
+- Avoid using static mBuilder for both JingleContentDescription and JingleContentTransport; else multiple JingleFileTransfer will interference with each other.
+- JingleSessionImpl#jingleSessionListeners cannot be static; otherwise updateSessionState will interfere with each other in multiple files transfer.
+- During multiple Jingle files receive, sometimes has the following exception ('session-accept' sent twice):
+    JingleIncomingFileOffer.onBytestreamReady() Cannot get InputStream from BytestreamSession:
+    java.net.SocketException: Socket is closed java.net.SocketException: Socket is closed
+    The problem is due to Recipient send accept twice - problem fixed.
+- Legacy file transfer uses the same instance of OperationSetFileTransferJabberImpl to send file with the same NegotiationProgress status callback;
+  hence unable to support multiple files transfer. Use difference NegotiationProgress for each OutgoingFileTransferJabberImpl to fix the problem.
+- Need to block the unexpected delayed info messages on HttpFileDownload send from server multiple times; else repeated UI requests user to accept file.
+- Add serverMsgId and remoteMsgId value to the file history record in the database; to check for unexpected delay info messages send from server.
+- Ignore any empty body forward message received during MamQuery process update.
+- Fix ChatState notifications not handle properly in MUC chat session.
+- Save last send/received message timestamp into mamDate in session record, avoid deleted messages reappear in UI when user relaunch aTalk.
+  When last send/received message are purged, then user exit/terminate aTalk. All the purged messages will get retrieved via mamQuery.
+  This is because the last message timeStamp is not saved into the session mamDate, and last cached info is destroyed on exit.
+- Use OriginIdElement as msgUid if the received message does not contain the msgId.
+- Move subclass common CameraCaptureSession.StateCallback into base class CameraStreamBase.
+- Replace deprecated option menu setHasOptionsMenu() implementation with MenuProvider.
+- Replace deprecated FragmentPagerAdapter with FragmentStateAdapter for the main aTalk MainPagerAdapter.
+- Add Arabic language support.
+
+*** Observation with no solution implemented:
+- Share from other app works only if aTalk is active (aTalk must be launched and registered on the network);
+  Requires aTalk to be registered with network, also onCreateView() is not being called when aTalk is inactive.
+- Sometimes JingleFileTransfer request is not received by recipient; and sender abort after 10s timeout; Then the sender fallback to other methods.
+  Sometimes aTalk does not receive JingleIncomingFileOffer messages (missing in logcat) after a new build debug. Other Jingle request is ok.
+- During multiple files send process, all FileSendConversation UI must be brought/scrolled into view before the file sending is triggered.
+- During multiple file send, the 'session-initiate' may not be sent if the sender UI is not in view.
+  User has to scroll the UI into view to start. Waiting for UI status to complete the update.
+- On file send error, a 'retry' option is offered. However this option is cleared if the user scrolls, and the UI get refresh as History record.
 
 =========================================================================
-Version:        00.02.020 (0002020)
+Version:        00.06.030 (0006030)
+Release Date:   04/26/2025
+Author:         cmeng
+- Enable Badge show for incoming file request, for user easy identification of the sender in contact list.
+- Enable HeadsUp notification for incoming file transfer request to alert user when device is in standby.
+
+- Move subclass common CameraCaptureSession.StateCallback into base class CameraStreamBase.
+- Replace deprecated option menu setHasOptionsMenu() implementation with MenuProvider.
+- Replace deprecated FragmentPagerAdapter with FragmentStateAdapter for the main aTalk MainPagerAdapter.
+
+=========================================================================
+Version:        00.06.020 (0006020)
+Release Date:   03/26/2025
+Author:         cmeng
+- Force aTalk to restart if user made changes to android HW Codec Expert settings; for them to be active.
+- ZRTPTransformEngine#initialize(): Fix ZidFile length must not be zero if exist, else ZidFile.open will failed.
+- Ensure android encoder inputSurface for remote video streaming is init only once, else video streaming will fail.
+  This fixes eglCreateWindowSurface: native_window_api_connect failed (already connected to another API?)
+  eglCreateWindowSurfaceTmpl:684 error 3003 (EGL_BAD_ALLOC)
+- Video resolution setting will use the closest match camera capability if exact match to user selected value is not available.
+
+*** Observation with no solution:
+- HW H264 decoder crashes on J730 when media exchange with Note10 (HW or SW H264 Encoder); but work with AVD Pixel API-34(100%)/33(90%)/31(70%).
+  A  Fatal signal 6 (SIGABRT), code -6 (SI_TKILL) in tid 5240 (MediaCodec_loop), pid 3595 (g.atalk.android)
+  With AVD Pixel API-27, at times failed as above or #Do process for codec: OMX.Exynos.avc.dec; Exception: null java.lang.IllegalStateException
+- SurfaceStream#initSurfaceConsumer: AVD Pixel6 throws EGL_BAD_ATTRIBUTE for Surface Stream (Note-10 is OK); so just ignore
+
+=========================================================================
+Version:        00.06.010 (0006010)
+Release Date:   02/19/2025
+Author:         cmeng
+- BaseActivity#configureToolBar must handle and enable custom actionBar setup; else ShareActivity crash.
+- Update German and Russian string.xml files.
+- Remove unused classes/files.
+
+=========================================================================
+Version:        00.06.000 (0006000)
+Release Date:   02/13/2025
+Author:         cmeng
+- Reimplement deprecated classes/methods i.e. onBackPressed and AsyncTask with new functions.
+- Fix show aTalk icon MissingForegroundServiceTypeException; use NotificationManager.notify() instead.
+- Need to add READ_EXTERNAL_STORAGE permission (Files and Media) request for android API-32.
+- Implement newly added READ_MEDIA_VISUAL_USER_SELECTED permission for android API-34.
+- Do not launch BatteryOptimization permission request within a dialog, else parseResult is based on dialog click.
+- ActivityResultContract#parseResult on BatteryOptimization request must return isOptimizingBattery() state.
+- UpdateServiceImpl#isLatestVersion need to close inputStream after access end.
+- Add BaseActivity, BaseFragment, BaseDialogFragment and BasePreferenceFragment classes, and subclass OSGi unrelated classes to these instead; Remove unused OSGi classes.
+- Remove all imageStreaming classes, aTalk does not support desktop sharing.
+- Clean up app sources and rename some packages names.
+- Update all app used libraries to the latest compatible releases.
+
+- Change default thumbnail size to 128x96 with jpeg compress 80% quality; better visibility and converse bandwidth.
+  ejabberd.yml shaper@normal set to 50KB/s
+- CryptoFragment: Skip if previous check has omemo supported. The OmemoManager.contactSupportsOmemo can cause ANR in OmemoManager.encrypt
+- Check for ConfigurationUtils#mConfigService not null before proceed to handle any setting changes.
+- Back key during call will exit screen block if UI is not responding due to proximity sensor problem.
+- Consolidate and move all si file transfer classes into smack directory.
+
+=========================================================================
+Version:        00.05.000 (0005000)
+Release Date:   05/14/2024
+Author:         cmeng
+- Add Jingle Content Thumbnails (XEP-0264) support in Jingle File Transfer (XEP-0234) protocol.
+  * Thumbnails is disabled for OMEMO Jet; no defined protocol to support.
+  * Add ThumbnailProvider class for Thumbnail element parsing in JingleFileTransferProvider.
+  * Include Thumbnail element handling in JingleFile and JingleFileTransferChild classes.
+  * OutgoingFileOfferJingleImpl: Implement bobInfoInit handler for thumbnail support.
+  * IncomingFileOfferJingleImpl: implement getThumbnail() with callback.
+- Optimize and cleanup OperationSetFileTransferJabberImpl for XEP-0264: Jingle Content Thumbnails support:
+  * OperationSetFileTransferJabberImpl#fileTransferRequest: let thumbnail request to be handled by FileReceiveConversation.
+  * OutgoingFileTransferJabberIml handles bobInfoInit at constructor, and remove StanzaListener to insert Thumbnail element.
+  * IncomingFileTransferRequestJabberImpl: add getThumbnail() with callback.
+- Block and alert user if attempt to send encrypted file via XEP-0096: SI File Transfer.
+- Update smack library classes to fully support Jingle Content Thumbnails (XEP-0264) in legacy Si and Jingle File Transfer.
+  * Rename ThumbnailStreamInitiationProvider to StreamInitiationProvider, and replace smack class file.
+  * Cleanup and update StreamInitiation.File to support Thumbnail element, and remove thumbnail.ThumbnailFile class file.
+  * FileTransferRequest: add getThumbnail() method.
+  * OutgoingFileTransfer: Add new thumbnail parameter in sendFile() etc for use in FileTransferNegotiator.negotiateOutgoingTransfer().
+  * FileTransferNegotiator: Add thumbnail element in XEP-0096: SI File Transfer stanza sending.
+  * JingleFileTransferProvider: Support Thumbnail parsing.
+- Dropped changing thumbnail default size to 128x96 in file transfer.
+  * Current BobData response time is ~16s (jpeg=14784) and 39s (png=31326) with thumbnail size = 128 x 96.
+  * Thumbnail size 64x64 => jpeg 5303 and takes ~7s; use this as default
+- Scale thumbnail x2 for display in file transfer request UI.
+- OutgoingFileOfferJingleImpl needs to perform process cleanup upon ProgressListener#onFinished().
+- Must init JetManager when user is authenticated, ready for advertise JET feature in DiscoveryManager;
+  else JetManager security file transfer support is not working.
+
+=========================================================================
+Version:        00.04.010 (0004010)
+Release Date:   05/02/2024
+Author:         cmeng
+- Add new permissions required for API-34 and change UI to support.
+- Add 'App Info' option in main menu to view/change aTalk permission settings; different android devices have own implementations.
+- Check and skip process for duplicated presence with caps sent from server; OperationSetPersistentPresenceJabberImpl#userCapsNodeNotify() process.
+- Add CapExtension flag in ContactPresenceStatusChangeEvent, and remove unused constructor.
+- Must handle userCapsNode Notify for presence goes offline for fullJid; else call options on UI are not updated.
+- ReImplement ServiceDiscoveryHelper#discoverInfoNonBlocking() to minimize device ANR.
+- Fix send file status not being updated to DB, and remain at STATUS_WAITING; accidentally commented out since v3.2.2.
+- Http Download to proceed with auto-download only if the file size from server is known.
+- In API-34, a file selected via picker for sending may be a url link temporary created by android system for file sharing;
+  this url link is invalid and not accessible to aTalk when user returns to the chat UI again. The url link is
+  i.e. /storage/emulated/0/.transforms/synthetic/picker/0/com.android.providers.media.photopicker/media/1000000043.jpg
+- Execute purgeCorruptedOmemoKey() in new Thread to avoid ANR.
+- Upgrade smack libraries to 4.4.8.
+- Migrate com.google.android.exoplayer:exoplayer:2.19.1 to androidx.media3:media3-exoplayer:1.3.1.
+- Simplify String parameter names and clean up unused resources.
+- Add aTalk.doap file.
+
+=========================================================================
+Version:        00.04.000 (0004000)
+Release Date:   04/01/2024
+Author:         cmeng
+- Removal of a contact shall purge all its associated history messages, call records and its sessionUuid.
+  Otherwise recreate same contact will inherited old sessionUuid and history messages, causing mamQuery problem.
+- Improve 'Recent conversations' interface to disable multi-item selection; and allow purge of orphan chat session.
+- Add support to delete history messages based on sessionUuid i.e. no associated contact or chatRoom.
+- EntityListHelper history record delete will return the actual deleted records count, for display to user.
+- Change EntityListHelp to support FragmentActivity caller i.e. onTaskComplete callback to its caller directly.
+- ChatPanel#mamQuery must use actual sessionUuid from DB; and it may not be the same as mChatId.
+
+- Fix duplication of chat messages received via delayed delivery in group chat;
+  Happen if user rejoins group chat after logout/login; last sent message timestamp not save in configuration
+- Fix duplicate display of incoming delayed messages in contact chat session; happen if mam messages are received before delayed messages
+- Fix incoming delayed encrypted messages out of timestamp order display. Process times vary for encrypted messages.
+  Must sort msgCache before its use.
+- If user goes offline after messages sent to an offline buddy; Upon messages received by buddy,
+  the receipt status of these messages are not updated in chat UI when user goes online again.
+  Move ReceiptReceivedListener implementation out of ChatFragment, and into MessageHistoryServiceImpl with callback.
+  This ensure the ReceiptReceivedListener are ready upon user login.
+- UserAvatar migrates to use PepEventListener, and ensure proper handling of avatar removal pubsub#event.
+  * also avoid retrieve image byte and pass as parameter in function call.
+- Update VCardAvatarManager to check and skip repeated request from multiple (x4) user presence's received.
+- User new avatar update are published via XEP-0084, and XEP-0153; ejabberd
+  responses to the later with vcard-temp and no photo hash, causing aTalk to remove the avatar.
+  * Disable VCardAvatarManager process of vcard-temp with no photo hash; use only 'XEP-0084: User Avatar' pubsub#event.
+  * Problem reported and fixed by ejabberd: https://github.com/processone/ejabberd/issues/4182
+    ejabberd sends presence's, photo element with no hash value, after user publishes a new avatar #4182
+- Fix avatar changes received via XEP-0153/XEP-0084 are not updated to the contact/user until user next re-login;
+  also user (added as contact entity) avatar does not get updated.
+- Merged both UserAvatarListener and VcardAvatarListener into one AvatarChangeListener for more efficient handling of avatar changes.
+- ContactJabberImpl introduces new retrieveIfNecessary in getAvatar(boolean) on dynamic request,
+  separately it from retrieveOnStart which should be set on user login.
+- userCapsNodeNotify() should be handled for each protocolProvider, to support multiple user accounts setup.
+- Skip OperationSetPersistentPresenceJabberImpl#publishPresenceStatus(), if user selected the same 'Presence Status'.
+- Fix duplicate sending of the initial <presence/> stanza by smack ServiceDiscoveryManager.
+- Move ServiceDiscoveryHelper#userCapsNodeNotify() into OperationSetPersistentPresenceJabberImpl,
+  tagged to Roster#presenceChanged() callback for process improvement.
+- ChatRoomCreateDialog: initAccountSpinner() only after initComboBox(); else onItemSelected() will trigger
+  initComboBox() and second network access duplication;
+- Remove main menu 'Sign out' and 'Exit' options to prevent user unintentionally unregister himself from server;
+  e.g. unable to receive incoming call.
+- SmackConfiguration.setDefaultReplyTimeout to 10000 ms.
+
+=========================================================================
+Version:        00.03.000 (0003000)
+Release Date:   02/29/2024
+Author:         cmeng
+- AndroidOmemoService initOmemoDevice() setReplyTimeout not working and always failed with NoResponseException;
+  * Implement setReplyTimeout for both Async.go in smack OmemoManager/OmemoService, else set value is reset by aTalk other stanza processes.
+  * set in OmemoService for initializeAsync(), and within the PepEventListener<OmemoDeviceListElement>
+  See https://discourse.igniterealtime.org/t/smack-4-4-7-xmppconnection-setreplytimeout-value-is-not-guaranteed-when-the-stanza-is-sent-asynchronously/93636
+- Smack OmemoManager handle of Pubsub#event in PepEventListener has NoResponseException; end in endless loop when server
+  send multiple (x15) Pubsub#event's, and eventually eventually crashes smack with InvalidXmlException.
+  setReplyTimeout to 15s and block all new Pubsub#Event once it is served, check via publishedDeviceList.
+- Finally aTalk decided to make local changes, replacing the 2 files in smack-omemo library i.e.
+  * OmemoManager.java and OmemoService.java classes
+- Add support for XEP-0191: Blocking Command to block communications with a specific contact and domain.
+- Implement EntityCapsPersistentCache using mySQlite DB instead of file system for speed.
+- Fix erased contact/chatroom history messages reappear after return to chatSession;
+  messages are retrieved from unclear chatPanel@msgCache.
+- Disable 'Contact Info' option when user is offline; Contact Info is not properly initialized when user is offline.
+- Must initPreferences() for all views before setPreferencesFromResource(); else any updated values in shared_prefs
+  will not be reflected in preference UI: IceFragment, TelephonyFragment and XmppConnectionFragment
+- Allow user removal of a DomainJid from the contact list UI.
+- Allow user moving of contact not in the Roster; ServerStoredContactListJabberImpl#moveContact()
+- Include check contact blocking state in MetaContactRender#isShowCallBtn() and isShowVideoCallBtn()
+- Fix Telephony UI Cancel button not working: must set TelephonyFragment.TELEPHONY_TAG in fragment Tag on launch.
+- Set android:exported to true for all activities launch via preference <intent android:action/>; else aTalk crashes in API-34.
+- Add/Remove of ContactPresenceStatusListener and ContactBlockingStatusListener should be for each registered ProtocolProvider
+  * MetaContactListAdapter#addContactStatusListener etc
+- Clean up ShareActivity source - remove the unnecessary FragmentPagerAdapter implementation.
+- Create common CustomDialogCb with checkBox option for: AccountDelete, ChatMessageDelete, and ContactBlock
+- Use full class path for all references to avoid problem.
+- JingleFile transfer AbstractMethodError resolved with aTalk source patches; Google team is unable to offer any solution in gradle release built.
+  * Must place two smack files into aTalk local source, and defined QNAME in file
+  * a. org.jivesoftware.smackx.jingle.transports.jingle_s5b.elements.JingleS5BTransportInfo
+  * b. org.jivesoftware.smackx.jingle_filetransfer.element.JingleFileTransferChild
+- Fix call notification control ui partial cropping of buttons.
+- Clean up ChatSessionManager class source removing unused methods.
+- Alert dialog drawable/background_alert_dialog must use ?attr/colorBackground, to align with text font theme color.
+- Drop dependency and replace com.code-troopers.betterpickers with android DatePicker-spinner mode (API-24).
+- Improve call history deletion UI for all call records prior to user set date.
+- Improve account preference birth date setting UI.
+- Remove MapsInitializer.initialize(), no further required; default to use Renderer.LATEST
+  see https://developers.google.com/maps/documentation/android-sdk/renderer#opt-out
+- Remove all old classes supporting <API-24: AbstractFunction, Consumer, Function, Predicate, and Supplier
+
+=========================================================================
+Version:        00.02.050 (0002050)
+Release Date:   02/09/2024
+Author:         cmeng
+- Fix incorrect derive of the chatSession Uuid for conference chat messages in saveMamIfNotExit()
+- Extend smack reply timeout to 10S for MamManager.MamQuery() to take care for slow server response
+- Drop non-null subject field as prerequisite in create/join a chatRoom; user may not have the right to change subject.
+  * Instead use chatRoomId for bookmark name if subject is null.
+- Default bookmark creation but with auto-join disabled for newly created chatRoom.
+- Default "Enable Room Status" to false on entry to newly created chatRoom.
+- Block room status caching in ChatPanel#msgCache if !isRoomStatusEnable(); else they will appear in chatSession when open.
+- Limit conference subject to single line with ellipsize="marquee" and auto scroll horizontally
+- Fix chatRoom status icon indicator not being updated on entry.
+- Fix muc#roomconfig stanza sending always failed with NoResponseException, if Send within
+  PresenceListener#processOwnPresence() thread; must send in new Thread() to resolve the problem.
+- Fix deletion of room status messages crashes aTalk
+- Drop aTalk ScServiceDiscovery class; use smack ServiceDiscoveryManager and local ServiceDiscoveryHelper implementations.
+  * Simplify implementation, and resolve endless disco#info requests at times.
+- Remove unused class EntityCapsDatabase()
+- Rename SimpleDirectoryPersistentCache entityStore to entityCapsStore
+- Cleanup and improve ServerPersistentStoresRefreshDialog class implementation
+- JingleFile transfer AbstractMethodError remained; disabled for aTalk release. Awaiting Google team solution feedback
+
+- Drop com.jakewharton:butterknife-compiler:10.2.3 dependency and remove jdk-15 max restriction;
+  use android View binding class instead.
+- Change file transfer protocol priority to:
+  * The file transport is selected with the following priority order if contact is online:
+  * a. httpFileUpload (for OMEMO and plain chat session: chatType)
+  * b. jingleFileSend (Secure JET or Plain) (NAT not supported)
+  * c. Legacy byteStream transfer protocol for SOCK5 with fallback on IBB on user retry
+- Fix Smack 4.4.7: ByteStream Sock5 implementation does not take care of the host address with zone id
+- Enable webView cache mode
+- JingleFile transfer AbstractMethodError remained; disabled for aTalk release. Awaiting Google team solution feedback
+- API-34 overrides aTalk message Snooze pending intent; actual implementation depends on manufacturers i.e.
+  auto enable after 3 notifications (pixel) or show user snooze option (Notes 10) with timer etc.
+
+- Update gradle build environment to with gradle 8.0.0 and above:
+  a. Use Android Studio Hedgehog | 2023.1.1 Patch
+  b. distributionUrl=https://services.gradle.org/distributions/gradle-8.5-bin.zip
+  c. classpath 'com.android.tools.build:gradle:8.2.2'
+  d. Add to buildFeatures: viewBinding true; buildConfig true
+  e. Add namespace to aTalk and YoutubePlayer modules
+  f. YoutubePlayer: kotlinOptions { jvmTarget = '1.8'}
+  g. Update gradle.properties to include:
+     # Gradle >=8.0.0: Library project resource identifiers are not constant static final ints, just static ints.
+     android.nonFinalResIds=false
+     # Gradle >=8.0.0: Allow transitive resource identifiers use in aTalk.
+     android.nonTransitiveRClass=false
+
+- Fix ContextCompat.registerReceiver flag setting: If this receiver is listening for broadcasts sent from the system
+  or from other apps—even other apps that you own—use the RECEIVER_EXPORTED flag. If instead this receiver is listening
+  only for broadcasts sent by your app, use the RECEIVER_NOT_EXPORTED flag; and broadcaster must setPackage(getPackageName()).
+  * Use RECEIVER_EXPORTED for HttpFileDownloadJabberImpl(), UpdateServiceImpl(), and ConnectivityManagerListenerImpl()
+  * Use RECEIVER_NOT_EXPORTED and required to setPackage(getPackageName()) in sendBroadcast for:
+  a. Fix option Exit not working in android API-34
+  b. Fix CallControl Notification with proper callback.
+  c. Fix message received popup with proper callback.
+- Temporary disable 'Jingle Outgoing File Offer', use HTTP file upload instead; Android Studio release build throws runtime AbstractMethodError.
+- Fix Option 'StreetViews & Map' crashes in API-34: Layout <frame /> cannot accept fraction value in android:layout_weight
+- Fix Correct downloadable fileNameApk =String.format("aTalk-%s-%s.apk", BuildConfig.FLAVOR, BuildConfig.BUILD_TYPE);
+- Make UpdateServiceImpl() shows both version/code for installed and latest available apk.
+- Move shutdownApplication() function into ExitMenuActivity i.e. non-static
+- Add missing method in JComponent#setDoubleBuffered(boolean)
+
+=========================================================================
+Version:        00.02.040 (0002040)
 Release Date:   01/26/2024
 Author:         cmeng
+- Rebuild for API-34 release fixing user login problem arise from Android Studio exclude group:.
 - AbstractXmlElement#toXML(XmlEnvironment): Do not pass in enclosingXmlEnvironment;
   else the NS may be be excluded causing problem; and getFirstChildElement(Class<T> type) will return null
   e.g. <description xmlns='urn:xmpp:jingle:apps:rtp:1'...> and <transport xmlns='urn:xmpp:jingle:transports:ice-udp:1'...>
+- Change chat session action options on user single and multiple items selection
+- Change auto return to contactList UI timer to 5 seconds after call has ended; allow user more time to view error messages.
 - Use exclude group: for local smack libraries inclusion;
-  add jarjar for local smack libraries into main build.gradle, and remove buildSrc#build.gradle
+  add jarjar for local smack libraries into main build.gralde, and remove buildSrc#build.gradle
 - AccountLoginActivity#onLoginPerformed(); update for new user create and login, startActivity aTalk UI
+- JingleFile send still having problem, AS throws AbstractMethodError exception unexpectedly.
+  Not such problem with apk in ADB debug. see https://issuetracker.google.com/issues/321988935
 
 =========================================================================
-Version:        00.02.010 (0002010)
+Version:        00.02.030 (0002030)
+Release Date:   01/12/2024
+Author:         cmeng
+- Revert to set distributionUrl=https://services.gradle.org/distributions/gradle-7.6-bin.zip
+  in gradle-wrapper.properties; gradle-8.x does not generate the required smack jarjar files at all.
+- Use implementation jarjar.repackage("filename.jar") to ensure destinationName is set correctly.
+
+=========================================================================
+Version:        00.02.020 (0002020)
+Release Date:   12/30/2023
+Author:         cmeng
+- Move directory 'aTalk' to 'entry', preparation for ohos porting
+
+=========================================================================
+Version:        00.02.040 (0002040)
 Release Date:   12/29/2023
 Author:         cmeng
 - Update atalk-ohos for android API-34 support (needs master jarjar-gradle)

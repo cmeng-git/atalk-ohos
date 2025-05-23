@@ -1,6 +1,6 @@
 /*
- * aTalk, ohos VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * aTalk, android VoIP and Instant Messaging client
+ * Copyright 2014 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,48 +16,62 @@
  */
 package org.atalk.ohos.gui.util;
 
+import android.content.Context;
+import android.database.Cursor;
+import android.text.InputType;
+import android.text.TextUtils;
+import android.util.AttributeSet;
+import android.util.TypedValue;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+
 import java.util.List;
 
-import ohos.agp.components.AttrSet;
-import ohos.agp.components.DirectionalLayout;
-import ohos.agp.components.LayoutScatter;
-import ohos.app.Context;
-
-import org.atalk.ohos.ResourceTable;
-import org.atalk.ohos.util.ComponentUtil;
+import org.atalk.ohos.R;
 
 /**
- * Custom ComboBox for ohos
+ * Custom ComboBox for Android
  *
  * @author Eng Chong Meng
  */
-public class ComboBox extends DirectionalLayout {
+public class ComboBox extends LinearLayout {
     protected AutoCompleteTextView _text;
     protected List<String> spinnerList;
 
     private final int unit = TypedValue.COMPLEX_UNIT_SP;
     private final float fontSize = 15;
-    private final int fontBlack = getContext().getColor(ResourceTable.Color_textColorBlack);
+    private final int fontBlack = getResources().getColor(R.color.textColorBlack, null);
 
     private Context mContext;
-    private LayoutScatter inflater;
+    private LayoutInflater inflater;
 
     public ComboBox(Context context) {
         super(context);
         this.createChildControls(context);
     }
 
-    public ComboBox(Context context, AttrSet attrs) {
+    public ComboBox(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.createChildControls(context);
     }
 
     private void createChildControls(Context context) {
         mContext = context;
-        inflater = (LayoutScatter) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         this.setOrientation(HORIZONTAL);
-        this.layoutConfig(new LayoutConfig(LayoutConfig.MATCH_PARENT, LayoutConfig.MATCH_CONTENT));
+        this.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 
         _text = new AutoCompleteTextView(context);
         _text.setDropDownWidth(-1); // set the dropdown width to match screen
@@ -69,13 +83,13 @@ public class ComboBox extends DirectionalLayout {
                 | InputType.TYPE_TEXT_FLAG_AUTO_COMPLETE
                 | InputType.TYPE_TEXT_FLAG_AUTO_CORRECT);
         _text.setRawInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
-        this.addView(_text, new LayoutConfig(LayoutConfig.MATCH_CONTENT, LayoutConfig.MATCH_CONTENT, 1));
+        this.addView(_text, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1));
 
-        Button _button = new Button(context);
-        _button.setImageResource(android.ResourceTable.Media_arrow_down_float);
-        _button.setClickedListener(v -> {
+        ImageButton _button = new ImageButton(context);
+        _button.setImageResource(android.R.drawable.arrow_down_float);
+        _button.setOnClickListener(v -> {
             if (!TextUtils.isEmpty(getText()) && !spinnerList.contains(getText())) {
-                ComponentUtil.hideKeyboard(mContext, _text);
+                ViewUtil.hideKeyboard(mContext, _text);
                 setSuggestionSource(spinnerList); // rest to user supplied list
             }
             _text.showDropDown();
@@ -91,27 +105,27 @@ public class ComboBox extends DirectionalLayout {
      */
     public void setSuggestionSource(Cursor source, String column) {
         String[] from = new String[]{column};
-        int[] to = new int[]{android.ResourceTable.Id_text1};
+        int[] to = new int[]{android.R.id.text1};
         SimpleCursorAdapter cursorAdapter = new SimpleCursorAdapter(this.getContext(),
-                ResourceTable.Layout_simple_spinner_dropdown_item, source, from, to);
+                R.layout.simple_spinner_dropdown_item, source, from, to);
 
         // this is to ensure that when suggestion is selected it provides the value to the textBox
         cursorAdapter.setStringConversionColumn(source.getColumnIndex(column));
-        _text.setItemProvider(cursorAdapter);
+        _text.setAdapter(cursorAdapter);
     }
 
     public void setSuggestionSource(List<String> list) {
         spinnerList = list;
 
         // Create an ArrayAdapter using the string array and custom spinner item with radio button
-        ArrayAdapter<String> mAdapter = new ArrayAdapter<String>(this.getContext(), ResourceTable.Layout_simple_spinner_item, list) {
+        ArrayAdapter<String> mAdapter = new ArrayAdapter<String>(this.getContext(), R.layout.simple_spinner_item, list) {
             // Allow to change font style in dropdown vew
-            public Component getComponent(int position, Component convertView, ComponentContainer parent) {
+            public View getView(int position, View convertView, @NonNull ViewGroup parent) {
                 if (convertView == null) {
-                    convertView = inflater.parse(ResourceTable.Layout_adapter_radio_item, null);
+                    convertView = inflater.inflate(R.layout.adapter_radio_item, null);
                 }
-                Text name = convertView.findComponentById(ResourceTable.Id_item_name);
-                RadioButton radio = convertView.findComponentById(ResourceTable.Id_item_radio);
+                TextView name = convertView.findViewById(R.id.item_name);
+                RadioButton radio = convertView.findViewById(R.id.item_radio);
 
                 final String variation = list.get(position);
                 name.setText(variation);
@@ -124,10 +138,10 @@ public class ComboBox extends DirectionalLayout {
         };
 
         // Specify the layout to use when the list of choices appears
-        mAdapter.setDropDownViewResource(ResourceTable.Layout_simple_spinner_dropdown_item);
+        mAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
 
         // Apply the adapter to the ComboBox
-        _text.setItemProvider(mAdapter);
+        _text.setAdapter(mAdapter);
     }
 
     /**
@@ -136,7 +150,7 @@ public class ComboBox extends DirectionalLayout {
      * @return Text or null if text isEmpty().
      */
     public String getText() {
-        return ComponentUtil.toString(_text);
+        return ViewUtil.toString(_text);
     }
 
     /**
@@ -163,9 +177,9 @@ public class ComboBox extends DirectionalLayout {
     /**
      * Set the call back when an item in the combo box dropdown list item is selected
      *
-     * @param l ListContainer OnItemClickListener
+     * @param l AdapterView OnItemClickListener
      */
-    public void setOnItemClickListener(ListContainer.OnItemClickListener l) {
+    public void setOnItemClickListener(AdapterView.OnItemClickListener l) {
         _text.setOnItemClickListener(l);
     }
 }

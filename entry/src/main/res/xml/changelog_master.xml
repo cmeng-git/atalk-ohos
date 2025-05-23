@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8"?><?xml-stylesheet type="text/xsl" href="changelog_style.xsl"?><!--
+     The master change log is kept in res/xml/changelog_master.xml.
+     Locale specific versions are kept in res/xml-<locale qualifier>/changelog.xml.
+
+     Don't edit the changelog_<name>_branch.xml files in the gh-pages branch.
+     They are automatically updated with "ant bump-version".
+-->
+<changelog>
+    <release version="00.07.000 (05/20/2025)" versioncode="0076000">
+        <change>Please read &lt;a href='https://cmeng-git.github.io/atalk/faq.html#ui_01'&gt;aTalk UI design &amp; Implementation&lt;/a&gt; before using aTalk</change>
+        <change>Show Badge indicator on incoming file request; to ease user identification of the sender in contact list main UI</change>
+        <change>Enable HeadsUp notification for incoming file transfer request to alert user when device is in standby</change>
+        <change>Ensure multiple files send/receive for HTTPFileUpload, JingleFileSend and Legacy Bytestream transfer protocols are handled properly; improve UI and process reliability</change>
+        <change>Must re-init all UI button actions whenever the xFileConversationForm is called on UI refresh; as inflateViewForFileTransfer() will change their references</change>
+        <change>Fix ConcurrentModificationException in JingleS5BTransportCandidateImpl#connectToCandidates() checking</change>
+        <change>Change to use TOTAL_CONNECTION_TIMEOUT (10s) for each candidate in establishBytestreamSession checking</change>
+        <change>Do not set file sending/receiving state as History Record while it is still active; else any UI refresh will interrupt file transfer, although file transfer may still running in background</change>
+        <change>Must create file record in DB for proper HTTP file download process update; else the cached info is destroyed when user closes the chat session</change>
+        <change>Use Math.max(COLUMN_TOTAL_SIZE_BYTES, COLUMN_BYTES_DOWNLOADED_SO_FAR) for HttpFileDownloadJabberImpl#queryFileSize(); later is found to contain file size, and COLUMN_TOTAL_SIZE_BYTES always return 0. Download Manager implementation error?</change>
+        <change> Improve and clean up HttpFileDownloadJabberImpl implementation</change>
+        <change>Must implement HttpFileDownloadJabberImpl#getTransferredBytes for proper HttpFileDownload progressBar update</change>
+        <change>Implement and support XEP-0066: Out of Band Data sending in Http file transfer in contact or muc chat session</change>
+        <change>Ensure the file transfer UI is shown (post delay 0.5S) before proceed to auto accept file transfer if enabled</change>
+        <change>Fix progressBar indicator not properly updated when the received file size in unknown in HttpFileDownload process</change>
+        <change>Do not constraint the IncomingFileTransferJingleImpl#progress() update with 10mS UPDATE_INTERVAL; else final rwBytes may not be reflected in the UI progressBar</change>
+        <change>Ensure all message event ID's in outgoing file transfer are in sync with the file record saved in database for proper status update</change>
+        <change>When file transfer form is first created, it must check that (getXferStatus() == FileTransferStatusChangeEvent.UNKNOWN) before start any file send/received process. else file transfer may get repeated in UI</change>
+        <change>Ensure all status definitions in both FileTransferStatusChangeEvent and FileRecord are in sync for correct status tracking</change>
+        <change>Ensure the transport candidates use in file transfer are properly refreshed when the device active network connection is changed</change>
+        <change>Avoid using static mBuilder for both JingleContentDescription and JingleContentTransport; else multiple JingleFileTransfer will interference with each other</change>
+        <change>JingleSessionImpl#jingleSessionListeners cannot be static; otherwise updateSessionState will interfere with each other in multiple files transfer</change>
+        <change>During multiple Jingle files receive, ensure recipient send session-accept only once</change>
+        <change>Fix Legacy file transfer uses the same instance of OperationSetFileTransferJabberImpl to send file with the same NegotiationProgress status callback</change>
+        <change>Need to block the unexpected delayed info messages on HttpFileDownload send from server multiple times; else repeated UI requests user to accept file</change>
+        <change>Add serverMsgId and remoteMsgId value to the file history record in the database; to check for unexpected delay info messages send from server</change>
+        <change>Ignore any empty body forward message received during MamQuery process update</change>
+        <change>Fix ChatState notifications not handle properly in MUC chat session</change>
+        <change>Save last send/received message timestamp into mamDate in session record, avoid deleted messages reappear in UI when user relaunch aTalk</change>
+        <change>Move subclass common CameraCaptureSession.StateCallback into base class CameraStreamBase</change>
+        <change>Replace deprecated option menu setHasOptionsMenu() implementation with MenuProvider</change>
+        <change>Replace deprecated FragmentPagerAdapter with FragmentStateAdapter for the main aTalk MainPagerAdapter</change>
+        <change>Add Arabic language support</change>
+        <change>Bug fixes and enhancements</change>
+    </release>
+
+    <release version="00.06.020 (03/26/2025)" versioncode="0006020">
+        <change>Force aTalk to restart if user made changes to android HW Codec Expert settings; for them to be active</change>
+        <change>ZidFile length must not be zero if exist, else ZidFile.open will failed</change>
+        <change>Ensure android encoder inputSurface for remote video streaming is init only once, else video streaming will fail</change>
+        <change>Video resolution setting will use the closest match camera capability if exact match to user selected value is not available</change>
+    </release>
+
+    <release version="00.06.010 (02/19/2025)" versioncode="0006010">
+        <change>BaseActivity#configureToolBar must handle and enable custom actionBar setup; else ShareActivity crashes</change>
+        <change>Update German and Russian string.xml files</change>
+        <change>Remove unused classes/files</change>
+    </release>
+    <release version="00.06.000 (02/13/2025)" versioncode="0006000">
+        <change>Reimplement deprecated classes/methods i.e. onBackPressed and AsyncTask with new functions</change>
+        <change>Fix show aTalk icon MissingForegroundServiceTypeException; use NotificationManager.notify() instead</change>
+        <change>Need to add READ_EXTERNAL_STORAGE permission (Files and Media) request for android API-32</change>
+        <change>Implement newly added READ_MEDIA_VISUAL_USER_SELECTED permission for android API-34</change>
+        <change>Do not launch BatteryOptimization permission request within a dialog, else parseResult is based on dialog click</change>
+        <change>ActivityResultContract#parseResult on BatteryOptimization request must return isOptimizingBattery() state</change>
+        <change>UpdateServiceImpl#isLatestVersion need to close inputStream after access end</change>
+        <change>Add BaseActivity, BaseFragment, BaseDialogFragment and BasePreferenceFragment classes, and subclass OSGi unrelated classes to these instead; Remove unused OSGi classes</change>
+        <change>Remove all imageStreaming classes, aTalk does not support desktop sharing</change>
+        <change>Change default thumbnail size to 128x96 with jpeg compress 80% quality; better visibility and converse bandwidth</change>
+        <change>CryptoFragment: Skip if previous check has omemo supported. The OmemoManager.contactSupportsOmemo can cause ANR in OmemoManager.encrypt</change>
+        <change>Check for ConfigurationUtils#mConfigService not null before proceed to handle any setting changes</change>
+        <change>Back key during call will exit screen block if UI is not responding due to proximity sensor problem</change>
+        <change>Consolidate and move all si file transfer classes into smack directory</change>
+        <change>Clean up app sources and rename some packages names</change>
+        <change>Update all app used libraries to the latest compatible releases</change>
+        <change>Bug fixes and enhancements</change>
+    </release>
+
+    <release version="00.05.010 (06/10/2024)" versioncode="0005010">
+        <change>Change default thumbnail size to 128x96 with jpeg compress 80% quality; better visibility and converse bandwidth</change>
+        <change>Minimize unnecessary OmemoManager #contactSupportsOmemo check; may block omemo message encryption and cause ANR</change>
+        <change>Check for ConfigService availability, before proceed to handle any user setting changes</change>
+        <change>Back key during call will exit screen block if UI is not responding due to proximity sensor problem</change>
+        <change>Consolidate and move all si file transfer classes into smack directory</change>
+        <change>Bug fixes and enhancements</change>
+    </release>
+
+    <release version="00.05.000 (05/14/2024)" versioncode="0005000">
+        <change>Add Jingle Content Thumbnails (XEP-0264) support in Jingle File Transfer (XEP-0234) protocol; Thumbnails is disabled for OMEMO Jet</change>
+        <change>Add ThumbnailProvider class for Thumbnail element parsing in JingleFileTransferProvider</change>
+        <change>Update all relevant Jingle File Transfer classes to support Thumbnail and BOB handling</change>
+        <change>Rename ThumbnailStreamInitiationProvider to StreamInitiationProvider, and override smack class</change>
+        <change>Cleanup and update smack StreamInitiation to support Thumbnail element; remove aTalk ThumbnailFile element class</change>
+        <change>Optimize and cleanup aTalk XEP-0096: SI File Transfer implementation for XEP-0264 support</change>
+        <change>OutgoingFileTransferJabberImpl handles bobInfo init at constructor; remove StanzaListener to insert Thumbnail element</change>
+        <change>Block and alert user if attempt to send encrypted file via XEP-0096: SI File Transfer</change>
+        <change>Scale thumbnail x2 for display in file transfer request UI</change>
+        <change>Update smack library classes to fully support Jingle Content Thumbnails (XEP-0264) in legacy Si and Jingle File Transfer</change>
+        <change>OutgoingFileOfferJingleImpl needs to perform process cleanup upon ProgressListener#onFinished()</change>
+        <change>Must init JetManager upon user authenticated, ready for advertise JET feature in DiscoveryManager</change>
+        <change>Bug fixes and enhancements</change>
+    </release>
+
+    <release version="00.04.010 (05/02/2024)" versioncode="0004010">
+        <change>Add new permissions required for API-34 and change UI to support</change>
+        <change>Add 'App Info' option in main menu to view/change aTalk permission settings; different android devices have own implementations</change>
+        <change>Check and skip process for duplicated presence with caps sent from server</change>
+        <change>Must handle userCapsNode Notify for contact going offline for fullJid; else call options on UI are not updated</change>
+        <change>ReImplement ServiceDiscoveryHelper discoverInfoNonBlocking() to minimize device ANR</change>
+        <change>Fix send file status not being updated to DB, and remain at STATUS_WAITING; accidentally commented out since v3.2.2</change>
+        <change>Http Download to proceed with auto-download only if the file size from server is known</change>
+        <change>Execute purgeCorruptedOmemoKey() in new Thread to avoid ANR</change>
+        <change>Upgrade smack libraries to 4.4.8</change>
+        <change>Migrate com.google.android.exoplayer:exoplayer:2.19.1 to androidx.media3:media3-exoplayer:1.3.1</change>
+        <change>Simplify String parameter names and clean up unused resources</change>
+        <change>Bug fixes and enhancements</change>
+    </release>
+    
+    <release version="00.04.000 (04/01/2024)" versioncode="0004000">
+        <change>Removal of a contact shall purge all its associated history messages, call records and its sessionUuid</change>
+        <change>Update 'Recent conversations' interface to disable multi-item selection; and allow purge of orphan chat session</change>
+        <change>Add support to delete history messages based on sessionUuid i.e. no associated contact or chatRoom</change>
+        <change>EntityListHelper history record delete will return the actual deleted records count for display to user.</change>
+        <change>ChatPanel#mamQuery must use actual sessionUuid from DB; and it may not be the same as mChatId</change>
+        <change>Fix duplicate display of the group chat messages sent previously; happens if user logout and rejoin muc after login</change>
+        <change>Fix duplicate display of incoming delayed messages in contact chat session; happen if mam messages are received before delayed messages</change>
+        <change>Fix incoming delayed encrypted messages display out of timestamp order; arise due to process times vary for encrypted messages</change>
+        <change>If user goes offline after messages sent to an offline buddy; Upon messages received by buddy, the receipt status of these messages are not updated</change>
+        <change>UserAvatar migrates to use PepEventListener, and ensure proper handling of avatar removal pubsub#event</change>
+        <change>Update VCardAvatarManager to check and skip repeated request from multiple (x4) user presence's received</change>
+        <change>Fix avatar changes published via XEP-0084 and 'XEP-0153; ejabberd responses to the later with vcard-temp and no photo hash, causing aTalk to remove the avatar</change>
+        <change>Fix avatar changes received via XEP-0153/XEP-0084 are not updated to the contact/user until user next re-login</change>
+        <change>Merged both UserAvatar and VcardAvatar Listeners into one AvatarChangeListener for more efficient handling of avatar changes</change>
+        <change>Need to handle the userCapsNodeNotify for each protocolProvider, to support multiple user accounts setup</change>
+        <change>Skip publish presence status, if user selected the same 'Presence Status' in action bar menu</change>
+        <change>Fix duplicate sending of the initial presence stanza by smack ServiceDiscoveryManager</change>
+        <change>Reorder ChatRoomCreateDialog: initAccountSpinner only after initComboBox to avoid unnecessary network access</change>
+        <change>Remove main menu 'Sign out' and 'Exit' options, to prevent user unregisters himself from the server unintentionally</change>
+        <change>Set Smack configuration 'Default Reply Timeout' to 10s, minimize NoResponse Exception from slow network communications</change>
+        <change>Bug fixes and enhancements</change>
+    </release>
+
+    <release version="00.03.000 (02/29/2024)" versioncode="0003000">
+        <change>Fix AndroidOmemoService#initOmemoDevice always failed with NoResponseException due to asynchronous execution even with setReplyTimeout = 15s</change>
+        <change>Fix smack OmemoManager handle of Pubsub#event in PepEventListener has NoResponseException; end in endless loop and smack crashes</change>
+        <change>Add support for XEP-0191: Blocking Command to block communications with a specific contact and domain</change>
+        <change>Add/Remove of ContactPresence and ContactBlocking Status Listeners in MetaContactListAdapter should be per registered ProtocolProvider</change>
+        <change>Include check for contact blocking state when showing AudioCall and VideoCall options</change>
+        <change>Allow user removal of a DomainJid from the contact list UI</change>
+        <change>Allow user moving of contact not in the Roster</change>
+        <change>Drop dependency and replace betterpickers library with android DatePicker-spinner mode (API-24)</change>
+        <change>Improve call history deletion UI for all call records prior to user set date</change>
+        <change>Improve account preference birth date setting UI</change>
+        <change>Alert dialog drawable/background_alert_dialog must use ?attr/colorBackground, to align with text font theme color</change>
+        <change>Implement EntityCapsPersistentCache using mySQLite DB instead of file system</change>
+        <change>Fix erased contact/chatroom history messages reappear after return to chatSession due to msgCache not cleared</change>
+        <change>Disable 'Contact Info' option when user is offline, as the info is invalid when user is offline</change>
+        <change>Fix Telephony UI Cancel button not working; Fragment Tag not set</change>
+        <change>Set android:exported to true for all activities launch via preference intent, else aTalk crashes in API-34</change>
+        <change>Must initialize all preferences values for all settings before 'set Preferences From Resource', to ensure the updated values are reflected in preference UI</change>
+        <change>JingleFile transfer AbstractMethodError resolved with aTalk source patches; Google team is unable to offer any solution in gradle release built</change>
+        <change>Fix call notification control ui partial cropping of buttons</change>
+        <change>Remove MapsInitializer.initialize(), no further required; default to use Renderer.LATEST</change>
+        <change>Bug fixes and enhancements</change>
+    </release>
+
+    <release version="00.02.050 (02/09/2024)" versioncode="0002050">
+        <change>Fix incorrect derive of the chatSession Uuid for conference chat messages in saveMamIfNotExit()</change>
+        <change>Extend smack reply timeout to 10S for MamManager.MamQuery() to take care for slow server response</change>
+        <change>Drop non-null subject field as prerequisite in create/join a chatRoom; user may not have the right to change subject</change>
+        <change>Default bookmark creation but with auto-join disabled for newly created chatRoom</change>
+        <change>Default "Enable Room Status" to false on entry to newly created chatRoom</change>
+        <change>Block room status caching in ChatPanel#msgCache if RoomStatus Enable == false; else they will appear in chatSession when open</change>
+        <change>Limit conference subject to single line with auto scroll horizontally</change>
+        <change>Fix chatRoom status icon indicator not being updated on entry</change>
+        <change>Send muc#roomconfig stanza on new thread; else always failed with NoResponseException</change>
+        <change>Fix deletion of room status messages crashes aTalk</change>
+        <change>Drop aTalk ScServiceDiscovery class; use smack ServiceDiscoveryManager and local ServiceDiscoveryHelper implementations</change>
+        <change>Cleanup and improve ServerPersistentStoresRefreshDialog class implementation</change>
+        <change>JingleFile transfer AbstractMethodError remained; disabled for aTalk release. Awaiting Google time solution feedback</change>
+        <change>Drop butterknife-compiler:10.2.3 dependency and remove jdk-15 max restriction; use android View binding class instead</change>
+        <change>Change file transfer protocol priority to: a. httpFileUpload; b. jingleFileSend (Secure JET or Plain); c. Legacy byteStream transfer protocol</change>
+        <change>Fix Smack 4.4.7: ByteStream Sock5 implementation does not take care of the host address with zone id</change>
+        <change>Enable webView cache mode</change>
+        <change>Upgrade to android studio Hedgehog; update all associated changes required with gradle 8.x</change>
+        <change>JingleFile transfer AbstractMethodError remained; disabled for aTalk release. Awaiting Google time solution feedback</change>
+        <change>Bug fixes and enhancements</change>
+        <change>Fix ContextCompat.registerReceiver flag setting to ensure proper callbacks for android API-34 device:</change>
+        <change>a. Fix Http File Download, Connectivity Manager Listener and Update Service</change>
+        <change>b. Fix main menu Exit option</change>
+        <change>c. Fix CallControl Notification with proper callback</change>
+        <change>d. Fix message received popup with proper callback</change>
+        <change>Temporary disable 'Jingle Outgoing File Offer', use only HTTP file upload instead; Android Studio release built throws runtime AbstractMethodError</change>
+        <change>Fix Option 'StreetViews &amp; Map' crashes in API-34: Layout &lt;frame /> cannot accept fraction value in android:layout_weight</change>
+        <change>Fix correct downloadable fileNameApk creation, for debug version only</change>
+        <change>Make UpdateService shows both version/code for installed and latest available apk</change>
+        <change>Bug fixes and enhancements</change>
+    </release>
+
+    <release version="00.02.040 (01/26/2024)" versioncode="0002040">
+        <change>Rebuild for API-34 release fixing user login problem arise from Android Studio weird behaviour</change>
+        <change>Change chat session action options on user single and multiple items selection</change>
+        <change>Change auto return to contactList UI timer to 5 seconds after call has ended; allow user more time to view error messages</change>
+        <change>JingleFile send still having problem, AS throws AbstractMethodError exception unexpectedly. See &lt;a href='https://issuetracker.google.com/issues/321988935'&gt;Bug Report&lt;/a&gt;</change>
+        <change>Bug fixes and enhancements</change>
+    </release>
+
+    <release version="00.02.030 (12/30/2023)" versioncode="0002030">
+        <change>Revert gradle-wrapper.properties #distributionUrl to use gradle-7.6-bin.zip; gradle-8.x does not generate the required smack jarjar files at all</change>
+        <change>Use implementation jarjar.repackage("filename.jar") to ensure destinationName is set correctly</change>
+        <change>Bug fixes and enhancements</change>
+    </release>
+
+    <release version="00.02.020 (12/30/2023)" versioncode="0002020">
+        <change>Move directory 'aTalk' to 'entry', preparation for ohos porting</change>
+    </release>
+
+    <release version="00.02.010 (12/29/2023)" versioncode="0002010">
+        <change>Update aTalk-ohos for android API-34 support; needs jarjar-gradle (master)</change>
+        <change>Use jarjar-gradle from github master i.e. '9a7eca7'(1.1.1); require gradle-8.2-bin.zip and precompiled smack jars</change>
+        <change>Update source to support API-34 ContextCompat.registerReceiver with RECEIVER_EXPORTED/RECEIVER_NOT_EXPORTED option</change>
+        <change>Update to 'com.android.tools.build:gradle:7.4.2' and 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.22'</change>
+        <change>Upgrade Android Studio to Giraffe | 2022.3.1 - but with Gradle-JDK using jdk-15</change>
+        <change>butterknife-compiler:10.2.3 is required for PermissionsActivity, but only compatible with jdk-15 max</change>
+    </release>
+
+    <release version="00.02.000 (12/25/2023)" versioncode="0002000">
+        <change>Rename aTalk project namespace to org.atalk.ohos</change>
+        <change>Strings/Strings_NT: cleanup and simplify string name id</change>
+        <change>Cleanup resources.languages.resources.properties</change>
+    </release>
+
+    <release version="00.01.000 (12/20/2023)" versioncode="0001000">
+        <change>Add user selectable option 'Delete account on server' when user remove an account; user must login to perform this action</change>
+        <change>While user is login, changing local password will also change password on the server</change>
+        <change>Upgrade smack library to version 4.4.7</change>
+        <change>Remove Desktop, SIP and ICQ protocols and preference settings support</change>
+        <change>Remove aTalk unused codec, audio system and unused classes: portaudio, pulseaudio, quicktime, and video4Linux</change>
+        <change>Merged CallEnded with VideoCallActivity; Auto return to contactList 3 seconds after call has ended</change>
+        <change>Remove OTR encryption and Desktop support</change>
+        <change>Update osmdroid-android:6.1.14 to 6.1.17</change>
+        <change>Update all aTalk JNI libraries build to use NDK '22.1.7171670'</change>
+        <change>Upgrade jni libraries sources for:libvpx 1.13.0 to 1.13.1; ffmpeg 5.1.2 to 5.1.4</change>
+        <change>Clean up JNI scripts for all native libraries built, and use prebuilt toolchain</change>
+        <change>Build openssl jni library without installing the man document</change>
+        <change>Move project name space to org.atalk.ohos</change>
+        <change>Rebase org.atalk.ohos version to 0.1.0</change>
+        <change>Change minimum API support to 24 (android-7)</change>
+        <change>Migrate ice4j to only compatible with API-24</change>
+        <change>Bug fixes and enhancements</change>
+    </release>
+
+</changelog>
