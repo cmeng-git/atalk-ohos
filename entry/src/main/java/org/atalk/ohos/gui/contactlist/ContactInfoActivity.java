@@ -1,26 +1,12 @@
 package org.atalk.ohos.gui.contactlist;
 
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.text.Html;
-import android.text.InputFilter;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import androidx.fragment.app.Fragment;
-
-import java.text.DateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import ohos.aafwk.ability.AbilitySlice;
+import ohos.aafwk.content.Intent;
+import ohos.agp.components.Button;
+import ohos.agp.components.Image;
+import ohos.agp.components.Text;
+import ohos.agp.components.element.ShapeElement;
+import ohos.media.codec.PixelMap;
 
 import net.java.sip.communicator.service.contactlist.MetaContact;
 import net.java.sip.communicator.service.protocol.Contact;
@@ -53,16 +39,22 @@ import net.java.sip.communicator.service.protocol.ServerStoredDetails.WorkOrgani
 import net.java.sip.communicator.service.protocol.ServerStoredDetails.WorkPhoneDetail;
 
 import org.apache.commons.lang3.StringUtils;
-import org.atalk.ohos.BaseActivity;
-import org.atalk.ohos.R;
+import org.atalk.ohos.BaseAbility;
+import org.atalk.ohos.ResourceTable;
 import org.atalk.ohos.gui.aTalk;
 import org.atalk.ohos.gui.actionbar.ActionBarUtil;
 import org.atalk.ohos.util.AppImageUtil;
 
+import java.text.DateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import timber.log.Timber;
 
 /**
- * Activity allows user to view presence status, status message, the avatar and the full
+ * Ability allows user to view presence status, status message, the avatar and the full
  * vCard-temp information for the {@link #mContact}.
  * <p>
  * The main panel that allows users to view their account information. Different instances of
@@ -71,23 +63,23 @@ import timber.log.Timber;
  * street/city/region/country address, postal code, birth date, gender, organization name, job
  * title, about me, home/work email, home/work phone.
  * <p>
- * <p>
  * The {@link #mContact} is retrieved from the {@link Intent} by direct access to
  *
  * @author Eng Chong Meng
- * @link ContactListFragment#getClickedContact()
+ * @link ContactListSlice#getClickedContact()
  */
-public class ContactInfoActivity extends BaseActivity
+
+public class ContactInfoAbility extends BaseAbility
         implements OperationSetServerStoredContactInfo.DetailsResponseListener {
     /**
      * Mapping between all supported by this plugin <code>ServerStoredDetails</code> and their
-     * respective <code>TextView</code> that are used for modifying the details.
+     * respective <code>Text</code> that are used for modifying the details.
      */
-    private final Map<Class<? extends GenericDetail>, TextView> detailToTextField = new HashMap<>();
+    private final Map<Class<? extends GenericDetail>, Text> detailToTextField = new HashMap<>();
 
-    private TextView urlField;
-    private TextView ageField;
-    private TextView birthDateField;
+    private Text urlField;
+    private Text ageField;
+    private Text birthDateField;
 
     /**
      * Intent's extra's key for account ID property of this activity
@@ -102,19 +94,19 @@ public class ContactInfoActivity extends BaseActivity
     private Contact mContact;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.contact_info);
+    protected void onStart(Intent intent) {
+        super.onStart(intent);
+        setUIContent(ResourceTable.Layout_contact_info);
 
         // Get contact ID from intent extras - but cannot link to mContact
-        String contactId = getIntent().getStringExtra(INTENT_CONTACT_ID);
+        String contactId = intent.getStringParam(INTENT_CONTACT_ID);
 
-        Fragment clf = aTalk.getFragment(aTalk.CL_FRAGMENT);
-        if (clf instanceof ContactListFragment) {
-            MetaContact metaContact = ((ContactListFragment) clf).getClickedContact();
+        AbilitySlice clf = aTalk.getFragment(aTalk.CL_FRAGMENT);
+        if (clf instanceof ContactListSlice) {
+            MetaContact metaContact = ((ContactListSlice) clf).getClickedContact();
             if (metaContact == null) {
                 Timber.e("Requested contact info not found: %s", contactId);
-                finish();
+                terminateAbility();
             }
             else {
                 mContact = metaContact.getDefaultContact();
@@ -148,19 +140,19 @@ public class ContactInfoActivity extends BaseActivity
         if (presenceStatus != null) {
             ActionBarUtil.setStatusIcon(this, presenceStatus.getStatusIcon());
 
-            TextView statusNameView = findViewById(R.id.presenceStatusName);
-            ImageView statusIconView = findViewById(R.id.presenceStatusIcon);
+            Text statusNameView = findComponentById(ResourceTable.Id_presenceStatusName);
+            Image statusIconView = findComponentById(ResourceTable.Id_presenceStatusIcon);
 
             // Set status icon
-            Bitmap presenceIcon = AppImageUtil.bitmapFromBytes(presenceStatus.getStatusIcon());
-            statusIconView.setImageBitmap(presenceIcon);
+            PixelMap presenceIcon = AppImageUtil.pixelMapFromBytes(presenceStatus.getStatusIcon());
+            statusIconView.setPixelMap(presenceIcon);
 
             // Set status name
             String statusName = presenceStatus.getStatusName();
             statusNameView.setText(statusName);
 
             // Add users status message if it exists
-            TextView statusMessage = findViewById(R.id.statusMessage);
+            Text statusMessage = findComponentById(ResourceTable.Id_statusMessage);
             ProtocolProviderService pps = mContact.getProtocolProvider();
             OperationSetPresence contactPresence = pps.getOperationSet(OperationSetPresence.class);
             String statusMsg = contactPresence.getCurrentStatusMessage();
@@ -180,87 +172,88 @@ public class ContactInfoActivity extends BaseActivity
      */
     private void initSummaryPanel() {
         // Display name details.
-        TextView displayNameField = findViewById(R.id.ci_DisplayNameField);
+        Text displayNameField = findComponentById(ResourceTable.Id_ci_DisplayNameField);
         detailToTextField.put(DisplayNameDetail.class, displayNameField);
 
         // First name details.
-        TextView firstNameField = findViewById(R.id.ci_FirstNameField);
+        Text firstNameField = findComponentById(ResourceTable.Id_ci_FirstNameField);
         detailToTextField.put(FirstNameDetail.class, firstNameField);
 
         // Middle name details.
-        TextView middleNameField = findViewById(R.id.ci_MiddleNameField);
+        Text middleNameField = findComponentById(ResourceTable.Id_ci_MiddleNameField);
         detailToTextField.put(MiddleNameDetail.class, middleNameField);
 
         // Last name details.
-        TextView lastNameField = findViewById(R.id.ci_LastNameField);
+        Text lastNameField = findComponentById(ResourceTable.Id_ci_LastNameField);
         detailToTextField.put(LastNameDetail.class, lastNameField);
 
-        TextView nicknameField = findViewById(R.id.ci_NickNameField);
+        Text nicknameField = findComponentById(ResourceTable.Id_ci_NickNameField);
         detailToTextField.put(NicknameDetail.class, nicknameField);
 
-        urlField = findViewById(R.id.ci_URLField);
+        urlField = findComponentById(ResourceTable.Id_ci_URLField);
         detailToTextField.put(URLDetail.class, urlField);
 
         // Gender details.
-        TextView genderField = findViewById(R.id.ci_GenderField);
+        Text genderField = findComponentById(ResourceTable.Id_ci_GenderField);
         detailToTextField.put(GenderDetail.class, genderField);
 
         // Birthday and Age details.
-        ageField = findViewById(R.id.ci_AgeField);
-        birthDateField = findViewById(R.id.ci_BirthDateField);
+        ageField = findComponentById(ResourceTable.Id_ci_AgeField);
+        birthDateField = findComponentById(ResourceTable.Id_ci_BirthDateField);
         detailToTextField.put(BirthDateDetail.class, birthDateField);
 
-        TextView streetAddressField = findViewById(R.id.ci_StreetAddressField);
+        Text streetAddressField = findComponentById(ResourceTable.Id_ci_StreetAddressField);
         detailToTextField.put(AddressDetail.class, streetAddressField);
 
-        TextView cityField = findViewById(R.id.ci_CityField);
+        Text cityField = findComponentById(ResourceTable.Id_ci_CityField);
         detailToTextField.put(CityDetail.class, cityField);
 
-        TextView regionField = findViewById(R.id.ci_RegionField);
+        Text regionField = findComponentById(ResourceTable.Id_ci_RegionField);
         detailToTextField.put(ProvinceDetail.class, regionField);
 
-        TextView postalCodeField = findViewById(R.id.ci_PostalCodeField);
+        Text postalCodeField = findComponentById(ResourceTable.Id_ci_PostalCodeField);
         detailToTextField.put(PostalCodeDetail.class, postalCodeField);
 
-        TextView countryField = findViewById(R.id.ci_CountryField);
+        Text countryField = findComponentById(ResourceTable.Id_ci_CountryField);
         detailToTextField.put(CountryDetail.class, countryField);
 
         // Email details.
-        TextView emailField = findViewById(R.id.ci_EMailField);
+        Text emailField = findComponentById(ResourceTable.Id_ci_EMailField);
         detailToTextField.put(EmailAddressDetail.class, emailField);
 
-        TextView workEmailField = findViewById(R.id.ci_WorkEmailField);
+        Text workEmailField = findComponentById(ResourceTable.Id_ci_WorkEmailField);
         detailToTextField.put(WorkEmailAddressDetail.class, workEmailField);
 
         // Phone number details.
-        TextView phoneField = findViewById(R.id.ci_PhoneField);
+        Text phoneField = findComponentById(ResourceTable.Id_ci_PhoneField);
         detailToTextField.put(PhoneNumberDetail.class, phoneField);
 
-        TextView workPhoneField = findViewById(R.id.ci_WorkPhoneField);
+        Text workPhoneField = findComponentById(ResourceTable.Id_ci_WorkPhoneField);
         detailToTextField.put(WorkPhoneDetail.class, workPhoneField);
 
-        TextView mobilePhoneField = findViewById(R.id.ci_MobilePhoneField);
+        Text mobilePhoneField = findComponentById(ResourceTable.Id_ci_MobilePhoneField);
         detailToTextField.put(MobilePhoneDetail.class, mobilePhoneField);
 
-        TextView organizationField = findViewById(R.id.ci_OrganizationNameField);
+        Text organizationField = findComponentById(ResourceTable.Id_ci_OrganizationNameField);
         detailToTextField.put(WorkOrganizationNameDetail.class, organizationField);
-        TextView jobTitleField = findViewById(R.id.ci_JobTitleField);
+        Text jobTitleField = findComponentById(ResourceTable.Id_ci_JobTitleField);
         detailToTextField.put(JobTitleDetail.class, jobTitleField);
 
-        TextView aboutMeArea = findViewById(R.id.ci_AboutMeField);
-        InputFilter[] filterArray = new InputFilter[1];
-        filterArray[0] = new InputFilter.LengthFilter(ABOUT_ME_MAX_CHARACTERS);
-        aboutMeArea.setFilters(filterArray);
-        aboutMeArea.setBackgroundResource(R.drawable.alpha_blue_01);
+        Text aboutMeArea = findComponentById(ResourceTable.Id_ci_AboutMeField);
+        aboutMeArea.setBackground(new ShapeElement(getContext(), ResourceTable.Graphic_alpha_blue_01));
         detailToTextField.put(AboutMeDetail.class, aboutMeArea);
 
-        Button mOkButton = findViewById(R.id.button_OK);
-        mOkButton.setOnClickListener(v -> finish());
+        //InputFilter[] filterArray = new InputFilter[1];
+        //filterArray[0] = new LengthFilter(ABOUT_ME_MAX_CHARACTERS);
+        //aboutMeArea.setInputFilters(filterArray);
+
+        Button mOkButton = findComponentById(ResourceTable.Id_button_OK);
+        mOkButton.setClickedListener(v -> terminateAbility());
     }
 
     @Override
     public void detailsRetrieved(final Iterator<GenericDetail> allDetails) {
-        runOnUiThread(() -> {
+        BaseAbility.runOnUiThread(() -> {
             if (allDetails != null) {
                 while (allDetails.hasNext()) {
                     GenericDetail detail = allDetails.next();
@@ -278,12 +271,12 @@ public class ContactInfoActivity extends BaseActivity
      */
     private void loadDetail(GenericDetail detail) {
         if (detail instanceof BinaryDetail) {
-            ImageView avatarView = findViewById(R.id.contactAvatar);
+            Image avatarView = findComponentById(ResourceTable.Id_contactAvatar);
 
             // If the user has a contact image, let's use it. If not, leave the default as it
             byte[] avatarImage = (byte[]) detail.getDetailValue();
-            Bitmap bitmap = BitmapFactory.decodeByteArray(avatarImage, 0, avatarImage.length);
-            avatarView.setImageBitmap(bitmap);
+            PixelMap bitmap = BitmapFactory.decodeByteArray(avatarImage, 0, avatarImage.length);
+            avatarView.setPixelMap(bitmap);
 
         }
         else if (detail instanceof URLDetail) {
@@ -296,10 +289,10 @@ public class ContactInfoActivity extends BaseActivity
                     + urlString + "'>"
                     + urlString
                     + "</a>";
-            urlField.setText(Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY));
-            urlField.setOnClickListener(v -> {
+            urlField.setText(Html.fromHtml(html));
+            urlField.setClickedListener(v -> {
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlString));
-                startActivity(browserIntent);
+                startAbility(browserIntent);
             });
         }
         else if (detail instanceof BirthDateDetail) {
@@ -326,7 +319,7 @@ public class ContactInfoActivity extends BaseActivity
             ageField.setText(ageDetail);
         }
         else {
-            TextView field = detailToTextField.get(detail.getClass());
+            Text field = detailToTextField.get(detail.getClass());
             if (field != null) {
                 Object obj = detail.getDetailValue();
                 if (obj instanceof String)

@@ -1,6 +1,6 @@
 /*
  * aTalk, android VoIP and Instant Messaging client
- * Copyright 2014 Eng Chong Meng
+ * Copyright 2024 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,50 +16,24 @@
  */
 package org.atalk.ohos.plugin.geolocation;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.pm.ActivityInfo;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.hardware.GeomagneticField;
-import android.location.Criteria;
-import android.location.Location;
-import android.location.LocationManager;
-import android.os.Bundle;
-import android.os.Looper;
-import android.util.DisplayMetrics;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.Surface;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageButton;
+import ohos.aafwk.content.Intent;
+import ohos.agp.components.Button;
+import ohos.agp.components.Component;
+import ohos.agp.components.LayoutScatter;
+import ohos.agp.utils.Rect.RotationEnum;
+import ohos.agp.window.service.DisplayManager;
+import ohos.eventhandler.EventRunner;
+import ohos.location.Location;
+import ohos.location.RequestParam;
 
-import androidx.annotation.NonNull;
-import androidx.core.location.LocationListenerCompat;
-import androidx.core.location.LocationManagerCompat;
-import androidx.core.location.LocationRequestCompat;
-import androidx.core.view.MenuProvider;
+import org.atalk.impl.neomedia.device.util.CameraUtils;
+import org.atalk.ohos.BaseAbility;
+import org.atalk.ohos.BaseSlice;
+import org.atalk.ohos.ResourceTable;
+import org.atalk.ohos.aTalkApp;
 
+import java.awt.Dimension;
 import java.util.ArrayList;
-
-import org.atalk.ohos.BaseFragment;
-import org.atalk.ohos.R;
-import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.CopyrightOverlay;
-import org.osmdroid.views.overlay.Marker;
-import org.osmdroid.views.overlay.ScaleBarOverlay;
-import org.osmdroid.views.overlay.compass.CompassOverlay;
-import org.osmdroid.views.overlay.compass.IOrientationConsumer;
-import org.osmdroid.views.overlay.compass.IOrientationProvider;
-import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider;
-import org.osmdroid.views.overlay.gestures.RotationGestureOverlay;
-import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
-import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
-
 import timber.log.Timber;
 
 /**
@@ -69,7 +43,7 @@ import timber.log.Timber;
  * @author Eng Chong Meng
  * @author Alex O'Ree
  */
-public class OsmFragment extends BaseFragment implements MenuProvider, LocationListenerCompat, IOrientationConsumer {
+public class OsmSlice extends BaseSlice implements LocationListenerCompat, IOrientationConsumer {
     private static final int MENU_LAST_ID = Menu.FIRST;
 
     private MyLocationNewOverlay mLocationOverlay;
@@ -83,17 +57,17 @@ public class OsmFragment extends BaseFragment implements MenuProvider, LocationL
     private MapView mMapView;
     private Marker mMarker;
 
-    public OsmActivity mActivity;
+    public OsmAbility mAbility;
     private Thread mThread = null;
     private Location mLocation = null;
     private ArrayList<Location> mLocations = null;
     private int mLocationFetchMode = GeoConstants.FOLLOW_ME_FIX;
 
-    protected ImageButton btCenterMap;
-    protected ImageButton btFollowMe;
+    protected Button btCenterMap;
+    protected Button btFollowMe;
 
     private IOrientationProvider mOrientationProvider = null;
-    private static final long mLocationUpdateMinTime = 1000L;      // mS
+    private static final int mLocationUpdateMinTime = 1000;      // mS
     private static final float mLocationUpdateMinDistance = 1.0f;  // meters
     private static final float gpsSpeedThreshold = 0.5f;           // m/s
 
@@ -107,45 +81,40 @@ public class OsmFragment extends BaseFragment implements MenuProvider, LocationL
     private boolean mHasBearing = false;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mActivity = (OsmActivity) getActivity();
+    public void onStart(Intent intent) {
+        mAbility = (OsmAbility) getAbility();
         requireActivity().addMenuProvider(this);
+        onViewCreated(intent);
 
-        Criteria criteria = new Criteria();
-        criteria.setAccuracy(Criteria.ACCURACY_FINE);
-        criteria.setVerticalAccuracy(Criteria.ACCURACY_HIGH);
-        criteria.setPowerRequirement(Criteria.POWER_MEDIUM);
+        RequestParam requestParam = new RequestParam(RequestParam.SCENE_NAVIGATION);
+        requestParam.setPriorityLevel(RequestParam.PRIORITY_ACCURACY);
 
-        mLocationManager = (LocationManager) mActivity.getSystemService(Context.LOCATION_SERVICE);
-        mProvider = mLocationManager.getBestProvider(criteria, true);
+        mLocationManager = (LocationManager) mAbility.getSystemService(Context.LOCATION_SERVICE);
+        mProvider = mLocationManager.getBestProvider(requestParam, true);
+
+        LayoutScatter inflater = LayoutScatter.getInstance(getContext());
+
+        Component v = inflater.parse(ResourceTable.Layout_osm_followme, null);
+        mMapView = v.findComponentById(ResourceTable.Id_mapview);
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.osm_followme, null);
-        mMapView = v.findViewById(R.id.mapview);
-        return v;
-    }
+    private void onViewCreated(Intent intent) {
+        final Dimension dm = aTalkApp.getDisplaySize();
 
-    @Override
-    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
-        final DisplayMetrics dm = mActivity.getResources().getDisplayMetrics();
-
-        GpsMyLocationProvider mGpsMyLocationProvider = new GpsMyLocationProvider(mActivity);
+        GpsMyLocationProvider mGpsMyLocationProvider = new GpsMyLocationProvider(mAbility);
         mGpsMyLocationProvider.clearLocationSources();
         mGpsMyLocationProvider.addLocationSource(mProvider);
         mGpsMyLocationProvider.setLocationUpdateMinTime(mLocationUpdateMinTime);
         mGpsMyLocationProvider.setLocationUpdateMinDistance(mLocationUpdateMinDistance);
 
-        Bitmap navIcon = BitmapFactory.decodeResource(mActivity.getResources(), R.drawable.map_navigation_icon);
+        Bitmap navIcon = BitmapFactory.decodeResource(mAbility.getResources(), ResourceTable.Media_map_navigation_icon);
         mLocationOverlay = new MyLocationNewOverlay(mGpsMyLocationProvider, mMapView);
         mLocationOverlay.setDirectionIcon(navIcon);
         mLocationOverlay.setDirectionAnchor(.5f, .63f);
 
         // orientation tracking - cannot reuse InternalCompassOrientationProvider from mCompassOverlay
-        mCompassOverlay = new CompassOverlay(mActivity, new InternalCompassOrientationProvider(mActivity), mMapView);
-        mOrientationProvider = new InternalCompassOrientationProvider(mActivity);
+        mCompassOverlay = new CompassOverlay(mAbility, new InternalCompassOrientationProvider(mAbility), mMapView);
+        mOrientationProvider = new InternalCompassOrientationProvider(mAbility);
 
         mScaleBarOverlay = new ScaleBarOverlay(mMapView);
         mScaleBarOverlay.setCentred(true);
@@ -164,7 +133,7 @@ public class OsmFragment extends BaseFragment implements MenuProvider, LocationL
         mMapView.getOverlays().add(mLocationOverlay);
         mMapView.getOverlays().add(mCompassOverlay);
         mMapView.getOverlays().add(mScaleBarOverlay);
-        mMapView.getOverlays().add(new CopyrightOverlay(mActivity));
+        mMapView.getOverlays().add(new CopyrightOverlay(mAbility));
         mMapView.getController();
 
         Bundle args = getArguments();
@@ -174,23 +143,22 @@ public class OsmFragment extends BaseFragment implements MenuProvider, LocationL
             mLocations = args.getParcelableArrayList(GeoIntentKey.LOCATION_LIST);
         }
 
-        btCenterMap = view.findViewById(R.id.ic_center_map);
-        btCenterMap.setOnClickListener(v -> {
+        btCenterMap = view.findComponentById(ResourceTable.Id_ic_center_map);
+        btCenterMap.setClickedListener(v -> {
             if (mLocation != null) {
                 mMapView.getController().animateTo(new GeoPoint(mLocation));
             }
         });
 
-        btFollowMe = view.findViewById(R.id.ic_follow_me);
-        btFollowMe.setOnClickListener(v -> updateFollowMe(!mLocationOverlay.isFollowLocationEnabled()));
+        btFollowMe = view.findComponentById(ResourceTable.Id_ic_follow_me);
+        btFollowMe.setClickedListener(v -> updateFollowMe(!mLocationOverlay.isFollowLocationEnabled()));
     }
 
-    @SuppressLint("MissingPermission")
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onActive() {
+        super.onActive();
         if (mMapView != null) {
-            mMapView.onResume();
+            mMapView.onActive();
         }
 
         try {
@@ -199,7 +167,7 @@ public class OsmFragment extends BaseFragment implements MenuProvider, LocationL
                     .setMinUpdateDistanceMeters(mLocationUpdateMinDistance)
                     .setQuality(LocationRequestCompat.QUALITY_BALANCED_POWER_ACCURACY)
                     .build();
-            LocationManagerCompat.requestLocationUpdates(mLocationManager, mProvider, mLocationRequest, this, Looper.myLooper());
+            LocationManagerCompat.requestLocationUpdates(mLocationManager, mProvider, mLocationRequest, this, EventRunner.getMainEventRunner());
         } catch (SecurityException unlikely) {
             Timber.e("Lost location permission. Could not request updates:%s", unlikely.getMessage());
         } catch (Throwable ex) {
@@ -231,10 +199,10 @@ public class OsmFragment extends BaseFragment implements MenuProvider, LocationL
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
+    public void onInactive() {
+        super.onInactive();
         if (mMapView != null) {
-            mMapView.onPause();
+            mMapView.onInactive();
         }
         if (mThread != null) {
             mThread.interrupt();
@@ -252,7 +220,7 @@ public class OsmFragment extends BaseFragment implements MenuProvider, LocationL
         mScaleBarOverlay.disableScaleBar();
 
         // unlock the orientation
-        mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+        mAbility.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         if (mOrientationProvider != null) {
             mOrientationProvider.stopOrientationProvider();
         }
@@ -260,8 +228,7 @@ public class OsmFragment extends BaseFragment implements MenuProvider, LocationL
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
+    public void onStop() {
         if (mMapView != null)
             mMapView.onDetach();
         mMapView = null;
@@ -279,12 +246,12 @@ public class OsmFragment extends BaseFragment implements MenuProvider, LocationL
     }
 
     @Override
-    public void onPrepareMenu(@NonNull Menu menu) {
+    public void onPrepareMenu(Menu menu) {
         mMapView.getOverlayManager().onPrepareOptionsMenu(menu, MENU_LAST_ID, mMapView);
     }
 
     @Override
-    public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+    public void onCreateMenu(Menu menu, MenuInflater inflater) {
         try {
             mMapView.getOverlayManager().onCreateOptionsMenu(menu, MENU_LAST_ID, mMapView);
         } catch (NullPointerException npe) {
@@ -293,8 +260,8 @@ public class OsmFragment extends BaseFragment implements MenuProvider, LocationL
     }
 
     @Override
-    public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
-        return mMapView.getOverlayManager().onOptionsItemSelected(menuItem, MENU_LAST_ID, mMapView);
+    public boolean onMenuItemSelected(MenuItem item) {
+        return mMapView.getOverlayManager().onOptionsItemSelected(item, MENU_LAST_ID, mMapView);
     }
 
     public void invalidateMapView() {
@@ -305,39 +272,38 @@ public class OsmFragment extends BaseFragment implements MenuProvider, LocationL
     private void updateFollowMe(boolean isFollowMe) {
         if (isFollowMe) {
             mLocationOverlay.enableFollowLocation();
-            btFollowMe.setImageResource(R.drawable.ic_follow_me_on);
+            btFollowMe.setImageResource(ResourceTable.Media_ic_follow_me_on);
             if (GeoConstants.ZERO_FIX != mLocationFetchMode) {
                 mLocationFetchMode = GeoConstants.FOLLOW_ME_FIX;
-                LocationManagerCompat.requestLocationUpdates(mLocationManager, mProvider, mLocationRequest, this, Looper.myLooper());
+                LocationManagerCompat.requestLocationUpdates(mLocationManager, mProvider, mLocationRequest, this, EventRunner.getMainEventRunner());
             }
         }
         else {
             mLocationOverlay.disableFollowLocation();
-            btFollowMe.setImageResource(R.drawable.ic_follow_me);
+            btFollowMe.setImageResource(ResourceTable.Media_ic_follow_me);
         }
     }
 
     private void setDeviceOrientation() {
-        int orientation;
-        int rotation = mActivity.getWindowManager().getDefaultDisplay().getRotation();
-        switch (rotation) {
-            case Surface.ROTATION_0:
+        int rotation = DisplayManager.getInstance().getDefaultDisplay(mContext).get().getRotation();
+        switch (RotationEnum.getByInt(rotation)) {
+            case CameraUtils.ROTATION_0:
                 orientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
                 mDeviceOrientation = 0;
                 break;
 
-            case Surface.ROTATION_90:
+            case CameraUtils.ROTATION_90:
                 mDeviceOrientation = 90;
                 orientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
                 break;
 
-            case Surface.ROTATION_180:
+            case CameraUtils.ROTATION_180:
                 mDeviceOrientation = 180;
                 orientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT;
                 break;
 
             default:
-            case Surface.ROTATION_270:
+            case CameraUtils.ROTATION_270:
                 mDeviceOrientation = 270;
                 orientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE;
                 break;
@@ -367,7 +333,7 @@ public class OsmFragment extends BaseFragment implements MenuProvider, LocationL
         mMapView.setMapOrientation(t);
     }
 
-    // Note: on devices without a compass this never fires this...
+    // Note: on devices without a compass this will never fire...
     // Only use the compass bit if we aren't moving, since gps is more accurate when we are moving.
     // aTalk always uses Compass if available, for screen orientation alignment
     @Override
@@ -434,7 +400,7 @@ public class OsmFragment extends BaseFragment implements MenuProvider, LocationL
             for (final Location xLocation : locations) {
                 try {
                     Thread.sleep(2000);
-                    runOnUiThread(() -> showLocation(xLocation));
+                    BaseAbility.runOnUiThread(() -> showLocation(xLocation));
                 } catch (InterruptedException ex) {
                     break;
                 } catch (Exception ex) {
