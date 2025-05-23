@@ -278,6 +278,7 @@ public class OsmFragment extends BaseFragment implements MenuProvider, LocationL
         btFollowMe = null;
     }
 
+    @Override
     public void onPrepareMenu(@NonNull Menu menu) {
         mMapView.getOverlayManager().onPrepareOptionsMenu(menu, MENU_LAST_ID, mMapView);
     }

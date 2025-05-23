@@ -179,6 +179,7 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
     public ChatController(Activity activity, ChatFragment fragment) {
         parent = activity;
         mChatFragment = fragment;
+
         // Do not use aTalk.getInstance, may not have initialized
         isAudioAllowed = aTalk.hasPermission(parent, false,
                 aTalk.PRC_RECORD_AUDIO, Manifest.permission.RECORD_AUDIO);
@@ -462,7 +463,7 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
             }
             quotedMessage = aTalkApp.getResString(R.string.chat_reply_quote,
                     replyMessage.getSender(), body);
-            chatMessageReply.setText(Html.fromHtml(quotedMessage, imageGetter, null));
+            chatMessageReply.setText(Html.fromHtml(quotedMessage, Html.FROM_HTML_MODE_LEGACY, imageGetter, null));
         }
         else {
             quotedMessage = null;

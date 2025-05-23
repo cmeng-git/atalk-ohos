@@ -1,7 +1,7 @@
 Project aTalk-ohos Release Notes
 =========================================================================
 Version:        00.07.000 (0007000)
-Release Date:   05/19/2025
+Release Date:   05/20/2025
 Author:         cmeng
 - Show Badge indicator on incoming file request; to ease user identification of the sender in contact list main UI.
 - Enable HeadsUp notification for incoming file transfer request to alert user when device is in standby;

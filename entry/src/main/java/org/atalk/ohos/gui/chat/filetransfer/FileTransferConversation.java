@@ -954,7 +954,6 @@ public abstract class FileTransferConversation extends BaseFragment
 
     /**
      * OnSeekBarChangeListener callback interface during multimedia playback
-     * <p>
      * A SeekBar callback that notifies clients when the progress level has been
      * changed. This includes changes that were initiated by the user through a
      * touch gesture or arrow key/trackball as well as changes that were initiated
@@ -973,7 +972,6 @@ public abstract class FileTransferConversation extends BaseFragment
         if (messageViewHolder.playbackSeekBar == seekBar) {
             isSeeking = true;
         }
-
     }
 
     @Override

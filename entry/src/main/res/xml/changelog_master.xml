@@ -6,7 +6,7 @@
      They are automatically updated with "ant bump-version".
 -->
 <changelog>
-    <release version="00.07.000 (05/19/2025)" versioncode="0076000">
+    <release version="00.07.000 (05/20/2025)" versioncode="0076000">
         <change>Please read &lt;a href='https://cmeng-git.github.io/atalk/faq.html#ui_01'&gt;aTalk UI design &amp; Implementation&lt;/a&gt; before using aTalk</change>
         <change>Show Badge indicator on incoming file request; to ease user identification of the sender in contact list main UI</change>
         <change>Enable HeadsUp notification for incoming file transfer request to alert user when device is in standby</change>
