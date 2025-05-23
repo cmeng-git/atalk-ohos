@@ -1,6 +1,6 @@
 /*
- * aTalk, android VoIP and Instant Messaging client
- * Copyright 2014 Eng Chong Meng
+ * aTalk, ohos VoIP and Instant Messaging client
+ * Copyright 2024 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,13 @@
  */
 package org.atalk.impl.appcertdialog;
 
-import android.os.Bundle;
-import android.text.Html;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
-
-import androidx.appcompat.app.AlertDialog;
+import ohos.aafwk.content.Intent;
+import ohos.agp.components.BaseItemProvider;
+import ohos.agp.components.Component;
+import ohos.agp.components.ComponentContainer;
+import ohos.agp.components.LayoutScatter;
+import ohos.agp.components.ListContainer;
+import ohos.agp.components.Text;
 
 import java.net.InetSocketAddress;
 import java.security.cert.Certificate;
@@ -44,9 +42,10 @@ import net.java.sip.communicator.service.protocol.TransportProtocol;
 import net.java.sip.communicator.util.account.AccountUtils;
 
 import org.apache.commons.lang3.StringUtils;
-import org.atalk.ohos.BaseActivity;
-import org.atalk.ohos.R;
+import org.atalk.ohos.BaseAbility;
+import org.atalk.ohos.ResourceTable;
 import org.atalk.ohos.aTalkApp;
+import org.atalk.ohos.gui.dialogs.DialogA;
 
 /**
  * Setting screen which displays protocolProvider connection info and servers SSL Certificates.
@@ -56,7 +55,7 @@ import org.atalk.ohos.aTalkApp;
  *
  * @author Eng Chong Meng
  */
-public class ConnectionInfo extends BaseActivity {
+public class ConnectionInfo extends BaseAbility {
     /**
      * List of AccountId to its array of manual approved self signed certificates
      */
@@ -65,7 +64,7 @@ public class ConnectionInfo extends BaseActivity {
     /*
      * Adapter used to display connection info and SSL certificates for all protocolProviders.
      */
-    private ConnectionInfoAdapter mCIAdapter;
+    private ConnectionInfoProvider mCIProvider;
 
     private CertificateServiceImpl cvs;
 
@@ -74,27 +73,27 @@ public class ConnectionInfo extends BaseActivity {
      */
     private X509CertificateView viewCertDialog;
 
-    private AlertDialog deleteDialog;
+    private DialogA deleteDialog;
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.list_layout);
-        ListView providerKeysList = findViewById(R.id.list);
+    protected void onStart(Intent intent) {
+        super.onStart(intent);
+        setUIContent(ResourceTable.Layout_list_layout);
+        ListContainer providerKeysList = findComponentById(ResourceTable.Id_list);
 
         cvs = (CertificateServiceImpl) JabberAccountRegistrationActivator.getCertificateService();
         List<AccountID> accountIDS = initCertificateEntry();
 
-        this.mCIAdapter = new ConnectionInfoAdapter(accountIDS);
-        providerKeysList.setAdapter(mCIAdapter);
+        this.mCIProvider = new ConnectionInfoProvider(accountIDS);
+        providerKeysList.setItemProvider(mCIProvider);
 
-        providerKeysList.setOnItemClickListener((parent, view, position, id)
+        providerKeysList.setItemClickedListener((parent, view, position, id)
                 -> showSslCertificate(position));
 
-        providerKeysList.setOnItemLongClickListener((parent, view, position, id) -> {
+        providerKeysList.setItemLongClickedListener((parent, view, position, id) -> {
             showSslCertificateDeleteAlert(position);
             return true;
         });
@@ -104,14 +103,14 @@ public class ConnectionInfo extends BaseActivity {
      * Dismissed any opened dialog to avoid window leaks on rotation
      */
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onInactive() {
+        super.onInactive();
         if (viewCertDialog != null && viewCertDialog.isShowing()) {
-            viewCertDialog.dismiss();
+            viewCertDialog.destroy();
             viewCertDialog = null;
         }
         if (deleteDialog != null && deleteDialog.isShowing()) {
-            deleteDialog.dismiss();
+            deleteDialog.remove();
             deleteDialog = null;
         }
     }
@@ -166,7 +165,7 @@ public class ConnectionInfo extends BaseActivity {
      * @param position the position of <code>SSL Certificate</code> in adapter's list which will be displayed.
      */
     public void showSslCertificate(int position) {
-        AccountID accountId = mCIAdapter.getItem(position);
+        AccountID accountId = mCIProvider.getItem(position);
         ProtocolProviderService pps = accountId.getProtocolProvider();
         if ((pps != null) && pps.isRegistered()) {
             OperationSetTLS opSetTLS = pps.getOperationSet(OperationSetTLS.class);
@@ -177,10 +176,10 @@ public class ConnectionInfo extends BaseActivity {
                 viewCertDialog.show();
             }
             else
-                aTalkApp.showToastMessage(aTalkApp.getResString(R.string.callinfo_tls_certificate_content) + ": null!");
+                aTalkApp.showToastMessage(aTalkApp.getResString(ResourceTable.String_callinfo_tls_certificate_content) + ": null!");
         }
         else {
-            aTalkApp.showToastMessage(R.string.certconfig_show_cert_exception, accountId);
+            aTalkApp.showToastMessage(ResourceTable.String_certconfig_show_cert_exception, accountId);
         }
     }
 
@@ -191,7 +190,7 @@ public class ConnectionInfo extends BaseActivity {
      * @param position the position of <code>SSL Certificate</code> in adapter's list which has to be used in the alert.
      */
     private void showSslCertificateDeleteAlert(int position) {
-        AccountID accountId = mCIAdapter.getItem(position);
+        AccountID accountId = mCIProvider.getItem(position);
         List<String> certs = certificateEntry.get(accountId);
         // Just display the SSL certificate info if none to delete
         if (certs.isEmpty()) {
@@ -200,18 +199,18 @@ public class ConnectionInfo extends BaseActivity {
         }
 
         final String bareJid = accountId.getAccountJid();
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.settings_ssl_certificate_remove)
-                .setMessage(getString(R.string.settings_ssl_certificate_purge, bareJid))
-                .setPositiveButton(R.string.yes, (dialog, which) -> {
+        DialogA.Builder builder = new DialogA.Builder(this);
+        builder.setTitle(ResourceTable.String_settings_ssl_certificate_remove)
+                .setContent(getString(ResourceTable.String_settings_ssl_certificate_purge, bareJid))
+                .setNegativeButton(ResourceTable.String_no, DialogA::remove)
+                .setPositiveButton(ResourceTable.String_yes, dialog -> {
                     for (String certEntry : certs)
                         cvs.removeCertificateEntry(certEntry);
 
                     // Update the adapter Account list after a deletion.
-                    mCIAdapter.setAccountIDs(initCertificateEntry());
-                    dialog.dismiss();
-                })
-                .setNegativeButton(R.string.no, (dialog, which) -> dialog.dismiss());
+                    mCIProvider.setAccountIDs(initCertificateEntry());
+                    dialog.remove();
+                });
         deleteDialog = builder.create();
         deleteDialog.show();
     }
@@ -226,33 +225,31 @@ public class ConnectionInfo extends BaseActivity {
         buff.append("<html><body>");
 
         // Protocol name
-        buff.append(getItemString(getString(R.string.protocol), pps.getProtocolName()));
+        buff.append(getItemString(getString(ResourceTable.String_protocol), pps.getProtocolName()));
 
         // Server address and port
         final OperationSetConnectionInfo opSetConnInfo = pps.getOperationSet(OperationSetConnectionInfo.class);
         if (opSetConnInfo != null) {
             InetSocketAddress ISAddress = opSetConnInfo.getServerAddress();
-            // buff.append(getItemString(getString(R.string.address),
-            //      (ISAddress == null) ? "" : ISAddress.getHostName()));
-            buff.append(getItemString(getString(R.string.address),
+            buff.append(getItemString(getString(ResourceTable.String_address),
                     (ISAddress == null) ? "" : ISAddress.getHostString()));
-            buff.append(getItemString(getString(R.string.port),
+            buff.append(getItemString(getString(ResourceTable.String_port),
                     (ISAddress == null) ? "" : String.valueOf(ISAddress.getPort())));
         }
 
         // Transport protocol
         TransportProtocol preferredTransport = pps.getTransportProtocol();
         if (preferredTransport != TransportProtocol.UNKNOWN)
-            buff.append(getItemString(getString(R.string.callinfo_call_transport), preferredTransport.toString()));
+            buff.append(getItemString(getString(ResourceTable.String_callinfo_call_transport), preferredTransport.toString()));
 
         // TLS information
         final OperationSetTLS opSetTLS = pps.getOperationSet(OperationSetTLS.class);
         if (opSetTLS != null) {
-            buff.append(getItemString(getString(R.string.callinfo_tls_protocol), opSetTLS.getProtocol()));
-            buff.append(getItemString(getString(R.string.callinfo_tls_cipher_suite), opSetTLS.getCipherSuite()));
+            buff.append(getItemString(getString(ResourceTable.String_callinfo_tls_protocol), opSetTLS.getProtocol()));
+            buff.append(getItemString(getString(ResourceTable.String_callinfo_tls_cipher_suite), opSetTLS.getCipherSuite()));
 
             buff.append("<b><u><font color=\"aqua\">")
-                    .append(getString(R.string.callinfo_view_certificate))
+                    .append(getString(ResourceTable.String_callinfo_view_certificate))
                     .append("</font></u></b>");
         }
         buff.append("</body></html>");
@@ -282,7 +279,7 @@ public class ConnectionInfo extends BaseActivity {
     /**
      * Adapter which displays Connection Info for list of <code>ProtocolProvider</code>s.
      */
-    class ConnectionInfoAdapter extends BaseAdapter {
+    class ConnectionInfoProvider extends BaseItemProvider {
         /**
          * List of <code>AccountID</code> for which the connection info and certificates are being displayed.
          */
@@ -294,7 +291,7 @@ public class ConnectionInfo extends BaseActivity {
          * @param accountIDS the list of <code>AccountId</code>s for which connection info and
          * certificates will be displayed by this adapter.
          */
-        ConnectionInfoAdapter(List<AccountID> accountIDS) {
+        ConnectionInfoProvider(List<AccountID> accountIDS) {
             this.accountIDs = accountIDS;
         }
 
@@ -306,7 +303,7 @@ public class ConnectionInfo extends BaseActivity {
          */
         public void setAccountIDs(List<AccountID> accountIDS) {
             this.accountIDs = accountIDS;
-            notifyDataSetChanged();
+            notifyDataChanged();
         }
 
         /**
@@ -337,14 +334,14 @@ public class ConnectionInfo extends BaseActivity {
          * {@inheritDoc}
          */
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            // Keeps reference to avoid future findViewById()
+        public Component getComponent(int position, Component convertView, ComponentContainer parent) {
+            // Keeps reference to avoid future findComponentById()
             CIViewHolder ciViewHolder;
             if (convertView == null) {
-                convertView = getLayoutInflater().inflate(R.layout.connection_info_list_row, parent, false);
+                convertView = LayoutScatter.getInstance(getContext()).parse(ResourceTable.Layout_connection_info_list_row, parent, false);
                 ciViewHolder = new CIViewHolder();
-                ciViewHolder.protocolService = convertView.findViewById(R.id.protocolProvider);
-                ciViewHolder.connectionInfo = convertView.findViewById(R.id.connectionInfo);
+                ciViewHolder.protocolService = convertView.findComponentById(ResourceTable.Id_protocolProvider);
+                ciViewHolder.connectionInfo = convertView.findComponentById(ResourceTable.Id_connectionInfo);
                 convertView.setTag(ciViewHolder);
             }
             else {
@@ -361,7 +358,7 @@ public class ConnectionInfo extends BaseActivity {
                 detailInfo = loadDetails(accountId.getProtocolProvider());
             }
             else {
-                detailInfo = getString(R.string.account_unregistered, "&#8226; ");
+                detailInfo = getString(ResourceTable.String_account_unregistered, "&#8226; ");
             }
 
             ciViewHolder.connectionInfo.setText(Html.fromHtml(detailInfo, Html.FROM_HTML_MODE_LEGACY, null, null));
@@ -370,7 +367,7 @@ public class ConnectionInfo extends BaseActivity {
     }
 
     private static class CIViewHolder {
-        TextView protocolService;
-        TextView connectionInfo;
+        Text protocolService;
+        Text connectionInfo;
     }
 }
