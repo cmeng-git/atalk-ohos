@@ -1,6 +1,6 @@
 /*
- * aTalk, android VoIP and Instant Messaging client
- * Copyright 2014 Eng Chong Meng
+ * aTalk, ohos VoIP and Instant Messaging client
+ * Copyright 2024 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,6 @@
  */
 package org.atalk.ohos.util;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.LinkProperties;
-import android.net.Network;
-import android.net.NetworkInfo;
-import android.net.RouteInfo;
-
 import org.minidns.DnsClient;
 import org.minidns.dnsserverlookup.AbstractDnsServerLookupMechanism;
 import org.minidns.dnsserverlookup.AndroidUsingExec;
@@ -33,16 +25,22 @@ import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 
+import ohos.app.Context;
+import ohos.net.ConnectionProperties;
+import ohos.net.NetCapabilities;
+import ohos.net.NetHandle;
+import ohos.net.NetManager;
+import ohos.net.RouteInfo;
+
 /**
  * A DNS server lookup mechanism using Android's Link Properties method available on Android API 21 or higher.
  * Use {@link #setup(Context)} to setup this mechanism.
- *
  * Requires the ACCESS_NETWORK_STATE permission.
  *
  */
 public class AndroidUsingLinkProperties extends AbstractDnsServerLookupMechanism
 {
-    private final ConnectivityManager connectivityManager;
+    private final NetManager netManager;
 
     /**
      * Setup this DNS server lookup mechanism. You need to invoke this method only once,
@@ -61,20 +59,13 @@ public class AndroidUsingLinkProperties extends AbstractDnsServerLookupMechanism
     public AndroidUsingLinkProperties(Context context)
     {
         super(AndroidUsingLinkProperties.class.getSimpleName(), AndroidUsingExec.PRIORITY - 1);
-        connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        netManager = NetManager.getInstance(context);
     }
 
-    @SuppressLint("ObsoleteSdkInt")
     @Override
     public boolean isAvailable()
     {
 		return true;
-    }
-
-    private Network getActiveNetwork()
-    {
-        // ConnectivityManager.getActiveNetwork() is API 23; null if otherwise
-        return connectivityManager.getActiveNetwork();
     }
 
     /**
@@ -86,20 +77,20 @@ public class AndroidUsingLinkProperties extends AbstractDnsServerLookupMechanism
     public List<String> getDnsServerAddresses()
     {
         final List<String> servers = new ArrayList<>();
-        final Network network = getActiveNetwork();
-        if (network == null) {
+        final NetHandle netHandle = netManager.getDefaultNet();
+        if (netHandle == null) {
             return null;
         }
 
-        LinkProperties linkProperties = connectivityManager.getLinkProperties(network);
-        if (linkProperties == null) {
+        ConnectionProperties connectionProperties = netManager.getConnectionProperties(netHandle);
+        if (connectionProperties == null) {
             return null;
         }
 
         int vpnOffset = 0;
-        final NetworkInfo networkInfo = connectivityManager.getNetworkInfo(network);
-        final boolean isVpn = networkInfo != null && networkInfo.getType() == ConnectivityManager.TYPE_VPN;
-        final List<String> v4v6Servers = getIPv4First(linkProperties.getDnsServers());
+        NetCapabilities nc = netManager.getNetCapabilities(netHandle);
+        final boolean isVpn = nc != null && nc.hasCap(NetCapabilities.BEARER_VPN);
+        final List<String> v4v6Servers = getIPv4First(connectionProperties.getDnsServers());
         // Timber.d("hasDefaultRoute: %s activeNetwork: %s || isVpn: %s || IP: %s",
         //        hasDefaultRoute(linkProperties), network, isVpn, toListOfStrings(linkProperties.getDnsServers()));
 
@@ -108,7 +99,7 @@ public class AndroidUsingLinkProperties extends AbstractDnsServerLookupMechanism
             // vpnOffset += v4v6Servers.size();
         }
         // Prioritize the DNS servers of links which have a default route
-        else if (hasDefaultRoute(linkProperties)) {
+        else if (hasDefaultRoute(connectionProperties)) {
             servers.addAll(vpnOffset, v4v6Servers);
         }
         else {
@@ -140,7 +131,7 @@ public class AndroidUsingLinkProperties extends AbstractDnsServerLookupMechanism
         return out;
     }
 
-    private static boolean hasDefaultRoute(LinkProperties linkProperties)
+    private static boolean hasDefaultRoute(ConnectionProperties linkProperties)
     {
         for (RouteInfo route : linkProperties.getRoutes()) {
             if (route.isDefaultRoute()) {

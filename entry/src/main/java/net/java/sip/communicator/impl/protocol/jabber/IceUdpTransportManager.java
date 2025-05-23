@@ -33,7 +33,7 @@ import net.java.sip.communicator.service.protocol.UserCredentials;
 import net.java.sip.communicator.service.protocol.media.TransportManager;
 import net.java.sip.communicator.util.PortTracker;
 
-import org.atalk.ohos.R;
+import org.atalk.ohos.ResourceTable;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.impl.timberlog.TimberLog;
 import org.atalk.service.neomedia.DefaultStreamConnector;
@@ -1078,7 +1078,7 @@ public class IceUdpTransportManager extends TransportManagerJabberImpl implement
             iceAgent.removeStateChangeListener(stateChangeListener);
             /* check the state of ICE processing and throw exception if failed */
             if (IceProcessingState.FAILED.equals(iceAgent.getState())) {
-                String msg = aTalkApp.getResString(R.string.protocol_ice_failed);
+                String msg = aTalkApp.getResString(ResourceTable.String_service_protocol_ICE_FAILED);
                 throw new OperationFailedException(msg, OperationFailedException.GENERAL_ERROR);
             }
         }

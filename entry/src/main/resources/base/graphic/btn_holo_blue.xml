@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<state-container
+    xmlns:ohos="http://schemas.huawei.com/res/ohos">
+
+    <item
+        ohos:element="$graphic:alpha_blue_01"
+        ohos:state="component_state_empty"/>
+
+    <item
+        ohos:element="$graphic:alpha_blue_01"
+        ohos:state="component_state_empty"/>
+
+    <item
+        ohos:element="$graphic:alpha_blue_01"
+        ohos:state="component_state_pressed"/>
+
+    <item
+        ohos:element="$graphic:alpha_blue_01"
+        ohos:state="component_state_focused"/>
+
+    <item
+        ohos:element="$graphic:alpha_blue_01"/>
+
+    <item
+        ohos:element="$graphic:greyshape"/>
+
+    <item
+        ohos:element="$graphic:alpha_blue_01"
+        ohos:state="component_state_focused"/>
+
+    <item
+        ohos:element="$graphic:alpha_blue_01"/>
+</state-container>

@@ -24,6 +24,10 @@ import net.sf.fmj.media.AbstractPlugIn;
  * @author Eng Chong Meng
  */
 public abstract class AbstractCodec2 extends AbstractCodec {
+    public static final int INFO_TRY_AGAIN_LATER = -1;
+    public static final int INFO_OUTPUT_FORMAT_CHANGED = -2;
+    public static final int INFO_OUTPUT_BUFFERS_CHANGED = -3;
+
     /**
      * The <code>Buffer</code> flag which indicates that the respective <code>Buffer</code> contains audio
      * data which has been decoded as a result of the operation of FEC.
@@ -120,6 +124,9 @@ public abstract class AbstractCodec2 extends AbstractCodec {
         return null;
     }
 
+    /**
+     * @noinspection SuspiciousNameCombination
+     */
     public static YUVFormat specialize(YUVFormat yuvFormat, Class<?> dataType) {
         Dimension size = yuvFormat.getSize();
         int strideY = yuvFormat.getStrideY();

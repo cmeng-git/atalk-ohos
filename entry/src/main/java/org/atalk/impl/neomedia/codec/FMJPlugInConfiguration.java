@@ -48,9 +48,9 @@ public class FMJPlugInConfiguration
      * The additional custom JMF codecs.
      */
     private static final String[] CUSTOM_CODECS = {
-            // "org.atalk.impl.neomedia.codec.AndroidMediaCodec",
-            OSUtils.IS_ANDROID ? "org.atalk.impl.neomedia.codec.video.AndroidEncoder" : null,
-            OSUtils.IS_ANDROID ? "org.atalk.impl.neomedia.codec.video.AndroidDecoder" : null,
+            // "org.atalk.impl.neomedia.codec.OhosMediaCodec",
+            "org.atalk.impl.neomedia.codec.video.MediaEncoder",
+            "org.atalk.impl.neomedia.codec.video.MediaDecoder",
             "org.atalk.impl.neomedia.codec.audio.alaw.DePacketizer",
             "org.atalk.impl.neomedia.codec.audio.alaw.JavaEncoder",
             "org.atalk.impl.neomedia.codec.audio.alaw.Packetizer",

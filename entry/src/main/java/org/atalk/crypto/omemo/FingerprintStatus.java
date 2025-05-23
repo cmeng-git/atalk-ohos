@@ -1,6 +1,6 @@
 /*
- * aTalk, android VoIP and Instant Messaging client
- * Copyright 2014 Eng Chong Meng
+ * aTalk, ohos VoIP and Instant Messaging client
+ * Copyright 2024 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,8 @@
  */
 package org.atalk.crypto.omemo;
 
-import android.content.ContentValues;
-import android.database.Cursor;
-
+import ohos.data.rdb.ValuesBucket;
+import ohos.data.resultset.ResultSet;
 import org.apache.commons.lang3.StringUtils;
 import org.jivesoftware.smackx.omemo.internal.OmemoDevice;
 import org.jxmpp.jid.BareJid;
@@ -53,32 +52,32 @@ public class FingerprintStatus implements Comparable<FingerprintStatus>
         return result;
     }
 
-    public ContentValues toContentValues() {
-        final ContentValues contentValues = new ContentValues();
-        contentValues.put(SQLiteOmemoStore.TRUST, trust.toString());
-        contentValues.put(SQLiteOmemoStore.ACTIVE, active ? 1 : 0);
+    public ValuesBucket toValuesBucket() {
+        final ValuesBucket valuesBucket = new ValuesBucket();
+        valuesBucket.putString(SQLiteOmemoStore.TRUST, trust.toString());
+        valuesBucket.putInteger(SQLiteOmemoStore.ACTIVE, active ? 1 : 0);
         if (lastActivation != DO_NOT_OVERWRITE) {
-            contentValues.put(SQLiteOmemoStore.LAST_ACTIVATION, lastActivation);
+            valuesBucket.putLong(SQLiteOmemoStore.LAST_ACTIVATION, lastActivation);
         }
-        return contentValues;
+        return valuesBucket;
     }
 
-    public static FingerprintStatus fromCursor(Cursor cursor) {
+    public static FingerprintStatus fromResultSet(ResultSet cursor) {
         final FingerprintStatus status = new FingerprintStatus();
         try {
-            BareJid bareJid = JidCreate.bareFrom(cursor.getString(cursor.getColumnIndexOrThrow(SQLiteOmemoStore.BARE_JID)));
-            int deviceId = cursor.getInt(cursor.getColumnIndexOrThrow(SQLiteOmemoStore.DEVICE_ID));
+            BareJid bareJid = JidCreate.bareFrom(cursor.getString(cursor.getColumnIndexForName(SQLiteOmemoStore.BARE_JID)));
+            int deviceId = cursor.getInt(cursor.getColumnIndexForName(SQLiteOmemoStore.DEVICE_ID));
             status.mDevice = new OmemoDevice(bareJid, deviceId);
         }
         catch (XmppStringprepException e) {
             e.printStackTrace();
         }
-        status.mFingerPrint = cursor.getString(cursor.getColumnIndexOrThrow(SQLiteOmemoStore.FINGERPRINT));
+        status.mFingerPrint = cursor.getString(cursor.getColumnIndexForName(SQLiteOmemoStore.FINGERPRINT));
         if (StringUtils.isEmpty(status.mFingerPrint ))
             return null;
 
         try {
-            String trust = cursor.getString(cursor.getColumnIndexOrThrow(SQLiteOmemoStore.TRUST));
+            String trust = cursor.getString(cursor.getColumnIndexForName(SQLiteOmemoStore.TRUST));
             if (StringUtils.isEmpty(trust))
                 status.trust = Trust.UNDECIDED;
             else
@@ -87,8 +86,8 @@ public class FingerprintStatus implements Comparable<FingerprintStatus>
             status.trust = Trust.UNTRUSTED;
         }
 
-        status.active = cursor.getInt(cursor.getColumnIndexOrThrow(SQLiteOmemoStore.ACTIVE)) > 0;
-        status.lastActivation = cursor.getLong(cursor.getColumnIndexOrThrow(SQLiteOmemoStore.LAST_ACTIVATION));
+        status.active = cursor.getInt(cursor.getColumnIndexForName(SQLiteOmemoStore.ACTIVE)) > 0;
+        status.lastActivation = cursor.getLong(cursor.getColumnIndexForName(SQLiteOmemoStore.LAST_ACTIVATION));
         return status;
     }
 

@@ -1,30 +1,36 @@
 /*
- * Jitsi, the OpenSource Java VoIP and Instant Messaging client.
+ * aTalk, ohos VoIP and Instant Messaging client
+ * Copyright 2024 Eng Chong Meng
  *
- * Distributable under LGPL license. See terms of license at gnu.org.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.atalk.ohos.gui.util;
 
-import android.app.ActivityManager;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.content.Context;
-import android.content.res.Configuration;
-import android.graphics.drawable.TransitionDrawable;
-import android.os.Looper;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.View.OnTouchListener;
-
-import androidx.core.app.NotificationCompat;
-
-import java.util.List;
+import ohos.agp.components.Component;
+import ohos.agp.window.service.Display;
+import ohos.agp.window.service.DisplayManager;
+import ohos.app.Context;
+import ohos.event.notification.NotificationHelper;
+import ohos.event.notification.NotificationRequest;
+import ohos.multimodalinput.event.TouchEvent;
+import ohos.rpc.RemoteException;
 
 import org.atalk.impl.appnotification.AppNotifications;
 import org.atalk.impl.timberlog.TimberLog;
-import org.atalk.ohos.R;
+import org.atalk.ohos.ResourceTable;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.AppGUIActivator;
+import org.atalk.ohos.util.AppImageUtil;
 import org.atalk.service.osgi.OSGiService;
 
 import timber.log.Timber;
@@ -33,8 +39,6 @@ import timber.log.Timber;
  * The <code>AppUtils</code> class provides a set of utility methods allowing an easy way to show
  * an alert dialog on android, show a general notification, etc.
  *
- * @author Yana Stamcheva
- * @author Pawel Domas
  * @author Eng Chong Meng
  */
 public class AppUtils {
@@ -47,10 +51,8 @@ public class AppUtils {
 
     /**
      * Clears the general notification.
-     *
-     * @param appContext the <code>Context</code> that will be used to create new activity from notification <code>Intent</code>.
      */
-    public static void clearGeneralNotification(Context appContext) {
+    public static void clearGeneralNotification() {
         int id = OSGiService.getGeneralNotificationId();
         if (id < 0) {
             Timber.log(TimberLog.FINER, "There's no global notification icon found");
@@ -78,25 +80,30 @@ public class AppUtils {
             return;
         }
 
-        NotificationCompat.Builder nBuilder;
-        nBuilder = new NotificationCompat.Builder(context, AppNotifications.DEFAULT_GROUP);
+        NotificationRequest.NotificationPictureContent pContent = new NotificationRequest.NotificationPictureContent()
+                .setTitle(title)
+                .setText(message);
 
-        nBuilder.setContentTitle(title)
-                .setContentText(message)
-                .setWhen(date)
-                .setSmallIcon(R.drawable.ic_notification);
+        NotificationRequest nRequest = new NotificationRequest(context, notificationID)
+                .setSlotId(AppNotifications.DEFAULT_GROUP)
+                .setDeliveryTime(date)
+                .setLittleIcon(AppImageUtil.getPixelMap(context, ResourceTable.Media_ic_notification))
+                .setOnlyLocal(true)
+                .setIntentAgent(aTalkApp.getaTalkIconIntent())
+                .setContent(new NotificationRequest.NotificationContent(pContent));
 
-        nBuilder.setContentIntent(aTalkApp.getaTalkIconIntent());
-        NotificationManager mNotificationManager
-                = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+//        NotificationManager mNotificationManager
+//                = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+//        Notification notification = nBuilder.build();
+//        notification.flags = Notification.FLAG_ONLY_ALERT_ONCE
+//                & Notification.FLAG_FOREGROUND_SERVICE & Notification.FLAG_NO_CLEAR;
 
-        Notification notification = nBuilder.build();
-        notification.flags = Notification.FLAG_ONLY_ALERT_ONCE
-                & Notification.FLAG_FOREGROUND_SERVICE & Notification.FLAG_NO_CLEAR;
-
-        // mId allows you to update the notification later on.
-        mNotificationManager.notify(notificationID, notification);
-        lastNotificationText = message;
+        try {
+            NotificationHelper.publishNotification(nRequest);
+            lastNotificationText = message;
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -107,69 +114,28 @@ public class AppUtils {
         lastNotificationText = null;
     }
 
-    /**
-     * Indicates if the service given by <code>activityClass</code> is currently running.
-     *
-     * @param context the Android context
-     * @param activityClass the activity class to check
-     *
-     * @return <code>true</code> if the activity given by the class is running, <code>false</code> - otherwise
-     */
-    public static boolean isActivityRunning(Context context, Class<?> activityClass) {
-        ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningTaskInfo> services = activityManager.getRunningTasks(Integer.MAX_VALUE);
-
-        boolean isServiceFound = false;
-        for (int i = 0; i < services.size(); i++) {
-            if (services.get(i).topActivity.getClassName().equals(activityClass.getName())) {
-                isServiceFound = true;
-            }
-        }
-        return isServiceFound;
-    }
-
-    public static void setOnTouchBackgroundEffect(View view) {
-        view.setOnTouchListener(new OnTouchListener() {
-            public boolean onTouch(View v, MotionEvent event) {
-                if (!(v.getBackground() instanceof TransitionDrawable))
+    public static void setOnTouchBackgroundEffect(Component view) {
+        view.setTouchEventListener(new Component.TouchEventListener() {
+            @Override
+            public boolean onTouchEvent(Component v, TouchEvent touchEvent) {
+                if (!(v.getBackgroundElement() instanceof TransitionDrawable))
                     return false;
 
                 TransitionDrawable transition = (TransitionDrawable) v.getBackground();
 
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
+                switch (touchEvent.getAction()) {
+                    case TouchEvent.PRIMARY_POINT_DOWN:
                         transition.startTransition(500);
                         break;
-                    case MotionEvent.ACTION_HOVER_EXIT:
-                    case MotionEvent.ACTION_CANCEL:
-                    case MotionEvent.ACTION_UP:
+                    case TouchEvent.HOVER_POINTER_EXIT:
+                    case TouchEvent.CANCEL:
+                    case TouchEvent.PRIMARY_POINT_UP:
                         transition.reverseTransition(500);
                         break;
                 }
                 return false;
             }
         });
-    }
-
-    /**
-     * Returns <code>true</code> if we are currently running on tablet device.
-     *
-     * @return <code>true</code> if we are currently running on tablet device.
-     */
-    public static boolean isTablet() {
-        Context context = aTalkApp.getInstance();
-
-        return (context.getResources().getConfiguration().screenLayout
-                & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE;
-    }
-
-    /**
-     * Returns <code>true</code> if current <code>Thread</code> is UI thread.
-     *
-     * @return <code>true</code> if current <code>Thread</code> is UI thread.
-     */
-    public static boolean isUIThread() {
-        return Looper.getMainLooper().getThread() == Thread.currentThread();
     }
 
     /**
@@ -180,6 +146,7 @@ public class AppUtils {
      * @return density independent pixels value for given pixels value.
      */
     public static int pxToDp(int px) {
-        return (int) (((float) px) * aTalkApp.getAppResources().getDisplayMetrics().density + 0.5f);
+        Display display = DisplayManager.getInstance().getDefaultDisplay(aTalkApp.getInstance()).get();
+        return px * display.getAttributes().densityDpi;
     }
 }

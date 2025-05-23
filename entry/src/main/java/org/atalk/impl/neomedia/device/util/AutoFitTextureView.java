@@ -1,11 +1,12 @@
 /*
- * Copyright 2014 The Android Open Source Project
+ * aTalk, ohos VoIP and Instant Messaging client
+ * Copyright 2024 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,16 +16,17 @@
  */
 package org.atalk.impl.neomedia.device.util;
 
-import android.content.Context;
-import android.util.AttributeSet;
-import android.view.TextureView;
+import ohos.agp.components.AttrSet;
+import ohos.agp.components.Component.EstimateSizeListener;
+import ohos.agp.components.textureprovider.TextureProvider;
+import ohos.app.Context;
 
 import timber.log.Timber;
 
 /**
- * A {@link TextureView} that can be adjusted to a specified aspect ratio.
+ * A {@link TextureProvider} that can be adjusted to a specified aspect ratio.
  */
-public class AutoFitTextureView extends TextureView {
+public class AutoFitTextureView extends TextureProvider implements EstimateSizeListener {
     protected int mRatioWidth = 0;
     protected int mRatioHeight = 0;
 
@@ -32,11 +34,11 @@ public class AutoFitTextureView extends TextureView {
         this(context, null);
     }
 
-    public AutoFitTextureView(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
+    public AutoFitTextureView(Context context, AttrSet attrs) {
+        this(context, attrs, "");
     }
 
-    public AutoFitTextureView(Context context, AttributeSet attrs, int defStyle) {
+    public AutoFitTextureView(Context context, AttrSet attrs, String defStyle) {
         super(context, attrs, defStyle);
     }
 
@@ -57,25 +59,24 @@ public class AutoFitTextureView extends TextureView {
         }
         mRatioWidth = width;
         mRatioHeight = height;
-        requestLayout();
+        setComponentSize(width, height);
     }
 
     /**
      * onMeasure will return the container dimension and not the device display size
      *
-     * @param widthMeasureSpec
-     * @param heightMeasureSpec
+     * @param widthMeasureSpec EstimateSpec width
+     * @param heightMeasureSpec EstimateSpec height
      */
     @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        int width = MeasureSpec.getSize(widthMeasureSpec);
-        int height = MeasureSpec.getSize(heightMeasureSpec);
+    public boolean onEstimateSize(int widthMeasureSpec, int heightMeasureSpec) {
+        int width = EstimateSpec.getSize(widthMeasureSpec);
+        int height = EstimateSpec.getSize(heightMeasureSpec);
         if (0 == mRatioWidth || 0 == mRatioHeight) {
-            setMeasuredDimension(width, height);
+            setEstimatedSize(width, height);
         }
         else {
-            setMeasuredDimension(mRatioWidth, mRatioHeight);
+            setEstimatedSize(mRatioWidth, mRatioHeight);
 //            if (width < height * mRatioWidth / mRatioHeight) {
 //                setMeasuredDimension(width, width * mRatioHeight / mRatioWidth);
 //                Timber.d("AutoFit TextureView onMeasureW: [%s x %s] => [%s x %s]", width, height, width, width * mRatioHeight / mRatioWidth);
@@ -86,5 +87,6 @@ public class AutoFitTextureView extends TextureView {
 //            }
         }
         Timber.d("AutoFit TextureView onMeasureWH: [%s x %s] => [%s x %s]", width, height, mRatioWidth, mRatioHeight);
+        return true;
     }
 }

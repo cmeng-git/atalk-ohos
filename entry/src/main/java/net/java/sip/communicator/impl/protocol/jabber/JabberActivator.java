@@ -5,8 +5,6 @@
  */
 package net.java.sip.communicator.impl.protocol.jabber;
 
-import java.util.Hashtable;
-
 import net.java.sip.communicator.service.credentialsstorage.CredentialsStorageService;
 import net.java.sip.communicator.service.globaldisplaydetails.GlobalDisplayDetailsService;
 import net.java.sip.communicator.service.googlecontacts.GoogleContactsService;
@@ -19,14 +17,16 @@ import net.java.sip.communicator.service.protocol.ProtocolProviderFactory;
 import net.java.sip.communicator.service.resources.ResourceManagementServiceUtils;
 import net.java.sip.communicator.util.ServiceUtils;
 
+import org.atalk.impl.appupdate.VersionServiceImpl;
 import org.atalk.service.configuration.ConfigurationService;
 import org.atalk.service.neomedia.MediaService;
 import org.atalk.service.resources.ResourceManagementService;
-import org.atalk.service.version.VersionService;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
+
+import java.util.Hashtable;
 
 /**
  * Loads the Jabber provider factory and registers it with service in the OSGI bundle context.
@@ -101,7 +101,7 @@ public class JabberActivator implements BundleActivator {
     /**
      * A reference to the currently valid <code>VersionService</code> instance.
      */
-    private static VersionService versionService = null;
+    private static final VersionServiceImpl versionService = null;
 
     /**
      * The registered PhoneNumberI18nService.
@@ -250,8 +250,7 @@ public class JabberActivator implements BundleActivator {
      */
     public static NetworkAddressManagerService getNetworkAddressManagerService() {
         if (networkAddressManagerService == null) {
-            ServiceReference<?> confReference
-                    = bundleContext.getServiceReference(NetworkAddressManagerService.class.getName());
+            ServiceReference<?> confReference = bundleContext.getServiceReference(NetworkAddressManagerService.class.getName());
             networkAddressManagerService = (NetworkAddressManagerService) bundleContext.getService(confReference);
         }
         return networkAddressManagerService;
@@ -299,21 +298,6 @@ public class JabberActivator implements BundleActivator {
             googleService = ServiceUtils.getService(bundleContext, GoogleContactsService.class);
         }
         return googleService;
-    }
-
-    /**
-     * Returns a reference to a VersionService implementation currently registered in the bundle
-     * context or null if no such implementation was found.
-     *
-     * @return a reference to a VersionService implementation currently registered in the bundle
-     * context or null if no such implementation was found.
-     */
-    public static VersionService getVersionService() {
-        if (versionService == null) {
-            ServiceReference<?> versionServiceReference = bundleContext.getServiceReference(VersionService.class.getName());
-            versionService = (VersionService) bundleContext.getService(versionServiceReference);
-        }
-        return versionService;
     }
 
     /**

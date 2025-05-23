@@ -6,17 +6,15 @@
  */
 package org.atalk.impl.neomedia.codec.video;
 
-import java.awt.Dimension;
-
-import javax.media.Buffer;
-import javax.media.Effect;
-import javax.media.Format;
-import javax.media.ResourceUnavailableException;
-
 import org.atalk.impl.neomedia.codec.AbstractCodec2;
 import org.atalk.impl.neomedia.codec.FFmpeg;
 import org.atalk.impl.timberlog.TimberLog;
 
+import java.awt.Dimension;
+import javax.media.Buffer;
+import javax.media.Effect;
+import javax.media.Format;
+import javax.media.ResourceUnavailableException;
 import timber.log.Timber;
 
 /**
@@ -27,8 +25,7 @@ import timber.log.Timber;
  * @author Lyubomir Marinov
  * @author Eng Chong Meng
  */
-public class HFlip extends AbstractCodec2
-        implements Effect {
+public class HFlip extends AbstractCodec2 implements Effect {
     /**
      * The list of <code>Format</code>s supported by <code>HFlip</code> instances as input and output.
      */

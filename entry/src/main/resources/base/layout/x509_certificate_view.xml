@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<DirectionalLayout xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:width="match_parent"
+    ohos:height="match_parent"
+    ohos:orientation="vertical">
+
+    <WebView
+        ohos:id="$+id:certificateInfo"
+        ohos:width="match_content"
+        ohos:height="match_content"
+        ohos:layout_alignment="center"
+        ohos:padding="10vp"
+        ohos:text="{View SSL Certificate}" />
+</DirectionalLayout>

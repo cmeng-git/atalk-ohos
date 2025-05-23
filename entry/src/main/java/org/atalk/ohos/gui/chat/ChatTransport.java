@@ -209,7 +209,7 @@ public interface ChatTransport {
      * leaving the transport to choose the destination.
      *
      * @param file the file to send
-     * @param chatType ChatFragment.MSGTYPE_OMEMO or MSGTYPE_NORMAL
+     * @param chatType ChatSlice.MSGTYPE_OMEMO or MSGTYPE_NORMAL
      * @param xferCon an instance of FileSendConversation
      *
      * @return the <code>FileTransfer</code> or HTTPFileUpload object charged to transfer the given <code>file</code>.
@@ -223,7 +223,7 @@ public interface ChatTransport {
      * Sends the given file through this chat transport.
      *
      * @param file the file to send
-     * @param chatType ChatFragment.MSGTYPE_OMEMO or MSGTYPE_NORMAL
+     * @param chatType ChatSlice.MSGTYPE_OMEMO or MSGTYPE_NORMAL
      * @param xferCon an instance of FileSendConversation
      *
      * @return the <code>FileTransfer</code> or HTTPFileUpload object charged to transfer the given <code>file</code>.

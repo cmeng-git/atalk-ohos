@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DirectionalLayout xmlns:ohos="http://schemas.huawei.com/apk/res/ohos"
+    ohos:layout_width="fill_parent"
+    ohos:layout_height="$float:contact_list_row_height"
+    ohos:background="$graphic:list_selector_state"
+    ohos:descendantFocusability="blocksDescendants"
+    ohos:orientation="horizontal"
+    ohos:padding="5dp">
+
+    <DependentLayout
+        ohos:id="$+id:avatarContainer"
+        ohos:layout_width="$float:contact_list_row_height"
+        ohos:layout_height="match_parent"
+        ohos:layout_gravity="center">
+
+        <Image
+            ohos:id="$+id:avatarIcon"
+            ohos:layout_width="54dp"
+            ohos:layout_height="54dp"
+            ohos:layout_centerVertical="true"
+            ohos:src="$media:avatar" />
+
+        <Image
+            ohos:id="$+id:contactBlockIcon"
+            ohos:layout_width="18dp"
+            ohos:layout_height="18dp"
+            ohos:layout_alignBottom="$id:avatarIcon"
+            ohos:layout_alignStart="$id:avatarIcon"
+            ohos:src="$media:contact_block" />
+
+        <Image
+            ohos:id="$+id:contactStatusIcon"
+            ohos:layout_width="16dp"
+            ohos:layout_height="16dp"
+            ohos:layout_alignBottom="$id:avatarIcon"
+            ohos:layout_alignEnd="$id:avatarIcon"
+            ohos:src="$media:contact_online" />
+    </DependentLayout>
+
+    <DirectionalLayout
+        ohos:layout_width="match_parent"
+        ohos:layout_height="match_parent"
+        ohos:gravity="bottom"
+        ohos:orientation="vertical"
+        ohos:paddingStart="10dp"
+        ohos:paddingBottom="4dp">
+
+        <Text
+            ohos:id="$+id:displayName"
+            style="$style:LargeFont"
+            ohos:layout_width="match_parent"
+            ohos:layout_height="wrap_content"
+            ohos:ellipsize="end"
+            ohos:maxLines="1"
+            ohos:text="Displayname@server.com"
+            ohos:textColor="$color:textColorBlack" />
+
+        <Text
+            ohos:id="$+id:statusMessage"
+            ohos:fontSize="$float:small_font"
+            ohos:layout_width="match_parent"
+            ohos:layout_height="wrap_content"
+            ohos:layout_gravity="start"
+            ohos:layout_marginBottom="5dp"
+            ohos:ellipsize="end"
+            ohos:gravity="bottom"
+            ohos:maxLines="1"
+            ohos:text="Some long status message"
+            ohos:textColor="$graphic:list_details_selection_color" />
+
+    </DirectionalLayout>
+
+    <DirectionalLayout
+        ohos:layout_width="fill_parent"
+        ohos:layout_height="1dp"
+        ohos:layout_alignParentBottom="true"
+        ohos:background="$media:contact_list_h_separator_dark" />
+
+</DirectionalLayout>

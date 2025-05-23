@@ -13,13 +13,11 @@
  */
 package org.atalk.ohos.gui.chat.conference;
 
-import android.app.Dialog;
-import android.content.Context;
-import android.os.Bundle;
-import android.text.TextUtils;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
+import ohos.agp.components.Component;
+import ohos.agp.components.LayoutScatter;
+import ohos.agp.components.Text;
+import ohos.agp.components.TextField;
+import ohos.app.Context;
 
 import net.java.sip.communicator.impl.muc.MUCActivator;
 import net.java.sip.communicator.service.protocol.AdHocChatRoomInvitation;
@@ -28,10 +26,10 @@ import net.java.sip.communicator.service.protocol.OperationFailedException;
 import net.java.sip.communicator.service.protocol.OperationSetAdHocMultiUserChat;
 import net.java.sip.communicator.service.protocol.OperationSetMultiUserChat;
 
-import org.atalk.ohos.R;
-import org.atalk.ohos.aTalkApp;
-import org.atalk.ohos.gui.dialogs.DialogActivity;
-import org.atalk.ohos.gui.util.ViewUtil;
+import org.apache.http.util.TextUtils;
+import org.atalk.ohos.ResourceTable;
+import org.atalk.ohos.gui.dialogs.DialogA;
+import org.atalk.ohos.util.ComponentUtil;
 import org.jxmpp.jid.EntityJid;
 
 /**
@@ -39,7 +37,7 @@ import org.jxmpp.jid.EntityJid;
  *
  * @author Eng Chong Meng
  */
-public class InvitationReceivedDialog extends Dialog {
+public class InvitationReceivedDialog {
     /**
      * The <code>MultiUserChatManager</code> is the one that deals with invitation events.
      */
@@ -68,8 +66,8 @@ public class InvitationReceivedDialog extends Dialog {
      */
     private AdHocChatRoomInvitation mInvitationAdHoc = null;
 
-    private Context mContext;
-    private EditText reasonTextArea;
+    private final Context mContext;
+    private TextField reasonTextArea;
     private final EntityJid mInviter;
     private final String mChatRoomName;
     private final String mReason;
@@ -84,7 +82,6 @@ public class InvitationReceivedDialog extends Dialog {
      */
     public InvitationReceivedDialog(Context context, ConferenceChatManager multiUserChatManager,
             OperationSetMultiUserChat multiUserChatOpSet, ChatRoomInvitation invitation) {
-        super(context);
         mContext = context;
         mMultiUserChatManager = multiUserChatManager;
         mMultiUserChatOpSet = multiUserChatOpSet;
@@ -104,7 +101,7 @@ public class InvitationReceivedDialog extends Dialog {
      */
     public InvitationReceivedDialog(Context context, ConferenceChatManager multiUserChatManager,
             OperationSetAdHocMultiUserChat multiUserChatAdHocOpSet, AdHocChatRoomInvitation invitationAdHoc) {
-        super(context);
+        mContext = context;
         mMultiUserChatManager = multiUserChatManager;
         mMultiUserChatAdHocOpSet = multiUserChatAdHocOpSet;
         mInvitationAdHoc = invitationAdHoc;
@@ -113,47 +110,43 @@ public class InvitationReceivedDialog extends Dialog {
         mReason = invitationAdHoc.getReason();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        setContentView(R.layout.muc_invitation_received_dialog);
-        setTitle(mContext.getString(R.string.invitation_received));
+    public DialogA create() {
+        LayoutScatter scatter = LayoutScatter.getInstance(mContext);
+        Component rxComponent = scatter.parse(ResourceTable.Layout_muc_invitation_received_dialog, null, false);
 
-        TextView infoTextArea = this.findViewById(R.id.textMsgView);
-        infoTextArea.setText(mContext.getString(R.string.invitation_received_message,
+        DialogA.Builder builder = new DialogA.Builder(mContext);
+        builder.setTitle(ResourceTable.String_invitation_received)
+                .setComponent(rxComponent)
+                .setNegativeButton(ResourceTable.String_ignore, DialogA::remove)
+                .setNeutralButton(ResourceTable.String_decline, dialog -> {
+                    onRejectClicked();
+                    dialog.remove();
+                })
+                .setPositiveButton(ResourceTable.String_accept, dialog -> {
+                    onAcceptClicked();
+                    dialog.remove();
+                });
+
+        Text infoTextArea = rxComponent.findComponentById(ResourceTable.Id_textMsgView);
+        infoTextArea.setText(mContext.getString(ResourceTable.String_invitation_received_message,
                 mInviter, mChatRoomName));
 
-        EditText textInvitation = this.findViewById(R.id.textInvitation);
+        TextField textInvitation = rxComponent.findComponentById(ResourceTable.Id_textInvitation);
         if (!TextUtils.isEmpty(mReason)) {
             textInvitation.setText(mReason);
         }
         else {
             textInvitation.setText("");
         }
-        reasonTextArea = this.findViewById(R.id.rejectReasonTextArea);
+        reasonTextArea = rxComponent.findComponentById(ResourceTable.Id_rejectReasonTextArea);
 
-        Button mAcceptButton = this.findViewById(R.id.button_Accept);
-        mAcceptButton.setOnClickListener(v -> {
-            dismiss();
-            onAcceptClicked();
-        });
-
-        Button mRejectButton = this.findViewById(R.id.button_Reject);
-        mRejectButton.setOnClickListener(v -> {
-            dismiss();
-            onRejectClicked();
-        });
-
-        Button mIgnoreButton = this.findViewById(R.id.button_Ignore);
-        mIgnoreButton.setOnClickListener(v -> dismiss());
+        return builder.create();
     }
 
     /**
      * Handles the <code>ActionEvent</code> triggered when one user clicks on one of the buttons.
      */
-    private boolean onAcceptClicked() {
+    private void onAcceptClicked() {
         if (mInvitationAdHoc == null) {
             MUCActivator.getMUCService().acceptInvitation(mInvitation);
         }
@@ -164,11 +157,10 @@ public class InvitationReceivedDialog extends Dialog {
                 e1.printStackTrace();
             }
         }
-        return true;
     }
 
     private void onRejectClicked() {
-        String reasonField = ViewUtil.toString(reasonTextArea);
+        String reasonField = ComponentUtil.toString(reasonTextArea);
         if (mMultiUserChatAdHocOpSet == null && mInvitationAdHoc == null) {
             try {
                 MUCActivator.getMUCService().rejectInvitation(mMultiUserChatOpSet, mInvitation, reasonField);
@@ -178,15 +170,5 @@ public class InvitationReceivedDialog extends Dialog {
         }
         if (mMultiUserChatAdHocOpSet != null)
             mMultiUserChatManager.rejectInvitation(mMultiUserChatAdHocOpSet, mInvitationAdHoc, reasonField);
-    }
-
-    /**
-     * Shows given error message as an alert.
-     *
-     * @param errorMessage the error message to show.
-     */
-    private void showErrorMessage(String errorMessage) {
-        Context ctx = aTalkApp.getInstance();
-        DialogActivity.showDialog(ctx, ctx.getString(R.string.error), errorMessage);
     }
 }

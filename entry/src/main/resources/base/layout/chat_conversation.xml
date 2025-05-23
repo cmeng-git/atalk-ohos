@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DirectionalLayout
+    xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:height="match_parent"
+    ohos:width="match_parent"
+    ohos:background_element="$color:chat_background"
+    ohos:orientation="vertical">
+
+    <ListContainer
+        ohos:id="$+id:chatListContainer"
+        ohos:height="0vp"
+        ohos:width="match_parent"
+        ohos:layout_alignment="center"
+        ohos:weight="1"/>
+
+    <DirectionalLayout
+        ohos:id="$+id:chatStateView"
+        ohos:height="20vp"
+        ohos:width="match_parent"
+        ohos:layout_alignment="center"
+        ohos:margin="0vp"
+        ohos:orientation="horizontal"
+        ohos:visibility="invisible">
+
+        <Text
+            ohos:id="$+id:chatStateTextView"
+            ohos:height="match_content"
+            ohos:width="match_content"
+            ohos:text_alignment="center"
+            ohos:text_color="$color:blue"
+            ohos:text_size="$float:small_font"/>
+
+        <Image
+            ohos:id="$+id:chatStateImageView"
+            ohos:height="0vp"
+            ohos:width="match_content"
+            ohos:scale_mode="center"
+            ohos:image_src="$graphic:chat_state_anim"
+            ohos:start_margin="$float:chat_text_margin"/>
+    </DirectionalLayout>
+</DirectionalLayout>

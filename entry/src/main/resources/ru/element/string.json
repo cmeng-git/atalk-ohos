@@ -1,0 +1,4820 @@
+{
+  "string": [
+    {
+      "name": "accept_call_video",
+      "value": "Ответить на вызов с видео"
+    },
+    {
+      "name": "account_delete_on_server",
+      "value": "Удалить аккаунт на сервере"
+    },
+    {
+      "name": "account_delete_on_server_unregistered",
+      "value": "Удалить аккаунт на сервере не удалось, пользователь не зарегистрирован!"
+    },
+    {
+      "name": "account_delete_on_server_failed",
+      "value": "Удалить учетную запись на сервере не удалось:\n%1$s"
+    },
+    {
+      "name": "account_delete_on_server_successful",
+      "value": "Удаление учетной записи на сервере успешно:\n%1$s"
+    },
+    {
+      "name": "account_show_password",
+      "value": "Показать пароль"
+    },
+    {
+      "name": "account_server_override",
+      "value": "Отменить настройку сервера"
+    },
+    {
+      "name": "account_ibr_on_server",
+      "value": "Зарегистрировать новую учетную запись на сервере"
+    },
+    {
+      "name": "account_server_ip",
+      "value": "Подключить сервер IP"
+    },
+    {
+      "name": "ibr_registration",
+      "value": "Регистрация IB"
+    },
+    {
+      "name": "captcha_ibr_request",
+      "value": "Регистрация-Captcha"
+    },
+    {
+      "name": "captcha_ibr_failed",
+      "value": "Ошибка регистрации-Captcha!\n%1$s"
+    },
+    {
+      "name": "captcha_ibr_success",
+      "value": "Регистрация-Captcha прошла успешно.\nВы можете перейти к регистрации!"
+    },
+    {
+      "name": "captcha_ibr_reason",
+      "value": "Inband регистрация, запрошенная пользователем"
+    },
+    {
+      "name": "captcha_ibr_pwd_empty",
+      "value": "Ошибка: поле пароля пусто!"
+    },
+    {
+      "name": "captcha_ibr_hint",
+      "value": "Введите текст, который вы видите"
+    },
+    {
+      "name": "captcha_ibr_retry",
+      "value": "Нажмите «ОК», чтобы повторить попытку, или «Отмена», чтобы завершить"
+    },
+    {
+      "name": "captcha_challenge",
+      "value": "Captcha вызов"
+    },
+    {
+      "name": "captcha_protected",
+      "value": "Чат-чат защищен вызовом captcha"
+    },
+    {
+      "name": "captcha_text_empty",
+      "value": "Текст капчи не может быть пустым"
+    },
+    {
+      "name": "captcha_verification_valid",
+      "value": "Проверка CAPTCHA действительна"
+    },
+    {
+      "name": "captcha_verification_failed",
+      "value": "Не удалось выполнить проверку CAPTCHA"
+    },
+    {
+      "name": "captcha_wait_timeout",
+      "value": "%1$s тайм-аут вызова ChatRoom CAPTCHA;\nпожалуйста, присоединитесь к chatRoom и попробуйте снова."
+    },
+    {
+      "name": "choose_network",
+      "value": "Выберите сеть"
+    },
+    {
+      "name": "encrypt_tooltip",
+      "value": "Шифровать чат"
+    },
+    {
+      "name": "encrypt_choices",
+      "value": "EncryptChoices"
+    },
+    {
+      "name": "encrypt_unencrypted",
+      "value": "Незашифровано"
+    },
+    {
+      "name": "muc_name",
+      "value": "Имя"
+    },
+    {
+      "name": "network",
+      "value": "Сеть"
+    },
+    {
+      "name": "notification_setting",
+      "value": "Настройки уведомлений…"
+    },
+    {
+      "name": "open_file_no_application",
+      "value": "Не найдено приложения для открытия файла"
+    },
+    {
+      "name": "password",
+      "value": "Пароль"
+    },
+    {
+      "name": "password_change_on_server_failed",
+      "value": "Смена пароля на сервере не удалась:\n%1$s"
+    },
+    {
+      "name": "password_change_on_server_successful",
+      "value": "Смена пароля на сервере прошла успешно!"
+    },
+    {
+      "name": "password_",
+      "value": "Пароль:"
+    },
+    {
+      "name": "send_process_signal",
+      "value": "Отправить сигнал процесса"
+    },
+    {
+      "name": "call_info",
+      "value": "Информация о вызове"
+    },
+    {
+      "name": "call_info_zrtp",
+      "value": "\"Вызов информации ZRTP"
+    },
+    {
+      "name": "osgi_framework_stop",
+      "value": "Остановить OSGi Framework"
+    },
+    {
+      "name": "save_password",
+      "value": "Сохранить пароль"
+    },
+    {
+      "name": "system_settings",
+      "value": "Настройки…"
+    },
+    {
+      "name": "username_hint",
+      "value": "username@example.com"
+    },
+    {
+      "name": "username_",
+      "value": "Имя пользователя:"
+    },
+    {
+      "name": "call_hang_up",
+      "value": "Повесьте вызов"
+    },
+    {
+      "name": "call_on_hold",
+      "value": "Удерживать вызов"
+    },
+    {
+      "name": "call_max_transfer",
+      "value": "Максимум 2 вызова разрешены для сопровождаемой передачи вызова!"
+    },
+    {
+      "name": "call_transfer_call",
+      "value": "Переадресовать вызов"
+    },
+    {
+      "name": "call_transfer",
+      "value": "Передача"
+    },
+    {
+      "name": "call_transfer_failed",
+      "value": "Не удалось продолжить перевод вызова: %1$s ⇢ %2$s\n%3$s"
+    },
+    {
+      "name": "call_transfer_hint",
+      "value": "Выберите контакт, который хотите передать, и нажмите Передача."
+    },
+    {
+      "name": "call_transfer_msg",
+      "value": "%1$s перевод вызова на… %2$s"
+    },
+    {
+      "name": "attach_picture",
+      "value": "Картинки"
+    },
+    {
+      "name": "attach_take_picture",
+      "value": "Сделать изображение"
+    },
+    {
+      "name": "attach_video",
+      "value": "Видео"
+    },
+    {
+      "name": "attach_record_video",
+      "value": "Записать видео"
+    },
+    {
+      "name": "attach_file",
+      "value": "Поделиться файлом"
+    },
+    {
+      "name": "copy",
+      "value": "Копировать"
+    },
+    {
+      "name": "delete",
+      "value": "Удалить"
+    },
+    {
+      "name": "edit",
+      "value": "Изменить"
+    },
+    {
+      "name": "forward",
+      "value": "Вперед…"
+    },
+    {
+      "name": "chat_message_long_press_hint",
+      "value": "Не нажимайте в области сообщений для операции выбора нескольких элементов"
+    },
+    {
+      "name": "quote",
+      "value": "Цитировать"
+    },
+    {
+      "name": "reply",
+      "value": "Отвечать"
+    },
+    {
+      "name": "select_all",
+      "value": "Выбрать все"
+    },
+    {
+      "name": "subject",
+      "value": "Тема"
+    },
+    {
+      "name": "settings",
+      "value": "Настройки"
+    },
+    {
+      "name": "contact_block_text",
+      "value": "Хотите заблокировать «%1$s» от отправки вам сообщений?"
+    },
+    {
+      "name": "contact_unblock_text",
+      "value": "Хотите разблокировать «%1$s» и разрешить им отправлять вам сообщения?"
+    },
+    {
+      "name": "domain_blocking",
+      "value": "Применить ко всем контактам из: %1$s"
+    },
+    {
+      "name": "contact_block",
+      "value": "Заблокировать контакт"
+    },
+    {
+      "name": "contact_unblock",
+      "value": "Разблокировать контакт"
+    },
+    {
+      "name": "contact_blocked",
+      "value": "Контакт заблокирован"
+    },
+    {
+      "name": "block",
+      "value": "Блокировать"
+    },
+    {
+      "name": "unblock",
+      "value": "Разблокировать"
+    },
+    {
+      "name": "block_list_title",
+      "value": "Чёрный список"
+    },
+    {
+      "name": "block_list_show",
+      "value": "Показать черный список"
+    },
+    {
+      "name": "accept",
+      "value": "Принять"
+    },
+    {
+      "name": "account",
+      "value": "Аккаунт"
+    },
+    {
+      "name": "account_me",
+      "value": "Я"
+    },
+    {
+      "name": "account_settings",
+      "value": "Настройки учетной записи…"
+    },
+    {
+      "name": "account_unregistered",
+      "value": "%1$s не зарегистрировано"
+    },
+    {
+      "name": "add",
+      "value": "Добавить"
+    },
+    {
+      "name": "add_contact",
+      "value": "Добавить контакт"
+    },
+    {
+      "name": "add_contact_to_list",
+      "value": "Добавить %1$s в список контактов"
+    },
+    {
+      "name": "add_contact_to",
+      "value": "Добавить контакт в"
+    },
+    {
+      "name": "add_contact_failed",
+      "value": "Не удалось добавить контакт с id: %1$s"
+    },
+    {
+      "name": "add_contact_error",
+      "value": "Добавить ошибку контакта"
+    },
+    {
+      "name": "add_contact_error_exist",
+      "value": "Контакт %1$s уже существует в вашем списке контактов."
+    },
+    {
+      "name": "add_contact_error_network",
+      "value": "Сервер не ответил на наш запрос, добавив контакт с jid: %1$s."
+    },
+    {
+      "name": "add_contact_error_not_supported",
+      "value": "Не удалось добавить контакт с id: %1$s. Операция не поддерживается."
+    },
+    {
+      "name": "add_contact_error_not_connected",
+      "value": "Чтобы добавить контакт, вам необходимо подключиться. Войдите в систему с выбранным поставщиком и повторите попытку."
+    },
+    {
+      "name": "add_group_error_local",
+      "value": "Не удалось добавить группу с именем: %1$s. Проблема возникла во время локальной операции ввода-вывода."
+    },
+    {
+      "name": "add_group_error_exist",
+      "value": "Группа %1$s уже существует в вашем списке контактов. Выберите другое имя."
+    },
+    {
+      "name": "add_group_error_network",
+      "value": "Не удалось добавить группу с именем: %1$s. Проблема возникла из-за сбоя сети. Проверьте сетевое подключение и повторите попытку."
+    },
+    {
+      "name": "add_group_failed",
+      "value": "Не удалось добавить группу с именем: %1$s."
+    },
+    {
+      "name": "add_group_error_empty_name",
+      "value": "Имя группы не должно быть пустым."
+    },
+    {
+      "name": "add_group_create",
+      "value": "Создать группу"
+    },
+    {
+      "name": "add_group_name",
+      "value": "Введите имя группы"
+    },
+    {
+      "name": "answer",
+      "value": "Ответ…"
+    },
+    {
+      "name": "apply",
+      "value": "Применить"
+    },
+    {
+      "name": "apply_changes",
+      "value": "Применение изменений учетной записи (~60S) …"
+    },
+    {
+      "name": "at",
+      "value": "at"
+    },
+    {
+      "name": "authentication_failed",
+      "value": "Ошибка аутентификации для %1$s. Введенный пароль недействителен."
+    },
+    {
+      "name": "authentication_requested",
+      "value": "Запрошенная аутентификация"
+    },
+    {
+      "name": "authentication_requested_by_server",
+      "value": "Сервер %1$s запросил вашу аутентификацию."
+    },
+    {
+      "name": "authentication_title",
+      "value": "%1$s аутентификация"
+    },
+    {
+      "name": "authorize",
+      "value": "Авторизовать"
+    },
+    {
+      "name": "authorization_accepted",
+      "value": "контакт принял ваш запрос авторизации."
+    },
+    {
+      "name": "authorization_rejected",
+      "value": "контакт отклонил ваш запрос авторизации."
+    },
+    {
+      "name": "authorization_requested",
+      "value": "Запрошенная авторизация"
+    },
+    {
+      "name": "authorization_request_info",
+      "value": "Контакт %1$s запрашивает ваше разрешение."
+    },
+    {
+      "name": "authorization_request",
+      "value": "Запрос авторизации"
+    },
+    {
+      "name": "avatar_size_hint",
+      "value": "Значок рекомендуется: 64 * 64 (96 * 96 пикселей квадратный максимум)"
+    },
+    {
+      "name": "away",
+      "value": "Отошёл"
+    },
+    {
+      "name": "avatar_set_error",
+      "value": "Не удалось установить аватар для %1$s"
+    },
+    {
+      "name": "avatar_retrieving",
+      "value": "Получение аватара для %1$s"
+    },
+    {
+      "name": "busy",
+      "value": "Занято"
+    },
+    {
+      "name": "call_audio",
+      "value": "Аудиозвонок"
+    },
+    {
+      "name": "call_answered",
+      "value": "%1$sответил на звонок."
+    },
+    {
+      "name": "call_disable_on_fault",
+      "value": "aTalk не удалось инициализировать %1$s\nВозвраты/службы мультимедиа будут отключены.\n%2$s"
+    },
+    {
+      "name": "call_ended",
+      "value": "Удаленный абонент завершил звонок: %1$s"
+    },
+    {
+      "name": "call_error",
+      "value": "Удаленная сторона возвращает ошибку: %1$s"
+    },
+    {
+      "name": "call_failed",
+      "value": "Не удалось выполнить вызов"
+    },
+    {
+      "name": "call_history_name",
+      "value": "Журнал вызовов"
+    },
+    {
+      "name": "call_history_remove_count",
+      "value": "Нет удаленных записей истории звонков: %1$s"
+    },
+    {
+      "name": "call_history_remove_before_date_warning",
+      "value": "Вы уверены, что хотите очистить все записи звонков до даты: %1$s?"
+    },
+    {
+      "name": "call_history_remove_none",
+      "value": "Ни одна запись не выбрана для удаления"
+    },
+    {
+      "name": "call_history_remove_warning",
+      "value": "Вы уверены, что хотите удалить все выбранные записи вызовов?"
+    },
+    {
+      "name": "call_incoming",
+      "value": "Входящий звонок: %1$s"
+    },
+    {
+      "name": "call_incoming_status",
+      "value": "Входящий вызов"
+    },
+    {
+      "name": "call_initiating",
+      "value": "Инициирующий вызов"
+    },
+    {
+      "name": "call_rejected",
+      "value": "%1$s отклонил звонок."
+    },
+    {
+      "name": "call_retracted",
+      "value": "%1$s прекратил этот звонок."
+    },
+    {
+      "name": "call_missed",
+      "value": "Пропущенные вызовы:"
+    },
+    {
+      "name": "call_no_active_device",
+      "value": "aTalk не смогли найти никаких активных аудио/видео устройств, следовательно, не смогли создать вызов."
+    },
+    {
+      "name": "call_no_audio_device",
+      "value": "Нет настроенного аудиоустройства."
+    },
+    {
+      "name": "call_no_audio_codec",
+      "value": "Отсутствует аудиокодек."
+    },
+    {
+      "name": "call_no_device_codec_H",
+      "value": "Устройство или кодек неправильно настроены в 'Настройки…': %1$s"
+    },
+    {
+      "name": "call_no_device_codec_Q",
+      "value": "Вы хотите продолжить вызов?"
+    },
+    {
+      "name": "call_no_matching_format",
+      "value": "Не найдено подходящих форматов медиа против предложения %1$s для приема вызова. Проверьте настройки устройства и кодека в «Настройки…»."
+    },
+    {
+      "name": "call_outgoing",
+      "value": "Исходящий вызов"
+    },
+    {
+      "name": "call_outgoing_with",
+      "value": "Выполнение вызова с помощью %1$s…"
+    },
+    {
+      "name": "call_video",
+      "value": "Видеозвонок"
+    },
+    {
+      "name": "call_via_",
+      "value": "Вызов через: %1$s"
+    },
+    {
+      "name": "call_with",
+      "value": "Вызов с:"
+    },
+    {
+      "name": "cancel",
+      "value": "Отменить"
+    },
+    {
+      "name": "contact_invalid",
+      "value": "Выбранный контакт недействителен: %1$s"
+    },
+    {
+      "name": "dismiss",
+      "value": "отклонять"
+    },
+    {
+      "name": "done",
+      "value": "Готово"
+    },
+    {
+      "name": "mark_as_read",
+      "value": "Пометить, как прочитанное"
+    },
+    {
+      "name": "reason",
+      "value": "Причина:"
+    },
+    {
+      "name": "set",
+      "value": "Устанавливать"
+    },
+    {
+      "name": "share",
+      "value": "Поделиться…"
+    },
+    {
+      "name": "share_text",
+      "value": "Поделиться текстом…"
+    },
+    {
+      "name": "share_file",
+      "value": "Поделиться файлом…"
+    },
+    {
+      "name": "snooze",
+      "value": "вздремнуть"
+    },
+    {
+      "name": "playback_error",
+      "value": "Не удается найти мультимедийный контент для воспроизведения"
+    },
+    {
+      "name": "playback_buffering",
+      "value": "Буферизация…"
+    },
+    {
+      "name": "playback_completed",
+      "value": "Конец воспроизведения мультимедиа"
+    },
+    {
+      "name": "playback_rate",
+      "value": "Скорость воспроизведения: %1$s"
+    },
+    {
+      "name": "auto_join",
+      "value": "Автосоединение"
+    },
+    {
+      "name": "change_nickname",
+      "value": "Изменить псевдоним"
+    },
+    {
+      "name": "change_nickname_",
+      "value": "Изменить псевдоним…"
+    },
+    {
+      "name": "change_nickname_error_conflict",
+      "value": "Ник уже существует"
+    },
+    {
+      "name": "change_nickname_error",
+      "value": "Ошибка изменения псевдонима для %1$s: %2$s"
+    },
+    {
+      "name": "change_nickname_label",
+      "value": "В поле ниже вы можете ввести новый псевдоним."
+    },
+    {
+      "name": "change_nickname_null",
+      "value": "Псевдоним Имя поля не может быть пустым"
+    },
+    {
+      "name": "chatroom_change_info",
+      "value": "Изменить информацию комнаты чата"
+    },
+    {
+      "name": "chatroom_change_subject",
+      "value": "В поле ниже вы можете ввести новый предмет для этой комнаты."
+    },
+    {
+      "name": "change_video_remote_quality",
+      "value": "Изменить качество удаленного видео"
+    },
+    {
+      "name": "chatroom_conference_item",
+      "value": "%1$s's конференция"
+    },
+    {
+      "name": "chatroom_conference",
+      "value": "Конференции"
+    },
+    {
+      "name": "chatroom",
+      "value": "Чат"
+    },
+    {
+      "name": "chatroom_already_joined",
+      "value": "Вы уже вошли в чат-комнату %1$s."
+    },
+    {
+      "name": "chatroom_configuration",
+      "value": "Конфигурация ChatRoom"
+    },
+    {
+      "name": "chatroom_configuration_failed",
+      "value": "Не удалось получить конфигурационную форму в чате %1$s."
+    },
+    {
+      "name": "chatroom_configuration_forbidden",
+      "value": "Не удалось получить форму конфигурации комнаты чата %1$s. Только владельцы чата могут видеть и изменять конфигурационную форму."
+    },
+    {
+      "name": "chatroom_configuration_members_edit_description",
+      "value": "Список справа содержит пользователей, которые имеют роль участника в этом чате. Когда в чате есть «Только члены», это будут пользователи, которым разрешено присоединиться."
+    },
+    {
+      "name": "chatroom_configuration_members_edit_title",
+      "value": "Редактировать список участников"
+    },
+    {
+      "name": "chatroom_configuration_submit_failed",
+      "value": "Произошла ошибка при попытке отправить конфигурационную форму для комнаты чата %1$s."
+    },
+    {
+      "name": "chatroom_remove_tooltip",
+      "value": "Удаляет выбранную комнату из списка сохраненных комнат"
+    },
+    {
+      "name": "chatroom_save_tooltip",
+      "value": "Сохраняет чат для будущего использования"
+    },
+    {
+      "name": "chatroom_send_message_forbidden",
+      "value": "Передача сообщений запрещена (голос отменен)"
+    },
+    {
+      "name": "chatroom_user_joined",
+      "value": "присоединился к %1$s"
+    },
+    {
+      "name": "chatroom_user_kicked",
+      "value": "был удален из %1$s"
+    },
+    {
+      "name": "chatroom_user_left",
+      "value": "оставил %1$s"
+    },
+    {
+      "name": "chatroom_user_quit",
+      "value": "имеет quit %1$s"
+    },
+    {
+      "name": "chatroom_name",
+      "value": "Имя в чате"
+    },
+    {
+      "name": "chatroom_name_info",
+      "value": "В поле ниже введите имя комнаты для чата, которую вы хотите создать."
+    },
+    {
+      "name": "chatroom_not_exist",
+      "value": "Комната %1$s не найдена на сервере %2$s. Проверьте правильность введенного имени."
+    },
+    {
+      "name": "chatroom_not_connected",
+      "value": "Вам нужно быть в сети, чтобы присоединиться к чат-комнате %1$s."
+    },
+    {
+      "name": "chatroom_leave_not_connected",
+      "value": "Вам нужно быть в сети, чтобы выйти из чата."
+    },
+    {
+      "name": "chatroom_not_joined",
+      "value": "Вам нужно войти в комнату чата, чтобы выполнить дальнейшие операции с ним."
+    },
+    {
+      "name": "chatroom_options",
+      "value": "Параметры чата"
+    },
+    {
+      "name": "chatroom_required_password",
+      "value": "Чат чата %1$s запросил пароль."
+    },
+    {
+      "name": "chatroom_status_disable",
+      "value": "Отключить статус номера"
+    },
+    {
+      "name": "chatroom_status_enable",
+      "value": "Включить статус комнаты"
+    },
+    {
+      "name": "chatroom_subject_changed",
+      "value": "Тема номера изменилась: '%1$s' => '%2$s'"
+    },
+    {
+      "name": "chatroom_nickname_changed",
+      "value": "%1$s теперь известен как %2$s"
+    },
+    {
+      "name": "clear_custom_messages",
+      "value": "Очистить пользовательские сообщения"
+    },
+    {
+      "name": "close",
+      "value": "Закрыть"
+    },
+    {
+      "name": "close_all_active_chats",
+      "value": "Закрыть все активные чаты"
+    },
+    {
+      "name": "close_current_chat",
+      "value": "Закрыть текущий сеанс чата"
+    },
+    {
+      "name": "connected",
+      "value": "Подключено"
+    },
+    {
+      "name": "connecting_",
+      "value": "Соединение %1$s"
+    },
+    {
+      "name": "connecting_status",
+      "value": "Подключение…"
+    },
+    {
+      "name": "connection_failed_message",
+      "value": "Ошибка подключения к учетной записи: Имя пользователя: %1$s\n\nИмя сервера: %2$s\nПожалуйста, проверьте свое сетевое подключение или обратитесь к сетевому администратору за дополнительной информацией."
+    },
+    {
+      "name": "connecting",
+      "value": "Подключение"
+    },
+    {
+      "name": "contact_active",
+      "value": "** %1$s активен в сеансе чата"
+    },
+    {
+      "name": "contact_composing",
+      "value": "** %1$s формирует сообщение"
+    },
+    {
+      "name": "contact_inactive",
+      "value": "** %1$s временно отсутствует"
+    },
+    {
+      "name": "contact_gone",
+      "value": "** %1$s покинул сеанс чата"
+    },
+    {
+      "name": "contact_info",
+      "value": "Контактная информация"
+    },
+    {
+      "name": "contact_name",
+      "value": "Контакт JID или Number"
+    },
+    {
+      "name": "contact_name_empty",
+      "value": "Имя контакта nameName не должно быть пустым."
+    },
+    {
+      "name": "contact_owner",
+      "value": "Связаться с владельцем: %1$s"
+    },
+    {
+      "name": "contact_pause_typing",
+      "value": "** %1$s приостановил ввод"
+    },
+    {
+      "name": "contact_rename",
+      "value": "Связаться с новым именем:"
+    },
+    {
+      "name": "contact_rename_tooltip",
+      "value": "Введите новый контакт Имя"
+    },
+    {
+      "name": "contact_rename_title",
+      "value": "Изменить имя контакта"
+    },
+    {
+      "name": "contacts",
+      "value": "Контакты"
+    },
+    {
+      "name": "contact_offline_hide",
+      "value": "Скрыть отключенных"
+    },
+    {
+      "name": "contact_offline_show",
+      "value": "Показать автономные контакты"
+    },
+    {
+      "name": "copy_message_text",
+      "value": "Копировать текст сообщения"
+    },
+    {
+      "name": "create",
+      "value": "Создать"
+    },
+    {
+      "name": "create_call_failed",
+      "value": "Не удалось создать вызов."
+    },
+    {
+      "name": "create_conference_call",
+      "value": "Создать конференцию…"
+    },
+    {
+      "name": "create_conference_chat",
+      "value": "Создать чат конференции…"
+    },
+    {
+      "name": "create_group",
+      "value": "Создать группу…"
+    },
+    {
+      "name": "create_group_name_invalid",
+      "value": "Неверное название группы: %1$s"
+    },
+    {
+      "name": "create_group_name",
+      "value": "В поле ниже введите имя группы, которую вы хотите создать."
+    },
+    {
+      "name": "create_group_first_wizard",
+      "value": "Ваш список контактов не содержит групп. Сначала создайте группу (File/Create group)."
+    },
+    {
+      "name": "aboutDialog_help",
+      "value": "<a href=\"https://cmeng-git.github.io/atalk\">Онлайн-справка</a>"
+    },
+    {
+      "name": "About",
+      "value": "О"
+    },
+    {
+      "name": "version_",
+      "value": "Версия %1$s"
+    },
+    {
+      "name": "help",
+      "value": "Справка"
+    },
+    {
+      "name": "check_new_version",
+      "value": "Проверить обновление"
+    },
+    {
+      "name": "show_history_log",
+      "value": "История журналов"
+    },
+    {
+      "name": "online_help",
+      "value": "Онлайн-справка"
+    },
+    {
+      "name": "delete_database",
+      "value": "Удалить базу данных"
+    },
+    {
+      "name": "http_authorization_request",
+      "value": "HTTP-запрос авторизации"
+    },
+    {
+      "name": "http_authorization_request_instruction",
+      "value": "HTTP (%1$s) Авторизация для %2$s\nКод проверки: %3$s\nПринимаете ли вы этот запрос для учетной записи:\n%4$s?\n\nПроверьте, соответствует ли данный идентификатор сайту, если он доступен"
+    },
+    {
+      "name": "app_authors_fmt",
+      "value": "Авторы: %1$s"
+    },
+    {
+      "name": "app_libraries",
+      "value": "aTalk использует следующие сторонние библиотеки: %1$s"
+    },
+    {
+      "name": "app_revision_fmt",
+      "value": "Информация о пересмотре: %1$s"
+    },
+    {
+      "name": "app_xep",
+      "value": "aTalk поддерживает следующие XEP: %1$s"
+    },
+    {
+      "name": "powered_by",
+      "value": "Работает на atalk.org"
+    },
+    {
+      "name": "chat_audio_buddy_offline",
+      "value": "Аудио-чат с автономным получателем не разрешен."
+    },
+    {
+      "name": "chat_audio_cancel",
+      "value": "<сдвинуть влево\nчтобы отменить"
+    },
+    {
+      "name": "chat_audio_start_record",
+      "value": "Начать запись"
+    },
+    {
+      "name": "latitude",
+      "value": "Широта:"
+    },
+    {
+      "name": "location",
+      "value": "Местоположение:"
+    },
+    {
+      "name": "longitude",
+      "value": "Долгота:"
+    },
+    {
+      "name": "altitude",
+      "value": "Высота:"
+    },
+    {
+      "name": "geo_send",
+      "value": "Отправить GPS-местоположение"
+    },
+    {
+      "name": "geo_street_views_map",
+      "value": "StreetViews & Карта"
+    },
+    {
+      "name": "geo_share",
+      "value": "Делитесь геолокациями"
+    },
+    {
+      "name": "apply_new_location_setting",
+      "value": "Нажмите кнопку «Следуй за мной», чтобы применить новые настройки"
+    },
+    {
+      "name": "btn_center_map",
+      "value": "Сосредоточиться на моем местоположении"
+    },
+    {
+      "name": "btn_follow_me",
+      "value": "Следуй за мной"
+    },
+    {
+      "name": "single_location_fix",
+      "value": "Исправление одного местоположения"
+    },
+    {
+      "name": "follow_me_start",
+      "value": "Подписывайтесь на меня (%1$dm) @%2$dS"
+    },
+    {
+      "name": "follow_me_stop",
+      "value": "Прекрати следовать за мной (%1$dm) @%2$dS"
+    },
+    {
+      "name": "google_map",
+      "value": "GoogleMap"
+    },
+    {
+      "name": "legal_info",
+      "value": "Юридическая информация"
+    },
+    {
+      "name": "play_service_not_installed",
+      "value": "Службы Google Play не установлены на этом устройстве."
+    },
+    {
+      "name": "split_street_view_panorama_and_map_description",
+      "value": "Демонстрирует, как показать панораму и карту уличного просмотра."
+    },
+    {
+      "name": "split_street_view_panorama_and_map_label",
+      "value": "Просмотр панорамы и карты"
+    },
+    {
+      "name": "map",
+      "value": "Карта"
+    },
+    {
+      "name": "permission_location_rationale",
+      "value": "Доступ к службе определения местоположения необходим для использования функции «мое местоположение», которая показывает ваше текущее местоположение на карте."
+    },
+    {
+      "name": "permission_location_denied",
+      "value": "Для этого примера требуется разрешение на размещение, чтобы включить слой «мое местоположение». Повторите попытку и предоставите доступ для использования этого местоположения.\nЕсли разрешение было окончательно отклонено, его можно включить с помощью Системных настроек > Приложения > «Демоки Google Maps API»."
+    },
+    {
+      "name": "permission_location_required",
+      "value": "Для этой демонстрации требуется разрешение на размещение."
+    },
+    {
+      "name": "export_sql_db",
+      "value": "Экспорт базы данных aTalk SQL"
+    },
+    {
+      "name": "purge_debug_log",
+      "value": "Очистить файл журнала отладки aTalk"
+    },
+    {
+      "name": "purge_sql_db",
+      "value": "Очистить базу данных ATalk SQL - Опасность!"
+    },
+    {
+      "name": "refresh_apply",
+      "value": "Применить"
+    },
+    {
+      "name": "refresh_store",
+      "value": "Обновить постоянные хранилища…"
+    },
+    {
+      "name": "refresh_store_avatar",
+      "value": "XEP-0084/XEP-0153: Аватар"
+    },
+    {
+      "name": "refresh_store_caps",
+      "value": "XEP-0115: возможности сущности"
+    },
+    {
+      "name": "refresh_store_disc_info",
+      "value": "XEP-0030: Обнаружение служб"
+    },
+    {
+      "name": "refresh_store_hint",
+      "value": "Проверить, что элемент для его постоянного хранилища должен быть очищен и обновлен; Выполняйте только при необходимости!\n"
+    },
+    {
+      "name": "refresh_store_roster",
+      "value": "XEP-0237: Реестр"
+    },
+    {
+      "name": "refresh_store_omemo",
+      "value": "XEP-0384: шифрование OMEMO"
+    },
+    {
+      "name": "unregistered_message",
+      "value": "Не удалось подключиться к учетной записи:\nИмя пользователя: %1$s\nServer Name: %2$s\nСохрана отключена."
+    },
+    {
+      "name": "create_videoBridge",
+      "value": "Создать видеомост…"
+    },
+    {
+      "name": "create_videoBridge_menu",
+      "value": "Создать видеомост"
+    },
+    {
+      "name": "create_join_video_conference",
+      "value": "Создать/Присоединиться к видеоконференции"
+    },
+    {
+      "name": "create_video_conference",
+      "value": "Создать новую видеоконференцию для этого чата"
+    },
+    {
+      "name": "video_format_not_supported",
+      "value": "Не удалось установить предварительный просмотр камеры устройства на: %1$s; Исключение: %2$s."
+    },
+    {
+      "name": "disconnected",
+      "value": "Отключено"
+    },
+    {
+      "name": "disconnecting_",
+      "value": "Отключение %1$s"
+    },
+    {
+      "name": "deny",
+      "value": "Запретить"
+    },
+    {
+      "name": "display_name",
+      "value": "отображаемое имя"
+    },
+    {
+      "name": "contact_display_name",
+      "value": "Контактное отображаемое имя"
+    },
+    {
+      "name": "do_not_disturb",
+      "value": "Не беспокоить"
+    },
+    {
+      "name": "duration",
+      "value": "длительность"
+    },
+    {
+      "name": "edit_status_message_tip",
+      "value": "Установить сообщение о статусе"
+    },
+    {
+      "name": "edited",
+      "value": "Отредактировано"
+    },
+    {
+      "name": "enter_name_or_number",
+      "value": "Введите имя или номер"
+    },
+    {
+      "name": "error",
+      "value": "Ошибка"
+    },
+    {
+      "name": "error_was_",
+      "value": "Ошибка: %1$s"
+    },
+    {
+      "name": "exit",
+      "value": "Выход"
+    },
+    {
+      "name": "extended_away",
+      "value": "Давно отсутствую"
+    },
+    {
+      "name": "free_for_chat",
+      "value": "Свободен для чата"
+    },
+    {
+      "name": "file_byte_sent",
+      "value": "отправлено %1$s"
+    },
+    {
+      "name": "file_receive_completed",
+      "value": "Файл получен из %1$s"
+    },
+    {
+      "name": "file_receive_failed",
+      "value": "Произошла ошибка при передаче файла из %1$s"
+    },
+    {
+      "name": "file_receive_from",
+      "value": "Получить файл из %1$s"
+    },
+    {
+      "name": "file_send_completed",
+      "value": "Файл успешно отправлен в %1$s"
+    },
+    {
+      "name": "file_send_declined",
+      "value": "%1$s отклонил этот файл"
+    },
+    {
+      "name": "file_sending_to",
+      "value": "Отправка файла в %1$s"
+    },
+    {
+      "name": "file_transfer_accepted",
+      "value": "Передача файла принята"
+    },
+    {
+      "name": "file_transfer_canceled",
+      "value": "Передача файла отменена"
+    },
+    {
+      "name": "file_transfer_preparing",
+      "value": "Преобразование передачи файлов с %1$s. Подождите…"
+    },
+    {
+      "name": "file_transfer_declined",
+      "value": "Отказано в передаче отклоненный"
+    },
+    {
+      "name": "file_transfer_request_received",
+      "value": "%1$s делится файлом с вами"
+    },
+    {
+      "name": "file_transfer_send_error",
+      "value": "Произошла ошибка при отправке файла в %1$s"
+    },
+    {
+      "name": "file_transfer_waiting_acceptance",
+      "value": "Выйти для %1$s, чтобы принять ваш файл"
+    },
+    {
+      "name": "purge",
+      "value": "Очистить"
+    },
+    {
+      "name": "estimated_time_",
+      "value": "Предполагаемое время: %1$s"
+    },
+    {
+      "name": "file",
+      "value": "Файл"
+    },
+    {
+      "name": "file_delivery_error",
+      "value": "Не удалось отправить выбранный файл. %1$s"
+    },
+    {
+      "name": "file_does_not_exist",
+      "value": "Указанный файл не найден. Он был удален или перемещен"
+    },
+    {
+      "name": "file_open_failed",
+      "value": "Не удалось открыть файл. Он может быть удален или перемещен"
+    },
+    {
+      "name": "file_open_no_application",
+      "value": "Мы не смогли найти приложение, связанное с этим типом файла"
+    },
+    {
+      "name": "file_open_no_permission",
+      "value": "У вас недостаточно прав для открытия этого файла. Проверьте разрешения на чтение и повторите попытку"
+    },
+    {
+      "name": "file_transfer_not_secure",
+      "value": "XEP-0096: Протокол передачи файлов SI не поддерживает отправку зашифрованных файлов!"
+    },
+    {
+      "name": "file_open_not_supported",
+      "value": "Операция открытого файла не поддерживается текущей платформой вашего устройства"
+    },
+    {
+      "name": "file_send_client_error",
+      "value": "Ошибка удаленного клиента при отправке файла: %1$s"
+    },
+    {
+      "name": "file_send_failed",
+      "value": "Не удалось отправить файл: %1$s"
+    },
+    {
+      "name": "file_send_not_allow",
+      "value": "Не удается отправить файл во время телефонной конференции!"
+    },
+    {
+      "name": "file_attachment",
+      "value": "Отправить вложение"
+    },
+    {
+      "name": "file_size_too_big",
+      "value": "Размер файла превышает максимально допустимый для этого протокола: %1$s"
+    },
+    {
+      "name": "file_transfer_active",
+      "value": "Прерывание передачи файлов прерывается. Отслеживание состояния @ %1$s потеряно!"
+    },
+    {
+      "name": "file_transfer_not_supported",
+      "value": "Контактный клиент (%1$s) или сервер не поддерживает передачу файлов или требуемые протоколы"
+    },
+    {
+      "name": "finish",
+      "value": "Закончить"
+    },
+    {
+      "name": "folder_not_exist",
+      "value": "Не удалось найти папку, содержащую этот файл. Он был удален или перемещен"
+    },
+    {
+      "name": "folder_open_failed",
+      "value": "Не удалось открыть папку"
+    },
+    {
+      "name": "folder_open_no_permission",
+      "value": "У вас недостаточно прав для открытия этой папки. Проверьте разрешения на чтение и повторите попытку"
+    },
+    {
+      "name": "folder_open_no_application",
+      "value": "Мы не смогли найти приложение для открытия этой папки"
+    },
+    {
+      "name": "group_chat",
+      "value": "Групповой чат"
+    },
+    {
+      "name": "hide",
+      "value": "Скрыть"
+    },
+    {
+      "name": "history",
+      "value": "История"
+    },
+    {
+      "name": "history_contact",
+      "value": "История - %1$s"
+    },
+    {
+      "name": "history_off_for_contact",
+      "value": "Отключить историю для этого контакта"
+    },
+    {
+      "name": "history_off_all",
+      "value": "Отключить историю для всех чатов и контактов"
+    },
+    {
+      "name": "history_erase_for_contact",
+      "value": "Удалить эту историю контактов"
+    },
+    {
+      "name": "history_erase_all",
+      "value": "Удалить все истории чатов контактов"
+    },
+    {
+      "name": "history_purge_for_contact_warning",
+      "value": "Вы уверены, что хотите удалить все выбранные сообщения для %1$s?"
+    },
+    {
+      "name": "history_purge_all_warning",
+      "value": "Вы действительно хотите очистить все сообщения для всех юридические лица?"
+    },
+    {
+      "name": "history_purge_count",
+      "value": "Количество удаленных записей истории: %1$s"
+    },
+    {
+      "name": "history_purge_error",
+      "value": "Ошибка удаления локально сохраненных сообщений для %1$s."
+    },
+    {
+      "name": "history_purge_media",
+      "value": "Удалить медиа с моего телефона"
+    },
+    {
+      "name": "history_offline_warning",
+      "value": "Закройте и откройте этот сеанс чата, чтобы просмотреть сообщения MAM и Offline в онлайн-режиме."
+    },
+    {
+      "name": "chatroom_alternate_venue",
+      "value": "Альтернативное место:"
+    },
+    {
+      "name": "chatroom_alternate_address",
+      "value": "Вы можете продолжить разговор в следующем чате: %1$s"
+    },
+    {
+      "name": "chatroom_bookmark_title",
+      "value": "ChatRoom Закладка"
+    },
+    {
+      "name": "chatroom_bookmark",
+      "value": "Закладка"
+    },
+    {
+      "name": "chatroom_auto_join",
+      "value": "Авто вступать"
+    },
+    {
+      "name": "chatroom_bookmark_update_failed",
+      "value": "Не удалось обновить закладки для %1$s: %2$s"
+    },
+    {
+      "name": "chatroom_occupant",
+      "value": "Жители чатов"
+    },
+    {
+      "name": "chatroom_history_erase_per",
+      "value": "Удалить эту историю чата"
+    },
+    {
+      "name": "chatroom_history_erase_all",
+      "value": "Стереть всю историю чатов."
+    },
+    {
+      "name": "chatroom_history_off_per",
+      "value": "Отключить историю для этого чатаRoom"
+    },
+    {
+      "name": "chatroom_info",
+      "value": "Информация о ChatRoom"
+    },
+    {
+      "name": "chatroom_info_name",
+      "value": "Название"
+    },
+    {
+      "name": "chatroom_info_subject",
+      "value": "Тема"
+    },
+    {
+      "name": "chatroom_info_description",
+      "value": "Описание"
+    },
+    {
+      "name": "chatroom_info_occupants",
+      "value": "Участники"
+    },
+    {
+      "name": "chatroom_info_member_only",
+      "value": "Только для участников"
+    },
+    {
+      "name": "chatroom_info_moderated",
+      "value": "Модерируется"
+    },
+    {
+      "name": "chatroom_info_non_anonymous",
+      "value": "Неанонимно"
+    },
+    {
+      "name": "chatroom_info_password_protected",
+      "value": "Защищёно паролем"
+    },
+    {
+      "name": "chatroom_info_persistent",
+      "value": "Постоянный"
+    },
+    {
+      "name": "chatroom_info_max_history_fetch",
+      "value": "Макс. история"
+    },
+    {
+      "name": "chatroom_info_contact_jid",
+      "value": "Контактный Jid"
+    },
+    {
+      "name": "chatroom_info_subject_modifiable",
+      "value": "Тема изменяема"
+    },
+    {
+      "name": "chatroom_info_language",
+      "value": "Язык"
+    },
+    {
+      "name": "chatroom_info_ldap_group",
+      "value": "Группа LDAP"
+    },
+    {
+      "name": "chatroom_create",
+      "value": "Создать чат-комнату…"
+    },
+    {
+      "name": "chatroom_create_error",
+      "value": "Не удалось создать чат-комнату:\n%1$s."
+    },
+    {
+      "name": "chatroom_create_join",
+      "value": "Создать / Вступить в чат"
+    },
+    {
+      "name": "chatroom_create_wizard",
+      "value": "Создать мастер чата"
+    },
+    {
+      "name": "chatroom_destroy",
+      "value": "Уничтожить этот chatRoom"
+    },
+    {
+      "name": "chatroom_destroy_exception",
+      "value": "Произошла ошибка при уничтожении комнаты чата:\n%1$s"
+    },
+    {
+      "name": "chatroom_destroy_error",
+      "value": "Не удалось удалить chatRoom на сервере:\n'%1$s'\n%2$s\n\nПродолжить очистку локального chatRoom."
+    },
+    {
+      "name": "chatroom_destroy_message",
+      "value": "Этот групповой чат был уничтожен!\nПричина: %1$s"
+    },
+    {
+      "name": "chatroom_destroy_note",
+      "value": "Чтобы проинформировать других участников, пожалуйста, укажите причину и альтернативное место встречи chatRoom, чтобы присоединиться."
+    },
+    {
+      "name": "chatroom_destroy_prompt",
+      "value": "Владелец учетной записи: %1$s.\nВы уверены, что хотите уничтожить\n'%2$s'\nи всю историю чатов?"
+    },
+    {
+      "name": "chatroom_destroy_reason",
+      "value": "неактивный групповой чат"
+    },
+    {
+      "name": "chatroom_destroy_successful",
+      "value": "'%1$s' удалено успешно!"
+    },
+    {
+      "name": "chatroom_destroy_title",
+      "value": "Уничтожить chatRoom"
+    },
+    {
+      "name": "chatroom_join_failed",
+      "value": "Не удалось присоединиться к комнате с псевдонимом: %1$s\n%2$s."
+    },
+    {
+      "name": "chatroom_join_failed_reason",
+      "value": "Не удалось присоединиться к чату %1$s:\n%2$s"
+    },
+    {
+      "name": "chatroom_join_password",
+      "value": "Комната чата запрашивает пароль."
+    },
+    {
+      "name": "chatroom_join_failed_registration",
+      "value": "Требуется регистрация в чате."
+    },
+    {
+      "name": "chatroom_join_title",
+      "value": "Вступить в чат"
+    },
+    {
+      "name": "chatroom_join_name",
+      "value": "Введите имя комнаты для чата, к которой вы хотели бы присоединиться."
+    },
+    {
+      "name": "chatroom_join_subject_null",
+      "value": "Пожалуйста, введите название чата, к которому вы хотите присоединиться."
+    },
+    {
+      "name": "chatroom_join_wizard",
+      "value": "Вступить в мастер чата"
+    },
+    {
+      "name": "cr_member_start_conversation",
+      "value": "Начать разговор"
+    },
+    {
+      "name": "cr_member_grant_owner_privilege",
+      "value": "Предоставить права владельца"
+    },
+    {
+      "name": "cr_member_revoke_owner_privilege",
+      "value": "Отменить привилегии владельца"
+    },
+    {
+      "name": "cr_member_kick",
+      "value": "Удалить из группового чата"
+    },
+    {
+      "name": "invitation_message",
+      "value": "Пригласительное сообщение:"
+    },
+    {
+      "name": "invitation_received",
+      "value": "Приглашение получено"
+    },
+    {
+      "name": "invitation_received_message",
+      "value": "%1$s приглашает вас войти в чат-комнату %2$s. Вы можете принять, отклонить или проигнорировать это приглашение."
+    },
+    {
+      "name": "invitation_rejected",
+      "value": "%1$s отклонил ваше приглашение присоединиться к чату. Причина: %2$s."
+    },
+    {
+      "name": "invite",
+      "value": "Пригласить"
+    },
+    {
+      "name": "invite_contact_message",
+      "value": "Выберите имена контактов, которые вы хотите добавить в этот разговор, и нажмите «Пригласить»."
+    },
+    {
+      "name": "invite_contact_to_call",
+      "value": "Приглашать контакты для вызова"
+    },
+    {
+      "name": "invite_contact_to_chat",
+      "value": "Приглашение контактов в чат"
+    },
+    {
+      "name": "invite_contact_to_videoBridge",
+      "value": "Пригласить контакты (видеобридж)"
+    },
+    {
+      "name": "invite_group_chat",
+      "value": "Приглашение в групповое чат"
+    },
+    {
+      "name": "invite_reason",
+      "value": "Пригласить Причина:"
+    },
+    {
+      "name": "invite_reject_reason",
+      "value": "Причина (при отклонении):"
+    },
+    {
+      "name": "invite_reject_busy",
+      "value": "Занято"
+    },
+    {
+      "name": "ignore",
+      "value": "Игнорировать"
+    },
+    {
+      "name": "info",
+      "value": "Информация"
+    },
+    {
+      "name": "address",
+      "value": "Адрес"
+    },
+    {
+      "name": "city",
+      "value": "Город"
+    },
+    {
+      "name": "country",
+      "value": "Страна"
+    },
+    {
+      "name": "email",
+      "value": "Email"
+    },
+    {
+      "name": "emails",
+      "value": "Письма"
+    },
+    {
+      "name": "fax",
+      "value": "Факс"
+    },
+    {
+      "name": "home",
+      "value": "Главная"
+    },
+    {
+      "name": "home_page",
+      "value": "Домашняя страница"
+    },
+    {
+      "name": "invalid_address",
+      "value": "Недействительный адрес: %1$s"
+    },
+    {
+      "name": "join",
+      "value": "Присоединить"
+    },
+    {
+      "name": "join_as",
+      "value": "Присоединиться как"
+    },
+    {
+      "name": "join_existing_video_conference",
+      "value": "Присоединиться к существующей видеоконференции"
+    },
+    {
+      "name": "join_video",
+      "value": "Присоединить видео"
+    },
+    {
+      "name": "job_title",
+      "value": "Название работы"
+    },
+    {
+      "name": "join_automatically",
+      "value": "Автоматически присоединяться"
+    },
+    {
+      "name": "do_not_join_automatically",
+      "value": "Не присоединяться автоматически"
+    },
+    {
+      "name": "kick",
+      "value": "пинать"
+    },
+    {
+      "name": "kick_failed",
+      "value": "Ошибка отказа"
+    },
+    {
+      "name": "kick_failed_general_error",
+      "value": "Не удалось нажать %1$s. Произошла общая ошибка сервера."
+    },
+    {
+      "name": "kick_failed_not_allowed",
+      "value": "Не удалось нажать %1$s. Владельца и администратора комнаты нельзя было пинать."
+    },
+    {
+      "name": "kick_failed_not_enough_permission",
+      "value": "Не удалось нажать %1$s. У вас недостаточно прав для этого."
+    },
+    {
+      "name": "last",
+      "value": "Последняя"
+    },
+    {
+      "name": "last_message_correction",
+      "value": "Коррекция последнего сообщения"
+    },
+    {
+      "name": "last_name",
+      "value": "Фамилия"
+    },
+    {
+      "name": "last_seen",
+      "value": "сегодня: %s"
+    },
+    {
+      "name": "leave",
+      "value": "Оставить"
+    },
+    {
+      "name": "leave_chat_room",
+      "value": "оставить chatRoom"
+    },
+    {
+      "name": "locally_on_hold",
+      "value": "Локально в режиме ожидания"
+    },
+    {
+      "name": "login_credential",
+      "value": "Пользовательские учетные данные пользователя"
+    },
+    {
+      "name": "login_failed",
+      "value": "Ошибка входа"
+    },
+    {
+      "name": "logoff_failed",
+      "value": "Произошла ошибка при выходе из системы со следующей учетной записью: Имя пользователя: %1$s, Имя сервера: %2$s."
+    },
+    {
+      "name": "mobile",
+      "value": "Мобильный"
+    },
+    {
+      "name": "move",
+      "value": "Переместить"
+    },
+    {
+      "name": "move_contact",
+      "value": "Переместить контакт"
+    },
+    {
+      "name": "move_contact_error",
+      "value": "Контакт не может быть перемещен"
+    },
+    {
+      "name": "move_contact_message",
+      "value": "Выберите контакт или группу, в которую вы хотите переместить выбранный контакт."
+    },
+    {
+      "name": "move_contact_failed",
+      "value": "Контакт, который вы выбрали, совпадает с\nthe исходным. Выберите другой контакт!"
+    },
+    {
+      "name": "move_contact_prompt",
+      "value": "Вы действительно хотите переместить %1$s в %2$s?"
+    },
+    {
+      "name": "move_contact_to_group",
+      "value": "Переместить в группу"
+    },
+    {
+      "name": "nickname",
+      "value": "Ник Имя"
+    },
+    {
+      "name": "chatroom_open_automatically",
+      "value": "Откройте эту комнату автоматически, когда"
+    },
+    {
+      "name": "personal",
+      "value": "Личный"
+    },
+    {
+      "name": "message_delivery_error",
+      "value": "Не удалось доставить сообщение."
+    },
+    {
+      "name": "message_delivery_failed",
+      "value": "Приведенное выше сообщение не может быть доставлено"
+    },
+    {
+      "name": "message_delivery_internal_error",
+      "value": "Произошла внутренняя ошибка. Скорее всего, Пожалуйста, сообщите об этом через журнал отладки."
+    },
+    {
+      "name": "message_delivery_not_supported",
+      "value": "Используемый протокол не поддерживает автономные сообщения. Вы можете попытаться достигнуть %1$s через другой протокол или подождать, пока он/она не станет онлайн."
+    },
+    {
+      "name": "message_delivery_unknown_error",
+      "value": "Неизвестная ошибка произошла при доставке вашего сообщения."
+    },
+    {
+      "name": "message_delivery_unsupported_operation",
+      "value": "Неподдерживаемая операция."
+    },
+    {
+      "name": "message_delivery_network_error",
+      "value": "Произошла сетевая проблема. Проверьте конфигурацию сети и повторите попытку."
+    },
+    {
+      "name": "message_received",
+      "value": "%1$s написал"
+    },
+    {
+      "name": "message_delivery_not_registered",
+      "value": "Вы должны сначала войти в систему, чтобы отправить сообщение."
+    },
+    {
+      "name": "multiple_login",
+      "value": "Несколько моментов входа не разрешены. Следующая учетная запись: Имя пользователя: %1$s, Имя сервера: %2$s отключено."
+    },
+    {
+      "name": "mutually_on_hole",
+      "value": "Взаимное удержание"
+    },
+    {
+      "name": "add_new_account",
+      "value": "Добавить новую учетную запись"
+    },
+    {
+      "name": "network_assert_error",
+      "value": "Поставщик Jabber должен быть подписан, прежде чем сможет общаться."
+    },
+    {
+      "name": "no",
+      "value": "Нет"
+    },
+    {
+      "name": "no_online_telephony_account",
+      "value": "Для совершения звонка необходима хотя бы одна учетная запись онлайн-телефонии. Войдите в одну из своих учетных записей и повторите попытку."
+    },
+    {
+      "name": "not_authorized",
+      "value": "Не разрешено"
+    },
+    {
+      "name": "not_authorized_hint",
+      "value": "Вы не авторизованы для доступа к серверу. Проверьте настройки учетной записи, пароль или включите регистрацию IB и повторите попытку:\n%s\""
+    },
+    {
+      "name": "off",
+      "value": "Выкл"
+    },
+    {
+      "name": "offline",
+      "value": "Offline"
+    },
+    {
+      "name": "ok",
+      "value": "OK"
+    },
+    {
+      "name": "on",
+      "value": "Вкл"
+    },
+    {
+      "name": "online",
+      "value": "Онлайн"
+    },
+    {
+      "name": "open",
+      "value": "Открыть"
+    },
+    {
+      "name": "open_file_vai_image",
+      "value": "Нажмите, чтобы открыть файл."
+    },
+    {
+      "name": "folder",
+      "value": "Папка"
+    },
+    {
+      "name": "other",
+      "value": "Другое"
+    },
+    {
+      "name": "organization",
+      "value": "Организация"
+    },
+    {
+      "name": "phone",
+      "value": "Телефон"
+    },
+    {
+      "name": "phones",
+      "value": "Телефоны"
+    },
+    {
+      "name": "play",
+      "value": "Играть"
+    },
+    {
+      "name": "postal_code",
+      "value": "Почтовый код"
+    },
+    {
+      "name": "rename",
+      "value": "Переименовать"
+    },
+    {
+      "name": "registration_required",
+      "value": "Ошибка при регистрации аккаунта на сервере:\n%s\""
+    },
+    {
+      "name": "save",
+      "value": "Сохранить"
+    },
+    {
+      "name": "show_stack_trace",
+      "value": "Показать трассировку стека"
+    },
+    {
+      "name": "street",
+      "value": "Улица"
+    },
+    {
+      "name": "submit",
+      "value": "Отправить"
+    },
+    {
+      "name": "user_login",
+      "value": "Пожалуйста, войдите"
+    },
+    {
+      "name": "work",
+      "value": "Работа"
+    },
+    {
+      "name": "xmpp_connection_error",
+      "value": "Проблема с обнаружением при подключении XMPP:\n%s\""
+    },
+    {
+      "name": "btn_video_tooltip",
+      "value": "Переключить видео"
+    },
+    {
+      "name": "mic_control_title",
+      "value": "Уровень усиления микрофона"
+    },
+    {
+      "name": "btn_mute_tooltip",
+      "value": "Отрегулировать звук микрофона"
+    },
+    {
+      "name": "presence_not_supported",
+      "value": "Присутствие не поддерживается %1$s"
+    },
+    {
+      "name": "proactive_notification",
+      "value": "Записывает сообщение (%1$s)"
+    },
+    {
+      "name": "recent_messages",
+      "value": "Недавние разговоры"
+    },
+    {
+      "name": "received_",
+      "value": "%1$s получено"
+    },
+    {
+      "name": "referred",
+      "value": "Отправлено"
+    },
+    {
+      "name": "restoring_",
+      "value": "Восстановление…"
+    },
+    {
+      "name": "decline",
+      "value": "Отклонить"
+    },
+    {
+      "name": "remove",
+      "value": "Удалить"
+    },
+    {
+      "name": "remove_account",
+      "value": "Удалить учетную запись"
+    },
+    {
+      "name": "remove_account_prompt",
+      "value": "Вы действительно хотите удалить учетную запись:\n%1$s?"
+    },
+    {
+      "name": "remove_contact",
+      "value": "Удалить контакт"
+    },
+    {
+      "name": "remove_contact_prompt",
+      "value": "Связаться с владельцем: %1$s.\n\nВы уверены, что хотите удалить контакт:'%2$s' из списка контактов?"
+    },
+    {
+      "name": "remove_contact_not_connected",
+      "value": "Чтобы удалить этот контакт, необходимо подключиться. Войдите в систему и повторите попытку."
+    },
+    {
+      "name": "remove_group",
+      "value": "Удалить группу"
+    },
+    {
+      "name": "remove_group_prompt",
+      "value": "Вы действительно хотите удалить группу: '%1$s' и все связанные с ней контакты из списка контактов?"
+    },
+    {
+      "name": "remotely_on_hold",
+      "value": "Удаленное удержание"
+    },
+    {
+      "name": "rename_contact",
+      "value": "Изменить контактное имя"
+    },
+    {
+      "name": "ringing",
+      "value": "Звонок"
+    },
+    {
+      "name": "request",
+      "value": "Запрос"
+    },
+    {
+      "name": "request_authorization",
+      "value": "Запрос авторизации"
+    },
+    {
+      "name": "request_authorization_prompt",
+      "value": "Связаться с владельцем: %1$s\n\nУдалить авторизацию от '%2$s', чтобы добавить его/ее в список контактов. Повторите запрос."
+    },
+    {
+      "name": "retry",
+      "value": "Повторить"
+    },
+    {
+      "name": "search",
+      "value": "Поиск"
+    },
+    {
+      "name": "search_contact",
+      "value": "Поиск контакта"
+    },
+    {
+      "name": "phonebook",
+      "value": "Телефонная книга"
+    },
+    {
+      "name": "security",
+      "value": "Безопасность"
+    },
+    {
+      "name": "select_account_owner",
+      "value": "Выбрать владельца учетной записи"
+    },
+    {
+      "name": "assign_group",
+      "value": "Назначенная группа для контакта:"
+    },
+    {
+      "name": "no_group",
+      "value": "Нет группы"
+    },
+    {
+      "name": "send_log",
+      "value": "Сообщить об ошибках"
+    },
+    {
+      "name": "send_log_prompt",
+      "value": "aTalk только что восстановился после серьезного сбоя. Вы хотите сообщить об ошибках?"
+    },
+    {
+      "name": "send_log_subject",
+      "value": "Отчет об ошибках aTalk"
+    },
+    {
+      "name": "send_log_title",
+      "value": "Отчет об ошибках aTalk по электронной почте"
+    },
+    {
+      "name": "send_log_info",
+      "value": "Приведенная ниже информация может помочь разработчику решить проблему:\n\n\n1. Что было последним, что вы сделали, прежде чем возникла проблема?\n\n\n\n2. В чем была проблема, которую вы видите, включая снимок экрана, если он доступен?\n\n\n\n3. Можно или как воспроизвести проблему?"
+    },
+    {
+      "name": "send_message",
+      "value": "Отправить сообщение"
+    },
+    {
+      "name": "send_message_failed",
+      "value": "Не удалось отправить сообщение: %1$s"
+    },
+    {
+      "name": "send_message_not_supported",
+      "value": "Объект, который вы выбрали, не поддерживает мгновенный обмен сообщениями чата: %1$s"
+    },
+    {
+      "name": "send_message_as_sms",
+      "value": "Отправить как SMS"
+    },
+    {
+      "name": "send_message_private",
+      "value": "Отправить личное сообщение"
+    },
+    {
+      "name": "send_via",
+      "value": "Отправить через"
+    },
+    {
+      "name": "sent",
+      "value": "отправлено"
+    },
+    {
+      "name": "server_chatroom",
+      "value": "Серверные чаты"
+    },
+    {
+      "name": "shutting_down",
+      "value": "shuting down…"
+    },
+    {
+      "name": "status",
+      "value": "Статус"
+    },
+    {
+      "name": "type_your_request_reason",
+      "value": "Введите причину запроса"
+    },
+    {
+      "name": "unknown",
+      "value": "Неизвестно"
+    },
+    {
+      "name": "unknown_user",
+      "value": "Неизвестный пользователь"
+    },
+    {
+      "name": "unknown_state",
+      "value": "Неизвестное состояние"
+    },
+    {
+      "name": "url_example",
+      "value": "https://www.example.com"
+    },
+    {
+      "name": "volume_control_title",
+      "value": "Уровень усиления выходного объема"
+    },
+    {
+      "name": "volume_control_tooltip",
+      "value": "Отрегулировать громкость"
+    },
+    {
+      "name": "volume_gain_level",
+      "value": "Уровень усиления уровня: %1$s%%"
+    },
+    {
+      "name": "waiting_for_authorization",
+      "value": "Ожидание авторизации"
+    },
+    {
+      "name": "warning",
+      "value": "Предупреждение"
+    },
+    {
+      "name": "call_in_progress_warning",
+      "value": "Невозможно выполнить это во время вызова"
+    },
+    {
+      "name": "yes",
+      "value": "Да"
+    },
+    {
+      "name": "account_create_failed",
+      "value": "Не удалось создать новую учетную запись из-за ошибки: %1$s"
+    },
+    {
+      "name": "create_account",
+      "value": "Создать учетную запись"
+    },
+    {
+      "name": "general_error",
+      "value": "Общая ошибка"
+    },
+    {
+      "name": "network_failure",
+      "value": "Сбой сети"
+    },
+    {
+      "name": "select_avatar",
+      "value": "Выберите новое изображение аватара"
+    },
+    {
+      "name": "set_status",
+      "value": "Изменить статус"
+    },
+    {
+      "name": "sign_in",
+      "value": "Войти"
+    },
+    {
+      "name": "sign_out",
+      "value": "Выйти"
+    },
+    {
+      "name": "server_info_not_complete",
+      "value": "Заполните серверную часть своей учетной записи."
+    },
+    {
+      "name": "speed_info",
+      "value": "Скорость: %1$s/sec (%2$s)"
+    },
+    {
+      "name": "status_change_general_error",
+      "value": "Не удалось изменить статус учетной записи: Имя пользователя: %1$s, Имя сервера: %2$s, из-за общей ошибки."
+    },
+    {
+      "name": "status_change_message",
+      "value": "стал%1$s"
+    },
+    {
+      "name": "status_change_network_failure",
+      "value": "Не удалось изменить статус учетной записи: Имя пользователя: %1$s, Имя сервера: %2$s, из-за сетевой проблемы."
+    },
+    {
+      "name": "security_error",
+      "value": "Ошибка безопасности"
+    },
+    {
+      "name": "security_info",
+      "value": "Сведения о безопасности"
+    },
+    {
+      "name": "security_warning",
+      "value": "Предупреждение о безопасности"
+    },
+    {
+      "name": "username_password_null",
+      "value": "Пожалуйста, введите правильное имя пользователя или пароль."
+    },
+    {
+      "name": "username_change_warning",
+      "value": "Предупреждение. Изменение имени пользователя учетной записи на '%1$s' также удалит сообщения %2$s для существующей учетной записи '%3$s'. Продолжить?. Proceed?"
+    },
+    {
+      "name": "user_exist_error",
+      "value": "Этот пользователь уже существует в выбранной сети. Выберите другого пользователя или сеть."
+    },
+    {
+      "name": "jan",
+      "value": "Jan"
+    },
+    {
+      "name": "feb",
+      "value": "Feb"
+    },
+    {
+      "name": "mar",
+      "value": "Мар"
+    },
+    {
+      "name": "apr",
+      "value": "Apr"
+    },
+    {
+      "name": "may",
+      "value": "May"
+    },
+    {
+      "name": "jun",
+      "value": "Jun"
+    },
+    {
+      "name": "jul",
+      "value": "Jul"
+    },
+    {
+      "name": "aug",
+      "value": "Aug"
+    },
+    {
+      "name": "sep",
+      "value": "Sep"
+    },
+    {
+      "name": "oct",
+      "value": "Oct"
+    },
+    {
+      "name": "nov",
+      "value": "Nov"
+    },
+    {
+      "name": "dec",
+      "value": "Dec"
+    },
+    {
+      "name": "service_protocol_ICE_FAILED",
+      "value": "Не удалось установить соединение (ICE не удалось и не найдено)"
+    },
+    {
+      "name": "callinfo_audio_info",
+      "value": "Аудиоинформация"
+    },
+    {
+      "name": "callinfo_bandwidth",
+      "value": "Полоса пропускания:"
+    },
+    {
+      "name": "callinfo_call_duration",
+      "value": "Длительность звонка:"
+    },
+    {
+      "name": "callinfo_call_identity",
+      "value": "Идентификатор:"
+    },
+    {
+      "name": "callinfo_call_information",
+      "value": "Информация о вызове"
+    },
+    {
+      "name": "callinfo_call_transport",
+      "value": "Транзакция вызова сигнализации:"
+    },
+    {
+      "name": "callinfo_codec",
+      "value": "Кодек/Частота:"
+    },
+    {
+      "name": "callinfo_conference_focus",
+      "value": "Фокус конференции:"
+    },
+    {
+      "name": "callinfo_default_encrypted",
+      "value": "Включено шифрование:"
+    },
+    {
+      "name": "callinfo_jitter",
+      "value": "Джиттер:"
+    },
+    {
+      "name": "callinfo_key_exchange_protocol",
+      "value": "Протокол обмена ключами"
+    },
+    {
+      "name": "callinfo_local_ip",
+      "value": "Локальный IP/Порт:"
+    },
+    {
+      "name": "callinfo_loss_rate",
+      "value": "Коэффициент потерь:"
+    },
+    {
+      "name": "callinfo_media_stream_rip",
+      "value": "RTP:"
+    },
+    {
+      "name": "callinfo_media_srtp",
+      "value": "SRTP:"
+    },
+    {
+      "name": "callinfo_media_stream_transport_protocol",
+      "value": "Протокол передачи медиапотоков:"
+    },
+    {
+      "name": "callinfo_na",
+      "value": "N.A."
+    },
+    {
+      "name": "callinfo_peer_count",
+      "value": "Количество участников:"
+    },
+    {
+      "name": "callinfo_remote_ip",
+      "value": "Удаленный IP/Порт:"
+    },
+    {
+      "name": "callinfo_rtt",
+      "value": "RTT:"
+    },
+    {
+      "name": "callinfo_details",
+      "value": "Информация о запросе вызовов"
+    },
+    {
+      "name": "callinfo_tls_cipher_suite",
+      "value": "Шифрованный набор TLS:"
+    },
+    {
+      "name": "callinfo_tls_certificate_content",
+      "value": "Содержимое сертификата сервера TLS отображается ниже."
+    },
+    {
+      "name": "callinfo_tls_protocol",
+      "value": "Протокол TLS:"
+    },
+    {
+      "name": "callinfo_view_certificate",
+      "value": "Просмотреть сертификат"
+    },
+    {
+      "name": "callinfo_video_size",
+      "value": "Размер видео"
+    },
+    {
+      "name": "callinfo_video_info",
+      "value": "Информация о видео"
+    },
+    {
+      "name": "callinfo_adaptive_jitter_buffer",
+      "value": "Адаптивный буфер дрожания:"
+    },
+    {
+      "name": "callinfo_decoded_with_fec",
+      "value": "Пакеты, декодированные с помощью FEC:"
+    },
+    {
+      "name": "callinfo_discarded_percent",
+      "value": "Отбрасываемые пакеты:"
+    },
+    {
+      "name": "callinfo_discarded_total",
+      "value": "Число отброшенных пакетов:"
+    },
+    {
+      "name": "callinfo_harvesting_data",
+      "value": "%1$d ms (для %2$d урожаев)"
+    },
+    {
+      "name": "callinfo_harvesting_time",
+      "value": "Время сбора урожая:"
+    },
+    {
+      "name": "callinfo_candidate_extended_type",
+      "value": "ICE кандидат расширенный тип:"
+    },
+    {
+      "name": "callinfo_localhost_address",
+      "value": "Локальный IP-адрес/порт:"
+    },
+    {
+      "name": "callinfo_ice_local_reflexive_address",
+      "value": "Локальный рефлексивный IP/порт:"
+    },
+    {
+      "name": "callinfo_ice_local_relayed_address",
+      "value": "Локальный ретранслируемый IP/порт:"
+    },
+    {
+      "name": "callinfo_ice_remote_host_address",
+      "value": "Удаленный хост IP/Порт:"
+    },
+    {
+      "name": "callinfo_ice_remote_reflexive_address",
+      "value": "Удаленный рефлексивный IP/порт:"
+    },
+    {
+      "name": "callinfo_ice_remote_relayed_address",
+      "value": "Удаленный ретранслируемый IP/порт:"
+    },
+    {
+      "name": "callinfo_ice_state",
+      "value": "Состояние обработки ICE:"
+    },
+    {
+      "name": "callinfo_ice_state_completed",
+      "value": "Завершено"
+    },
+    {
+      "name": "callinfo_ice_state_failed",
+      "value": "Ошибка"
+    },
+    {
+      "name": "callinfo_ice_state_running",
+      "value": "Проверки соединений"
+    },
+    {
+      "name": "callinfo_ice_state_waiting",
+      "value": "Собирать кандидатов"
+    },
+    {
+      "name": "callinfo_ice_state_jitter_buffer_delay",
+      "value": "Буфер дрожания:"
+    },
+    {
+      "name": "callinfo_total_harvesting_time",
+      "value": "Общее время уборки:"
+    },
+    {
+      "name": "trust_always",
+      "value": "Всегда доверяйте этому сертификату"
+    },
+    {
+      "name": "cert_dialog_title",
+      "value": "Проверка сертификата"
+    },
+    {
+      "name": "cert_dialog_description",
+      "value": "<html>%1$s не может проверить личность сервера при подключении к <br/><b>%2$s </b><br/><br/>\nСертификату не доверяют (самозаверяющий сертификат), что означает, что сервер идентификация не может быть автоматически проверена. <br/><br/>\nПродолжить подключение только для этого экземпляра? <br/> Для получения дополнительной информации и информации нажмите «Показать сертификат». </html>"
+    },
+    {
+      "name": "cert_dialog_description_no_host",
+      "value": "<html>%1$s не может проверить идентификатор сертификата сервера. <br/><br/>\nСертификату не доверяют (самозаверяющий сертификат), что означает, что сервер идентификация не может быть автоматически проверена. <br/><br/>\nПродолжить подключение только для этого экземпляра? <br/> Для получения дополнительной информации и информации нажмите «Показать сертификат». </html>"
+    },
+    {
+      "name": "cert_dialog_client_description",
+      "value": "<html>%1$s не может проверить идентичность соединительного клиента. <br/>\n\t\t<br/>Сертификату не доверяют (самозаверяющий сертификат), что означает, что клиентский идентификация не может быть автоматически проверена.\n\t\t<br/><br/> Продолжить подключение только для этого экземпляра? <br/> Для получения дополнительной информации и информации нажмите «Показать сертификат».</html>"
+    },
+    {
+      "name": "cert_dialog_peer_description",
+      "value": "<html>%1$s не может проверить\nидентичность равного %2$s. <br/><br/>\nСертификату не доверяют (самозаверяющий сертификат), что означает, что сверстник\nидентификация не может быть автоматически проверена. <br/><br/>\nПродолжить подключение только для этого экземпляра? <br/>\nДля получения дополнительной информации и информации нажмите «Показать сертификат». </html>"
+    },
+    {
+      "name": "proceed",
+      "value": "Продолжить"
+    },
+    {
+      "name": "cert_info_issued_to",
+      "value": "<b>Выдан To </b>"
+    },
+    {
+      "name": "cert_info_chain",
+      "value": "Цепочка сертификатов:"
+    },
+    {
+      "name": "cert_info_cn",
+      "value": "Общее имя:"
+    },
+    {
+      "name": "cert_info_O",
+      "value": "Организация:"
+    },
+    {
+      "name": "cert_info_C",
+      "value": "Название страны:"
+    },
+    {
+      "name": "cert_info_ST",
+      "value": "Название штата или провинции:"
+    },
+    {
+      "name": "cert_info_L",
+      "value": "Локальное имя:"
+    },
+    {
+      "name": "cert_info_issued_by",
+      "value": "<b>Выдано по </b>"
+    },
+    {
+      "name": "cert_info_OU",
+      "value": "Организационное подразделение:"
+    },
+    {
+      "name": "cert_info_validity",
+      "value": "<b>Validity</b>"
+    },
+    {
+      "name": "cert_info_issued_on",
+      "value": "Выпущено:"
+    },
+    {
+      "name": "cert_info_expires_on",
+      "value": "Срок действия:"
+    },
+    {
+      "name": "cert_info_fingerprints",
+      "value": "<b>Отпечатки пальцев </b>"
+    },
+    {
+      "name": "cert_info_details",
+      "value": "<b>Информация о сертификате </b>"
+    },
+    {
+      "name": "cert_info_SN",
+      "value": "Серийный номер:"
+    },
+    {
+      "name": "cert_info_version",
+      "value": "Версия:"
+    },
+    {
+      "name": "cert_info_sign_algo",
+      "value": "Алгоритм подписи:"
+    },
+    {
+      "name": "cert_info_pubkey_info",
+      "value": "<b>Информация открытого ключа </b>"
+    },
+    {
+      "name": "cert_info_algo",
+      "value": "Алгоритм:"
+    },
+    {
+      "name": "cert_info_pubkey",
+      "value": "Открытый ключ:"
+    },
+    {
+      "name": "cert_info_key_bytes",
+      "value": "%1$s bytes: %2$s"
+    },
+    {
+      "name": "cert_info_key_bits",
+      "value": "%1$s бит"
+    },
+    {
+      "name": "cert_info_exponent",
+      "value": "Экспонента:"
+    },
+    {
+      "name": "cert_info_key_size",
+      "value": "Размер ключа:"
+    },
+    {
+      "name": "cert_info_signature",
+      "value": "Подпись:"
+    },
+    {
+      "name": "service_gui_CONTINUE",
+      "value": "Продолжить"
+    },
+    {
+      "name": "certificate_show",
+      "value": "Показать сертификат"
+    },
+    {
+      "name": "certificate_hide",
+      "value": "Скрыть сертификат"
+    },
+    {
+      "name": "unsaved_changes",
+      "value": "У вас есть несохраненные изменения. Сохранить или отменить и выйти."
+    },
+    {
+      "name": "unsaved_changes_title",
+      "value": "UnSaved Changes"
+    },
+    {
+      "name": "please_wait",
+      "value": "Подождите…"
+    },
+    {
+      "name": "server_info_fetching",
+      "value": "Извлечение объявленных функций/информации…"
+    },
+    {
+      "name": "security_audio_not_secure",
+      "value": "Аудио не защищено"
+    },
+    {
+      "name": "security_call_not_secured_tooltip",
+      "value": "Вызов не защищен."
+    },
+    {
+      "name": "security_call_secured_compare_tooltip",
+      "value": "Нажмите здесь, чтобы сравнить секрет секретности с вашим партнером."
+    },
+    {
+      "name": "security_call_secured_tooltip",
+      "value": "Звонок защищен. Для получения дополнительной информации нажмите здесь."
+    },
+    {
+      "name": "security_cipher",
+      "value": "Шифр: %1$s"
+    },
+    {
+      "name": "security_clear",
+      "value": "Очистить"
+    },
+    {
+      "name": "security_compare_with_partner_short",
+      "value": "Сравнить с партнером:"
+    },
+    {
+      "name": "confirm",
+      "value": "Подтвердить"
+    },
+    {
+      "name": "security_encryption_required",
+      "value": "Требуется шифрование!"
+    },
+    {
+      "name": "security_no_video",
+      "value": "Нет видео"
+    },
+    {
+      "name": "security_secure_audio",
+      "value": "Защищенный звук"
+    },
+    {
+      "name": "security_secure_video",
+      "value": "Защищенное видео"
+    },
+    {
+      "name": "security_alert",
+      "value": "Попытка обеспечить безопасный вызов. Отключится в"
+    },
+    {
+      "name": "security_string_compared",
+      "value": "String сравнивается:"
+    },
+    {
+      "name": "security_verify_toast",
+      "value": "Включена защита звонков! Нажмите, чтобы сравнить строку безопасности сейчас или используйте меню позже."
+    },
+    {
+      "name": "security_video_not_secured",
+      "value": "Видео не защищено"
+    },
+    {
+      "name": "avatar_chose_icon",
+      "value": "Выберите изображение"
+    },
+    {
+      "name": "avatar_remove_icon",
+      "value": "Удалить текущее изображение"
+    },
+    {
+      "name": "update_download",
+      "value": "Загрузить"
+    },
+    {
+      "name": "update_install",
+      "value": "Установить"
+    },
+    {
+      "name": "update_reInstall",
+      "value": "Переустановить"
+    },
+    {
+      "name": "update_download_completed",
+      "value": "Загрузить готовый"
+    },
+    {
+      "name": "update_download_ready",
+      "value": "Обновление (%1$s) загружается и готово к установке."
+    },
+    {
+      "name": "update_in_progress",
+      "value": "Выполняется"
+    },
+    {
+      "name": "update_download_in_progress",
+      "value": "Выполняется обновление загрузки."
+    },
+    {
+      "name": "update_update_available",
+      "value": "Доступна новая выпущенная версия (%1$s-%2$s) для %3$s. Текущая установленная версия: (%4$s-%5$s)."
+    },
+    {
+      "name": "update_up_to_date",
+      "value": "Ваша текущая установленная версия: (%1$s-%2$s) обновлена. Доступная онлайн-версия: (%3$s-%4$s)."
+    },
+    {
+      "name": "update_new_version_none",
+      "value": "Нет новой версии"
+    },
+    {
+      "name": "update_install_update",
+      "value": "Установить обновления"
+    },
+    {
+      "name": "update_download_failed",
+      "value": "Не удалось загрузить новое обновление!"
+    },
+    {
+      "name": "update_check_update",
+      "value": "Проверить наличие обновлений"
+    },
+    {
+      "name": "update_version_invalid",
+      "value": "Загруженный apk не соответствует; действительный: %1$s (%2$s)"
+    },
+    {
+      "name": "update_vew_version_available",
+      "value": "Доступна новая версия программного обеспечения (%1$s)."
+    },
+    {
+      "name": "accountinfo_about_me",
+      "value": "Обо мне:"
+    },
+    {
+      "name": "accountinfo_about_me_hint",
+      "value": "Введите краткое описание себя в этом поле"
+    },
+    {
+      "name": "accountinfo_age",
+      "value": "Возраст:"
+    },
+    {
+      "name": "accountinfo_birth_date",
+      "value": "Дата рождения:"
+    },
+    {
+      "name": "accountinfo_change",
+      "value": "Изменить"
+    },
+    {
+      "name": "accountinfo_city",
+      "value": "Город:"
+    },
+    {
+      "name": "accountinfo_country",
+      "value": "Страна:"
+    },
+    {
+      "name": "accountinfo_discard_change",
+      "value": "Пользователь переходит в автономный режим - Отбрасывает все изменения учетной записи."
+    },
+    {
+      "name": "accountinfo_display_name",
+      "value": "Отображаемое имя:"
+    },
+    {
+      "name": "accountinfo_email",
+      "value": "E-mail:"
+    },
+    {
+      "name": "accountinfo_extended",
+      "value": "Расширенные"
+    },
+    {
+      "name": "accountinfo_first_name",
+      "value": "Имя:"
+    },
+    {
+      "name": "accountinfo_gender",
+      "value": "Пол:"
+    },
+    {
+      "name": "accountinfo_global_icon",
+      "value": "Использовать глобальный значок"
+    },
+    {
+      "name": "accountinfo_job_title",
+      "value": "Название задания:"
+    },
+    {
+      "name": "accountinfo_last_name",
+      "value": "Фамилия:"
+    },
+    {
+      "name": "accountinfo_local_icon",
+      "value": "Используйте этот значок:"
+    },
+    {
+      "name": "accountinfo_middle_name",
+      "value": "Среднее имя:"
+    },
+    {
+      "name": "accountinfo_mobile_phone",
+      "value": "Мобильный телефон:"
+    },
+    {
+      "name": "accountinfo_nickname",
+      "value": "Псевдоним:"
+    },
+    {
+      "name": "accountinfo_not_registered_message",
+      "value": "Аккаунт отключен - он должен быть онлайн для изменения информации об учетной записи."
+    },
+    {
+      "name": "accountinfo_not_supported",
+      "value": "Информация об учетной записи недоступна."
+    },
+    {
+      "name": "accountinfo_only_message",
+      "value": "Только сообщения"
+    },
+    {
+      "name": "accountinfo_organisation",
+      "value": "Название организации:"
+    },
+    {
+      "name": "accountinfo_phone",
+      "value": "Телефон:"
+    },
+    {
+      "name": "accountinfo_postcode",
+      "value": "Почтовый индекс:"
+    },
+    {
+      "name": "accountinfo_region",
+      "value": "Регион:"
+    },
+    {
+      "name": "accountinfo_select_account",
+      "value": "Выберите учетную запись:"
+    },
+    {
+      "name": "accountinfo_street",
+      "value": "Улица:"
+    },
+    {
+      "name": "accountinfo_title",
+      "value": "Информация об учетной записи"
+    },
+    {
+      "name": "accountinfo_user_picture",
+      "value": "Пользовательские изображения"
+    },
+    {
+      "name": "accountinfo_work_email",
+      "value": "Работа E-mail:"
+    },
+    {
+      "name": "accountinfo_work_phone",
+      "value": "Рабочий телефон:"
+    },
+    {
+      "name": "certconfig_title",
+      "value": "Конфигурация TLS"
+    },
+    {
+      "name": "certconfig_trusted_store",
+      "value": "Источник доверенных корневых сертификатов"
+    },
+    {
+      "name": "certconfig_cert_list_title",
+      "value": "Конфигурации аутентификации клиента TLS"
+    },
+    {
+      "name": "certconfig_cert_list_description",
+      "value": "Управляемые здесь конфигурации могут быть выбраны в качестве клиентских сертификатов TLS в конфигурациях учетной записи (например, для аутентификации с помощью сертификата против вашего поставщика SIP вместо имени пользователя и пароля)."
+    },
+    {
+      "name": "certconfig_alias",
+      "value": "Псевдоним в KeyStore"
+    },
+    {
+      "name": "certconfig_keystore_type",
+      "value": "Тип"
+    },
+    {
+      "name": "certconfig_cert_entry_title",
+      "value": "Сертификат клиента TLS"
+    },
+    {
+      "name": "certconfig_keystore_file",
+      "value": "файл"
+    },
+    {
+      "name": "certconfig_keystore_password",
+      "value": "пароль"
+    },
+    {
+      "name": "certconfig_incomplete",
+      "value": "Пожалуйста, введите значение для всех полей"
+    },
+    {
+      "name": "certconfig_show_cert_exception",
+      "value": "Невозможно показать сертификат (%1$s)."
+    },
+    {
+      "name": "certconfig_keystore_exception",
+      "value": "Невозможно загрузить хранилище ключей (%1$s)."
+    },
+    {
+      "name": "certconfig_file_type_description",
+      "value": "Хранилища сертификатов (модуль PKCS#11, файлы PKCS#12, хранилище ключей Java Keystore)"
+    },
+    {
+      "name": "certconfig_alias_load_exception",
+      "value": "Невозможно получить псевдонимы из хранилища ключей (%1$s)."
+    },
+    {
+      "name": "certconfig_invalid_keystore_type",
+      "value": "Выбранный тип хранилища ключей кажется недействительным (%1$s)."
+    },
+    {
+      "name": "certconfig_revocation_title",
+      "value": "Варианты отзыва сертификатов"
+    },
+    {
+      "name": "certconfig_revocation_check_enabled",
+      "value": "Проверка списка отзыва сертификатов CRL включена"
+    },
+    {
+      "name": "certconfig_revocation_ocsp_enabled",
+      "value": "Включена проверка OCSP (онлайн-протокола статуса сертификата)"
+    },
+    {
+      "name": "connectioninfo_title",
+      "value": "Информация о подключении"
+    },
+    {
+      "name": "contactinfo_title",
+      "value": "Контактная информация"
+    },
+    {
+      "name": "contactinfo_contact_summary_description",
+      "value": "Резюме контактной информации для"
+    },
+    {
+      "name": "contactinfo_contact_extended_description",
+      "value": "Расширенная контактная информация для"
+    },
+    {
+      "name": "contactinfo_not_specified",
+      "value": "[Не указано]"
+    },
+    {
+      "name": "contactinfo_user_pictures",
+      "value": "Пользовательские изображения"
+    },
+    {
+      "name": "contactinfo_status_message",
+      "value": "Сообщение о статусе"
+    },
+    {
+      "name": "notificationconfig_event_BusyCall",
+      "value": "Занятый вызов"
+    },
+    {
+      "name": "notificationconfig_event_BusyCall_description",
+      "value": "Описание занятого вызова"
+    },
+    {
+      "name": "notificationconfig_event_CallSaved",
+      "value": "Сохраненный вызов"
+    },
+    {
+      "name": "notificationconfig_event_CallSecurityError",
+      "value": "Ошибка безопасности вызовов"
+    },
+    {
+      "name": "notificationconfig_event_CallSecurityError_description",
+      "value": "Описание ошибки безопасности вызова"
+    },
+    {
+      "name": "notificationconfig_event_CallSecurityOn",
+      "value": "Безопасность вызовов в"
+    },
+    {
+      "name": "notificationconfig_event_CallSecurityOn_description",
+      "value": "Безопасность вызовов при описании"
+    },
+    {
+      "name": "notificationconfig_event_Dialing",
+      "value": "Набор номера"
+    },
+    {
+      "name": "notificationconfig_event_Dialing_description",
+      "value": "Описание набора"
+    },
+    {
+      "name": "notificationconfig_event_HangUp",
+      "value": "Завершить звонок"
+    },
+    {
+      "name": "notificationconfig_event_HangUp_description",
+      "value": "Развернуть описание"
+    },
+    {
+      "name": "notificationconfig_event_IncomingCall",
+      "value": "Входящий вызов"
+    },
+    {
+      "name": "notificationconfig_event_IncomingCall_description",
+      "value": "Описание входящих вызовов."
+    },
+    {
+      "name": "notificationconfig_event_IncomingFile",
+      "value": "Входящий файл"
+    },
+    {
+      "name": "notificationconfig_event_IncomingInvitation",
+      "value": "Входящее приглашение"
+    },
+    {
+      "name": "notificationconfig_event_IncomingMessage",
+      "value": "Входящее сообщение"
+    },
+    {
+      "name": "notificationconfig_event_IncomingMessage_description",
+      "value": "Описание входящих сообщений"
+    },
+    {
+      "name": "notificationconfig_event_LogFilesArchived",
+      "value": "Файлы журнала Архивированные"
+    },
+    {
+      "name": "notificationconfig_event_MissedCall",
+      "value": "Пропущенный вызов"
+    },
+    {
+      "name": "notificationconfig_event_NetworkNotifications",
+      "value": "Сетевые уведомления"
+    },
+    {
+      "name": "notificationconfig_event_NetworkNotifications_description",
+      "value": "Описание сетевого уведомления"
+    },
+    {
+      "name": "notificationconfig_event_ProactiveNotification",
+      "value": "Ввод уведомлений"
+    },
+    {
+      "name": "notificationconfig_event_ProactiveNotification_description",
+      "value": "Проактивное описание уведомления о состоянии чата"
+    },
+    {
+      "name": "notificationconfig_event_OutgoingCall",
+      "value": "Исходящий вызов"
+    },
+    {
+      "name": "notificationconfig_event_OutgoingCall_description",
+      "value": "Исходящее описание вызова"
+    },
+    {
+      "name": "notificationconfig_event_SecurityMessage",
+      "value": "Сообщение безопасности"
+    },
+    {
+      "name": "notificationconfig_event_SecurityMessage_description",
+      "value": "Описание сообщения безопасности"
+    },
+    {
+      "name": "notificationconfig_notification_sound",
+      "value": "​​Звук на устройстве уведомлений"
+    },
+    {
+      "name": "notificationconfig_playback_sound",
+      "value": "​​Звук на устройстве воспроизведения"
+    },
+    {
+      "name": "notificationconfig_popup_notification",
+      "value": "Всплывающее уведомление"
+    },
+    {
+      "name": "notificationconfig_vibration",
+      "value": "Вибрация"
+    },
+    {
+      "name": "notificationconfig_sound_file",
+      "value": "Звуковой файл:"
+    },
+    {
+      "name": "callrecordingconfig_call_saved",
+      "value": "Вызов успешно сохранен"
+    },
+    {
+      "name": "callrecordingconfig_call_saved_to",
+      "value": "Сохранить в: %1$s"
+    },
+    {
+      "name": "media_configform_audio_device_config_changed",
+      "value": "Изменена конфигурация аудиоустройства"
+    },
+    {
+      "name": "media_configform_audio_device_config_management_click",
+      "value": "Нажмите здесь для управления устройством"
+    },
+    {
+      "name": "media_configform_preview",
+      "value": "Предварительный просмотр"
+    },
+    {
+      "name": "media_security_checksum_mismatch",
+      "value": "<html>Внутренняя несоответствие контрольной суммы пакета ZRTP. <br/>Если вы часто видите это сообщение, это может означать атаку отказа в обслуживании! </html>"
+    },
+    {
+      "name": "media_security_data_send_failed",
+      "value": "<html>Не удалось отправить данные шифрования. Интернет-соединение для передачи данных или одноранговое соединение отключено. <br/><b>Ваш вызов не является безопасным </b><br/>Код ошибки: %1$s </html>"
+    },
+    {
+      "name": "imedia_security_retry_rate_exceeded",
+      "value": "<html>Слишком много попыток во время переговоров по безопасности. Это может означать, что у другой стороны проблемы с подключением к Интернету. <br/><b>Ваш вызов не является безопасным </b><br/>Код ошибки: %1$s </html>"
+    },
+    {
+      "name": "media_security_internal_protocol_error",
+      "value": "<html>Произошла ошибка внутреннего протокола. <br/><b>Ваш вызов не защищен </b><br/>Код ошибки: %1$s </html >"
+    },
+    {
+      "name": "media_security_off",
+      "value": "Поддержка шифрования вызовов"
+    },
+    {
+      "name": "media_security_on",
+      "value": "Поддержка шифрования вызовов в"
+    },
+    {
+      "name": "media_security_severe_generic_message",
+      "value": "<html>Была обнаружена серьезная проблема безопасности. <br/><b>Ваш вызов не защищен </b><br/>Код ошибки: %1$s</html>"
+    },
+    {
+      "name": "media_security_warning_no_rs_match",
+      "value": "<html>Недоступен сохраненный общий секрет. <br/><b>Рекомендуется проверка SAS </b></html>"
+    },
+    {
+      "name": "media_security_warning_no_expected_rs_match",
+      "value": "<html>Отсутствует ожидаемый сохраненный общий секрет. <br/><b>Требуется проверка SAS </b><br/>Если коды SAS не совпадают, то зависание и повторите попытку </html>"
+    },
+    {
+      "name": "media_security_zrtp_generic_message",
+      "value": "<html>Была обнаружена серьезная проблема ZRTP. <br/><b>Ваш вызов не является безопасным </b><br/>Код ошибки : %1$s </html>"
+    },
+    {
+      "name": "media_security_zrtp_handshake_timeout",
+      "value": "вызов не является безопасным; Время ожидания рукопожатия RTP: %1$s"
+    },
+    {
+      "name": "media_security_encryption_ended",
+      "value": "Шифрование звонка закончилось: %1$s"
+    },
+    {
+      "name": "menu_crypto_plain_text",
+      "value": "Обычный текст"
+    },
+    {
+      "name": "omemo_authbuddy_authenticate_buddy",
+      "value": "Аутентифицировать друзей"
+    },
+    {
+      "name": "omemo_authbuddy_authenticate_info",
+      "value": "У вас есть неаутентифицированные друзья. Непроверенные друзья не могут получать сообщение OMEMO. Проверить подлинность."
+    },
+    {
+      "name": "omemo_authbuddy_local_fingerprint",
+      "value": "My Fingerprint %1$s:\n%2$s"
+    },
+    {
+      "name": "omemo_authbuddy_verify_buddy",
+      "value": "Проверить контакт"
+    },
+    {
+      "name": "omemo_identity_keypairs_missing",
+      "value": "Создайте OMEMO IdentityKeyPairs для: %1$s"
+    },
+    {
+      "name": "omemo_identity_key_invalid",
+      "value": "Недопустимый IdentityKey для omemoDevice: %1$s.\nException: %2$s."
+    },
+    {
+      "name": "omemo_identity_key_missing",
+      "value": "OMEMO IdentityKey для %1$s отсутствует.\nПродолжить загрузку с сервера."
+    },
+    {
+      "name": "omemo_identity_keypairs_invalid",
+      "value": "Недопустимый IdentityKeyPairs для omemoDevice: %1$s.\nException: %2$s."
+    },
+    {
+      "name": "omemo_init_failed_corrupted_omemoKey_exception",
+      "value": "Инициализировать OmemoManager не удалось, и omemo обмен сообщениями не работает. Если проблема сохраняется\nпосле перезагрузки, перейдите к разделу «Зарегистрировать идентификаторы OMEMO» для отказавшего omomoDevice: %1$s.\n\nException: %2$s."
+    },
+    {
+      "name": "omemo_init_failed_no_response",
+      "value": "Инициализировать OmemoManager не удалось, и omemo обмен сообщениями может не работать должным образом: %1$s"
+    },
+    {
+      "name": "omemo_init_failed_title",
+      "value": "Ошибка initemoManager"
+    },
+    {
+      "name": "omemo_menu_authenticated",
+      "value": "OMEMO аутентифицировано"
+    },
+    {
+      "name": "omemo_send_error",
+      "value": "Не удалось отправить сообщение. Пожалуйста, попробуйте еще раз после того, как все ошибки были исправлены: %1$s"
+    },
+    {
+      "name": "omemo_menu_unauthenticated",
+      "value": "OMEMO НЕ аутентифицировано"
+    },
+    {
+      "name": "omemo_menu_untrusted",
+      "value": "OMEMO НЕ доверенный"
+    },
+    {
+      "name": "omemo_rebuild_session",
+      "value": "Перестроить новый сеанс для отсутствия: %1$s"
+    },
+    {
+      "name": "omemo_purge_inactive_device_error",
+      "value": "Не удалось удалить неактивное устройство omemo для: %1$s."
+    },
+    {
+      "name": "settings_bosh_proxy",
+      "value": "Конфигурация прокси-сервера"
+    },
+    {
+      "name": "settings_bosh_proxy_summary",
+      "value": "Настройка подключения через BOSH/Proxy для учетной записи"
+    },
+    {
+      "name": "bosh_proxy_url_null",
+      "value": "Содержимое поля BOSH URL не может быть пустым"
+    },
+    {
+      "name": "bosh_proxy_host_port_null",
+      "value": "Содержимое прокси-хоста и порта не может быть пустым"
+    },
+    {
+      "name": "bosh_proxy_type",
+      "value": "Тип прокси-сервера"
+    },
+    {
+      "name": "bosh_proxy_url",
+      "value": "BOSH URL:"
+    },
+    {
+      "name": "bosh_proxy_use_http",
+      "value": "Использовать HTTP-прокси"
+    },
+    {
+      "name": "bosh_proxy_host",
+      "value": "Прокси-сервер"
+    },
+    {
+      "name": "bosh_proxy_port",
+      "value": "Порт прокси"
+    },
+    {
+      "name": "provisioning_auto",
+      "value": "Автоматическое обнаружение URI инициализации"
+    },
+    {
+      "name": "provisioning_bonjour",
+      "value": "Bonjour"
+    },
+    {
+      "name": "provisioning_clipboard_failed",
+      "value": "Не удалось скопировать UUID в буфер обмена"
+    },
+    {
+      "name": "provisioning_copy_to_clipboard",
+      "value": "Скопировать UUID в буфер обмена"
+    },
+    {
+      "name": "provisioning_credentials",
+      "value": "Последние сохраненные учетные данные для обеспечения"
+    },
+    {
+      "name": "provisioning_enable",
+      "value": "Включить предоставление"
+    },
+    {
+      "name": "provisioning_exit_on_failed",
+      "value": "Выход из приложения, если сбой обеспечения"
+    },
+    {
+      "name": "provisioning_forget_password",
+      "value": "Забыть пароль"
+    },
+    {
+      "name": "provisioning_manual",
+      "value": "Вручную укажите URI инициализации"
+    },
+    {
+      "name": "provisioning_method",
+      "value": "Метод предоставления"
+    },
+    {
+      "name": "provisioning_failed",
+      "value": "Ошибка предоставления"
+    },
+    {
+      "name": "provisioning_failed_message",
+      "value": "<html>Произошла неудача. %1$s!<br/>Повторите попытку позже или обратитесь к своему администратору.</html>"
+    },
+    {
+      "name": "provisioning",
+      "value": "Предоставление"
+    },
+    {
+      "name": "provisioning_summary",
+      "value": "Настроить параметры настройки"
+    },
+    {
+      "name": "provisioning_remove_credentials_message",
+      "value": "Вы действительно хотите удалить пароль для обеспечения безопасности?"
+    },
+    {
+      "name": "provisioning_restart_alert",
+      "value": "Обратите внимание, что ваши изменения вступят в силу при следующем запуске aTalk!"
+    },
+    {
+      "name": "settings_dnssec_dane",
+      "value": "Безопасность SSL/DNSSEC/DANE"
+    },
+    {
+      "name": "settings_dns",
+      "value": "DNS"
+    },
+    {
+      "name": "settings_dns_summary",
+      "value": "Настройка параметров DNS"
+    },
+    {
+      "name": "dnsconfig_dnssec",
+      "value": "Безопасность DNS (DNSSEC)"
+    },
+    {
+      "name": "dnsconfig_dnssec_domain_name",
+      "value": "Домен"
+    },
+    {
+      "name": "dnsconfig_dnssec_enable_failed",
+      "value": "Ошибка состояния"
+    },
+    {
+      "name": "dnsconfig_dnssec_enable_failed_message",
+      "value": "Сбой состояния включенного DNSSEC."
+    },
+    {
+      "name": "dnsconfig_dnssec_mode",
+      "value": "Поведение"
+    },
+    {
+      "name": "dnsconfig_dnssec_restart_alert",
+      "value": "<html>Обратите внимание, что включение или отключение DNSSEC отключает параллельный распознаватель и вступает в силу при следующем запуске aTalk.</html>"
+    },
+    {
+      "name": "dnsconfig_dnssec_title",
+      "value": "Резервное копирование"
+    },
+    {
+      "name": "dnsconfig_dnssec_check_absolute",
+      "value": "Рассматривать все доменные имена как абсолютные"
+    },
+    {
+      "name": "dnsconfig_dnssec_check_enable",
+      "value": "Включить распознаватель DNSSEC"
+    },
+    {
+      "name": "dnsconfig_dnssec_label_default",
+      "value": "Поведение по умолчанию"
+    },
+    {
+      "name": "dnsconfig_dnssec_label_name_servers",
+      "value": "Пользовательские серверы имен"
+    },
+    {
+      "name": "dnsconfig_dnssec_label_name_servers_hint",
+      "value": "<html>Несколько серверов могут быть разделены запятой, например. 149.20.64.20, 149.20.64.21 (Открытый DSSEC-реестр для проверки подлинности DNSSEC)</html>"
+    },
+    {
+      "name": "dns_insecure_answer_title",
+      "value": "Ошибка DNSSEC"
+    },
+    {
+      "name": "dns_insecure_answer_message_insecure",
+      "value": "DNS-ответ для %1$s небезопасен."
+    },
+    {
+      "name": "dns_insecure_answer_message_reason",
+      "value": "DNS-ответ для %1$s небезопасен.\nReason: %2$s"
+    },
+    {
+      "name": "dns_dnssec_advanced_options",
+      "value": "Показать дополнительные параметры"
+    },
+    {
+      "name": "dns_dnssec_advanced_reason_invalid",
+      "value": "<html>Подписанная DNSSEC зона %1$s возвращает недопустимые данные. <br>%2$s </html>"
+    },
+    {
+      "name": "dns_dnssec_advanced_reason_unsigned",
+      "value": "%1$s запрос для %2$s без знака."
+    },
+    {
+      "name": "dns_dnssec_warning",
+      "value": "<html><div width=\"600\">%1$s попытался подключиться к серверу с <b>%2$s<</b>,\nкоторый является областью, которая обладает сильной защитой, называемой DNSSEC. Информация, полученная %1$s\nс DNS-сервера не соответствует информации, предоставляемой DNSSEC об этом домене. <br><br><b>\nЭтого не должно произойти, если не были сделаны серьезные ошибки в %2$s. Поэтому это очень сильный признак того, что что-то есть\nсерьезно ошибаются в отношении надежности вашего сетевого соединения. </b><br><br>\nЕсли вы находитесь на чужом интернет-соединении (например, в точке доступа WiFi) или если есть особые обстоятельства, которые заставляют вас не доверять\nваш обычный интернет-провайдер, мы настоятельно рекомендуем вам немедленно прекратить его использование и искать альтернативную точку доступа в Интернет.\nЕсли вы безопасно подключены к другой сети, проблема должна быть решена автоматически. Если это не так, обратитесь к своему\nпоставщика услуг, чтобы сообщить им об этой проблеме. </DIV></HTML>"
+    },
+    {
+      "name": "settings_ssl_certificate",
+      "value": "Сертификат SSL"
+    },
+    {
+      "name": "settings_ssl_certificate_purge",
+      "value": "Удалить одобренные пользователем сертификаты для: %1$s"
+    },
+    {
+      "name": "settings_ssl_certificate_remove",
+      "value": "Удалить сертификат"
+    },
+    {
+      "name": "settings_ssl_certificate_summary",
+      "value": "Управление сертификатами SSL"
+    },
+    {
+      "name": "tls_cert",
+      "value": "Клиентский сертификат TLS"
+    },
+    {
+      "name": "tls_cert_prompt",
+      "value": "Выберите сертификат TLS"
+    },
+    {
+      "name": "tls_cert_summary",
+      "value": "Использование сертификата при аутентификации пользователя на сервере"
+    },
+    {
+      "name": "zid_reset_summary",
+      "value": "Сброс долгоживущего идентификатора ZRTP"
+    },
+    {
+      "name": "zid_reset_title",
+      "value": "Сброс настроек ZID"
+    },
+    {
+      "name": "zid_reset_done",
+      "value": "ZID был сброшен"
+    },
+    {
+      "name": "commit_progress_message",
+      "value": "Сохранение изменений учетной записи, подождите…"
+    },
+    {
+      "name": "commit_progress_title",
+      "value": "Обработка…"
+    },
+    {
+      "name": "settings_not_set",
+      "value": "(Не задано)"
+    },
+    {
+      "name": "enc_audio_title",
+      "value": "Кодировка аудио"
+    },
+    {
+      "name": "enc_override_global",
+      "value": "Переопределить глобальную"
+    },
+    {
+      "name": "enc_video_title",
+      "value": "Кодирование видео"
+    },
+    {
+      "name": "none",
+      "value": "None"
+    },
+    {
+      "name": "sec_encryption",
+      "value": "Шифрование"
+    },
+    {
+      "name": "sec_protocols_title",
+      "value": "Протоколы безопасности"
+    },
+    {
+      "name": "sec_protocols_message",
+      "value": "Выберите нужные протоколы в порядке"
+    },
+    {
+      "name": "discard",
+      "value": "Отменить"
+    },
+    {
+      "name": "sec_zrtp_signalling_on",
+      "value": "ZRTP будет рекламироваться по протоколу сигнализации"
+    },
+    {
+      "name": "sec_zrtp_signalling_off",
+      "value": "Не будет рекламы ZRTP"
+    },
+    {
+      "name": "service_gui_SERVERS_LIST_ADD_SERVER",
+      "value": "Добавить сервер"
+    },
+    {
+      "name": "service_gui_SERVERS_LIST_EMPTY",
+      "value": "Список пуст. Нажмите, чтобы добавить новую запись…"
+    },
+    {
+      "name": "service_gui_JINGLE_EDIT_JID",
+      "value": "Адрес JID"
+    },
+    {
+      "name": "service_gui_JINGLE_EDIT_SUPPORT_RELAY",
+      "value": "Реле поддержки"
+    },
+    {
+      "name": "stun_turn_server",
+      "value": "STUN/TURN Сервер"
+    },
+    {
+      "name": "ip_address",
+      "value": "IP-адрес"
+    },
+    {
+      "name": "server_port",
+      "value": "Порт сервера"
+    },
+    {
+      "name": "turn_supported",
+      "value": "Поддержка TURN"
+    },
+    {
+      "name": "username",
+      "value": "имя пользователя"
+    },
+    {
+      "name": "security_dtls_srtp",
+      "value": "Передача сигналов DTLS_SRTP"
+    },
+    {
+      "name": "security_dtls_title",
+      "value": "Алгоритм подписи сертификата TLS"
+    },
+    {
+      "name": "security_encryption_enable",
+      "value": "Включить шифрование вызовов"
+    },
+    {
+      "name": "security_encryption_protocols",
+      "value": "Протоколы шифрования"
+    },
+    {
+      "name": "security_rtp_savp",
+      "value": "Индикация RTP/SAVP"
+    },
+    {
+      "name": "security_rtp_savp_title",
+      "value": "Метод индикации RTP/SAVP"
+    },
+    {
+      "name": "security_sdes",
+      "value": "Параметры SDES"
+    },
+    {
+      "name": "security_sdes_dlg_title",
+      "value": "Выберите нужный набор шифров"
+    },
+    {
+      "name": "security_sdes_title",
+      "value": "Набор шифров SDES"
+    },
+    {
+      "name": "security_zrtp_options",
+      "value": "Параметры ZRTP"
+    },
+    {
+      "name": "security_zrtp_signalling",
+      "value": "Передача сигналов ZRTP"
+    },
+    {
+      "name": "audio_encoding",
+      "value": "Кодировка аудио"
+    },
+    {
+      "name": "audio_enc_global_override_summary",
+      "value": "Переопределить звуковые форматы для этой учетной записи"
+    },
+    {
+      "name": "call_encryption",
+      "value": "Настройки шифрования вызовов"
+    },
+    {
+      "name": "video_encoding",
+      "value": "Кодирование видео"
+    },
+    {
+      "name": "video_enc_global_override_summary",
+      "value": "Переопределить глобальные определенные видеоформаты для этой учетной записи"
+    },
+    {
+      "name": "jbr_auto_sign_in",
+      "value": "Подключиться при запуске"
+    },
+    {
+      "name": "jbr_auto_stun_discovery",
+      "value": "Автоматическое открытие серверов STUN/TURN"
+    },
+    {
+      "name": "jbr_connection_summary",
+      "value": "Установить сведения о подключении…"
+    },
+    {
+      "name": "jbr_connection",
+      "value": "Параметры подключения"
+    },
+    {
+      "name": "jbr_jingle_disable",
+      "value": "Отключить вызовы (Jingle)"
+    },
+    {
+      "name": "jbr_jingle_summary",
+      "value": "(аудио и видеозвонки с XMPP)"
+    },
+    {
+      "name": "jbr_dtmf_method",
+      "value": "Метод DTMF"
+    },
+    {
+      "name": "jbr_dtmf_summary",
+      "value": "Выбор метода DTMF"
+    },
+    {
+      "name": "jbr_gmail_notifications",
+      "value": "Уведомления Gmail для новых сообщений"
+    },
+    {
+      "name": "jbr_google_contact_search",
+      "value": "Поиск контактов Google"
+    },
+    {
+      "name": "jbr_gtalk_domain",
+      "value": "Домен, который будет использовать вызов GTalk"
+    },
+    {
+      "name": "jbr_ice_summary",
+      "value": "Настроить параметры ICE…"
+    },
+    {
+      "name": "jbr_jingle_auto",
+      "value": "Автоматическое обнаружение реле узлов Jingle"
+    },
+    {
+      "name": "jbr_jingle_list",
+      "value": "Дополнительные узлы звонка…"
+    },
+    {
+      "name": "jbr_jingle_list_summary",
+      "value": "Пользовательские дополнительные узлы Jingle для использования"
+    },
+    {
+      "name": "jbr_jingle_nodes",
+      "value": "Jingle Nodes"
+    },
+    {
+      "name": "jbr_jingle_use",
+      "value": "Использовать jingle-узлы"
+    },
+    {
+      "name": "jbr_keep_alive",
+      "value": "Сохранить вживую"
+    },
+    {
+      "name": "jbr_keep_alive_enable",
+      "value": "Включить опцию Keep Alive"
+    },
+    {
+      "name": "jbr_keep_alive_summary",
+      "value": "Включить, если наблюдается частая отключение мобильной сети"
+    },
+    {
+      "name": "jbr_tls_ver_min",
+      "value": "Минимальная версия TLS"
+    },
+    {
+      "name": "jbr_tls_ver_min_summary",
+      "value": "Соединитесь, используя эту или более позднюю версию протокола TLS"
+    },
+    {
+      "name": "jbr_non_secure_allow",
+      "value": "Разрешить незащищенные соединения"
+    },
+    {
+      "name": "jbr_non_ssk_summary",
+      "value": "Отключить шифрование соединения с сервером SSL/TLS"
+    },
+    {
+      "name": "jbr_server_override",
+      "value": "Изменить параметры сервера по умолчанию"
+    },
+    {
+      "name": "jbr_password",
+      "value": "Введите пароль"
+    },
+    {
+      "name": "jbr_ping_interval",
+      "value": "Интервал Ping (1~3600 секунд)"
+    },
+    {
+      "name": "jbr_ping_interval_tune_enable",
+      "value": "Включить оптимизацию Ping Interval"
+    },
+    {
+      "name": "jbr_ping_interval_tune_off_summary",
+      "value": "Не выполняйте оптимизацию интервала ping для подключения к мобильной сети"
+    },
+    {
+      "name": "jbr_ping_interval_tune_on_summary",
+      "value": "Выполнять оптимизацию интервала ping для подключения к мобильной сети"
+    },
+    {
+      "name": "jbr_server_port",
+      "value": "Порт сервера"
+    },
+    {
+      "name": "jbr_priority",
+      "value": "Приоритет (диапазон: -128~127)"
+    },
+    {
+      "name": "jbr_resource_auto_gen",
+      "value": "Автоматическое создание ресурса"
+    },
+    {
+      "name": "jbr_resource_id",
+      "value": "Ресурс идентификатора Jabber"
+    },
+    {
+      "name": "jbr_resource_name",
+      "value": "Имя ресурса"
+    },
+    {
+      "name": "jbr_server_ip",
+      "value": "Подключение IP-адреса сервера"
+    },
+    {
+      "name": "jbr_server_options",
+      "value": "Параметры сервера"
+    },
+    {
+      "name": "jbr_store_password",
+      "value": "Запомнить пароль"
+    },
+    {
+      "name": "jbr_store_password_summary",
+      "value": "Сохранить пароль для автоматического входа в систему при запуске приложения"
+    },
+    {
+      "name": "jbr_stun_list",
+      "value": "Дополнительные серверы STUN/TURN…"
+    },
+    {
+      "name": "jbr_stun_list_summary",
+      "value": "Пользовательские дополнительные серверы STUN/TURN для использования"
+    },
+    {
+      "name": "jbr_telephony_domain",
+      "value": "Домен телефонии"
+    },
+    {
+      "name": "jbr_telephony_voip_pbx",
+      "value": "Телефония VoIP-PBX"
+    },
+    {
+      "name": "jbr_telephony_summary",
+      "value": "Настроить параметры телефонии…"
+    },
+    {
+      "name": "jbr_use_default_stun",
+      "value": "Использовать сервер Jitsi STUN (резервный)"
+    },
+    {
+      "name": "jbr_use_ice",
+      "value": "Использовать ICE"
+    },
+    {
+      "name": "jbr_use_google_ice",
+      "value": "Использовать Google Jingle/ICE (экспериментальный)"
+    },
+    {
+      "name": "jbr_use_upnp",
+      "value": "Использовать UPnP"
+    },
+    {
+      "name": "jbr_user_id",
+      "value": "ИД пользователя"
+    },
+    {
+      "name": "jbr_user_name_password",
+      "value": "Имя пользователя и пароль"
+    },
+    {
+      "name": "contact_phone",
+      "value": "Контактное имя/Телефон/Jid:"
+    },
+    {
+      "name": "call_via",
+      "value": "Позвоните через:"
+    },
+    {
+      "name": "contact_phone_empty",
+      "value": "Контактный номер телефона не может быть пустым!"
+    },
+    {
+      "name": "recipient_error_non_ascii",
+      "value": "Специальные символы в настоящее время не поддерживаются!"
+    },
+    {
+      "name": "domain_not_in_roster",
+      "value": "Указанный домен телефонии '%1$s' не входит в список контактов"
+    },
+    {
+      "name": "not_in_call_group",
+      "value": "%1$s не относится к определенной группе вызовов"
+    },
+    {
+      "name": "jingle_not_supported",
+      "value": "%1$s\nне поддерживает протокол Jingle"
+    },
+    {
+      "name": "recipient_error_parse_failed",
+      "value": "Ошибка анализа адреса!"
+    },
+    {
+      "name": "unknown_recipient",
+      "value": "<Неизвестный получатель>"
+    },
+    {
+      "name": "disabled",
+      "value": "Отключено"
+    },
+    {
+      "name": "enabled",
+      "value": "Включено"
+    },
+    {
+      "name": "general",
+      "value": "Общие"
+    },
+    {
+      "name": "settings_webview_dlg_title",
+      "value": "Войдите на страницу доступа по умолчанию для webView:"
+    },
+    {
+      "name": "settings_webview_page",
+      "value": "Страница веб-доступа"
+    },
+    {
+      "name": "settings_messaging",
+      "value": "Обмен сообщениями"
+    },
+    {
+      "name": "settings_multichat_off",
+      "value": "Отдельное окно для ech-беседы"
+    },
+    {
+      "name": "settings_multichat_on",
+      "value": "Сообщения группового чата в одном окне"
+    },
+    {
+      "name": "settings_multichat_window",
+      "value": "Многострочное окно"
+    },
+    {
+      "name": "settings_history_log_off",
+      "value": "Отключена история чата"
+    },
+    {
+      "name": "settings_history_log_on",
+      "value": "Журнал журнала чата"
+    },
+    {
+      "name": "settings_history_logging",
+      "value": "Журнал регистрации чатов"
+    },
+    {
+      "name": "settings_history_mam_warning",
+      "value": "Ошибка при настройке параметра MAM для автономного пользователя: %1$s"
+    },
+    {
+      "name": "settings_history_dlg_title",
+      "value": "Сколько последних сообщений должно отображаться?"
+    },
+    {
+      "name": "settings_history_size",
+      "value": "Показать последние сообщения"
+    },
+    {
+      "name": "settings_history_summary",
+      "value": "%d последние сообщения в новых чатах"
+    },
+    {
+      "name": "settings_history_show",
+      "value": "Показать историю"
+    },
+    {
+      "name": "settings_message_delivery_receipt",
+      "value": "Квитанция о доставке сообщения"
+    },
+    {
+      "name": "settings_message_delivery_receipt_summary",
+      "value": "Позволяет вашим контактам видеть когда вы получили и прочитали их сообщения"
+    },
+    {
+      "name": "settings_typing_notifications",
+      "value": "Отправить уведомления о состоянии чата"
+    },
+    {
+      "name": "settings_thumbnail_option",
+      "value": "Отправить/Получить превью"
+    },
+    {
+      "name": "settings_file_max_auto_accept",
+      "value": "Автоматическое принятие максимального размера файла"
+    },
+    {
+      "name": "settings_presence_subscribe_approval_mode",
+      "value": "Утверждение подписки на доступность"
+    },
+    {
+      "name": "settings_presence_subscribe_approval_auto",
+      "value": "Подтвердить утверждение - автоматически принять все"
+    },
+    {
+      "name": "settings_presence_subscribe_approval_manual",
+      "value": "Подтвердить утверждение - руководство"
+    },
+    {
+      "name": "settings_chat_notifications",
+      "value": "Показать сообщения о статусной строке"
+    },
+    {
+      "name": "settings_notifications",
+      "value": "Уведомления"
+    },
+    {
+      "name": "settings_auto_update_check_enable",
+      "value": "Включить проверку обновлений автоматического SW"
+    },
+    {
+      "name": "settings_popup_handler",
+      "value": "Тип всплывающих уведомлений"
+    },
+    {
+      "name": "pref_heads_up_notifications",
+      "value": "Экранные уведомления"
+    },
+    {
+      "name": "pref_heads_up_notifications_summary",
+      "value": "Показывать экранные уведомления"
+    },
+    {
+      "name": "popup_auto",
+      "value": "Авто"
+    },
+    {
+      "name": "popup_status_bar",
+      "value": "Уведомления строки состояния"
+    },
+    {
+      "name": "settings_event_summary",
+      "value": "Настройка индивидуальных уведомлений"
+    },
+    {
+      "name": "settings_event_title",
+      "value": "События"
+    },
+    {
+      "name": "quiet_hours",
+      "value": "Тихие часы"
+    },
+    {
+      "name": "quiet_hours_start_time",
+      "value": "Начало"
+    },
+    {
+      "name": "quiet_hours_end_time",
+      "value": "Окончание"
+    },
+    {
+      "name": "quiet_hours_enable",
+      "value": "Включить режим «тихих часов»"
+    },
+    {
+      "name": "quiet_hours_summary",
+      "value": "Уведомления будут отключены во время «тихих часов»"
+    },
+    {
+      "name": "settings_show_icon",
+      "value": "Показать значок aTalk"
+    },
+    {
+      "name": "settings_show_icon_summary_off",
+      "value": "Скрыть активный индикатор aTalk в уведомлениях"
+    },
+    {
+      "name": "settings_show_icon_summary_on",
+      "value": "Показать активный индикатор aTalk в уведомлениях"
+    },
+    {
+      "name": "settings_auto_start",
+      "value": "Автозапуск aTalk при перезагрузке"
+    },
+    {
+      "name": "settings_auto_start_summary_disable",
+      "value": "Отключить автоматический запуск aTalk при следующей перезагрузке"
+    },
+    {
+      "name": "settings_auto_start_summary_enable",
+      "value": "Включить автоматический запуск aTalk при следующей перезагрузке"
+    },
+    {
+      "name": "settings_locale",
+      "value": "Язык"
+    },
+    {
+      "name": "settings_locale_system",
+      "value": "По умолчанию в системе"
+    },
+    {
+      "name": "settings_theme_dark",
+      "value": "Темная"
+    },
+    {
+      "name": "settings_theme_light",
+      "value": "Светлая"
+    },
+    {
+      "name": "settings_theme",
+      "value": "Тема"
+    },
+    {
+      "name": "tts_delay",
+      "value": "Текст сообщения в задержку речи (ms)"
+    },
+    {
+      "name": "tts_settings",
+      "value": "Общие настройки TTS…"
+    },
+    {
+      "name": "tts_disable",
+      "value": "Отключить текст в речь"
+    },
+    {
+      "name": "tts_enable",
+      "value": "Включить текст в речь"
+    },
+    {
+      "name": "tts_synthesis",
+      "value": "Введите текст, чтобы говорить или синтезировать и сохранить в файл:"
+    },
+    {
+      "name": "tts_voice",
+      "value": "Голос TTS по умолчанию:"
+    },
+    {
+      "name": "loading_wait",
+      "value": "Загрузка, пожалуйста подождите…"
+    },
+    {
+      "name": "settings_normalize_number",
+      "value": "Специальные символы в телефонных номерах"
+    },
+    {
+      "name": "settings_normalize_off",
+      "value": "Нет изменений номера телефона"
+    },
+    {
+      "name": "settings_normalize_on",
+      "value": "Специальные символы будут удалены из числа"
+    },
+    {
+      "name": "settings_phone_alpha_no_allow",
+      "value": "Нет изменений номера телефона"
+    },
+    {
+      "name": "settings_phone_alpha_allow",
+      "value": "Письма в телефонных номерах"
+    },
+    {
+      "name": "call",
+      "value": "Вызов"
+    },
+    {
+      "name": "media_call",
+      "value": "Медиа звонок"
+    },
+    {
+      "name": "audio",
+      "value": "Аудио"
+    },
+    {
+      "name": "settings_echo_cancel",
+      "value": "Отмена эха"
+    },
+    {
+      "name": "settings_echo_cancel_off",
+      "value": "Отключено"
+    },
+    {
+      "name": "settings_echo_cancel_on",
+      "value": "Включено"
+    },
+    {
+      "name": "settings_agc",
+      "value": "Автоматическое управление усилением"
+    },
+    {
+      "name": "settings_agc_off",
+      "value": "Отключено"
+    },
+    {
+      "name": "settings_agc_on",
+      "value": "Включено"
+    },
+    {
+      "name": "settings_denoise",
+      "value": "Подавление шума"
+    },
+    {
+      "name": "settings_denoise_off",
+      "value": "Отключено"
+    },
+    {
+      "name": "settings_denoise_on",
+      "value": "Включено"
+    },
+    {
+      "name": "settings_audio_codecs_summary",
+      "value": "Выбрать и определить приоритет для аудиокодеков"
+    },
+    {
+      "name": "settings_audio_codecs",
+      "value": "Аудиокодеки"
+    },
+    {
+      "name": "video",
+      "value": "Видео"
+    },
+    {
+      "name": "settings_system_android_camera",
+      "value": "AndroidCamera"
+    },
+    {
+      "name": "settings_system_media_recorder",
+      "value": "MediaRecorder"
+    },
+    {
+      "name": "settings_camera",
+      "value": "Камера"
+    },
+    {
+      "name": "settings_no_camera",
+      "value": "Совместимое устройство камеры не найдено"
+    },
+    {
+      "name": "settings_use_back_camera",
+      "value": "Использовать обратную камеру"
+    },
+    {
+      "name": "settings_use_front_camera",
+      "value": "Использовать переднюю камеру"
+    },
+    {
+      "name": "settings_use_match_camera_resolution",
+      "value": "Использовать максимально подходящее разрешение камеры: %1$s"
+    },
+    {
+      "name": "settings_direct_surface_decode",
+      "value": "Использовать прямое поверхностное декодирование"
+    },
+    {
+      "name": "settings_direct_surface_encode",
+      "value": "Использовать прямое кодирование"
+    },
+    {
+      "name": "settings_hw_decode",
+      "value": "Использовать аппаратное декодирование (требуется перезагрузка)"
+    },
+    {
+      "name": "settings_hw_encode",
+      "value": "Использовать аппаратное кодирование (требуется перезагрузка)"
+    },
+    {
+      "name": "settings_media_codec_list",
+      "value": "MediaCodecs"
+    },
+    {
+      "name": "settings_media_codec_list_summary",
+      "value": "Список встроенных медиакодеров/декодеров"
+    },
+    {
+      "name": "settings_restart_require",
+      "value": "Требовать перезапустить aTalk"
+    },
+    {
+      "name": "settings_video_codec_summary",
+      "value": "Выбрать и определить приоритет для видеокодеков"
+    },
+    {
+      "name": "settings_video_codec",
+      "value": "Видеокодеки"
+    },
+    {
+      "name": "settings_video_resolution",
+      "value": "Разрешение видео"
+    },
+    {
+      "name": "settings_fps_limit_off",
+      "value": "Неограниченный"
+    },
+    {
+      "name": "settings_fps_limit_on",
+      "value": "Скорректированная частота кадров"
+    },
+    {
+      "name": "settings_video_bitrate",
+      "value": "Битрейт видео (килобит/с)"
+    },
+    {
+      "name": "settings_video_frame_rate",
+      "value": "Частота кадров видео"
+    },
+    {
+      "name": "settings_video_fps_description",
+      "value": "Значения, принятые между 5 и 30 кадрами в секунду"
+    },
+    {
+      "name": "settings_video_max_bw",
+      "value": "порог стимуляции RTP (kBytes/s)"
+    },
+    {
+      "name": "settings_video_fps_target",
+      "value": "Целевая частота кадров (в секунду)"
+    },
+    {
+      "name": "settings_messaging_security_summary",
+      "value": "Настройки безопасности шифрования сообщений"
+    },
+    {
+      "name": "settings_messaging_security",
+      "value": "Безопасность сообщений"
+    },
+    {
+      "name": "omemo_messaging_security",
+      "value": "Безопасность сообщений OMEMO"
+    },
+    {
+      "name": "omemo_blind_trust_before_verification",
+      "value": "Слепое доверие перед проверкой"
+    },
+    {
+      "name": "omemo_blind_trust_before_verification_summary",
+      "value": "Автоматическое доверие ко всем новым устройствам контактов, которые ранее не были проверены; запрос на подтверждение вручную, когда подтвержденный контакт добавляет новые устройства."
+    },
+    {
+      "name": "omemo_regenerate_identities_summary",
+      "value": "После восстановления вашей идентичности OMEMO все ваши контакты получат новый отпечаток пальца и должны будут повторно подтвердить вас. Выполняйте только при наличии проблемы установки omemo."
+    },
+    {
+      "name": "omemo_regenerate_identities",
+      "value": "Регенерировать идентификаторы OMEMO"
+    },
+    {
+      "name": "omemo_regenerate_title",
+      "value": "Оповещения OMEMO Обновить"
+    },
+    {
+      "name": "omemo_purge_devices_summary",
+      "value": "Удалить все неактивные устройства; только опубликовать текущее активное устройство, которое вы используете."
+    },
+    {
+      "name": "omemo_purge_device_unused",
+      "value": "Очистить неиспользуемые идентификаторы"
+    },
+    {
+      "name": "omemo_purge_device",
+      "value": "Устройства OMEMO Удалить"
+    },
+    {
+      "name": "key_fingerprint_security",
+      "value": "Key & Безопасность FingerPrint"
+    },
+    {
+      "name": "settings_crypto_priv_key_empty",
+      "value": "Найден нулевой зарегистрированный пользователь"
+    },
+    {
+      "name": "settings_crypto_priv_key_summary",
+      "value": "Управление секретными отпечатками crypto"
+    },
+    {
+      "name": "settings_crypto_priv_key",
+      "value": "Закрытые ключи Crypto"
+    },
+    {
+      "name": "settings_fingerprint_summary",
+      "value": "Управление всеми известными отпечатками устройств\nцвет: циан=собственное устройство; серый=неактивный"
+    },
+    {
+      "name": "settings_fingerprint_title",
+      "value": "Отпечатки пальцев криптографических устройств"
+    },
+    {
+      "name": "crypto_key_generate_prompt",
+      "value": "Вы хотите создать новый ключ для %1$s%2$s"
+    },
+    {
+      "name": "crypto_key_generate_title",
+      "value": "Генерация секретного ключа"
+    },
+    {
+      "name": "crypto_key_regenerate_prompt",
+      "value": "Вы хотите восстановить ключ для %1$s\n\n%2$s"
+    },
+    {
+      "name": "delete_selected",
+      "value": "Удалить выбранные"
+    },
+    {
+      "name": "regenerate_selected",
+      "value": "Восстановить выбранный"
+    },
+    {
+      "name": "crypto_menu_key_generate",
+      "value": "Создать новый ключ"
+    },
+    {
+      "name": "crypto_menu_key_regenerate",
+      "value": "Восстановить ключ"
+    },
+    {
+      "name": "crypto_menu_fingerprint_copy",
+      "value": "Копировать фингерпринт"
+    },
+    {
+      "name": "crypto_menu_fingerprint_distrust",
+      "value": "Недопустимый отпечаток"
+    },
+    {
+      "name": "crypto_menu_fingerprint_trust",
+      "value": "Доверять отпечатку"
+    },
+    {
+      "name": "crypto_msg_omemo_session_setup_failed",
+      "value": "Настройка сеанса OMEMO не удалась! %1$s"
+    },
+    {
+      "name": "crypto_msg_omemo_session_untrusted",
+      "value": "Найден доверенный приятель ZERO для получения сообщений OMEMO!"
+    },
+    {
+      "name": "crypto_msg_omemo_session_unverified",
+      "value": "Отправка сообщений OMEMO некоторым неизвестным друзьям с непроверенными отпечатками пальцев!"
+    },
+    {
+      "name": "crypto_msg_omemo_session_unverified_untrusted",
+      "value": "MultiUserChat с некоторыми друзьями не доверенными или с непроверенными отпечатками пальцев!"
+    },
+    {
+      "name": "crypto_msg_omemo_session_verified",
+      "value": "*** Все приятели прошли проверку подлинности! ***"
+    },
+    {
+      "name": "crypto_fingerprint_status",
+      "value": "Проверено: %1$s"
+    },
+    {
+      "name": "crypto_no_key_present",
+      "value": "Отсутствует ключ"
+    },
+    {
+      "name": "crypto_fingerprint_copy",
+      "value": "Фингерпринт скопирован в буфер обмена!"
+    },
+    {
+      "name": "crypto_omemo_distrust_messaging_stop",
+      "value": "Остановить дальнейшую отправку сообщения OMEMO другу: %1$s"
+    },
+    {
+      "name": "crypto_omemo_trust_messaging_resume",
+      "value": "Возобновить отправку сообщения OMEMO собеседнику: %1$s"
+    },
+    {
+      "name": "advanced",
+      "value": "Дополнительно"
+    },
+    {
+      "name": "settings_expert",
+      "value": "Расширенные настройки"
+    },
+    {
+      "name": "settings_expert_summary",
+      "value": "Пожалуйста, будьте осторожны с данными настройками"
+    },
+    {
+      "name": "port",
+      "value": "Порт"
+    },
+    {
+      "name": "protocol",
+      "value": "Протокол"
+    },
+    {
+      "name": "opus",
+      "value": "Opus"
+    },
+    {
+      "name": "opus_sampling_rate",
+      "value": "Частота дискретизации"
+    },
+    {
+      "name": "opus_bitrate",
+      "value": "Средний битрейт кодировщика (kbps)"
+    },
+    {
+      "name": "opus_complexity",
+      "value": "сложность кодирования"
+    },
+    {
+      "name": "opus_min_expected_packet_loss",
+      "value": "Минимальная ожидаемая потеря пакетов (%)"
+    },
+    {
+      "name": "opus_encoder_settings",
+      "value": "Настроить настройки энкодера Opus"
+    },
+    {
+      "name": "opus_use_dtx",
+      "value": "Использовать DTX"
+    },
+    {
+      "name": "opus_use_fec",
+      "value": "Использовать inband FEC"
+    },
+    {
+      "name": "silk",
+      "value": "Silk"
+    },
+    {
+      "name": "silk_encoder_settings",
+      "value": "Настройка параметров Silk encoder"
+    },
+    {
+      "name": "silk_use_fec",
+      "value": "Использовать inband FEC"
+    },
+    {
+      "name": "silk_assume_pl",
+      "value": "Всегда предполагать потерю пакетов"
+    },
+    {
+      "name": "silk_fec_sat",
+      "value": "Порог активности речи (0–1)"
+    },
+    {
+      "name": "silk_fec_advertise",
+      "value": "Рекламировать поддержку FEC в SDP"
+    },
+    {
+      "name": "battery_optimizations",
+      "value": "Оптимизация аккумулятора"
+    },
+    {
+      "name": "battery_optimizations_dialog",
+      "value": "У вашего устройства оптимизация использования аккумулятора на aTalk; это может привести к задержке уведомлений или потерям сообщения.\n\nРекомендуется отключить эту оптимизацию для aTalk."
+    },
+    {
+      "name": "battery_optimization_on",
+      "value": "aTalk будет переведен в режим сна, когда устройство перейдет в режим ожидания. Перезапустите aTalk вручную, чтобы получать новые сообщения."
+    },
+    {
+      "name": "device_does_not_support_battery_op",
+      "value": "Ваше устройство не поддерживает отказ от оптимизации батареи"
+    },
+    {
+      "name": "disable",
+      "value": "Отключить"
+    },
+    {
+      "name": "next",
+      "value": "Далее"
+    },
+    {
+      "name": "app_info",
+      "value": "App Info…"
+    },
+    {
+      "name": "permission_app_info",
+      "value": "Информация о приложении"
+    },
+    {
+      "name": "permission_request_all",
+      "value": "Запрос всех разрешений"
+    },
+    {
+      "name": "permission_audio",
+      "value": "Аудио"
+    },
+    {
+      "name": "permission_camera",
+      "value": "Камера"
+    },
+    {
+      "name": "permission_contacts",
+      "value": "Контакты"
+    },
+    {
+      "name": "permission_location",
+      "value": "Местоположение"
+    },
+    {
+      "name": "permission_microphone",
+      "value": "Микрофон"
+    },
+    {
+      "name": "permission_music",
+      "value": "Музыка и аудио"
+    },
+    {
+      "name": "permission_notifications",
+      "value": "Уведомления"
+    },
+    {
+      "name": "permission_phone",
+      "value": "Телефон"
+    },
+    {
+      "name": "permission_video",
+      "value": "Фото и видео"
+    },
+    {
+      "name": "permission_storage",
+      "value": "Хранение"
+    },
+    {
+      "name": "permission_hint",
+      "value": "Для максимальной производительности и полной поддержки приложений, aTalk требует предоставления разрешений для следующих служб. Без них aTalk может не работать или может иметь неожиданное поведение!"
+    },
+    {
+      "name": "permission_denied",
+      "value": "DENIED"
+    },
+    {
+      "name": "permission_granted",
+      "value": "GRANTED"
+    },
+    {
+      "name": "permission_denied_permanently",
+      "value": "ПОСТОЯННО ЗАЩИЩЕН"
+    },
+    {
+      "name": "permission_unknown",
+      "value": "UNKNOWN"
+    },
+    {
+      "name": "mic_permission_denied_dialog_title",
+      "value": "Запрос разрешения звука"
+    },
+    {
+      "name": "mic_permission_denied_feedback",
+      "value": "Звуковой вызов не будет доступен, пока вы не предоставите запрос на разрешение"
+    },
+    {
+      "name": "camera_permission_denied_dialog_title",
+      "value": "Запрос разрешения камеры"
+    },
+    {
+      "name": "camera_permission_denied_feedback",
+      "value": "все связанные с камерой действия не будут доступны, пока вы не предоставите запрос на разрешение"
+    },
+    {
+      "name": "contacts_permission_denied_dialog_title",
+      "value": "Запрос на доступ к контактам"
+    },
+    {
+      "name": "contacts_permission_denied_feedback",
+      "value": "Требуется разрешение для доступа к телефону и настройки вызова"
+    },
+    {
+      "name": "music_permission_denied_dialog_title",
+      "value": "Запрос разрешения на музыку и аудио"
+    },
+    {
+      "name": "music_permission_denied_feedback",
+      "value": "Мультимедийный аудиофайл недоступен, пока вы не предоставите запрос на разрешение."
+    },
+    {
+      "name": "location_permission_denied_dialog_title",
+      "value": "Запрос разрешения на размещение"
+    },
+    {
+      "name": "location_permission_denied_feedback",
+      "value": "Функции GPS-Location не будут доступны, пока вы не предоставите запрос на разрешение"
+    },
+    {
+      "name": "notifications_permission_denied_dialog_title",
+      "value": "Запрос разрешения на уведомления"
+    },
+    {
+      "name": "notifications_permission_denied_feedback",
+      "value": "Уведомления от aTalk будут отключены, пока вы не предоставите запрос на разрешение."
+    },
+    {
+      "name": "phone_permission_denied_dialog_title",
+      "value": "Прочитать запрос разрешения состояния телефона"
+    },
+    {
+      "name": "phone_permission_denied_feedback",
+      "value": "Функции телефона не будут доступны, пока вы не предоставите запрос на разрешение"
+    },
+    {
+      "name": "video_permission_denied_dialog_title",
+      "value": "Запрос разрешения на фото и видео"
+    },
+    {
+      "name": "video_permission_denied_feedback",
+      "value": "Медиа-фото и видеофайлы недоступны, пока вы не предоставите запрос на разрешение."
+    },
+    {
+      "name": "storage_permission_denied_dialog_title",
+      "value": "Запрос разрешения на хранение"
+    },
+    {
+      "name": "storage_permission_denied_feedback",
+      "value": "Сохранение отправленного и полученного содержимого в хранилище не будет разрешено, пока вы не предоставите запрос на разрешение"
+    },
+    {
+      "name": "all_permission_denied_dialog_title",
+      "value": "Запрос всех разрешений"
+    },
+    {
+      "name": "all_permissions_denied_feedback",
+      "value": "aTalk может работать некорректно или может иметь неожиданное поведение, поскольку некоторые службы были отклонены!\nЕсли вы выбрали опцию «Не разрешаете повторно», вам нужно перейти в Настройки Android -> APP INFO для aTalk, чтобы разрешить доступ к ресурсу"
+    },
+    {
+      "name": "permission_denied_all_alert",
+      "value": "aTalk не будет работать должным образом. Вы отклонили aTalk всех разрешений\nВам нужно перейти к настройкам Android -> APP INFO для aTalk, чтобы разрешить доступ к ресурсу."
+    },
+    {
+      "name": "permission_rationale_message",
+      "value": "Вам предоставляется каждая услуга, необходимая для aTalk; разрешите aTalk получить доступ к этим службам для поддержки всех поддерживаемых функций"
+    },
+    {
+      "name": "permission_rationale_settings_button_text",
+      "value": "НАСТРОЙКИ"
+    },
+    {
+      "name": "permission_rationale_title",
+      "value": "aTalk нужны разрешения"
+    },
+    {
+      "name": "location_permission_dialog_title",
+      "value": "Требуется разрешение на размещение"
+    },
+    {
+      "name": "location_permission_dialog_message",
+      "value": "Включить разрешение на размещение сейчас?"
+    },
+    {
+      "name": "location_services_off",
+      "value": "Услуги по размещению"
+    },
+    {
+      "name": "open_location_settings",
+      "value": "Включить услуги определения местоположения?"
+    },
+    {
+      "name": "changelog_full_title",
+      "value": "Изменения"
+    },
+    {
+      "name": "changelog_title",
+      "value": "Что нового"
+    },
+    {
+      "name": "changelog_show_full",
+      "value": "Подробнее…"
+    },
+    {
+      "name": "changelog_version_format",
+      "value": "Версия <xliff:g id=\"version_name\">%s</xliff:g>"
+    }
+  ]
+}

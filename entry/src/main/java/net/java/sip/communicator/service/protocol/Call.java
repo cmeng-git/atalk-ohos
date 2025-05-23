@@ -5,8 +5,6 @@
  */
 package net.java.sip.communicator.service.protocol;
 
-import android.text.TextUtils;
-
 import net.java.sip.communicator.service.protocol.event.CallChangeEvent;
 import net.java.sip.communicator.service.protocol.event.CallChangeListener;
 import net.java.sip.communicator.service.protocol.event.CallPeerChangeEvent;
@@ -14,6 +12,7 @@ import net.java.sip.communicator.service.protocol.event.CallPeerEvent;
 import net.java.sip.communicator.service.protocol.event.SoundLevelListener;
 import net.java.sip.communicator.util.DataObject;
 
+import org.apache.http.util.TextUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jivesoftware.smackx.jingle.JingleManager;
 

@@ -1,6 +1,6 @@
 /*
  * aTalk, android VoIP and Instant Messaging client
- * Copyright 2014 Eng Chong Meng
+ * Copyright 2024 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,12 @@
  */
 package org.atalk.ohos.plugin.geolocation;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.location.Location;
-import android.text.TextUtils;
+import ohos.app.Context;
+import ohos.data.DatabaseHelper;
+import ohos.data.preferences.Preferences;
+import ohos.location.Location;
+
+import org.apache.http.util.TextUtils;
 
 /**
  * Class implementation to save/retrieve last known GeoLocation
@@ -31,7 +33,7 @@ public class GeoPreferenceUtil
     private static final String LAST_KNOWN_LOCATION = "last_known_location";
     private static final String GPS = "GPS";
     private static final String PREF_NAME = "geolocation";
-    private final SharedPreferences mPreferences;
+    private final Preferences mPreferences;
     private static GeoPreferenceUtil instance;
 
     public static GeoPreferenceUtil getInstance(Context context) {
@@ -42,7 +44,8 @@ public class GeoPreferenceUtil
     }
 
     private GeoPreferenceUtil(Context context) {
-        mPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        DatabaseHelper dbHelper =  new DatabaseHelper(context);
+        mPreferences = dbHelper.getPreferences(PREF_NAME);
     }
 
     public Location getLastKnownLocation() {
@@ -51,7 +54,7 @@ public class GeoPreferenceUtil
             return null;
         else {
             String[] latLong = locationString.split(",");
-            Location location = new Location(GPS);
+            Location location = new Location(0, 0);
             location.setLatitude(Double.parseDouble(latLong[0]));
             location.setLongitude(Double.parseDouble(latLong[1]));
             location.setAltitude((latLong.length == 3)? Double.parseDouble(latLong[2]) : 0.0f);
@@ -60,6 +63,6 @@ public class GeoPreferenceUtil
     }
     public void saveLastKnownLocation(Location location) {
         String geoLocation = location.getLatitude() + "," + location.getLongitude() + "," + location.getAltitude();
-        mPreferences.edit().putString(LAST_KNOWN_LOCATION, geoLocation).apply();
+        mPreferences.putString(LAST_KNOWN_LOCATION, geoLocation).flush();
     }
 }

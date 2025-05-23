@@ -1,15 +1,26 @@
 /*
- * aTalk / Jitsi, the OpenSource Java VoIP and Instant Messaging client.
+ * aTalk, ohos VoIP and Instant Messaging client
+ * Copyright 2024 Eng Chong Meng
  *
- * Distributable under LGPL license. See terms of license at gnu.org.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package net.java.sip.communicator.service.protocol;
 
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-
-import androidx.annotation.NonNull;
+import ohos.data.rdb.RdbPredicates;
+import ohos.data.rdb.RdbStore;
+import ohos.data.rdb.ValuesBucket;
+import ohos.data.resultset.ResultSet;
+import ohos.utils.zson.ZSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,13 +36,11 @@ import net.java.sip.communicator.util.ServiceUtils;
 import net.java.sip.communicator.util.account.AccountUtils;
 
 import org.apache.commons.lang3.StringUtils;
-import org.atalk.ohos.R;
+import org.atalk.ohos.ResourceTable;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.account.settings.BoshProxyDialog;
 import org.atalk.service.configuration.ConfigurationService;
 import org.atalk.service.neomedia.SrtpControlType;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.jxmpp.jid.DomainBareJid;
 import org.jxmpp.jid.EntityBareJid;
 import org.osgi.framework.BundleContext;
@@ -96,11 +105,10 @@ public class AccountID {
 
     protected String avatarHash;
     protected String rosterVersion;
-    protected String otrFingerprint;
 
     protected String statusMessage = "status_Message";
 
-    protected JSONObject mKeys = new JSONObject();
+    protected final ZSONObject mKeys;
 
 
     /**
@@ -185,14 +193,10 @@ public class AccountID {
         this.accountUuid = accountProperties.get(ProtocolProviderFactory.ACCOUNT_UUID);
         this.accountUid = accountProperties.get(ProtocolProviderFactory.ACCOUNT_UID);
 
-        JSONObject tmp = new JSONObject();
+        ZSONObject tmp = new ZSONObject();
         String strKeys = accountProperties.get(ProtocolProviderFactory.KEYS);
         if (StringUtils.isNotEmpty(strKeys)) {
-            try {
-                tmp = new JSONObject(strKeys);
-            } catch (JSONException e) {
-                Timber.w("Cannot convert JSONObject from: %s", strKeys);
-            }
+            tmp = ZSONObject.stringToZSON(strKeys);
         }
         mKeys = tmp;
         Timber.d("### Set Account UUID to: %s: %s for %s", accountUuid, accountUid, userID);
@@ -508,7 +512,6 @@ public class AccountID {
      *
      * @return a string representation of this account id.
      */
-    @NonNull
     @Override
     public String toString() {
         return getAccountUid();
@@ -612,7 +615,7 @@ public class AccountID {
      */
     public String getDnssMode() {
         return getAccountPropertyString(ProtocolProviderFactory.DNSSEC_MODE,
-                aTalkApp.getAppResources().getStringArray(R.array.dnssec_Mode_value)[0]);
+                aTalkApp.getInstance().getStringArray(ResourceTable.Strarray_dnssec_Mode_value)[0]);
     }
 
     /**
@@ -1084,7 +1087,7 @@ public class AccountID {
         ProtocolProviderFactory providerFactory
                 = ProtocolProviderFactory.getProtocolProviderFactory(bundleContext, accountID.getSystemProtocolName());
 
-        String password;
+        String password = null;
         String className = providerFactory.getClass().getName();
         String packageSourceName = className.substring(0, className.lastIndexOf('.'));
 
@@ -1198,14 +1201,14 @@ public class AccountID {
      * selected. Depending on the value of the <code>exactPrefixMatch</code> parameter the method will
      * (when false) or will not (when exactPrefixMatch is true) include property names that have
      * prefixes longer than the specified <code>prefix</code> param.
-     *
+     * <p>
      * Example:
      * Imagine a configuration service instance containing 2 properties only:<br>
      * <code>
      * net.java.sip.communicator.PROP1=value1<br>
      * net.java.sip.communicator.service.protocol.PROP1=value2
      * </code>
-     *
+     * <p>
      * A call to this method with a prefix="net.java.sip.communicator" and exactPrefixMatch=true
      * would only return the first property - net.java.sip.communicator.PROP1, whereas the same
      * call with exactPrefixMatch=false would return both properties as the second prefix includes
@@ -1238,14 +1241,14 @@ public class AccountID {
      * selected. Depending on the value of the <code>exactPrefixMatch</code> parameter the method will
      * (when false) or will not (when exactPrefixMatch is true) include property names that have
      * prefixes longer than the specified <code>prefix</code> param.
-     *
+     * <p>
      * Example:
      * Imagine a configuration service instance containing 2 properties only:<br>
      * <code>
      * net.java.sip.communicator.PROP1=value1<br>
      * net.java.sip.communicator.service.protocol.PROP1=value2
      * </code>
-     *
+     * <p>
      * A call to this method with a prefix="net.java.sip.communicator" and exactPrefixMatch=true
      * would only return the first property - net.java.sip.communicator.PROP1, whereas the same
      * call with exactPrefixMatch=false would return both properties as the second prefix includes
@@ -1275,14 +1278,14 @@ public class AccountID {
      * have the specified prefix. Depending on the value of the <code>exactPrefixMatch</code> parameter
      * the method will (when false) or will not (when exactPrefixMatch is true) include property
      * names that have prefixes longer than the specified <code>prefix</code> param.
-     *
+     * <p>
      * Example:
      * Imagine a configuration service instance containing 2 properties only:<br>
      * <code>
      * net.java.sip.communicator.PROP1=value1<br>
      * net.java.sip.communicator.service.protocol.PROP1=value2
      * </code>
-     *
+     * <p>
      * A call to this method with a prefix="net.java.sip.communicator" and exactPrefixMatch=true
      * would only return the first property - net.java.sip.communicator.PROP1, whereas the same call
      * with exactPrefixMatch=false would return both properties as the second prefix includes the
@@ -1419,45 +1422,46 @@ public class AccountID {
 
     /**
      * Create the new accountID based on two separate tables data i.e.
-     * accountID based on given cursor and accountProperties table
+     * accountID based on given resultSet and accountProperties table
      *
      * @param db aTalk SQLite Database
-     * @param cursor AccountID table cursor for properties extraction
+     * @param resultSet AccountID table resultSet for properties extraction
      * @param factory Account protocolProvider Factory
      *
      * @return the new AccountID constructed
      */
-    public static AccountID fromCursor(SQLiteDatabase db, Cursor cursor, ProtocolProviderFactory factory) {
-        String accountUuid = cursor.getString(cursor.getColumnIndexOrThrow(ACCOUNT_UUID));
+    public static AccountID fromResultSet(RdbStore db, ResultSet resultSet, ProtocolProviderFactory factory) {
+        String accountUuid = resultSet.getString(resultSet.getColumnIndexForName(ACCOUNT_UUID));
 
         Map<String, String> accountProperties = new Hashtable<>();
         accountProperties.put(ProtocolProviderFactory.ACCOUNT_UUID, accountUuid);
-        accountProperties.put(ProtocolProviderFactory.PROTOCOL, cursor.getString(cursor.getColumnIndexOrThrow(PROTOCOL)));
-        accountProperties.put(ProtocolProviderFactory.USER_ID, cursor.getString(cursor.getColumnIndexOrThrow(USER_ID)));
-        accountProperties.put(ProtocolProviderFactory.ACCOUNT_UID, cursor.getString(cursor.getColumnIndexOrThrow(ACCOUNT_UID)));
-        accountProperties.put(ProtocolProviderFactory.KEYS, cursor.getString(cursor.getColumnIndexOrThrow(KEYS)));
+        accountProperties.put(ProtocolProviderFactory.PROTOCOL, resultSet.getString(resultSet.getColumnIndexForName(PROTOCOL)));
+        accountProperties.put(ProtocolProviderFactory.USER_ID, resultSet.getString(resultSet.getColumnIndexForName(USER_ID)));
+        accountProperties.put(ProtocolProviderFactory.ACCOUNT_UID, resultSet.getString(resultSet.getColumnIndexForName(ACCOUNT_UID)));
+        accountProperties.put(ProtocolProviderFactory.KEYS, resultSet.getString(resultSet.getColumnIndexForName(KEYS)));
 
-        // Retrieve the remaining account properties from table
-        String[] args = {accountUuid};
-        cursor = db.query(TBL_PROPERTIES, null, ACCOUNT_UUID + "=?", args, null, null, null);
-        int columnName = cursor.getColumnIndex("Name");
-        int columnValue = cursor.getColumnIndex("Value");
+        RdbPredicates rdbPredicates = new RdbPredicates(AccountID.TABLE_NAME)
+                .equalTo(ACCOUNT_UUID, accountUuid);
+        resultSet = db.query(rdbPredicates, null);
 
-        while (cursor.moveToNext()) {
-            accountProperties.put(cursor.getString(columnName), cursor.getString(columnValue));
+        int columnName = resultSet.getColumnIndexForName("Name");
+        int columnValue = resultSet.getColumnIndexForName("Value");
+
+        while (resultSet.goToNextRow()) {
+            accountProperties.put(resultSet.getString(columnName), resultSet.getString(columnValue));
         }
-        cursor.close();
+        resultSet.close();
         return factory.createAccount(accountProperties);
     }
 
-    public ContentValues getContentValues() {
-        final ContentValues values = new ContentValues();
-        values.put(ACCOUNT_UUID, getAccountUuid());
-        values.put(PROTOCOL, protocolName);
-        values.put(USER_ID, mUserID);
-        values.put(ACCOUNT_UID, accountUid);
+    public ValuesBucket getValuesBucket() {
+        final ValuesBucket values = new ValuesBucket();
+        values.putString(ACCOUNT_UUID, getAccountUuid());
+        values.putString(PROTOCOL, protocolName);
+        values.putString(USER_ID, mUserID);
+        values.putString(ACCOUNT_UID, accountUid);
         synchronized (mKeys) {
-            values.put(KEYS, mKeys.toString());
+            values.putString(KEYS, mKeys.toString());
         }
         return values;
     }
@@ -1468,11 +1472,11 @@ public class AccountID {
 
     public String getKey(final String name) {
         synchronized (mKeys) {
-            return mKeys.optString(name, null);
+            return mKeys.getString(name);
         }
     }
 
-    public JSONObject getKeys() {
+    public ZSONObject getKeys() {
         return mKeys;
     }
 
@@ -1487,40 +1491,13 @@ public class AccountID {
 
     public boolean setKey(final String keyName, final String keyValue) {
         synchronized (mKeys) {
-            try {
-                mKeys.put(keyName, keyValue);
-                return true;
-            } catch (final JSONException e) {
-                return false;
-            }
+            return mKeys.put(keyName, keyValue) != null;
         }
     }
 
-    public String getOtrFingerprint() {
-        if (this.otrFingerprint == null) {
-            //			try {
-            //				if (this.mOtrService == null) {
-            //					return null;
-            //				}
-            //				final PublicKey publicKey = this.mOtrService.getPublicKey();
-            //				if (publicKey == null || !(publicKey instanceof DSAPublicKey)) {
-            return null;
-            //				}
-            //				this.otrFingerprint = new OtrCryptoEngineImpl().getFingerprint(publicKey)
-            //						.toLowerCase(Locale.US);
-            //				return this.otrFingerprint;
-            //			} catch (final OtrCryptoException ignored) {
-            //				return null;
-            //			}
-        }
-        else {
-            return this.otrFingerprint;
-        }
-    }
-
-    public boolean unsetKey(String key) {
+    public void unsetKey(String key) {
         synchronized (mKeys) {
-            return mKeys.remove(key) != null;
+            mKeys.remove(key);
         }
     }
 }

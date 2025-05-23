@@ -5,20 +5,13 @@
  */
 package org.atalk.ohos.gui.actionbar;
 
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
-import android.widget.ImageView;
-import android.widget.TextView;
+import ohos.aafwk.ability.Ability;
+import ohos.agp.components.Image;
+import ohos.agp.components.Text;
+import ohos.app.Context;
+import ohos.media.image.PixelMap;
 
-import androidx.annotation.DrawableRes;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.res.ResourcesCompat;
-
-import org.atalk.ohos.R;
+import org.atalk.ohos.ResourceTable;
 import org.atalk.ohos.util.AppImageUtil;
 
 import timber.log.Timber;
@@ -33,15 +26,15 @@ public class ActionBarUtil {
     /**
      * Sets the action bar title for the given activity.
      *
-     * @param activity the <code>Activity</code>, for which we set the action bar title
+     * @param activity the <code>Ability</code>, for which we set the action bar title
      * @param title the title string to set
      */
-    public static void setTitle(AppCompatActivity activity, CharSequence title) {
+    public static void setTitle(Ability activity, String title) {
         ActionBar actionBar = activity.getSupportActionBar();
         // Some activities don't have ActionBar
         if (actionBar != null) {
             if (actionBar.getCustomView() != null) {
-                TextView actionBarText = activity.findViewById(R.id.actionBarTitle);
+                Text actionBarText = activity.findComponentById(ResourceTable.Id_actionBarTitle);
                 if (actionBarText != null)
                     actionBarText.setText(title);
             }
@@ -56,13 +49,13 @@ public class ActionBarUtil {
      * b. The chat buddy last seen date or online status
      * c. Callee Jid during media call
      *
-     * @param activity the <code>Activity</code>, for which we set the action bar subtitle
+     * @param activity the <code>Ability</code>, for which we set the action bar subtitle
      * @param subtitle the subtitle string to set
      */
-    public static void setSubtitle(AppCompatActivity activity, String subtitle) {
+    public static void setSubtitle(Ability activity, String subtitle) {
         ActionBar actionBar = activity.getSupportActionBar();
         if (actionBar != null) {
-            TextView statusText = activity.findViewById(R.id.actionBarStatus);
+            Text statusText = activity.findComponentById(ResourceTable.Id_actionBarStatus);
             // statusText is null while search option is selected
             if (statusText != null) {
                 statusText.setText(subtitle);
@@ -76,19 +69,19 @@ public class ActionBarUtil {
     /**
      * Gets the action bar subTitle for the given activity.
      *
-     * @param activity the <code>Activity</code>, for which we get the action bar title
+     * @param activity the <code>Ability</code>, for which we get the action bar title
      *
      * @return the title string
      */
-    public static String getStatus(AppCompatActivity activity) {
+    public static String getStatus(Ability activity) {
         if (activity != null) {
             ActionBar actionBar = activity.getSupportActionBar();
             // Some activities don't have ActionBar
             if (actionBar == null)
                 return null;
 
-            TextView actionBarText = activity.findViewById(R.id.actionBarStatus);
-            return (actionBarText.getText().toString());
+            Text actionBarText = activity.findComponentById(ResourceTable.Id_actionBarStatus);
+            return (actionBarText.getText());
         }
         return null;
     }
@@ -102,26 +95,26 @@ public class ActionBarUtil {
      *
      * @return use online status
      */
-    public static boolean isOffline(AppCompatActivity activity) {
-        String offlineLabel = activity.getResources().getString(R.string.offline);
+    public static boolean isOffline(Ability activity) {
+        String offlineLabel = activity.getString(ResourceTable.String_offline);
         return offlineLabel.equals(ActionBarUtil.getStatus(activity));
     }
 
     /**
      * Set the action bar status for the given activity.
      *
-     * @param activity the <code>Activity</code>, for which we get the action bar title
+     * @param activity the <code>Ability</code>, for which we get the action bar title
      * @param statusIcon display Icon per the user status
      */
-    public static void setStatusIcon(AppCompatActivity activity, byte[] statusIcon) {
+    public static void setStatusIcon(Ability activity, byte[] statusIcon) {
         ActionBar actionBar = activity.getSupportActionBar();
         if (actionBar != null) {
-            Bitmap avatarStatusBmp = AppImageUtil.bitmapFromBytes(statusIcon);
+            PixelMap avatarStatusBmp = AppImageUtil.pixelMapFromBytes(statusIcon);
             if (avatarStatusBmp != null) {
-                ImageView actionBarStatus = activity.findViewById(R.id.globalStatusIcon);
+                Image actionBarStatus = activity.findComponentById(ResourceTable.Id_globalStatusIcon);
                 // actionBarStatus is null while search option is selected
                 if (actionBarStatus != null)
-                    actionBarStatus.setImageBitmap(avatarStatusBmp);
+                    actionBarStatus.setPixelMap(avatarStatusBmp);
             }
         }
     }
@@ -132,63 +125,62 @@ public class ActionBarUtil {
      * @param activity the current activity where the status should be displayed
      * @param avatar the avatar to display
      */
-    public static void setAvatar(AppCompatActivity activity, byte[] avatar) {
-        // The default avatar drawable for display on ActionBar
-        LayerDrawable avatarDrawable = getDefaultAvatarDrawable(activity);
+    public static void setAvatar(Ability activity, byte[] avatar) {
+        // The default avatar pixelMap for display on ActionBar
+        PixelMap avatarPixelMap = getDefaultAvatarPixelMap(activity);
 
         // cmeng: always clear old avatar picture when pager scroll to different chat fragment
-        // and invalidate Drawable for scrolled page to update Logo properly
+        // and invalidate pixelMap for scrolled page to update Logo properly
         // cmeng: 20200312: seems no necessary anymore? so disable it seems ok now
         // avatarDrawable.invalidateDrawable(avatarDrawable);
 
-        BitmapDrawable avatarBmp = null;
+        PixelMap avatarBmp = null;
         if (avatar != null) {
             if (avatar.length < 256 * 1024) {
-                avatarBmp = AppImageUtil.roundedDrawableFromBytes(avatar);
+                avatarBmp = AppImageUtil.getCircularPixelMapFromBytes(avatar);
             }
             else {
                 Timber.e("Avatar image is too large: %s", avatar.length);
             }
             if (avatarBmp != null) {
-                avatarDrawable.setDrawableByLayerId(R.id.avatarDrawable, avatarBmp);
+                avatarPixelMap.DrawableByLayerId(ResourceTable.Id_avatarDrawable, avatarBmp);
             }
             else {
-                Timber.e("Failed to get avatar drawable from bytes");
+                Timber.e("Failed to get avatar pixelMap from bytes");
             }
         }
         // set Logo is only available when there is no customView attached or during search
         ActionBar actionBar = activity.getSupportActionBar();
         if (actionBar != null) {
             if (actionBar.getCustomView() == null)
-                actionBar.setLogo(avatarDrawable);
+                actionBar.setLogo(avatarPixelMap);
             else {
-                ImageView logo = activity.findViewById(R.id.logo);
+                Image logo = activity.findComponentById(ResourceTable.Id_logo);
                 if (logo != null)
-                    logo.setImageDrawable(avatarDrawable);
+                    logo.setPixelMap(avatarPixelMap);
             }
         }
     }
 
-    public static void setAvatar(AppCompatActivity activity, @DrawableRes int resId) {
+    public static void setAvatar(Ability activity, int resId) {
         ActionBar actionBar = activity.getSupportActionBar();
         if (actionBar != null) {
             if (actionBar.getCustomView() == null)
                 actionBar.setLogo(resId);
             else {
-                ImageView logo = activity.findViewById(R.id.logo);
+                Image logo = activity.findComponentById(ResourceTable.Id_logo);
                 if (logo != null)
-                    logo.setImageResource(resId);
+                    logo.setPixelMap(resId);
             }
         }
     }
 
     /**
-     * Returns the default avatar {@link Drawable}
+     * Returns the default avatar {@link PixelMap}
      *
-     * @return the default avatar {@link Drawable}
+     * @return the default avatar {@link PixelMap}
      */
-    private static LayerDrawable getDefaultAvatarDrawable(AppCompatActivity activity) {
-        Resources res = activity.getResources();
-        return (LayerDrawable) ResourcesCompat.getDrawable(res, R.drawable.avatar_layer_drawable, null);
+    private static PixelMap getDefaultAvatarPixelMap(Context context) {
+        return AppImageUtil.getPixelMap(context, ResourceTable.Media_avatar);
     }
 }

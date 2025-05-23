@@ -5,10 +5,11 @@
  */
 package org.atalk.service.neomedia.recording;
 
+import ohos.utils.zson.ZSONObject;
+
 import androidx.annotation.NonNull;
 
 import org.atalk.util.MediaType;
-import org.json.JSONObject;
 
 /**
  * Represents an event related to media recording, such as a new SSRC starting to be recorded.
@@ -91,29 +92,29 @@ public class RecorderEvent
     }
 
     /**
-     * Constructs a <code>RecorderEvent</code> and tries to parse its fields from <code>json</code>.
+     * Constructs a <code>RecorderEvent</code> and tries to parse its fields from <code>zson</code>.
      *
-     * @param json a JSON object, containing fields with which to initialize the fields of this <code>RecorderEvent</code>.
+     * @param zson a ZSON object, containing fields with which to initialize the fields of this <code>RecorderEvent</code>.
      */
-    public RecorderEvent(JSONObject json)
+    public RecorderEvent(ZSONObject zson)
     {
-        type = Type.parseString(json.optString("type"));
+        type = Type.parseString(zson.getString("type"));
 
-        instant = json.optLong("instant", -1);
-        ssrc = json.optLong("ssrc", -1);
-        audioSsrc = json.optLong("audioSsrc", -1);
-        ntpTime = json.optLong("ntpTime", -1);
-        duration = json.optLong("duration", -1);
+        instant = zson.getLongValue("instant");
+        ssrc = zson.getLongValue("ssrc");
+        audioSsrc = zson.getLongValue("audioSsrc");
+        ntpTime = zson.getLongValue("ntpTime");
+        duration = zson.getLongValue("duration");
 
-        aspectRatio = AspectRatio.parseString(json.optString("aspectRatio"));
+        aspectRatio = AspectRatio.parseString(zson.getString("aspectRatio"));
 
-        filename = json.optString("filename", null);
-        participantName = json.optString("participantName", null);
-        participantDescription = json.optString("participantDescription", null);
-        endpointId = json.optString("endpointId", null);
+        filename = zson.getString("filename");
+        participantName = zson.getString("participantName");
+        participantDescription = zson.getString("participantDescription");
+        endpointId = zson.getString("endpointId");
 
-        mediaType = MediaType.parseString(json.optString("mediaType"));
-        disableOtherVideosOnTop = json.optBoolean("disableOtherVideosOnTop");
+        mediaType = MediaType.parseString(zson.getString("mediaType"));
+        disableOtherVideosOnTop = zson.getBooleanValue("disableOtherVideosOnTop");
     }
 
     public Type getType()
@@ -295,7 +296,7 @@ public class RecorderEvent
          */
         OTHER("OTHER");
 
-        private String name;
+        private final String name;
 
         Type(String name)
         {
@@ -326,8 +327,8 @@ public class RecorderEvent
         ASPECT_RATIO_4_3("4_3", 4. / 3),
         ASPECT_RATIO_UNKNOWN("UNKNOWN", 1.);
 
-        public double scaleFactor;
-        private String stringValue;
+        public final double scaleFactor;
+        private final String stringValue;
 
         AspectRatio(String stringValue, double scaleFactor)
         {

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:ohos="http://schemas.huawei.com/res/ohos">
+    <item
+        ohos:id="$+id:erase_contact_chat_history"
+        ohos:title="$string:history_erase_for_contact"
+        ohos:visible="false"/>
+    <item
+        ohos:id="$+id:erase_chatroom_history"
+        ohos:title="$string:chatroom_history_erase_per"
+        ohos:visible="false"/>
+    <item
+        ohos:id="$+id:ctx_menu_exit"
+        ohos:title="$string:cancel"/>
+</menu>

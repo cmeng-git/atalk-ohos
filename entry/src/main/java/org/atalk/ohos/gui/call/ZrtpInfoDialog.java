@@ -1,22 +1,29 @@
 /*
- * Jitsi, the OpenSource Java VoIP and Instant Messaging client.
+ * aTalk, ohos VoIP and Instant Messaging client
+ * Copyright 2024 Eng Chong Meng
  *
- * Distributable under LGPL license. See terms of license at gnu.org.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.atalk.ohos.gui.call;
 
-import android.content.Context;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-
-import java.awt.Component;
 import java.util.Iterator;
 import java.util.List;
+
+import ohos.agp.components.Component;
+import ohos.agp.components.LayoutScatter;
+import ohos.agp.window.dialog.BaseDialog;
+import ohos.agp.window.dialog.IDialog;
+import ohos.app.Context;
 
 import net.java.sip.communicator.service.protocol.Call;
 import net.java.sip.communicator.service.protocol.CallPeer;
@@ -30,9 +37,10 @@ import net.java.sip.communicator.service.protocol.event.CallPeerSecurityStatusEv
 import net.java.sip.communicator.service.protocol.event.CallPeerSecurityTimeoutEvent;
 import net.java.sip.communicator.service.protocol.media.MediaAwareCallPeer;
 
-import org.atalk.ohos.R;
-import org.atalk.ohos.gui.dialogs.BaseDialogFragment;
-import org.atalk.ohos.gui.util.ViewUtil;
+import org.atalk.ohos.BaseAbility;
+import org.atalk.ohos.ResourceTable;
+import org.atalk.ohos.gui.dialogs.DialogA;
+import org.atalk.ohos.util.ComponentUtil;
 import org.atalk.service.neomedia.MediaStream;
 import org.atalk.service.neomedia.SrtpControl;
 import org.atalk.service.neomedia.ZrtpControl;
@@ -42,25 +50,25 @@ import org.atalk.util.event.VideoListener;
 
 import timber.log.Timber;
 
+import static org.atalk.ohos.util.ComponentUtil.ensureVisible;
+import static org.atalk.ohos.util.ComponentUtil.setTextViewValue;
+
 /**
  * The dialog shows security information for ZRTP protocol. Allows user to verify/clear security authentication string.
  * It will be shown only if the call is secured (i.e. there is security control available).
- * Parent <code>Activity</code> should implement {@link SasVerificationListener} in order to receive SAS
+ * Parent <code>Ability</code> should implement {@link SasVerificationListener} in order to receive SAS
  * verification status updates performed by this dialog.
  *
- * @author Pawel Domas
  * @author Eng Chong Meng
  */
-public class ZrtpInfoDialog extends BaseDialogFragment implements CallPeerSecurityListener, VideoListener {
-    /**
-     * The extra key for call ID managed by {@link CallManager}.
-     */
-    private static final String EXTRA_CALL_KEY = "org.atalk.ohos.call_id";
+public class ZrtpInfoDialog implements CallPeerSecurityListener, VideoListener {
+    private final Context mContext;
+    private final String mCallKey;
 
     /**
      * The listener object that will be notified on SAS string verification status change.
      */
-    private SasVerificationListener verificationListener;
+    private SasVerificationListener mVerificationListener;
 
     /**
      * The {@link MediaAwareCallPeer} used by this dialog.
@@ -72,50 +80,20 @@ public class ZrtpInfoDialog extends BaseDialogFragment implements CallPeerSecuri
      */
     private ZrtpControl masterControl;
 
-    /**
-     * Dialog view container for ZRTP info display
-     */
-    private View viewContainer;
+    private Component zrtpComponent;
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
+    public ZrtpInfoDialog(Context context, String callKey) {
+        mContext = context;
+        mCallKey = callKey;
+
         if (context instanceof SasVerificationListener) {
-            verificationListener = (SasVerificationListener) context;
+            mVerificationListener = (SasVerificationListener) context;
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onDetach() {
-        verificationListener = null;
-        super.onDetach();
-    }
-
-    /**
-     * Notifies the listener(if any) about the SAS verification update.
-     *
-     * @param isVerified <code>true</code> if the SAS string has been verified by the user.
-     */
-    private void notifySasVerified(boolean isVerified) {
-        if (verificationListener != null)
-            verificationListener.onSasVerificationChanged(isVerified);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public DialogA create() {
         // Retrieves the call from manager.
-        String callKey = getArguments().getString(EXTRA_CALL_KEY);
-        Call call = CallManager.getActiveCall(callKey);
-
+        Call call = CallManager.getActiveCall(mCallKey);
         if (call != null) {
             // Gets first media aware call peer
             Iterator<? extends CallPeer> callPeers = call.getCallPeers();
@@ -134,49 +112,37 @@ public class ZrtpInfoDialog extends BaseDialogFragment implements CallPeerSecuri
             }
         }
 
-        viewContainer = inflater.inflate(R.layout.zrtp_info_dialog, container, false);
-        View cancelBtn = viewContainer.findViewById(R.id.zrtp_ok);
-        cancelBtn.setOnClickListener(view -> dismiss());
+        LayoutScatter scatter = LayoutScatter.getInstance(mContext);
+        zrtpComponent = scatter.parse(ResourceTable.Layout_zrtp_info_dialog, null, false);
 
-        View confirmBtn = viewContainer.findViewById(R.id.security_confirm);
-        confirmBtn.setOnClickListener(view -> {
-            if (mediaAwarePeer.getCall() == null)
-                return;
+        DialogA.Builder builder = new DialogA.Builder(mContext);
+        builder.setTitle(ResourceTable.String_security_info)
+                .setComponent(zrtpComponent)
+                .setNegativeButton(ResourceTable.String_ok, DialogA::remove);
 
-            // Confirms / clears SAS confirmation status
-            masterControl.setSASVerification(!masterControl.isSecurityVerified());
-            updateVerificationStatus();
-            notifySasVerified(masterControl.isSecurityVerified());
+        if (mediaAwarePeer == null || masterControl == null) {
+            setTextViewValue(zrtpComponent, ResourceTable.Id_security_cipher,
+                    "This call does not contain media/security information");
+            ComponentUtil.setTextViewColor(zrtpComponent, ResourceTable.Id_security_cipher, ResourceTable.Color_red);
+            return builder.create();
+        }
+
+        builder.setPositiveButton(ResourceTable.String_ok, dialog -> {
+            if (mediaAwarePeer.getCall() != null) {
+                // Confirms / clears SAS confirmation status
+                masterControl.setSASVerification(!masterControl.isSecurityVerified());
+                updateVerificationStatus();
+                notifySasVerified(masterControl.isSecurityVerified());
+            }
+            dialog.remove();
         });
-
-        if (getDialog() != null)
-            getDialog().setTitle(R.string.security_info);
-        return viewContainer;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (mediaAwarePeer == null) {
-            showToast("This call does not contain media information");
-            dismiss();
-            return;
-        }
-        if (masterControl == null) {
-            showToast("This call does not contain security information");
-            dismiss();
-            return;
-        }
 
         mediaAwarePeer.addCallPeerSecurityListener(this);
         mediaAwarePeer.getMediaHandler().addVideoListener(this);
 
-        ViewUtil.setTextViewValue(viewContainer, R.id.security_cipher,
-                getString(R.string.security_cipher, masterControl.getCipherString()));
-        ViewUtil.setTextViewValue(viewContainer, R.id.security_auth_str, getSecurityString());
+        setTextViewValue(zrtpComponent, ResourceTable.Id_security_cipher,
+                mContext.getString(ResourceTable.String_security_cipher, masterControl.getCipherString()));
+        setTextViewValue(zrtpComponent, ResourceTable.Id_security_auth_str, getSecurityString());
 
         updateVerificationStatus();
         boolean isAudioSecure = masterControl != null && masterControl.getSecureCommunicationStatus();
@@ -184,6 +150,32 @@ public class ZrtpInfoDialog extends BaseDialogFragment implements CallPeerSecuri
 
         MediaStream videoStream = mediaAwarePeer.getMediaHandler().getStream(MediaType.VIDEO);
         updateVideoSecureStatus(videoStream != null && videoStream.getSrtpControl().getSecureCommunicationStatus());
+
+        DialogA sDialog = builder.create();
+        sDialog.registerRemoveCallback(removeCallback);
+        return sDialog;
+    }
+
+    BaseDialog.RemoveCallback removeCallback = new BaseDialog.RemoveCallback() {
+        @Override
+        public void onRemove(IDialog iDialog) {
+            if (mediaAwarePeer != null) {
+                mediaAwarePeer.removeCallPeerSecurityListener(ZrtpInfoDialog.this);
+                mediaAwarePeer.getMediaHandler().removeVideoListener(ZrtpInfoDialog.this);
+            }
+            mVerificationListener = null;
+
+        }
+    };
+
+    /**
+     * Notifies the listener(if any) about the SAS verification update.
+     *
+     * @param isVerified <code>true</code> if the SAS string has been verified by the user.
+     */
+    private void notifySasVerified(boolean isVerified) {
+        if (mVerificationListener != null)
+            mVerificationListener.onSasVerificationChanged(isVerified);
     }
 
     /**
@@ -193,33 +185,11 @@ public class ZrtpInfoDialog extends BaseDialogFragment implements CallPeerSecuri
         boolean verified = masterControl.isSecurityVerified();
         Timber.d("Is sas verified? %s", verified);
 
-        String txt = verified ? getString(R.string.security_string_compared) : getString(R.string.security_compare_with_partner_short);
-        ViewUtil.setTextViewValue(viewContainer, R.id.security_compare, txt);
+        String txt = verified ? mContext.getString(ResourceTable.String_security_string_compared) : mContext.getString(ResourceTable.String_security_compare_with_partner_short);
+        setTextViewValue(zrtpComponent, ResourceTable.Id_security_compare, txt);
 
-        String confirmTxt = verified ? getString(R.string.security_clear) : getString(R.string.confirm);
-        ViewUtil.setTextViewValue(viewContainer, R.id.security_confirm, confirmTxt);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onStop() {
-        if (mediaAwarePeer != null) {
-            mediaAwarePeer.removeCallPeerSecurityListener(this);
-            mediaAwarePeer.getMediaHandler().removeVideoListener(this);
-        }
-        super.onStop();
-    }
-
-    /**
-     * Shows the toast on the screen with given <code>text</code>.
-     *
-     * @param text the message text that will be used.
-     */
-    private void showToast(String text) {
-        Toast toast = Toast.makeText(getActivity(), text, Toast.LENGTH_LONG);
-        toast.show();
+        String confirmTxt = verified ? mContext.getString(ResourceTable.String_security_clear) : mContext.getString(ResourceTable.String_confirm);
+        setTextViewValue(zrtpComponent, ResourceTable.Id_security_confirm, confirmTxt);
     }
 
     /**
@@ -230,12 +200,11 @@ public class ZrtpInfoDialog extends BaseDialogFragment implements CallPeerSecuri
     private String getSecurityString() {
         String securityString = masterControl.getSecurityString();
         if (securityString != null) {
-            final String sb = String.valueOf(
+            return String.valueOf(
                     securityString.charAt(0)) + ' ' +
                     securityString.charAt(1) + ' ' +
                     securityString.charAt(2) + ' ' +
                     securityString.charAt(3);
-            return sb;
         }
         else {
             return "";
@@ -248,11 +217,11 @@ public class ZrtpInfoDialog extends BaseDialogFragment implements CallPeerSecuri
      * @param isSecure <code>true</code> if the audio is secure.
      */
     private void updateAudioSecureStatus(boolean isSecure) {
-        String audioStr = isSecure ? getString(R.string.security_secure_audio) : getString(R.string.security_audio_not_secure);
+        String audioStr = isSecure ? mContext.getString(ResourceTable.String_security_secure_audio) : mContext.getString(ResourceTable.String_security_audio_not_secure);
 
-        ViewUtil.setTextViewValue(viewContainer, R.id.secure_audio_text, audioStr);
-        int iconId = isSecure ? R.drawable.secure_audio_on_light : R.drawable.secure_audio_off_light;
-        ViewUtil.setImageViewIcon(viewContainer, R.id.secure_audio_icon, iconId);
+        setTextViewValue(zrtpComponent, ResourceTable.Id_secure_audio_text, audioStr);
+        int iconId = isSecure ? ResourceTable.Media_secure_audio_on_light : ResourceTable.Media_secure_audio_off_light;
+        ComponentUtil.setImageViewIcon(zrtpComponent, ResourceTable.Id_secure_audio_icon, iconId);
     }
 
     /**
@@ -285,9 +254,8 @@ public class ZrtpInfoDialog extends BaseDialogFragment implements CallPeerSecuri
                 isVideo = (videos != null && !videos.isEmpty());
             }
         }
-
-        ViewUtil.ensureVisible(viewContainer, R.id.secure_video_text, isVideo);
-        ViewUtil.ensureVisible(viewContainer, R.id.secure_video_icon, isVideo);
+        ensureVisible(zrtpComponent, ResourceTable.Id_secure_video_text, isVideo);
+        ensureVisible(zrtpComponent, ResourceTable.Id_secure_video_icon, isVideo);
 
         /*
          * If there's no video skip this part, as controls will be hidden.
@@ -295,14 +263,17 @@ public class ZrtpInfoDialog extends BaseDialogFragment implements CallPeerSecuri
         if (!isVideo)
             return;
 
-        String videoText = isSecure ? getString(R.string.security_secure_video) : getString(R.string.security_video_not_secured);
-        runOnUiThread(() -> {
-            ViewUtil.setTextViewValue(viewContainer, R.id.secure_video_text, videoText);
+        String videoText = isSecure ? mContext.getString(ResourceTable.String_security_secure_video)
+                : mContext.getString(ResourceTable.String_security_video_not_secured);
+        BaseAbility.runOnUiThread(() -> {
+            setTextViewValue(zrtpComponent, ResourceTable.Id_secure_video_text, videoText);
 
-            ViewUtil.setImageViewIcon(viewContainer, R.id.secure_video_icon, isSecure
-                    ? R.drawable.secure_video_on_light : R.drawable.secure_video_off_light);
+            ComponentUtil.setImageViewIcon(zrtpComponent, ResourceTable.Id_secure_video_icon, isSecure
+                    ? ResourceTable.Media_secure_video_on_light : ResourceTable.Media_secure_video_off_light);
         });
     }
+
+    // === CallPeerSecurityListener === //
 
     /**
      * The handler for the security event received. The security event represents an indication of change in the
@@ -363,8 +334,10 @@ public class ZrtpInfoDialog extends BaseDialogFragment implements CallPeerSecuri
      * Refreshes video security displays on GUI thread.
      */
     private void refreshVideoOnUIThread() {
-        runOnUiThread(() -> updateVideoSecureStatus(isVideoSecure()));
+        BaseAbility.runOnUiThread(() -> updateVideoSecureStatus(isVideoSecure()));
     }
+
+    // === VideoListener === //
 
     /**
      * {@inheritDoc}
@@ -397,22 +370,5 @@ public class ZrtpInfoDialog extends BaseDialogFragment implements CallPeerSecuri
          * @param isVerified <code>true</code> if SAS is verified by the user.
          */
         void onSasVerificationChanged(boolean isVerified);
-    }
-
-    /**
-     * Creates new parametrized instance of {@link ZrtpInfoDialog}.
-     *
-     * @param callKey the call key managed by {@link CallManager}.
-     *
-     * @return parametrized instance of <code>ZrtpInfoDialog</code>.
-     */
-    public static ZrtpInfoDialog newInstance(String callKey) {
-        ZrtpInfoDialog infoDialog = new ZrtpInfoDialog();
-
-        Bundle arguments = new Bundle();
-        arguments.putString(EXTRA_CALL_KEY, callKey);
-        infoDialog.setArguments(arguments);
-
-        return infoDialog;
     }
 }

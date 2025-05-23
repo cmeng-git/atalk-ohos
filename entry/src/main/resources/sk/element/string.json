@@ -1,0 +1,4816 @@
+{
+  "string": [
+    {
+      "name": "accept_call_video",
+      "value": "Prijmite hovor s videom"
+    },
+    {
+      "name": "account_delete_on_server",
+      "value": "Odstrániť účet na serveri"
+    },
+    {
+      "name": "account_delete_on_server_unregistered",
+      "value": "Odstránenie účtu na serveri zlyhalo, používateľ nie je zaregistrovaný!"
+    },
+    {
+      "name": "account_delete_on_server_failed",
+      "value": "Odstránenie účtu na serveri zlyhalo:\n%1$s"
+    },
+    {
+      "name": "account_delete_on_server_successful",
+      "value": "Úspešné odstránenie účtu na serveri:\n%1$s"
+    },
+    {
+      "name": "account_show_password",
+      "value": "Ukázať heslo"
+    },
+    {
+      "name": "account_server_override",
+      "value": "Prestaviť pripojenie servera"
+    },
+    {
+      "name": "account_ibr_on_server",
+      "value": "Zaregistrujte nový účet na serveri"
+    },
+    {
+      "name": "account_server_ip",
+      "value": "Meno alebo IP adresa servera"
+    },
+    {
+      "name": "ibr_registration",
+      "value": "IB Registrácia"
+    },
+    {
+      "name": "captcha_ibr_request",
+      "value": "Registračná-Captcha"
+    },
+    {
+      "name": "captcha_ibr_failed",
+      "value": "Registračná-Captcha zlyhala!\n %1$s"
+    },
+    {
+      "name": "captcha_ibr_success",
+      "value": "Registračná-Captcha je úspešná.\n Môžete sa teraz pokračovať k prihláseniu!"
+    },
+    {
+      "name": "captcha_ibr_reason",
+      "value": "Inband registrácia bola vyžiadaná používateľom"
+    },
+    {
+      "name": "captcha_ibr_pwd_empty",
+      "value": "Chyba: pole pre heslo je prázdne!"
+    },
+    {
+      "name": "captcha_ibr_hint",
+      "value": "Zadajte text, ktorý vidíte"
+    },
+    {
+      "name": "captcha_ibr_retry",
+      "value": "Kliknutím na tlačidlo „OK“ skúste znova alebo kliknutím na tlačidlo „Zrušiť“ skončíte"
+    },
+    {
+      "name": "captcha_challenge",
+      "value": "Captcha výzva"
+    },
+    {
+      "name": "captcha_protected",
+      "value": "Diskusnej miestnosť je chránená výzvou captcha"
+    },
+    {
+      "name": "captcha_text_empty",
+      "value": "Text captcha nemôže byť prázdny"
+    },
+    {
+      "name": "captcha_verification_valid",
+      "value": "Overenie CAPTCHA je platné"
+    },
+    {
+      "name": "captcha_verification_failed",
+      "value": "Overenie CAPTCHA zlyhalo"
+    },
+    {
+      "name": "captcha_wait_timeout",
+      "value": "%1$s CAPTCHA vypršal časový limit výzvy;\nProsim znovu sa pripojte k diskusnej miestnosti a skúste to znova."
+    },
+    {
+      "name": "choose_network",
+      "value": "Vyberte sieť"
+    },
+    {
+      "name": "encrypt_tooltip",
+      "value": "Šifrovať rozhovor"
+    },
+    {
+      "name": "encrypt_choices",
+      "value": "Možnosti šifrovania"
+    },
+    {
+      "name": "encrypt_unencrypted",
+      "value": "nešifrované"
+    },
+    {
+      "name": "muc_name",
+      "value": "Meno"
+    },
+    {
+      "name": "network",
+      "value": "sieť"
+    },
+    {
+      "name": "notification_setting",
+      "value": "Nastavenia upozornení…"
+    },
+    {
+      "name": "open_file_no_application",
+      "value": "Nenašli sa žiadne aplikácie na otvorenie súboru"
+    },
+    {
+      "name": "password",
+      "value": "heslo"
+    },
+    {
+      "name": "password_change_on_server_failed",
+      "value": "Zmena hesla na serveri zlyhala:\n%1$s"
+    },
+    {
+      "name": "password_change_on_server_successful",
+      "value": "Zmena hesla na serveri úspešná!"
+    },
+    {
+      "name": "password_",
+      "value": "Heslo:"
+    },
+    {
+      "name": "send_process_signal",
+      "value": "Poslať procesný signál"
+    },
+    {
+      "name": "call_info",
+      "value": "Informácie o hovore"
+    },
+    {
+      "name": "call_info_zrtp",
+      "value": "\"Informácie o ZRTP"
+    },
+    {
+      "name": "osgi_framework_stop",
+      "value": "Zastaviť OSGi knižnicu"
+    },
+    {
+      "name": "save_password",
+      "value": "Uložiť heslo"
+    },
+    {
+      "name": "system_settings",
+      "value": "Nastavenie…"
+    },
+    {
+      "name": "username_hint",
+      "value": "pouzivatel@napriklad.sk"
+    },
+    {
+      "name": "username_",
+      "value": "Používateľské meno:"
+    },
+    {
+      "name": "call_hang_up",
+      "value": "Zaveste hovor"
+    },
+    {
+      "name": "call_on_hold",
+      "value": "Podržte hovor"
+    },
+    {
+      "name": "call_max_transfer",
+      "value": "Pre presmerovanie hovoru s obsluhou sú povolené maximálne 2 hovory!"
+    },
+    {
+      "name": "call_transfer_call",
+      "value": "Preniesť hovor"
+    },
+    {
+      "name": "call_transfer",
+      "value": "Prenos"
+    },
+    {
+      "name": "call_transfer_failed",
+      "value": "Prepojenie hovoru zlyhalo: %1$s ⇢ %2$s\n%3$s"
+    },
+    {
+      "name": "call_transfer_hint",
+      "value": "Vyberte názov kontaktu, ktorý si želáte preniesť a kliknite na \"Preniesť\""
+    },
+    {
+      "name": "call_transfer_msg",
+      "value": "%1$s presmerovanie hovoru na… %2$s"
+    },
+    {
+      "name": "attach_picture",
+      "value": "Obrázky"
+    },
+    {
+      "name": "attach_take_picture",
+      "value": "Vyfotiť obrázok"
+    },
+    {
+      "name": "attach_video",
+      "value": "Videá"
+    },
+    {
+      "name": "attach_record_video",
+      "value": "Zaznamenajte video"
+    },
+    {
+      "name": "attach_file",
+      "value": "Zdieľať súbor"
+    },
+    {
+      "name": "copy",
+      "value": "Kopírovať"
+    },
+    {
+      "name": "delete",
+      "value": "Vymazať"
+    },
+    {
+      "name": "edit",
+      "value": "Editovať"
+    },
+    {
+      "name": "forward",
+      "value": "Ďalej…"
+    },
+    {
+      "name": "chat_message_long_press_hint",
+      "value": "Vyhnite sa klikaniu v oblasti správ pre výber viacerých položiek"
+    },
+    {
+      "name": "quote",
+      "value": "Citovať"
+    },
+    {
+      "name": "reply",
+      "value": "Odpovedať"
+    },
+    {
+      "name": "select_all",
+      "value": "Vybrať všetko"
+    },
+    {
+      "name": "subject",
+      "value": "Predmet"
+    },
+    {
+      "name": "settings",
+      "value": "Nastavenie"
+    },
+    {
+      "name": "contact_block_text",
+      "value": "Chceli by ste zablokovať prijímanie správ od %1$s?"
+    },
+    {
+      "name": "contact_unblock_text",
+      "value": "Chceli by ste odblokovať '%1$s' a povoliť prijímanie správ?"
+    },
+    {
+      "name": "domain_blocking",
+      "value": "Použiť na všetky kontakty z: %1$s"
+    },
+    {
+      "name": "contact_block",
+      "value": "Zablokovať kontakt"
+    },
+    {
+      "name": "contact_unblock",
+      "value": "Odblokovať kontakt"
+    },
+    {
+      "name": "contact_blocked",
+      "value": "Kontakt zablokovaný"
+    },
+    {
+      "name": "block",
+      "value": "Zablokovať"
+    },
+    {
+      "name": "unblock",
+      "value": "Odblokovať"
+    },
+    {
+      "name": "block_list_title",
+      "value": "Zablokovať zoznam"
+    },
+    {
+      "name": "block_list_show",
+      "value": "Zobraziť zoznam blokov"
+    },
+    {
+      "name": "accept",
+      "value": "Súhlasiť"
+    },
+    {
+      "name": "account",
+      "value": "Účet"
+    },
+    {
+      "name": "account_me",
+      "value": "Ja"
+    },
+    {
+      "name": "account_settings",
+      "value": "Nastavenia účtu…"
+    },
+    {
+      "name": "account_unregistered",
+      "value": "%1$s nie je zaregistrovaný"
+    },
+    {
+      "name": "add",
+      "value": "Pridať"
+    },
+    {
+      "name": "add_contact",
+      "value": "Pridať kontakt"
+    },
+    {
+      "name": "add_contact_to_list",
+      "value": "Pridajte %1$s do svojho zoznamu kontaktov"
+    },
+    {
+      "name": "add_contact_to",
+      "value": "Pridajte kontakt do"
+    },
+    {
+      "name": "add_contact_failed",
+      "value": "Nepodarilo sa pridať kontakt s ID: %1$s"
+    },
+    {
+      "name": "add_contact_error",
+      "value": "Chyba pridávania kontaktu"
+    },
+    {
+      "name": "add_contact_error_exist",
+      "value": "Kontakt %1$s už vo vašom zozname kontaktov existuje."
+    },
+    {
+      "name": "add_contact_error_network",
+      "value": "Server neodpovedal na našu žiadosť o pridanie kontaktu s používateľom: %1$s ."
+    },
+    {
+      "name": "add_contact_error_not_supported",
+      "value": "Nepodarilo sa pridať kontakt s ID: %1$s . Operácia nie je podporovaná."
+    },
+    {
+      "name": "add_contact_error_not_connected",
+      "value": "Ak chcete pridať kontakt, musíte byť pripojení. Prihláste sa k vybranému poskytovateľovi a skúste to znova."
+    },
+    {
+      "name": "add_group_error_local",
+      "value": "Nepodarilo sa pridať skupinu s názvom: %1$s . Chyba sa vyskytla počas miestnej IO operácie."
+    },
+    {
+      "name": "add_group_error_exist",
+      "value": "Skupina %1$s už existuje vo vašom zozname kontaktov. Vyberte iné meno."
+    },
+    {
+      "name": "add_group_error_network",
+      "value": "Nepodarilo sa pridať skupinu s názvom: %1$s . Problém nastal kvôli zlyhaniu siete. Skontrolujte sieťové pripojenie a skúste to znova."
+    },
+    {
+      "name": "add_group_failed",
+      "value": "Nepodarilo sa pridať skupinu s názvom: %1$s ."
+    },
+    {
+      "name": "add_group_error_empty_name",
+      "value": "Názov skupiny nesmie byť prázdny."
+    },
+    {
+      "name": "add_group_create",
+      "value": "Vytvoriť skupinu"
+    },
+    {
+      "name": "add_group_name",
+      "value": "Zadajte názov skupiny"
+    },
+    {
+      "name": "answer",
+      "value": "Odpoveď\u2026"
+    },
+    {
+      "name": "apply",
+      "value": "Použiť"
+    },
+    {
+      "name": "apply_changes",
+      "value": "Použiť nastavenia účtu (~60S) …"
+    },
+    {
+      "name": "at",
+      "value": "na"
+    },
+    {
+      "name": "authentication_failed",
+      "value": "Autorizácia zlyhala pre %1$s . Zadané heslo nie je platné."
+    },
+    {
+      "name": "authentication_requested",
+      "value": "Vyžaduje sa overenie"
+    },
+    {
+      "name": "authentication_requested_by_server",
+      "value": "Server %1$s požiadal o vaše prihlásenie."
+    },
+    {
+      "name": "authentication_title",
+      "value": "Autentifikácia %1$s"
+    },
+    {
+      "name": "authorize",
+      "value": "Povoliť"
+    },
+    {
+      "name": "authorization_accepted",
+      "value": "Kontakt prijal vašu žiadosť o autorizáciu."
+    },
+    {
+      "name": "authorization_rejected",
+      "value": "Kontakt zamietol vašu žiadosť o autorizáciu."
+    },
+    {
+      "name": "authorization_requested",
+      "value": "Požiadavka o autorizáciu"
+    },
+    {
+      "name": "authorization_request_info",
+      "value": "Kontakt %1$s Vás prosí o vašu autorizáciu."
+    },
+    {
+      "name": "authorization_request",
+      "value": "Žiadosť o autorizáciu"
+    },
+    {
+      "name": "avatar_size_hint",
+      "value": "Odporúčaná ikona: 64 * 64 (maximálne 96 * 96 px)"
+    },
+    {
+      "name": "away",
+      "value": "Preč"
+    },
+    {
+      "name": "avatar_set_error",
+      "value": "Nepodarilo sa nastaviť avatar pre %1$s"
+    },
+    {
+      "name": "avatar_retrieving",
+      "value": "Načítava sa avatar pre %1$s"
+    },
+    {
+      "name": "busy",
+      "value": "Zaneprázdnený"
+    },
+    {
+      "name": "call_audio",
+      "value": "Zvukový hovor"
+    },
+    {
+      "name": "call_answered",
+      "value": "%1$s Používateľ prijal hovor."
+    },
+    {
+      "name": "call_disable_on_fault",
+      "value": "aTalk sa nepodarilo inicializovať %1$s\n Všetky mediálne hovory/služby budú vypnuté.\n %2$s"
+    },
+    {
+      "name": "call_ended",
+      "value": "Diaľkový volajúci hovor ukončil: %1$s"
+    },
+    {
+      "name": "call_error",
+      "value": "Vzdialená strana vracia chybu: %1$s"
+    },
+    {
+      "name": "call_failed",
+      "value": "Hovor zlyhal"
+    },
+    {
+      "name": "call_history_remove_before_date_warning",
+      "value": "Naozaj chcete vymazať všetky záznamy hovorov pred dátumom?: %1$s?"
+    },
+    {
+      "name": "call_history_name",
+      "value": "História hovorov"
+    },
+    {
+      "name": "call_history_remove_count",
+      "value": "počet vymazaných záznamov histórie hovorov: %1$s"
+    },
+    {
+      "name": "call_history_remove_none",
+      "value": "Na odstránenie nebol vybratý žiadny záznam"
+    },
+    {
+      "name": "call_history_remove_warning",
+      "value": "Ali ste prepričani, da želite očistiti vse izbrane zapise klicev?"
+    },
+    {
+      "name": "call_incoming",
+      "value": "Prichádzajúci hovor: %1$s"
+    },
+    {
+      "name": "call_incoming_status",
+      "value": "Prichádzajúci hovor"
+    },
+    {
+      "name": "call_initiating",
+      "value": "Začatie hovoru"
+    },
+    {
+      "name": "call_rejected",
+      "value": "%1$s Používateľ odmietol hovor."
+    },
+    {
+      "name": "call_retracted",
+      "value": "%1$s odvolal hovor.."
+    },
+    {
+      "name": "call_missed",
+      "value": "Zmeškané hovory od:"
+    },
+    {
+      "name": "call_no_active_device",
+      "value": "aTalk nenašiel žiadne aktívne audio/video zariadenia, a preto nemôže uskutočniť hovor."
+    },
+    {
+      "name": "call_no_audio_device",
+      "value": "Nie je nakonfigurované žiadne zvukové zariadenie."
+    },
+    {
+      "name": "call_no_audio_codec",
+      "value": "Nie je povolený žiadny zvukový kodek."
+    },
+    {
+      "name": "call_no_device_codec_H",
+      "value": "Zariadenie alebo kodek nie je správne nakonfigurovaný v 'Nastaveniach…': %1$s"
+    },
+    {
+      "name": "call_no_device_codec_Q",
+      "value": "Chcete pokračovať v hovore?"
+    },
+    {
+      "name": "call_no_matching_format",
+      "value": "V ponuke %1$s sa nenašli žiadne zodpovedajúce formáty médií, ktoré by mohli prijať hovor. Skontrolujte nastavenie zariadenia a kodeku v časti 'Nastavenia…'."
+    },
+    {
+      "name": "call_outgoing",
+      "value": "Odchádzajúci hovor"
+    },
+    {
+      "name": "call_outgoing_with",
+      "value": "Volanie s %1$s…"
+    },
+    {
+      "name": "call_video",
+      "value": "Videohovor"
+    },
+    {
+      "name": "call_via_",
+      "value": "Hovor cez: %1$s"
+    },
+    {
+      "name": "call_with",
+      "value": "Volajte s:"
+    },
+    {
+      "name": "cancel",
+      "value": "Zrušiť"
+    },
+    {
+      "name": "contact_invalid",
+      "value": "Vybraný kontakt nie je platný: %1$s"
+    },
+    {
+      "name": "dismiss",
+      "value": "Zavrieť hovor"
+    },
+    {
+      "name": "done",
+      "value": "Hotovo"
+    },
+    {
+      "name": "mark_as_read",
+      "value": "Označiť ako prečítané"
+    },
+    {
+      "name": "reason",
+      "value": "Dôvod:"
+    },
+    {
+      "name": "set",
+      "value": "Nastaviť"
+    },
+    {
+      "name": "share",
+      "value": "Zdieľam…"
+    },
+    {
+      "name": "share_text",
+      "value": "Zdieľajte text…"
+    },
+    {
+      "name": "share_file",
+      "value": "Zdieľajte súbor…"
+    },
+    {
+      "name": "snooze",
+      "value": "Zdriemnutie"
+    },
+    {
+      "name": "playback_error",
+      "value": "Nie je možné nájsť žiadny mediálny obsah na prehrávanie"
+    },
+    {
+      "name": "playback_buffering",
+      "value": "Ukladanie do vyrovnávacej pamäte…"
+    },
+    {
+      "name": "playback_completed",
+      "value": "Koniec prehrávania médií"
+    },
+    {
+      "name": "playback_rate",
+      "value": "Rýchlosť prehrávania: %1$s"
+    },
+    {
+      "name": "auto_join",
+      "value": "Automatické pripojenie"
+    },
+    {
+      "name": "change_nickname",
+      "value": "Zmena prezývky"
+    },
+    {
+      "name": "change_nickname_",
+      "value": "Zmena prezývky…"
+    },
+    {
+      "name": "change_nickname_error_conflict",
+      "value": "Prezývka už existuje"
+    },
+    {
+      "name": "change_nickname_error",
+      "value": "Chyba pri zmene prezývky pre %1$s: %2$s"
+    },
+    {
+      "name": "change_nickname_label",
+      "value": "Do poľa nižšie môžete zadať svoju novú prezývku."
+    },
+    {
+      "name": "change_nickname_null",
+      "value": "Obsah poľa Prezývka nemôže byť prázdny"
+    },
+    {
+      "name": "chatroom_change_info",
+      "value": "Zmeniť informácie o diskusií"
+    },
+    {
+      "name": "chatroom_change_subject",
+      "value": "Do poľa nižšie môžete zadať nový predmet pre túto miestnosť."
+    },
+    {
+      "name": "change_video_remote_quality",
+      "value": "Zmeňte kvalitu vzdialeného videa"
+    },
+    {
+      "name": "chatroom_conference_item",
+      "value": "Konferencia používateľa %1$s"
+    },
+    {
+      "name": "chatroom_conference",
+      "value": "Konferencie"
+    },
+    {
+      "name": "chatroom",
+      "value": "Diskusná miestnosť"
+    },
+    {
+      "name": "chatroom_already_joined",
+      "value": "Už ste sa pripojili k diskusnej miestnosti %1$s."
+    },
+    {
+      "name": "chatroom_configuration",
+      "value": "Konfigurácia diskusnej miestnosti"
+    },
+    {
+      "name": "chatroom_configuration_failed",
+      "value": "Nepodarilo sa získať konfiguračný formulár diskusnej miestnosti %1$s."
+    },
+    {
+      "name": "chatroom_configuration_forbidden",
+      "value": "Nepodarilo sa získať konfiguračný formulár diskusnej miestnosti %1$s. Konfiguračný formulár môžu vidieť a meniť iba vlastníci diskusnej miestnosti."
+    },
+    {
+      "name": "chatroom_configuration_members_edit_description",
+      "value": "Zoznam napravo obsahuje používateľov, ktorí majú v tejto diskusnej miestnosti úlohu člena. Ak je diskusná miestnosť iba pre členov, budú to používatelia, ktorí sa môžu pripojiť."
+    },
+    {
+      "name": "chatroom_configuration_members_edit_title",
+      "value": "Upraviť zoznam členov"
+    },
+    {
+      "name": "chatroom_configuration_submit_failed",
+      "value": "Pri pokuse o odoslanie konfiguračného formulára pre diskusnú miestnosť %1$s sa vyskytla chyba."
+    },
+    {
+      "name": "chatroom_remove_tooltip",
+      "value": "Odstráni vybratú miestnosť zo zoznamu uložených miestností"
+    },
+    {
+      "name": "chatroom_save_tooltip",
+      "value": "Uloží diskusnú miestnosť pre budúce použitie"
+    },
+    {
+      "name": "chatroom_send_message_forbidden",
+      "value": "Odosielanie správ je zakázané (hlas odvolaný)"
+    },
+    {
+      "name": "chatroom_user_joined",
+      "value": "sa pripojil k %1$s"
+    },
+    {
+      "name": "chatroom_user_kicked",
+      "value": "bol vyhodený z %1$s"
+    },
+    {
+      "name": "chatroom_user_left",
+      "value": "opustil %1$s"
+    },
+    {
+      "name": "chatroom_user_quit",
+      "value": "Používateľ skončil %1$s"
+    },
+    {
+      "name": "chatroom_name",
+      "value": "Názov miestnosti na rozhovor"
+    },
+    {
+      "name": "chatroom_name_info",
+      "value": "Do poľa nižšie zadajte názov miestnosti, ktorú chcete vytvoriť."
+    },
+    {
+      "name": "chatroom_not_exist",
+      "value": "Miestnosť %1$s sa nenašla na serveri %2$s. Skontrolujte, či je zadané meno správne."
+    },
+    {
+      "name": "chatroom_not_connected",
+      "value": "Ak sa chcete pripojiť k diskusnej miestnosti %1$s, musíte byť online."
+    },
+    {
+      "name": "chatroom_leave_not_connected",
+      "value": "Aby ste mohli opustiť miestnosť, musíte byť online."
+    },
+    {
+      "name": "chatroom_not_joined",
+      "value": "Aby ste s ňou mohli robiť ďalšie operácie, musíte sa pripojiť k diskusnej miestnosti."
+    },
+    {
+      "name": "chatroom_options",
+      "value": "Možnosti diskusnej miestnosti"
+    },
+    {
+      "name": "chatroom_required_password",
+      "value": "Diskusná miestnosť %1$s požiadala o heslo."
+    },
+    {
+      "name": "chatroom_status_disable",
+      "value": "Zakázať stav miestnosti"
+    },
+    {
+      "name": "chatroom_status_enable",
+      "value": "Zakázať stav miestnosti"
+    },
+    {
+      "name": "chatroom_subject_changed",
+      "value": "Predmet miestnosti zmenený: '%1$s ' => '%2$s '"
+    },
+    {
+      "name": "chatroom_nickname_changed",
+      "value": "%1$s je teraz známy ako %2$s"
+    },
+    {
+      "name": "clear_custom_messages",
+      "value": "Vymazať vlastné správy"
+    },
+    {
+      "name": "close",
+      "value": "Zavrieť"
+    },
+    {
+      "name": "close_all_active_chats",
+      "value": "Zatvorte všetky aktívne rozhovory"
+    },
+    {
+      "name": "close_current_chat",
+      "value": "Zatvorte aktuálnu reláciu rozhovoru"
+    },
+    {
+      "name": "connected",
+      "value": "Spojený"
+    },
+    {
+      "name": "connecting_",
+      "value": "Pripája sa %1$s"
+    },
+    {
+      "name": "connecting_status",
+      "value": "Pripojenie…"
+    },
+    {
+      "name": "connection_failed_message",
+      "value": "Prihlásenie k účtu zlyhalo: Meno používateľa: %1$s\n\nNázov servera: %2$s\nProsím skontrolujte sieťové pripojenie ALEBO sa obráťte na správcu siete, ktorý vám poskytne ďalšie informácie."
+    },
+    {
+      "name": "connecting",
+      "value": "Pripájanie"
+    },
+    {
+      "name": "contact_active",
+      "value": "** %1$s je aktívny v relácii rozhovoru"
+    },
+    {
+      "name": "contact_composing",
+      "value": "** %1$s píše správu"
+    },
+    {
+      "name": "contact_inactive",
+      "value": "** %1$s je dočasne preč"
+    },
+    {
+      "name": "contact_gone",
+      "value": "** %1$s opustil diskusiu"
+    },
+    {
+      "name": "contact_info",
+      "value": "Kontaktné informácie"
+    },
+    {
+      "name": "contact_name",
+      "value": "Kontakt JID alebo číslo"
+    },
+    {
+      "name": "contact_name_empty",
+      "value": "Zobrazovaný názov kontaktu nesmie byť prázdny."
+    },
+    {
+      "name": "contact_owner",
+      "value": "Vlastník kontaktu: %1$s"
+    },
+    {
+      "name": "contact_pause_typing",
+      "value": "** %1$s pozastavil písanie"
+    },
+    {
+      "name": "contact_rename",
+      "value": "Kontaktovať nové meno:"
+    },
+    {
+      "name": "contact_rename_tooltip",
+      "value": "Zadajte nové meno kontaktu"
+    },
+    {
+      "name": "contact_rename_title",
+      "value": "Zmeniť meno kontaktu"
+    },
+    {
+      "name": "contacts",
+      "value": "Kontakty"
+    },
+    {
+      "name": "contact_offline_hide",
+      "value": "Skryť odpojené kontakty"
+    },
+    {
+      "name": "contact_offline_show",
+      "value": "Zobraziť vypnuté kontakty"
+    },
+    {
+      "name": "copy_message_text",
+      "value": "Skopírujte text správy"
+    },
+    {
+      "name": "create",
+      "value": "Vytvoriť"
+    },
+    {
+      "name": "create_call_failed",
+      "value": "Hovor sa nepodarilo vytvoriť."
+    },
+    {
+      "name": "create_conference_call",
+      "value": "Vytvorte konferenčný hovor…"
+    },
+    {
+      "name": "create_conference_chat",
+      "value": "Vytvorte konferenčnú diskusiu…"
+    },
+    {
+      "name": "create_group",
+      "value": "Vytvoriť skupinu…"
+    },
+    {
+      "name": "create_group_name_invalid",
+      "value": "Neveljavno ime skupine: %1$s"
+    },
+    {
+      "name": "create_group_name",
+      "value": "Do poľa nižšie zadajte názov skupiny, ktorú chcete vytvoriť."
+    },
+    {
+      "name": "create_group_first_wizard",
+      "value": "Váš zoznam kontaktov neobsahuje žiadne skupiny. Najskôr vytvorte skupinu (Súbor/Vytvoriť skupinu)."
+    },
+    {
+      "name": "aboutDialog_help",
+      "value": "<a href=\"https://cmeng-git.github.io/atalk\">Online pomoc</a>"
+    },
+    {
+      "name": "About",
+      "value": "O programe"
+    },
+    {
+      "name": "version_",
+      "value": "Verzia %1$s"
+    },
+    {
+      "name": "help",
+      "value": "Pomoc"
+    },
+    {
+      "name": "check_new_version",
+      "value": "Skontrolujte aktualizáciu"
+    },
+    {
+      "name": "show_history_log",
+      "value": "História"
+    },
+    {
+      "name": "online_help",
+      "value": "Online pomoc"
+    },
+    {
+      "name": "delete_database",
+      "value": "Vymazať databázu"
+    },
+    {
+      "name": "http_authorization_request",
+      "value": "Žiadosť o autorizáciu HTTP"
+    },
+    {
+      "name": "http_authorization_request_instruction",
+      "value": "HTTP (%1$s) autorizácia pre %2$s\nOverovací kód: %3$s\nPrijali ste túto žiadosť o účet:\n%4$s?\n\nOverte stránku s identifikáciami ID, ak sú k dispozícii"
+    },
+    {
+      "name": "app_authors_fmt",
+      "value": "Autori: %1$s"
+    },
+    {
+      "name": "app_libraries",
+      "value": "aTalk používa nasledujúce knižnice tretích strán: %1$s"
+    },
+    {
+      "name": "app_revision_fmt",
+      "value": "Informácie o revízii: %1$s"
+    },
+    {
+      "name": "app_xep",
+      "value": "aTalk podporuje nasledujúce XEP: %1$s"
+    },
+    {
+      "name": "powered_by",
+      "value": "Poháňaný atalk.org"
+    },
+    {
+      "name": "chat_audio_buddy_offline",
+      "value": "Zvukový rozhovor s odpojeným príjemcom nie je povolený."
+    },
+    {
+      "name": "chat_audio_cancel",
+      "value": "< posunutím doľava\n zrušíte"
+    },
+    {
+      "name": "chat_audio_start_record",
+      "value": "Spustite nahrávanie"
+    },
+    {
+      "name": "latitude",
+      "value": "Zemepisná šírka:"
+    },
+    {
+      "name": "location",
+      "value": "Poloha:"
+    },
+    {
+      "name": "longitude",
+      "value": "Zemepisná dĺžka:"
+    },
+    {
+      "name": "altitude",
+      "value": "Nadmorská výška:"
+    },
+    {
+      "name": "geo_send",
+      "value": "Poslať GPS-polohu"
+    },
+    {
+      "name": "geo_street_views_map",
+      "value": "Street View & mapa"
+    },
+    {
+      "name": "geo_share",
+      "value": "Zdieľajte geografické polohy"
+    },
+    {
+      "name": "apply_new_location_setting",
+      "value": "Kliknutím na tlačidlo \\\"Nasledujte ma\\\" použijete nové nastavenie"
+    },
+    {
+      "name": "btn_center_map",
+      "value": "Vycentrujte na moju polohu"
+    },
+    {
+      "name": "btn_follow_me",
+      "value": "Nasledujte ma"
+    },
+    {
+      "name": "single_location_fix",
+      "value": "Oprava jedného miesta"
+    },
+    {
+      "name": "follow_me_start",
+      "value": "Nasleduj ma (%1$dm) @%2$dS"
+    },
+    {
+      "name": "follow_me_stop",
+      "value": "Prestaň ma sledovať (%1$dm) @%2$dS"
+    },
+    {
+      "name": "google_map",
+      "value": "GoogleMap"
+    },
+    {
+      "name": "legal_info",
+      "value": "Právne informácie"
+    },
+    {
+      "name": "play_service_not_installed",
+      "value": "Na tomto zariadení nie sú nainštalované služby Google Play."
+    },
+    {
+      "name": "split_street_view_panorama_and_map_description",
+      "value": "Ukazuje, ako zobraziť panorámu a mapu Street View."
+    },
+    {
+      "name": "split_street_view_panorama_and_map_label",
+      "value": "Panoráma a mapa ulíc"
+    },
+    {
+      "name": "map",
+      "value": "Mapa"
+    },
+    {
+      "name": "permission_location_rationale",
+      "value": "Prístup k službe určovania polohy je potrebný na preukázanie funkcie 'moja poloha', ktorá zobrazuje vašu aktuálnu polohu na mape."
+    },
+    {
+      "name": "permission_location_denied",
+      "value": "Táto vzorka vyžaduje povolenie polohy na povolenie vrstvy 'moja poloha '. Skúste to znova a povoľte prístup na používanie miesta.\n Ak bolo povolenie trvalo zamietnuté, je možné ho povoliť v nastaveniach systému; Aplikácie; 'Ukážky rozhrania Google Maps API '."
+    },
+    {
+      "name": "permission_location_required",
+      "value": "Pre toto ukážku sa vyžaduje povolenie polohy."
+    },
+    {
+      "name": "export_sql_db",
+      "value": "Export aTalk SQL databázy"
+    },
+    {
+      "name": "purge_debug_log",
+      "value": "Vyčistite Debug súbor"
+    },
+    {
+      "name": "purge_sql_db",
+      "value": "Vyčistiť aTalk SQL DataBase - nebezpečné!"
+    },
+    {
+      "name": "refresh_apply",
+      "value": "Použiť"
+    },
+    {
+      "name": "refresh_store",
+      "value": "Obnoviť trvalé úložiska…"
+    },
+    {
+      "name": "refresh_store_avatar",
+      "value": "XEP-0084/XEP-0153: Avatar"
+    },
+    {
+      "name": "refresh_store_caps",
+      "value": "XEP-0115: Entity Capabilities"
+    },
+    {
+      "name": "refresh_store_disc_info",
+      "value": "XEP-0030: Service Discovery"
+    },
+    {
+      "name": "refresh_store_hint",
+      "value": "Skontrolujte, či sa položka nedá vyčistiť a obnoviť v jej trvalom úložisku; Vykonajte iba v prípade potreby!\n"
+    },
+    {
+      "name": "refresh_store_roster",
+      "value": "XEP-0237: Roster"
+    },
+    {
+      "name": "refresh_store_omemo",
+      "value": "XEP-0384: OMEMO Encryption"
+    },
+    {
+      "name": "unregistered_message",
+      "value": "Prihlásenie k účtu zlyhalo:\nUžívateľské meno: %1$s\nServer Name: %2$s\nÚčet je odpojený."
+    },
+    {
+      "name": "create_videoBridge",
+      "value": "Vytvoriť video most…"
+    },
+    {
+      "name": "create_videoBridge_menu",
+      "value": "Vytvoriť video most"
+    },
+    {
+      "name": "create_join_video_conference",
+      "value": "Vytvoriť / Pripojiť sa k videokonferencii"
+    },
+    {
+      "name": "create_video_conference",
+      "value": "Vytvorte novú videokonferenciu pre túto diskusnú miestnosť"
+    },
+    {
+      "name": "video_format_not_supported",
+      "value": "Nepodarilo sa nastaviť ukážku kamery na: %1$s; Výnimka: %2$s."
+    },
+    {
+      "name": "disconnected",
+      "value": "Odpojený"
+    },
+    {
+      "name": "disconnecting_",
+      "value": "Odpojuje sa %1$s"
+    },
+    {
+      "name": "deny",
+      "value": "Odmietnuť"
+    },
+    {
+      "name": "display_name",
+      "value": "Zobraziť meno"
+    },
+    {
+      "name": "contact_display_name",
+      "value": "Zobrazovaný názov kontaktu"
+    },
+    {
+      "name": "do_not_disturb",
+      "value": "Nevyrušovať"
+    },
+    {
+      "name": "duration",
+      "value": "trvanie"
+    },
+    {
+      "name": "edit_status_message_tip",
+      "value": "Nastaviť stavovú správu"
+    },
+    {
+      "name": "edited",
+      "value": "upravená"
+    },
+    {
+      "name": "enter_name_or_number",
+      "value": "Zadajte meno alebo číslo"
+    },
+    {
+      "name": "error",
+      "value": "Chyba"
+    },
+    {
+      "name": "error_was_",
+      "value": "Chyba bola: %1$s"
+    },
+    {
+      "name": "exit",
+      "value": "Ukončiť aplikáciu"
+    },
+    {
+      "name": "extended_away",
+      "value": "Rozšírené"
+    },
+    {
+      "name": "free_for_chat",
+      "value": "Dostupný na diskusiu"
+    },
+    {
+      "name": "file_byte_sent",
+      "value": "Odoslané: %1$s"
+    },
+    {
+      "name": "file_receive_completed",
+      "value": "Súbor bol prijatý od %1$s"
+    },
+    {
+      "name": "file_receive_failed",
+      "value": "Pri prenose súboru z %1$s sa vyskytla chyba"
+    },
+    {
+      "name": "file_receive_from",
+      "value": "Prijíma sa súbor od %1$s"
+    },
+    {
+      "name": "file_send_completed",
+      "value": "Súbor bol úspešne odoslaný na %1$s"
+    },
+    {
+      "name": "file_send_declined",
+      "value": "%1$s odmietol tento súbor"
+    },
+    {
+      "name": "file_sending_to",
+      "value": "Odosiela sa súbor do %1$s"
+    },
+    {
+      "name": "file_transfer_accepted",
+      "value": "Prenos súboru bol prijatý"
+    },
+    {
+      "name": "file_transfer_canceled",
+      "value": "Prenos súboru bol zrušený"
+    },
+    {
+      "name": "file_transfer_preparing",
+      "value": "Príprava prenosu súboru s %1$s. Prosím čakajte…"
+    },
+    {
+      "name": "file_transfer_declined",
+      "value": "Prenos súboru bol zavrnil"
+    },
+    {
+      "name": "file_transfer_request_received",
+      "value": "%1$s s vami zdieľa súbor"
+    },
+    {
+      "name": "file_transfer_send_error",
+      "value": "Pri odosielaní súboru do %1$s sa vyskytla chyba"
+    },
+    {
+      "name": "file_transfer_waiting_acceptance",
+      "value": "Čaká sa na prijatie súboru %1$s"
+    },
+    {
+      "name": "purge",
+      "value": "Očistiť"
+    },
+    {
+      "name": "estimated_time_",
+      "value": "Odhadovaný čas: %1$s"
+    },
+    {
+      "name": "file",
+      "value": "Súbor"
+    },
+    {
+      "name": "file_delivery_error",
+      "value": "Vybratý súbor sa nepodarilo odoslať. %1$s"
+    },
+    {
+      "name": "file_does_not_exist",
+      "value": "Zadaný súbor sa nepodarilo nájsť. Bol odstránený alebo presunutý"
+    },
+    {
+      "name": "file_open_failed",
+      "value": "Nepodarilo sa otvoriť súbor. Môže sa odstrániť alebo presunúť"
+    },
+    {
+      "name": "file_open_no_application",
+      "value": "Aplikáciu spojenú s týmto typom súboru sa nepodarilo nájsť"
+    },
+    {
+      "name": "file_open_no_permission",
+      "value": "Nemáte dostatok povolení na otvorenie tohto súboru. Skontrolujte svoje oprávnenia na čítanie a skúste to znova"
+    },
+    {
+      "name": "file_transfer_not_secure",
+      "value": "XEP-0096: Protokol SI File Transfer nepodporuje odosielanie šifrovaných súborov!"
+    },
+    {
+      "name": "file_open_not_supported",
+      "value": "Operácia otvoreného súboru nie je súčasnou platformou zariadenia podporovaná"
+    },
+    {
+      "name": "file_send_client_error",
+      "value": "Chyba vzdialeného klienta v odoslanom súbore: %1$s"
+    },
+    {
+      "name": "file_send_failed",
+      "value": "Nepodarilo sa odoslať súbor: %1$s"
+    },
+    {
+      "name": "file_send_not_allow",
+      "value": "Počas konferenčného hovoru nie je možné odoslať súbor!"
+    },
+    {
+      "name": "file_attachment",
+      "value": "Odoslať prílohu"
+    },
+    {
+      "name": "file_size_too_big",
+      "value": "Veľkosť súboru presahuje maximum povolené pre tento protokol: %1$s"
+    },
+    {
+      "name": "file_transfer_active",
+      "value": "Prebieha prenos súborov. Sledovanie stavu @%1$s sa stratilo!"
+    },
+    {
+      "name": "file_transfer_not_supported",
+      "value": "Obráťte sa na klienta (%1$s) alebo server nepodporuje prenos súborov ani požadované protokoly"
+    },
+    {
+      "name": "finish",
+      "value": "Skončiť"
+    },
+    {
+      "name": "folder_not_exist",
+      "value": "Priečinok obsahujúci tento súbor sa nepodarilo nájsť. Bol odstránený alebo presunutý"
+    },
+    {
+      "name": "folder_open_failed",
+      "value": "Nepodarilo sa otvoriť priečinok"
+    },
+    {
+      "name": "folder_open_no_permission",
+      "value": "Na otvorenie tohto priečinka nemáte dostatok povolení. Skontrolujte svoje oprávnenia na čítanie a skúste to znova"
+    },
+    {
+      "name": "folder_open_no_application",
+      "value": "Nepodarilo sa nájsť aplikáciu na otvorenie tohto priečinka"
+    },
+    {
+      "name": "group_chat",
+      "value": "Skupinová diskusia"
+    },
+    {
+      "name": "hide",
+      "value": "Skryť"
+    },
+    {
+      "name": "history",
+      "value": "História"
+    },
+    {
+      "name": "history_contact",
+      "value": "História -%1$s"
+    },
+    {
+      "name": "history_off_for_contact",
+      "value": "Vypnite históriu pre tento kontakt"
+    },
+    {
+      "name": "history_off_all",
+      "value": "Vypnite históriu pre všetky diskusie a kontakty"
+    },
+    {
+      "name": "history_erase_for_contact",
+      "value": "Vymazať históriu pre tento kontakt"
+    },
+    {
+      "name": "history_erase_all",
+      "value": "Vymazať históriu rozhovorov všetkých kontaktov"
+    },
+    {
+      "name": "history_purge_for_contact_warning",
+      "value": "Naozaj chcete vymazať všetky vybraté správy pre %1$s?"
+    },
+    {
+      "name": "history_purge_all_warning",
+      "value": "Naozaj chcete vymazať všetky správy od všetkých entity?"
+    },
+    {
+      "name": "history_purge_count",
+      "value": "Počet odstránených záznamov histórie: %1$s"
+    },
+    {
+      "name": "history_purge_error",
+      "value": "Chyba pri odstraňovaní lokálne uložených správ pre %1$s."
+    },
+    {
+      "name": "history_purge_media",
+      "value": "Odstrániť médiá z môjho telefónu"
+    },
+    {
+      "name": "history_offline_warning",
+      "value": "Zatvorte a otvorte túto reláciu rozhovoru, aby ste si mohli prezerať správy MAM a offline, keď ste online"
+    },
+    {
+      "name": "chatroom_alternate_venue",
+      "value": "Miesto konania:"
+    },
+    {
+      "name": "chatroom_alternate_address",
+      "value": "V konverzácii môžete pokračovať v nasledujúcej miestnosti: %1$s"
+    },
+    {
+      "name": "chatroom_bookmark_title",
+      "value": "Záložky pre diskusie"
+    },
+    {
+      "name": "chatroom_bookmark",
+      "value": "Aáložka"
+    },
+    {
+      "name": "chatroom_auto_join",
+      "value": "Automatické pripojenie"
+    },
+    {
+      "name": "chatroom_bookmark_update_failed",
+      "value": "Nepodarilo sa aktualizovať záložky pre %1$s: %2$s"
+    },
+    {
+      "name": "chatroom_occupant",
+      "value": "Účastníci diskusie"
+    },
+    {
+      "name": "chatroom_history_erase_per",
+      "value": "Vymazať history tejto diskusie"
+    },
+    {
+      "name": "chatroom_history_erase_all",
+      "value": "Vymazať históriu všetkých diskusií"
+    },
+    {
+      "name": "chatroom_history_off_per",
+      "value": "Vypnite históriu pre túto diskusiu"
+    },
+    {
+      "name": "chatroom_info",
+      "value": "Info o diskusií"
+    },
+    {
+      "name": "chatroom_info_name",
+      "value": "Názov"
+    },
+    {
+      "name": "chatroom_info_subject",
+      "value": "Predmet"
+    },
+    {
+      "name": "chatroom_info_description",
+      "value": "Popis"
+    },
+    {
+      "name": "chatroom_info_occupants",
+      "value": "Účastníci"
+    },
+    {
+      "name": "chatroom_info_member_only",
+      "value": "Iba pre členov"
+    },
+    {
+      "name": "chatroom_info_moderated",
+      "value": "Moderovaná"
+    },
+    {
+      "name": "chatroom_info_non_anonymous",
+      "value": "Neanonymna"
+    },
+    {
+      "name": "chatroom_info_password_protected",
+      "value": "Chránené heslom"
+    },
+    {
+      "name": "chatroom_info_persistent",
+      "value": "vytrvalý"
+    },
+    {
+      "name": "chatroom_info_max_history_fetch",
+      "value": "Maximálna história"
+    },
+    {
+      "name": "chatroom_info_contact_jid",
+      "value": "Kontakt Jid"
+    },
+    {
+      "name": "chatroom_info_subject_modifiable",
+      "value": "Predmet je upraviteľný"
+    },
+    {
+      "name": "chatroom_info_language",
+      "value": "Jazyk"
+    },
+    {
+      "name": "chatroom_info_ldap_group",
+      "value": "Skupina LDAP"
+    },
+    {
+      "name": "chatroom_create",
+      "value": "Vytvorte diskusnú miestnosť…"
+    },
+    {
+      "name": "chatroom_create_error",
+      "value": "Nepodarilo sa vytvoriť diskusnú miestnosť pre:\n%1$s"
+    },
+    {
+      "name": "chatroom_create_join",
+      "value": "Vytvorte/Pripojte sa k diskusii"
+    },
+    {
+      "name": "chatroom_create_wizard",
+      "value": "Vytvorte sprievodcu diskusnou miestnosťou"
+    },
+    {
+      "name": "chatroom_destroy",
+      "value": "Zrušte diskusnú miestnosť"
+    },
+    {
+      "name": "chatroom_destroy_exception",
+      "value": "Pri rušení diskusnej miestnosti sa vyskytla chyba:\n%1$s"
+    },
+    {
+      "name": "chatroom_destroy_error",
+      "value": "Nepodarilo sa odstrániť diskusnú miestnosť na serveri:\n '%1$s '\n%2$s\n\nPokračujte v očistení miestneho chatRoom."
+    },
+    {
+      "name": "chatroom_destroy_message",
+      "value": "Tento skupinový rozhovor bol zničený!\nDôvod: %1$s"
+    },
+    {
+      "name": "chatroom_destroy_note",
+      "value": "Ak chcete informovať ostatných účastníkov, zadajte dôvod a miesto konania alternatívnej diskusie, ku ktorej sa chcete pripojiť."
+    },
+    {
+      "name": "chatroom_destroy_prompt",
+      "value": "Vlastník účtu: %1$s.\nNaozaj chcete zničiť\n '%2$s '\na celú jeho históriu rozhovorov?"
+    },
+    {
+      "name": "chatroom_destroy_reason",
+      "value": "neaktívny skupinový rozhovor"
+    },
+    {
+      "name": "chatroom_destroy_successful",
+      "value": "'%1$s ' bol úspešne odstránený!"
+    },
+    {
+      "name": "chatroom_destroy_title",
+      "value": "Zrušiť diskusnú miestnosť"
+    },
+    {
+      "name": "chatroom_join_failed",
+      "value": "Nepodarilo sa pripojiť k miestnosti s prezývkou: %1$s\n %2$s."
+    },
+    {
+      "name": "chatroom_join_failed_reason",
+      "value": "Nepodarilo sa pripojiť k diskusnej miestnosti %1$s:\n%2$s"
+    },
+    {
+      "name": "chatroom_join_password",
+      "value": "Diskusná miestnosť požaduje heslo."
+    },
+    {
+      "name": "chatroom_join_failed_registration",
+      "value": "Diskusná miestnosť vyžaduje registráciu."
+    },
+    {
+      "name": "chatroom_join_title",
+      "value": "Pripojte sa k diskusnej miestnosti"
+    },
+    {
+      "name": "chatroom_join_name",
+      "value": "Zadajte názov diskusnej miestnosti, ku ktorej sa chcete pripojiť."
+    },
+    {
+      "name": "chatroom_join_subject_null",
+      "value": "Zadajte názov chatovacej miestnosti, do ktorej sa chcete pripojiť."
+    },
+    {
+      "name": "chatroom_join_wizard",
+      "value": "Pripojte sa k sprievodcovi diskusnou miestnosťou"
+    },
+    {
+      "name": "cr_member_start_conversation",
+      "value": "Začnite konverzáciu"
+    },
+    {
+      "name": "cr_member_grant_owner_privilege",
+      "value": "Udeliť privilégiá vlastníka"
+    },
+    {
+      "name": "cr_member_revoke_owner_privilege",
+      "value": "Zrušte oprávnenia vlastníka"
+    },
+    {
+      "name": "cr_member_kick",
+      "value": "Odstrániť zo skupinového četu"
+    },
+    {
+      "name": "invitation_message",
+      "value": "Pozvánka:"
+    },
+    {
+      "name": "invitation_received",
+      "value": "Pozvánka bola prijatá"
+    },
+    {
+      "name": "invitation_received_message",
+      "value": "Používateľ %1$s vás pozval do diskusnej miestnosti %2$s. Túto pozvánku môžete prijať, odmietnuť alebo ignorovať."
+    },
+    {
+      "name": "invitation_rejected",
+      "value": "%1$s odmietol vaše pozvanie na pripojenie sa k miestnosti. Dôvod: %2$s."
+    },
+    {
+      "name": "invite",
+      "value": "Pozvať"
+    },
+    {
+      "name": "invite_contact_message",
+      "value": "Vyberte mená kontaktov, ktoré chcete pridať do tejto konverzácie, a potom kliknite na položku Pozvať."
+    },
+    {
+      "name": "invite_contact_to_call",
+      "value": "Pozvite kontakty na volanie"
+    },
+    {
+      "name": "invite_contact_to_chat",
+      "value": "Pozvite kontakty na rozhovor"
+    },
+    {
+      "name": "invite_contact_to_videoBridge",
+      "value": "Pozvať kontakty (videobridge)"
+    },
+    {
+      "name": "invite_group_chat",
+      "value": "Pozvánka na skupinový rozhovor"
+    },
+    {
+      "name": "invite_reason",
+      "value": "Dôvod pozvania:"
+    },
+    {
+      "name": "invite_reject_reason",
+      "value": "Dôvod (pri zamietnutí):"
+    },
+    {
+      "name": "invite_reject_busy",
+      "value": "Zaneprázdnený"
+    },
+    {
+      "name": "ignore",
+      "value": "Ignorovať"
+    },
+    {
+      "name": "info",
+      "value": "Info"
+    },
+    {
+      "name": "address",
+      "value": "Adresa"
+    },
+    {
+      "name": "city",
+      "value": "Mesto"
+    },
+    {
+      "name": "country",
+      "value": "Krajina"
+    },
+    {
+      "name": "email",
+      "value": "E-mail"
+    },
+    {
+      "name": "emails",
+      "value": "E-maily"
+    },
+    {
+      "name": "fax",
+      "value": "Fax"
+    },
+    {
+      "name": "home",
+      "value": "Domov"
+    },
+    {
+      "name": "home_page",
+      "value": "Domovská stránka"
+    },
+    {
+      "name": "invalid_address",
+      "value": "Neplatná adresa: %1$s"
+    },
+    {
+      "name": "join",
+      "value": "Pripojiť"
+    },
+    {
+      "name": "join_as",
+      "value": "Pripojte sa ako"
+    },
+    {
+      "name": "join_existing_video_conference",
+      "value": "Pripojte sa k existujúcej videokonferencii"
+    },
+    {
+      "name": "join_video",
+      "value": "Pripojte sa k videu"
+    },
+    {
+      "name": "job_title",
+      "value": "Názov práce"
+    },
+    {
+      "name": "join_automatically",
+      "value": "Pripojte sa automaticky"
+    },
+    {
+      "name": "do_not_join_automatically",
+      "value": "Nepripájajte sa automaticky"
+    },
+    {
+      "name": "kick",
+      "value": "Vykopnuť"
+    },
+    {
+      "name": "kick_failed",
+      "value": "Vykopnutie zlýhalo"
+    },
+    {
+      "name": "kick_failed_general_error",
+      "value": "Nepodarilo sa vykopnúť %1$s. Vyskytla sa všeobecná chyba servera."
+    },
+    {
+      "name": "kick_failed_not_allowed",
+      "value": "Nepodarilo sa vykopnúť %1$s. Majiteľa a správcu miestnosti nebolo možné kopnúť."
+    },
+    {
+      "name": "kick_failed_not_enough_permission",
+      "value": "Nepodarilo sa vykopnúť %1$s. Na to nemáte dostatočné privilégiá."
+    },
+    {
+      "name": "last",
+      "value": "Posledná"
+    },
+    {
+      "name": "last_message_correction",
+      "value": "Oprava poslednej správy"
+    },
+    {
+      "name": "last_name",
+      "value": "Priezvisko"
+    },
+    {
+      "name": "last_seen",
+      "value": "Dnes: %s"
+    },
+    {
+      "name": "leave",
+      "value": "Opustiť"
+    },
+    {
+      "name": "leave_chat_room",
+      "value": "Opustiť diskusnú miestnosť"
+    },
+    {
+      "name": "locally_on_hold",
+      "value": "Lokálne podržané"
+    },
+    {
+      "name": "login_credential",
+      "value": "Prihlasovacie poverenia používateľa"
+    },
+    {
+      "name": "login_failed",
+      "value": "Prihlásenie zlyhalo"
+    },
+    {
+      "name": "logoff_failed",
+      "value": "Pri odhlásení pomocou nasledujúceho účtu sa vyskytla chyba: Meno používateľa: %1$s, Názov servera: %2$s."
+    },
+    {
+      "name": "mobile",
+      "value": "Mobilné"
+    },
+    {
+      "name": "move",
+      "value": "Presunúť"
+    },
+    {
+      "name": "move_contact",
+      "value": "Presunúť kontakt"
+    },
+    {
+      "name": "move_contact_error",
+      "value": "Kontakt nie je možné presunúť"
+    },
+    {
+      "name": "move_contact_message",
+      "value": "Vyberte kontakt alebo skupinu, do ktorej chcete vybraný kontakt presunúť."
+    },
+    {
+      "name": "move_contact_failed",
+      "value": "Kontakt, ktorý ste si vybrali, je rovnaký ako ten, ktorý ste vybrali ako zdroj. Vyberte iný kontakt!"
+    },
+    {
+      "name": "move_contact_prompt",
+      "value": "Naozaj chcete presunúť %1$s na %2$s?"
+    },
+    {
+      "name": "move_contact_to_group",
+      "value": "Presunúť do skupiny"
+    },
+    {
+      "name": "nickname",
+      "value": "Prezývka"
+    },
+    {
+      "name": "chatroom_open_automatically",
+      "value": "Otvorte túto miestnosť automaticky, keď"
+    },
+    {
+      "name": "personal",
+      "value": "Osobné"
+    },
+    {
+      "name": "message_delivery_error",
+      "value": "Nepodarilo sa doručiť správu."
+    },
+    {
+      "name": "message_delivery_failed",
+      "value": "Uvedenú správu nebolo možné doručiť"
+    },
+    {
+      "name": "message_delivery_internal_error",
+      "value": "Vyskytla sa interná chyba. Toto je pravdepodobne chyba. Nahláste to prostredníctvom protokolu ladenia."
+    },
+    {
+      "name": "message_delivery_not_supported",
+      "value": "Protokol, ktorý používate, nepodporuje správy bez pripojenia. Mohli by ste sa pokúsiť dosiahnuť %1$s pomocou iného protokolu alebo počkať, kým sa nestane online."
+    },
+    {
+      "name": "message_delivery_unknown_error",
+      "value": "Pri doručovaní správy sa vyskytla neznáma chyba."
+    },
+    {
+      "name": "message_delivery_unsupported_operation",
+      "value": "Nepodporovaná prevádzka."
+    },
+    {
+      "name": "message_delivery_network_error",
+      "value": "Vyskytol sa problém so sieťou. Skontrolujte konfiguráciu siete a skúste to znova."
+    },
+    {
+      "name": "message_received",
+      "value": "Napísal (-a) %1$s"
+    },
+    {
+      "name": "message_delivery_not_registered",
+      "value": "Ak chcete poslať správu, musíte sa najprv prihlásiť."
+    },
+    {
+      "name": "multiple_login",
+      "value": "Nie je povolené viacnásobné prihlásenie. Nasledujúci účet: Meno používateľa: %1$s, Názov servera: %2$s bol odpojený."
+    },
+    {
+      "name": "mutually_on_hole",
+      "value": "Vzájomne pozastavené"
+    },
+    {
+      "name": "add_new_account",
+      "value": "Pridajte nový účet"
+    },
+    {
+      "name": "network_assert_error",
+      "value": "Pred komunikáciou musí byť poskytovateľ Jabber prihlásený."
+    },
+    {
+      "name": "no",
+      "value": "žiadny"
+    },
+    {
+      "name": "no_online_telephony_account",
+      "value": "Na uskutočnenie hovoru je potrebný aspoň jeden účet online telefonovania. Prihláste sa do jedného zo svojich telefónnych účtov a skúste to znova."
+    },
+    {
+      "name": "not_authorized",
+      "value": "Nie je povolené"
+    },
+    {
+      "name": "not_authorized_hint",
+      "value": "Nemáte oprávnenie na prístup na server. Skontrolujte nastavenia účtu, heslo alebo povoľte registráciu IB a skúste to znova:\n%s \""
+    },
+    {
+      "name": "off",
+      "value": "preč"
+    },
+    {
+      "name": "offline",
+      "value": "Odpojený"
+    },
+    {
+      "name": "ok",
+      "value": "OK"
+    },
+    {
+      "name": "on",
+      "value": "na"
+    },
+    {
+      "name": "online",
+      "value": "Pripojený"
+    },
+    {
+      "name": "open",
+      "value": "Otvorené"
+    },
+    {
+      "name": "open_file_vai_image",
+      "value": "Kliknutím otvorte súbor."
+    },
+    {
+      "name": "folder",
+      "value": "zložka"
+    },
+    {
+      "name": "other",
+      "value": "ostatné"
+    },
+    {
+      "name": "organization",
+      "value": "Organizácia"
+    },
+    {
+      "name": "phone",
+      "value": "telefón"
+    },
+    {
+      "name": "phones",
+      "value": "telefóny"
+    },
+    {
+      "name": "play",
+      "value": "hrať"
+    },
+    {
+      "name": "postal_code",
+      "value": "poštové smerovacie číslo"
+    },
+    {
+      "name": "rename",
+      "value": "premenovanie"
+    },
+    {
+      "name": "registration_required",
+      "value": "Chyba pri registrácii účtu na serveri:\n%s \""
+    },
+    {
+      "name": "save",
+      "value": "Uložiť"
+    },
+    {
+      "name": "show_stack_trace",
+      "value": "Zobraziť sledovanie stopy"
+    },
+    {
+      "name": "street",
+      "value": "pouličné"
+    },
+    {
+      "name": "submit",
+      "value": "Predložiť"
+    },
+    {
+      "name": "user_login",
+      "value": "Prosím prihláste sa"
+    },
+    {
+      "name": "work",
+      "value": "Práca"
+    },
+    {
+      "name": "xmpp_connection_error",
+      "value": "Pri stretnutí s XMPP došlo k problému:\n%s \""
+    },
+    {
+      "name": "btn_video_tooltip",
+      "value": "Prepnúť video"
+    },
+    {
+      "name": "mic_control_title",
+      "value": "Úroveň zisku mikrofónu"
+    },
+    {
+      "name": "btn_mute_tooltip",
+      "value": "Upravte zvuk mikrofónu"
+    },
+    {
+      "name": "presence_not_supported",
+      "value": "%1$s nepodporuje prítomnosť"
+    },
+    {
+      "name": "proactive_notification",
+      "value": "píše správu (%1$s)"
+    },
+    {
+      "name": "recent_messages",
+      "value": "Posledné konverzácie"
+    },
+    {
+      "name": "received_",
+      "value": "Prijaté: %1$s"
+    },
+    {
+      "name": "referred",
+      "value": "Uvedené"
+    },
+    {
+      "name": "restoring_",
+      "value": "obnovenie…"
+    },
+    {
+      "name": "decline",
+      "value": "Zavrnil"
+    },
+    {
+      "name": "remove",
+      "value": "Remove"
+    },
+    {
+      "name": "remove_account",
+      "value": "Odstrániť účet"
+    },
+    {
+      "name": "remove_account_prompt",
+      "value": "Naozaj chcete odstrániť účet:\n%1$s?"
+    },
+    {
+      "name": "remove_contact",
+      "value": "Odstrániť kontakt"
+    },
+    {
+      "name": "remove_contact_prompt",
+      "value": "Vlastník kontaktov: %1$s.\n\nNaozaj chcete odstrániť kontakt: '%2$s ' z vášho zoznamu kontaktov?"
+    },
+    {
+      "name": "remove_contact_not_connected",
+      "value": "Na odstránenie tohto kontaktu musíte byť pripojení. Prihláste sa a skúste to znova."
+    },
+    {
+      "name": "remove_group",
+      "value": "Odstrániť skupinu"
+    },
+    {
+      "name": "remove_group_prompt",
+      "value": "Naozaj chcete odstrániť skupinu: '%1$s ' a všetky súvisiace kontakty z vášho zoznamu kontaktov?"
+    },
+    {
+      "name": "remotely_on_hold",
+      "value": "Diaľkovo podržané"
+    },
+    {
+      "name": "rename_contact",
+      "value": "Zmeniť meno kontaktu"
+    },
+    {
+      "name": "ringing",
+      "value": "Zvoním"
+    },
+    {
+      "name": "request",
+      "value": "žiadosť"
+    },
+    {
+      "name": "request_authorization",
+      "value": "Vyžiadajte si autorizáciu"
+    },
+    {
+      "name": "request_authorization_prompt",
+      "value": "Vlastník kontaktov: %1$s\n\nPotrebujete autorizáciu od '%2$s ' a pridajte ho do svojho zoznamu kontaktov. Zadajte svoju požiadavku znova."
+    },
+    {
+      "name": "retry",
+      "value": "Skúsiť znova"
+    },
+    {
+      "name": "search",
+      "value": "Vyhľadávanie"
+    },
+    {
+      "name": "search_contact",
+      "value": "Vyhľadajte kontakt"
+    },
+    {
+      "name": "phonebook",
+      "value": "Telefónny zoznam"
+    },
+    {
+      "name": "security",
+      "value": "zabezpečenia"
+    },
+    {
+      "name": "select_account_owner",
+      "value": "Vyberte vlastníka účtu"
+    },
+    {
+      "name": "assign_group",
+      "value": "Priradená skupina:"
+    },
+    {
+      "name": "no_group",
+      "value": "Žiadna skupina"
+    },
+    {
+      "name": "send_log",
+      "value": "Nahlásiť chyby"
+    },
+    {
+      "name": "send_log_prompt",
+      "value": "aTalk sa práve zotavil po vážnom páde. Chcete nahlásiť chyby vývojárom?"
+    },
+    {
+      "name": "send_log_subject",
+      "value": "aTalk bug report"
+    },
+    {
+      "name": "send_log_title",
+      "value": "aTalk hlásenia chýb prostredníctvom e-mailu"
+    },
+    {
+      "name": "send_log_info",
+      "value": "Informácie uvedené nižšie môžu vývojárom pomôcť vyriešiť problém:\n\n\n1. Čo bolo posledné, čo ste urobili predtým, ako sa problém vyskytol?\n\n\n\n2. Aký bol problém, ktorý vidíte, zahrňte snímku obrazovky, ak je k dispozícii?\n\n\n\n3. Môžete alebo ako problém reprodukovať?"
+    },
+    {
+      "name": "send_message",
+      "value": "Poslať správu"
+    },
+    {
+      "name": "send_message_failed",
+      "value": "Nepodarilo sa odoslať správu: %1$s"
+    },
+    {
+      "name": "send_message_not_supported",
+      "value": "Subjekt, ktorý ste vybrali, nepodporuje okamžité diskusné správy: %1$s"
+    },
+    {
+      "name": "send_message_as_sms",
+      "value": "Poslať ako SMS"
+    },
+    {
+      "name": "send_message_private",
+      "value": "Poslať súkromnú správu"
+    },
+    {
+      "name": "send_via",
+      "value": "Poslať cez"
+    },
+    {
+      "name": "sent",
+      "value": "Zaslaná"
+    },
+    {
+      "name": "server_chatroom",
+      "value": "Diskusné miestnosti servera"
+    },
+    {
+      "name": "shutting_down",
+      "value": "Vypínanie…"
+    },
+    {
+      "name": "status",
+      "value": "Postavenie"
+    },
+    {
+      "name": "type_your_request_reason",
+      "value": "Zadajte dôvod žiadosti"
+    },
+    {
+      "name": "unknown",
+      "value": "Neznámy"
+    },
+    {
+      "name": "unknown_user",
+      "value": "Neznámy používateľ"
+    },
+    {
+      "name": "unknown_state",
+      "value": "Neznámy stav"
+    },
+    {
+      "name": "url_example",
+      "value": "https://www.example.com"
+    },
+    {
+      "name": "volume_control_title",
+      "value": "Úroveň zosilnenia výstupného objemu"
+    },
+    {
+      "name": "volume_control_tooltip",
+      "value": "Nastavte hlasitosť"
+    },
+    {
+      "name": "volume_gain_level",
+      "value": "Úroveň nárastu objemu: %1$s %%"
+    },
+    {
+      "name": "waiting_for_authorization",
+      "value": "Čaká sa na autorizáciu"
+    },
+    {
+      "name": "warning",
+      "value": "Výstraha"
+    },
+    {
+      "name": "call_in_progress_warning",
+      "value": "Počas hovoru to nie je možné"
+    },
+    {
+      "name": "yes",
+      "value": "Áno"
+    },
+    {
+      "name": "account_create_failed",
+      "value": "Vytvorenie nového účtu zlyhalo z dôvodu chyby: %1$s"
+    },
+    {
+      "name": "create_account",
+      "value": "Vytvoriť účet"
+    },
+    {
+      "name": "general_error",
+      "value": "Všeobecná chyba"
+    },
+    {
+      "name": "network_failure",
+      "value": "Zlyhanie siete"
+    },
+    {
+      "name": "select_avatar",
+      "value": "Vyberte nový obrázok avatar"
+    },
+    {
+      "name": "set_status",
+      "value": "Zmeniť stav"
+    },
+    {
+      "name": "sign_in",
+      "value": "Prihlásiť sa"
+    },
+    {
+      "name": "sign_out",
+      "value": "Odhlásiť sa"
+    },
+    {
+      "name": "server_info_not_complete",
+      "value": "Vyplňte serverovú časť svojho účtu."
+    },
+    {
+      "name": "speed_info",
+      "value": "Rýchlosť: %1$s / s (%2$s)"
+    },
+    {
+      "name": "status_change_general_error",
+      "value": "Nepodarilo sa zmeniť stav účtu: Meno používateľa: %1$s, Názov servera: %2$s, kvôli všeobecnej chybe."
+    },
+    {
+      "name": "status_change_message",
+      "value": "sa stal %1$s"
+    },
+    {
+      "name": "status_change_network_failure",
+      "value": "Stav účtu sa nepodarilo zmeniť: Používateľské meno: %1$s, názov servera: %2$s z dôvodu problému so sieťou."
+    },
+    {
+      "name": "security_error",
+      "value": "Chyba zabezpečenia"
+    },
+    {
+      "name": "security_info",
+      "value": "Bezpečnostné informácie"
+    },
+    {
+      "name": "security_warning",
+      "value": "Bezpečnostné varovanie"
+    },
+    {
+      "name": "username_password_null",
+      "value": "Zadajte správne používateľské meno alebo heslo."
+    },
+    {
+      "name": "username_change_warning",
+      "value": "Varovanie: Zmena používateľského mena účtu na '%1$s ' tiež vymaže správy %2$s pre existujúci účet '%3$s '. Postupovať?"
+    },
+    {
+      "name": "user_exist_error",
+      "value": "Tento používateľ už existuje vo vybranej sieti. Vyberte iného používateľa alebo sieť."
+    },
+    {
+      "name": "jan",
+      "value": "január"
+    },
+    {
+      "name": "feb",
+      "value": "februára"
+    },
+    {
+      "name": "mar",
+      "value": "Mar"
+    },
+    {
+      "name": "apr",
+      "value": "apríla"
+    },
+    {
+      "name": "may",
+      "value": "Smieť"
+    },
+    {
+      "name": "jun",
+      "value": "júna"
+    },
+    {
+      "name": "jul",
+      "value": "júla"
+    },
+    {
+      "name": "aug",
+      "value": "auguste"
+    },
+    {
+      "name": "sep",
+      "value": "septembra"
+    },
+    {
+      "name": "oct",
+      "value": "október"
+    },
+    {
+      "name": "nov",
+      "value": "november"
+    },
+    {
+      "name": "dec",
+      "value": "decembra"
+    },
+    {
+      "name": "service_protocol_ICE_FAILED",
+      "value": "Nepodarilo sa nadviazať spojenie (ICE zlyhalo a nenašlo sa žiadne relé)"
+    },
+    {
+      "name": "callinfo_audio_info",
+      "value": "Zvukové informácie"
+    },
+    {
+      "name": "callinfo_bandwidth",
+      "value": "Šírka pásma:"
+    },
+    {
+      "name": "callinfo_call_duration",
+      "value": "Trvanie hovoru:"
+    },
+    {
+      "name": "callinfo_call_identity",
+      "value": "identita:"
+    },
+    {
+      "name": "callinfo_call_information",
+      "value": "Informácie o hovoroch"
+    },
+    {
+      "name": "callinfo_call_transport",
+      "value": "Doprava signalizačného hovoru:"
+    },
+    {
+      "name": "callinfo_codec",
+      "value": "Codec / Frekvencia:"
+    },
+    {
+      "name": "callinfo_conference_focus",
+      "value": "Zameranie konferencie:"
+    },
+    {
+      "name": "callinfo_default_encrypted",
+      "value": "Šifrovanie povolené:"
+    },
+    {
+      "name": "callinfo_jitter",
+      "value": "Jitter:"
+    },
+    {
+      "name": "callinfo_key_exchange_protocol",
+      "value": "Protokol výmeny kľúčov"
+    },
+    {
+      "name": "callinfo_local_ip",
+      "value": "Miestna IP / Port:"
+    },
+    {
+      "name": "callinfo_loss_rate",
+      "value": "Miera straty:"
+    },
+    {
+      "name": "callinfo_media_stream_rip",
+      "value": "RTP:"
+    },
+    {
+      "name": "callinfo_media_srtp",
+      "value": "SRTP:"
+    },
+    {
+      "name": "callinfo_media_stream_transport_protocol",
+      "value": "Protokol prenosu mediálneho toku:"
+    },
+    {
+      "name": "callinfo_na",
+      "value": "N.A."
+    },
+    {
+      "name": "callinfo_peer_count",
+      "value": "Počet účastníkov:"
+    },
+    {
+      "name": "callinfo_remote_ip",
+      "value": "Vzdialená IP adresa / port:"
+    },
+    {
+      "name": "callinfo_rtt",
+      "value": "RTT:"
+    },
+    {
+      "name": "callinfo_details",
+      "value": "Podrobnosti o telefonických informáciách"
+    },
+    {
+      "name": "callinfo_tls_cipher_suite",
+      "value": "Šifrovací balík TLS:"
+    },
+    {
+      "name": "callinfo_tls_certificate_content",
+      "value": "Obsah certifikátu servera TLS je uvedený nižšie."
+    },
+    {
+      "name": "callinfo_tls_protocol",
+      "value": "Protokol TLS:"
+    },
+    {
+      "name": "callinfo_view_certificate",
+      "value": "Zobraziť certifikát"
+    },
+    {
+      "name": "callinfo_video_size",
+      "value": "Veľkosť videa"
+    },
+    {
+      "name": "callinfo_video_info",
+      "value": "Informácie o videu"
+    },
+    {
+      "name": "callinfo_adaptive_jitter_buffer",
+      "value": "Adaptívny jitter buffer:"
+    },
+    {
+      "name": "callinfo_decoded_with_fec",
+      "value": "Pakety dekódované pomocou FEC:"
+    },
+    {
+      "name": "callinfo_discarded_percent",
+      "value": "Balíky, ktoré sa momentálne vyraďujú:"
+    },
+    {
+      "name": "callinfo_discarded_total",
+      "value": "Počet vyradených paketov:"
+    },
+    {
+      "name": "callinfo_harvesting_data",
+      "value": "%1$d ms (pre zber úrody %2$d)"
+    },
+    {
+      "name": "callinfo_harvesting_time",
+      "value": "Čas zberu:"
+    },
+    {
+      "name": "callinfo_candidate_extended_type",
+      "value": "Rozšírený typ kandidáta na ICE:"
+    },
+    {
+      "name": "callinfo_localhost_address",
+      "value": "IP / Port lokálneho hostiteľa:"
+    },
+    {
+      "name": "callinfo_ice_local_reflexive_address",
+      "value": "Lokálny reflexný IP / port:"
+    },
+    {
+      "name": "callinfo_ice_local_relayed_address",
+      "value": "Lokálne prenášané IP / Port:"
+    },
+    {
+      "name": "callinfo_ice_remote_host_address",
+      "value": "IP / Port vzdialeného hostiteľa:"
+    },
+    {
+      "name": "callinfo_ice_remote_reflexive_address",
+      "value": "Diaľkové reflexné IP / Port:"
+    },
+    {
+      "name": "callinfo_ice_remote_relayed_address",
+      "value": "Vzdialene prenášané IP / Port:"
+    },
+    {
+      "name": "callinfo_ice_state",
+      "value": "Spracovateľský štát ICE:"
+    },
+    {
+      "name": "callinfo_ice_state_completed",
+      "value": "dokončený"
+    },
+    {
+      "name": "callinfo_ice_state_failed",
+      "value": "neúspešný"
+    },
+    {
+      "name": "callinfo_ice_state_running",
+      "value": "Kontroly pripojenia"
+    },
+    {
+      "name": "callinfo_ice_state_waiting",
+      "value": "Zhromaždite kandidátov"
+    },
+    {
+      "name": "callinfo_ice_state_jitter_buffer_delay",
+      "value": "Jitter buffer:"
+    },
+    {
+      "name": "callinfo_total_harvesting_time",
+      "value": "Celková doba zberu:"
+    },
+    {
+      "name": "trust_always",
+      "value": "Vždy dôverujte tomuto certifikátu"
+    },
+    {
+      "name": "cert_dialog_title",
+      "value": "Overenie certifikátu"
+    },
+    {
+      "name": "cert_dialog_description",
+      "value": "<html>%1$s cannot verify the identity of the server when connecting to<br/><b>%2$s</b><br/><br/>The certificate is not trusted (a self-signed certificate), which means that the server's identity cannot be automatically verified.<br/><br/>Proceed with connection for this instance only?<br/>For more option and info, click Show Certificate.</html>"
+    },
+    {
+      "name": "cert_dialog_description_no_host",
+      "value": "<html>%1$s cannot verify the\nidentity of the server's certificate.<br/><br/>\nThe certificate is not trusted (a self-signed certificate), which means that the server's\nidentity cannot be automatically verified.<br/><br/>\nProceed with connection for this instance only?<br/>\nFor more option and info, click \"Show Certificate\".</html>"
+    },
+    {
+      "name": "cert_dialog_client_description",
+      "value": "<html>%1$s cannot verify the\nidentity of the connecting client.<br/><br/>\nThe certificate is not trusted (a self-signed certificate), which means that the client's\nidentity cannot be automatically verified.<br/><br/>\nProceed with connection for this instance only?<br/>\nFor more option and info, click \"Show Certificate\".</html>"
+    },
+    {
+      "name": "cert_dialog_peer_description",
+      "value": "<html>%1$s cannot verify the\nidentity of the peer %2$s.<br/><br/>\nThe certificate is not trusted (a self-signed certificate), which means that the peer's\nidentity cannot be automatically verified.<br/><br/>\nProceed with connection for this instance only?<br/>\nFor more option and info, click \"Show Certificate\".</html>"
+    },
+    {
+      "name": "proceed",
+      "value": "pokračovať"
+    },
+    {
+      "name": "cert_info_issued_to",
+      "value": "<b>Vydané pre</b>"
+    },
+    {
+      "name": "cert_info_chain",
+      "value": "Reťaz certifikátu:"
+    },
+    {
+      "name": "cert_info_cn",
+      "value": "Spoločný názov:"
+    },
+    {
+      "name": "cert_info_O",
+      "value": "Organizácia:"
+    },
+    {
+      "name": "cert_info_C",
+      "value": "Názov krajiny:"
+    },
+    {
+      "name": "cert_info_ST",
+      "value": "Názov štátu alebo provincie:"
+    },
+    {
+      "name": "cert_info_L",
+      "value": "Názov lokality:"
+    },
+    {
+      "name": "cert_info_issued_by",
+      "value": "<b>Vydal:<b>"
+    },
+    {
+      "name": "cert_info_OU",
+      "value": "Organizačná jednotka:"
+    },
+    {
+      "name": "cert_info_validity",
+      "value": "platnosť"
+    },
+    {
+      "name": "cert_info_issued_on",
+      "value": "Dátum vydania:"
+    },
+    {
+      "name": "cert_info_expires_on",
+      "value": "Vyprší:"
+    },
+    {
+      "name": "cert_info_fingerprints",
+      "value": "odtlačky prstov"
+    },
+    {
+      "name": "cert_info_details",
+      "value": "Informácie o certifikáte"
+    },
+    {
+      "name": "cert_info_SN",
+      "value": "Sériové číslo:"
+    },
+    {
+      "name": "cert_info_version",
+      "value": "verzia:"
+    },
+    {
+      "name": "cert_info_sign_algo",
+      "value": "Algoritmus podpisu:"
+    },
+    {
+      "name": "cert_info_pubkey_info",
+      "value": "Informácie o verejnom kľúči"
+    },
+    {
+      "name": "cert_info_algo",
+      "value": "algoritmus:"
+    },
+    {
+      "name": "cert_info_pubkey",
+      "value": "Verejný kľúč:"
+    },
+    {
+      "name": "cert_info_key_bytes",
+      "value": "Bajty: %1$s:%2$s"
+    },
+    {
+      "name": "cert_info_key_bits",
+      "value": "Bity %1$s"
+    },
+    {
+      "name": "cert_info_exponent",
+      "value": "Exponent:"
+    },
+    {
+      "name": "cert_info_key_size",
+      "value": "Veľkosť kľúča:"
+    },
+    {
+      "name": "cert_info_signature",
+      "value": "podpis:"
+    },
+    {
+      "name": "service_gui_CONTINUE",
+      "value": "ďalej"
+    },
+    {
+      "name": "certificate_show",
+      "value": "Zobraziť certifikát"
+    },
+    {
+      "name": "certificate_hide",
+      "value": "Skryť certifikát"
+    },
+    {
+      "name": "unsaved_changes",
+      "value": "Máte neuložené zmeny. Uloženie alebo zrušenie a ukončenie."
+    },
+    {
+      "name": "unsaved_changes_title",
+      "value": "Neuložené zmeny"
+    },
+    {
+      "name": "please_wait",
+      "value": "Prosím čakajte…"
+    },
+    {
+      "name": "server_info_fetching",
+      "value": "Načítavajú sa funkcie a informácie oznamované serverom…"
+    },
+    {
+      "name": "security_audio_not_secure",
+      "value": "Zvuk nie je zabezpečený"
+    },
+    {
+      "name": "security_call_not_secured_tooltip",
+      "value": "Hovor nie je zabezpečený."
+    },
+    {
+      "name": "security_call_secured_compare_tooltip",
+      "value": "Stlačením tu môžete porovnať bezpečnostné tajomstvo s vaším partnerom."
+    },
+    {
+      "name": "security_call_secured_tooltip",
+      "value": "Hovor je zabezpečený. Viac informácií nájdete tu."
+    },
+    {
+      "name": "security_cipher",
+      "value": "Šifra: %1$s"
+    },
+    {
+      "name": "security_clear",
+      "value": "jasný"
+    },
+    {
+      "name": "security_compare_with_partner_short",
+      "value": "Porovnať s partnerom:"
+    },
+    {
+      "name": "confirm",
+      "value": "potvrdiť"
+    },
+    {
+      "name": "security_encryption_required",
+      "value": "Vyžaduje sa šifrovanie!"
+    },
+    {
+      "name": "security_no_video",
+      "value": "Žiadne video"
+    },
+    {
+      "name": "security_secure_audio",
+      "value": "Zabezpečený zvuk"
+    },
+    {
+      "name": "security_secure_video",
+      "value": "Zabezpečené video"
+    },
+    {
+      "name": "security_alert",
+      "value": "Pokúšam sa zabezpečiť hovor. Odpojí sa"
+    },
+    {
+      "name": "security_string_compared",
+      "value": "Porovnanie reťazcov:"
+    },
+    {
+      "name": "security_verify_toast",
+      "value": "Zabezpečenie hovorov povolené! Klepnutím porovnajte bezpečnostný reťazec teraz alebo použite ponuku neskôr."
+    },
+    {
+      "name": "security_video_not_secured",
+      "value": "Video nie je zabezpečené"
+    },
+    {
+      "name": "avatar_chose_icon",
+      "value": "Vyberte obrázok"
+    },
+    {
+      "name": "avatar_remove_icon",
+      "value": "Odstráňte aktuálny obrázok"
+    },
+    {
+      "name": "update_download",
+      "value": "Stiahnuť"
+    },
+    {
+      "name": "update_install",
+      "value": "Inštalácia"
+    },
+    {
+      "name": "update_reInstall",
+      "value": "preinštalovať"
+    },
+    {
+      "name": "update_download_completed",
+      "value": "Sťahovanie bolo dokončené"
+    },
+    {
+      "name": "update_download_ready",
+      "value": "Aktualizácia (%1$s) sa stiahne a je pripravená na inštaláciu."
+    },
+    {
+      "name": "update_in_progress",
+      "value": "Prebieha"
+    },
+    {
+      "name": "update_download_in_progress",
+      "value": "Prebieha sťahovanie aktualizácií."
+    },
+    {
+      "name": "update_update_available",
+      "value": "K dispozícii je nová vydaná verzia (%1$s-%2$s) pre %3$s. Aktuálna nainštalovaná verzia: (%4$s-%5$s)."
+    },
+    {
+      "name": "update_up_to_date",
+      "value": "Vaša aktuálna nainštalovaná verzia: (%1$s-%2$s) je aktuálna. Online dostupná verzia: (%3$s-%4$s)."
+    },
+    {
+      "name": "update_new_version_none",
+      "value": "Žiadna nová verzia"
+    },
+    {
+      "name": "update_install_update",
+      "value": "Nainštalujte aktualizácie"
+    },
+    {
+      "name": "update_download_failed",
+      "value": "Nepodarilo sa stiahnuť novú aktualizáciu!"
+    },
+    {
+      "name": "update_check_update",
+      "value": "Skontroluj aktualizácie"
+    },
+    {
+      "name": "update_version_invalid",
+      "value": "Stiahnutý súbor apk sa nezhoduje; skutočné: %1$s (%2$s)"
+    },
+    {
+      "name": "update_vew_version_available",
+      "value": "K dispozícii je nová verzia softvéru (%1$s)."
+    },
+    {
+      "name": "accountinfo_about_me",
+      "value": "O mne:"
+    },
+    {
+      "name": "accountinfo_about_me_hint",
+      "value": "Do tohto poľa zadajte stručný popis svojej osoby"
+    },
+    {
+      "name": "accountinfo_age",
+      "value": "Vek:"
+    },
+    {
+      "name": "accountinfo_birth_date",
+      "value": "Dátum narodenia:"
+    },
+    {
+      "name": "accountinfo_change",
+      "value": "zmena"
+    },
+    {
+      "name": "accountinfo_city",
+      "value": "mesto:"
+    },
+    {
+      "name": "accountinfo_country",
+      "value": "Krajina:"
+    },
+    {
+      "name": "accountinfo_discard_change",
+      "value": "Používateľ sa prepne do odpojeného režimu - zahodí všetky zmeny informácií o účte."
+    },
+    {
+      "name": "accountinfo_display_name",
+      "value": "Zobraziť meno:"
+    },
+    {
+      "name": "accountinfo_email",
+      "value": "E-mail:"
+    },
+    {
+      "name": "accountinfo_extended",
+      "value": "predĺžený"
+    },
+    {
+      "name": "accountinfo_first_name",
+      "value": "Krstné meno:"
+    },
+    {
+      "name": "accountinfo_gender",
+      "value": "Rod:"
+    },
+    {
+      "name": "accountinfo_global_icon",
+      "value": "Použiť globálnu ikonu"
+    },
+    {
+      "name": "accountinfo_job_title",
+      "value": "Názov práce:"
+    },
+    {
+      "name": "accountinfo_last_name",
+      "value": "Priezvisko:"
+    },
+    {
+      "name": "accountinfo_local_icon",
+      "value": "Použite túto ikonu:"
+    },
+    {
+      "name": "accountinfo_middle_name",
+      "value": "Stredné meno:"
+    },
+    {
+      "name": "accountinfo_mobile_phone",
+      "value": "Mobilný telefón:"
+    },
+    {
+      "name": "accountinfo_nickname",
+      "value": "prezývka:"
+    },
+    {
+      "name": "accountinfo_not_registered_message",
+      "value": "Účet je odpojený - ak chcete zmeniť informácie o účte, musíte byť pripojený."
+    },
+    {
+      "name": "accountinfo_not_supported",
+      "value": "Informácie o účte nie sú k dispozícii."
+    },
+    {
+      "name": "accountinfo_only_message",
+      "value": "Iba správy"
+    },
+    {
+      "name": "accountinfo_organisation",
+      "value": "Názov organizácie:"
+    },
+    {
+      "name": "accountinfo_phone",
+      "value": "telefón:"
+    },
+    {
+      "name": "accountinfo_postcode",
+      "value": "Poštové smerovacie číslo:"
+    },
+    {
+      "name": "accountinfo_region",
+      "value": "región:"
+    },
+    {
+      "name": "accountinfo_select_account",
+      "value": "Vyberte účet:"
+    },
+    {
+      "name": "accountinfo_street",
+      "value": "Ulica:"
+    },
+    {
+      "name": "accountinfo_title",
+      "value": "Informácie o účte"
+    },
+    {
+      "name": "accountinfo_user_picture",
+      "value": "Obrázky používateľov"
+    },
+    {
+      "name": "accountinfo_work_email",
+      "value": "Pracovný e-mail:"
+    },
+    {
+      "name": "accountinfo_work_phone",
+      "value": "Pracovný telefón:"
+    },
+    {
+      "name": "certconfig_title",
+      "value": "Konfigurácia TLS"
+    },
+    {
+      "name": "certconfig_trusted_store",
+      "value": "Zdroj dôveryhodných koreňových certifikátov"
+    },
+    {
+      "name": "certconfig_cert_list_title",
+      "value": "Konfigurácie autentifikácie klienta TLS"
+    },
+    {
+      "name": "certconfig_cert_list_description",
+      "value": "Tu spravované konfigurácie môžu byť vybrané ako klientske TLS certifikáty v konfiguráciách účtu (napr. Na overenie certifikátom proti poskytovateľovi SIP namiesto užívateľského mena a hesla)."
+    },
+    {
+      "name": "certconfig_alias",
+      "value": "Názov aliasu v KeyStore"
+    },
+    {
+      "name": "certconfig_keystore_type",
+      "value": "typ"
+    },
+    {
+      "name": "certconfig_cert_entry_title",
+      "value": "Certifikát klienta TLS"
+    },
+    {
+      "name": "certconfig_keystore_file",
+      "value": "súbor"
+    },
+    {
+      "name": "certconfig_keystore_password",
+      "value": "heslo"
+    },
+    {
+      "name": "certconfig_incomplete",
+      "value": "Zadajte hodnotu pre všetky polia"
+    },
+    {
+      "name": "certconfig_show_cert_exception",
+      "value": "Certifikát sa nedá zobraziť (%1$s)."
+    },
+    {
+      "name": "certconfig_keystore_exception",
+      "value": "Nemožno načítať úložisko kľúčov (%1$s)."
+    },
+    {
+      "name": "certconfig_file_type_description",
+      "value": "Sklady certifikátov (modul PKCS # 11, súbory PKCS # 12, úložisko kľúčov Java ks)"
+    },
+    {
+      "name": "certconfig_alias_load_exception",
+      "value": "Nie je možné získať aliasy z úložiska kľúčov (%1$s)."
+    },
+    {
+      "name": "certconfig_invalid_keystore_type",
+      "value": "Vybraný typ skladu kľúčov sa zdá byť neplatný (%1$s)."
+    },
+    {
+      "name": "certconfig_revocation_title",
+      "value": "Možnosti zrušenia certifikátu"
+    },
+    {
+      "name": "certconfig_revocation_check_enabled",
+      "value": "Kontrola CRL (Zoznam zrušených certifikátov) je povolená"
+    },
+    {
+      "name": "certconfig_revocation_ocsp_enabled",
+      "value": "Kontrola OCSP (Online Certificate Status Protocol) je povolená"
+    },
+    {
+      "name": "connectioninfo_title",
+      "value": "Informácie o pripojení"
+    },
+    {
+      "name": "contactinfo_title",
+      "value": "Kontaktné údaje"
+    },
+    {
+      "name": "contactinfo_contact_summary_description",
+      "value": "Zhrnutie kontaktných informácií pre"
+    },
+    {
+      "name": "contactinfo_contact_extended_description",
+      "value": "Rozšírené kontaktné informácie pre"
+    },
+    {
+      "name": "contactinfo_not_specified",
+      "value": "[Nešpecifikované]"
+    },
+    {
+      "name": "contactinfo_user_pictures",
+      "value": "Obrázky používateľov"
+    },
+    {
+      "name": "contactinfo_status_message",
+      "value": "Správa o stave"
+    },
+    {
+      "name": "notificationconfig_event_BusyCall",
+      "value": "Obsadené volanie"
+    },
+    {
+      "name": "notificationconfig_event_BusyCall_description",
+      "value": "Popis obsadeného hovoru"
+    },
+    {
+      "name": "notificationconfig_event_CallSaved",
+      "value": "Hovor bol uložený"
+    },
+    {
+      "name": "notificationconfig_event_CallSecurityError",
+      "value": "Chyba zabezpečenia hovoru"
+    },
+    {
+      "name": "notificationconfig_event_CallSecurityError_description",
+      "value": "Popis chyby volania hovoru"
+    },
+    {
+      "name": "notificationconfig_event_CallSecurityOn",
+      "value": "Zavolajte na Zabezpečenie"
+    },
+    {
+      "name": "notificationconfig_event_CallSecurityOn_description",
+      "value": "Zavolajte bezpečnosť na popis"
+    },
+    {
+      "name": "notificationconfig_event_Dialing",
+      "value": "vytáčanie"
+    },
+    {
+      "name": "notificationconfig_event_Dialing_description",
+      "value": "Opis vytáčania"
+    },
+    {
+      "name": "notificationconfig_event_HangUp",
+      "value": "Zložiť"
+    },
+    {
+      "name": "notificationconfig_event_HangUp_description",
+      "value": "Zaveste popis"
+    },
+    {
+      "name": "notificationconfig_event_IncomingCall",
+      "value": "Prichádzajúci hovor"
+    },
+    {
+      "name": "notificationconfig_event_IncomingCall_description",
+      "value": "Popis prichádzajúceho hovoru."
+    },
+    {
+      "name": "notificationconfig_event_IncomingFile",
+      "value": "Prichádzajúci súbor"
+    },
+    {
+      "name": "notificationconfig_event_IncomingInvitation",
+      "value": "Prichádzajúce pozvanie"
+    },
+    {
+      "name": "notificationconfig_event_IncomingMessage",
+      "value": "Prichádzajúca správa"
+    },
+    {
+      "name": "notificationconfig_event_IncomingMessage_description",
+      "value": "Popis prichádzajúcej správy"
+    },
+    {
+      "name": "notificationconfig_event_LogFilesArchived",
+      "value": "Archivované súbory denníka"
+    },
+    {
+      "name": "notificationconfig_event_MissedCall",
+      "value": "Zmeškaný hovor"
+    },
+    {
+      "name": "notificationconfig_event_NetworkNotifications",
+      "value": "Sieťové upozornenia"
+    },
+    {
+      "name": "notificationconfig_event_NetworkNotifications_description",
+      "value": "Opis sieťového oznámenia"
+    },
+    {
+      "name": "notificationconfig_event_ProactiveNotification",
+      "value": "Oznámenia o písaní"
+    },
+    {
+      "name": "notificationconfig_event_ProactiveNotification_description",
+      "value": "Popis upozornenia na aktívny stav rozhovoru"
+    },
+    {
+      "name": "notificationconfig_event_OutgoingCall",
+      "value": "Odchádzajúci hovor"
+    },
+    {
+      "name": "notificationconfig_event_OutgoingCall_description",
+      "value": "Popis odchádzajúceho hovoru"
+    },
+    {
+      "name": "notificationconfig_event_SecurityMessage",
+      "value": "Bezpečnostná správa"
+    },
+    {
+      "name": "notificationconfig_event_SecurityMessage_description",
+      "value": "Popis bezpečnostnej správy"
+    },
+    {
+      "name": "notificationconfig_notification_sound",
+      "value": "Zvuk na oznamovacom zariadení"
+    },
+    {
+      "name": "notificationconfig_playback_sound",
+      "value": "Zvuk na prehrávacom zariadení"
+    },
+    {
+      "name": "notificationconfig_popup_notification",
+      "value": "Vyskakovacie okno"
+    },
+    {
+      "name": "notificationconfig_vibration",
+      "value": "chvenie"
+    },
+    {
+      "name": "notificationconfig_sound_file",
+      "value": "Zvukový súbor:"
+    },
+    {
+      "name": "callrecordingconfig_call_saved",
+      "value": "Hovor bol úspešne uložený"
+    },
+    {
+      "name": "callrecordingconfig_call_saved_to",
+      "value": "Ušetrite do: %1$s"
+    },
+    {
+      "name": "media_configform_audio_device_config_changed",
+      "value": "Konfigurácia zvukového zariadenia sa zmenila"
+    },
+    {
+      "name": "media_configform_audio_device_config_management_click",
+      "value": "Kliknite sem pre správu zariadení"
+    },
+    {
+      "name": "media_configform_preview",
+      "value": "Náhľad"
+    },
+    {
+      "name": "media_security_checksum_mismatch",
+      "value": "<html>Internal ZRTP packet checksum mismatch.<br/>If you see this message often this may mean a denial-of-service attack!</html>"
+    },
+    {
+      "name": "media_security_data_send_failed",
+      "value": "<html>Failed to send encryption data. Internet data connection or peer is down.<br/><b>Your call is not secure</b><br/>Error code: %1$s</html>"
+    },
+    {
+      "name": "imedia_security_retry_rate_exceeded",
+      "value": "<html>Too much retries during security negotiation. This may mean that the other party has internet connection problems.<br/><b>Your call is not secure</b><br/>Error code: %1$s</html>"
+    },
+    {
+      "name": "media_security_internal_protocol_error",
+      "value": "<html>Internal protocol error occurred.<br/><b>Your call is not secure</b><br/>Error code: %1$s</html>"
+    },
+    {
+      "name": "media_security_off",
+      "value": "Vypnúť podporu šifrovania"
+    },
+    {
+      "name": "media_security_on",
+      "value": "Zapnúť podporu šifrovania"
+    },
+    {
+      "name": "media_security_severe_generic_message",
+      "value": "<html>A severe security problem was detected.<br/><b>Your call is not secure</b><br/>Error code: %1$s</html>"
+    },
+    {
+      "name": "media_security_warning_no_rs_match",
+      "value": "<html>No retained shared secret available.<br/><b>SAS verification is recommended</b></html>"
+    },
+    {
+      "name": "media_security_warning_no_expected_rs_match",
+      "value": "<html>An expected retained shared secret is missing.<br/><b>SAS verification is required</b><br/>If SAS codes do not match then hangup and try again</html>"
+    },
+    {
+      "name": "media_security_zrtp_generic_message",
+      "value": "<html>A severe ZRTP problem was detected.<br/><b>Your call is not secure</b><br/>Error code: %1$s</html>"
+    },
+    {
+      "name": "media_security_zrtp_handshake_timeout",
+      "value": "Hovor nie je bezpečný; Časový limit na nadviazanie spojenia RTP vypršal: %1$s"
+    },
+    {
+      "name": "media_security_encryption_ended",
+      "value": "Šifrovanie hovorov skončilo: %1$s"
+    },
+    {
+      "name": "menu_crypto_plain_text",
+      "value": "Nešifrovaný text"
+    },
+    {
+      "name": "omemo_authbuddy_authenticate_buddy",
+      "value": "Autentifikácia Buddy"
+    },
+    {
+      "name": "omemo_authbuddy_authenticate_info",
+      "value": "Máte neoverených kamarátov. Neoverení kamaráti nemôžu prijímať správu OMEMO. Začiarknite na overenie."
+    },
+    {
+      "name": "omemo_authbuddy_local_fingerprint",
+      "value": "Môj odtlačok prsta %1$s:\n%2$s"
+    },
+    {
+      "name": "omemo_authbuddy_verify_buddy",
+      "value": "Overte Buddy"
+    },
+    {
+      "name": "omemo_identity_keypairs_missing",
+      "value": "Vytvorte OMEMO IdentityKeyPair pre: %1$s"
+    },
+    {
+      "name": "omemo_identity_key_invalid",
+      "value": "Neplatné IdentityKey pre omemoDevice: %1$s.\nVýnimka:%2$s."
+    },
+    {
+      "name": "omemo_identity_key_missing",
+      "value": "Chýba OMEMO IdentityKey pre %1$s.\nPokračujte v sťahovaní zo servera."
+    },
+    {
+      "name": "omemo_identity_keypairs_invalid",
+      "value": "Neplatné IdentityKeyPairs pre omemoDevice: %1$s.\nVýnimka:%2$s."
+    },
+    {
+      "name": "omemo_init_failed_corrupted_omemoKey_exception",
+      "value": "Inicializácia aplikácie OmemoManager zlyhala a správy Omemo nefungujú. Ak problém pretrváva po reštarte prosím pokračujte do časti „Regenerovať identity OMEMO“ pre zlyhané omomoDevice: %1$s.\n\nVýnimka: %2$s."
+    },
+    {
+      "name": "omemo_init_failed_no_response",
+      "value": "Inicializácia aplikácie OmemoManager zlyhala a správy Omemo nemusia fungovať správne: %1$s"
+    },
+    {
+      "name": "omemo_init_failed_title",
+      "value": "Inicializácia OmemoManageru zlyhala"
+    },
+    {
+      "name": "omemo_menu_authenticated",
+      "value": "OMEMO overené"
+    },
+    {
+      "name": "omemo_send_error",
+      "value": "Odoslanie správy zlyhalo. Skúste znova po odstránení všetkých chýb: %1$s"
+    },
+    {
+      "name": "omemo_menu_unauthenticated",
+      "value": "OMEMO neautentizované"
+    },
+    {
+      "name": "omemo_menu_untrusted",
+      "value": "OMEMO nedôveryhodné"
+    },
+    {
+      "name": "omemo_rebuild_session",
+      "value": "Znovu vytvorte novú reláciu pre chýbajúce: %1$s"
+    },
+    {
+      "name": "omemo_purge_inactive_device_error",
+      "value": "Nepodarilo sa odstrániť neaktívne OMEMO zariadenie pre: %1$s."
+    },
+    {
+      "name": "settings_bosh_proxy",
+      "value": "Konfigurácia BOSH-Proxy"
+    },
+    {
+      "name": "settings_bosh_proxy_summary",
+      "value": "Nastaviť pripojenie cez BOSH / Proxy pre účet"
+    },
+    {
+      "name": "bosh_proxy_url_null",
+      "value": "Obsah poľa adresy URL BOSH nemôže byť prázdny"
+    },
+    {
+      "name": "bosh_proxy_host_port_null",
+      "value": "Obsah polí Proxy Host a Port nemôže byť prázdny"
+    },
+    {
+      "name": "bosh_proxy_type",
+      "value": "Proxy-typ:"
+    },
+    {
+      "name": "bosh_proxy_url",
+      "value": "Adresa URL BOSH:"
+    },
+    {
+      "name": "bosh_proxy_use_http",
+      "value": "Použite HTTP Proxy"
+    },
+    {
+      "name": "bosh_proxy_host",
+      "value": "Host proxy:"
+    },
+    {
+      "name": "bosh_proxy_port",
+      "value": "Proxy Port:"
+    },
+    {
+      "name": "provisioning_auto",
+      "value": "Automaticky objaví URI provizórnych služieb"
+    },
+    {
+      "name": "provisioning_bonjour",
+      "value": "Bonjour"
+    },
+    {
+      "name": "provisioning_clipboard_failed",
+      "value": "Nepodarilo sa skopírovať UUID do schránky"
+    },
+    {
+      "name": "provisioning_copy_to_clipboard",
+      "value": "Skopírovať UUID do schránky"
+    },
+    {
+      "name": "provisioning_credentials",
+      "value": "Posledné uložené poverovacie oprávnenia"
+    },
+    {
+      "name": "provisioning_enable",
+      "value": "Povoliť tvorbu rezerv"
+    },
+    {
+      "name": "provisioning_exit_on_failed",
+      "value": "Ak dotácia zlyhá, aplikáciu ukončite"
+    },
+    {
+      "name": "provisioning_forget_password",
+      "value": "Zabudnuté heslo"
+    },
+    {
+      "name": "provisioning_manual",
+      "value": "Ručne určte URI dotácie"
+    },
+    {
+      "name": "provisioning_method",
+      "value": "Spôsob poskytovania"
+    },
+    {
+      "name": "provisioning_failed",
+      "value": "Poskytovanie zlyhalo"
+    },
+    {
+      "name": "provisioning_failed_message",
+      "value": "<html>Provisioning failed. %1$s!<br/>Please, try again later or contact your administrator.</html>"
+    },
+    {
+      "name": "provisioning",
+      "value": "Provisioning"
+    },
+    {
+      "name": "provisioning_summary",
+      "value": "Nakonfigurujte nastavenia poskytovania"
+    },
+    {
+      "name": "provisioning_remove_credentials_message",
+      "value": "Naozaj chcete odstrániť heslo na spravovanie účtu?"
+    },
+    {
+      "name": "provisioning_restart_alert",
+      "value": "Upozorňujeme, že vaše zmeny sa prejavia až pri ďalšom spustení aTalk!"
+    },
+    {
+      "name": "settings_dnssec_dane",
+      "value": "Zabezpečenie SSL / DNSSEC / DANE"
+    },
+    {
+      "name": "settings_dns",
+      "value": "DNS"
+    },
+    {
+      "name": "settings_dns_summary",
+      "value": "Nakonfigurujte nastavenia DNS"
+    },
+    {
+      "name": "dnsconfig_dnssec",
+      "value": "Zabezpečenie DNS (DNSSEC)"
+    },
+    {
+      "name": "dnsconfig_dnssec_domain_name",
+      "value": "doména"
+    },
+    {
+      "name": "dnsconfig_dnssec_enable_failed",
+      "value": "Zmena stavu zlyhala"
+    },
+    {
+      "name": "dnsconfig_dnssec_enable_failed_message",
+      "value": "Zmena stavu povoleného DNSSEC zlyhala."
+    },
+    {
+      "name": "dnsconfig_dnssec_mode",
+      "value": "Správanie"
+    },
+    {
+      "name": "dnsconfig_dnssec_restart_alert",
+      "value": "<html>Note that enabling or disabling DNSSEC disables the parallel resolver and will only take effect the next time you start aTalk.</html>"
+    },
+    {
+      "name": "dnsconfig_dnssec_title",
+      "value": "Zálohovací prekladač"
+    },
+    {
+      "name": "dnsconfig_dnssec_check_absolute",
+      "value": "Zaobchádzajte so všetkými názvami domén ako s absolútnymi"
+    },
+    {
+      "name": "dnsconfig_dnssec_check_enable",
+      "value": "Povoliť prekladač DNSSEC"
+    },
+    {
+      "name": "dnsconfig_dnssec_label_default",
+      "value": "Predvolené správanie"
+    },
+    {
+      "name": "dnsconfig_dnssec_label_name_servers",
+      "value": "Vlastné menové servery"
+    },
+    {
+      "name": "dnsconfig_dnssec_label_name_servers_hint",
+      "value": "<html>Multiple servers can be delimited with a comma, e.g. 149.20.64.20, 149.20.64.21 (OARC's Open DNSSEC Validating Resolver)</html>"
+    },
+    {
+      "name": "dns_insecure_answer_title",
+      "value": "Zlyhanie DNSSEC"
+    },
+    {
+      "name": "dns_insecure_answer_message_insecure",
+      "value": "Odpoveď DNS pre %1$s je neistá."
+    },
+    {
+      "name": "dns_insecure_answer_message_reason",
+      "value": "Odpoveď DNS pre %1$s je neistá.\n Dôvod: %2$s"
+    },
+    {
+      "name": "dns_dnssec_advanced_options",
+      "value": "Zobraziť rozšírené možnosti"
+    },
+    {
+      "name": "dns_dnssec_advanced_reason_invalid",
+      "value": "<html>DNSSEC signed zone %1$s returned invalid data.<br/>%2$s</html>"
+    },
+    {
+      "name": "dns_dnssec_advanced_reason_unsigned",
+      "value": "Dopyt %1$s pre %2$s nie je podpísaný."
+    },
+    {
+      "name": "dns_dnssec_warning",
+      "value": "<html><div width=\"600\">%1$s has tried to connect to the server at <b>%2$s<</b>,\nwhich is a domain that carries a strong protection called DNSSEC. The information that %1$s has obtained\nfrom the DNS server is not in accordance with the information DNSSEC provides about this domain.<br/><br/><b>\nThis should not happen unless very serious mistakes were made at %2$s. It therefore is a very strong indication that something is\nseriously wrong with the trustworthiness of your network connection.</b><br/><br/>\nIf you are on someone else's internet connection (like a WiFi hotspot) or if there are special circumstances that make you distrust\nyour regular internet provider, we strongly advise you to stop using it immediately and look for an alternative internet access point.\nWhen you are safely connected to another network, the problem should be resolved automatically. If this is not the case, contact your\nservice provider to inform them about the issue. </div></html>"
+    },
+    {
+      "name": "settings_ssl_certificate",
+      "value": "Certifikát SSL"
+    },
+    {
+      "name": "settings_ssl_certificate_purge",
+      "value": "Vyčistiť certifikáty schválené používateľom pre: %1$s"
+    },
+    {
+      "name": "settings_ssl_certificate_remove",
+      "value": "Odstráňte certifikát"
+    },
+    {
+      "name": "settings_ssl_certificate_summary",
+      "value": "Správa certifikátov SSL"
+    },
+    {
+      "name": "tls_cert",
+      "value": "Certifikát TLS klienta"
+    },
+    {
+      "name": "tls_cert_prompt",
+      "value": "Vyberte certifikát TLS"
+    },
+    {
+      "name": "tls_cert_summary",
+      "value": "Použitie certifikátu pri autentifikácii užívateľa so serverom"
+    },
+    {
+      "name": "zid_reset_summary",
+      "value": "Vygenerovať nový dlhodobý identifikátor ZRTP"
+    },
+    {
+      "name": "zid_reset_title",
+      "value": "Vygenerovať nový ZID"
+    },
+    {
+      "name": "zid_reset_done",
+      "value": "ZID bol generovaný nanovo"
+    },
+    {
+      "name": "commit_progress_message",
+      "value": "Na ukladanie zmien účtu čakajte…"
+    },
+    {
+      "name": "commit_progress_title",
+      "value": "\"Záväzok…\""
+    },
+    {
+      "name": "settings_not_set",
+      "value": "(Nie je nastavené)"
+    },
+    {
+      "name": "enc_audio_title",
+      "value": "Audio kódovanie"
+    },
+    {
+      "name": "enc_override_global",
+      "value": "Prepísať globálne"
+    },
+    {
+      "name": "enc_video_title",
+      "value": "Kódovanie videa"
+    },
+    {
+      "name": "none",
+      "value": "nikto"
+    },
+    {
+      "name": "sec_encryption",
+      "value": "Šifrovanie"
+    },
+    {
+      "name": "sec_protocols_title",
+      "value": "Bezpečnostné protokoly"
+    },
+    {
+      "name": "sec_protocols_message",
+      "value": "Vyberte požadované protokoly v poradí"
+    },
+    {
+      "name": "discard",
+      "value": "Zrušiť"
+    },
+    {
+      "name": "sec_zrtp_signalling_on",
+      "value": "Oznamovať ZRTP pomocou signalizačného protokolu"
+    },
+    {
+      "name": "sec_zrtp_signalling_off",
+      "value": "Neoznamovať ZRTP"
+    },
+    {
+      "name": "service_gui_SERVERS_LIST_ADD_SERVER",
+      "value": "Pridať server"
+    },
+    {
+      "name": "service_gui_SERVERS_LIST_EMPTY",
+      "value": "Zoznam je prázdny. Kliknutím pridajte nový záznam…"
+    },
+    {
+      "name": "service_gui_JINGLE_EDIT_JID",
+      "value": "Adresa JID"
+    },
+    {
+      "name": "service_gui_JINGLE_EDIT_SUPPORT_RELAY",
+      "value": "Podporné relé"
+    },
+    {
+      "name": "stun_turn_server",
+      "value": "STUN/TURN Server"
+    },
+    {
+      "name": "ip_address",
+      "value": "IP adresa"
+    },
+    {
+      "name": "server_port",
+      "value": "Port servera"
+    },
+    {
+      "name": "turn_supported",
+      "value": "Podpora TURN"
+    },
+    {
+      "name": "username",
+      "value": "Užívateľské meno"
+    },
+    {
+      "name": "security_dtls_srtp",
+      "value": "Signalizácia DTLS_SRTP"
+    },
+    {
+      "name": "security_dtls_title",
+      "value": "Algoritmus podpisu certifikátu TLS"
+    },
+    {
+      "name": "security_encryption_enable",
+      "value": "Povoliť šifrovanie hovorov"
+    },
+    {
+      "name": "security_encryption_protocols",
+      "value": "Šifrovacie protokoly"
+    },
+    {
+      "name": "security_rtp_savp",
+      "value": "Indikácia RTP / SAVP"
+    },
+    {
+      "name": "security_rtp_savp_title",
+      "value": "Metóda indikácie RTP / SAVP"
+    },
+    {
+      "name": "security_sdes",
+      "value": "Možnosti SDES"
+    },
+    {
+      "name": "security_sdes_dlg_title",
+      "value": "Vyberte požadované sady šifry"
+    },
+    {
+      "name": "security_sdes_title",
+      "value": "Šifrovacie sady SDES"
+    },
+    {
+      "name": "security_zrtp_options",
+      "value": "Možnosti ZRTP"
+    },
+    {
+      "name": "security_zrtp_signalling",
+      "value": "Signalizácia ZRTP"
+    },
+    {
+      "name": "audio_encoding",
+      "value": "Audio kódovanie"
+    },
+    {
+      "name": "audio_enc_global_override_summary",
+      "value": "Prepíše globálne definované zvukové formáty pre tento účet"
+    },
+    {
+      "name": "call_encryption",
+      "value": "Zavolajte nastavenia šifrovania"
+    },
+    {
+      "name": "video_encoding",
+      "value": "Kódovanie videa"
+    },
+    {
+      "name": "video_enc_global_override_summary",
+      "value": "Prepísať globálne definované formáty videa pre tento účet"
+    },
+    {
+      "name": "jbr_auto_sign_in",
+      "value": "Pripojiť pri spustení"
+    },
+    {
+      "name": "jbr_auto_stun_discovery",
+      "value": "Automatické zistenie serverov STUN / TURN"
+    },
+    {
+      "name": "jbr_connection_summary",
+      "value": "Nastavte podrobnosti pripojenia…"
+    },
+    {
+      "name": "jbr_connection",
+      "value": "Nastavenia pripojenia"
+    },
+    {
+      "name": "jbr_jingle_disable",
+      "value": "Zakázať mediálne hovory (Jingle)"
+    },
+    {
+      "name": "jbr_jingle_summary",
+      "value": "(zvukové a videohovory s XMPP)"
+    },
+    {
+      "name": "jbr_dtmf_method",
+      "value": "Metóda DTMF"
+    },
+    {
+      "name": "jbr_dtmf_summary",
+      "value": "Výber metódy DTMF"
+    },
+    {
+      "name": "jbr_gmail_notifications",
+      "value": "Upozornenia služby Gmail týkajúce sa nových správ"
+    },
+    {
+      "name": "jbr_google_contact_search",
+      "value": "Vyhľadávanie kontaktov Google"
+    },
+    {
+      "name": "jbr_gtalk_domain",
+      "value": "Doména, ktorá bude používať hovor GTalk"
+    },
+    {
+      "name": "jbr_ice_summary",
+      "value": "Konfigurovať možnosti ICE…"
+    },
+    {
+      "name": "jbr_jingle_auto",
+      "value": "Automatické zistenie relé Jingle Nodes"
+    },
+    {
+      "name": "jbr_jingle_list",
+      "value": "Dodatočné uzlové uzly…"
+    },
+    {
+      "name": "jbr_jingle_list_summary",
+      "value": "Užívateľ definoval ďalšie uzly spojenia na použitie"
+    },
+    {
+      "name": "jbr_jingle_nodes",
+      "value": "Uzly jingle"
+    },
+    {
+      "name": "jbr_jingle_use",
+      "value": "Použite uzlové uzly"
+    },
+    {
+      "name": "jbr_keep_alive",
+      "value": "Udržať nažive"
+    },
+    {
+      "name": "jbr_keep_alive_enable",
+      "value": "Povoliť možnosť Ponechať nažive"
+    },
+    {
+      "name": "jbr_keep_alive_summary",
+      "value": "Povoliť, ak dochádza k častému odpojeniu mobilnej siete"
+    },
+    {
+      "name": "jbr_tls_ver_min",
+      "value": "Minimálna verzia TLS"
+    },
+    {
+      "name": "jbr_tls_ver_min_summary",
+      "value": "Pripojte sa pomocou tejto alebo vyššej verzie protokolu TLS"
+    },
+    {
+      "name": "jbr_non_secure_allow",
+      "value": "Povoliť nezabezpečené pripojenia"
+    },
+    {
+      "name": "jbr_non_ssk_summary",
+      "value": "Zakázať šifrovanie pripojenia k serveru SSL / TLS"
+    },
+    {
+      "name": "jbr_server_override",
+      "value": "Prepíše predvolené možnosti servera"
+    },
+    {
+      "name": "jbr_password",
+      "value": "Zadajte heslo"
+    },
+    {
+      "name": "jbr_ping_interval",
+      "value": "Interval pingu (1 ~ 3600 sekúnd)"
+    },
+    {
+      "name": "jbr_ping_interval_tune_enable",
+      "value": "Povoliť optimalizáciu intervalu Ping"
+    },
+    {
+      "name": "jbr_ping_interval_tune_off_summary",
+      "value": "Nevykonávajte optimalizáciu intervalu ping pre pripojenie k mobilnej sieti"
+    },
+    {
+      "name": "jbr_ping_interval_tune_on_summary",
+      "value": "Vykonajte optimalizáciu intervalu ping pre pripojenie k mobilnej sieti"
+    },
+    {
+      "name": "jbr_server_port",
+      "value": "Port servera"
+    },
+    {
+      "name": "jbr_priority",
+      "value": "Priorita (rozsah: -128 ~ 127)"
+    },
+    {
+      "name": "jbr_resource_auto_gen",
+      "value": "Automatické generovanie zdrojov"
+    },
+    {
+      "name": "jbr_resource_id",
+      "value": "Zdroj Jabber ID"
+    },
+    {
+      "name": "jbr_resource_name",
+      "value": "Názov zdroja"
+    },
+    {
+      "name": "jbr_server_ip",
+      "value": "Pripojte IP servera"
+    },
+    {
+      "name": "jbr_server_options",
+      "value": "Možnosti servera"
+    },
+    {
+      "name": "jbr_store_password",
+      "value": "Zapamätať heslo"
+    },
+    {
+      "name": "jbr_store_password_summary",
+      "value": "Uložte heslo pre automatické prihlásenie pri spustení aplikácie"
+    },
+    {
+      "name": "jbr_stun_list",
+      "value": "Ďalšie servery STUN / TURN…"
+    },
+    {
+      "name": "jbr_stun_list_summary",
+      "value": "Užívateľ definoval ďalšie servery STUN / TURN na použitie"
+    },
+    {
+      "name": "jbr_telephony_domain",
+      "value": "Telefónna doména"
+    },
+    {
+      "name": "jbr_telephony_voip_pbx",
+      "value": "Telefonovanie VoIP-PBX"
+    },
+    {
+      "name": "jbr_telephony_summary",
+      "value": "Nakonfigurujte možnosti telefonovania…"
+    },
+    {
+      "name": "jbr_use_default_stun",
+      "value": "Použite server Jitsi STUN (záložný server)"
+    },
+    {
+      "name": "jbr_use_ice",
+      "value": "Použite ICE"
+    },
+    {
+      "name": "jbr_use_google_ice",
+      "value": "Použite Jingle / ICE spoločnosti Google (experimentálne)"
+    },
+    {
+      "name": "jbr_use_upnp",
+      "value": "Použite UPnP"
+    },
+    {
+      "name": "jbr_user_id",
+      "value": "ID POUŽÍVATEĽA"
+    },
+    {
+      "name": "jbr_user_name_password",
+      "value": "Používateľské meno a heslo"
+    },
+    {
+      "name": "contact_phone",
+      "value": "Meno kontaktu / Telefón / Jid:"
+    },
+    {
+      "name": "call_via",
+      "value": "Volať prostredníctvom:"
+    },
+    {
+      "name": "contact_phone_empty",
+      "value": "Kontaktné telefónne číslo nemôže byť prázdne!"
+    },
+    {
+      "name": "recipient_error_non_ascii",
+      "value": "Špeciálne znaky momentálne nie sú podporované!"
+    },
+    {
+      "name": "domain_not_in_roster",
+      "value": "Zadaná telefónna doména '%1$s ' nie je členom zoznamu kontaktov"
+    },
+    {
+      "name": "not_in_call_group",
+      "value": "%1$s nepatrí do definovanej skupiny hovorov"
+    },
+    {
+      "name": "jingle_not_supported",
+      "value": "%1$s\n nepodporuje protokol Jingle"
+    },
+    {
+      "name": "recipient_error_parse_failed",
+      "value": "Chyba pri analýze adresy!"
+    },
+    {
+      "name": "unknown_recipient",
+      "value": "<Neznámy príjemca>"
+    },
+    {
+      "name": "disabled",
+      "value": "Deaktivované"
+    },
+    {
+      "name": "enabled",
+      "value": "Aktivované"
+    },
+    {
+      "name": "general",
+      "value": "Všeobecné"
+    },
+    {
+      "name": "settings_webview_dlg_title",
+      "value": "Zadajte predvolenú prístupovú stránku webView:"
+    },
+    {
+      "name": "settings_webview_page",
+      "value": "Stránka prístupu na web"
+    },
+    {
+      "name": "settings_messaging",
+      "value": "správy"
+    },
+    {
+      "name": "settings_multichat_off",
+      "value": "Samostatné okno pre konverzáciu ech"
+    },
+    {
+      "name": "settings_multichat_on",
+      "value": "Zoskupte správy z chatu do jedného okna"
+    },
+    {
+      "name": "settings_multichat_window",
+      "value": "Multidiskusné okno"
+    },
+    {
+      "name": "settings_history_log_off",
+      "value": "História rozhovoru je zakázaná"
+    },
+    {
+      "name": "settings_history_log_on",
+      "value": "Zaznamenávať históriu rozhovorov"
+    },
+    {
+      "name": "settings_history_logging",
+      "value": "Protokolovanie histórie rozhovorov"
+    },
+    {
+      "name": "settings_history_mam_warning",
+      "value": "Chyba pri nastavovaní možnosti MAM pre offline používateľa: %1$s"
+    },
+    {
+      "name": "settings_history_dlg_title",
+      "value": "Koľko posledných správ by sa malo zobraziť?"
+    },
+    {
+      "name": "settings_history_size",
+      "value": "Zobraziť posledné správy"
+    },
+    {
+      "name": "settings_history_summary",
+      "value": "%d nedávnych správ v nových diskusiach"
+    },
+    {
+      "name": "settings_history_show",
+      "value": "Zobraziť históriu"
+    },
+    {
+      "name": "settings_message_delivery_receipt",
+      "value": "Prijatie správy"
+    },
+    {
+      "name": "settings_message_delivery_receipt_summary",
+      "value": "Dajte svojim kontaktom vedieť, kedy ste dostali a prečítali si ich správy"
+    },
+    {
+      "name": "settings_typing_notifications",
+      "value": "Odosielajte upozornenia na stav rozhovoru"
+    },
+    {
+      "name": "settings_thumbnail_option",
+      "value": "Odoslať / prijať náhľad miniatúry"
+    },
+    {
+      "name": "settings_file_max_auto_accept",
+      "value": "Automaticky prijať maximálnu veľkosť súboru"
+    },
+    {
+      "name": "settings_presence_subscribe_approval_mode",
+      "value": "Schválenie na odber prítomnosti"
+    },
+    {
+      "name": "settings_presence_subscribe_approval_auto",
+      "value": "Prihlásiť sa na odber - automatické akceptovanie všetkých"
+    },
+    {
+      "name": "settings_presence_subscribe_approval_manual",
+      "value": "Predplatiť schválenie - manuál"
+    },
+    {
+      "name": "settings_chat_notifications",
+      "value": "Zobraziť upozornenia na stavovom riadku"
+    },
+    {
+      "name": "settings_notifications",
+      "value": "oznámenia"
+    },
+    {
+      "name": "settings_auto_update_check_enable",
+      "value": "Povoliť kontrolu automatickej aktualizácie SW"
+    },
+    {
+      "name": "settings_popup_handler",
+      "value": "Typ upozornení automaticky otváraných okien"
+    },
+    {
+      "name": "pref_heads_up_notifications",
+      "value": "Upozornenia na heads-up"
+    },
+    {
+      "name": "pref_heads_up_notifications_summary",
+      "value": "Zobraziť oznámenia o heads-up"
+    },
+    {
+      "name": "popup_auto",
+      "value": "Auto"
+    },
+    {
+      "name": "popup_status_bar",
+      "value": "Upozornenia na stavovom riadku"
+    },
+    {
+      "name": "settings_event_summary",
+      "value": "Konfigurovať jednotlivé oznámenia"
+    },
+    {
+      "name": "settings_event_title",
+      "value": "Diania"
+    },
+    {
+      "name": "quiet_hours",
+      "value": "Pokojné hodiny"
+    },
+    {
+      "name": "quiet_hours_start_time",
+      "value": "Čas začatia"
+    },
+    {
+      "name": "quiet_hours_end_time",
+      "value": "Čas skončenia"
+    },
+    {
+      "name": "quiet_hours_enable",
+      "value": "Umožnite tiché hodiny"
+    },
+    {
+      "name": "quiet_hours_summary",
+      "value": "Upozornenia sa stíšia v tichých hodinách"
+    },
+    {
+      "name": "settings_show_icon",
+      "value": "Zobraziť ikonu aTalk"
+    },
+    {
+      "name": "settings_show_icon_summary_off",
+      "value": "Skryť aTalk aktívny indikátor v upozornení"
+    },
+    {
+      "name": "settings_show_icon_summary_on",
+      "value": "Zobraziť aTalk aktívny indikátor v upozornení"
+    },
+    {
+      "name": "settings_auto_start",
+      "value": "Spustenie aTalk pri reštarte"
+    },
+    {
+      "name": "settings_auto_start_summary_disable",
+      "value": "Vypnite  aTalk  pri ďalšom reštarte zariadenia"
+    },
+    {
+      "name": "settings_auto_start_summary_enable",
+      "value": "Povoľte automatické spustenie aTalk pri ďalšom reštarte zariadenia"
+    },
+    {
+      "name": "settings_locale",
+      "value": "Jazyk"
+    },
+    {
+      "name": "settings_locale_system",
+      "value": "Predvolený systém"
+    },
+    {
+      "name": "settings_theme_dark",
+      "value": "Tmavá"
+    },
+    {
+      "name": "settings_theme_light",
+      "value": "Svetlá"
+    },
+    {
+      "name": "settings_theme",
+      "value": "Téma"
+    },
+    {
+      "name": "tts_delay",
+      "value": "Oneskorenie textu na reč (ms)"
+    },
+    {
+      "name": "tts_settings",
+      "value": "Všeobecné nastavenia TTS…"
+    },
+    {
+      "name": "tts_disable",
+      "value": "Disable Text ➡ Speech"
+    },
+    {
+      "name": "tts_enable",
+      "value": "Enable Text ➡ Speech"
+    },
+    {
+      "name": "tts_synthesis",
+      "value": "Zadajte text, ktorý chcete vysloviť alebo syntetizovať, a uložte ho do súboru:"
+    },
+    {
+      "name": "tts_voice",
+      "value": "Predvolený hlas TTS:"
+    },
+    {
+      "name": "loading_wait",
+      "value": "Načitáva sa, prosím čakajte…"
+    },
+    {
+      "name": "settings_normalize_number",
+      "value": "Špeciálne symboly v telefónnych číslach"
+    },
+    {
+      "name": "settings_normalize_off",
+      "value": "Žiadne úpravy telefónneho čísla"
+    },
+    {
+      "name": "settings_normalize_on",
+      "value": "Z tohto čísla budú odstránené špeciálne symboly"
+    },
+    {
+      "name": "settings_phone_alpha_no_allow",
+      "value": "Žiadne úpravy telefónneho čísla"
+    },
+    {
+      "name": "settings_phone_alpha_allow",
+      "value": "Písmená v telefónnych číslach"
+    },
+    {
+      "name": "call",
+      "value": "volanie"
+    },
+    {
+      "name": "media_call",
+      "value": "Mediálny hovor"
+    },
+    {
+      "name": "audio",
+      "value": "Audio"
+    },
+    {
+      "name": "settings_echo_cancel",
+      "value": "Zrušenie ozveny"
+    },
+    {
+      "name": "settings_echo_cancel_off",
+      "value": "invalidný"
+    },
+    {
+      "name": "settings_echo_cancel_on",
+      "value": "povolené"
+    },
+    {
+      "name": "settings_agc",
+      "value": "Automatické riadenie hlasitosti"
+    },
+    {
+      "name": "settings_agc_off",
+      "value": "Deaktivované"
+    },
+    {
+      "name": "settings_agc_on",
+      "value": "Aktivované"
+    },
+    {
+      "name": "settings_denoise",
+      "value": "Potlačenie hluku"
+    },
+    {
+      "name": "settings_denoise_off",
+      "value": "Deaktivované"
+    },
+    {
+      "name": "settings_denoise_on",
+      "value": "Aktivované"
+    },
+    {
+      "name": "settings_audio_codecs_summary",
+      "value": "Vyberte a definujte prioritu zvukových kodekov"
+    },
+    {
+      "name": "settings_audio_codecs",
+      "value": "Zvukové kodeky"
+    },
+    {
+      "name": "video",
+      "value": "Video"
+    },
+    {
+      "name": "settings_system_android_camera",
+      "value": "AndroidCamera"
+    },
+    {
+      "name": "settings_system_media_recorder",
+      "value": "MediaRecorder"
+    },
+    {
+      "name": "settings_camera",
+      "value": "fotoaparát"
+    },
+    {
+      "name": "settings_no_camera",
+      "value": "Nenašlo sa žiadne kompatibilné zariadenie s fotoaparátom"
+    },
+    {
+      "name": "settings_use_back_camera",
+      "value": "Použite zadnú kameru"
+    },
+    {
+      "name": "settings_use_front_camera",
+      "value": "Používajte prednú kameru"
+    },
+    {
+      "name": "settings_use_match_camera_resolution",
+      "value": "Použiť najbližšie zodpovedajúce rozlíšenie fotoaparátu: %1$s"
+    },
+    {
+      "name": "settings_direct_surface_decode",
+      "value": "Použiť priame dekódovanie povrchu"
+    },
+    {
+      "name": "settings_direct_surface_encode",
+      "value": "Použiť priame kódovanie povrchu"
+    },
+    {
+      "name": "settings_hw_decode",
+      "value": "Použiť hardvérové dekódovanie (vyžaduje sa reštart)"
+    },
+    {
+      "name": "settings_hw_encode",
+      "value": "Použite hardvérové kódovanie (vyžaduje sa reštart)"
+    },
+    {
+      "name": "settings_media_codec_list",
+      "value": "MediaCodecs"
+    },
+    {
+      "name": "settings_media_codec_list_summary",
+      "value": "Zoznam vstavaných kodérov / dekodérov médií"
+    },
+    {
+      "name": "settings_restart_require",
+      "value": "Vyžadovať reštartovanie aTalk"
+    },
+    {
+      "name": "settings_video_codec_summary",
+      "value": "Vyberte a definujte prioritu videokodekov"
+    },
+    {
+      "name": "settings_video_codec",
+      "value": "Videokodeky"
+    },
+    {
+      "name": "settings_video_resolution",
+      "value": "Rozlíšenie videa"
+    },
+    {
+      "name": "settings_fps_limit_off",
+      "value": "neobmedzený"
+    },
+    {
+      "name": "settings_fps_limit_on",
+      "value": "Upravená snímková frekvencia"
+    },
+    {
+      "name": "settings_video_bitrate",
+      "value": "Prenosová rýchlosť videa (kilobitov / s)"
+    },
+    {
+      "name": "settings_video_frame_rate",
+      "value": "Snímková frekvencia videa"
+    },
+    {
+      "name": "settings_video_fps_description",
+      "value": "Hodnoty akceptované medzi 5 a 30 fps"
+    },
+    {
+      "name": "settings_video_max_bw",
+      "value": "Prah pre RTP tempo (kBytes / s)"
+    },
+    {
+      "name": "settings_video_fps_target",
+      "value": "Cieľová rýchlosť snímok (za sekundu)"
+    },
+    {
+      "name": "settings_messaging_security_summary",
+      "value": "Nastavenia zabezpečenia šifrovania správ"
+    },
+    {
+      "name": "settings_messaging_security",
+      "value": "Zabezpečenie správ"
+    },
+    {
+      "name": "omemo_messaging_security",
+      "value": "Bezpečnosť správ OMEMO"
+    },
+    {
+      "name": "omemo_blind_trust_before_verification",
+      "value": "Slepá dôvera pred overením"
+    },
+    {
+      "name": "omemo_blind_trust_before_verification_summary",
+      "value": "Automaticky veriť všetkým novým zariadeniam kontaktov, ktoré ešte neboli overené; výzva na manuálne potvrdenie, keď overený kontakt pridá nové zariadenia."
+    },
+    {
+      "name": "omemo_regenerate_identities_summary",
+      "value": "Po regenerácii vašej identity OMEMO dostanú všetky vaše kontakty nový odtlačok prsta a musíte ich znova overiť. Vykonajte iba v prípade problémov s nastavením relácie Omemo."
+    },
+    {
+      "name": "omemo_regenerate_identities",
+      "value": "Regenerujte identity OMEMO"
+    },
+    {
+      "name": "omemo_regenerate_title",
+      "value": "Obnovenie identity OMEMO"
+    },
+    {
+      "name": "omemo_purge_devices_summary",
+      "value": "Odstráňte všetky neaktívne zariadenia; publikovať iba aktuálne aktívne zariadenie, ktoré používate."
+    },
+    {
+      "name": "omemo_purge_device_unused",
+      "value": "Vymažte nepoužívané identity"
+    },
+    {
+      "name": "omemo_purge_device",
+      "value": "OMEMO Zariadenia odstrániť"
+    },
+    {
+      "name": "key_fingerprint_security",
+      "value": "Kľúč & zabezpečenie odtlačkov prstov"
+    },
+    {
+      "name": "settings_crypto_priv_key_empty",
+      "value": "Bol nájdený nulový registrovaný užívateľ"
+    },
+    {
+      "name": "settings_crypto_priv_key_summary",
+      "value": "Správa kryptografických súkromných odtlačkov prstov"
+    },
+    {
+      "name": "settings_crypto_priv_key",
+      "value": "Krypto súkromné kľúče"
+    },
+    {
+      "name": "settings_fingerprint_summary",
+      "value": "Spravujte všetky známe odtlačky prstov všetkých známych zariadení\ncolor: cyan = ownDevice; šedá = neaktívny"
+    },
+    {
+      "name": "settings_fingerprint_title",
+      "value": "Odtlačky prstov šifrovacích zariadení"
+    },
+    {
+      "name": "crypto_key_generate_prompt",
+      "value": "Chcete vygenerovať nový kľúč pre %1$s%2$s"
+    },
+    {
+      "name": "crypto_key_generate_title",
+      "value": "Generovanie súkromného kľúča"
+    },
+    {
+      "name": "crypto_key_regenerate_prompt",
+      "value": "Chcete regenerovať kľúč pre %1$s\n\n%2$s"
+    },
+    {
+      "name": "delete_selected",
+      "value": "Zmaž označené"
+    },
+    {
+      "name": "regenerate_selected",
+      "value": "Regenerovať vybraté"
+    },
+    {
+      "name": "crypto_menu_key_generate",
+      "value": "Vygenerujte nový kľúč"
+    },
+    {
+      "name": "crypto_menu_key_regenerate",
+      "value": "Regenerovať kľúč"
+    },
+    {
+      "name": "crypto_menu_fingerprint_copy",
+      "value": "Kopírovanie odtlačkov klúčov"
+    },
+    {
+      "name": "crypto_menu_fingerprint_distrust",
+      "value": "Nedôverovať odtlačku klúča"
+    },
+    {
+      "name": "crypto_menu_fingerprint_trust",
+      "value": "Dôverovať odtlačku klúča"
+    },
+    {
+      "name": "crypto_msg_omemo_session_setup_failed",
+      "value": "Nastavenie relácie OMEMO nebolo úspešné! %1$s"
+    },
+    {
+      "name": "crypto_msg_omemo_session_untrusted",
+      "value": "Našlo sa nula dôveryhodných kamarátov na prijímanie OMEMO správ!"
+    },
+    {
+      "name": "crypto_msg_omemo_session_unverified",
+      "value": "Posielajte správy OMEMO niektorým neznámym kamarátom s neoverenými odtlačkami prstov!"
+    },
+    {
+      "name": "crypto_msg_omemo_session_unverified_untrusted",
+      "value": "Viacosobová diskusia s niektorými kamarátmi nedôveryhodnými alebo s neoverenými odtlačkami prstov!"
+    },
+    {
+      "name": "crypto_msg_omemo_session_verified",
+      "value": "*** Všetci kamaráti boli overení! ***"
+    },
+    {
+      "name": "crypto_fingerprint_status",
+      "value": "Overené: %1$s"
+    },
+    {
+      "name": "crypto_no_key_present",
+      "value": "Nie je prítomný žiadny kľúč"
+    },
+    {
+      "name": "crypto_fingerprint_copy",
+      "value": "Odtlačok prsta bol skopírovaný do schránky!"
+    },
+    {
+      "name": "crypto_omemo_distrust_messaging_stop",
+      "value": "Prestaňte ďalej posielať správu OMEMO kamarátovi: %1$s"
+    },
+    {
+      "name": "crypto_omemo_trust_messaging_resume",
+      "value": "Pokračujte v odosielaní správy OMEMO kamarátovi: %1$s"
+    },
+    {
+      "name": "advanced",
+      "value": "Pokročilé"
+    },
+    {
+      "name": "settings_expert",
+      "value": "Expertné nastavenia"
+    },
+    {
+      "name": "settings_expert_summary",
+      "value": "Prosím buďte opatrní"
+    },
+    {
+      "name": "port",
+      "value": "Port"
+    },
+    {
+      "name": "protocol",
+      "value": "Protokol"
+    },
+    {
+      "name": "opus",
+      "value": "Opus"
+    },
+    {
+      "name": "opus_sampling_rate",
+      "value": "Vzorkovacia frekvencia"
+    },
+    {
+      "name": "opus_bitrate",
+      "value": "Priemerný dátový tok enkodéra (kb/s)"
+    },
+    {
+      "name": "opus_complexity",
+      "value": "Zložitosť kódovania"
+    },
+    {
+      "name": "opus_min_expected_packet_loss",
+      "value": "Minimálna očakávaná strata paketov (%%)"
+    },
+    {
+      "name": "opus_encoder_settings",
+      "value": "Konfigurácia nastavení enkodéra Opus"
+    },
+    {
+      "name": "opus_use_dtx",
+      "value": "Použite DTX"
+    },
+    {
+      "name": "opus_use_fec",
+      "value": "Použite inband FEC"
+    },
+    {
+      "name": "silk",
+      "value": "Silk"
+    },
+    {
+      "name": "silk_encoder_settings",
+      "value": "Konfigurujte nastavenia kódovača Silk"
+    },
+    {
+      "name": "silk_use_fec",
+      "value": "Použite inband FEC"
+    },
+    {
+      "name": "silk_assume_pl",
+      "value": "Vždy predpokladajte stratu paketu"
+    },
+    {
+      "name": "silk_fec_sat",
+      "value": "Prahová hodnota reči (0–1)"
+    },
+    {
+      "name": "silk_fec_advertise",
+      "value": "Propagujte podporu FEC v SDP"
+    },
+    {
+      "name": "battery_optimizations",
+      "value": "Optimalizácia batérie"
+    },
+    {
+      "name": "battery_optimizations_dialog",
+      "value": "Vaše zariadenie má zapnutú optimalizáciu využitia batérie; to môže viesť k oneskoreným správam.\n\nOdporúča sa deaktivovať túto optimalizáciu pre aTalk."
+    },
+    {
+      "name": "battery_optimization_on",
+      "value": "Keď sa vaše zariadenie uspí, nebude aTalk prijímať správy. Budete musieť aTalk znovu spustiť, aby ste dostali nové správy."
+    },
+    {
+      "name": "device_does_not_support_battery_op",
+      "value": "Vaše zariadenie nepodporuje deaktiváciu optimalizácie batérie"
+    },
+    {
+      "name": "disable",
+      "value": "Zakázať"
+    },
+    {
+      "name": "next",
+      "value": "Ďalšie"
+    },
+    {
+      "name": "app_info",
+      "value": "App Info…"
+    },
+    {
+      "name": "permission_app_info",
+      "value": "Info o aplikácii"
+    },
+    {
+      "name": "permission_request_all",
+      "value": "Vyžiadať všetky"
+    },
+    {
+      "name": "permission_camera",
+      "value": "Kamera"
+    },
+    {
+      "name": "permission_contacts",
+      "value": "Kontakty"
+    },
+    {
+      "name": "permission_location",
+      "value": "Poloha"
+    },
+    {
+      "name": "permission_microphone",
+      "value": "Mikrofón"
+    },
+    {
+      "name": "permission_music",
+      "value": "Hudba a zvuk"
+    },
+    {
+      "name": "permission_notifications",
+      "value": "Upozornenia"
+    },
+    {
+      "name": "permission_phone",
+      "value": "Telefonovanie"
+    },
+    {
+      "name": "permission_video",
+      "value": "Foto a video"
+    },
+    {
+      "name": "permission_storage",
+      "value": "Ukladovanie"
+    },
+    {
+      "name": "permission_hint",
+      "value": "Na podporu všetkých funkcií aTalk sa vyžaduje, aby ste udelili povolenia pre nasledujúce služby. Bez nich nemusia funkcie aTalk fungovať alebo môžu mať neočakávané správanie!"
+    },
+    {
+      "name": "permission_denied",
+      "value": "NEPOVOLENÉ"
+    },
+    {
+      "name": "permission_granted",
+      "value": "POVOLENÉ"
+    },
+    {
+      "name": "permission_denied_permanently",
+      "value": "TRVALO ZAMIETNUTÉ"
+    },
+    {
+      "name": "permission_unknown",
+      "value": "NEZNÁMY STAV"
+    },
+    {
+      "name": "mic_permission_denied_dialog_title",
+      "value": "Žiadosť o povolenie zvuku"
+    },
+    {
+      "name": "mic_permission_denied_feedback",
+      "value": "Zvukový hovor nebude k dispozícii, kým nevyhoviete žiadosti o povolenie"
+    },
+    {
+      "name": "camera_permission_denied_dialog_title",
+      "value": "Žiadosť o povolenie kamery"
+    },
+    {
+      "name": "camera_permission_denied_feedback",
+      "value": "Všetky aktivity súvisiace s kamerou nebudú k dispozícii, kým nevydáte žiadosť o povolenie"
+    },
+    {
+      "name": "contacts_permission_denied_dialog_title",
+      "value": "Žiadosť o povolenie kontaktov"
+    },
+    {
+      "name": "contacts_permission_denied_feedback",
+      "value": "Na prístup do stavu telefónu a nastavenie hovoru je potrebné povolenie kontaktov"
+    },
+    {
+      "name": "music_permission_denied_dialog_title",
+      "value": "Žiadosť o povolenie pre hudbu a zvuk"
+    },
+    {
+      "name": "music_permission_denied_feedback",
+      "value": "Mediálny zvukový súbor nebude prístupný, kým neschválite žiadosť o povolenie"
+    },
+    {
+      "name": "location_permission_denied_dialog_title",
+      "value": "Žiadosť o povolenie polohy"
+    },
+    {
+      "name": "location_permission_denied_feedback",
+      "value": "Funkcie GPS-Polohy nebudú k dispozícii, kým neudelíte žiadosť o povolenie"
+    },
+    {
+      "name": "notifications_permission_denied_dialog_title",
+      "value": "Žiadosť o povolenie upozornení"
+    },
+    {
+      "name": "notifications_permission_denied_feedback",
+      "value": "Upozornenia z aTalk budú vypnuté, kým neschválite žiadosť o povolenie"
+    },
+    {
+      "name": "phone_permission_denied_dialog_title",
+      "value": "Prečítajte si žiadosť o povolenie štátneho telefónu"
+    },
+    {
+      "name": "phone_permission_denied_feedback",
+      "value": "Telefónne funkcie nebudú k dispozícii, kým neudelíte žiadosť o povolenie"
+    },
+    {
+      "name": "video_permission_denied_dialog_title",
+      "value": "Žiadosť o povolenie na fotografie a videá"
+    },
+    {
+      "name": "video_permission_denied_feedback",
+      "value": "Mediálny súbor fotografií a videa nebude prístupný, kým neschválite žiadosť o povolenie"
+    },
+    {
+      "name": "storage_permission_denied_dialog_title",
+      "value": "Žiadosť o povolenie na ukladanie"
+    },
+    {
+      "name": "storage_permission_denied_feedback",
+      "value": "Ukladanie odoslaného a prijatého obsahu do úložiska nebude povolené, kým nevyhoviete žiadosti o povolenie"
+    },
+    {
+      "name": "all_permission_denied_dialog_title",
+      "value": "Žiadosť o všetky povolenia"
+    },
+    {
+      "name": "all_permissions_denied_feedback",
+      "value": "aTalk nemusí fungovať správne alebo môže mať neočakávané správanie, pretože niektoré služby boli odmietnuté!\nAk ste vybrali možnosť „Nepýtať sa znova“, musíte prejsť na Nastavenia systému Android -> INFORMÁCIE O aplikácii pre aplikáciu aTalk, čím povolíte povolenie na prístup k zdrojom"
+    },
+    {
+      "name": "permission_denied_all_alert",
+      "value": "aTalk nebude fungovať správne. Odmietli ste aTalk všetkých povolení!\nPotrebujete prejsť na Nastavenia Android -> APP INFO pre aTalk, aby ste povolili povolenie na prístup k prostriedkom."
+    },
+    {
+      "name": "permission_rationale_message",
+      "value": "Zobrazí sa vám každá služba, ktorú aTalk potrebuje; povolte aTalk prístup k týmto službám, aby boli podporované všetky funkcie"
+    },
+    {
+      "name": "permission_rationale_settings_button_text",
+      "value": "NASTAVENIE"
+    },
+    {
+      "name": "permission_rationale_title",
+      "value": "aTalk potrebuje povolenie"
+    },
+    {
+      "name": "location_permission_dialog_title",
+      "value": "Povolenie pre určenie polohy"
+    },
+    {
+      "name": "location_permission_dialog_message",
+      "value": "Povoliť zisťovanie polohy?"
+    },
+    {
+      "name": "location_services_off",
+      "value": "Služba určovania polohy je VYPNUTÁ"
+    },
+    {
+      "name": "open_location_settings",
+      "value": "Povoliť služby určovania polohy?"
+    },
+    {
+      "name": "changelog_full_title",
+      "value": "Zoznam zmien"
+    },
+    {
+      "name": "changelog_title",
+      "value": "Čo je nové"
+    },
+    {
+      "name": "changelog_show_full",
+      "value": "Viac…"
+    },
+    {
+      "name": "changelog_version_format",
+      "value": "Verzia <xliff:g id=\"version_name\">%s</xliff:g>"
+    }
+  ]
+}

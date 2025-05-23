@@ -1,6 +1,6 @@
 /*
- * aTalk, android VoIP and Instant Messaging client
- * Copyright 2014 Eng Chong Meng
+ * aTalk, ohos VoIP and Instant Messaging client
+ * Copyright 2024 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,14 @@
  */
 package org.atalk.ohos.gui.chatroomslist;
 
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.TextView;
+import ohos.agp.components.Checkbox;
+import ohos.agp.components.Component;
+import ohos.agp.components.LayoutScatter;
+import ohos.agp.components.Text;
+import ohos.agp.components.TextField;
+import ohos.agp.window.dialog.BaseDialog;
+import ohos.agp.window.dialog.IDialog;
+import ohos.app.Context;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,11 +33,10 @@ import net.java.sip.communicator.impl.muc.MUCServiceImpl;
 import net.java.sip.communicator.service.muc.ChatRoomWrapper;
 import net.java.sip.communicator.service.protocol.ProtocolProviderService;
 
-import org.atalk.ohos.R;
+import org.atalk.ohos.ResourceTable;
 import org.atalk.ohos.aTalkApp;
-import org.atalk.ohos.gui.dialogs.BaseDialogFragment;
-import org.atalk.ohos.gui.util.ViewUtil;
-import org.jetbrains.annotations.NotNull;
+import org.atalk.ohos.gui.dialogs.DialogA;
+import org.atalk.ohos.util.ComponentUtil;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smackx.bookmarks.BookmarkManager;
@@ -53,23 +52,23 @@ import timber.log.Timber;
  *
  * @author Eng Chong Meng
  */
-public class ChatRoomBookmarkDialog extends BaseDialogFragment {
-    private MUCServiceImpl mucService;
-    private ChatRoomWrapper mChatRoomWrapper;
-    private OnFinishedCallback finishedCallback = null;
+public class ChatRoomBookmarkDialog {
+    private final Context mContext;
+    private final MUCServiceImpl mMucService;
+    private final ChatRoomWrapper mChatRoomWrapper;
+    private final OnFinishedCallback finishedCallback;
 
     /**
      * The account list view.
      */
-    private TextView mAccount;
-    private TextView mChatRoom;
+    private Text mAccount;
+    private Text mChatRoom;
 
-    private EditText mucNameField;
-    private EditText nicknameField;
-    private CheckBox mAutoJoin;
-    private CheckBox mBookmark;
-
-    private EditText mPasswordField;
+    private TextField mucNameField;
+    private TextField nicknameField;
+    private TextField mPasswordField;
+    private Checkbox mAutoJoin;
+    private Checkbox mBookmark;
 
     /**
      * Constructs the <code>ChatInviteDialog</code>.
@@ -77,51 +76,57 @@ public class ChatRoomBookmarkDialog extends BaseDialogFragment {
      * @param chatRoomWrapper the <code>ChatRoomWrapper</code> whom attributes are to be modified.
      * @param callback to be call on dialog closed.
      */
-    public static ChatRoomBookmarkDialog getInstance(ChatRoomWrapper chatRoomWrapper, OnFinishedCallback callback) {
-        ChatRoomBookmarkDialog dialog = new ChatRoomBookmarkDialog();
-        dialog.mucService = MUCActivator.getMUCService();
-        dialog.mChatRoomWrapper = chatRoomWrapper;
-        dialog.finishedCallback = callback;
-
-        Bundle args = new Bundle();
-        dialog.setArguments(args);
-        return dialog;
+    public ChatRoomBookmarkDialog(Context context, ChatRoomWrapper chatRoomWrapper, OnFinishedCallback callback) {
+        mContext = context;
+        mMucService = MUCActivator.getMUCService();
+        mChatRoomWrapper = chatRoomWrapper;
+        finishedCallback = callback;
     }
 
-    @Override
-    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (getDialog() != null)
-            getDialog().setTitle(R.string.chatroom_bookmark_title);
+    public DialogA create() {
+        LayoutScatter scatter = LayoutScatter.getInstance(mContext);
+        Component contentView = scatter.parse(ResourceTable.Layout_chatroom_bookmark, null, false);
 
-        View contentView = inflater.inflate(R.layout.chatroom_bookmark, container, false);
+        mAccount = contentView.findComponentById(ResourceTable.Id_jid_account);
+        mucNameField = contentView.findComponentById(ResourceTable.Id_mucName_Edit);
 
-        mAccount = contentView.findViewById(R.id.jid_account);
-        mucNameField = contentView.findViewById(R.id.mucName_Edit);
+        nicknameField = contentView.findComponentById(ResourceTable.Id_nickName_Edit);
+        mAutoJoin = contentView.findComponentById(ResourceTable.Id_cb_autojoin);
+        mBookmark = contentView.findComponentById(ResourceTable.Id_cb_bookmark);
 
-        nicknameField = contentView.findViewById(R.id.nickName_Edit);
-        mAutoJoin = contentView.findViewById(R.id.cb_autojoin);
-        mBookmark = contentView.findViewById(R.id.cb_bookmark);
+        mPasswordField = contentView.findComponentById(ResourceTable.Id_passwordField);
+        Checkbox mShowPasswordCheckBox = contentView.findComponentById(ResourceTable.Id_show_password);
+        mShowPasswordCheckBox.setCheckedStateChangedListener((buttonView, isChecked)
+                -> ComponentUtil.showPassword(mPasswordField, isChecked));
 
-        mPasswordField = contentView.findViewById(R.id.passwordField);
-        CheckBox mShowPasswordCheckBox = contentView.findViewById(R.id.show_password);
-        mShowPasswordCheckBox.setOnCheckedChangeListener((buttonView, isChecked)
-                -> ViewUtil.showPassword(mPasswordField, isChecked));
-
-        mChatRoom = contentView.findViewById(R.id.jid_chatroom);
+        mChatRoom = contentView.findComponentById(ResourceTable.Id_jid_chatroom);
         initBookmarkedConference();
 
-        Button mApplyButton = contentView.findViewById(R.id.button_Apply);
-        mApplyButton.setOnClickListener(v -> {
+        DialogA.Builder builder = new DialogA.Builder(mContext);
+        builder.setTitle(ResourceTable.String_chatroom_bookmark_title)
+                .setComponent(contentView)
+                .setNegativeButton(ResourceTable.String_ok, DialogA::remove);
+
+        builder.setPositiveButton(ResourceTable.String_apply, dialog -> {
             if (updateBookmarkedConference())
-                closeDialog();
+                dialog.remove();
         });
 
-        Button mCancelButton = contentView.findViewById(R.id.button_Cancel);
-        mCancelButton.setOnClickListener(v -> closeDialog());
-
-        setCancelable(false);
-        return contentView;
+        DialogA sDialog = builder.create();
+        sDialog.setSwipeToDismiss(true);
+        sDialog.setAutoClosable(false);
+        sDialog.siteRemovable(false);
+        sDialog.registerRemoveCallback(removeCallback);
+        return sDialog;
     }
+
+    BaseDialog.RemoveCallback removeCallback = new BaseDialog.RemoveCallback() {
+        @Override
+        public void onRemove(IDialog iDialog) {
+            if (finishedCallback != null)
+                finishedCallback.onCloseDialog();
+        }
+    };
 
     /**
      * Creates the providers comboBox and filling its content with the current available chatRooms
@@ -143,12 +148,6 @@ public class ChatRoomBookmarkDialog extends BaseDialogFragment {
         mBookmark.setChecked(mChatRoomWrapper.isBookmarked());
     }
 
-    private void closeDialog() {
-        if (finishedCallback != null)
-            finishedCallback.onCloseDialog();
-        dismiss();
-    }
-
     /**
      * Update the bookmarks on server.
      */
@@ -165,10 +164,10 @@ public class ChatRoomBookmarkDialog extends BaseDialogFragment {
                 bookmarkedEntityList.add(bookmarkedConference.getJid());
             }
 
-            String name = ViewUtil.toString(mucNameField);
-            String nickStr = ViewUtil.toString(nicknameField);
+            String name = ComponentUtil.toString(mucNameField);
+            String nickStr = ComponentUtil.toString(nicknameField);
             Resourcepart nickName = (nickStr == null) ? null : Resourcepart.from(nickStr);
-            String password = ViewUtil.toString(mPasswordField);
+            String password = ComponentUtil.toString(mPasswordField);
 
             boolean autoJoin = mAutoJoin.isChecked();
             boolean bookmark = mBookmark.isChecked();
@@ -191,11 +190,11 @@ public class ChatRoomBookmarkDialog extends BaseDialogFragment {
             // save info to local chatRoomWrapper
             byte[] pwd = (password == null) ? null : password.getBytes();
             if (autoJoin) {
-                mucService.joinChatRoom(mChatRoomWrapper, nickStr, pwd);
+                mMucService.joinChatRoom(mChatRoomWrapper, nickStr, pwd);
             }
         } catch (SmackException.NoResponseException | SmackException.NotConnectedException
                  | XMPPException.XMPPErrorException | InterruptedException | XmppStringprepException e) {
-            String errMag = aTalkApp.getResString(R.string.chatroom_bookmark_update_failed,
+            String errMag = aTalkApp.getResString(ResourceTable.String_chatroom_bookmark_update_failed,
                     mChatRoomWrapper, e.getMessage());
             Timber.w(errMag);
             aTalkApp.showToastMessage(errMag);

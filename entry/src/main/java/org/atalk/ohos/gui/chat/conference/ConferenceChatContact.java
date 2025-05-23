@@ -16,7 +16,7 @@ import net.java.sip.communicator.service.protocol.ChatRoomMember;
 import net.java.sip.communicator.service.protocol.ChatRoomMemberRole;
 
 import org.apache.commons.lang3.StringUtils;
-import org.atalk.ohos.R;
+import org.atalk.ohos.ResourceTable;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.chat.ChatContact;
 
@@ -53,7 +53,7 @@ public class ConferenceChatContact extends ChatContact<ChatRoomMember> {
     public String getName() {
         String name = descriptor.getNickName();
         if (StringUtils.isEmpty(name))
-            name = aTalkApp.getResString(R.string.unknown_user);
+            name = aTalkApp.getResString(ResourceTable.String_unknown_user);
 
         return name;
     }

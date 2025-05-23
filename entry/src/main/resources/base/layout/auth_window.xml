@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<DirectionalLayout xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:width="match_parent"
+    ohos:height="match_content"
+    ohos:orientation="vertical"
+    ohos:padding="$float:screen_padding">
+
+    <Text
+        ohos:id="$+id:text"
+        ohos:text_size="$float:medium_font"
+        ohos:background_element="$graphic:alpha_blue_01"
+        ohos:width="match_parent"
+        ohos:height="match_content"
+        ohos:padding="5vp"
+        ohos:bottom_margin="$float:label_padding"
+        ohos:text="[window text]" />
+
+    <DirectionalLayout
+        ohos:width="match_parent"
+        ohos:height="match_content"
+        ohos:layout_alignment="vertical_center"
+        ohos:bottom_margin="$float:list_padding"
+        ohos:orientation="horizontal">
+
+        <Text
+            ohos:id="$+id:username_label"
+            ohos:text_size="$float:medium_font"
+            ohos:width="match_content"
+            ohos:height="match_content"
+            ohos:text_alignment="vertical_center|end"
+            ohos:text="$string:username_" />
+
+        <TextField
+            ohos:id="$+id:username"
+            ohos:background_element="$graphic:bg_text_field"
+            ohos:width="0vp"
+            ohos:start_margin="5vp"
+            ohos:weight="0.5"
+            ohos:hint="$string:username_hint" />
+    </DirectionalLayout>
+
+    <DirectionalLayout
+        ohos:width="match_parent"
+        ohos:height="match_content"
+        ohos:layout_alignment="vertical_center"
+        ohos:bottom_margin="$float:list_padding"
+        ohos:orientation="horizontal">
+
+        <Text
+            ohos:id="$+id:password_label"
+            ohos:text_size="$float:medium_font"
+            ohos:width="match_content"
+            ohos:height="match_content"
+            ohos:text_alignment="vertical_center|end"
+            ohos:text="$string:password_" />
+
+        <TextField
+            ohos:id="$+id:password"
+            ohos:background_element="$graphic:bg_text_field"
+            ohos:width="match_parent"
+            ohos:text_alignment="center"
+            ohos:start_margin="5vp"
+            ohos:hint="$string:password"
+            ohos:text_input_type="pattern_password" />
+    </DirectionalLayout>
+
+    <Checkbox
+        ohos:id="$+id:store_password"
+        ohos:width="match_parent"
+        ohos:height="match_content"
+        ohos:bottom_margin="$float:list_padding"
+        ohos:text="$string:save_password" />
+
+    <DirectionalLayout
+        ohos:width="match_parent"
+        ohos:height="match_content"
+        ohos:orientation="horizontal">
+
+        <Button
+            ohos:id="$+id:cancelButton"
+            ohos:background_element="$graphic:btn_state_action"
+            ohos:text="$string:cancel" />
+
+        <Button
+            ohos:id="$+id:okButton"
+            ohos:background_element="$graphic:btn_state_action"
+            ohos:start_margin="4vp"
+            ohos:text="$string:ok" />
+    </DirectionalLayout>
+</DirectionalLayout>

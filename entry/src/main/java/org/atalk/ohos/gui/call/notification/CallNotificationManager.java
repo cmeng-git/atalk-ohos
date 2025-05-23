@@ -1,22 +1,40 @@
 /*
- * Jitsi, the OpenSource Java VoIP and Instant Messaging client.
+ * aTalk, ohos VoIP and Instant Messaging client
+ * Copyright 2024 Eng Chong Meng
  *
- * Distributable under LGPL license. See terms of license at gnu.org.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.atalk.ohos.gui.call.notification;
 
-import static org.atalk.impl.appstray.NotificationPopupHandler.getPendingIntentFlag;
+import ohos.aafwk.content.Intent;
+import ohos.aafwk.content.Operation;
+import ohos.app.Context;
+import ohos.event.intentagent.IntentAgent;
+import ohos.event.intentagent.IntentAgentConstant.OperationType;
+import ohos.event.intentagent.IntentAgentHelper;
+import ohos.event.intentagent.IntentAgentInfo;
+import ohos.event.intentagent.TriggerInfo;
+import ohos.event.notification.NotificationActionButton;
+import ohos.event.notification.NotificationActionButton.Builder;
+import ohos.event.notification.NotificationHelper;
+import ohos.event.notification.NotificationRequest;
+import ohos.event.notification.NotificationRequest.NotificationContent;
+import ohos.event.notification.NotificationRequest.NotificationPictureContent;
+import ohos.rpc.RemoteException;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
-import android.widget.RemoteViews;
-
-import androidx.core.app.NotificationCompat;
-
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 
@@ -27,16 +45,20 @@ import net.java.sip.communicator.service.protocol.event.CallChangeListener;
 import net.java.sip.communicator.service.protocol.event.CallPeerEvent;
 
 import org.atalk.impl.appnotification.AppNotifications;
-import org.atalk.ohos.R;
+import org.atalk.ohos.ResourceTable;
+import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.call.CallManager;
 import org.atalk.ohos.gui.call.CallUIUtils;
-import org.atalk.ohos.gui.call.VideoCallActivity;
+import org.atalk.ohos.gui.call.VideoCallAbility;
 import org.atalk.ohos.util.AppImageUtil;
+import org.atalk.ohos.util.LogUtil;
 
 import timber.log.Timber;
 
+import static org.atalk.impl.appstray.NotificationPopupHandler.getIntentFlag;
+
 /**
- * Class manages currently running call control notifications. Those are displayed when {@link VideoCallActivity} is
+ * Class manages currently running call control notifications. Those are displayed when {@link VideoCallAbility} is
  * minimized or closed and the call is still active. They allow user to do basic call operations like mute, put on hold
  * and hang up directly from the call notification control UI.
  *
@@ -44,6 +66,8 @@ import timber.log.Timber;
  * @author Eng Chong Meng
  */
 public class CallNotificationManager {
+    private static final String TAG = CallNotificationManager.class.getSimpleName();
+
     /**
      * Map content contains callId to CallNotificationManager instance.
      */
@@ -55,24 +79,14 @@ public class CallNotificationManager {
     private CtrlNotificationThread mNotificationHandler = null;
 
     /**
-     * Android system NOTIFICATION_SERVICE manager
-     */
-    private NotificationManager mNotificationManager = null;
-
-    /**
-     * Back to call pending intent, to allow trigger from message chat send button
-     */
-    private PendingIntent pVideo = null;
-
-    /**
      * The call ID that will be used in this <code>Instance</code>, and the <code>Intents</code> binding.
      * The ID is managed by {@link CallManager}.
      */
     private final String mCallId;
 
     /**
-     * Map to facilitate the toggle of requestCodeBase between 0 and 10 to avoid existing PendingIntents get cancel:
-     * FLAG_CANCEL_CURRENT <a href="https://developer.android.com/reference/android/app/PendingIntent">PendingIntent</a>.
+     * Map to facilitate the toggle of requestCodeBase between 0 and 10 to avoid existing IntentAgent get cancel:
+     * FLAG_CANCEL_CURRENT <a href="https://developer.android.com/reference/android/app/IntentAgent">PendingIntent</a>.
      */
     private static final Map<String, Integer> requestCodes = new HashMap<>();
 
@@ -109,32 +123,36 @@ public class CallNotificationManager {
         }
 
         // Sets call peer display name and avatar in content view
-        RemoteViews contentView = new RemoteViews(context.getPackageName(), R.layout.call_notification_control_ui);
+        // NotificationRequest.NotificationPictureContent contentView = new RemoteViews(context.getPackageName(), ResourceTable.Layout_call_notification_control_ui);
+        NotificationPictureContent pContent = new NotificationPictureContent();
         CallPeer callPeer = call.getCallPeers().next();
         byte[] avatar = CallUIUtils.getCalleeAvatar(call);
         if (avatar != null) {
-            contentView.setImageViewBitmap(R.id.avatarView, AppImageUtil.bitmapFromBytes(avatar));
+            pContent.setBigPicture(AppImageUtil.pixelMapFromBytes(avatar));
         }
-        contentView.setTextViewText(R.id.calleeDisplayName, callPeer.getDisplayName());
+        // pContent.setTitle()
+        pContent.setText(callPeer.getDisplayName());
+
+        // Must use random Id, else notification cancel() may not work properly
+        int id = (int) System.currentTimeMillis() % 10000;
+        NotificationRequest nRequest = new NotificationRequest(context, id)
+                .setSlotId(AppNotifications.CALL_GROUP)
+                .setDeliveryTime(System.currentTimeMillis())
+                .setLittleIcon(AppImageUtil.getPixelMap(context, ResourceTable.Media_missed_call))
+                .setContent(new NotificationContent(pContent));
 
         // Binds pending intents using the requestCodeBase to avoid being cancel; aTalk can have 2 callNotifications.
         int requestCodeBase = requestCodes.containsValue(10) ? 0 : 10;
         requestCodes.put(mCallId, requestCodeBase);
-        setIntents(context, contentView, requestCodeBase);
+        setIntents(context, nRequest, requestCodeBase);
 
-        Notification notification = new NotificationCompat.Builder(context, AppNotifications.CALL_GROUP)
-                .setWhen(System.currentTimeMillis())
-                .setSmallIcon(R.drawable.missed_call)
-                .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
-                .setCustomContentView(contentView) // Sets custom content view to avoid buttons cropping
-                .build();
+        try {
+            NotificationHelper.publishNotification(nRequest);
+        } catch (RemoteException e) {
+            LogUtil.error(TAG, "Call publication failed: " + e.getMessage());
+        }
 
-        // Must use random Id, else notification cancel() may not work properly
-        int id = (int) (System.currentTimeMillis() % 10000);
-        mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.notify(id, notification);
-        mNotificationHandler = new CtrlNotificationThread(context, call, id, notification);
-
+        mNotificationHandler = new CtrlNotificationThread(context, call, id, nRequest);
         call.addCallChangeListener(new CallChangeListener() {
             public void callPeerAdded(CallPeerEvent evt) {
             }
@@ -155,48 +173,93 @@ public class CallNotificationManager {
     /**
      * Binds pending intents to all control <code>Views</code>.
      *
-     * @param ctx Android context.
-     * @param contentView notification root <code>View</code>.
+     * @param ctx HarmonyOS context.
+     * @param nRequest notification request.
      * @param requestCodeBase the starting Request Code ID that will be used in the <code>Intents</code>
      */
-    private void setIntents(Context ctx, RemoteViews contentView, int requestCodeBase) {
+    private void setIntents(Context ctx, NotificationRequest nRequest, int requestCodeBase) {
+        // Set up callback when IntentAgent is triggered.
+        IntentAgent.OnCompleted iaCallBack = new CallControl();
+
         // Speakerphone button
-        PendingIntent pSpeaker = PendingIntent.getBroadcast(ctx, requestCodeBase++, CallControl.getToggleSpeakerIntent(mCallId),
-                getPendingIntentFlag(false, false));
-        contentView.setOnClickPendingIntent(R.id.button_speakerphone, pSpeaker);
+        IntentAgent intentAgent = CallControl.getToggleSpeakerIntent(ctx, mCallId);
+        NotificationActionButton pSpeaker = new Builder(AppImageUtil.getPixelMap(ctx, ResourceTable.Media_call_receiver_on_dark),
+                "Spkr", intentAgent).build();
+        nRequest.addActionButton(pSpeaker);
+        IntentAgentHelper.triggerIntentAgent(ctx, intentAgent, iaCallBack, null, null);
 
         // Mute button
-        PendingIntent pMute = PendingIntent.getBroadcast(ctx, requestCodeBase++, CallControl.getToggleMuteIntent(mCallId),
-                getPendingIntentFlag(false, false));
-        contentView.setOnClickPendingIntent(R.id.button_mute, pMute);
+        intentAgent = CallControl.getToggleMuteIntent(ctx, mCallId);
+        NotificationActionButton pMute = new Builder(AppImageUtil.getPixelMap(ctx, ResourceTable.Media_call_microphone_dark),
+                "Mic", intentAgent).build();
+        nRequest.addActionButton(pMute);
+        IntentAgentHelper.triggerIntentAgent(ctx, intentAgent, iaCallBack, null, null);
 
         // Hold button
-        PendingIntent pHold = PendingIntent.getBroadcast(ctx, requestCodeBase++, CallControl.getToggleOnHoldIntent(mCallId),
-                getPendingIntentFlag(false, false));
-        contentView.setOnClickPendingIntent(R.id.button_hold, pHold);
+        intentAgent = CallControl.getToggleOnHoldIntent(ctx, mCallId);
+        NotificationActionButton pHold = new Builder(AppImageUtil.getPixelMap(ctx, ResourceTable.Media_call_hold_on_dark),
+                "Hold", intentAgent).build();
+        nRequest.addActionButton(pHold);
+        IntentAgentHelper.triggerIntentAgent(ctx, intentAgent, iaCallBack, null, null);
 
         // Hangup button
-        PendingIntent pHangup = PendingIntent.getBroadcast(ctx, requestCodeBase++, CallControl.getHangupIntent(mCallId),
-                getPendingIntentFlag(false, false));
-        contentView.setOnClickPendingIntent(R.id.button_hangup, pHangup);
+        intentAgent = CallControl.getHangupIntent(ctx, mCallId);
+        NotificationActionButton pHangup = new Builder(AppImageUtil.getPixelMap(ctx, ResourceTable.Media_call_hangup_dark),
+                "Hold", intentAgent).build();
+        nRequest.addActionButton(pHangup);
+        IntentAgentHelper.triggerIntentAgent(ctx, intentAgent, iaCallBack, null, null);
 
-        // Transfer call via VideoCallActivity, and execute in place to show VideoCallActivity (note-10)
+        // Transfer call via VideoCallAbility, and execute in place to show VideoCallAbility (note-10)
         // Call via broadcast receiver has problem of CallTransferDialog keeps popping up
-        Intent pTransfer = new Intent(ctx, VideoCallActivity.class);
-        pTransfer.putExtra(CallManager.CALL_SID, mCallId);
-        pTransfer.putExtra(CallManager.CALL_TRANSFER, true);
-        pVideo = PendingIntent.getActivity(ctx, requestCodeBase++, pTransfer, getPendingIntentFlag(false, false));
-        contentView.setOnClickPendingIntent(R.id.button_transfer, pVideo);
+        intentAgent = getCallIntentAgent(ctx, mCallId, true);
+        NotificationActionButton pTransfer = new Builder(AppImageUtil.getPixelMap(ctx, ResourceTable.Media_call_transfer_dark),
+                "Transfer", intentAgent).build();
+        nRequest.addActionButton(pTransfer);
+        IntentAgentHelper.triggerIntentAgent(ctx, intentAgent, null, null,
+                new TriggerInfo(null, null, null, CallControl.ACTION_TRANSFER_CALL));
 
-        // Show video call Activity on click; pendingIntent executed in place i.e. no via Broadcast receiver
-        Intent videoCall = new Intent(ctx, VideoCallActivity.class);
-        videoCall.putExtra(CallManager.CALL_SID, mCallId);
-        videoCall.putExtra(CallManager.CALL_TRANSFER, false);
-        pVideo = PendingIntent.getActivity(ctx, requestCodeBase, videoCall, getPendingIntentFlag(false, false));
-        contentView.setOnClickPendingIntent(R.id.button_back_to_call, pVideo);
+        // Show video call Ability on click; IntentAgent executed in place i.e. no via Broadcast receiver
+        intentAgent = getCallIntentAgent(ctx, mCallId, false);
+        NotificationActionButton pBackTC = new Builder(AppImageUtil.getPixelMap(ctx, ResourceTable.Media_send_call_dark),
+                "onCall", intentAgent).build();
+        nRequest.addActionButton(pBackTC);
+        IntentAgentHelper.triggerIntentAgent(ctx, intentAgent, null, null,
+                new TriggerInfo(null, null, null, CallControl.ACTION_TRANSFER_CALL));
 
-        // Binds launch VideoCallActivity to the whole area
-        contentView.setOnClickPendingIntent(R.id.notificationContent, pVideo);
+        // Binds launch VideoCallAbility to the whole area
+        // nRequest.setOnClickPendingIntent(ResourceTable.Id_notificationContent, pVideo);
+    }
+
+    private IntentAgent getCallIntentAgent(Context ctx, String callId, boolean isCallTransfer) {
+        Intent callActivity = getCallIntent(ctx, callId, isCallTransfer);
+        List<Intent> intentList = Collections.singletonList(callActivity);
+
+        IntentAgentInfo intentInfo = new IntentAgentInfo(CallControl.ACTION_TRANSFER_CALL, OperationType.START_ABILITY,
+                getIntentFlag(false, false), intentList, null);
+
+        return IntentAgentHelper.getIntentAgent(ctx, intentInfo);
+    }
+
+    public void backToCall() {
+        if (mCallId != null) {
+            Context ctx = aTalkApp.getInstance();
+            Intent callBack = getCallIntent(ctx, mCallId, false);
+            ctx.startAbility(callBack, 0);
+        }
+    }
+
+    public Intent getCallIntent(Context ctx, String mCallId, boolean isCallTransfer) {
+        Operation operation = new Intent.OperationBuilder()
+                .withDeviceId("")
+                .withBundleName(ctx.getBundleName())
+                .withAbilityName(VideoCallAbility.class)
+                .build();
+
+        Intent callIntent = new Intent();
+        callIntent.setParam(CallManager.CALL_SID, mCallId);
+        callIntent.setParam(CallManager.CALL_TRANSFER, isCallTransfer);
+        callIntent.setOperation(operation);
+        return callIntent;
     }
 
     /**
@@ -207,7 +270,7 @@ public class CallNotificationManager {
             Timber.d("Call Notification Panel removed: %s; id: %s", mCallId, mNotificationHandler.getCtrlId());
             // Stop NotificationHandler and remove the notification from system notification bar
             mNotificationHandler.stop();
-            mNotificationManager.cancel(mNotificationHandler.getCtrlId());
+            // mNotificationManager.cancel(mNotificationHandler.getCtrlId());
 
             mNotificationHandler = null;
             INSTANCES.remove(mCallId);
@@ -222,15 +285,5 @@ public class CallNotificationManager {
      */
     public synchronized boolean isNotificationRunning() {
         return mNotificationHandler != null;
-    }
-
-    public void backToCall() {
-        if (pVideo != null) {
-            try {
-                pVideo.send();
-            } catch (PendingIntent.CanceledException e) {
-                e.printStackTrace();
-            }
-        }
     }
 }

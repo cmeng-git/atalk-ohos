@@ -33,7 +33,7 @@ public class AndroidBrowserLauncher implements BrowserLauncherService
             Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uri);
             launchBrowser.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-            aTalkApp.getInstance().startActivity(launchBrowser);
+            aTalkApp.getInstance().startAbility(launchBrowser);
         } catch (Exception e) {
             Timber.e(e, "Error opening URL");
         }

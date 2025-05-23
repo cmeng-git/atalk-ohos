@@ -1,6 +1,6 @@
 /*
- * aTalk, android VoIP and Instant Messaging client
- * Copyright 2014 Eng Chong Meng
+ * aTalk, ohos VoIP and Instant Messaging client
+ * Copyright 2024 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,18 @@
  */
 package net.java.sip.communicator.impl.contactlist;
 
-import static net.java.sip.communicator.service.contactlist.MetaContactGroup.TBL_CHILD_CONTACTS;
-
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-
-import androidx.annotation.NonNull;
-
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import ohos.data.rdb.RdbPredicates;
+import ohos.data.rdb.RdbStore;
+import ohos.data.rdb.ValuesBucket;
+import ohos.data.resultset.ResultSet;
+import ohos.utils.zson.ZSONArray;
+import ohos.utils.zson.ZSONObject;
 
 import net.java.sip.communicator.service.contactlist.MetaContact;
 import net.java.sip.communicator.service.contactlist.MetaContactGroup;
@@ -45,9 +44,6 @@ import net.java.sip.communicator.service.protocol.ContactGroup;
 
 import org.apache.commons.lang3.StringUtils;
 import org.atalk.persistance.DatabaseBackend;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.osgi.framework.BundleContext;
 
 import timber.log.Timber;
@@ -69,20 +65,13 @@ public class MclStorageManager implements MetaContactListListener {
     public static final String JABBER = "Jabber";
 
     /**
-     * The property to enable multi tenant mode. When changing profiles/accounts the table
-     * can be filled with groups and contacts from protocol provider we do not know about. This
-     * mode will prevent loading empty and groups we do not know about.
-     */
-    private static final String MULTI_TENANT_MODE_PROP = "contactlist.MULTI_TENANT_MODE";
-
-    /**
      * A reference to the MetaContactListServiceImpl that created and started us.
      */
     private MetaContactListServiceImpl mclServiceImpl = null;
 
-    private static SQLiteDatabase mDB;
-    private final ContentValues mcValues = new ContentValues();
-    private final ContentValues ccValues = new ContentValues();
+    private static RdbStore mRdbStore;
+    private final ValuesBucket mcValues = new ValuesBucket();
+    private final ValuesBucket ccValues = new ValuesBucket();
 
     /**
      * Initializes the storage manager to perform the initial loading and parsing of the
@@ -94,7 +83,7 @@ public class MclStorageManager implements MetaContactListListener {
      */
     void start(BundleContext bc, MetaContactListServiceImpl mclServiceImpl) {
         this.mclServiceImpl = mclServiceImpl;
-        mDB = DatabaseBackend.getWritableDB();
+        mRdbStore = DatabaseBackend.getRdbStore();
         mclServiceImpl.addMetaContactListListener(this);
     }
 
@@ -122,30 +111,35 @@ public class MclStorageManager implements MetaContactListListener {
     // #TODO: Rename of ROOT_PROTO_GROUP_UID to "Contacts" in v2.4.0 (20200817); need to remove on later version
     public static void mcg_patch() {
         // Remove table row: ContactGroup.ROOT_GROUP_UID in Table metaContactGroup
-        String[] args = new String[]{ContactGroup.ROOT_GROUP_UID};
-        mDB.delete(MetaContactGroup.TABLE_NAME, MetaContactGroup.MC_GROUP_UID + "=?", args);
+        mRdbStore.delete(new RdbPredicates(MetaContactGroup.TABLE_NAME)
+                .equalTo(MetaContactGroup.MC_GROUP_UID, ContactGroup.ROOT_GROUP_UID));
 
         // Rename all "ContactListRoot" to "Contacts" in Table metaContactGroup
-        args = new String[]{"ContactListRoot"};
-        ContentValues values = new ContentValues();
-        values.put(MetaContactGroup.PARENT_PROTO_GROUP_UID, ContactGroup.ROOT_PROTO_GROUP_UID);
-        mDB.update(MetaContactGroup.TABLE_NAME, values,
-                MetaContactGroup.PARENT_PROTO_GROUP_UID + "=?", args);
+        ValuesBucket values = new ValuesBucket();
+        values.putString(MetaContactGroup.PARENT_PROTO_GROUP_UID, ContactGroup.ROOT_PROTO_GROUP_UID);
+
+        RdbPredicates rdbPredicates = new RdbPredicates(MetaContactGroup.TABLE_NAME)
+                .equalTo(MetaContactGroup.PARENT_PROTO_GROUP_UID, "ContactListRoot");
+        mRdbStore.update(values, rdbPredicates);
 
         // Rename all "ContactListRoot" to "Contacts" in Table childContacts
         values.clear();
-        values.put(MetaContactGroup.PROTO_GROUP_UID, ContactGroup.ROOT_PROTO_GROUP_UID);
-        mDB.update(MetaContactGroup.TBL_CHILD_CONTACTS, values,
-                MetaContactGroup.PROTO_GROUP_UID + "=?", args);
+        values.putString(MetaContactGroup.PROTO_GROUP_UID, ContactGroup.ROOT_PROTO_GROUP_UID);
+
+        rdbPredicates = new RdbPredicates(MetaContactGroup.TBL_CHILD_CONTACTS)
+                .equalTo(MetaContactGroup.PROTO_GROUP_UID, "ContactListRoot");
+        mRdbStore.update(values, rdbPredicates);
     }
 
     // For data base garbage clean-up during testing
     private void mcg_clean() {
         String[] Ids = new String[]{"83"};
         for (String Id : Ids) {
-            String[] args = new String[]{Id};
-            mDB.delete(MetaContactGroup.TABLE_NAME, MetaContactGroup.ID + "=?", args);
-            // mDB.delete(MetaContactGroup.TBL_CHILD_CONTACTS, MetaContactGroup.ID + "=?", args);
+            mRdbStore.delete(new RdbPredicates(MetaContactGroup.TABLE_NAME)
+                    .equalTo(MetaContactGroup.ID, Id));
+
+//            mDB.delete(new RdbPredicates(MetaContactGroup.TBL_CHILD_CONTACTS)
+//                    .equalTo(MetaContactGroup.ID, Id));
         }
     }
 
@@ -190,15 +184,17 @@ public class MclStorageManager implements MetaContactListListener {
                 null, null, accountUid);
         protoGroupsMap.put(protoGroupUID, newProtoGroup);
 
-        String[] args = new String[]{accountUuid};
-        Cursor cursor = mDB.query(MetaContactGroup.TABLE_NAME, null,
-                MetaContactGroup.ACCOUNT_UUID + "=?", args, null, null, MetaContactGroup.ID);
-        while (cursor.moveToNext()) {
-            String parentProtoGroupUID = cursor.getString(cursor.getColumnIndexOrThrow(MetaContactGroup.PARENT_PROTO_GROUP_UID));
-            String groupUID = cursor.getString(cursor.getColumnIndexOrThrow(MetaContactGroup.MC_GROUP_UID));
-            String groupName = cursor.getString(cursor.getColumnIndexOrThrow(MetaContactGroup.MC_GROUP_NAME));
-            protoGroupUID = cursor.getString(cursor.getColumnIndexOrThrow(MetaContactGroup.PROTO_GROUP_UID));
-            String persistentData = cursor.getString(cursor.getColumnIndexOrThrow(MetaContactGroup.PERSISTENT_DATA));
+        RdbPredicates rdbPredicates = new RdbPredicates(MetaContactGroup.TABLE_NAME)
+                .equalTo(MetaContactGroup.ACCOUNT_UUID, accountUuid)
+                .orderByAsc(MetaContactGroup.ID);
+        ResultSet resultSet = mRdbStore.query(rdbPredicates, null);
+
+        while (resultSet.goToNextRow()) {
+            String parentProtoGroupUID = resultSet.getString(resultSet.getColumnIndexForName(MetaContactGroup.PARENT_PROTO_GROUP_UID));
+            String groupUID = resultSet.getString(resultSet.getColumnIndexForName(MetaContactGroup.MC_GROUP_UID));
+            String groupName = resultSet.getString(resultSet.getColumnIndexForName(MetaContactGroup.MC_GROUP_NAME));
+            protoGroupUID = resultSet.getString(resultSet.getColumnIndexForName(MetaContactGroup.PROTO_GROUP_UID));
+            String persistentData = resultSet.getString(resultSet.getColumnIndexForName(MetaContactGroup.PERSISTENT_DATA));
 
             Timber.d("### Fetching contact group: %s: %s for %s", parentProtoGroupUID, protoGroupUID, accountUuid);
             MetaContactGroupImpl metaGroup = metaGroupMap.get(parentProtoGroupUID);
@@ -212,30 +208,27 @@ public class MclStorageManager implements MetaContactListListener {
                 protoGroupsMap.put(protoGroupUID, newProtoGroup);
             }
         }
-        cursor.close();
+        resultSet.close();
 
-        args = new String[]{accountUuid};
-        String innerJoin = " INNER JOIN " + Contact.TABLE_NAME + " ON "
+        String tableInnerJoin = MetaContactGroup.TBL_CHILD_CONTACTS + " INNER JOIN " + Contact.TABLE_NAME + " ON "
                 + MetaContactGroup.TBL_CHILD_CONTACTS + "." + MetaContactGroup.CONTACT_JID + "="
                 + Contact.TABLE_NAME + "." + Contact.CONTACT_JID;
 
-        cursor = mDB.query(MetaContactGroup.TBL_CHILD_CONTACTS + innerJoin, null,
-                MetaContactGroup.ACCOUNT_UUID + "=?", args, null, null, null);
+        rdbPredicates = new RdbPredicates(tableInnerJoin)
+                .equalTo(MetaContactGroup.ACCOUNT_UUID, accountUuid);
+        resultSet = mRdbStore.query(rdbPredicates, null);
 
-        while (cursor.moveToNext()) {
-            String metaUID = cursor.getString(cursor.getColumnIndexOrThrow(MetaContactGroup.MC_UID));
-            protoGroupUID = cursor.getString(cursor.getColumnIndexOrThrow(MetaContactGroup.PROTO_GROUP_UID));
-            String contactAddress = cursor.getString(cursor.getColumnIndexOrThrow(MetaContactGroup.CONTACT_JID));
-            String displayName = cursor.getString(cursor.getColumnIndexOrThrow(MetaContactGroup.MC_DISPLAY_NAME));
+        while (resultSet.goToNextRow()) {
+            String metaUID = resultSet.getString(resultSet.getColumnIndexForName(MetaContactGroup.MC_UID));
+            protoGroupUID = resultSet.getString(resultSet.getColumnIndexForName(MetaContactGroup.PROTO_GROUP_UID));
+            String contactAddress = resultSet.getString(resultSet.getColumnIndexForName(MetaContactGroup.CONTACT_JID));
+            String displayName = resultSet.getString(resultSet.getColumnIndexForName(MetaContactGroup.MC_DISPLAY_NAME));
             boolean isDisplayNameUserDefined = Boolean.parseBoolean(
-                    cursor.getString(cursor.getColumnIndexOrThrow(MetaContactGroup.MC_USER_DEFINED)));
-            String persistentData = cursor.getString(cursor.getColumnIndexOrThrow(MetaContactGroup.PERSISTENT_DATA));
-            JSONObject details = new JSONObject();
-            try {
-                details = new JSONObject(cursor.getString(cursor.getColumnIndexOrThrow(MetaContactGroup.MC_DETAILS)));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+                    resultSet.getString(resultSet.getColumnIndexForName(MetaContactGroup.MC_USER_DEFINED)));
+            String persistentData = resultSet.getString(resultSet.getColumnIndexForName(MetaContactGroup.PERSISTENT_DATA));
+
+            String mcDetails = resultSet.getString(resultSet.getColumnIndexForName(MetaContactGroup.MC_DETAILS));
+            ZSONObject details = ZSONObject.stringToZSON(mcDetails);
 
             // Proceed if only there is a pre-loaded protoGroup for the contact
             if (protoGroupsMap.containsKey(protoGroupUID)) {
@@ -255,12 +248,12 @@ public class MclStorageManager implements MetaContactListListener {
                     Timber.w("Parse metaContact Exception. Proceed to remove (%s) and continue with other contacts: %s",
                             metaUID, ex.getMessage());
 
-                    args = new String[]{metaUID};
-                    mDB.delete(MetaContactGroup.TBL_CHILD_CONTACTS, MetaContactGroup.MC_UID + "=?", args);
+                    mRdbStore.delete(new RdbPredicates(MetaContactGroup.TBL_CHILD_CONTACTS)
+                            .equalTo(MetaContactGroup.MC_UID, metaUID));
                 }
             }
         }
-        cursor.close();
+        resultSet.close();
     }
 
     /**
@@ -314,31 +307,31 @@ public class MclStorageManager implements MetaContactListListener {
 
         // Ignore if the group was created as an encapsulator of a non persistent proto group
         if ((protoGroup != null) && protoGroup.isPersistent()) {
-            ContentValues mcgContent = new ContentValues();
+            ValuesBucket mcgValues = new ValuesBucket();
 
             String accountUuid = protoGroup.getProtocolProvider().getAccountID().getAccountUuid();
-            mcgContent.put(MetaContactGroup.ACCOUNT_UUID, accountUuid);
+            mcgValues.putString(MetaContactGroup.ACCOUNT_UUID, accountUuid);
 
             String mcGroupName = metaGroup.getGroupName();
-            mcgContent.put(MetaContactGroup.MC_GROUP_NAME, mcGroupName);
+            mcgValues.putString(MetaContactGroup.MC_GROUP_NAME, mcGroupName);
 
             String mcGroupUid = metaGroup.getMetaUID();
-            mcgContent.put(MetaContactGroup.MC_GROUP_UID, mcGroupUid);
+            mcgValues.putString(MetaContactGroup.MC_GROUP_UID, mcGroupUid);
 
             // Use default ContactGroup.ROOT_PROTO_GROUP_UID for all protoGroup entry
             String parentGroupUid = ContactGroup.ROOT_PROTO_GROUP_UID;
-            mcgContent.put(MetaContactGroup.PARENT_PROTO_GROUP_UID, parentGroupUid);
+            mcgValues.putString(MetaContactGroup.PARENT_PROTO_GROUP_UID, parentGroupUid);
 
             String protoGroupUid = protoGroup.getUID();
-            mcgContent.put(MetaContactGroup.PROTO_GROUP_UID, protoGroupUid);
+            mcgValues.putString(MetaContactGroup.PROTO_GROUP_UID, protoGroupUid);
 
             // add persistent data
             String persistentData = protoGroup.getPersistentData();
             if (StringUtils.isEmpty(persistentData))
                 persistentData = "";
-            mcgContent.put(MetaContactGroup.PERSISTENT_DATA, persistentData);
+            mcgValues.putString(MetaContactGroup.PERSISTENT_DATA, persistentData);
 
-            mDB.insert(MetaContactGroup.TABLE_NAME, null, mcgContent);
+            mRdbStore.insert(MetaContactGroup.TABLE_NAME, mcgValues);
         }
     }
 
@@ -348,20 +341,20 @@ public class MclStorageManager implements MetaContactListListener {
      * @param metaContact the MetaContact that the new entry is to be created for
      */
     private void createMetaContactEntry(MetaContact metaContact) {
-        ContentValues contentValues = new ContentValues();
+        ValuesBucket values = new ValuesBucket();
         mcValues.clear();
 
         String mcUid = metaContact.getMetaUID();
-        mcValues.put(MetaContactGroup.MC_UID, mcUid);
+        mcValues.putString(MetaContactGroup.MC_UID, mcUid);
 
         String displayName = metaContact.getDisplayName();
-        mcValues.put(MetaContactGroup.MC_DISPLAY_NAME, displayName);
+        mcValues.putString(MetaContactGroup.MC_DISPLAY_NAME, displayName);
 
         boolean isUserDefined = ((MetaContactImpl) metaContact).isDisplayNameUserDefined();
-        mcValues.put(MetaContactGroup.MC_USER_DEFINED, Boolean.toString(isUserDefined));
+        mcValues.putString(MetaContactGroup.MC_USER_DEFINED, Boolean.toString(isUserDefined));
 
-        JSONObject mcDetails = metaContact.getDetails();
-        mcValues.put(MetaContactGroup.MC_DETAILS, mcDetails.toString());
+        ZSONObject mcDetails = metaContact.getDetails();
+        mcValues.putString(MetaContactGroup.MC_DETAILS, mcDetails.toString());
 
         Iterator<Contact> contacts = metaContact.getContacts();
         while (contacts.hasNext()) {
@@ -370,30 +363,30 @@ public class MclStorageManager implements MetaContactListListener {
                 continue;
 
             String accountUuid = contact.getProtocolProvider().getAccountID().getAccountUuid();
-            mcValues.put(MetaContactGroup.ACCOUNT_UUID, accountUuid);
+            mcValues.putString(MetaContactGroup.ACCOUNT_UUID, accountUuid);
 
             String protoGroupId = contact.getParentContactGroup().getUID();
-            mcValues.put(MetaContactGroup.PROTO_GROUP_UID, protoGroupId);
+            mcValues.putString(MetaContactGroup.PROTO_GROUP_UID, protoGroupId);
 
             String contactJid = contact.getAddress();
-            mcValues.put(MetaContactGroup.CONTACT_JID, contactJid);
+            mcValues.putString(MetaContactGroup.CONTACT_JID, contactJid);
 
             String persistentData = contact.getPersistentData();
-            mcValues.put(MetaContactGroup.PERSISTENT_DATA, persistentData);
+            mcValues.putString(MetaContactGroup.PERSISTENT_DATA, persistentData);
 
-            mDB.insert(TBL_CHILD_CONTACTS, null, mcValues);
+            mRdbStore.insert(MetaContactGroup.TBL_CHILD_CONTACTS, mcValues);
 
             // Create the contact entry only if not found in contacts table
             if (findContactEntry(JABBER, contactJid) == null) {
-                contentValues.clear();
-                contentValues.put(Contact.CONTACT_UUID, mcUid);
-                contentValues.put(Contact.PROTOCOL_PROVIDER, JABBER);
-                contentValues.put(Contact.CONTACT_JID, contactJid);
+                values.clear();
+                values.putString(Contact.CONTACT_UUID, mcUid);
+                values.putString(Contact.PROTOCOL_PROVIDER, JABBER);
+                values.putString(Contact.CONTACT_JID, contactJid);
 
                 String svrDisplayName = (isUserDefined) ? contactJid : displayName;
-                contentValues.put(Contact.SVR_DISPLAY_NAME, svrDisplayName);
+                values.putString(Contact.SVR_DISPLAY_NAME, svrDisplayName);
 
-                mDB.insert(Contact.TABLE_NAME, null, contentValues);
+                mRdbStore.insert(Contact.TABLE_NAME, values);
             }
         }
     }
@@ -456,10 +449,11 @@ public class MclStorageManager implements MetaContactListListener {
 
             case MetaContactGroupEvent.META_CONTACT_GROUP_RENAMED:
                 mcValues.clear();
-                String[] args = {mcGroupUid};
+                mcValues.putString(MetaContactGroup.MC_GROUP_NAME, mcGroup.getGroupName());
 
-                mcValues.put(MetaContactGroup.MC_GROUP_NAME, mcGroup.getGroupName());
-                mDB.update(MetaContactGroup.TABLE_NAME, mcValues, MetaContactGroup.MC_GROUP_UID + "=?", args);
+                RdbPredicates rdbPredicates = new RdbPredicates(MetaContactGroup.TABLE_NAME)
+                        .equalTo(MetaContactGroup.MC_GROUP_UID, mcGroupUid);
+                mRdbStore.update(mcValues, rdbPredicates);
                 break;
         }
     }
@@ -484,8 +478,8 @@ public class MclStorageManager implements MetaContactListListener {
         }
 
         // proceed to remove metaContactGroup
-        String[] args = new String[]{mcGroupUid};
-        mDB.delete(MetaContactGroup.TABLE_NAME, MetaContactGroup.MC_GROUP_UID + "=?", args);
+        mRdbStore.delete(new RdbPredicates(MetaContactGroup.TABLE_NAME)
+                .equalTo(MetaContactGroup.MC_GROUP_UID, mcGroupUid));
     }
 
     /**
@@ -518,35 +512,38 @@ public class MclStorageManager implements MetaContactListListener {
         String newProtoGroupUid = evt.getSourceProtoGroup().getUID();
 
         String[] columns = {MetaContactGroup.PROTO_GROUP_UID};
-        String[] args = {mcGroupUid};
-        Cursor cursor = mDB.query(MetaContactGroup.TABLE_NAME, columns,
-                MetaContactGroup.MC_GROUP_UID + "=?", args, null, null, null);
+        RdbPredicates rdbPredicates = new RdbPredicates(MetaContactGroup.TABLE_NAME)
+                .equalTo(MetaContactGroup.MC_GROUP_UID, mcGroupUid);
+        ResultSet resultSet = mRdbStore.query(rdbPredicates, columns);
 
-        if (cursor.getCount() != 1) {
+        if (resultSet.getRowCount() != 1) {
             Timber.d("Ignore debug ref: Rename of the protoGroup is not allowed with multiple owners: %s", newProtoGroupUid);
         }
         else {
-            cursor.moveToNext();
-            String oldProtoGroupUid = cursor.getString(0);
-            args = new String[]{mcGroupUid, oldProtoGroupUid};
+            resultSet.goToNextRow();
+            String oldProtoGroupUid = resultSet.getString(0);
 
             mcValues.clear();
-            mcValues.put(MetaContactGroup.PROTO_GROUP_UID, newProtoGroupUid);
-            mDB.update(MetaContactGroup.TABLE_NAME, mcValues, MetaContactGroup.MC_GROUP_UID
-                    + "=? AND " + MetaContactGroup.PROTO_GROUP_UID + "=?", args);
+            mcValues.putString(MetaContactGroup.PROTO_GROUP_UID, newProtoGroupUid);
+            rdbPredicates = new RdbPredicates(MetaContactGroup.TABLE_NAME)
+                    .equalTo(MetaContactGroup.MC_GROUP_UID, mcGroupUid)
+                    .and().equalTo(MetaContactGroup.PROTO_GROUP_UID, oldProtoGroupUid);
+            mRdbStore.update(mcValues, rdbPredicates);
 
             // update childContacts to new protoGroupUid
             String accountUuid = evt.getSourceProvider().getAccountID().getAccountUuid();
-            args = new String[]{accountUuid, oldProtoGroupUid};
-            mDB.update(TBL_CHILD_CONTACTS, mcValues, MetaContactGroup.ACCOUNT_UUID
-                    + "=? AND " + MetaContactGroup.PROTO_GROUP_UID + "=?", args);
+
+            rdbPredicates = new RdbPredicates(MetaContactGroup.TBL_CHILD_CONTACTS)
+                    .equalTo(MetaContactGroup.ACCOUNT_UUID, accountUuid)
+                    .and().equalTo(MetaContactGroup.PROTO_GROUP_UID, oldProtoGroupUid);
+            mRdbStore.update(mcValues, rdbPredicates);
         }
-        cursor.close();
+        resultSet.close();
     }
 
     /**
      * Removal of a protocol specific ContactGroup in the source MetaContactGroup;
-     *
+     * <p>
      * Removal of its child contacts were already performed by mclServiceImpl prior to
      * call for contactGroup removal.
      *
@@ -573,21 +570,26 @@ public class MclStorageManager implements MetaContactListListener {
             return;
         }
 
-        String[] args = {accountUuid, mcGroupUid, protoGroupUid};
-        mDB.delete(MetaContactGroup.TABLE_NAME, MetaContactGroup.ACCOUNT_UUID + "=? AND "
-                + MetaContactGroup.MC_GROUP_UID + "=? AND " + MetaContactGroup.PROTO_GROUP_UID + "=?", args);
+        RdbPredicates rdbPredicates = new RdbPredicates(MetaContactGroup.TABLE_NAME)
+                .equalTo(MetaContactGroup.ACCOUNT_UUID, accountUuid)
+                .and().equalTo(MetaContactGroup.MC_GROUP_UID, mcGroupUid)
+                .and().equalTo(MetaContactGroup.PROTO_GROUP_UID, protoGroupUid);
+        mRdbStore.delete(rdbPredicates);
 
         // Remove all the protoGroup orphan childContacts entry - in case not clean properly
-        args = new String[]{protoGroupUid};
-        Cursor cursor = mDB.query(MetaContactGroup.TABLE_NAME, null,
-                MetaContactGroup.PROTO_GROUP_UID + "=?", args, null, null, null);
-        if (cursor.getCount() == 0) {  // found no parent
+        rdbPredicates = new RdbPredicates(MetaContactGroup.TBL_CHILD_CONTACTS)
+                .equalTo(MetaContactGroup.PROTO_GROUP_UID, protoGroupUid);
+        ResultSet resultSet = mRdbStore.query(rdbPredicates, null);
+
+        // found no parent; proceed to delete childs
+        if (resultSet.getRowCount() == 0) {
             Timber.d("Removing old protoGroup childContacts if any: %s: %s", protoGroupUid, accountUuid);
-            args = new String[]{accountUuid, protoGroupUid};
-            mDB.delete(TBL_CHILD_CONTACTS, MetaContactGroup.ACCOUNT_UUID
-                    + "=? AND " + MetaContactGroup.PROTO_GROUP_UID + "=?", args);
+            rdbPredicates = new RdbPredicates(MetaContactGroup.TBL_CHILD_CONTACTS)
+                    .equalTo(MetaContactGroup.ACCOUNT_UUID, accountUuid)
+                    .and().equalTo(MetaContactGroup.PROTO_GROUP_UID, protoGroupUid);
+            mRdbStore.delete(rdbPredicates);
         }
-        cursor.close();
+        resultSet.close();
     }
 
     /**
@@ -624,28 +626,31 @@ public class MclStorageManager implements MetaContactListListener {
         String newDisplayName = evt.getNewDisplayName();
         if (StringUtils.isNotEmpty(newDisplayName) && !newDisplayName.equals(oldDisplayName)) {
             mcValues.clear();
-            mcValues.put(MetaContactGroup.MC_DISPLAY_NAME, newDisplayName);
+            mcValues.putString(MetaContactGroup.MC_DISPLAY_NAME, newDisplayName);
             boolean isUserDefined = metaContactImpl.isDisplayNameUserDefined();
-            mcValues.put(MetaContactGroup.MC_USER_DEFINED, Boolean.toString(isUserDefined));
+            mcValues.putString(MetaContactGroup.MC_USER_DEFINED, Boolean.toString(isUserDefined));
 
             Iterator<Contact> contacts = metaContactImpl.getContacts();
             while (contacts.hasNext()) {
                 Contact contact = contacts.next();
                 contactJid = contact.getAddress();
-                String[] args = {metaContactUid, contactJid};
 
                 String persistentData = contact.getPersistentData();
-                mcValues.put(MetaContactGroup.PERSISTENT_DATA, persistentData);
+                mcValues.putString(MetaContactGroup.PERSISTENT_DATA, persistentData);
 
-                mDB.update(TBL_CHILD_CONTACTS, mcValues, MetaContactGroup.MC_UID
-                        + "=? AND " + MetaContactGroup.CONTACT_JID + "=?", args);
+                RdbPredicates rdbPredicates = new RdbPredicates(MetaContactGroup.TBL_CHILD_CONTACTS)
+                        .equalTo(MetaContactGroup.MC_UID, metaContactUid)
+                        .and().equalTo(MetaContactGroup.CONTACT_JID, contactJid);
+                mRdbStore.update(mcValues, rdbPredicates);
 
                 // Also update the contacts table entry if update is from server
                 if (!isUserDefined) {
                     ccValues.clear();
-                    ccValues.put(Contact.SVR_DISPLAY_NAME, newDisplayName);
-                    mDB.update(Contact.TABLE_NAME, ccValues, Contact.CONTACT_JID + "=?",
-                            new String[]{contactJid});
+                    ccValues.putString(Contact.SVR_DISPLAY_NAME, newDisplayName);
+
+                    rdbPredicates = new RdbPredicates(MetaContactGroup.TABLE_NAME)
+                            .equalTo(MetaContactGroup.CONTACT_JID, contactJid);
+                    mRdbStore.update(mcValues, rdbPredicates);
                 }
             }
         }
@@ -666,71 +671,64 @@ public class MclStorageManager implements MetaContactListListener {
             return;
         }
 
-        JSONObject details;
-        JSONArray jsonArray;
+        ZSONObject details;
+        ZSONArray zsonArray;
         String[] columns = {MetaContactGroup.MC_DETAILS};
-        String[] args = {metaContactUid};
-        Cursor cursor = mDB.query(TBL_CHILD_CONTACTS, columns,
-                MetaContactGroup.MC_UID + "=?", args, null, null, null);
+
+        RdbPredicates rdbPredicates = new RdbPredicates(MetaContactGroup.TBL_CHILD_CONTACTS)
+                .equalTo(MetaContactGroup.MC_UID, metaContactUid);
+        ResultSet resultSet = mRdbStore.query(rdbPredicates, columns);
 
         String name = evt.getModificationName();
-        try {
-            details = new JSONObject(cursor.getString(0));
-            jsonArray = details.getJSONArray(name);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            cursor.close();
-            return;
-        }
-        cursor.close();
+        details = ZSONObject.stringToZSON(resultSet.getString(0));
+        zsonArray = details.getZSONArray(name);
+        resultSet.close();
 
         Object oldValue = evt.getOldValue();
         Object newValue = evt.getNewValue();
-        int jaSize = jsonArray.length();
+        int jaSize = zsonArray.size();
         boolean isChanged = false;
 
-        try {
-            // indicates add new item
-            if ((oldValue == null) && (newValue != null)) {
-                jsonArray.put(newValue);
+        // indicates add new item
+        if ((oldValue == null) && (newValue != null)) {
+            zsonArray.add(newValue);
+        }
+        // indicates remove and old value must be string or ZSONArray
+        else if ((oldValue != null) && (newValue == null) && (jaSize > 0)) {
+            // indicates removing multiple items at one time
+            if (oldValue instanceof ZSONArray) {
+                zsonArray = null;
+                isChanged = true;
             }
-            // indicates remove and old value must be string or JSONArray
-            else if ((oldValue != null) && (newValue == null) && (jaSize > 0)) {
-                // indicates removing multiple items at one time
-                if (oldValue instanceof JSONArray) {
-                    jsonArray = null;
-                    isChanged = true;
-                }
-                // removing one item only
-                else {
-                    for (int i = 0; i < jaSize; i++) {
-                        if (oldValue.equals(jsonArray.get(i))) {
-                            jsonArray.remove(i);
-                            isChanged = true;
-                            break;
-                        }
-                    }
-                }
-            }
-            // indicates change item value
-            else if ((oldValue != null) && (newValue != null) && (jaSize > 0)) {
+            // removing one item only
+            else {
                 for (int i = 0; i < jaSize; i++) {
-                    if (oldValue.equals(jsonArray.get(i))) {
-                        jsonArray.put(i, newValue);
+                    if (oldValue.equals(zsonArray.get(i))) {
+                        zsonArray.remove(i);
                         isChanged = true;
                         break;
                     }
                 }
             }
-            details.put(name, jsonArray);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return;
         }
+        // indicates change item value
+        else if ((oldValue != null) && (newValue != null) && (jaSize > 0)) {
+            for (int i = 0; i < jaSize; i++) {
+                if (oldValue.equals(zsonArray.get(i))) {
+                    zsonArray.add(i, newValue);
+                    isChanged = true;
+                    break;
+                }
+            }
+        }
+        details.put(name, zsonArray);
         if (isChanged) {
             mcValues.clear();
-            mcValues.put(MetaContactGroup.MC_DETAILS, details.toString());
-            mDB.update(TBL_CHILD_CONTACTS, mcValues, MetaContactGroup.MC_UID + "=?", args);
+            mcValues.putString(MetaContactGroup.MC_DETAILS, details.toString());
+
+            rdbPredicates = new RdbPredicates(MetaContactGroup.TBL_CHILD_CONTACTS)
+                    .equalTo(MetaContactGroup.MC_UID, metaContactUid);
+            mRdbStore.update(mcValues, rdbPredicates);
         }
     }
 
@@ -766,9 +764,11 @@ public class MclStorageManager implements MetaContactListListener {
         }
 
         mcValues.clear();
-        String[] args = {metaContactUid};
-        mcValues.put(MetaContactGroup.PROTO_GROUP_UID, newGroupName);
-        mDB.update(TBL_CHILD_CONTACTS, mcValues, MetaContactGroup.MC_UID + "=?", args);
+        mcValues.putString(MetaContactGroup.PROTO_GROUP_UID, newGroupName);
+
+        RdbPredicates rdbPredicates = new RdbPredicates(MetaContactGroup.TBL_CHILD_CONTACTS)
+                .equalTo(MetaContactGroup.MC_UID, metaContactUid);
+        mRdbStore.update(mcValues, rdbPredicates);
     }
 
     /**
@@ -791,20 +791,23 @@ public class MclStorageManager implements MetaContactListListener {
         }
 
         // remove the meta contact entry.
-        String[] args = {metaContactUid};
-        mDB.delete(TBL_CHILD_CONTACTS, MetaContactGroup.MC_UID + "=?", args);
+        mRdbStore.delete(new RdbPredicates(MetaContactGroup.TBL_CHILD_CONTACTS)
+                .equalTo(MetaContactGroup.MC_UID, metaContactUid));
 
         // cmeng - need to remove from contacts table if not found in childContacts table
         if (findProtoContactEntry(null, contactJid) == 0) {
-            args = new String[]{JABBER, contactJid};
-            mDB.delete(Contact.TABLE_NAME, Contact.PROTOCOL_PROVIDER + "=? AND "
-                    + Contact.CONTACT_JID + "=?", args);
+            RdbPredicates rdbPredicates = new RdbPredicates(MetaContactGroup.TABLE_NAME)
+                    .equalTo(Contact.PROTOCOL_PROVIDER, JABBER)
+                    .and().equalTo(Contact.CONTACT_JID, contactJid);
+            mRdbStore.delete(rdbPredicates);
+
         }
     }
 
     /**
      * Indicates that a protocol specific <code>Contact</code> instance has been added to the list of
      * protocol specific buddies in this <code>MetaContact</code>
+     * <p>
      * Creates a table entry corresponding to <code>Contact</code>.
      *
      * @param evt a reference to the corresponding <code>ProtoContactEvent</code>
@@ -829,35 +832,35 @@ public class MclStorageManager implements MetaContactListListener {
         }
 
         mcValues.clear();
-        mcValues.put(MetaContactGroup.MC_UID, mcUid);
+        mcValues.putString(MetaContactGroup.MC_UID, mcUid);
 
         String accountUuid = contact.getProtocolProvider().getAccountID().getAccountUuid();
-        mcValues.put(MetaContactGroup.ACCOUNT_UUID, accountUuid);
+        mcValues.putString(MetaContactGroup.ACCOUNT_UUID, accountUuid);
 
         String protoGroupId = parentGroup.getUID();
-        mcValues.put(MetaContactGroup.PROTO_GROUP_UID, protoGroupId);
+        mcValues.putString(MetaContactGroup.PROTO_GROUP_UID, protoGroupId);
 
-        mcValues.put(MetaContactGroup.CONTACT_JID, contactJid);
+        mcValues.putString(MetaContactGroup.CONTACT_JID, contactJid);
 
         String displayName = metaContact.getDisplayName();
-        mcValues.put(MetaContactGroup.MC_DISPLAY_NAME, displayName);
+        mcValues.putString(MetaContactGroup.MC_DISPLAY_NAME, displayName);
 
-        JSONObject mcDetails = metaContact.getDetails();
-        mcValues.put(MetaContactGroup.MC_DETAILS, mcDetails.toString());
+        ZSONObject mcDetails = metaContact.getDetails();
+        mcValues.putString(MetaContactGroup.MC_DETAILS, mcDetails.toString());
 
         String persistentData = contact.getPersistentData();
-        mcValues.put(MetaContactGroup.PERSISTENT_DATA, persistentData);
+        mcValues.putString(MetaContactGroup.PERSISTENT_DATA, persistentData);
 
-        mDB.insert(TBL_CHILD_CONTACTS, null, mcValues);
+        mRdbStore.insert(MetaContactGroup.TBL_CHILD_CONTACTS, mcValues);
 
         // Create the contact entry only if not found in contacts table
         if (findContactEntry(JABBER, contactJid) == null) {
             mcValues.clear();
-            mcValues.put(Contact.CONTACT_UUID, mcUid);
-            mcValues.put(Contact.PROTOCOL_PROVIDER, JABBER);
-            mcValues.put(Contact.CONTACT_JID, contactJid);
-            mcValues.put(Contact.SVR_DISPLAY_NAME, contact.getDisplayName());
-            mDB.insert(Contact.TABLE_NAME, null, mcValues);
+            mcValues.putString(Contact.CONTACT_UUID, mcUid);
+            mcValues.putString(Contact.PROTOCOL_PROVIDER, JABBER);
+            mcValues.putString(Contact.CONTACT_JID, contactJid);
+            mcValues.putString(Contact.SVR_DISPLAY_NAME, contact.getDisplayName());
+            mRdbStore.insert(Contact.TABLE_NAME, mcValues);
         }
     }
 
@@ -872,7 +875,6 @@ public class MclStorageManager implements MetaContactListListener {
         if ((contact == null) || (findContactEntry(JABBER, contact.getAddress()) == null)) {
             MetaContact metaContact = evt.getParent();
             String metaContactUid = metaContact.getMetaUID();
-
             Timber.d("Ignore debug info: ProtoContact not found for modification: %s for: %s",
                     evt.getParent(), metaContactUid);
             return;
@@ -881,12 +883,13 @@ public class MclStorageManager implements MetaContactListListener {
         // update the svrDisplayName for the specific contact
         String svrDisplayName = contact.getDisplayName();
         if (StringUtils.isNotEmpty(svrDisplayName)) {
-            String[] args = {JABBER, contact.getAddress()};
             mcValues.clear();
-            mcValues.put(Contact.SVR_DISPLAY_NAME, svrDisplayName);
+            mcValues.putString(Contact.SVR_DISPLAY_NAME, svrDisplayName);
 
-            mDB.update(Contact.TABLE_NAME, mcValues, Contact.PROTOCOL_PROVIDER
-                    + "=? AND " + Contact.CONTACT_JID + "=?", args);
+            RdbPredicates rdbPredicates = new RdbPredicates(Contact.TABLE_NAME)
+                    .equalTo(Contact.PROTOCOL_PROVIDER, JABBER)
+                    .and().equalTo(Contact.CONTACT_JID, contact.getAddress());
+            mRdbStore.update(mcValues, rdbPredicates);
         }
     }
 
@@ -912,12 +915,12 @@ public class MclStorageManager implements MetaContactListListener {
         Contact contact = evt.getProtoContact();
         String persistentData = contact.getPersistentData();
         if (StringUtils.isNotEmpty(persistentData)) {
-            String contactAddress = contact.getAddress();
-            String[] args = {metaContactUid, contactAddress};
+            mcValues.putString(MetaContactGroup.PERSISTENT_DATA, persistentData);
 
-            mcValues.put(MetaContactGroup.PERSISTENT_DATA, persistentData);
-            mDB.update(TBL_CHILD_CONTACTS, mcValues, MetaContactGroup.MC_UID
-                    + "=? AND " + MetaContactGroup.CONTACT_JID + "=?", args);
+            RdbPredicates rdbPredicates = new RdbPredicates(MetaContactGroup.TBL_CHILD_CONTACTS)
+                    .equalTo(MetaContactGroup.MC_UID, metaContactUid)
+                    .and().equalTo(MetaContactGroup.CONTACT_JID, contact.getAddress());
+            mRdbStore.update(mcValues, rdbPredicates);
         }
     }
 
@@ -945,11 +948,13 @@ public class MclStorageManager implements MetaContactListListener {
         }
 
         // Just modified the groupName of old contact
-        String[] args = new String[]{oldMcUid, contactJid};
         mcValues.clear();
-        mcValues.put(MetaContactGroup.MC_GROUP_NAME, groupName);
-        mDB.update(TBL_CHILD_CONTACTS, mcValues, MetaContactGroup.MC_UID
-                + "=? AND " + MetaContactGroup.CONTACT_JID + "=?", args);
+        mcValues.putString(MetaContactGroup.MC_GROUP_NAME, groupName);
+
+        RdbPredicates rdbPredicates = new RdbPredicates(MetaContactGroup.TBL_CHILD_CONTACTS)
+                .equalTo(MetaContactGroup.MC_UID, oldMcUid)
+                .and().equalTo(MetaContactGroup.CONTACT_JID, contactJid);
+        mRdbStore.update(mcValues, rdbPredicates);
     }
 
     /**
@@ -957,7 +962,7 @@ public class MclStorageManager implements MetaContactListListener {
      * also the contact entry in contacts table if none found in childContacts after removal.
      * <p>
      * Note: Both the contact chatSession and its associated chat messages are left in the DB
-     * User may remove this in ChatSessionFragment when an invalid entity is selected.
+     * User may remove this in ChatSessionSlice when an invalid entity is selected.
      *
      * @param evt a reference to the corresponding <code>ProtoContactEvent</code>
      */
@@ -971,15 +976,17 @@ public class MclStorageManager implements MetaContactListListener {
             return;
         }
 
-        String[] args = {mcUid, contactJid};
-        mDB.delete(TBL_CHILD_CONTACTS, MetaContactGroup.MC_UID + "=? AND "
-                + MetaContactGroup.CONTACT_JID + "=?", args);
+        RdbPredicates rdbPredicates = new RdbPredicates(MetaContactGroup.TBL_CHILD_CONTACTS)
+                .equalTo(MetaContactGroup.MC_UID, mcUid)
+                .and().equalTo(MetaContactGroup.CONTACT_JID, contactJid);
+        mRdbStore.delete(rdbPredicates);
 
         // cmeng - need to remove from contacts if none found in contactList
         if (findProtoContactEntry(null, contactJid) == 0) {
-            args = new String[]{JABBER, contactJid};
-            mDB.delete(Contact.TABLE_NAME, Contact.PROTOCOL_PROVIDER + "=? AND "
-                    + Contact.CONTACT_JID + "=?", args);
+            rdbPredicates = new RdbPredicates(Contact.TABLE_NAME)
+                    .equalTo(Contact.PROTOCOL_PROVIDER, JABBER)
+                    .and().equalTo(Contact.CONTACT_JID, contactJid);
+            mRdbStore.delete(rdbPredicates);
         }
     }
 
@@ -995,15 +1002,16 @@ public class MclStorageManager implements MetaContactListListener {
      */
     private String findContactEntry(String protocolProvider, String jid) {
         String[] columns = {Contact.CONTACT_UUID};
-        String[] args = {protocolProvider, jid};
-        Cursor cursor = mDB.query(Contact.TABLE_NAME, columns, Contact.PROTOCOL_PROVIDER
-                + "=? AND " + Contact.CONTACT_JID + "=?", args, null, null, null);
+        RdbPredicates rdbPredicates = new RdbPredicates(Contact.TABLE_NAME)
+                .equalTo(Contact.PROTOCOL_PROVIDER, protocolProvider)
+                .and().equalTo(Contact.CONTACT_JID, jid);
+        ResultSet resultSet = mRdbStore.query(rdbPredicates, columns);
 
         String contactUuid = null;
-        while (cursor.moveToNext()) {
-            contactUuid = cursor.getString(0);
+        while (resultSet.goToNextRow()) {
+            contactUuid = resultSet.getString(0);
         }
-        cursor.close();
+        resultSet.close();
         return contactUuid;
     }
 
@@ -1013,22 +1021,21 @@ public class MclStorageManager implements MetaContactListListener {
      * @param accountUuid the protocol user AccountUuid
      * @param contactJid ContactJid associated with the user account
      *
-     * @return the metaUuid for start ChatActivity
+     * @return the metaUuid for start ChatAbility
      */
     public static String getMetaUuid(String accountUuid, String contactJid) {
 
         String[] columns = {MetaContactGroup.MC_UID};
-        String[] args = {accountUuid, contactJid};
-
-        Cursor cursor = mDB.query(TBL_CHILD_CONTACTS, columns,
-                MetaContactGroup.ACCOUNT_UUID + "=? AND " + MetaContactGroup.CONTACT_JID + "=?",
-                args, null, null, null);
+        RdbPredicates rdbPredicates = new RdbPredicates(MetaContactGroup.TBL_CHILD_CONTACTS)
+                .equalTo(MetaContactGroup.ACCOUNT_UUID, accountUuid)
+                .and().equalTo(MetaContactGroup.CONTACT_JID, contactJid);
+        ResultSet resultSet = mRdbStore.query(rdbPredicates, columns);
 
         String metaUuid = null;
-        while (cursor.moveToNext()) {
-            metaUuid = cursor.getString(0);
+        while (resultSet.goToNextRow()) {
+            metaUuid = resultSet.getString(0);
         }
-        cursor.close();
+        resultSet.close();
         return metaUuid;
     }
 
@@ -1041,21 +1048,15 @@ public class MclStorageManager implements MetaContactListListener {
      * @return the number of entry with the given contactJid.
      */
     private int findProtoContactEntry(String mcUid, String contactJid) {
-        Cursor cursor;
-        String[] args = {contactJid};
+        RdbPredicates rdbPredicates = new RdbPredicates(MetaContactGroup.TBL_CHILD_CONTACTS)
+                .equalTo(MetaContactGroup.CONTACT_JID, contactJid);
+        if (StringUtils.isNotEmpty(mcUid)) {
+            rdbPredicates.and().equalTo(MetaContactGroup.MC_UID, mcUid);
+        }
+        ResultSet resultSet = mRdbStore.query(rdbPredicates, null);
 
-        if (StringUtils.isEmpty(mcUid)) {
-            cursor = mDB.query(TBL_CHILD_CONTACTS, null,
-                    MetaContactGroup.CONTACT_JID + "=?", args, null, null, null);
-        }
-        else {
-            args = new String[]{mcUid, contactJid};
-            cursor = mDB.query(TBL_CHILD_CONTACTS, null,
-                    MetaContactGroup.MC_UID + "=? AND " + MetaContactGroup.CONTACT_JID + "=?",
-                    args, null, null, null);
-        }
-        int count = cursor.getCount();
-        cursor.close();
+        int count = resultSet.getRowCount();
+        resultSet.close();
         return count;
     }
 
@@ -1071,15 +1072,16 @@ public class MclStorageManager implements MetaContactListListener {
      */
     private String findMetaContactEntry(String metaContactUID) {
         String[] columns = {MetaContactGroup.CONTACT_JID};
-        String[] args = {metaContactUID};
-        Cursor cursor = mDB.query(TBL_CHILD_CONTACTS, columns,
-                MetaContactGroup.MC_UID + "=?", args, null, null, null);
+
+        RdbPredicates rdbPredicates = new RdbPredicates(MetaContactGroup.TBL_CHILD_CONTACTS)
+                .equalTo(MetaContactGroup.MC_UID, metaContactUID);
+        ResultSet resultSet = mRdbStore.query(rdbPredicates, columns);
 
         String contactJid = null;
-        while (cursor.moveToNext()) {
-            contactJid = cursor.getString(0);
+        while (resultSet.goToNextRow()) {
+            contactJid = resultSet.getString(0);
         }
-        cursor.close();
+        resultSet.close();
         return contactJid;
     }
 
@@ -1094,15 +1096,16 @@ public class MclStorageManager implements MetaContactListListener {
      */
     private String findMetaContactGroupEntry(String metaContactGroupUID) {
         String[] columns = {MetaContactGroup.MC_GROUP_NAME};
-        String[] args = {metaContactGroupUID};
-        Cursor cursor = mDB.query(MetaContactGroup.TABLE_NAME, columns,
-                MetaContactGroup.MC_GROUP_UID + "=?", args, null, null, null);
+
+        RdbPredicates rdbPredicates = new RdbPredicates(MetaContactGroup.TABLE_NAME)
+                .equalTo(MetaContactGroup.MC_GROUP_UID, metaContactGroupUID);
+        ResultSet resultSet = mRdbStore.query(rdbPredicates, columns);
 
         String mcGroupName = null;
-        while (cursor.moveToNext()) {
-            mcGroupName = cursor.getString(0);
+        while (resultSet.goToNextRow()) {
+            mcGroupName = resultSet.getString(0);
         }
-        cursor.close();
+        resultSet.close();
         return mcGroupName;
     }
 
@@ -1125,7 +1128,6 @@ public class MclStorageManager implements MetaContactListListener {
          *
          * @return a string representation of the descriptor.
          */
-        @NonNull
         @Override
         public String toString() {
             return "StoredProtocolContactDescriptor[ " + " contactAddress=" + contactAddress

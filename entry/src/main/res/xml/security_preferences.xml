@@ -1,45 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:ohos="http://schemas.huawei.com/res/ohos">
     <!-- Message settings -->
-    <PreferenceCategory android:title="@string/omemo_messaging_security">
+    <PreferenceCategory
+        ohos:title="$string:omemo_messaging_security">
+
         <CheckBoxPreference
-            android:key="pref.key.omemo.key.blind.trust"
-            android:summary="@string/omemo_blind_trust_before_verification_summary"
-            android:title="@string/omemo_blind_trust_before_verification" />
-
+            ohos:key="pref.key.omemo.key.blind.trust"
+            ohos:summary="$string:omemo_blind_trust_before_verification_summary"
+            ohos:title="$string:omemo_blind_trust_before_verification"/>
         <PreferenceScreen
-            android:summary="@string/omemo_regenerate_identities_summary"
-            android:title="@string/omemo_regenerate_identities">
-            <intent
-                android:action="org.atalk..crypto.omemo.OmemoRegenerateDialog"
-                android:targetPackage="org.atalk.ohos" />
+            ohos:summary="$string:omemo_regenerate_identities_summary"
+            ohos:title="$string:omemo_regenerate_identities">
+            <intent ohos:action=".crypto.omemo.OmemoRegenerateDialog"/>
         </PreferenceScreen>
-
         <PreferenceScreen
-            android:summary="@string/omemo_purge_devices_summary"
-            android:title="@string/omemo_purge_device_unused">
-            <intent
-                android:action="org.atalk.crypto.omemo.OmemoDeviceDeleteDialog"
+            ohos:summary="$string:omemo_purge_devices_summary"
+            ohos:title="$string:omemo_purge_device_unused">
+            <intent ohos:action=".crypto.omemo.OmemoDeviceDeleteDialog"
                 android:targetPackage="org.atalk.ohos" />
         </PreferenceScreen>
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/key_fingerprint_security">
+    <PreferenceCategory
+        ohos:title="$string:key_fingerprint_security">
         <PreferenceScreen
-            android:summary="@string/settings_crypto_priv_key_summary"
-            android:title="@string/settings_crypto_priv_key">
-            <intent
-                android:action="org.atalk.crypto.CryptoPrivateKeys"
+            ohos:summary="$string:settings_crypto_priv_key_summary"
+            ohos:title="$string:settings_crypto_priv_key">
+            <intent ohos:action=".crypto.CryptoPrivateKeys"
+                android:targetPackage="org.atalk.ohos" />
+        </PreferenceScreen>
+        <PreferenceScreen
+            ohos:summary="$string:settings_fingerprint_summary"
+            ohos:title="$string:settings_fingerprint_title">
+            <intent ohos:action=".crypto.CryptoDeviceFingerPrints"
                 android:targetPackage="org.atalk.ohos" />
         </PreferenceScreen>
 
-        <PreferenceScreen
-            android:summary="@string/settings_fingerprint_summary"
-            android:title="@string/settings_fingerprint_title">
-            <intent
-                android:action="org.atalk.crypto.CryptoDeviceFingerPrints"
-                android:targetPackage="org.atalk.ohos" />
-        </PreferenceScreen>
     </PreferenceCategory>
 </PreferenceScreen>

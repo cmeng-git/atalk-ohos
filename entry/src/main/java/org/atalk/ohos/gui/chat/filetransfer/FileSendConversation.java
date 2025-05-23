@@ -1,6 +1,6 @@
 /*
- * aTalk, android VoIP and Instant Messaging client
- * Copyright 2014 Eng Chong Meng
+ * aTalk, ohos VoIP and Instant Messaging client
+ * Copyright 2024 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,25 +16,6 @@
  */
 package org.atalk.ohos.gui.chat.filetransfer;
 
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.util.Date;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.CustomTarget;
-import com.bumptech.glide.request.transition.Transition;
-
 import net.java.sip.communicator.impl.filehistory.FileHistoryServiceImpl;
 import net.java.sip.communicator.impl.protocol.jabber.OutgoingFileSendEntityImpl;
 import net.java.sip.communicator.impl.protocol.jabber.OutgoingFileTransferJabberImpl;
@@ -47,12 +28,24 @@ import net.java.sip.communicator.service.protocol.event.FileTransferStatusListen
 import net.java.sip.communicator.util.ConfigurationUtils;
 import net.java.sip.communicator.util.GuiUtils;
 
-import org.atalk.ohos.R;
+import org.apache.http.util.TextUtils;
+import org.atalk.ohos.BaseAbility;
+import org.atalk.ohos.ResourceTable;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.AppGUIActivator;
-import org.atalk.ohos.gui.chat.ChatFragment;
+import org.atalk.ohos.gui.chat.ChatSlice;
 import org.atalk.ohos.gui.chat.ChatMessage;
 import org.atalk.persistance.FileBackend;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.util.Date;
+
+import ohos.agp.components.Component;
+import ohos.agp.components.ComponentContainer;
+import ohos.agp.components.LayoutScatter;
+import ohos.media.codec.PixelMap;
+import ohos.utils.net.Uri;
 
 import timber.log.Timber;
 
@@ -85,7 +78,7 @@ public class FileSendConversation extends FileTransferConversation implements Fi
     protected boolean mRecordCreated = false;
 
 
-    private FileSendConversation(ChatFragment cPanel, String dir) {
+    private FileSendConversation(ChatSlice cPanel, String dir) {
         super(cPanel, dir);
     }
 
@@ -98,7 +91,7 @@ public class FileSendConversation extends FileTransferConversation implements Fi
      * @param fileName the file to transfer
      */
 
-    public static FileSendConversation newInstance(ChatFragment cPanel, String msgUuid, String sendTo,
+    public static FileSendConversation newInstance(ChatSlice cPanel, String msgUuid, String sendTo,
             final String fileName, int chatType, boolean stickerMode) {
         FileSendConversation fragmentSFC = new FileSendConversation(cPanel, FileRecord.OUT);
         fragmentSFC.msgUuid = msgUuid;
@@ -113,15 +106,15 @@ public class FileSendConversation extends FileTransferConversation implements Fi
         return fragmentSFC;
     }
 
-    public View SendFileConversationForm(LayoutInflater inflater, ChatFragment.MessageViewHolder msgViewHolder,
-            ViewGroup container, int id, boolean init) {
-        View convertView = inflateViewForFileTransfer(inflater, msgViewHolder, container, init);
+    public Component SendFileConversationForm(LayoutScatter inflater, ChatSlice.MessageViewHolder msgViewHolder,
+            ComponentContainer container, int id, boolean init) {
+        Component convertView = inflateViewForFileTransfer(inflater, msgViewHolder, container, init);
 
         msgViewId = id;
         updateFileViewInfo(mXferFile, false);
-        messageViewHolder.retryButton.setOnClickListener(v -> {
-            messageViewHolder.retryButton.setVisibility(View.GONE);
-            messageViewHolder.cancelButton.setVisibility(View.GONE);
+        messageViewHolder.retryButton.setClickedListener(v -> {
+            messageViewHolder.retryButton.setVisibility(Component.HIDE);
+            messageViewHolder.cancelButton.setVisibility(Component.HIDE);
             sendFileTransferRequest(mThumbnail);
         });
 
@@ -153,28 +146,28 @@ public class FileSendConversation extends FileTransferConversation implements Fi
 
         switch (status) {
             case FileTransferStatusChangeEvent.PREPARING:
-                statusText = aTalkApp.getResString(R.string.file_transfer_preparing, mSendTo);
+                statusText = aTalkApp.getResString(ResourceTable.String_file_transfer_preparing, mSendTo);
                 break;
 
             case FileTransferStatusChangeEvent.WAITING:
-                statusText = aTalkApp.getResString(R.string.file_transfer_waiting_acceptance, mSendTo);
+                statusText = aTalkApp.getResString(ResourceTable.String_file_transfer_waiting_acceptance, mSendTo);
                 break;
 
             case FileTransferStatusChangeEvent.ACCEPT:
-                statusText = aTalkApp.getResString(R.string.file_transfer_accepted);
+                statusText = aTalkApp.getResString(ResourceTable.String_file_transfer_accepted);
                 break;
 
             case FileTransferStatusChangeEvent.IN_PROGRESS:
-                statusText = aTalkApp.getResString(R.string.file_sending_to, mSendTo);
+                statusText = aTalkApp.getResString(ResourceTable.String_file_sending_to, mSendTo);
                 break;
 
             case FileTransferStatusChangeEvent.COMPLETED:
-                statusText = aTalkApp.getResString(R.string.file_send_completed, mSendTo);
+                statusText = aTalkApp.getResString(ResourceTable.String_file_send_completed, mSendTo);
                 break;
 
             // not offer to retry - smack replied as failed when recipient rejects on some devices
             case FileTransferStatusChangeEvent.FAILED:
-                statusText = aTalkApp.getResString(R.string.file_transfer_send_error, mSendTo);
+                statusText = aTalkApp.getResString(ResourceTable.String_file_transfer_send_error, mSendTo);
                 if (!TextUtils.isEmpty(reason)) {
                     statusText += "\n" + reason;
                 }
@@ -182,27 +175,27 @@ public class FileSendConversation extends FileTransferConversation implements Fi
 
             case FileTransferStatusChangeEvent.CANCELED:
                 // Inform remote user if sender canceled; not in standard legacy file xfer protocol event
-                statusText = aTalkApp.getResString(R.string.file_transfer_canceled);
+                statusText = aTalkApp.getResString(ResourceTable.String_file_transfer_canceled);
                 if (!TextUtils.isEmpty(reason)) {
                     statusText += ": " + reason;
                 }
 
                 if (mFileTransfer instanceof OutgoingFileTransferJabberImpl) {
-                    mChatFragment.getChatPanel().sendMessage(statusText,
+                    mChatSlice.getChatPanel().sendMessage(statusText,
                             IMessage.FLAG_REMOTE_ONLY | IMessage.ENCODE_PLAIN);
                 }
                 // Must invalid view; else the progress and cancel buttons are still visible when user has canceled.
-                mChatFragment.getChatListAdapter().notifyDataSetInvalidated();
+                mChatSlice.getChatListAdapter().notifyDataInvalidated();
                 break;
 
             case FileTransferStatusChangeEvent.DECLINED:
-                statusText = aTalkApp.getResString(R.string.file_send_declined, mSendTo);
+                statusText = aTalkApp.getResString(ResourceTable.String_file_send_declined, mSendTo);
                 break;
         }
         // Do here so newly created DB record is properly updated.
         updateFTStatus(status);
         updateXferFileViewState(status, statusText);
-        mChatFragment.scrollToBottom();
+        mChatSlice.scrollToBottom();
     }
 
     /**
@@ -234,7 +227,7 @@ public class FileSendConversation extends FileTransferConversation implements Fi
                 ChatMessage.MESSAGE_FILE_TRANSFER_HISTORY : ChatMessage.MESSAGE_FILE_TRANSFER_SEND;
 
         mFHS.updateFTStatusToDB(msgUuid, status, fileName, mEncryption, ftState);
-        mChatFragment.updateFTStatus(msgUuid, status, fileName, mEncryption, ftState);
+        mChatSlice.updateFTStatus(msgUuid, status, fileName, mEncryption, ftState);
     }
 
     /**
@@ -254,7 +247,7 @@ public class FileSendConversation extends FileTransferConversation implements Fi
         final String reason = event.getReason();
 
         // Must execute in UiThread to Update UI information
-        runOnUiThread(() -> {
+        BaseAbility.runOnUiThread(() -> {
             updateStatus(status, reason);
             if (isFileTransferEnd(status)) {
                 // Timber.e( "removeStatusListener: %s => %s", fileTransfer, FileSendConversation.this);
@@ -278,7 +271,7 @@ public class FileSendConversation extends FileTransferConversation implements Fi
         mFileTransfer = fileTransfer;
         fileTransfer.addStatusListener(this);
         setFileTransfer(fileTransfer, mXferFile.length());
-        runOnUiThread(() -> updateStatus(FileTransferStatusChangeEvent.WAITING, null));
+        BaseAbility.runOnUiThread(() -> updateStatus(FileTransferStatusChangeEvent.WAITING, null));
     }
 
     /**
@@ -290,7 +283,7 @@ public class FileSendConversation extends FileTransferConversation implements Fi
      */
     @Override
     protected String getProgressLabel(long bytesString) {
-        return aTalkApp.getResString(R.string.file_byte_sent, bytesString);
+        return aTalkApp.getResString(ResourceTable.String_file_byte_sent, bytesString);
     }
 
     /**
@@ -313,15 +306,15 @@ public class FileSendConversation extends FileTransferConversation implements Fi
      */
     public void sendFileWithThumbnail() {
         if (ConfigurationUtils.isSendThumbnail()
-                && (ChatFragment.MSGTYPE_OMEMO != mChatType)
+                && (ChatSlice.MSGTYPE_OMEMO != mChatType)
                 && !mStickerMode && FileBackend.isMediaFile(mXferFile)) {
             Glide.with(aTalkApp.getInstance())
                     .asBitmap()
-                    .load(Uri.fromFile(mXferFile))
-                    .into(new CustomTarget<Bitmap>(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT) {
+                    .load(Uri.getUriFromFile(mXferFile))
+                    .into(new CustomTarget<PixelMap>(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT) {
                               @Override
-                              public void onResourceReady(@NonNull Bitmap bitmap,
-                                      @Nullable Transition<? super Bitmap> transition) {
+                              public void onResourceReady(Bitmap bitmap,
+                                      Transition<? super Bitmap> transition) {
                                   ByteArrayOutputStream stream = new ByteArrayOutputStream();
                                   bitmap.compress(Bitmap.CompressFormat.JPEG, 80, stream);
                                   byte[] byteData = stream.toByteArray();
@@ -330,12 +323,12 @@ public class FileSendConversation extends FileTransferConversation implements Fi
                               }
 
                               @Override
-                              public void onLoadCleared(@Nullable Drawable placeholder) {
+                              public void onLoadCleared(Drawable placeholder) {
                                   Timber.d("Glide onLoadCleared received!!!");
                               }
 
                               @Override
-                              public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                              public void onLoadFailed(Drawable errorDrawable) {
                                   // load failed due to some reason, notify callers here about the same
                                   sendFileTransferRequest(null);
                               }
@@ -356,6 +349,6 @@ public class FileSendConversation extends FileTransferConversation implements Fi
      */
     public void sendFileTransferRequest(byte[] thumbnail) {
         mThumbnail = thumbnail;
-        mChatFragment.new SendFile(this, msgViewId).execute();
+        mChatSlice.new SendFile(this, msgViewId).execute();
     }
 }

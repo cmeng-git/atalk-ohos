@@ -7,9 +7,6 @@ package net.java.sip.communicator.service.protocol.media;
 
 import static org.atalk.impl.neomedia.format.MediaFormatImpl.FORMAT_PARAMETER_ATTR_IMAGEATTR;
 
-import androidx.annotation.NonNull;
-
-import java.awt.Component;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.net.InetSocketAddress;
@@ -27,9 +24,10 @@ import net.java.sip.communicator.service.protocol.OperationFailedException;
 import net.java.sip.communicator.service.protocol.OperationSetVideoTelephony;
 import net.java.sip.communicator.service.protocol.ProtocolProviderFactory;
 
-import org.atalk.ohos.R;
+import org.atalk.ohos.ResourceTable;
 import org.atalk.ohos.aTalkApp;
-import org.atalk.ohos.gui.dialogs.DialogActivity;
+import org.atalk.ohos.agp.components.JComponent;
+import org.atalk.ohos.gui.dialogs.DialogH;
 import org.atalk.impl.neomedia.format.MediaFormatImpl;
 import org.atalk.service.neomedia.AudioMediaStream;
 import org.atalk.service.neomedia.MediaDirection;
@@ -57,6 +55,9 @@ import org.atalk.util.event.VideoEvent;
 import org.atalk.util.event.VideoListener;
 import org.atalk.util.event.VideoNotifierSupport;
 import org.jxmpp.jid.Jid;
+
+import ohos.agp.components.Component;
+import ohos.app.Context;
 
 import timber.log.Timber;
 
@@ -282,15 +283,15 @@ public abstract class CallPeerMediaHandler<T extends MediaAwareCallPeer<?, ?, ?>
                 event.consume();
         }
 
-        public void videoAdded(@NonNull VideoEvent event) {
+        public void videoAdded(VideoEvent event) {
             onVideoEvent(event);
         }
 
-        public void videoRemoved(@NonNull VideoEvent event) {
+        public void videoRemoved(VideoEvent event) {
             onVideoEvent(event);
         }
 
-        public void videoUpdate(@NonNull VideoEvent event) {
+        public void videoUpdate(VideoEvent event) {
             onVideoEvent(event);
         }
     };
@@ -484,7 +485,7 @@ public abstract class CallPeerMediaHandler<T extends MediaAwareCallPeer<?, ?, ?>
      * describes have been consumed and should be considered owned, referenced (which is important because
      * <code>Component</code>s belong to a single <code>Container</code> at a time); otherwise, <code>false</code>
      */
-    protected boolean fireVideoEvent(int type, Component visualComponent, int origin) {
+    protected boolean fireVideoEvent(int type, JComponent visualComponent, int origin) {
         return videoNotifierSupport.fireVideoEvent(type, visualComponent, origin, true);
     }
 
@@ -531,7 +532,7 @@ public abstract class CallPeerMediaHandler<T extends MediaAwareCallPeer<?, ?, ?>
         // cmeng (20210504): Call with/initiated by Conversation may get terminated abruptly, when h264 video codec is used
         if (mPeer.getCall() == null) {
             Timber.w("Get default device with null call: %s %s", mPeer, mediaType);
-            aTalkApp.showToastMessage(R.string.call_ended, mPeer.getEntity());
+            aTalkApp.showToastMessage(ResourceTable.String_call_ended, mPeer.getEntity());
             return null;
         }
 
@@ -762,8 +763,9 @@ public abstract class CallPeerMediaHandler<T extends MediaAwareCallPeer<?, ?, ?>
         }
 
         if (supportFormats.size() == 0) {
-            DialogActivity.showDialog(aTalkApp.getInstance(),
-                    R.string.call_audio, R.string.call_no_device_codec_H,
+            Context ctx = aTalkApp.getInstance();
+            DialogH.getInstance(ctx).showDialog(ctx,
+                    ResourceTable.String_call_audio, ResourceTable.String_call_no_device_codec_H,
                     (mediaDevice != null) ? mediaDevice.getMediaType().toString() : "Unknown");
         }
         return supportFormats;
@@ -776,7 +778,7 @@ public abstract class CallPeerMediaHandler<T extends MediaAwareCallPeer<?, ?, ?>
      * @return the visual <code>Component</code> depicting the local video if local video is actually
      * being streamed from the local peer to the remote peer; otherwise, <code>null</code>
      */
-    public Component getLocalVisualComponent() {
+    public JComponent getLocalVisualComponent() {
         MediaStream videoStream = getStream(MediaType.VIDEO);
         return ((videoStream == null) || !isLocalVideoTransmissionEnabled())
                 ? null : ((VideoMediaStream) videoStream).getLocalVisualComponent();
@@ -903,7 +905,7 @@ public abstract class CallPeerMediaHandler<T extends MediaAwareCallPeer<?, ?, ?>
      */
     @Deprecated
     public Component getVisualComponent() {
-        List<Component> visualComponents = getVisualComponents();
+        List<JComponent> visualComponents = getVisualComponents();
         return visualComponents.isEmpty() ? null : visualComponents.get(0);
     }
 
@@ -913,9 +915,9 @@ public abstract class CallPeerMediaHandler<T extends MediaAwareCallPeer<?, ?, ?>
      * @return the visual <code>Component</code>s in which videos from the remote peer are currently
      * being rendered
      */
-    public List<Component> getVisualComponents() {
+    public List<JComponent> getVisualComponents() {
         MediaStream videoStream = getStream(MediaType.VIDEO);
-        List<Component> visualComponents;
+        List<JComponent> visualComponents;
 
         if (videoStream == null)
             visualComponents = Collections.emptyList();

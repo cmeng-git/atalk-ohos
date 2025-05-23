@@ -72,7 +72,7 @@ public class DefineFLP
 
 	static final float SPEECH_ACTIVITY_DTX_THRES = 0.1f;
 
-	/* Speech Activity LBRR enable threshold (needs tuning) */
+	/* Speech Ability LBRR enable threshold (needs tuning) */
 	static float LBRR_SPEECH_ACTIVITY_THRES = 0.5f;
 
 	static final float Q14_CONVERSION_FAC = 6.1035e-005f; // 1 / 2^14

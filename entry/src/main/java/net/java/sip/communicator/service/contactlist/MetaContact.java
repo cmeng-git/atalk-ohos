@@ -15,15 +15,15 @@
  */
 package net.java.sip.communicator.service.contactlist;
 
+import java.util.Iterator;
+import java.util.List;
+
+import ohos.utils.zson.ZSONArray;
+import ohos.utils.zson.ZSONObject;
+
 import net.java.sip.communicator.service.protocol.Contact;
 import net.java.sip.communicator.service.protocol.OperationSet;
 import net.java.sip.communicator.service.protocol.ProtocolProviderService;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * A MetaContact is an abstraction used for merging multiple Contacts (most
@@ -37,8 +37,7 @@ import java.util.List;
  * @author Lubomir Marinov
  * @author Eng Chong Meng
  */
-public interface MetaContact extends Comparable<MetaContact>
-{
+public interface MetaContact extends Comparable<MetaContact> {
     /**
      * Returns the default protocol specific <code>Contact</code> to use when
      * communicating with this <code>MetaContact</code>.
@@ -52,6 +51,7 @@ public interface MetaContact extends Comparable<MetaContact>
      * <code>MetaContact</code> for a precise operation (IM, call, ...).
      *
      * @param operationSet the operation for which the default contact is needed
+     *
      * @return the default contact for the specified operation.
      */
     Contact getDefaultContact(Class<? extends OperationSet> operationSet);
@@ -62,6 +62,7 @@ public interface MetaContact extends Comparable<MetaContact>
      * Currently the main use is to display the call button for user access
      *
      * @param operationSet the operation for which the metacontact is supported
+     *
      * @return the first contact for the specified operation supported.
      */
     Contact getOpSetSupportedContact(Class<? extends OperationSet> operationSet);
@@ -89,6 +90,7 @@ public interface MetaContact extends Comparable<MetaContact>
      * @param contactAddress the address of the contact who we're looking for.
      * @param ownerProvider a reference to the ProtocolProviderService that
      * the contact we're looking for belongs to.
+     *
      * @return a reference to a <code>Contact</code>, encapsulated by this
      * MetaContact, carrying the specified address and originating from the
      * specified ownerProvider or null if no such contact exists..
@@ -100,6 +102,7 @@ public interface MetaContact extends Comparable<MetaContact>
      * in this <code>MetaContact</code>, otherwise - returns <code>false</code>.
      *
      * @param protocolContact the <code>Contact</code> we're looking for
+     *
      * @return <code>true</code> if the given <code>protocolContact</code> is contained
      * in this <code>MetaContact</code>, otherwise - returns <code>false</code>
      */
@@ -126,6 +129,7 @@ public interface MetaContact extends Comparable<MetaContact>
      *
      * @param provider a reference to the <code>ProtocolProviderService</code>
      * whose contacts we'd like to get.
+     *
      * @return an <code>Iterator</code> over all contacts encapsulated in this
      * <code>MetaContact</code> and originating from the specified provider.
      */
@@ -143,6 +147,7 @@ public interface MetaContact extends Comparable<MetaContact>
      * <p>
      *
      * @param opSetClass the operation for which the default contact is needed
+     *
      * @return a <code>List</code> of all contacts encapsulated in this
      * <code>MetaContact</code> and supporting the specified <code>OperationSet</code>
      */
@@ -201,6 +206,7 @@ public interface MetaContact extends Comparable<MetaContact>
      *
      * @param isLazy Indicates if this method should return the locally stored
      * avatar or it should obtain the avatar right from the server.
+     *
      * @return an avatar (e.g. user photo) of this contact.
      */
     byte[] getAvatar(boolean isLazy);
@@ -248,16 +254,18 @@ public interface MetaContact extends Comparable<MetaContact>
      * Get all details with given name.
      *
      * @param name the name of the details we are searching.
-     * @return JSONArray for the details with the given name.
+     *
+     * @return ZSONArray for the details with the given name.
      */
-    JSONArray getDetails(String name);
+    ZSONArray getDetails(String name);
 
-    JSONObject getDetails();
+    ZSONObject getDetails();
 
     /**
      * Gets the user data associated with this instance and a specific key.
      *
      * @param key the key of the user data associated with this instance to be retrieved
+     *
      * @return an <code>Object</code> which represents the value associated with
      * this instance and the specified <code>key</code>; <code>null</code> if no
      * association with the specified <code>key</code> exists in this instance

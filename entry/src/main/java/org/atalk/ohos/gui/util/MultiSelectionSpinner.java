@@ -1,6 +1,6 @@
 /*
- * aTalk, android VoIP and Instant Messaging client
- * Copyright 2014 Eng Chong Meng
+ * aTalk, ohos VoIP and Instant Messaging client
+ * Copyright 2024 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,21 +16,16 @@
  */
 package org.atalk.ohos.gui.util;
 
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
-import android.content.DialogInterface.OnMultiChoiceClickListener;
-import android.util.AttributeSet;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
-
-import androidx.appcompat.app.AlertDialog;
-
-import org.atalk.ohos.R;
-
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+
+import ohos.agp.components.Picker;
+import ohos.agp.window.dialog.IDialog;
+import ohos.app.Context;
+
+import org.atalk.ohos.ResourceTable;
+import org.atalk.ohos.gui.dialogs.DialogA;
 
 import timber.log.Timber;
 
@@ -39,11 +34,11 @@ import timber.log.Timber;
  * The dropdown list is implemented as a dialog in which items are kept separately from the spinner list.
  * Displaying of user selection is by setting spinner list to single item built from user selected items
  *
- * Note: Do not change extends Spinner, ignored android error highlight
+ * Note: Do not change extends Picker, ignored android error highlight
  *
  * @author Eng Chong Meng
  */
-public class MultiSelectionSpinner extends Spinner implements OnMultiChoiceClickListener, OnCancelListener
+public class MultiSelectionSpinner extends Picker implements IDialog.CheckBoxClickedListener, DialogA.ClickedListener
 {
     private static String selected_ALL = "ALL";
     private static String selected_NONE = "NONE";
@@ -56,18 +51,18 @@ public class MultiSelectionSpinner extends Spinner implements OnMultiChoiceClick
     public MultiSelectionSpinner(Context context)
     {
         super(context);
-        mAdapter = new ArrayAdapter<>(context, R.layout.simple_spinner_item);
-        super.setAdapter(mAdapter);
+        mAdapter = new ArrayAdapter<>(context, ResourceTable.Layout_simple_spinner_item);
+        super.setItemProvider(mAdapter);
     }
 
     public MultiSelectionSpinner(Context context, AttributeSet attrs)
     {
         super(context, attrs);
-        mAdapter = new ArrayAdapter<>(context, R.layout.simple_spinner_item);
-        super.setAdapter(mAdapter);
+        mAdapter = new ArrayAdapter<>(context, ResourceTable.Layout_simple_spinner_item);
+        super.setItemProvider(mAdapter);
     }
 
-    public void onClick(DialogInterface dialog, int which, boolean isChecked)
+    public void onClick(IDialog dialog, int which, boolean isChecked)
     {
         if (mSelected != null && which < mSelected.length) {
             mSelected[which] = isChecked;
@@ -81,32 +76,32 @@ public class MultiSelectionSpinner extends Spinner implements OnMultiChoiceClick
      * Internal call and when exit MultiSelectionSpinner:
      * update spinner UI and return call back to registered listener for action
      *
-     * @param dialog
+     * @param iDialog
      */
     @Override
-    public void onCancel(DialogInterface dialog)
+    public void onClick(DialogA iDialog)
     {
+        // check i is cancel before proceed.
         updateSpinnerSelection();
-
         if (listener != null)
             listener.onItemsSelected(this, mSelected);
     }
 
     /**
      * Build the dropdown list alert for user selection
-
+     *
      * @return true always.
      */
     @Override
     public boolean performClick()
     {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setMultiChoiceItems(items.toArray(new CharSequence[0]), mSelected, this);
+        DialogA.Builder builder = new DialogA.Builder(getContext());
+        builder.setMultiChoiceItems(items.toArray(new String[0]), mSelected, this);
 
-        builder.setPositiveButton(android.R.string.ok, (dialog, which) -> dialog.cancel());
-        builder.setOnCancelListener(this);
+        builder.setNegativeButton(ResourceTable.String_cancel, this);
+        builder.setPositiveButton(ResourceTable.String_ok, dialog -> dialog.remove());
 
-        builder.show();
+        builder.create().show();
         return true;
     }
 
@@ -125,7 +120,7 @@ public class MultiSelectionSpinner extends Spinner implements OnMultiChoiceClick
         mSelected = new boolean[items.size()];
         Arrays.fill(mSelected, false);
 
-        mAdapter = new ArrayAdapter<>(getContext(), R.layout.simple_spinner_item, new String[]{"NONE"});
+        mAdapter = new ArrayAdapter<>(getContext(), ResourceTable.Layout_simple_spinner_item, new String[]{"NONE"});
         setAdapter(mAdapter);
     }
 
@@ -257,7 +252,7 @@ public class MultiSelectionSpinner extends Spinner implements OnMultiChoiceClick
     public void updateSpinnerSelection()
     {
         String spinnerText = getSelectedItemsAsString();
-        mAdapter = new ArrayAdapter<>(getContext(), R.layout.simple_spinner_item, new String[]{spinnerText});
+        mAdapter = new ArrayAdapter<>(getContext(), ResourceTable.Layout_simple_spinner_item, new String[]{spinnerText});
         setAdapter(mAdapter);
     }
 

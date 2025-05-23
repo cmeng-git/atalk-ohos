@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:app="http://schemas.huawei.com/apk/res-auto"
+    xmlns:ohos="http://schemas.huawei.com/res/ohos">
+    <item
+        ohos:id="$+id:cr_delete"
+        ohos:icon="$media:ic_delete_dark"
+        ohos:title="$string:delete"
+        app:showAsAction="always"/>
+
+    <item
+        ohos:id="$+id:cr_delete_history"
+        ohos:icon="$media:ic_delete_history"
+        ohos:title="$string:delete"
+        app:showAsAction="always"/>
+
+    <item
+        ohos:id="$+id:cr_select_all"
+        ohos:icon="$media:ic_select_all_dark"
+        ohos:title="$string:select_all"
+        app:showAsAction="always"/>
+
+</menu>

@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * Android implementation of <code>AuthenticationWindowService</code>. This class manages authentication requests. Each
  * request data is held by the <code>AuthWindowImpl</code> identified by assigned request id. Request id is passed to the
- * <code>AuthWindowActivity</code> so that it can obtain request data and interact with the user.
+ * <code>AuthWindowAbility</code> so that it can obtain request data and interact with the user.
  *
  * @author Pawel Domas
  * @author Eng Chong Meng

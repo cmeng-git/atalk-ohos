@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DirectionalLayout xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:width="match_parent"
+    ohos:height="match_content">
+
+    <DirectionalLayout
+        ohos:width="match_content"
+        ohos:height="match_content"
+        ohos:left_margin="8vp"
+        ohos:end_margin="8vp"
+        ohos:bottom_margin="4vp">
+
+        <Text
+            ohos:id="$+id:messageView"
+            ohos:text_size="$float:medium_font"
+            ohos:width="match_content"
+            ohos:height="match_content"
+            ohos:start_margin="$float:chat_text_margin"
+            ohos:text_alignment="vertical_center|start"
+            ohos:padding="7vp"
+            ohos:text="{System message text}"
+            ohos:text_color="$color:blue" />
+    </DirectionalLayout>
+</DirectionalLayout>

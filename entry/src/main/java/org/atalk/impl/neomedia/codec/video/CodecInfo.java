@@ -1,47 +1,42 @@
 /*
- * Jitsi, the OpenSource Java VoIP and Instant Messaging client.
+ * aTalk, ohos VoIP and Instant Messaging client
+ * Copyright 2024 Eng Chong Meng
  *
- * Distributable under LGPL license.
- * See terms of license at gnu.org.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.atalk.impl.neomedia.codec.video;
 
-import static android.media.MediaCodecList.REGULAR_CODECS;
+import ohos.agp.graphics.Surface.PixelFormat;
+import ohos.agp.render.render3d.BuildConfig;
+import ohos.media.codec.CodecDescription;
+import ohos.media.codec.CodecDescriptionList;
+import ohos.media.common.Format;
 
-import android.media.MediaCodecInfo;
-import android.media.MediaCodecList;
+import org.atalk.service.neomedia.codec.Constants;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.atalk.service.neomedia.codec.Constants;
-import org.jetbrains.annotations.NotNull;
-
 import timber.log.Timber;
 
 /**
- * Class used to manage codecs information for <code>MediaCodec</code>.
+ * Class used to manage codecs information for <code>Codec</code>.
  *
- * @author Pawel Domas
  * @author Eng Chong Meng
  */
 public abstract class CodecInfo {
-    /**
-     * The mime type of H.264-encoded media data as defined by Android's <code>MediaCodec</code> class.
-     */
-    public static final String MEDIA_CODEC_TYPE_H264 = "video/avc";
-
-    /**
-     * The mime type of VP8-encoded media data as defined by Android's <code>MediaCodec</code> class.
-     */
-    public static final String MEDIA_CODEC_TYPE_VP8 = "video/x-vnd.on2.vp8";
-
-    /**
-     * The mime type of VP9-encoded media data as defined by Android's <code>MediaCodec</code> class.
-     */
-    public static final String MEDIA_CODEC_TYPE_VP9 = "video/x-vnd.on2.vp9";
-
     /**
      * List of crashing codecs
      */
@@ -50,7 +45,7 @@ public abstract class CodecInfo {
     /**
      * List of all codecs discovered in the system.
      */
-    private static final List<CodecInfo> codecs = new ArrayList<>();
+    private static final List<CodecInfo> codecInfos = new ArrayList<>();
 
     static {
         bannedYuvCodecs = new ArrayList<>();
@@ -66,80 +61,66 @@ public abstract class CodecInfo {
         // This one works only for res 176x144
         bannedYuvCodecs.add("OMX.google.vpx.encoder");
 
-        MediaCodecInfo[] codecInfos = new MediaCodecList(REGULAR_CODECS).getCodecInfos();
-        for (MediaCodecInfo codecInfo : codecInfos) {
-            // Timber.d("Codec discovered: %s/%s", codecInfo.getName(), Arrays.toString(codecInfo.getSupportedTypes()));
-            CodecInfo ci = CodecInfo.getCodecInfo(codecInfo);
+        List<CodecDescription> codecDescriptions = new CodecDescriptionList().getSupportedCodecs();
+        for (CodecDescription codecDes : codecDescriptions) {
+            // Timber.d("Codec discovered: %s/%s", codecDes.getName(), Arrays.toString(codecDes.getMimeTypes()));
+            CodecInfo ci = getCodecInfo(codecDes);
             if (ci != null) {
-                codecs.add(ci);
                 ci.setBanned(bannedYuvCodecs.contains(ci.getName()));
+                codecInfos.add(ci);
             }
         }
 
-        // Timber.i("H264 encoder info: %s", getCodecForType(MEDIA_CODEC_TYPE_H264, true));
-        // Timber.i("H264 decoder info: %s", getCodecForType(MEDIA_CODEC_TYPE_H264, false));
-        // Timber.i("VP8 encoder info: %s", getCodecForType(MEDIA_CODEC_TYPE_VP8, true));
-        // Timber.i("VP8 decoder info: %s", getCodecForType(MEDIA_CODEC_TYPE_VP8, false));
-        // Timber.i("VP9 encoder info: %s", getCodecForType(MEDIA_CODEC_TYPE_VP9, true));
-        // Timber.i("VP9 decoder info: %s", getCodecForType(MEDIA_CODEC_TYPE_VP9, false));
+        if (BuildConfig.DEBUG) {
+            Timber.i("H264 encoder info: %s", getCodecForType(Format.VIDEO_AVC, true));
+            Timber.i("H264 decoder info: %s", getCodecForType(Format.VIDEO_AVC, false));
+            Timber.i("VP8 encoder info: %s", getCodecForType(Format.VIDEO_VP8, true));
+            Timber.i("VP8 decoder info: %s", getCodecForType(Format.VIDEO_VP8, false));
+            Timber.i("VP9 encoder info: %s", getCodecForType(Format.VIDEO_VP9, true));
+            Timber.i("VP9 decoder info: %s", getCodecForType(Format.VIDEO_VP9, false));
+        }
     }
 
     /**
      * <code>MediaCodecInfo</code> encapsulated by this instance.
      */
-    protected final MediaCodecInfo codecInfo;
+    protected final CodecDescription mCodecDes;
 
     /**
-     * <code>MediaCodecInfo.CodecCapabilities</code> encapsulated by this instance.
+     * List of color formats supported by subject <code>Codec</code>.
      */
-    protected final MediaCodecInfo.CodecCapabilities caps;
-
-    /**
-     * List of color formats supported by subject <code>MediaCodec</code>.
-     */
-    protected final ArrayList<CodecColorFormat> colors;
+    protected final PixelFormat[] mPixelFormats;
 
     /**
      * Media type of this <code>CodecInfo</code>.
      */
-    private final String mediaType;
-
-    /**
-     * Profile levels supported by subject <code>MediaCodec</code>.
-     */
-    private ProfileLevel[] profileLevels;
+    private final String mMediaType;
 
     /**
      * Flag indicates that this codec is known to cause some troubles and is disabled
      * (will be ignored during codec select phase).
      */
-    private boolean banned;
+    private boolean isBanned;
 
     /**
-     * Creates a new instance of <code>CodecInfo</code> that will encapsulate given <code>codecInfo</code>.
+     * Creates a new instance of <code>CodecInfo</code> that will encapsulate given <code>codecDes</code>.
      *
-     * @param codecInfo the codec info object to encapsulate.
+     * @param codecDes the codec info object to encapsulate.
      * @param mediaType media type of the codec
      */
-    public CodecInfo(MediaCodecInfo codecInfo, String mediaType) {
-        this.codecInfo = codecInfo;
-        this.mediaType = mediaType;
-        this.caps = codecInfo.getCapabilitiesForType(mediaType);
-
-        this.colors = new ArrayList<>();
-        int[] colorFormats = caps.colorFormats;
-        for (int colorFormat : colorFormats) {
-            colors.add(CodecColorFormat.fromInt(colorFormat));
-        }
+    public CodecInfo(CodecDescription codecDes, String mediaType) {
+        mCodecDes = codecDes;
+        mMediaType = mediaType;
+        mPixelFormats = PixelFormat.values();
     }
 
     /**
-     * Returns codec name that can be used to obtain <code>MediaCodec</code>.
+     * Returns codec name that can be used to obtain <code>Codec</code>.
      *
-     * @return codec name that can be used to obtain <code>MediaCodec</code>.
+     * @return codec name that can be used to obtain <code>Codec</code>.
      */
     public String getName() {
-        return codecInfo.getName();
+        return mCodecDes.getName();
     }
 
     /**
@@ -148,14 +129,14 @@ public abstract class CodecInfo {
      * @param mimeType mime type of the codec.
      * @param isEncoder <code>true</code> if encoder should be returned or <code>false</code> for decoder.
      *
-     * @return the codec for given <code>mimeType</code>.
+     * @return the codec for the given <code>mimeType</code>.
      */
     public static CodecInfo getCodecForType(String mimeType, boolean isEncoder) {
-        for (CodecInfo codec : codecs) {
-            if (!codec.isBanned()
-                    && codec.mediaType.equals(mimeType)
-                    && codec.codecInfo.isEncoder() == isEncoder) {
-                return codec;
+        for (CodecInfo codecInfo : codecInfos) {
+            if (!codecInfo.isBanned()
+                    && codecInfo.mMediaType.equals(mimeType)
+                    && codecInfo.isEncoder() == isEncoder) {
+                return codecInfo;
             }
         }
         return null;
@@ -167,11 +148,11 @@ public abstract class CodecInfo {
      * @return the list of detected codecs.
      */
     public static List<CodecInfo> getSupportedCodecs() {
-        return Collections.unmodifiableList(codecs);
+        return Collections.unmodifiableList(codecInfos);
     }
 
     /**
-     * Returns the list of profiles supported.
+     * Returns the array of profiles supported.
      *
      * @return the array of profiles supported.
      */
@@ -200,85 +181,62 @@ public abstract class CodecInfo {
         return new Level("Unknown", levelInt);
     }
 
-    public ProfileLevel[] getProfileLevels() {
-        if (profileLevels == null) {
-            MediaCodecInfo.CodecProfileLevel[] plArray = caps.profileLevels;
-            profileLevels = new ProfileLevel[plArray.length];
-            for (int i = 0; i < profileLevels.length; i++) {
-                Profile p = getProfile(plArray[i].profile);
-                Level l = getLevel(plArray[i].level);
-                profileLevels[i] = new ProfileLevel(p, l);
-            }
-        }
-        return profileLevels;
-    }
-
-    @NotNull
     @Override
     public String toString() {
         StringBuilder colorStr = new StringBuilder("\ncolors:\n");
-        for (int i = 0; i < colors.size(); i++) {
-            colorStr.append(colors.get(i));
-            if (i != colors.size() - 1)
+        for (int i = 0; i < mPixelFormats.length; i++) {
+            colorStr.append(mPixelFormats[i]);
+            if (i != mPixelFormats.length - 1)
                 colorStr.append(", \n");
         }
-
-        StringBuilder plStr = new StringBuilder("\nprofiles:\n");
-        ProfileLevel[] profiles = getProfileLevels();
-        for (int i = 0; i < profiles.length; i++) {
-            plStr.append(profiles[i].toString());
-            if (i != profiles.length - 1)
-                plStr.append(", \n");
-        }
-
-        return codecInfo.getName() + "(" + getLibjitsiEncoding() + ")" + colorStr + plStr;
+        return mCodecDes.getName() + "(" + getLibEncoding() + ")" + colorStr;
     }
 
-    public static CodecInfo getCodecInfo(MediaCodecInfo codecInfo) {
-        String[] types = codecInfo.getSupportedTypes();
+    public static CodecInfo getCodecInfo(CodecDescription codecDes) {
+        String[] types = codecDes.getMimeTypes();
         for (String type : types) {
             try {
                 switch (type) {
-                    case MEDIA_CODEC_TYPE_H264:
-                        return new H264CodecInfo(codecInfo);
-                    case MEDIA_CODEC_TYPE_VP8:
-                        return new VP8CodecInfo(codecInfo);
-                    case MEDIA_CODEC_TYPE_VP9:
-                        return new VP9CodecInfo(codecInfo);
+                    case Format.VIDEO_AVC:
+                        return new AvcCodecInfo(codecDes);
+                    case Format.VIDEO_VP8:
+                        return new Vp8CodecInfo(codecDes);
+                    case Format.VIDEO_VP9:
+                        return new Vp9CodecInfo(codecDes);
                 }
             } catch (IllegalArgumentException e) {
-                Timber.e(e, "Error initializing codec info: %s, type: %s", codecInfo.getName(), type);
+                Timber.e(e, "Error initializing codec info: %s, type: %s", codecDes.getName(), type);
             }
         }
         return null;
     }
 
     public void setBanned(boolean banned) {
-        this.banned = banned;
+        isBanned = banned;
     }
 
     public boolean isBanned() {
-        return banned;
+        return isBanned;
     }
 
     public boolean isEncoder() {
-        return codecInfo.isEncoder();
+        return mCodecDes.isEncoder();
     }
 
     public boolean isNominated() {
-        return getCodecForType(mediaType, isEncoder()) == this;
+        return getCodecForType(mMediaType, isEncoder()) == this;
     }
 
-    public String getLibjitsiEncoding() {
-        switch (mediaType) {
-            case MEDIA_CODEC_TYPE_H264:
+    public String getLibEncoding() {
+        switch (mMediaType) {
+            case Format.VIDEO_AVC:
                 return Constants.H264;
-            case MEDIA_CODEC_TYPE_VP8:
+            case Format.VIDEO_VP8:
                 return Constants.VP8;
-            case MEDIA_CODEC_TYPE_VP9:
+            case Format.VIDEO_VP9:
                 return Constants.VP9;
             default:
-                return mediaType;
+                return mMediaType;
         }
     }
 
@@ -332,7 +290,7 @@ public abstract class CodecInfo {
         }
     }
 
-    static class H264CodecInfo extends CodecInfo {
+    static class AvcCodecInfo extends CodecInfo {
         // from OMX_VIDEO_AVCPROFILETYPE
         private final CodecInfo.Profile[] PROFILES = new CodecInfo.Profile[]{
                 new Profile("AVCProfileBaseline", 0x01),
@@ -366,8 +324,8 @@ public abstract class CodecInfo {
                 new Level("Level51", 0x8000)
         };
 
-        public H264CodecInfo(MediaCodecInfo codecInfo) {
-            super(codecInfo, MEDIA_CODEC_TYPE_H264);
+        public AvcCodecInfo(CodecDescription codecDes) {
+            super(codecDes, Format.VIDEO_AVC);
         }
 
         @Override
@@ -381,7 +339,7 @@ public abstract class CodecInfo {
         }
     }
 
-    static class VP8CodecInfo extends CodecInfo {
+    static class Vp8CodecInfo extends CodecInfo {
         private final Profile[] PROFILES = new Profile[]{
                 // from OMX_VIDEO_VP8PROFILETYPE
                 new Profile("ProfileMain", 0x01)
@@ -395,8 +353,8 @@ public abstract class CodecInfo {
                 new Level("VP8Level_Version3", 0x08)
         };
 
-        public VP8CodecInfo(MediaCodecInfo codecInfo) {
-            super(codecInfo, MEDIA_CODEC_TYPE_VP8);
+        public Vp8CodecInfo(CodecDescription codecDes) {
+            super(codecDes, Format.VIDEO_VP8);
         }
 
         @Override
@@ -410,7 +368,7 @@ public abstract class CodecInfo {
         }
     }
 
-    static class VP9CodecInfo extends CodecInfo {
+    static class Vp9CodecInfo extends CodecInfo {
         private final Profile[] PROFILES = new Profile[]{
                 // from OMX_VIDEO_VP9PROFILETYPE
                 new Profile("VP9Profile0", 0x01),
@@ -441,8 +399,8 @@ public abstract class CodecInfo {
                 new Level("VP9Level62", 0x2000)
         };
 
-        public VP9CodecInfo(MediaCodecInfo codecInfo) {
-            super(codecInfo, MEDIA_CODEC_TYPE_VP9);
+        public Vp9CodecInfo(CodecDescription codecDes) {
+            super(codecDes, Format.VIDEO_VP9);
         }
 
         @Override

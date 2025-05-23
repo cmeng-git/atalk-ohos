@@ -5,9 +5,6 @@
  */
 package org.atalk.ohos.gui.account;
 
-import android.content.Context;
-import android.graphics.drawable.Drawable;
-
 import net.java.sip.communicator.service.protocol.AccountID;
 import net.java.sip.communicator.service.protocol.OperationSet;
 import net.java.sip.communicator.service.protocol.OperationSetAvatar;
@@ -32,7 +29,7 @@ import org.atalk.ohos.util.AppImageUtil;
 import org.atalk.ohos.gui.util.event.EventListener;
 import org.atalk.ohos.gui.util.event.EventListenerList;
 import org.atalk.impl.timberlog.TimberLog;
-import org.atalk.service.osgi.OSGiActivity;
+import org.atalk.service.osgi.OSGiAbility;
 import org.atalk.service.resources.ResourceManagementService;
 import org.jxmpp.jid.Jid;
 import org.jxmpp.jid.impl.JidCreate;
@@ -46,6 +43,10 @@ import java.beans.PropertyChangeEvent;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+
+import ohos.aafwk.ability.Ability;
+import ohos.app.Context;
+import ohos.media.image.PixelMap;
 
 import timber.log.Timber;
 
@@ -79,12 +80,12 @@ public class Account implements ProviderPresenceStatusListener, RegistrationStat
     private final AccountID mAccountID;
 
     /**
-     * The {@link BundleContext} of parent {@link OSGiActivity}
+     * The {@link BundleContext} of parent {@link OSGiAbility}
      */
     private final BundleContext bundleContext;
 
     /**
-     * The {@link Context} of parent {@link android.app.Activity}
+     * The {@link Context} of parent {@link ohos.aafwk.ability.Ability}
      */
     private final Context activityContext;
 
@@ -94,21 +95,21 @@ public class Account implements ProviderPresenceStatusListener, RegistrationStat
     private EventListenerList<AccountEvent> listeners = new EventListenerList<>();
 
     /**
-     * The {@link Drawable} representing protocol's image
+     * The {@link PixelMap} representing protocol's image
      */
-    private Drawable protocolIcon;
+    private PixelMap protocolIcon;
 
     /**
      * Current avatar image
      */
-    private Drawable avatarIcon;
+    private PixelMap avatarIcon;
 
     /**
      * Creates new instance of {@link Account}
      *
      * @param accountID the {@link AccountID} that will be encapsulated by this class
-     * @param context the {@link BundleContext} of parent {@link OSGiActivity}
-     * @param activityContext the {@link Context} of parent {@link android.app.Activity}
+     * @param context the {@link BundleContext} of parent {@link OSGiAbility}
+     * @param activityContext the {@link Context} of parent {@link Ability}
      */
     public Account(AccountID accountID, BundleContext context, Context activityContext)
     {
@@ -127,7 +128,7 @@ public class Account implements ProviderPresenceStatusListener, RegistrationStat
      *
      * @return protocol's icon
      */
-    private Drawable initProtocolIcon()
+    private PixelMap initProtocolIcon()
     {
         byte[] blob = null;
 
@@ -135,7 +136,7 @@ public class Account implements ProviderPresenceStatusListener, RegistrationStat
             blob = protocolProvider.getProtocolIcon().getIcon(ProtocolIcon.ICON_SIZE_32x32);
 
         if (blob != null)
-            return AppImageUtil.drawableFromBytes(blob);
+            return AppImageUtil.pixelMapFromBytes(blob);
 
         String iconPath = mAccountID.getAccountPropertyString(
                 ProtocolProviderFactory.ACCOUNT_ICON_PATH);
@@ -143,7 +144,7 @@ public class Account implements ProviderPresenceStatusListener, RegistrationStat
         if (iconPath != null) {
             blob = loadIcon(iconPath);
             if (blob != null)
-                return AppImageUtil.drawableFromBytes(blob);
+                return AppImageUtil.pixelMapFromBytes(blob);
         }
 
         return null;
@@ -402,11 +403,11 @@ public class Account implements ProviderPresenceStatusListener, RegistrationStat
     }
 
     /**
-     * Returns the {@link Drawable} protocol icon
+     * Returns the {@link PixelMap} protocol icon
      *
      * @return the protocol's icon valid for this {@link Account}
      */
-    public Drawable getProtocolIcon()
+    public PixelMap getProtocolIcon()
     {
         return protocolIcon;
     }
@@ -416,7 +417,7 @@ public class Account implements ProviderPresenceStatusListener, RegistrationStat
      *
      * @return the icon describing actual {@link PresenceStatus} of this {@link Account}
      */
-    public Drawable getStatusIcon()
+    public PixelMap getStatusIcon()
     {
         OperationSetPresence presence = getPresenceOpSet();
 
@@ -424,7 +425,7 @@ public class Account implements ProviderPresenceStatusListener, RegistrationStat
             byte[] statusBlob = presence.getPresenceStatus().getStatusIcon();
 
             if (statusBlob != null)
-                return AppImageUtil.drawableFromBytes(statusBlob);
+                return AppImageUtil.pixelMapFromBytes(statusBlob);
         }
 
         return AccountUtil.getDefaultPresenceIcon(activityContext, mAccountID.getProtocolName());
@@ -483,16 +484,16 @@ public class Account implements ProviderPresenceStatusListener, RegistrationStat
             avatarIcon = AccountUtil.getDefaultAvatarIcon(activityContext);
         }
         else {
-            avatarIcon = AppImageUtil.drawableFromBytes(newAvatar);
+            avatarIcon = AppImageUtil.pixelMapFromBytes(newAvatar);
         }
     }
 
     /**
-     * Returns the {@link Drawable} of account avatar
+     * Returns the {@link PixelMap} of account avatar
      *
-     * @return the {@link Drawable} of account avatar
+     * @return the {@link PixelMap} of account avatar
      */
-    public Drawable getAvatarIcon()
+    public PixelMap getAvatarIcon()
     {
         if (avatarIcon == null) {
             byte[] avatarBlob = null;

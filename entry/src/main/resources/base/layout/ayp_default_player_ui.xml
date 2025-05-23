@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<StackLayout xmlns:ohos="http://schemas.ohos.com/apk/res/ohos"
+    xmlns:app="http://schemas.ohos.com/apk/res-auto"
+    ohos:layout_width="match_parent"
+    ohos:layout_height="match_parent">
+
+    <Component
+        ohos:id="$+id:panel"
+        ohos:layout_width="match_parent"
+        ohos:layout_height="match_parent"
+        ohos:background="$color:black"
+        ohos:clickable="true"
+        ohos:focusable="true" />
+
+    <DependentLayout
+        ohos:id="$+id:controls_container"
+        ohos:layout_width="match_parent"
+        ohos:layout_height="match_parent"
+        ohos:background="$color:transparent_black">
+
+        <Component
+            ohos:id="$+id:drop_shadow_top"
+            ohos:layout_width="match_parent"
+            ohos:layout_height="64dp"
+            ohos:layout_alignParentTop="true"
+            ohos:background="$graphic:ayp_drop_shadow_top" />
+
+        <Component
+            ohos:id="$+id:drop_shadow_bottom"
+            ohos:layout_width="match_parent"
+            ohos:layout_height="64dp"
+            ohos:layout_alignParentBottom="true"
+            ohos:background="$graphic:ayp_drop_shadow_bottom" />
+
+        <Text
+            ohos:id="$+id:video_title"
+            ohos:layout_width="wrap_content"
+            ohos:layout_height="wrap_content"
+            ohos:layout_alignParentStart="true"
+            ohos:layout_alignParentTop="true"
+            ohos:layout_toStartOf="$+id:extra_views_container"
+            ohos:ellipsize="end"
+            ohos:lines="1"
+            ohos:padding="8dp"
+            ohos:text=""
+            ohos:textColor="$color:white"
+            ohos:textSize="14sp" />
+
+        <DirectionalLayout
+            ohos:id="$+id:extra_views_container"
+            ohos:layout_width="wrap_content"
+            ohos:layout_height="wrap_content"
+            ohos:layout_alignParentTop="true"
+            ohos:layout_alignParentEnd="true"
+            ohos:orientation="horizontal"
+            ohos:padding="8dp">
+
+            <Button
+                ohos:id="$+id:menu_button"
+                ohos:layout_width="wrap_content"
+                ohos:layout_height="wrap_content"
+                ohos:src="graphic:ayp_ic_menu_24dp"
+                ohos:background="$graphic:ayp_background_item_selected"
+                ohos:contentDescription="$string:ayp_open_video_in_youtube"
+                ohos:clickable="true"
+                ohos:focusable="true"
+                ohos:visibility="gone" />
+        </DirectionalLayout>
+
+        <DirectionalLayout
+            ohos:id="$+id:play_control"
+            ohos:layout_width="wrap_content"
+            ohos:layout_height="wrap_content"
+            ohos:layout_centerInParent="true"
+            ohos:orientation="horizontal"
+            ohos:padding="8dp">
+
+            <Button
+                ohos:id="$+id:action_previous_button"
+                ohos:layout_width="wrap_content"
+                ohos:layout_height="wrap_content"
+                ohos:padding="8dp"
+                ohos:layout_marginRight="18dp"
+                ohos:src="$media:ayp_ic_previous"
+                ohos:background="$graphic:ayp_background_item_selected"
+                ohos:contentDescription="$string:ayp_action_previous"
+                ohos:clickable="true"
+                ohos:focusable="true"
+                ohos:visibility="invisible" />
+
+            <Button
+                ohos:id="$+id:action_rewind_button"
+                ohos:layout_width="wrap_content"
+                ohos:layout_height="wrap_content"
+                ohos:padding="8dp"
+                ohos:layout_marginRight="18dp"
+                ohos:src="$media:ayp_ic_rewind"
+                ohos:background="$graphic:ayp_background_item_selected"
+                ohos:contentDescription="$string:ayp_custom_action_left"
+                ohos:clickable="true"
+                ohos:focusable="true"
+                ohos:visibility="visible" />
+
+            <Button
+                ohos:id="$+id:play_pause_button"
+                ohos:layout_width="wrap_content"
+                ohos:layout_height="wrap_content"
+                ohos:padding="8dp"
+                ohos:layout_gravity="center_vertical"
+                ohos:src="$graphic:ayp_ic_play_36dp"
+                ohos:background="$graphic:ayp_background_item_selected"
+                ohos:contentDescription="$string:ayp_play_button"
+                ohos:clickable="true"
+                ohos:focusable="true"
+                ohos:visibility="visible" />
+
+            <Button
+                ohos:id="$+id:action_forward_button"
+                ohos:layout_width="wrap_content"
+                ohos:layout_height="wrap_content"
+                ohos:padding="8dp"
+                ohos:layout_marginLeft="18dp"
+                ohos:src="$media:ayp_ic_forward"
+                ohos:background="$graphic:ayp_background_item_selected"
+                ohos:contentDescription="$string:ayp_custom_action_right"
+                ohos:clickable="true"
+                ohos:focusable="true"
+                ohos:visibility="visible" />
+
+            <Button
+                ohos:id="$+id:action_next_button"
+                ohos:layout_width="wrap_content"
+                ohos:layout_height="wrap_content"
+                ohos:padding="8dp"
+                ohos:layout_marginLeft="18dp"
+                ohos:src="$media:ayp_ic_next"
+                ohos:background="$graphic:ayp_background_item_selected"
+                ohos:contentDescription="$string:ayp_action_next"
+                ohos:clickable="true"
+                ohos:focusable="true"
+                ohos:visibility="invisible" />
+        </DirectionalLayout>
+
+        <Slider
+            ohos:id="$+id:progress"
+            ohos:layout_width="wrap_content"
+            ohos:layout_height="wrap_content"
+            ohos:layout_centerInParent="true" />
+
+        <DirectionalLayout
+            ohos:layout_width="match_parent"
+            ohos:layout_height="wrap_content"
+            ohos:layout_alignParentStart="true"
+            ohos:layout_alignParentEnd="true"
+            ohos:layout_alignParentBottom="true"
+            ohos:gravity="center_vertical"
+            ohos:orientation="horizontal">
+
+            <com.pierfrancescosoffritti.youtubeplayer.ui.views.YouTubePlayerSeekBar
+                ohos:id="$+id:youtube_player_seekbar"
+                ohos:layout_width="0dp"
+                ohos:layout_height="wrap_content"
+                ohos:layout_weight="1"
+                ohos:maxHeight="100dp"
+                app:color="$color:ayp_red"
+                app:fontSize="12sp" />
+
+            <Text
+                ohos:id="$+id:live_video_indicator"
+                ohos:layout_width="wrap_content"
+                ohos:layout_height="wrap_content"
+                ohos:gravity="center_vertical"
+                ohos:padding="8dp"
+                ohos:text="$string:ayp_live"
+                ohos:textColor="$color:white"
+                ohos:textSize="12sp"
+                ohos:visibility="gone" />
+
+            <Button
+                ohos:id="$+id:youtube_button"
+                ohos:layout_width="wrap_content"
+                ohos:layout_height="wrap_content"
+                ohos:padding="8dp"
+                ohos:src="$graphic:ayp_ic_youtube_24dp"
+                ohos:background="$graphic:ayp_background_item_selected"
+                ohos:contentDescription="$string:ayp_open_video_in_youtube"
+                ohos:clickable="true"
+                ohos:focusable="true" />
+
+            <Button
+                ohos:id="$+id:rate_dec_button"
+                ohos:layout_width="wrap_content"
+                ohos:layout_height="wrap_content"
+                ohos:padding="8dp"
+                ohos:src="$media:ayp_ic_speed_dec"
+                ohos:background="$graphic:ayp_background_item_selected"
+                ohos:contentDescription="$string:ayp_rate_button"
+                ohos:clickable="true"
+                ohos:focusable="true" />
+
+            <Button
+                ohos:id="$+id:rate_inc_button"
+                ohos:layout_width="wrap_content"
+                ohos:layout_height="wrap_content"
+                ohos:padding="8dp"
+                ohos:src="$media:ayp_ic_speed_inc"
+                ohos:background="$graphic:ayp_background_item_selected"
+                ohos:contentDescription="$string:ayp_rate_button"
+                ohos:clickable="true"
+                ohos:focusable="true" />
+
+            <Button
+                ohos:id="$+id:hide_screen_button"
+                ohos:layout_width="wrap_content"
+                ohos:layout_height="wrap_content"
+                ohos:padding="8dp"
+                ohos:src="$media:ayp_ic_hide_screen"
+                ohos:background="$graphic:ayp_background_item_selected"
+                ohos:contentDescription="$string:ayp_screen_hide_button"
+                ohos:clickable="true"
+                ohos:focusable="true" />
+
+            <Button
+                ohos:id="$+id:fullscreen_button"
+                ohos:layout_width="wrap_content"
+                ohos:layout_height="wrap_content"
+                ohos:padding="8dp"
+                ohos:src="$graphic:ayp_ic_fullscreen_24dp"
+                ohos:background="$graphic:ayp_background_item_selected"
+                ohos:contentDescription="$string:ayp_full_screen_button"
+                ohos:clickable="true"
+                ohos:focusable="true" />
+        </DirectionalLayout>
+    </DependentLayout>
+</StackLayout>

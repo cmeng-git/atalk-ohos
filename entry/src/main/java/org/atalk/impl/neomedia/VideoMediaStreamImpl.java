@@ -5,52 +5,7 @@
  */
 package org.atalk.impl.neomedia;
 
-import org.atalk.impl.timberlog.TimberLog;
-import org.atalk.impl.neomedia.codec.video.AndroidEncoder;
-import org.atalk.impl.neomedia.control.ImgStreamingControl;
-import org.atalk.impl.neomedia.device.DeviceConfiguration;
-import org.atalk.impl.neomedia.device.DeviceSystem;
-import org.atalk.impl.neomedia.device.MediaDeviceImpl;
-import org.atalk.impl.neomedia.device.MediaDeviceSession;
-import org.atalk.impl.neomedia.device.ScreenDeviceImpl;
-import org.atalk.impl.neomedia.device.VideoMediaDeviceSession;
-import org.atalk.impl.neomedia.rtcp.RTCPReceiverFeedbackTermination;
-import org.atalk.impl.neomedia.rtp.MediaStreamTrackReceiver;
-import org.atalk.impl.neomedia.rtp.RTPEncodingDesc;
-import org.atalk.impl.neomedia.rtp.StreamRTPManager;
-import org.atalk.impl.neomedia.rtp.VideoMediaStreamTrackReceiver;
-import org.atalk.impl.neomedia.rtp.remotebitrateestimator.RemoteBitrateEstimatorWrapper;
-import org.atalk.impl.neomedia.rtp.sendsidebandwidthestimation.BandwidthEstimatorImpl;
-import org.atalk.impl.neomedia.transform.CachingTransformer;
-import org.atalk.impl.neomedia.transform.PaddingTermination;
-import org.atalk.impl.neomedia.transform.RetransmissionRequesterImpl;
-import org.atalk.impl.neomedia.transform.RtxTransformer;
-import org.atalk.impl.neomedia.transform.TransformEngine;
-import org.atalk.impl.neomedia.transform.TransformEngineWrapper;
-import org.atalk.impl.neomedia.transform.fec.FECTransformEngine;
-import org.atalk.service.configuration.ConfigurationService;
-import org.atalk.service.libjitsi.LibJitsi;
-import org.atalk.service.neomedia.QualityControl;
-import org.atalk.service.neomedia.QualityPreset;
-import org.atalk.service.neomedia.SrtpControl;
-import org.atalk.service.neomedia.StreamConnector;
-import org.atalk.service.neomedia.VideoMediaStream;
-import org.atalk.service.neomedia.control.KeyFrameControl;
-import org.atalk.service.neomedia.control.KeyFrameControlAdapter;
-import org.atalk.service.neomedia.device.MediaDevice;
-import org.atalk.service.neomedia.device.ScreenDevice;
-import org.atalk.service.neomedia.format.MediaFormat;
-import org.atalk.service.neomedia.rtp.BandwidthEstimator;
-import org.atalk.util.OSUtils;
-import org.atalk.util.concurrent.RecurringRunnableExecutor;
-import org.atalk.util.event.VideoEvent;
-import org.atalk.util.event.VideoListener;
-import org.atalk.util.event.VideoNotifierSupport;
-
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -66,6 +21,44 @@ import javax.media.format.VideoFormat;
 import javax.media.format.YUVFormat;
 import javax.media.protocol.DataSource;
 
+import org.atalk.impl.neomedia.codec.video.MediaEncoder;
+import org.atalk.impl.neomedia.device.DeviceConfiguration;
+import org.atalk.impl.neomedia.device.MediaDeviceSession;
+import org.atalk.impl.neomedia.device.VideoMediaDeviceSession;
+import org.atalk.impl.neomedia.rtcp.RTCPReceiverFeedbackTermination;
+import org.atalk.impl.neomedia.rtp.MediaStreamTrackReceiver;
+import org.atalk.impl.neomedia.rtp.RTPEncodingDesc;
+import org.atalk.impl.neomedia.rtp.StreamRTPManager;
+import org.atalk.impl.neomedia.rtp.VideoMediaStreamTrackReceiver;
+import org.atalk.impl.neomedia.rtp.remotebitrateestimator.RemoteBitrateEstimatorWrapper;
+import org.atalk.impl.neomedia.rtp.sendsidebandwidthestimation.BandwidthEstimatorImpl;
+import org.atalk.impl.neomedia.transform.CachingTransformer;
+import org.atalk.impl.neomedia.transform.PaddingTermination;
+import org.atalk.impl.neomedia.transform.RetransmissionRequesterImpl;
+import org.atalk.impl.neomedia.transform.RtxTransformer;
+import org.atalk.impl.neomedia.transform.TransformEngine;
+import org.atalk.impl.neomedia.transform.TransformEngineWrapper;
+import org.atalk.impl.neomedia.transform.fec.FECTransformEngine;
+import org.atalk.impl.timberlog.TimberLog;
+import org.atalk.ohos.agp.components.JComponent;
+import org.atalk.service.configuration.ConfigurationService;
+import org.atalk.service.libjitsi.LibJitsi;
+import org.atalk.service.neomedia.QualityControl;
+import org.atalk.service.neomedia.QualityPreset;
+import org.atalk.service.neomedia.SrtpControl;
+import org.atalk.service.neomedia.StreamConnector;
+import org.atalk.service.neomedia.VideoMediaStream;
+import org.atalk.service.neomedia.control.KeyFrameControl;
+import org.atalk.service.neomedia.control.KeyFrameControlAdapter;
+import org.atalk.service.neomedia.device.MediaDevice;
+import org.atalk.service.neomedia.format.MediaFormat;
+import org.atalk.service.neomedia.rtp.BandwidthEstimator;
+import org.atalk.util.OSUtils;
+import org.atalk.util.concurrent.RecurringRunnableExecutor;
+import org.atalk.util.event.VideoEvent;
+import org.atalk.util.event.VideoListener;
+import org.atalk.util.event.VideoNotifierSupport;
+
 import timber.log.Timber;
 
 /**
@@ -75,8 +68,7 @@ import timber.log.Timber;
  * @author Sebastien Vincent
  * @author Eng Chong Meng
  */
-public class VideoMediaStreamImpl extends MediaStreamImpl implements VideoMediaStream
-{
+public class VideoMediaStreamImpl extends MediaStreamImpl implements VideoMediaStream {
     /**
      * The indicator which determines whether RTCP feedback Picture Loss Indication messages are to be used.
      */
@@ -98,11 +90,11 @@ public class VideoMediaStreamImpl extends MediaStreamImpl implements VideoMediaS
      * Extracts and returns maximum resolution can receive from the image attribute.
      *
      * @param imgattr send/recv resolution string
+     *
      * @return maximum resolution array (first element is send, second one is recv). Elements could
      * be null if image attribute is not present or if resolution is a wildcard.
      */
-    public static Dimension[] parseSendRecvResolution(String imgattr)
-    {
+    public static Dimension[] parseSendRecvResolution(String imgattr) {
         Dimension[] res = new Dimension[2];
         String token;
         Pattern pSendSingle = Pattern.compile("send \\[x=[0-9]+,y=[0-9]+]");
@@ -198,12 +190,12 @@ public class VideoMediaStreamImpl extends MediaStreamImpl implements VideoMediaS
      * specified <code>preferredWidth</code> and <code>preferredHeight</code>
      * @param preferredWidth the width of the <code>VideoFormat</code> to be selected
      * @param preferredHeight the height of the <code>VideoFormat</code> to be selected
+     *
      * @return the size of the <code>VideoFormat</code> from the list of supported formats of
      * <code>videoDS</code> which is as close as possible to <code>preferredWidth</code> and
      * <code>preferredHeight</code> and which has been set as the format of <code>videoDS</code>
      */
-    public static Dimension selectVideoSize(DataSource videoDS, final int preferredWidth, final int preferredHeight)
-    {
+    public static Dimension selectVideoSize(DataSource videoDS, final int preferredWidth, final int preferredHeight) {
         if (videoDS == null)
             return null;
 
@@ -220,29 +212,25 @@ public class VideoMediaStreamImpl extends MediaStreamImpl implements VideoMediaS
         if (count == 1)
             selectedFormat = (VideoFormat) formats[0];
         else {
-            class FormatInfo
-            {
+            class FormatInfo {
                 public final double difference;
                 public final Dimension dimension;
                 public final VideoFormat format;
 
-                public FormatInfo(Dimension size)
-                {
+                public FormatInfo(Dimension size) {
                     this.format = null;
                     this.dimension = size;
                     this.difference = getDifference(this.dimension);
                 }
 
-                public FormatInfo(VideoFormat format)
-                {
+                public FormatInfo(VideoFormat format) {
                     this.format = format;
                     this.dimension = format.getSize();
                     this.difference = getDifference(this.dimension);
                     // Timber.d("format: %s; dimension: %s, difference: %s", format, dimension, difference);
                 }
 
-                private double getDifference(Dimension size)
-                {
+                private double getDifference(Dimension size) {
                     int width = (size == null) ? 0 : size.width;
                     double xScale;
 
@@ -268,7 +256,7 @@ public class VideoMediaStreamImpl extends MediaStreamImpl implements VideoMediaS
             }
 
             // Check to see if the hardware encoder is supported
-            boolean isCodecSupported = AndroidEncoder.isCodecSupported(mFormat.getEncoding());
+            boolean isCodecSupported = MediaEncoder.isCodecSupported(mFormat.getEncoding());
             FormatInfo[] infos = new FormatInfo[count];
             int idx = -1;
             for (int i = 0; i < count; i++) {
@@ -442,8 +430,7 @@ public class VideoMediaStreamImpl extends MediaStreamImpl implements VideoMediaS
      * video exchanged via the specified <code>StreamConnector</code>
      * @param srtpControl a control which is already created, used to control the srtp operations.
      */
-    public VideoMediaStreamImpl(StreamConnector connector, MediaDevice device, SrtpControl srtpControl)
-    {
+    public VideoMediaStreamImpl(StreamConnector connector, MediaDevice device, SrtpControl srtpControl) {
         super(connector, device, srtpControl);
         recurringRunnableExecutor.registerRecurringRunnable(rtcpFeedbackTermination);
     }
@@ -452,8 +439,7 @@ public class VideoMediaStreamImpl extends MediaStreamImpl implements VideoMediaS
      * {@inheritDoc}
      */
     @Override
-    public RtxTransformer getRtxTransformer()
-    {
+    public RtxTransformer getRtxTransformer() {
         return rtxTransformer;
     }
 
@@ -461,8 +447,7 @@ public class VideoMediaStreamImpl extends MediaStreamImpl implements VideoMediaS
      * {@inheritDoc}
      */
     @Override
-    protected TransformEngineWrapper<FECTransformEngine> getFecTransformEngine()
-    {
+    protected TransformEngineWrapper<FECTransformEngine> getFecTransformEngine() {
         return this.fecTransformEngineWrapper;
     }
 
@@ -472,8 +457,7 @@ public class VideoMediaStreamImpl extends MediaStreamImpl implements VideoMediaS
      * @param fecTransformEngine
      */
     @Override
-    protected void setFecTransformEngine(FECTransformEngine fecTransformEngine)
-    {
+    protected void setFecTransformEngine(FECTransformEngine fecTransformEngine) {
         this.fecTransformEngineWrapper.setWrapped(fecTransformEngine);
     }
 
@@ -482,8 +466,7 @@ public class VideoMediaStreamImpl extends MediaStreamImpl implements VideoMediaS
      *
      * @param supportsFir the value to set.
      */
-    public void setSupportsFir(boolean supportsFir)
-    {
+    public void setSupportsFir(boolean supportsFir) {
         this.supportsFir = supportsFir;
     }
 
@@ -492,8 +475,7 @@ public class VideoMediaStreamImpl extends MediaStreamImpl implements VideoMediaS
      *
      * @param supportsPli the value to set.
      */
-    public void setSupportsPli(boolean supportsPli)
-    {
+    public void setSupportsPli(boolean supportsPli) {
         this.supportsPli = supportsPli;
     }
 
@@ -502,24 +484,21 @@ public class VideoMediaStreamImpl extends MediaStreamImpl implements VideoMediaS
      *
      * @param supportsRemb the value to set.
      */
-    public void setSupportsRemb(boolean supportsRemb)
-    {
+    public void setSupportsRemb(boolean supportsRemb) {
         remoteBitrateEstimator.setSupportsRemb(supportsRemb);
     }
 
     /**
      * @return {@code true} iff the remote end supports RTCP FIR.
      */
-    public boolean supportsFir()
-    {
+    public boolean supportsFir() {
         return supportsFir;
     }
 
     /**
      * @return {@code true} iff the remote end supports RTCP PLI.
      */
-    public boolean supportsPli()
-    {
+    public boolean supportsPli() {
         return supportsPli;
     }
 
@@ -529,8 +508,7 @@ public class VideoMediaStreamImpl extends MediaStreamImpl implements VideoMediaS
      * @param ssrc remote SSRC
      */
     @Override
-    protected void addRemoteSourceID(long ssrc)
-    {
+    protected void addRemoteSourceID(long ssrc) {
         super.addRemoteSourceID(ssrc);
         MediaDeviceSession deviceSession = getDeviceSession();
 
@@ -549,8 +527,7 @@ public class VideoMediaStreamImpl extends MediaStreamImpl implements VideoMediaS
      * @param listener the <code>VideoListener</code> to be notified when visual/video <code>Component</code>s are
      * being added or removed in this <code>VideoMediaStream</code>
      */
-    public void addVideoListener(VideoListener listener)
-    {
+    public void addVideoListener(VideoListener listener) {
         videoNotifierSupport.addVideoListener(listener);
     }
 
@@ -558,8 +535,7 @@ public class VideoMediaStreamImpl extends MediaStreamImpl implements VideoMediaS
      * {@inheritDoc}
      */
     @Override
-    public void close()
-    {
+    public void close() {
         try {
             super.close();
         } finally {
@@ -585,8 +561,7 @@ public class VideoMediaStreamImpl extends MediaStreamImpl implements VideoMediaS
      * <code>MediaStreamImpl</code> and to be configured
      */
     @Override
-    protected void configureDataOutputStream(RTPConnectorOutputStream dataOutputStream)
-    {
+    protected void configureDataOutputStream(RTPConnectorOutputStream dataOutputStream) {
         super.configureDataOutputStream(dataOutputStream);
 
         /*
@@ -620,8 +595,7 @@ public class VideoMediaStreamImpl extends MediaStreamImpl implements VideoMediaS
      * is to be performed
      */
     @Override
-    protected void configureRTPManagerBufferControl(StreamRTPManager rtpManager, BufferControl bufferControl)
-    {
+    protected void configureRTPManagerBufferControl(StreamRTPManager rtpManager, BufferControl bufferControl) {
         super.configureRTPManagerBufferControl(rtpManager, bufferControl);
         bufferControl.setBufferLength(BufferControl.MAX_VALUE);
     }
@@ -630,8 +604,7 @@ public class VideoMediaStreamImpl extends MediaStreamImpl implements VideoMediaS
      * {@inheritDoc}
      */
     @Override
-    public MediaStreamTrackReceiver getMediaStreamTrackReceiver()
-    {
+    public MediaStreamTrackReceiver getMediaStreamTrackReceiver() {
         return mediaStreamTrackReceiver;
     }
 
@@ -646,11 +619,11 @@ public class VideoMediaStreamImpl extends MediaStreamImpl implements VideoMediaS
      *
      * @param oldValue the <code>MediaDeviceSession</code> with the <code>MediaDevice</code> this instance used work with
      * @param newValue the <code>MediaDeviceSession</code> with the <code>MediaDevice</code> this instance is to work with
+     *
      * @see MediaStreamImpl#deviceSessionChanged(MediaDeviceSession, MediaDeviceSession)
      */
     @Override
-    protected void deviceSessionChanged(MediaDeviceSession oldValue, MediaDeviceSession newValue)
-    {
+    protected void deviceSessionChanged(MediaDeviceSession oldValue, MediaDeviceSession newValue) {
         super.deviceSessionChanged(oldValue, newValue);
         if (oldValue instanceof VideoMediaDeviceSession) {
             VideoMediaDeviceSession oldVideoMediaDeviceSession = (VideoMediaDeviceSession) oldValue;
@@ -668,16 +641,14 @@ public class VideoMediaStreamImpl extends MediaStreamImpl implements VideoMediaS
             VideoMediaDeviceSession newVideoMediaDeviceSession = (VideoMediaDeviceSession) newValue;
 
             if (deviceSessionVideoListener == null) {
-                deviceSessionVideoListener = new VideoListener()
-                {
+                deviceSessionVideoListener = new VideoListener() {
                     /**
                      * {@inheritDoc}
                      *
                      * Notifies that a visual <code>Component</code> depicting video was reported added
                      * by the provider this listener is added to.
                      */
-                    public void videoAdded(VideoEvent e)
-                    {
+                    public void videoAdded(VideoEvent e) {
                         if (fireVideoEvent(e.getType(), e.getVisualComponent(), e.getOrigin(), true))
                             e.consume();
                     }
@@ -688,8 +659,7 @@ public class VideoMediaStreamImpl extends MediaStreamImpl implements VideoMediaS
                      * Notifies that a visual <code>Component</code> depicting video was reported
                      * removed by the provider this listener is added to.
                      */
-                    public void videoRemoved(VideoEvent e)
-                    {
+                    public void videoRemoved(VideoEvent e) {
                         // Process in the same way as VIDEO_ADDED.
                         videoAdded(e);
                     }
@@ -700,8 +670,7 @@ public class VideoMediaStreamImpl extends MediaStreamImpl implements VideoMediaS
                      * Notifies that a visual <code>Component</code> depicting video was reported
                      * updated by the provider this listener is added to.
                      */
-                    public void videoUpdate(VideoEvent e)
-                    {
+                    public void videoUpdate(VideoEvent e) {
                         fireVideoEvent(e, true);
                     }
                 };
@@ -734,12 +703,12 @@ public class VideoMediaStreamImpl extends MediaStreamImpl implements VideoMediaS
      * captured); {@link VideoEvent#REMOTE} if the origin of the video is remote (e.g. a remote peer is streaming it)
      * @param wait <code>true</code> if the call is to wait till the specified <code>VideoEvent</code> has been
      * delivered to the <code>VideoListener</code>s; otherwise, <code>false</code>
+     *
      * @return <code>true</code> if this event and, more specifically, the visual <code>Component</code> it
      * describes have been consumed and should be considered owned, referenced (which is important because
      * <code>Component</code>s belong to a single <code>Container</code> at a time); otherwise, <code>false</code>
      */
-    protected boolean fireVideoEvent(int type, Component visualComponent, int origin, boolean wait)
-    {
+    protected boolean fireVideoEvent(int type, JComponent visualComponent, int origin, boolean wait) {
         Timber.log(TimberLog.FINER, "Firing VideoEvent with type %s and origin %s",
                 VideoEvent.typeToString(type), VideoEvent.originToString(origin));
 
@@ -753,20 +722,18 @@ public class VideoMediaStreamImpl extends MediaStreamImpl implements VideoMediaS
      * @param wait <code>true</code> if the call is to wait till the specified <code>VideoEvent</code> has been
      * delivered to the <code>VideoListener</code>s; otherwise, <code>false</code>
      */
-    protected void fireVideoEvent(VideoEvent event, boolean wait)
-    {
+    protected void fireVideoEvent(VideoEvent event, boolean wait) {
         videoNotifierSupport.fireVideoEvent(event, wait);
     }
 
     /**
      * Implements {@link VideoMediaStream#getKeyFrameControl()}.
-     *
+     * <p>
      * {@inheritDoc}
      *
      * @see VideoMediaStream#getKeyFrameControl()
      */
-    public KeyFrameControl getKeyFrameControl()
-    {
+    public KeyFrameControl getKeyFrameControl() {
         if (keyFrameControl == null)
             keyFrameControl = new KeyFrameControlAdapter();
         return keyFrameControl;
@@ -778,8 +745,7 @@ public class VideoMediaStreamImpl extends MediaStreamImpl implements VideoMediaS
      * @return the visual <code>Component</code> depicting the local video if local video is actually
      * being streamed from the local peer to the remote peer; otherwise, <code>null</code>
      */
-    public Component getLocalVisualComponent()
-    {
+    public JComponent getLocalVisualComponent() {
         MediaDeviceSession deviceSession = getDeviceSession();
         return (deviceSession instanceof VideoMediaDeviceSession)
                 ? ((VideoMediaDeviceSession) deviceSession).getLocalVisualComponent() : null;
@@ -791,8 +757,7 @@ public class VideoMediaStreamImpl extends MediaStreamImpl implements VideoMediaS
      * @return video priority.
      */
     @Override
-    protected int getPriority()
-    {
+    protected int getPriority() {
         return 5;
     }
 
@@ -801,8 +766,7 @@ public class VideoMediaStreamImpl extends MediaStreamImpl implements VideoMediaS
      *
      * @return the <code>QualityControl</code> of this <code>VideoMediaStream</code>
      */
-    public QualityControl getQualityControl()
-    {
+    public QualityControl getQualityControl() {
         return qualityControl;
     }
 
@@ -810,8 +774,7 @@ public class VideoMediaStreamImpl extends MediaStreamImpl implements VideoMediaS
      * {@inheritDoc}
      */
     @Override
-    public RemoteBitrateEstimatorWrapper getRemoteBitrateEstimator()
-    {
+    public RemoteBitrateEstimatorWrapper getRemoteBitrateEstimator() {
         return remoteBitrateEstimator;
     }
 
@@ -821,12 +784,12 @@ public class VideoMediaStreamImpl extends MediaStreamImpl implements VideoMediaS
      *
      * @return the visual <code>Component</code> where video from the remote peer is being rendered or
      * <code>null</code> if no video is currently being rendered
+     *
      * @see VideoMediaStream#getVisualComponent()
      */
     @Deprecated
-    public Component getVisualComponent()
-    {
-        List<Component> visualComponents = getVisualComponents();
+    public JComponent getVisualComponent() {
+        List<JComponent> visualComponents = getVisualComponents();
         return visualComponents.isEmpty() ? null : visualComponents.get(0);
     }
 
@@ -834,10 +797,10 @@ public class VideoMediaStreamImpl extends MediaStreamImpl implements VideoMediaS
      * Gets the visual <code>Component</code>s rendering the <code>ReceiveStream</code> corresponding to the given ssrc.
      *
      * @param ssrc the src-id of the receive stream, which visual <code>Component</code> we're looking for
+     *
      * @return the visual <code>Component</code> rendering the <code>ReceiveStream</code> corresponding to the given ssrc
      */
-    public Component getVisualComponent(long ssrc)
-    {
+    public JComponent getVisualComponent(long ssrc) {
         MediaDeviceSession deviceSession = getDeviceSession();
         return (deviceSession instanceof VideoMediaDeviceSession)
                 ? ((VideoMediaDeviceSession) deviceSession).getVisualComponent(ssrc) : null;
@@ -847,12 +810,12 @@ public class VideoMediaStreamImpl extends MediaStreamImpl implements VideoMediaS
      * Gets a list of the visual <code>Component</code>s where video from the remote peer is being rendered.
      *
      * @return a list of the visual <code>Component</code>s where video from the remote peer is being rendered
+     *
      * @see VideoMediaStream#getVisualComponents()
      */
-    public List<Component> getVisualComponents()
-    {
+    public List<JComponent> getVisualComponents() {
         MediaDeviceSession deviceSession = getDeviceSession();
-        List<Component> visualComponents;
+        List<JComponent> visualComponents;
 
         if (deviceSession instanceof VideoMediaDeviceSession) {
             visualComponents = ((VideoMediaDeviceSession) deviceSession).getVisualComponents();
@@ -869,8 +832,7 @@ public class VideoMediaStreamImpl extends MediaStreamImpl implements VideoMediaS
      * @param attrs the attributes <code>Map</code> to handle
      */
     @Override
-    protected void handleAttributes(MediaFormat format, Map<String, String> attrs)
-    {
+    protected void handleAttributes(MediaFormat format, Map<String, String> attrs) {
         // Keep a reference copy for use in selectVideoSize()
         mFormat = format;
 
@@ -978,47 +940,13 @@ public class VideoMediaStreamImpl extends MediaStreamImpl implements VideoMediaS
     }
 
     /**
-     * Move origin of a partial desktop streaming <code>MediaDevice</code>.
-     *
-     * @param x new x coordinate origin
-     * @param y new y coordinate origin
-     */
-    public void movePartialDesktopStreaming(int x, int y)
-    {
-        MediaDeviceImpl dev = (MediaDeviceImpl) getDevice();
-
-        if (!DeviceSystem.LOCATOR_PROTOCOL_IMGSTREAMING.equals(dev.getCaptureDeviceInfoLocatorProtocol())) {
-            return;
-        }
-
-        DataSource captureDevice = getDeviceSession().getCaptureDevice();
-        Object imgStreamingControl = captureDevice.getControl(ImgStreamingControl.class.getName());
-
-        if (imgStreamingControl == null)
-            return;
-
-        // Makes the screen detection with a point inside a real screen i.e.
-        // x and y are both greater than or equal to 0.
-        ScreenDevice screen = NeomediaServiceUtils.getMediaServiceImpl().getScreenForPoint(
-                new Point(Math.max(x, 0), Math.max(y, 0)));
-
-        if (screen != null) {
-            Rectangle bounds = ((ScreenDeviceImpl) screen).getBounds();
-
-            ((ImgStreamingControl) imgStreamingControl).setOrigin(0, screen.getIndex(),
-                    x - bounds.x, y - bounds.y);
-        }
-    }
-
-    /**
      * Notifies this <code>VideoMediaStreamImpl</code> that {@link #remoteBitrateEstimator} has
      * computed a new bitrate estimate for the incoming streams.
      *
      * @param ssrcs Remote source
      * @param bitrate Source bitRate
      */
-    private void remoteBitrateEstimatorOnReceiveBitrateChanged(Collection<Long> ssrcs, long bitrate)
-    {
+    private void remoteBitrateEstimatorOnReceiveBitrateChanged(Collection<Long> ssrcs, long bitrate) {
         // TODO Auto-generated method stub
     }
 
@@ -1029,8 +957,7 @@ public class VideoMediaStreamImpl extends MediaStreamImpl implements VideoMediaS
      * @param listener the <code>VideoListener</code> to no longer be notified when visual/video
      * <code>Component</code>s are being added or removed in this <code>VideoMediaStream</code>
      */
-    public void removeVideoListener(VideoListener listener)
-    {
+    public void removeVideoListener(VideoListener listener) {
         videoNotifierSupport.removeVideoListener(listener);
     }
 
@@ -1043,11 +970,11 @@ public class VideoMediaStreamImpl extends MediaStreamImpl implements VideoMediaS
      * @param oldValue the <code>RTPConnector</code> of this <code>MediaStream</code> implementation before it got
      * changed to <code>newValue</code>
      * @param newValue the current <code>RTPConnector</code> of this <code>MediaStream</code> which replaced <code>oldValue</code>
+     *
      * @see MediaStreamImpl#rtpConnectorChanged(AbstractRTPConnector, AbstractRTPConnector)
      */
     @Override
-    protected void rtpConnectorChanged(AbstractRTPConnector oldValue, AbstractRTPConnector newValue)
-    {
+    protected void rtpConnectorChanged(AbstractRTPConnector oldValue, AbstractRTPConnector newValue) {
         super.rtpConnectorChanged(oldValue, newValue);
         if (newValue != null) {
             MediaDeviceSession deviceSession = getDeviceSession();
@@ -1064,8 +991,7 @@ public class VideoMediaStreamImpl extends MediaStreamImpl implements VideoMediaS
      * {@inheritDoc}
      */
     @Override
-    protected void setLocalSourceID(long localSourceID)
-    {
+    protected void setLocalSourceID(long localSourceID) {
         super.setLocalSourceID(localSourceID);
         MediaDeviceSession deviceSession = getDeviceSession();
 
@@ -1079,8 +1005,7 @@ public class VideoMediaStreamImpl extends MediaStreamImpl implements VideoMediaS
      *
      * @param outputSize the size/resolution of the video to be output by this instance
      */
-    private void setOutputSize(Dimension outputSize)
-    {
+    private void setOutputSize(Dimension outputSize) {
         this.outputSize = outputSize;
     }
 
@@ -1089,8 +1014,7 @@ public class VideoMediaStreamImpl extends MediaStreamImpl implements VideoMediaS
      *
      * @param advancedParams parameters of advanced attributes that may affect quality control
      */
-    public void updateQualityControl(Map<String, String> advancedParams)
-    {
+    public void updateQualityControl(Map<String, String> advancedParams) {
         for (Map.Entry<String, String> entry : advancedParams.entrySet()) {
             if (entry.getKey().equals("imageattr")) {
                 Dimension[] res = parseSendRecvResolution(entry.getValue());
@@ -1107,8 +1031,7 @@ public class VideoMediaStreamImpl extends MediaStreamImpl implements VideoMediaS
      * {@inheritDoc}
      */
     @Override
-    protected CachingTransformer createCachingTransformer()
-    {
+    protected CachingTransformer createCachingTransformer() {
         if (cachingTransformer == null) {
             cachingTransformer = new CachingTransformer(this);
             recurringRunnableExecutor.registerRecurringRunnable(cachingTransformer);
@@ -1120,8 +1043,7 @@ public class VideoMediaStreamImpl extends MediaStreamImpl implements VideoMediaS
      * {@inheritDoc}
      */
     @Override
-    protected RetransmissionRequesterImpl createRetransmissionRequester()
-    {
+    protected RetransmissionRequesterImpl createRetransmissionRequester() {
         ConfigurationService cfg = LibJitsi.getConfigurationService();
         if (cfg != null && cfg.getBoolean(REQUEST_RETRANSMISSIONS_PNAME, false)) {
             return new RetransmissionRequesterImpl(this);
@@ -1133,16 +1055,14 @@ public class VideoMediaStreamImpl extends MediaStreamImpl implements VideoMediaS
      * {@inheritDoc}
      */
     @Override
-    protected TransformEngine getRTCPTermination()
-    {
+    protected TransformEngine getRTCPTermination() {
         return rtcpFeedbackTermination;
     }
 
     /**
      * {@inheritDoc}
      */
-    protected PaddingTermination getPaddingTermination()
-    {
+    protected PaddingTermination getPaddingTermination() {
         return paddingTermination;
     }
 
@@ -1150,8 +1070,7 @@ public class VideoMediaStreamImpl extends MediaStreamImpl implements VideoMediaS
      * {@inheritDoc}
      */
     @Override
-    public BandwidthEstimator getOrCreateBandwidthEstimator()
-    {
+    public BandwidthEstimator getOrCreateBandwidthEstimator() {
         if (bandwidthEstimator == null) {
             bandwidthEstimator = new BandwidthEstimatorImpl(this);
             recurringRunnableExecutor.registerRecurringRunnable(bandwidthEstimator);

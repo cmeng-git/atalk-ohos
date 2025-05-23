@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<DirectionalLayout xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:width="match_parent"
+    ohos:height="match_content"
+    ohos:start_margin="$float:screen_padding"
+    ohos:end_margin="$float:screen_padding"
+    ohos:padding="2dp"
+    ohos:alignment="vertical_center"
+    ohos:orientation="horizontal" >
+
+    <ToggleButton
+        ohos:id="$+id:accountToggleButton"
+        ohos:width="match_content"
+        ohos:height="match_content"/>
+
+    <Image
+        ohos:id="$+id:accountProtoIcon"
+        ohos:width="32dp"
+        ohos:height="32dp"
+        ohos:start_margin="5dp"
+        ohos:image_src="$media:jabber_logo" />
+
+    <Text
+        ohos:id="$+id:protocolProvider"
+        ohos:text_size="$float:medium_font"
+        ohos:width="0dp"
+        ohos:weight="8"
+        ohos:height="match_content"
+        ohos:start_margin="5dp" />
+
+    <Image
+        ohos:id="$+id:accountStatusIcon"
+        ohos:width="24dp"
+        ohos:height="24dp"
+        ohos:image_src="$media:jabber_status_phone" />
+
+    <Text
+        ohos:id="$+id:accountStatus"
+        ohos:text_size="$float:medium_font"
+        ohos:width="0dp"
+        ohos:weight="2"
+        ohos:height="match_content"
+        ohos:start_margin="10dp"/>
+
+</DirectionalLayout>

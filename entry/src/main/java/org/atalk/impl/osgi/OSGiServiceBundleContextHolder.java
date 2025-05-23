@@ -5,10 +5,15 @@
  */
 package org.atalk.impl.osgi;
 
-import android.os.Binder;
-
+import java.io.FileDescriptor;
 import java.util.ArrayList;
 import java.util.List;
+
+import ohos.rpc.IRemoteBroker;
+import ohos.rpc.IRemoteObject;
+import ohos.rpc.MessageOption;
+import ohos.rpc.MessageParcel;
+import ohos.rpc.RemoteException;
 
 import org.atalk.service.osgi.BundleContextHolder;
 import org.osgi.framework.BundleActivator;
@@ -19,7 +24,7 @@ import timber.log.Timber;
 /**
  * @author Lyubomir Marinov
  */
-public class OSGiServiceBundleContextHolder extends Binder implements BundleActivator, BundleContextHolder {
+public class OSGiServiceBundleContextHolder implements IRemoteObject, BundleActivator, BundleContextHolder {
     private final List<BundleActivator> bundleActivators = new ArrayList<>();
 
     private BundleContext bundleContext;
@@ -92,5 +97,43 @@ public class OSGiServiceBundleContextHolder extends Binder implements BundleActi
                 this.bundleContext = null;
             }
         }
+    }
+
+    @Override
+    public IRemoteBroker queryLocalInterface(String s) {
+        return null;
+    }
+
+    @Override
+    public boolean sendRequest(int i, MessageParcel messageParcel, MessageParcel messageParcel1, MessageOption messageOption) throws RemoteException {
+        return false;
+    }
+
+    @Override
+    public boolean addDeathRecipient(DeathRecipient deathRecipient, int i) {
+        return false;
+    }
+
+    @Override
+    public boolean removeDeathRecipient(DeathRecipient deathRecipient, int i) {
+        return false;
+    }
+
+    @Override
+    public String getInterfaceDescriptor() {
+        return null;
+    }
+
+    @Override
+    public void dump(FileDescriptor fileDescriptor, String[] strings) throws RemoteException {
+    }
+
+    @Override
+    public void slowPathDump(FileDescriptor fileDescriptor, String[] strings) throws RemoteException {
+    }
+
+    @Override
+    public boolean isObjectDead() {
+        return false;
     }
 }

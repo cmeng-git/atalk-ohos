@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DirectionalLayout xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:width="match_parent"
+    ohos:height="match_content"
+    ohos:orientation="horizontal" >
+
+    <Text
+        ohos:id="$+id:item_name"
+        ohos:width="0vp"
+        ohos:weight="1" />
+
+    <RadioButton
+        ohos:id="$+id:item_radio"
+        ohos:width="match_content"
+        ohos:height="match_content"
+        ohos:clickable="false"
+        ohos:focusable="focus_disable" />
+</DirectionalLayout>

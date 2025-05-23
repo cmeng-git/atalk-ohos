@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<DirectionalLayout
+    xmlns:ohos="http://schemas.huawei.com/apk/res/ohos"
+    ohos:layout_height="match_parent"
+    ohos:layout_width="match_parent"
+    ohos:orientation="vertical">
+
+    <TextField
+        ohos:id="$+id:messageText"
+        ohos:layout_height="wrap_content"
+        ohos:layout_width="match_parent"
+        ohos:text="$string:history_purge_for_contact_warning"
+        ohos:textAppearance="$style:MediumFont"/>
+
+    <Checkbox
+        ohos:checked="true"
+        ohos:id="$+id:cb_option"
+        ohos:layout_height="wrap_content"
+        ohos:layout_width="wrap_content"
+        ohos:padding="$float:list_padding"
+        ohos:text="$string:history_purge_media"/>
+
+</DirectionalLayout>

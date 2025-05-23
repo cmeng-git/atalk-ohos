@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:ohos="http://schemas.huawei.com/res/ohos" >
+    <item
+        ohos:id="$+id:chatroom_tts_enable"
+        ohos:title="$string:tts_enable">
+    </item>
+    <item
+        ohos:id="$+id:close_chatroom"
+        ohos:title="$string:close_current_chat">
+    </item>
+    <item
+        ohos:id="$+id:close_all_chatrooms"
+        ohos:title="$string:close_all_active_chats">
+    </item>
+    <item
+        ohos:id="$+id:erase_chatroom_history"
+        ohos:title="$string:chatroom_history_erase_per">
+    </item>
+    <item
+        ohos:id="$+id:erase_all_chatroom_history"
+        ohos:title="$string:chatroom_history_erase_all">
+    </item>
+    <item
+        ohos:id="$+id:destroy_chatroom"
+        ohos:title="$string:chatroom_destroy">
+    </item>
+    <item
+        ohos:id="$+id:send_chatroom_file"
+        ohos:title="$string:file_attachment"
+        ohos:visible="false">
+    </item>
+    <item
+        ohos:id="$+id:chatroom_info"
+        ohos:title="$string:chatroom_info"
+        ohos:visible="true">
+    </item>
+    <item
+        ohos:id="$+id:chatroom_ctx_menu_exit"
+        ohos:title="$string:cancel">
+    </item>
+</menu>

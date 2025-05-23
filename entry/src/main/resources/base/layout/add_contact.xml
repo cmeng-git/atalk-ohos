@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<DirectionalLayout xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:width="match_parent"
+    ohos:height="match_content"
+    ohos:orientation="vertical"
+    ohos:padding="$float:screen_padding">
+
+    <Text
+        ohos:text_size="$float:medium_font"
+        ohos:width="match_content"
+        ohos:height="match_content"
+        ohos:bottom_margin="$float:label_padding"
+        ohos:text="$string:select_account_owner" />
+
+    <Picker
+        ohos:id="$+id:selectAccountSpinner"
+        ohos:background_element="$media:spinner_dark"
+        ohos:bottom_margin="$float:between_padding" />
+
+    <Text
+        ohos:text_size="$float:medium_font"
+        ohos:width="match_content"
+        ohos:height="match_content"
+        ohos:bottom_margin="$float:label_padding"
+        ohos:text="$string:contact_name" />
+
+    <TextField
+        ohos:id="$+id:editContactName"
+        ohos:background_element="$graphic:bg_text_field"
+        ohos:width="match_parent"
+        ohos:bottom_margin="$float:between_padding"
+        ohos:text_input_type="pattern_null" />
+
+    <Text
+        ohos:text_size="$float:medium_font"
+        ohos:width="match_content"
+        ohos:height="match_content"
+        ohos:bottom_margin="$float:label_padding"
+        ohos:text="$string:assign_group" />
+
+    <Picker
+        ohos:id="$+id:selectGroupSpinner"
+        ohos:background_element="$media:spinner_dark"
+        ohos:bottom_margin="$float:between_padding" />
+
+    <Text
+        ohos:text_size="$float:medium_font"
+        ohos:width="match_content"
+        ohos:height="match_content"
+        ohos:bottom_margin="$float:label_padding"
+        ohos:text="$string:contact_display_name" />
+
+    <TextField
+        ohos:id="$+id:editDisplayName"
+        ohos:background_element="$graphic:bg_text_field"
+        ohos:width="match_parent"
+        ohos:bottom_margin="$float:between_padding"
+        ohos:text_input_type="pattern_null" />
+
+    <DirectionalLayout
+        ohos:width="match_parent"
+        ohos:height="match_content"
+        ohos:orientation="horizontal">
+
+        <Button
+            ohos:id="$+id:button_cancel"
+            ohos:background_element="$graphic:btn_state_action"
+            ohos:text="$string:cancel" />
+
+        <Button
+            ohos:id="$+id:button_add"
+            ohos:background_element="$graphic:btn_state_action"
+            ohos:start_margin="2vp"
+            ohos:text="$string:add" />
+    </DirectionalLayout>
+</DirectionalLayout>

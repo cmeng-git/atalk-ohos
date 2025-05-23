@@ -1,0 +1,4816 @@
+{
+  "string": [
+    {
+      "name": "accept_call_video",
+      "value": "Jawab panggilan dengan video"
+    },
+    {
+      "name": "account_delete_on_server",
+      "value": "Hapus akun di server"
+    },
+    {
+      "name": "account_delete_on_server_unregistered",
+      "value": "Gagal menghapus akun di server, pengguna tidak terdaftar!"
+    },
+    {
+      "name": "account_delete_on_server_failed",
+      "value": "Gagal menghapus akun di server:\n%1$s"
+    },
+    {
+      "name": "account_delete_on_server_successful",
+      "value": "Hapus akun di server berhasil:\n%1$s"
+    },
+    {
+      "name": "account_show_password",
+      "value": "Tampilkan kata sandi"
+    },
+    {
+      "name": "account_server_override",
+      "value": "Ganti pengaturan server"
+    },
+    {
+      "name": "account_ibr_on_server",
+      "value": "Daftarkan akun baru di server"
+    },
+    {
+      "name": "account_server_ip",
+      "value": "Hubungkan IP server"
+    },
+    {
+      "name": "ibr_registration",
+      "value": "Pendaftaran IBR"
+    },
+    {
+      "name": "captcha_ibr_request",
+      "value": "Pendaftaran-Captcha"
+    },
+    {
+      "name": "captcha_ibr_failed",
+      "value": "Pendaftaran-Captcha gagal!\n %1$s"
+    },
+    {
+      "name": "captcha_ibr_success",
+      "value": "Pendaftaran-Captcha berhasil.\nAnda sekarang dapat melanjutkan untuk masuk!"
+    },
+    {
+      "name": "captcha_ibr_reason",
+      "value": "Pendaftaran inband diminta oleh pengguna"
+    },
+    {
+      "name": "captcha_ibr_pwd_empty",
+      "value": "Kesalahan: bidang kata sandi kosong!"
+    },
+    {
+      "name": "captcha_ibr_hint",
+      "value": "Isikan teks yang Anda lihat"
+    },
+    {
+      "name": "captcha_ibr_retry",
+      "value": "Klik 'OK' untuk mencoba lagi atau 'Batal' untuk mengakhiri"
+    },
+    {
+      "name": "captcha_challenge",
+      "value": "Tantangan Captcha"
+    },
+    {
+      "name": "captcha_protected",
+      "value": "Ruang obrolan dilindungi dengan tantangan captcha"
+    },
+    {
+      "name": "captcha_text_empty",
+      "value": "Entri teks captcha tidak boleh kosong"
+    },
+    {
+      "name": "captcha_verification_valid",
+      "value": "Verifikasi CAPTCHA betul"
+    },
+    {
+      "name": "captcha_verification_failed",
+      "value": "Die CAPTCHA-Überprüfung ist fehlgeschlagen"
+    },
+    {
+      "name": "captcha_wait_timeout",
+      "value": "%1$s chatRoom CAPTCHA timeout tantangan;\nsilakan bergabung kembali dengan chatRoom dan coba lagi."
+    },
+    {
+      "name": "choose_network",
+      "value": "Pilih jaringan"
+    },
+    {
+      "name": "encrypt_tooltip",
+      "value": "Enkripsi obrolan"
+    },
+    {
+      "name": "encrypt_choices",
+      "value": "Enkripsikan Pilihan"
+    },
+    {
+      "name": "encrypt_unencrypted",
+      "value": "Tidak terenkripsi"
+    },
+    {
+      "name": "muc_name",
+      "value": "Nama"
+    },
+    {
+      "name": "network",
+      "value": "Jaringan"
+    },
+    {
+      "name": "notification_setting",
+      "value": "Pengaturan pemberitahuan…"
+    },
+    {
+      "name": "open_file_no_application",
+      "value": "Tidak ada yang menambahkan aplikasi untuk perangkat lunak untuk arsip"
+    },
+    {
+      "name": "password",
+      "value": "kata sandi"
+    },
+    {
+      "name": "password_change_on_server_failed",
+      "value": "Perubahan kata sandi di server gagal:\n%1$s"
+    },
+    {
+      "name": "password_change_on_server_successful",
+      "value": "Perubahan kata sandi di server berhasil!"
+    },
+    {
+      "name": "password_",
+      "value": "Kata Sandi:"
+    },
+    {
+      "name": "send_process_signal",
+      "value": "Kirim Sinyal Proses"
+    },
+    {
+      "name": "call_info",
+      "value": "Info panggilan"
+    },
+    {
+      "name": "call_info_zrtp",
+      "value": "\"Panggil info ZRTP"
+    },
+    {
+      "name": "osgi_framework_stop",
+      "value": "Hentikan Kerangka OSGi"
+    },
+    {
+      "name": "save_password",
+      "value": "Simpan kata sandi"
+    },
+    {
+      "name": "system_settings",
+      "value": "Pengaturan…"
+    },
+    {
+      "name": "username_hint",
+      "value": "namapengguna@contoh.com"
+    },
+    {
+      "name": "username_",
+      "value": "Nama pengguna:"
+    },
+    {
+      "name": "call_hang_up",
+      "value": "Menutup panggilan"
+    },
+    {
+      "name": "call_on_hold",
+      "value": "Tunda panggilan"
+    },
+    {
+      "name": "call_max_transfer",
+      "value": "Maksimal 2 panggilan diperbolehkan untuk transfer panggilan yang dihadiri!"
+    },
+    {
+      "name": "call_transfer_call",
+      "value": "Transfer panggilan"
+    },
+    {
+      "name": "call_transfer",
+      "value": "Transfer"
+    },
+    {
+      "name": "call_transfer_failed",
+      "value": "Gagal melanjutkan transfer panggilan: %1$s ⇢ %2$s\n%3$s"
+    },
+    {
+      "name": "call_transfer_hint",
+      "value": "Pilih nama kontak yang ingin Anda transfer, lalu klik Transfer."
+    },
+    {
+      "name": "call_transfer_msg",
+      "value": "%1$s panggilan ditransfer ke… %2$s"
+    },
+    {
+      "name": "attach_picture",
+      "value": "Gambar"
+    },
+    {
+      "name": "attach_take_picture",
+      "value": "Ambil gambar"
+    },
+    {
+      "name": "attach_video",
+      "value": "Video"
+    },
+    {
+      "name": "attach_record_video",
+      "value": "Rekam video"
+    },
+    {
+      "name": "attach_file",
+      "value": "Bagikan Fail"
+    },
+    {
+      "name": "copy",
+      "value": "Duplikat"
+    },
+    {
+      "name": "delete",
+      "value": "Hapuskan"
+    },
+    {
+      "name": "edit",
+      "value": "Meredaksi"
+    },
+    {
+      "name": "forward",
+      "value": "Teruskan…"
+    },
+    {
+      "name": "chat_message_long_press_hint",
+      "value": "Hindari mengklik dalam area pesan untuk operasi pemilihan multi-item"
+    },
+    {
+      "name": "quote",
+      "value": "Mengutip"
+    },
+    {
+      "name": "reply",
+      "value": "Jawab"
+    },
+    {
+      "name": "select_all",
+      "value": "Pilih semua"
+    },
+    {
+      "name": "subject",
+      "value": "Subjek"
+    },
+    {
+      "name": "settings",
+      "value": "Pengaturan"
+    },
+    {
+      "name": "contact_block_text",
+      "value": "Apakah Anda ingin memblokir '%1$s' mengirimi Anda pesan?"
+    },
+    {
+      "name": "contact_unblock_text",
+      "value": "Apakah Anda ingin membuka blokir '%1$s' dan mengizinkan mereka mengirimi Anda pesan?"
+    },
+    {
+      "name": "domain_blocking",
+      "value": "Berlaku untuk semua kontak dari: %1$s"
+    },
+    {
+      "name": "contact_block",
+      "value": "Blokir kontak"
+    },
+    {
+      "name": "contact_unblock",
+      "value": "Buka blokir kontak"
+    },
+    {
+      "name": "contact_blocked",
+      "value": "Kontak diblokir"
+    },
+    {
+      "name": "block",
+      "value": "Memblokir"
+    },
+    {
+      "name": "unblock",
+      "value": "Buka blokir"
+    },
+    {
+      "name": "block_list_title",
+      "value": "Daftar blokir"
+    },
+    {
+      "name": "block_list_show",
+      "value": "Tampilkan daftar blokir"
+    },
+    {
+      "name": "accept",
+      "value": "Terima"
+    },
+    {
+      "name": "account",
+      "value": "Akun"
+    },
+    {
+      "name": "account_me",
+      "value": "Saya"
+    },
+    {
+      "name": "account_settings",
+      "value": "Pengaturan akun…"
+    },
+    {
+      "name": "account_unregistered",
+      "value": "%1$s tidak terdaftar"
+    },
+    {
+      "name": "add",
+      "value": "Tambah"
+    },
+    {
+      "name": "add_contact",
+      "value": "Tambah kontak"
+    },
+    {
+      "name": "add_contact_to_list",
+      "value": "Tambahkan %1$s ke daftar kontak Anda"
+    },
+    {
+      "name": "add_contact_to",
+      "value": "Tambah kontak ke"
+    },
+    {
+      "name": "add_contact_failed",
+      "value": "Gagal menambahkan kontak dengan id: %1$s"
+    },
+    {
+      "name": "add_contact_error",
+      "value": "Tambah Kesalahan Kontak"
+    },
+    {
+      "name": "add_contact_error_exist",
+      "value": "Kontak %1$s sudah ada dalam daftar kontak Anda."
+    },
+    {
+      "name": "add_contact_error_network",
+      "value": "Server tidak menanggapi permintaan kami menambahkan kontak dengan jid: %1$s."
+    },
+    {
+      "name": "add_contact_error_not_supported",
+      "value": "Gagal menambahkan kontak dengan id: %1$s. Operasi tidak didukung."
+    },
+    {
+      "name": "add_contact_error_not_connected",
+      "value": "Anda harus terhubung untuk menambahkan kontak. Harap masuk ke penyedia yang dipilih dan coba lagi."
+    },
+    {
+      "name": "add_group_error_local",
+      "value": "Gagal menambahkan grup dengan nama: %1$s. Masalah terjadi selama operasi IO lokal."
+    },
+    {
+      "name": "add_group_error_exist",
+      "value": "Grup %1$s sudah ada di daftar kontak Anda. Silakan pilih nama lain."
+    },
+    {
+      "name": "add_group_error_network",
+      "value": "Gagal menambahkan grup dengan nama: %1$s. Masalah terjadi karena kegagalan jaringan. Silakan periksa koneksi jaringan Anda dan coba lagi."
+    },
+    {
+      "name": "add_group_failed",
+      "value": "Gagal menambahkan grup dengan nama: %1$s."
+    },
+    {
+      "name": "add_group_error_empty_name",
+      "value": "Nama grup tidak boleh kosong."
+    },
+    {
+      "name": "add_group_create",
+      "value": "Bikin grup"
+    },
+    {
+      "name": "add_group_name",
+      "value": "Masukkan nama grup"
+    },
+    {
+      "name": "answer",
+      "value": "Jawab…"
+    },
+    {
+      "name": "apply",
+      "value": "Terapkan"
+    },
+    {
+      "name": "apply_changes",
+      "value": "Menerapkan perubahan akun (~60S) …"
+    },
+    {
+      "name": "at",
+      "value": "di"
+    },
+    {
+      "name": "authentication_failed",
+      "value": "Autentikasi gagal untuk %1$s. Kata sandi yang Anda masukkan tidak sah."
+    },
+    {
+      "name": "authentication_requested",
+      "value": "Otentikasi diminta"
+    },
+    {
+      "name": "authentication_requested_by_server",
+      "value": "Server %1$s telah meminta otentikasi Anda."
+    },
+    {
+      "name": "authentication_title",
+      "value": "otentikasi %1$s"
+    },
+    {
+      "name": "authorize",
+      "value": "Otorisasi"
+    },
+    {
+      "name": "authorization_accepted",
+      "value": "kontak telah menerima permintaan otorisasi Anda."
+    },
+    {
+      "name": "authorization_rejected",
+      "value": "kontak telah menolak permintaan otorisasi Anda."
+    },
+    {
+      "name": "authorization_requested",
+      "value": "Otorisasi diminta"
+    },
+    {
+      "name": "authorization_request_info",
+      "value": "Kontak %1$s meminta otorisasi Anda."
+    },
+    {
+      "name": "authorization_request",
+      "value": "Permintaan Otorisasi"
+    },
+    {
+      "name": "avatar_size_hint",
+      "value": "Ikon direkomendasikan: 64 * 64 (96 * 96 px maks persegi)"
+    },
+    {
+      "name": "away",
+      "value": "Meninggal"
+    },
+    {
+      "name": "avatar_set_error",
+      "value": "Gagal mengatur avatar untuk %1$s"
+    },
+    {
+      "name": "avatar_retrieving",
+      "value": "Mengambil avatar untuk %1$s"
+    },
+    {
+      "name": "busy",
+      "value": "Sibuk"
+    },
+    {
+      "name": "call_audio",
+      "value": "Panggilan audio"
+    },
+    {
+      "name": "call_answered",
+      "value": "%1$s telah menjawab panggilan."
+    },
+    {
+      "name": "call_disable_on_fault",
+      "value": "aTalk gagal menginisialisasi %1$s\nSemua panggilan/layanan media akan dinonaktifkan.\n%2$s"
+    },
+    {
+      "name": "call_ended",
+      "value": "Penelepon jarak jauh telah mengakhiri panggilan: %1$s"
+    },
+    {
+      "name": "call_error",
+      "value": "Pesta jarak jauh mengembalikan kesalahan: %1$s"
+    },
+    {
+      "name": "call_failed",
+      "value": "Panggilan gagal"
+    },
+    {
+      "name": "call_history_name",
+      "value": "Riwayat Panggilan"
+    },
+    {
+      "name": "call_history_remove_count",
+      "value": "Jumlah catatan riwayat panggilan dihapus: %1$s"
+    },
+    {
+      "name": "call_history_remove_before_date_warning",
+      "value": "Anda yakin ingin menghapus semua catatan panggilan sebelum tanggal tersebut: %1$s?"
+    },
+    {
+      "name": "call_history_remove_none",
+      "value": "Tidak ada catatan yang dipilih untuk dihapus"
+    },
+    {
+      "name": "call_history_remove_warning",
+      "value": "Anda yakin ingin menghapus semua catatan panggilan yang dipilih?"
+    },
+    {
+      "name": "call_incoming",
+      "value": "Panggilan masuk: %1$s"
+    },
+    {
+      "name": "call_incoming_status",
+      "value": "Panggilan masuk"
+    },
+    {
+      "name": "call_initiating",
+      "value": "Memulai panggilan"
+    },
+    {
+      "name": "call_rejected",
+      "value": "%1$s telah menolak panggilan."
+    },
+    {
+      "name": "call_retracted",
+      "value": "%1$s telah mencabut panggilan."
+    },
+    {
+      "name": "call_missed",
+      "value": "Panggilan tidak terjawab dari:"
+    },
+    {
+      "name": "call_no_active_device",
+      "value": "aTalk tidak dapat menemukan perangkat Audio/Video yang aktif sehingga tidak dapat membuat panggilan."
+    },
+    {
+      "name": "call_no_audio_device",
+      "value": "Tidak ada perangkat audio yang dikonfigurasi."
+    },
+    {
+      "name": "call_no_audio_codec",
+      "value": "Tidak ada codec audio yang diaktifkan."
+    },
+    {
+      "name": "call_no_device_codec_H",
+      "value": "Perangkat atau codec tidak dikonfigurasi dengan betul di 'Pengaturan…': %1$s"
+    },
+    {
+      "name": "call_no_device_codec_Q",
+      "value": "Apakah Anda ingin melanjutkan panggilan?"
+    },
+    {
+      "name": "call_no_matching_format",
+      "value": "Tidak ada format media yang cocok yang ditemukan terhadap penawaran %1$s untuk menerima panggilan. Harap verifikasi pengaturan perangkat dan codec di'Pengaturan…'."
+    },
+    {
+      "name": "call_outgoing",
+      "value": "Panggilan keluar"
+    },
+    {
+      "name": "call_outgoing_with",
+      "value": "Melakukan panggilan dengan %1$s…"
+    },
+    {
+      "name": "call_video",
+      "value": "Panggilan video"
+    },
+    {
+      "name": "call_via_",
+      "value": "Hubungi dengan: %1$s"
+    },
+    {
+      "name": "call_with",
+      "value": "Panggil dengan:"
+    },
+    {
+      "name": "cancel",
+      "value": "Tamatkan"
+    },
+    {
+      "name": "contact_invalid",
+      "value": "Kontak yang dipilih tidak dikenali: %1$s"
+    },
+    {
+      "name": "dismiss",
+      "value": "Tolak"
+    },
+    {
+      "name": "done",
+      "value": "Selesai"
+    },
+    {
+      "name": "mark_as_read",
+      "value": "tandai membaca"
+    },
+    {
+      "name": "reason",
+      "value": "Alasan:"
+    },
+    {
+      "name": "set",
+      "value": "Set"
+    },
+    {
+      "name": "share",
+      "value": "Bagikan…"
+    },
+    {
+      "name": "share_text",
+      "value": "Bagikan teks…"
+    },
+    {
+      "name": "share_file",
+      "value": "Bagikan file…"
+    },
+    {
+      "name": "snooze",
+      "value": "Tunda"
+    },
+    {
+      "name": "playback_error",
+      "value": "Tidak dapat menemukan konten media apa pun untuk pemutaran"
+    },
+    {
+      "name": "playback_buffering",
+      "value": "Buffering…"
+    },
+    {
+      "name": "playback_completed",
+      "value": "Pemutaran media berakhir"
+    },
+    {
+      "name": "playback_rate",
+      "value": "Kecepatan pemutaran: %1$s"
+    },
+    {
+      "name": "auto_join",
+      "value": "Autojoin"
+    },
+    {
+      "name": "change_nickname",
+      "value": "Ubah nama panggilan"
+    },
+    {
+      "name": "change_nickname_",
+      "value": "Ubah nama panggilan…"
+    },
+    {
+      "name": "change_nickname_error_conflict",
+      "value": "Nama panggilan sudah ada"
+    },
+    {
+      "name": "change_nickname_error",
+      "value": "Kesalahan saat mengubah nama panggilan untuk %1$s: %2$s"
+    },
+    {
+      "name": "change_nickname_label",
+      "value": "Pada bidang di bawah ini, Anda dapat memasukkan nama panggilan baru Anda."
+    },
+    {
+      "name": "change_nickname_null",
+      "value": "Konten bidang Nama Nick tidak boleh nol"
+    },
+    {
+      "name": "chatroom_change_info",
+      "value": "Ubah Info Ruang obrolan"
+    },
+    {
+      "name": "chatroom_change_subject",
+      "value": "Di bidang di bawah ini, Anda dapat memasukkan subjek baru untuk ruangan ini."
+    },
+    {
+      "name": "change_video_remote_quality",
+      "value": "Ubah kualitas video jarak jauh"
+    },
+    {
+      "name": "chatroom_conference_item",
+      "value": "konferensi %1$s "
+    },
+    {
+      "name": "chatroom_conference",
+      "value": "Konferensi"
+    },
+    {
+      "name": "chatroom",
+      "value": "Ruang Chat"
+    },
+    {
+      "name": "chatroom_already_joined",
+      "value": "Anda telah bergabung dengan ruang obrolan %1$s."
+    },
+    {
+      "name": "chatroom_configuration",
+      "value": "konfigurasi ruang obrolan"
+    },
+    {
+      "name": "chatroom_configuration_failed",
+      "value": "Gagal mendapatkan %1$s formulir konfigurasi ruang obrolan."
+    },
+    {
+      "name": "chatroom_configuration_forbidden",
+      "value": "Tidak dapat memperoleh %1$s formulir konfigurasi ruang obrolan. Hanya pemilik ruang obrolan yang dapat melihat dan mengubah formulir konfigurasi."
+    },
+    {
+      "name": "chatroom_configuration_members_edit_description",
+      "value": "Daftar di sebelah kanan berisi pengguna yang memiliki peran anggota di ruang obrolan ini. Ketika ruang obrolan adalah 'Anggota-hanya' mereka akan menjadi pengguna yang diizinkan untuk bergabung."
+    },
+    {
+      "name": "chatroom_configuration_members_edit_title",
+      "value": "Ubah Daftar Anggota"
+    },
+    {
+      "name": "chatroom_configuration_submit_failed",
+      "value": "Terjadi kesalahan saat mencoba mengirimkan formulir konfigurasi untuk ruang obrolan %1$s."
+    },
+    {
+      "name": "chatroom_remove_tooltip",
+      "value": "Menghapus ruang yang dipilih dari daftar ruang yang disimpan"
+    },
+    {
+      "name": "chatroom_save_tooltip",
+      "value": "Menyimpan ruang obrolan untuk penggunaan selanjutnya"
+    },
+    {
+      "name": "chatroom_send_message_forbidden",
+      "value": "Pengiriman pesan dilarang (suara dicabut)"
+    },
+    {
+      "name": "chatroom_user_joined",
+      "value": "telah bergabung dengan %1$s"
+    },
+    {
+      "name": "chatroom_user_kicked",
+      "value": "telah ditendang dari %1$s"
+    },
+    {
+      "name": "chatroom_user_left",
+      "value": "telah meninggalkan %1$s"
+    },
+    {
+      "name": "chatroom_user_quit",
+      "value": "telah berhenti %1$s"
+    },
+    {
+      "name": "chatroom_name",
+      "value": "Nama ruang obrolan"
+    },
+    {
+      "name": "chatroom_name_info",
+      "value": "Di kolom di bawah ini masukkan nama ruang obrolan yang ingin Anda buat."
+    },
+    {
+      "name": "chatroom_not_exist",
+      "value": "Ruangan %1$s tidak ditemukan di server %2$s. Harap verifikasi jika nama yang Anda ketikkan benar."
+    },
+    {
+      "name": "chatroom_not_connected",
+      "value": "Anda harus online untuk bergabung dengan ruang obrolan %1$s."
+    },
+    {
+      "name": "chatroom_leave_not_connected",
+      "value": "Anda harus online untuk meninggalkan ruang obrolan."
+    },
+    {
+      "name": "chatroom_not_joined",
+      "value": "Anda harus bergabung dengan ruang obrolan untuk melakukan operasi lebih lanjut dengannya."
+    },
+    {
+      "name": "chatroom_options",
+      "value": "Opsi ruang obrolan"
+    },
+    {
+      "name": "chatroom_required_password",
+      "value": "Ruang obrolan %1$s telah meminta kata sandi."
+    },
+    {
+      "name": "chatroom_status_disable",
+      "value": "Nonaktifkan Status Kamar"
+    },
+    {
+      "name": "chatroom_status_enable",
+      "value": "Aktifkan Status Kamar"
+    },
+    {
+      "name": "chatroom_subject_changed",
+      "value": "Subjek kamar berubah: '%1$s' => '%2$s'"
+    },
+    {
+      "name": "chatroom_nickname_changed",
+      "value": "%1$s sekarang dikenal sebagai %2$s"
+    },
+    {
+      "name": "clear_custom_messages",
+      "value": "Hapus pesan khusus"
+    },
+    {
+      "name": "close",
+      "value": "Tutup"
+    },
+    {
+      "name": "close_all_active_chats",
+      "value": "Tutup semua obrolan aktif"
+    },
+    {
+      "name": "close_current_chat",
+      "value": "Tutup sesi obrolan saat ini"
+    },
+    {
+      "name": "connected",
+      "value": "Terhubung"
+    },
+    {
+      "name": "connecting_",
+      "value": "Menghubungkan %1$s"
+    },
+    {
+      "name": "connecting_status",
+      "value": "Menghubungkan…"
+    },
+    {
+      "name": "connection_failed_message",
+      "value": "Gagal login koneksi akun: Nama pengguna: %1$s\n\nNama server: %2$s\nSilakan periksa koneksi jaringan Anda ATAU hubungi administrator jaringan Anda untuk informasi lebih lanjut."
+    },
+    {
+      "name": "connecting",
+      "value": "Menghubungkan"
+    },
+    {
+      "name": "contact_active",
+      "value": "** %1$s aktif dalam sesi obrolan"
+    },
+    {
+      "name": "contact_composing",
+      "value": "** %1$s sedang menulis pesan"
+    },
+    {
+      "name": "contact_inactive",
+      "value": "** %1$s sementara menjauh"
+    },
+    {
+      "name": "contact_gone",
+      "value": "** %1$s telah keluar dari sesi obrolan"
+    },
+    {
+      "name": "contact_info",
+      "value": "Info kontak"
+    },
+    {
+      "name": "contact_name",
+      "value": "Hubungi JID atau Nomor"
+    },
+    {
+      "name": "contact_name_empty",
+      "value": "Tampilan kontakNama tidak boleh kosong."
+    },
+    {
+      "name": "contact_owner",
+      "value": "Pemilik Kontak: %1$s"
+    },
+    {
+      "name": "contact_pause_typing",
+      "value": "** %1$s telah berhenti mengetik"
+    },
+    {
+      "name": "contact_rename",
+      "value": "Hubungi Nama baru:"
+    },
+    {
+      "name": "contact_rename_tooltip",
+      "value": "Masukkan Nama kontak baru"
+    },
+    {
+      "name": "contact_rename_title",
+      "value": "Ubah Nama Kontak"
+    },
+    {
+      "name": "contacts",
+      "value": "Kontak"
+    },
+    {
+      "name": "contact_offline_hide",
+      "value": "Sembunyikan kontak offline"
+    },
+    {
+      "name": "contact_offline_show",
+      "value": "Tunjukkan kontak offline"
+    },
+    {
+      "name": "copy_message_text",
+      "value": "Salin teks pesan"
+    },
+    {
+      "name": "create",
+      "value": "Buat"
+    },
+    {
+      "name": "create_call_failed",
+      "value": "Gagal membuat panggilan."
+    },
+    {
+      "name": "create_conference_call",
+      "value": "Bikin panggilan konferensi…"
+    },
+    {
+      "name": "create_conference_chat",
+      "value": "Bikin obrolan konferensi…"
+    },
+    {
+      "name": "create_group",
+      "value": "Bikin grup…"
+    },
+    {
+      "name": "create_group_name_invalid",
+      "value": "Nama grup tidak betul: %1$s"
+    },
+    {
+      "name": "create_group_name",
+      "value": "Pada bidang di bawah, masukkan nama grup yang ingin Anda buat."
+    },
+    {
+      "name": "create_group_first_wizard",
+      "value": "Daftar kontak Anda tidak berisi grup apa pun. Harap buat grup terlebih dahulu (Fail/Buat grup)."
+    },
+    {
+      "name": "aboutDialog_help",
+      "value": "<a href=\"https://cmeng-git.github.io/atalk\">Bantuan online</a>"
+    },
+    {
+      "name": "About",
+      "value": "Tentang"
+    },
+    {
+      "name": "version_",
+      "value": "Versi %1$s"
+    },
+    {
+      "name": "help",
+      "value": "Bantuan"
+    },
+    {
+      "name": "check_new_version",
+      "value": "Periksa Pembaruan"
+    },
+    {
+      "name": "show_history_log",
+      "value": "Log Riwayat"
+    },
+    {
+      "name": "online_help",
+      "value": "Bantuan online"
+    },
+    {
+      "name": "delete_database",
+      "value": "Hapus Basis Data"
+    },
+    {
+      "name": "http_authorization_request",
+      "value": "Permintaan Otorisasi HTTP"
+    },
+    {
+      "name": "http_authorization_request_instruction",
+      "value": "HTTP (%1$s) Otorisasi untuk %2$s\nKode validasi: %3$s\nApakah Anda menerima permintaan akun ini:\n%4$s?\n\nVerifikasi situs pencocokan ID yang diberikan jika tersedia"
+    },
+    {
+      "name": "app_authors_fmt",
+      "value": "Penulis: %1$s"
+    },
+    {
+      "name": "app_libraries",
+      "value": "aTalk menggunakan pustaka pihak ketiga berikut: %1$s"
+    },
+    {
+      "name": "app_revision_fmt",
+      "value": "Informasi Revisi: %1$s"
+    },
+    {
+      "name": "app_xep",
+      "value": "aTalk mendukung XEPs berikut: %1$s"
+    },
+    {
+      "name": "powered_by",
+      "value": "Didukung oleh atalk.org"
+    },
+    {
+      "name": "chat_audio_buddy_offline",
+      "value": "Obrolan audio dengan penerima offline tidak diizinkan."
+    },
+    {
+      "name": "chat_audio_cancel",
+      "value": "< geser ke kiri\nuntuk membatalkan"
+    },
+    {
+      "name": "chat_audio_start_record",
+      "value": "Mulai Merekam"
+    },
+    {
+      "name": "latitude",
+      "value": "Latitud:"
+    },
+    {
+      "name": "location",
+      "value": "Lokasi:"
+    },
+    {
+      "name": "longitude",
+      "value": "Longitude:"
+    },
+    {
+      "name": "altitude",
+      "value": "Ketinggian:"
+    },
+    {
+      "name": "geo_send",
+      "value": "Kirim GPS-Lokasi"
+    },
+    {
+      "name": "geo_street_views_map",
+      "value": "StreetViews & Petakan"
+    },
+    {
+      "name": "geo_share",
+      "value": "Bagikan lokasi geografis"
+    },
+    {
+      "name": "apply_new_location_setting",
+      "value": "Klik Tombol \\\"Ikuti saya\\\" untuk menerapkan pengaturan baru"
+    },
+    {
+      "name": "btn_center_map",
+      "value": "Pusatkan di lokasi saya"
+    },
+    {
+      "name": "btn_follow_me",
+      "value": "Ikuti saya"
+    },
+    {
+      "name": "single_location_fix",
+      "value": "Pembaruan lokasi Tunggal"
+    },
+    {
+      "name": "follow_me_start",
+      "value": "Ikuti aku (%1$dm) @ %2$dS"
+    },
+    {
+      "name": "follow_me_stop",
+      "value": "Berhenti ikuti aku (%1$dm) @%2$dS"
+    },
+    {
+      "name": "google_map",
+      "value": "GoogleMap"
+    },
+    {
+      "name": "legal_info",
+      "value": "Info Legal"
+    },
+    {
+      "name": "play_service_not_installed",
+      "value": "Layanan Google Play tidak dipasang di perangkat ini."
+    },
+    {
+      "name": "split_street_view_panorama_and_map_description",
+      "value": "Mendemonstrasikan cara menampilkan panorama Street View dan memetakan."
+    },
+    {
+      "name": "split_street_view_panorama_and_map_label",
+      "value": "Panorama dan Peta Street View"
+    },
+    {
+      "name": "map",
+      "value": "Peta"
+    },
+    {
+      "name": "permission_location_rationale",
+      "value": "Akses ke layanan lokasi diperlukan untuk menunjukkan fitur'lokasi saya', yang menunjukkan lokasi Anda saat ini di peta."
+    },
+    {
+      "name": "permission_location_denied",
+      "value": "Sampel ini memerlukan izin lokasi untuk mengaktifkan lapisan'lokasi saya'. Silakan coba lagi dan berikan akses untuk menggunakan lokasi.\nJika izin telah ditolak secara permanen, itu dapat diaktifkan dari Pengaturan Sistem >Aplikasi >'Demo Google Maps API'."
+    },
+    {
+      "name": "permission_location_required",
+      "value": "Izin lokasi diperlukan untuk demo ini."
+    },
+    {
+      "name": "export_sql_db",
+      "value": "Ekspor aTalk Database SQL"
+    },
+    {
+      "name": "purge_debug_log",
+      "value": "Bersihkan Fail Log Debug aTalk"
+    },
+    {
+      "name": "purge_sql_db",
+      "value": "Bersihkan aTalk SQL DataBase - Bahaya!"
+    },
+    {
+      "name": "refresh_apply",
+      "value": "Terapkan"
+    },
+    {
+      "name": "refresh_store",
+      "value": "Segarkan toko tetap…"
+    },
+    {
+      "name": "refresh_store_avatar",
+      "value": "XEP-0084/XEP-0153: Avatar"
+    },
+    {
+      "name": "refresh_store_caps",
+      "value": "XEP-0115: Kemampuan Entitas"
+    },
+    {
+      "name": "refresh_store_disc_info",
+      "value": "XEP-0030: Penemuan Layanan"
+    },
+    {
+      "name": "refresh_store_hint",
+      "value": "Periksa item untuk penyimpanannya yang persisten agar dibersihkan dan disegarkan;Lakukan hanya bila diperlukan!\n"
+    },
+    {
+      "name": "refresh_store_roster",
+      "value": "XEP-0237: Daftar nama"
+    },
+    {
+      "name": "refresh_store_omemo",
+      "value": "XEP-0384: Enkripsi OMEMO"
+    },
+    {
+      "name": "unregistered_message",
+      "value": "Gagal login koneksi akun gagal:\nNama Pengguna: %1$s\nNama Server: %2$s\nAkun sedang offline."
+    },
+    {
+      "name": "create_videoBridge",
+      "value": "Buat jembatan video…"
+    },
+    {
+      "name": "create_videoBridge_menu",
+      "value": "Buat jembatan video"
+    },
+    {
+      "name": "create_join_video_conference",
+      "value": "Buat/Gabung konferensi video"
+    },
+    {
+      "name": "create_video_conference",
+      "value": "Buat konferensi video baru untuk ruang obrolan ini"
+    },
+    {
+      "name": "video_format_not_supported",
+      "value": "Gagal menyetel pratinjau kamera perangkat ke: %1$s; Pengecualian: %2$s."
+    },
+    {
+      "name": "disconnected",
+      "value": "Terputus"
+    },
+    {
+      "name": "disconnecting_",
+      "value": "Memutuskan sambungan %1$s"
+    },
+    {
+      "name": "deny",
+      "value": "Tolak"
+    },
+    {
+      "name": "display_name",
+      "value": "Nama Tampilan"
+    },
+    {
+      "name": "contact_display_name",
+      "value": "Nama Tampilan Kontak"
+    },
+    {
+      "name": "do_not_disturb",
+      "value": "Jangan ganggu"
+    },
+    {
+      "name": "duration",
+      "value": "durasi"
+    },
+    {
+      "name": "edit_status_message_tip",
+      "value": "Setel status pesan"
+    },
+    {
+      "name": "edited",
+      "value": "meredaksi"
+    },
+    {
+      "name": "enter_name_or_number",
+      "value": "Masukkan nama atau nomor"
+    },
+    {
+      "name": "error",
+      "value": "Kesalahan"
+    },
+    {
+      "name": "error_was_",
+      "value": "Kesalahannya adalah: %1$s"
+    },
+    {
+      "name": "exit",
+      "value": "Tamat"
+    },
+    {
+      "name": "extended_away",
+      "value": "Meninggal lama"
+    },
+    {
+      "name": "free_for_chat",
+      "value": "Gratis untuk obrolan"
+    },
+    {
+      "name": "file_byte_sent",
+      "value": "%1$s dikirim"
+    },
+    {
+      "name": "file_receive_completed",
+      "value": "Fail telah diterima dari %1$s"
+    },
+    {
+      "name": "file_receive_failed",
+      "value": "Terjadi kesalahan saat mentransfer fail dari %1$s"
+    },
+    {
+      "name": "file_receive_from",
+      "value": "Menerima fail dari %1$s"
+    },
+    {
+      "name": "file_send_completed",
+      "value": "Fail telah berhasil dikirim ke %1$s"
+    },
+    {
+      "name": "file_send_declined",
+      "value": "%1$s telah menampik fail ini"
+    },
+    {
+      "name": "file_sending_to",
+      "value": "Mengirim fail ke %1$s"
+    },
+    {
+      "name": "file_transfer_accepted",
+      "value": "Fail transfer telah diterima"
+    },
+    {
+      "name": "file_transfer_canceled",
+      "value": "Fail transfer telah dibatalkan"
+    },
+    {
+      "name": "file_transfer_preparing",
+      "value": "Mempersiapkan transfer fail dengan %1$s. Harap tunggu…"
+    },
+    {
+      "name": "file_transfer_declined",
+      "value": "Fail transfer telah ditampik"
+    },
+    {
+      "name": "file_transfer_request_received",
+      "value": "%1$s berbagi fail dengan Anda"
+    },
+    {
+      "name": "file_transfer_send_error",
+      "value": "Terjadi kesalahan saat mengirim fail ke %1$s"
+    },
+    {
+      "name": "file_transfer_waiting_acceptance",
+      "value": "Menunggu untuk %1$s untuk menerima fail Anda"
+    },
+    {
+      "name": "purge",
+      "value": "Bersihkan"
+    },
+    {
+      "name": "estimated_time_",
+      "value": "Perkiraan waktu: %1$s"
+    },
+    {
+      "name": "file",
+      "value": "File"
+    },
+    {
+      "name": "file_delivery_error",
+      "value": "Gagal mengirim fail yang dipilih. %1$s"
+    },
+    {
+      "name": "file_does_not_exist",
+      "value": "Fail yang ditentukan tidak dapat ditemukan. Itu dihapus atau dipindahkan"
+    },
+    {
+      "name": "file_open_failed",
+      "value": "Gagal membuka file. Ini dapat dihapus atau dipindahkan"
+    },
+    {
+      "name": "file_open_no_application",
+      "value": "Kami tidak dapat menemukan aplikasi yang terkait dengan jenis fail ini"
+    },
+    {
+      "name": "file_open_no_permission",
+      "value": "Anda tidak memiliki izin yang cukup untuk membuka fail ini. Silakan periksa izin baca Anda dan coba lagi"
+    },
+    {
+      "name": "file_transfer_not_secure",
+      "value": "XEP-0096: Protokol Transfer File SI tidak dapat mendukung pengiriman file terenkripsi!"
+    },
+    {
+      "name": "file_open_not_supported",
+      "value": "Operasi fail terbuka tidak didukung oleh platform perangkat Anda saat ini"
+    },
+    {
+      "name": "file_send_client_error",
+      "value": "Kesalahan klien jarak jauh pada file yang dikirim: %1$s"
+    },
+    {
+      "name": "file_send_failed",
+      "value": "Gagal mengirim file: %1$s"
+    },
+    {
+      "name": "file_send_not_allow",
+      "value": "Tidak dapat mengirim file selama panggilan konferensi!"
+    },
+    {
+      "name": "file_attachment",
+      "value": "Kirim Lampiran"
+    },
+    {
+      "name": "file_size_too_big",
+      "value": "Ukuran fail melebihi batas maksimum yang diizinkan untuk protokol ini: %1$s"
+    },
+    {
+      "name": "file_transfer_active",
+      "value": "Transfer fail sedang diproses sedang terganggu. Pelacakan status @ %1$s hilang!"
+    },
+    {
+      "name": "file_transfer_not_supported",
+      "value": "Hubungi klien (%1$s) atau server tidak mendukung transfer file atau protokol yang diperlukan"
+    },
+    {
+      "name": "finish",
+      "value": "Selesai"
+    },
+    {
+      "name": "folder_not_exist",
+      "value": "Folder yang berisi fail ini tidak dapat ditemukan. Itu dihapus atau dipindahkan"
+    },
+    {
+      "name": "folder_open_failed",
+      "value": "Gagal membuka folder"
+    },
+    {
+      "name": "folder_open_no_permission",
+      "value": "Anda tidak memiliki izin yang cukup untuk membuka folder ini. Silakan periksa izin baca Anda dan coba lagi"
+    },
+    {
+      "name": "folder_open_no_application",
+      "value": "Kami tidak dapat menemukan aplikasi untuk membuka folder ini"
+    },
+    {
+      "name": "group_chat",
+      "value": "Obrolan Grup"
+    },
+    {
+      "name": "hide",
+      "value": "Sembunyikan"
+    },
+    {
+      "name": "history",
+      "value": "Riwayat"
+    },
+    {
+      "name": "history_contact",
+      "value": "Sejarah - %1$s"
+    },
+    {
+      "name": "history_off_for_contact",
+      "value": "Matikan histori untuk kontak ini"
+    },
+    {
+      "name": "history_off_all",
+      "value": "Matikan riwayat untuk semua obrolan dan kontak"
+    },
+    {
+      "name": "history_erase_for_contact",
+      "value": "Hapus riwayat kontak ini"
+    },
+    {
+      "name": "history_erase_all",
+      "value": "Hapus semua riwayat obrolan kontak"
+    },
+    {
+      "name": "history_purge_for_contact_warning",
+      "value": "Anda yakin ingin menghapus semua pesan yang dipilih selama %1$s?"
+    },
+    {
+      "name": "history_purge_all_warning",
+      "value": "Anda yakin ingin menghapus semua pesan untuk semua entitas?"
+    },
+    {
+      "name": "history_purge_count",
+      "value": "Jumlah catatan sejarah yang dihapus: %1$s"
+    },
+    {
+      "name": "history_purge_error",
+      "value": "Kesalahan menghapus pesan yang disimpan secara lokal untuk %1$s."
+    },
+    {
+      "name": "history_purge_media",
+      "value": "Hapus media dari ponsel saya"
+    },
+    {
+      "name": "history_offline_warning",
+      "value": "Tutup dan buka sesi obrolan ini untuk melihat pesan MAM dan Offline saat online"
+    },
+    {
+      "name": "chatroom_alternate_venue",
+      "value": "Bilik Alternatif:"
+    },
+    {
+      "name": "chatroom_alternate_address",
+      "value": "Anda dapat melanjutkan percakapan di ruang obrolan berikut: %1$s"
+    },
+    {
+      "name": "chatroom_bookmark_title",
+      "value": "Bookmark ChatRoom"
+    },
+    {
+      "name": "chatroom_bookmark",
+      "value": "Bookmark"
+    },
+    {
+      "name": "chatroom_auto_join",
+      "value": "Hubung Oto"
+    },
+    {
+      "name": "chatroom_bookmark_update_failed",
+      "value": "Gagal memperbarui Bookmark untuk %1$s: %2$s"
+    },
+    {
+      "name": "chatroom_occupant",
+      "value": "Penghuni ruang obrolan"
+    },
+    {
+      "name": "chatroom_history_erase_per",
+      "value": "Hapus obrolan iniRiwayat riwayat"
+    },
+    {
+      "name": "chatroom_history_erase_all",
+      "value": "Hapus semua riwayat chatRooms"
+    },
+    {
+      "name": "chatroom_history_off_per",
+      "value": "Matikan histori untuk chatRoom ini"
+    },
+    {
+      "name": "chatroom_info",
+      "value": "Info ChatRoom"
+    },
+    {
+      "name": "chatroom_info_name",
+      "value": "Nama"
+    },
+    {
+      "name": "chatroom_info_subject",
+      "value": "Subjek"
+    },
+    {
+      "name": "chatroom_info_description",
+      "value": "Keterangan"
+    },
+    {
+      "name": "chatroom_info_occupants",
+      "value": "Penghuni"
+    },
+    {
+      "name": "chatroom_info_member_only",
+      "value": "Hanya Anggota"
+    },
+    {
+      "name": "chatroom_info_moderated",
+      "value": "Dimoderasi"
+    },
+    {
+      "name": "chatroom_info_non_anonymous",
+      "value": "Non Anonim"
+    },
+    {
+      "name": "chatroom_info_password_protected",
+      "value": "Dilindungi Kata Sandi"
+    },
+    {
+      "name": "chatroom_info_persistent",
+      "value": "Gigih"
+    },
+    {
+      "name": "chatroom_info_max_history_fetch",
+      "value": "Jumlah Riwayat Maks"
+    },
+    {
+      "name": "chatroom_info_contact_jid",
+      "value": "Hubungi Jid"
+    },
+    {
+      "name": "chatroom_info_subject_modifiable",
+      "value": "Subyek Dapat Dimodifikasi"
+    },
+    {
+      "name": "chatroom_info_language",
+      "value": "Bahasa"
+    },
+    {
+      "name": "chatroom_info_ldap_group",
+      "value": "Grup LDAP"
+    },
+    {
+      "name": "chatroom_create",
+      "value": "Bikin ruang obrolan…"
+    },
+    {
+      "name": "chatroom_create_error",
+      "value": "Gagal membuat ruang obrolan:\n%1$s."
+    },
+    {
+      "name": "chatroom_create_join",
+      "value": "Buah / Bergabung ruang obrolan"
+    },
+    {
+      "name": "chatroom_create_wizard",
+      "value": "Bikin wizard ruang chat"
+    },
+    {
+      "name": "chatroom_destroy",
+      "value": "Hancurkan chatRoom ini"
+    },
+    {
+      "name": "chatroom_destroy_exception",
+      "value": "Terjadi kesalahan saat menghancurkan ruang obrolan:\n%1$s"
+    },
+    {
+      "name": "chatroom_destroy_error",
+      "value": "Gagal menghapus chatRoom di server:\n'%1$s'\n%2$s\n\nLanjutkan untuk menghapus chatRoom lokal."
+    },
+    {
+      "name": "chatroom_destroy_message",
+      "value": "Obrolan grup ini telah dihancurkan!\nAlasan: %1$s"
+    },
+    {
+      "name": "chatroom_destroy_note",
+      "value": "Untuk memberi tahu peserta lain, silakan masukkan alasan dan tempat chatRoom alternatif untuk bergabung."
+    },
+    {
+      "name": "chatroom_destroy_prompt",
+      "value": "Pemilik akun: %1$s.\nApakah Anda yakin ingin menghancurkan\n'%2$s'\ndan semua riwayat obrolannya?"
+    },
+    {
+      "name": "chatroom_destroy_reason",
+      "value": "obrolan grup tidak aktif"
+    },
+    {
+      "name": "chatroom_destroy_successful",
+      "value": "'%1$s' telah dihapus Berhasil!"
+    },
+    {
+      "name": "chatroom_destroy_title",
+      "value": "Hancurkan chatRoom"
+    },
+    {
+      "name": "chatroom_join_failed",
+      "value": "Gagal bergabung ke kamar dengan nama panggilan: %1$s\n%2$s."
+    },
+    {
+      "name": "chatroom_join_failed_reason",
+      "value": "Gagal bergabung ke ruang obrolan %1$s:\n%2$s"
+    },
+    {
+      "name": "chatroom_join_password",
+      "value": "Ruang obrolan meminta kata sandi."
+    },
+    {
+      "name": "chatroom_join_failed_registration",
+      "value": "Ruang obrolan membutuhkan registrasi."
+    },
+    {
+      "name": "chatroom_join_title",
+      "value": "Bergabung dengan ruang obrolan"
+    },
+    {
+      "name": "chatroom_join_name",
+      "value": "Isikan nama ruang obrolan yang Anda ingin bergabung."
+    },
+    {
+      "name": "chatroom_join_subject_null",
+      "value": "Silakan isikan subjek ruang obrolan yang Anda igin bergabung."
+    },
+    {
+      "name": "chatroom_join_wizard",
+      "value": "Bergabung dengan wizard ruang chat"
+    },
+    {
+      "name": "cr_member_start_conversation",
+      "value": "Mulai percakapan"
+    },
+    {
+      "name": "cr_member_grant_owner_privilege",
+      "value": "Berikan hak istimewa pemilik"
+    },
+    {
+      "name": "cr_member_revoke_owner_privilege",
+      "value": "Cabut hak istimewa pemilik"
+    },
+    {
+      "name": "cr_member_kick",
+      "value": "Hapus dari obrolan grup"
+    },
+    {
+      "name": "invitation_message",
+      "value": "Pesan undangan:"
+    },
+    {
+      "name": "invitation_received",
+      "value": "Undangan diterima"
+    },
+    {
+      "name": "invitation_received_message",
+      "value": "%1$s telah mengundang Anda untuk bergabung dengan ruang obrolan %2$s. Anda dapat menerima, menolak, atau mengabaikan undangan ini."
+    },
+    {
+      "name": "invitation_rejected",
+      "value": "%1$s telah menolak undangan Anda untuk bergabung dengan ruang obrolan. Alasan: %2$s."
+    },
+    {
+      "name": "invite",
+      "value": "Undang"
+    },
+    {
+      "name": "invite_contact_message",
+      "value": "Pilih nama-nama kontak yang ingin Anda tambahkan ke percakapan ini dan kemudian klik Undang."
+    },
+    {
+      "name": "invite_contact_to_call",
+      "value": "Undang kontak untuk memanggil"
+    },
+    {
+      "name": "invite_contact_to_chat",
+      "value": "Undang kontak ke obrolan"
+    },
+    {
+      "name": "invite_contact_to_videoBridge",
+      "value": "Undang kontak (videobridge)"
+    },
+    {
+      "name": "invite_group_chat",
+      "value": "Undangan ngobrol berkelompok"
+    },
+    {
+      "name": "invite_reason",
+      "value": "Undang Alasan:"
+    },
+    {
+      "name": "invite_reject_reason",
+      "value": "Alasan (penolakan):"
+    },
+    {
+      "name": "invite_reject_busy",
+      "value": "Sibuk"
+    },
+    {
+      "name": "ignore",
+      "value": "Abaikan"
+    },
+    {
+      "name": "info",
+      "value": "Info"
+    },
+    {
+      "name": "address",
+      "value": "Alamat"
+    },
+    {
+      "name": "city",
+      "value": "Kota"
+    },
+    {
+      "name": "country",
+      "value": "Negara"
+    },
+    {
+      "name": "email",
+      "value": "Email"
+    },
+    {
+      "name": "emails",
+      "value": "Email"
+    },
+    {
+      "name": "fax",
+      "value": "Faks"
+    },
+    {
+      "name": "home",
+      "value": "Beranda"
+    },
+    {
+      "name": "home_page",
+      "value": "Beranda"
+    },
+    {
+      "name": "invalid_address",
+      "value": "Alamat tidak valid: %1$s"
+    },
+    {
+      "name": "join",
+      "value": "Bergabunglah dengan"
+    },
+    {
+      "name": "join_as",
+      "value": "Bergabung sebagai"
+    },
+    {
+      "name": "join_existing_video_conference",
+      "value": "Bergabung dengan konferensi video yang ada"
+    },
+    {
+      "name": "join_video",
+      "value": "Bergabung dengan video"
+    },
+    {
+      "name": "job_title",
+      "value": "Judul pekerjaan"
+    },
+    {
+      "name": "join_automatically",
+      "value": "Gabung otomatis"
+    },
+    {
+      "name": "do_not_join_automatically",
+      "value": "Jangan bergabung secara otomatis"
+    },
+    {
+      "name": "kick",
+      "value": "Tendang"
+    },
+    {
+      "name": "kick_failed",
+      "value": "Jurus gagal"
+    },
+    {
+      "name": "kick_failed_general_error",
+      "value": "Gagal menendang %1$s. Terjadi kesalahan server umum."
+    },
+    {
+      "name": "kick_failed_not_allowed",
+      "value": "Gagal menendang %1$s. Pemilik dan administrator ruangan tidak dapat ditendang."
+    },
+    {
+      "name": "kick_failed_not_enough_permission",
+      "value": "Gagal menendang %1$s. Anda tidak memiliki cukup hak untuk melakukannya."
+    },
+    {
+      "name": "last",
+      "value": "Terakhir"
+    },
+    {
+      "name": "last_message_correction",
+      "value": "Koreksi pesan terakhir"
+    },
+    {
+      "name": "last_name",
+      "value": "Nama belakang"
+    },
+    {
+      "name": "last_seen",
+      "value": "Harini: %s"
+    },
+    {
+      "name": "leave",
+      "value": "Tinggalkan"
+    },
+    {
+      "name": "leave_chat_room",
+      "value": "Tinggalkan chatRoom"
+    },
+    {
+      "name": "locally_on_hold",
+      "value": "Lokal ditahan"
+    },
+    {
+      "name": "login_credential",
+      "value": "Login Kredensial Pengguna"
+    },
+    {
+      "name": "login_failed",
+      "value": "Login gagal"
+    },
+    {
+      "name": "logoff_failed",
+      "value": "Terjadi kesalahan saat melakukan logoff dengan akun berikut: Nama pengguna: %1$s, Nama server: %2$s."
+    },
+    {
+      "name": "mobile",
+      "value": "Seluler"
+    },
+    {
+      "name": "move",
+      "value": "Pindahkan"
+    },
+    {
+      "name": "move_contact",
+      "value": "Pindahkan Kontak"
+    },
+    {
+      "name": "move_contact_error",
+      "value": "Kontak tidak dapat dipindahkan"
+    },
+    {
+      "name": "move_contact_message",
+      "value": "Pilih kontak atau grup, di mana Anda ingin memindahkan kontak yang dipilih."
+    },
+    {
+      "name": "move_contact_failed",
+      "value": "Kontak yang Anda pilih sama dengan\n sumbernya. Silakan pilih kontak lain!"
+    },
+    {
+      "name": "move_contact_prompt",
+      "value": "Anda yakin ingin memindahkan %1$s ke %2$s?"
+    },
+    {
+      "name": "move_contact_to_group",
+      "value": "Pindah ke grup"
+    },
+    {
+      "name": "nickname",
+      "value": "Nama Nick"
+    },
+    {
+      "name": "chatroom_open_automatically",
+      "value": "Buka ruangan ini secara otomatis ketika"
+    },
+    {
+      "name": "personal",
+      "value": "Pribadi"
+    },
+    {
+      "name": "message_delivery_error",
+      "value": "Gagal mengirim pesan."
+    },
+    {
+      "name": "message_delivery_failed",
+      "value": "Pesan di atas tidak dapat dikirim"
+    },
+    {
+      "name": "message_delivery_internal_error",
+      "value": "Terjadi kesalahan internal. Ini kemungkinan besar bug. Silakan laporkan melalui log debug."
+    },
+    {
+      "name": "message_delivery_not_supported",
+      "value": "Protokol yang Anda gunakan tidak mendukung pesan offline.\nAnda dapat mencoba menjangkau %1$s melalui protokol lain atau menunggu hingga dia online."
+    },
+    {
+      "name": "message_delivery_unknown_error",
+      "value": "Kesalahan tidak dikenal telah terjadi saat mengirim pesan Anda."
+    },
+    {
+      "name": "message_delivery_unsupported_operation",
+      "value": "Operasi tidak didukung."
+    },
+    {
+      "name": "message_delivery_network_error",
+      "value": "Terjadi masalah jaringan. Silakan periksa konfigurasi jaringan Anda dan coba lagi."
+    },
+    {
+      "name": "message_received",
+      "value": "%1$s menulis"
+    },
+    {
+      "name": "message_delivery_not_registered",
+      "value": "Anda harus login terlebih dahulu untuk mengirim pesan."
+    },
+    {
+      "name": "multiple_login",
+      "value": "Beberapa instans masuk tidak diizinkan. Akun berikut: Nama pengguna: %1$s, Nama server: %2$s telah diputuskan."
+    },
+    {
+      "name": "mutually_on_hole",
+      "value": "Saling Menerus Saat"
+    },
+    {
+      "name": "add_new_account",
+      "value": "Tambah akun baru"
+    },
+    {
+      "name": "network_assert_error",
+      "value": "Penyedia Jabber harus masuk sebelum dapat berkomunikasi."
+    },
+    {
+      "name": "no",
+      "value": "Tidak ada"
+    },
+    {
+      "name": "no_online_telephony_account",
+      "value": "Setidaknya satu akun telepon online diperlukan untuk melakukan panggilan. Silakan masuk ke salah satu akun telepon Anda dan coba lagi."
+    },
+    {
+      "name": "not_authorized",
+      "value": "Tidak diotorisasi"
+    },
+    {
+      "name": "not_authorized_hint",
+      "value": "Anda tidak berwenang mengakses server. Periksa pengaturan akun, kata sandi atau aktifkan Registrasi IB dan coba lagi:\n%s\""
+    },
+    {
+      "name": "off",
+      "value": "Tidak aktif"
+    },
+    {
+      "name": "offline",
+      "value": "Offline"
+    },
+    {
+      "name": "ok",
+      "value": "OK"
+    },
+    {
+      "name": "on",
+      "value": "Aktif"
+    },
+    {
+      "name": "online",
+      "value": "Online"
+    },
+    {
+      "name": "open",
+      "value": "Buka"
+    },
+    {
+      "name": "open_file_vai_image",
+      "value": "Klik untuk membuka file."
+    },
+    {
+      "name": "folder",
+      "value": "Folder"
+    },
+    {
+      "name": "other",
+      "value": "Lainnya"
+    },
+    {
+      "name": "organization",
+      "value": "Organisasi"
+    },
+    {
+      "name": "phone",
+      "value": "Telepon"
+    },
+    {
+      "name": "phones",
+      "value": "Ponsel"
+    },
+    {
+      "name": "play",
+      "value": "Main"
+    },
+    {
+      "name": "postal_code",
+      "value": "Kode Pos"
+    },
+    {
+      "name": "rename",
+      "value": "Nama baru"
+    },
+    {
+      "name": "registration_required",
+      "value": "Kesalahan dalam pendaftaran akun di server:\n%s\""
+    },
+    {
+      "name": "save",
+      "value": "Simpan"
+    },
+    {
+      "name": "show_stack_trace",
+      "value": "Tampilkan tumpukan Jejak"
+    },
+    {
+      "name": "street",
+      "value": "Jalan"
+    },
+    {
+      "name": "submit",
+      "value": "Kirim"
+    },
+    {
+      "name": "user_login",
+      "value": "Silahkan masuk"
+    },
+    {
+      "name": "work",
+      "value": "Bekerja"
+    },
+    {
+      "name": "xmpp_connection_error",
+      "value": "Menemukan masalah selama koneksi XMPP:\n%s\""
+    },
+    {
+      "name": "btn_video_tooltip",
+      "value": "Alihkan video"
+    },
+    {
+      "name": "mic_control_title",
+      "value": "Tingkat penguatan mikrofon"
+    },
+    {
+      "name": "btn_mute_tooltip",
+      "value": "Sesuaikan suara mikrofon"
+    },
+    {
+      "name": "presence_not_supported",
+      "value": "Keberadaan tidak didukung oleh %1$s"
+    },
+    {
+      "name": "proactive_notification",
+      "value": "sedang menulis pesan (%1$s)"
+    },
+    {
+      "name": "recent_messages",
+      "value": "Percakapan terbaru"
+    },
+    {
+      "name": "received_",
+      "value": "%1$s diterima"
+    },
+    {
+      "name": "referred",
+      "value": "Disebutkan"
+    },
+    {
+      "name": "restoring_",
+      "value": "Memulihkan…"
+    },
+    {
+      "name": "decline",
+      "value": "Tampik"
+    },
+    {
+      "name": "remove",
+      "value": "Hapus"
+    },
+    {
+      "name": "remove_account",
+      "value": "Hapus akun"
+    },
+    {
+      "name": "remove_account_prompt",
+      "value": "Anda yakin ingin menghapus akun:\n%1$s?"
+    },
+    {
+      "name": "remove_contact",
+      "value": "Hapus kontak"
+    },
+    {
+      "name": "remove_contact_prompt",
+      "value": "Pemilik kontak: %1$s.\n\nApakah Anda yakin ingin menghapus kontak:'%2$s'dari daftar kontak Anda?"
+    },
+    {
+      "name": "remove_contact_not_connected",
+      "value": "Anda harus terhubung untuk menghapus kontak ini. Harap masuk dan coba lagi."
+    },
+    {
+      "name": "remove_group",
+      "value": "Hapus grup"
+    },
+    {
+      "name": "remove_group_prompt",
+      "value": "Anda yakin ingin menghapus grup:'%1$s'dan semua kontak terkait dari daftar kontak Anda?"
+    },
+    {
+      "name": "remotely_on_hold",
+      "value": "Ditangguhkan secara remote"
+    },
+    {
+      "name": "rename_contact",
+      "value": "Ubah Nama Kontak"
+    },
+    {
+      "name": "ringing",
+      "value": "Dering"
+    },
+    {
+      "name": "request",
+      "value": "Permintaan"
+    },
+    {
+      "name": "request_authorization",
+      "value": "Minta otorisasi"
+    },
+    {
+      "name": "request_authorization_prompt",
+      "value": "Pemilik kontak: %1$s\n\nMemerlukan otorisasi dari'%2$s'untuk menambahkan dia ke daftar kontak Anda. Harap masukkan permintaan Anda lagi."
+    },
+    {
+      "name": "retry",
+      "value": "Coba lagi"
+    },
+    {
+      "name": "search",
+      "value": "Cari"
+    },
+    {
+      "name": "search_contact",
+      "value": "Cari kontak"
+    },
+    {
+      "name": "phonebook",
+      "value": "Buku telepon"
+    },
+    {
+      "name": "security",
+      "value": "Keamanan"
+    },
+    {
+      "name": "select_account_owner",
+      "value": "Pilih Pemilik Akun"
+    },
+    {
+      "name": "assign_group",
+      "value": "Kontak Ditugaskan Grup:"
+    },
+    {
+      "name": "no_group",
+      "value": "Tidak ada grup"
+    },
+    {
+      "name": "send_log",
+      "value": "Laporkan Bug"
+    },
+    {
+      "name": "send_log_prompt",
+      "value": "aTalk baru saja pulih setelah kecelakaan serius. Apakah Anda ingin melaporkan bug ke devepers?"
+    },
+    {
+      "name": "send_log_subject",
+      "value": "laporan bug aTalk"
+    },
+    {
+      "name": "send_log_title",
+      "value": "laporan bug aTalk melalui email"
+    },
+    {
+      "name": "send_log_info",
+      "value": "Info di bawah ini dapat membantu pengembang memperbaiki masalah:\n\n\n1. Apa hal terakhir yang Anda lakukan sebelum masalah terjadi?\n\n\n\n2. Apa masalah yang Anda lihat, sertakan snapshot tampilan jika tersedia?\n\n\n\n3. Bisakah Anda atau bagaimana mereproduksi masalah?"
+    },
+    {
+      "name": "send_message",
+      "value": "Kirim pesan"
+    },
+    {
+      "name": "send_message_failed",
+      "value": "Gagal mengirim pesan: %1$s"
+    },
+    {
+      "name": "send_message_not_supported",
+      "value": "Badan yang Anda pilih tidak mendukung perpesanan obrolan instan: %1$s"
+    },
+    {
+      "name": "send_message_as_sms",
+      "value": "Kirim sebagai SMS"
+    },
+    {
+      "name": "send_message_private",
+      "value": "Kirim pesan pribadi"
+    },
+    {
+      "name": "send_via",
+      "value": "Kirim via"
+    },
+    {
+      "name": "sent",
+      "value": "mengirim"
+    },
+    {
+      "name": "server_chatroom",
+      "value": "Ruang Obrolan Server"
+    },
+    {
+      "name": "shutting_down",
+      "value": "mematikan…"
+    },
+    {
+      "name": "status",
+      "value": "Status"
+    },
+    {
+      "name": "type_your_request_reason",
+      "value": "Ketikkan alasan permintaan Anda"
+    },
+    {
+      "name": "unknown",
+      "value": "Tidak diketahui"
+    },
+    {
+      "name": "unknown_user",
+      "value": "Pengguna tidak dikenal"
+    },
+    {
+      "name": "unknown_state",
+      "value": "Kondisi tidak dikenal"
+    },
+    {
+      "name": "url_example",
+      "value": "https://www.example.com"
+    },
+    {
+      "name": "volume_control_title",
+      "value": "Tingkat penguatan volume output"
+    },
+    {
+      "name": "volume_control_tooltip",
+      "value": "Menyesuaikan volume"
+    },
+    {
+      "name": "volume_gain_level",
+      "value": "Level penguatan volume: %1$s %%"
+    },
+    {
+      "name": "waiting_for_authorization",
+      "value": "Menunggu otorisasi"
+    },
+    {
+      "name": "warning",
+      "value": "Peringatan"
+    },
+    {
+      "name": "call_in_progress_warning",
+      "value": "Tidak dapat melakukan ini selama panggilan"
+    },
+    {
+      "name": "yes",
+      "value": "Ya"
+    },
+    {
+      "name": "account_create_failed",
+      "value": "Gagal membuat akun baru karena kesalahan: %1$s"
+    },
+    {
+      "name": "create_account",
+      "value": "Buat akun"
+    },
+    {
+      "name": "general_error",
+      "value": "Kesalahan umum"
+    },
+    {
+      "name": "network_failure",
+      "value": "Kegagalan jaringan"
+    },
+    {
+      "name": "select_avatar",
+      "value": "Pilih gambar avatar baru"
+    },
+    {
+      "name": "set_status",
+      "value": "Ubah status"
+    },
+    {
+      "name": "sign_in",
+      "value": "Akaun login"
+    },
+    {
+      "name": "sign_out",
+      "value": "Akaun logoff"
+    },
+    {
+      "name": "server_info_not_complete",
+      "value": "Silakan lengkapi bagian server dari akun Anda."
+    },
+    {
+      "name": "speed_info",
+      "value": "Kecepatan: %1$s/dtk ( %2$s)"
+    },
+    {
+      "name": "status_change_general_error",
+      "value": "Gagal mengubah status untuk akun: Nama pengguna: %1$s, Nama server: %2$s, karena kesalahan umum."
+    },
+    {
+      "name": "status_change_message",
+      "value": "telah menjadi %1$s"
+    },
+    {
+      "name": "status_change_network_failure",
+      "value": "Gagal mengubah status untuk akun: Nama pengguna: %1$s, Nama server: %2$s, karena masalah jaringan."
+    },
+    {
+      "name": "security_error",
+      "value": "Kesalahan keamanan"
+    },
+    {
+      "name": "security_info",
+      "value": "Informasi keamanan"
+    },
+    {
+      "name": "security_warning",
+      "value": "Peringatan keamanan"
+    },
+    {
+      "name": "username_password_null",
+      "value": "Silakan isi nama pengguna atau/dan kata sandi yang tepat."
+    },
+    {
+      "name": "username_change_warning",
+      "value": "Peringatan: Mengubah nama pengguna akun menjadi '%1$s' juga akan membersihkan pesan %2$s untuk akun yang ada '%3$s'. Memproses?"
+    },
+    {
+      "name": "user_exist_error",
+      "value": "Pengguna ini sudah ada di jaringan yang dipilih. Silakan pilih pengguna atau jaringan lain."
+    },
+    {
+      "name": "jan",
+      "value": "Jan"
+    },
+    {
+      "name": "feb",
+      "value": "Feb"
+    },
+    {
+      "name": "mar",
+      "value": "Mar"
+    },
+    {
+      "name": "apr",
+      "value": "Apr"
+    },
+    {
+      "name": "may",
+      "value": "Mei"
+    },
+    {
+      "name": "jun",
+      "value": "Jun"
+    },
+    {
+      "name": "jul",
+      "value": "Jul"
+    },
+    {
+      "name": "aug",
+      "value": "Aug"
+    },
+    {
+      "name": "sep",
+      "value": "Sep"
+    },
+    {
+      "name": "oct",
+      "value": "Okt"
+    },
+    {
+      "name": "nov",
+      "value": "Nov"
+    },
+    {
+      "name": "dec",
+      "value": "Des"
+    },
+    {
+      "name": "service_protocol_ICE_FAILED",
+      "value": "Tidak dapat membuat koneksi (ICE gagal dan tidak ditemukan relai)"
+    },
+    {
+      "name": "callinfo_audio_info",
+      "value": "Informasi audio"
+    },
+    {
+      "name": "callinfo_bandwidth",
+      "value": "Bandwidth:"
+    },
+    {
+      "name": "callinfo_call_duration",
+      "value": "Durasi panggilan:"
+    },
+    {
+      "name": "callinfo_call_identity",
+      "value": "Identitas:"
+    },
+    {
+      "name": "callinfo_call_information",
+      "value": "Informasi panggilan"
+    },
+    {
+      "name": "callinfo_call_transport",
+      "value": "Transportasi panggilan sinyal:"
+    },
+    {
+      "name": "callinfo_codec",
+      "value": "Codec/Frekuensi:"
+    },
+    {
+      "name": "callinfo_conference_focus",
+      "value": "Fokus konferensi:"
+    },
+    {
+      "name": "callinfo_default_encrypted",
+      "value": "Enkripsi diaktifkan:"
+    },
+    {
+      "name": "callinfo_jitter",
+      "value": "Jitter:"
+    },
+    {
+      "name": "callinfo_key_exchange_protocol",
+      "value": "Protokol pertukaran kunci"
+    },
+    {
+      "name": "callinfo_local_ip",
+      "value": "IP/Port Lokal:"
+    },
+    {
+      "name": "callinfo_loss_rate",
+      "value": "Tingkat kehilangan:"
+    },
+    {
+      "name": "callinfo_media_stream_rip",
+      "value": "RTP:"
+    },
+    {
+      "name": "callinfo_media_srtp",
+      "value": "SRTP:"
+    },
+    {
+      "name": "callinfo_media_stream_transport_protocol",
+      "value": "Protokol transport stream media:"
+    },
+    {
+      "name": "callinfo_na",
+      "value": "N.A."
+    },
+    {
+      "name": "callinfo_peer_count",
+      "value": "Jumlah peserta:"
+    },
+    {
+      "name": "callinfo_remote_ip",
+      "value": "IP/Port Jarak Jauh:"
+    },
+    {
+      "name": "callinfo_rtt",
+      "value": "RTT:"
+    },
+    {
+      "name": "callinfo_details",
+      "value": "Detail Info Panggilan"
+    },
+    {
+      "name": "callinfo_tls_cipher_suite",
+      "value": "Cipher suite TLS:"
+    },
+    {
+      "name": "callinfo_tls_certificate_content",
+      "value": "Isi sertifikat server TLS ditampilkan di bawah ini."
+    },
+    {
+      "name": "callinfo_tls_protocol",
+      "value": "protokol TLS:"
+    },
+    {
+      "name": "callinfo_view_certificate",
+      "value": "Pandangan sertifikat"
+    },
+    {
+      "name": "callinfo_video_size",
+      "value": "Ukuran video"
+    },
+    {
+      "name": "callinfo_video_info",
+      "value": "Info video"
+    },
+    {
+      "name": "callinfo_adaptive_jitter_buffer",
+      "value": "Adaptive jitter buffer:"
+    },
+    {
+      "name": "callinfo_decoded_with_fec",
+      "value": "Paket di-decode dengan FEC:"
+    },
+    {
+      "name": "callinfo_discarded_percent",
+      "value": "Paket saat ini dibuang:"
+    },
+    {
+      "name": "callinfo_discarded_total",
+      "value": "Jumlah paket yang dibuang:"
+    },
+    {
+      "name": "callinfo_harvesting_data",
+      "value": "%1$d ms (untuk %2$d panen)"
+    },
+    {
+      "name": "callinfo_harvesting_time",
+      "value": "Waktu pemanenan:"
+    },
+    {
+      "name": "callinfo_candidate_extended_type",
+      "value": "Jenis diperpanjang kandidat ICE:"
+    },
+    {
+      "name": "callinfo_localhost_address",
+      "value": "IP host lokal/Port:"
+    },
+    {
+      "name": "callinfo_ice_local_reflexive_address",
+      "value": "IP/Port refleksif Lokal:"
+    },
+    {
+      "name": "callinfo_ice_local_relayed_address",
+      "value": "IP/Port relay lokal:"
+    },
+    {
+      "name": "callinfo_ice_remote_host_address",
+      "value": "IP/Port host jarak jauh:"
+    },
+    {
+      "name": "callinfo_ice_remote_reflexive_address",
+      "value": "Remote refleksif IP/Port:"
+    },
+    {
+      "name": "callinfo_ice_remote_relayed_address",
+      "value": "IP/Port yang diteruskan jarak jauh:"
+    },
+    {
+      "name": "callinfo_ice_state",
+      "value": "Kondisi Proses ICE:"
+    },
+    {
+      "name": "callinfo_ice_state_completed",
+      "value": "Selesai"
+    },
+    {
+      "name": "callinfo_ice_state_failed",
+      "value": "Gagal"
+    },
+    {
+      "name": "callinfo_ice_state_running",
+      "value": "Pemeriksaan konektivitas"
+    },
+    {
+      "name": "callinfo_ice_state_waiting",
+      "value": "Kumpulkan kandidat"
+    },
+    {
+      "name": "callinfo_ice_state_jitter_buffer_delay",
+      "value": "Jitter buffer:"
+    },
+    {
+      "name": "callinfo_total_harvesting_time",
+      "value": "Total waktu panen:"
+    },
+    {
+      "name": "trust_always",
+      "value": "Selalu percaya sertifikat ini"
+    },
+    {
+      "name": "cert_dialog_title",
+      "value": "Verifikasi Sertifikat"
+    },
+    {
+      "name": "cert_dialog_description",
+      "value": "<html>%1$s tidak dapat memverifikasi identitas server saat terhubung ke<br/><b>%2$s</b><br/><br/>\nSertifikat tidak dipercaya (sertifikat yang ditandatangani sendiri), yang berarti bahwa server's\nidentitas tidak dapat diverifikasi secara otomatis.<br/><br/>\nLanjutkan dengan koneksi hanya untuk contoh ini?<br/>\nUntuk opsi dan info lebih lanjut, klik \"Tampilkan Sertifikat\".</html>"
+    },
+    {
+      "name": "cert_dialog_description_no_host",
+      "value": "<html>%1$s tidak dapat memverifikasi\nidentitas sertifikat server'.<br/><br/>\nSertifikat tidak dipercaya (sertifikat yang ditandatangani sendiri), yang berarti bahwa server's\nidentitas tidak dapat diverifikasi secara otomatis.<br/><br/>\nLanjutkan dengan koneksi hanya untuk contoh ini?<br/>\nUntuk opsi dan info lebih lanjut, klik \"Tampilkan Sertifikat\".</html>"
+    },
+    {
+      "name": "cert_dialog_client_description",
+      "value": "<html>%1$s tidak dapat memverifikasi\nidentitas klien yang terhubung.<br/><br/>\nSertifikat tidak dipercaya (sertifikat yang ditandatangani sendiri), yang berarti bahwa klien's\nidentitas tidak dapat diverifikasi secara otomatis.<br/><br/>\nLanjutkan dengan koneksi hanya untuk contoh ini?<br/>\nUntuk opsi dan info lebih lanjut, klik \"Tampilkan Sertifikat\".</html>"
+    },
+    {
+      "name": "cert_dialog_peer_description",
+      "value": "<html>%1$s tidak dapat memverifikasi\nidentitas rekan %2$s.<br/><br/>\nSertifikat tidak dipercaya (sertifikat yang ditandatangani sendiri), yang berarti bahwa rekan's\nidentitas tidak dapat diverifikasi secara otomatis.<br/><br/>\nLanjutkan dengan koneksi hanya untuk contoh ini?<br/>\nUntuk opsi dan info lebih lanjut, klik \"Tampilkan Sertifikat\".</html>"
+    },
+    {
+      "name": "proceed",
+      "value": "Lanjutkan"
+    },
+    {
+      "name": "cert_info_issued_to",
+      "value": "<b>Dikeluarkan ke</b>"
+    },
+    {
+      "name": "cert_info_chain",
+      "value": "Rantai Sertifikat:"
+    },
+    {
+      "name": "cert_info_cn",
+      "value": "Nama Umum:"
+    },
+    {
+      "name": "cert_info_O",
+      "value": "Organisasi:"
+    },
+    {
+      "name": "cert_info_C",
+      "value": "Nama Negara:"
+    },
+    {
+      "name": "cert_info_ST",
+      "value": "Nama Negara atau Provinsi:"
+    },
+    {
+      "name": "cert_info_L",
+      "value": "Nama Lokalitas:"
+    },
+    {
+      "name": "cert_info_issued_by",
+      "value": "<b>Dikeluarkan Oleh</b>"
+    },
+    {
+      "name": "cert_info_OU",
+      "value": "Unit Organisasi:"
+    },
+    {
+      "name": "cert_info_validity",
+      "value": "<b>Validitas</b>"
+    },
+    {
+      "name": "cert_info_issued_on",
+      "value": "Diterbitkan Pada:"
+    },
+    {
+      "name": "cert_info_expires_on",
+      "value": "Kedaluwarsa pada:"
+    },
+    {
+      "name": "cert_info_fingerprints",
+      "value": "<b>Sidik Jari</b>"
+    },
+    {
+      "name": "cert_info_details",
+      "value": "<b>Info Sertifikat</b>"
+    },
+    {
+      "name": "cert_info_SN",
+      "value": "Nomor Seri:"
+    },
+    {
+      "name": "cert_info_version",
+      "value": "Versi:"
+    },
+    {
+      "name": "cert_info_sign_algo",
+      "value": "Algoritme Tanda Tangan:"
+    },
+    {
+      "name": "cert_info_pubkey_info",
+      "value": "<b>Info Tombol Publik</b>"
+    },
+    {
+      "name": "cert_info_algo",
+      "value": "Algoritma:"
+    },
+    {
+      "name": "cert_info_pubkey",
+      "value": "Kunci Publik:"
+    },
+    {
+      "name": "cert_info_key_bytes",
+      "value": "%1$s byte: %2$s"
+    },
+    {
+      "name": "cert_info_key_bits",
+      "value": "%1$s bit"
+    },
+    {
+      "name": "cert_info_exponent",
+      "value": "Eksponen:"
+    },
+    {
+      "name": "cert_info_key_size",
+      "value": "Ukuran Kunci:"
+    },
+    {
+      "name": "cert_info_signature",
+      "value": "Tanda Tangan:"
+    },
+    {
+      "name": "service_gui_CONTINUE",
+      "value": "Lanjutkan"
+    },
+    {
+      "name": "certificate_show",
+      "value": "Tampilkan Sertifikat"
+    },
+    {
+      "name": "certificate_hide",
+      "value": "Sembunyikan Sertifikat"
+    },
+    {
+      "name": "unsaved_changes",
+      "value": "Anda memiliki perubahan yang belum disimpan. Simpan atau Batal dan keluar"
+    },
+    {
+      "name": "unsaved_changes_title",
+      "value": "Perubahan Tidak Tersimpan"
+    },
+    {
+      "name": "please_wait",
+      "value": "Harap tunggu…"
+    },
+    {
+      "name": "server_info_fetching",
+      "value": "Mengambil server yang diiklankan fitur/info…"
+    },
+    {
+      "name": "security_audio_not_secure",
+      "value": "Audio tidak aman"
+    },
+    {
+      "name": "security_call_not_secured_tooltip",
+      "value": "Panggilan tidak aman."
+    },
+    {
+      "name": "security_call_secured_compare_tooltip",
+      "value": "Tekan di sini untuk membandingkan rahasia keamanan dengan pasangan Anda."
+    },
+    {
+      "name": "security_call_secured_tooltip",
+      "value": "Panggil aman. Untuk informasi lebih lanjut, tekan di sini."
+    },
+    {
+      "name": "security_cipher",
+      "value": "Cipher: %1$s"
+    },
+    {
+      "name": "security_clear",
+      "value": "Bersihkan"
+    },
+    {
+      "name": "security_compare_with_partner_short",
+      "value": "Bandingkan dengan mitra:"
+    },
+    {
+      "name": "confirm",
+      "value": "Konfirmasikan"
+    },
+    {
+      "name": "security_encryption_required",
+      "value": "Enkripsi diperlukan!"
+    },
+    {
+      "name": "security_no_video",
+      "value": "Tidak ada video"
+    },
+    {
+      "name": "security_secure_audio",
+      "value": "Audio aman"
+    },
+    {
+      "name": "security_secure_video",
+      "value": "Video aman"
+    },
+    {
+      "name": "security_alert",
+      "value": "Mencoba untuk mengamankan panggilan. Akan terputus di"
+    },
+    {
+      "name": "security_string_compared",
+      "value": "String dibandingkan:"
+    },
+    {
+      "name": "security_verify_toast",
+      "value": "Keamanan panggilan diaktifkan! Ketuk untuk membandingkan string keamanan sekarang atau gunakan menu nanti."
+    },
+    {
+      "name": "security_video_not_secured",
+      "value": "Video tidak aman"
+    },
+    {
+      "name": "avatar_chose_icon",
+      "value": "Pilih gambar"
+    },
+    {
+      "name": "avatar_remove_icon",
+      "value": "Hapus gambar saat ini"
+    },
+    {
+      "name": "update_download",
+      "value": "Unduh"
+    },
+    {
+      "name": "update_install",
+      "value": "Instal"
+    },
+    {
+      "name": "update_reInstall",
+      "value": "Instal ulang"
+    },
+    {
+      "name": "update_download_completed",
+      "value": "Unduhan selesai"
+    },
+    {
+      "name": "update_download_ready",
+      "value": "Pembaruan (%1$s) diunduh dan siap untuk dipasang."
+    },
+    {
+      "name": "update_in_progress",
+      "value": "Sedang berlangsung"
+    },
+    {
+      "name": "update_download_in_progress",
+      "value": "Mengunduh pembaruan sedang berlangsung."
+    },
+    {
+      "name": "update_update_available",
+      "value": "Versi baru yang dirilis (%1$s-%2$s) untuk %3$s telah tersedia. Versi terpasang saat ini: (%4$s-%5$s)."
+    },
+    {
+      "name": "update_up_to_date",
+      "value": "Versi terinstal yang saat ini: (%1$s-%2$s) adalah yang terbaru. Versi online yang tersedia: (%3$s-%4$s)."
+    },
+    {
+      "name": "update_new_version_none",
+      "value": "Tidak ada versi baru"
+    },
+    {
+      "name": "update_install_update",
+      "value": "Instal Pembaruan"
+    },
+    {
+      "name": "update_download_failed",
+      "value": "Gagal mengunduh pembaruan baru!"
+    },
+    {
+      "name": "update_check_update",
+      "value": "Periksa pembaruan"
+    },
+    {
+      "name": "update_version_invalid",
+      "value": "apk yang diunduh tidak cocok; sebenarnya: %1$s (%2$s)"
+    },
+    {
+      "name": "update_vew_version_available",
+      "value": "Versi perangkat lunak baru ( %1$s) tersedia."
+    },
+    {
+      "name": "accountinfo_about_me",
+      "value": "Tentang Saya:"
+    },
+    {
+      "name": "accountinfo_about_me_hint",
+      "value": "Masukkan deskripsi singkat tentang diri Anda di kotak ini"
+    },
+    {
+      "name": "accountinfo_age",
+      "value": "Umur:"
+    },
+    {
+      "name": "accountinfo_birth_date",
+      "value": "Tanggal Lahir:"
+    },
+    {
+      "name": "accountinfo_change",
+      "value": "Ubah"
+    },
+    {
+      "name": "accountinfo_city",
+      "value": "Kota:"
+    },
+    {
+      "name": "accountinfo_country",
+      "value": "Negara:"
+    },
+    {
+      "name": "accountinfo_discard_change",
+      "value": "Pengguna pergi offline - Dibuang semua perubahan info akun."
+    },
+    {
+      "name": "accountinfo_display_name",
+      "value": "Nama tampilan:"
+    },
+    {
+      "name": "accountinfo_email",
+      "value": "E-mail:"
+    },
+    {
+      "name": "accountinfo_extended",
+      "value": "Diperpanjang"
+    },
+    {
+      "name": "accountinfo_first_name",
+      "value": "Nama Depan:"
+    },
+    {
+      "name": "accountinfo_gender",
+      "value": "Jenis Kelamin:"
+    },
+    {
+      "name": "accountinfo_global_icon",
+      "value": "Gunakan ikon global"
+    },
+    {
+      "name": "accountinfo_job_title",
+      "value": "Judul Pekerjaan:"
+    },
+    {
+      "name": "accountinfo_last_name",
+      "value": "Nama Belakang:"
+    },
+    {
+      "name": "accountinfo_local_icon",
+      "value": "Gunakan ikon ini:"
+    },
+    {
+      "name": "accountinfo_middle_name",
+      "value": "Nama Tengah:"
+    },
+    {
+      "name": "accountinfo_mobile_phone",
+      "value": "Ponsel:"
+    },
+    {
+      "name": "accountinfo_nickname",
+      "value": "Nama panggilan:"
+    },
+    {
+      "name": "accountinfo_not_registered_message",
+      "value": "Akun sedang offline - harus online untuk mengubah info akun."
+    },
+    {
+      "name": "accountinfo_not_supported",
+      "value": "Info akun tidak tersedia."
+    },
+    {
+      "name": "accountinfo_only_message",
+      "value": "Hanya pesan"
+    },
+    {
+      "name": "accountinfo_organisation",
+      "value": "Nama Organisasi:"
+    },
+    {
+      "name": "accountinfo_phone",
+      "value": "Telepon:"
+    },
+    {
+      "name": "accountinfo_postcode",
+      "value": "Kode pos:"
+    },
+    {
+      "name": "accountinfo_region",
+      "value": "Wilayah:"
+    },
+    {
+      "name": "accountinfo_select_account",
+      "value": "Silakan pilih akun:"
+    },
+    {
+      "name": "accountinfo_street",
+      "value": "Alamat Jalan:"
+    },
+    {
+      "name": "accountinfo_title",
+      "value": "Info Akun"
+    },
+    {
+      "name": "accountinfo_user_picture",
+      "value": "Gambar Pengguna"
+    },
+    {
+      "name": "accountinfo_work_email",
+      "value": "E-mail Kerja:"
+    },
+    {
+      "name": "accountinfo_work_phone",
+      "value": "Telepon Kerja:"
+    },
+    {
+      "name": "certconfig_title",
+      "value": "Konfigurasi TLS"
+    },
+    {
+      "name": "certconfig_trusted_store",
+      "value": "Sumber sertifikat akar tepercaya"
+    },
+    {
+      "name": "certconfig_cert_list_title",
+      "value": "Konfigurasi otentikasi klien TLS"
+    },
+    {
+      "name": "certconfig_cert_list_description",
+      "value": "Konfigurasi yang dikelola di sini dapat dipilih sebagai sertifikat TLS klien dalam konfigurasi akun (mis. Untuk mengautentikasi dengan sertifikat terhadap penyedia SIP Anda alih-alih nama pengguna dan kata sandi)."
+    },
+    {
+      "name": "certconfig_alias",
+      "value": "Nama alias di KeyStore"
+    },
+    {
+      "name": "certconfig_keystore_type",
+      "value": "Jenis"
+    },
+    {
+      "name": "certconfig_cert_entry_title",
+      "value": "Сертификат клиента TLS"
+    },
+    {
+      "name": "certconfig_keystore_file",
+      "value": "File"
+    },
+    {
+      "name": "certconfig_keystore_password",
+      "value": "Kata sandi"
+    },
+    {
+      "name": "certconfig_incomplete",
+      "value": "Silakan masukkan nilai untuk semua bidang"
+    },
+    {
+      "name": "certconfig_show_cert_exception",
+      "value": "Tidak dapat menampilkan sertifikat (%1$s)."
+    },
+    {
+      "name": "certconfig_keystore_exception",
+      "value": "Tidak dapat memuat keystore (%1$s)."
+    },
+    {
+      "name": "certconfig_file_type_description",
+      "value": "Certificate stores (PKCS#11 Module, PKCS#12 files, Java ks Keystore)"
+    },
+    {
+      "name": "certconfig_alias_load_exception",
+      "value": "Tidak dapat memperoleh alias dari keystore (%1$s)."
+    },
+    {
+      "name": "certconfig_invalid_keystore_type",
+      "value": "Jenis Keystore yang dipilih tampaknya tidak valid (%1$s)."
+    },
+    {
+      "name": "certconfig_revocation_title",
+      "value": "Opsi pencabutan sertifikat"
+    },
+    {
+      "name": "certconfig_revocation_check_enabled",
+      "value": "Pemeriksaan CRL (Daftar Pencabutan Sertifikat) diaktifkan"
+    },
+    {
+      "name": "certconfig_revocation_ocsp_enabled",
+      "value": "Pemeriksaan OCSP (Online Certificate Status Protocol) diaktifkan"
+    },
+    {
+      "name": "connectioninfo_title",
+      "value": "Info Koneksi"
+    },
+    {
+      "name": "contactinfo_title",
+      "value": "Detail kontak"
+    },
+    {
+      "name": "contactinfo_contact_summary_description",
+      "value": "Ringkasan info kontak untuk"
+    },
+    {
+      "name": "contactinfo_contact_extended_description",
+      "value": "Info kontak yang diperluas untuk"
+    },
+    {
+      "name": "contactinfo_not_specified",
+      "value": "[Tidak ditentukan]"
+    },
+    {
+      "name": "contactinfo_user_pictures",
+      "value": "Gambar pengguna"
+    },
+    {
+      "name": "contactinfo_status_message",
+      "value": "Pesan Status"
+    },
+    {
+      "name": "notificationconfig_event_BusyCall",
+      "value": "Panggilan Sibuk"
+    },
+    {
+      "name": "notificationconfig_event_BusyCall_description",
+      "value": "Deskripsi panggilan sibuk"
+    },
+    {
+      "name": "notificationconfig_event_CallSaved",
+      "value": "Panggilan Disimpan"
+    },
+    {
+      "name": "notificationconfig_event_CallSecurityError",
+      "value": "Kesalahan Panggilan Keamanan"
+    },
+    {
+      "name": "notificationconfig_event_CallSecurityError_description",
+      "value": "Memanggil deskripsi kesalahan keamanan"
+    },
+    {
+      "name": "notificationconfig_event_CallSecurityOn",
+      "value": "Keamanan Panggilan Aktif"
+    },
+    {
+      "name": "notificationconfig_event_CallSecurityOn_description",
+      "value": "Keamanan panggilan di deskripsi"
+    },
+    {
+      "name": "notificationconfig_event_Dialing",
+      "value": "Memanggil"
+    },
+    {
+      "name": "notificationconfig_event_Dialing_description",
+      "value": "Deskripsi panggilan"
+    },
+    {
+      "name": "notificationconfig_event_HangUp",
+      "value": "Hang Up"
+    },
+    {
+      "name": "notificationconfig_event_HangUp_description",
+      "value": "Hangout description"
+    },
+    {
+      "name": "notificationconfig_event_IncomingCall",
+      "value": "Panggilan Masuk"
+    },
+    {
+      "name": "notificationconfig_event_IncomingCall_description",
+      "value": "Deskripsi panggilan masuk."
+    },
+    {
+      "name": "notificationconfig_event_IncomingFile",
+      "value": "Fail Masuk"
+    },
+    {
+      "name": "notificationconfig_event_IncomingInvitation",
+      "value": "Undangan Masuk"
+    },
+    {
+      "name": "notificationconfig_event_IncomingMessage",
+      "value": "Pesan Masuk"
+    },
+    {
+      "name": "notificationconfig_event_IncomingMessage_description",
+      "value": "Deskripsi pesan masuk"
+    },
+    {
+      "name": "notificationconfig_event_LogFilesArchived",
+      "value": "Fail Log Diarsipkan"
+    },
+    {
+      "name": "notificationconfig_event_MissedCall",
+      "value": "Panggilan Tak Terjawab"
+    },
+    {
+      "name": "notificationconfig_event_NetworkNotifications",
+      "value": "Pemberitahuan Jaringan"
+    },
+    {
+      "name": "notificationconfig_event_NetworkNotifications_description",
+      "value": "Deskripsi notifikasi jaringan"
+    },
+    {
+      "name": "notificationconfig_event_ProactiveNotification",
+      "value": "Pemberitahuan Pengetikan"
+    },
+    {
+      "name": "notificationconfig_event_ProactiveNotification_description",
+      "value": "Deskripsi pemberitahuan status obrolan proaktif"
+    },
+    {
+      "name": "notificationconfig_event_OutgoingCall",
+      "value": "Panggilan Keluar"
+    },
+    {
+      "name": "notificationconfig_event_OutgoingCall_description",
+      "value": "Deskripsi panggilan keluar"
+    },
+    {
+      "name": "notificationconfig_event_SecurityMessage",
+      "value": "Pesan Keamanan"
+    },
+    {
+      "name": "notificationconfig_event_SecurityMessage_description",
+      "value": "Deskripsi pesan keamanan"
+    },
+    {
+      "name": "notificationconfig_notification_sound",
+      "value": "​​Suara pada perangkat notifikasi"
+    },
+    {
+      "name": "notificationconfig_playback_sound",
+      "value": "​​Suara pada perangkat pemutaran"
+    },
+    {
+      "name": "notificationconfig_popup_notification",
+      "value": "Pemberitahuan popup"
+    },
+    {
+      "name": "notificationconfig_vibration",
+      "value": "Getaran"
+    },
+    {
+      "name": "notificationconfig_sound_file",
+      "value": "File suara:"
+    },
+    {
+      "name": "callrecordingconfig_call_saved",
+      "value": "Panggilan berhasil disimpan"
+    },
+    {
+      "name": "callrecordingconfig_call_saved_to",
+      "value": "Simpan ke: %1$s"
+    },
+    {
+      "name": "media_configform_audio_device_config_changed",
+      "value": "Konfigurasi perangkat audio diubah"
+    },
+    {
+      "name": "media_configform_audio_device_config_management_click",
+      "value": "Klik di sini untuk pengelolaan perangkat"
+    },
+    {
+      "name": "media_configform_preview",
+      "value": "Pratinjau"
+    },
+    {
+      "name": "media_security_checksum_mismatch",
+      "value": "<html>Internal checksum paket checksum ZRTP.<br/>Jika Anda sering melihat pesan ini, ini berarti serangan denial-of-service!</html>"
+    },
+    {
+      "name": "media_security_data_send_failed",
+      "value": "<html>Gagal mengirim data enkripsi. Koneksi data internet atau rekan sedang down.<br/><b>Panggilan Anda tidak aman</b><br/>Kode kesalahan: %1$s</html>"
+    },
+    {
+      "name": "imedia_security_retry_rate_exceeded",
+      "value": "<html>Terlalu banyak percobaan ulang selama negosiasi keamanan. Ini dapat berarti bahwa pihak lain memiliki masalah koneksi internet.<br/><b>Panggilan Anda tidak aman</b><br/>Kode kesalahan: %1$s</html>"
+    },
+    {
+      "name": "media_security_internal_protocol_error",
+      "value": "<html>Terjadi kesalahan protokol internal.<br/><b>Panggilan Anda tidak aman</b><br/>Kode kesalahan: %1$s</html >"
+    },
+    {
+      "name": "media_security_off",
+      "value": "Dukungan enkripsi panggilan dimatikan"
+    },
+    {
+      "name": "media_security_on",
+      "value": "Dukungan enkripsi panggilan pada"
+    },
+    {
+      "name": "media_security_severe_generic_message",
+      "value": "<html>Masalah keamanan yang parah terdeteksi.<br/><br/>Kode kesalahan: %1$s</html>"
+    },
+    {
+      "name": "media_security_warning_no_rs_match",
+      "value": "<html>Tidak ada rahasia bersama yang dipertahankan.<br/><b>Verifikasi SAS direkomendasikan</b></html>"
+    },
+    {
+      "name": "media_security_warning_no_expected_rs_match",
+      "value": "<html>Rahasia bersama retensi yang diharapkan tidak ada.<br/><b>Verifikasi SAS diperlukan</b><br/>Jika kode SAS tidak cocok, maka hangup dan coba lagi</html>"
+    },
+    {
+      "name": "media_security_zrtp_generic_message",
+      "value": "<html>Masalah ZRTP parah terdeteksi.<br/><b>Panggilan Anda tidak aman</b><br/>Kode kesalahan : %1$s</html>"
+    },
+    {
+      "name": "media_security_zrtp_handshake_timeout",
+      "value": "Panggilan tidak aman; Batas waktu jabat tangan RTP: %1$s"
+    },
+    {
+      "name": "media_security_encryption_ended",
+      "value": "Enkripsi panggilan telah berakhir: %1$s"
+    },
+    {
+      "name": "menu_crypto_plain_text",
+      "value": "Teks Biasa"
+    },
+    {
+      "name": "omemo_authbuddy_authenticate_buddy",
+      "value": "Otentikasi Sobat"
+    },
+    {
+      "name": "omemo_authbuddy_authenticate_info",
+      "value": "Anda memiliki teman yang tidak terautentikasi. Teman yang belum diverifikasi tidak dapat menerima pesan OMEMO. Periksa untuk mengautentikasi."
+    },
+    {
+      "name": "omemo_authbuddy_local_fingerprint",
+      "value": "Sidik Jari Saya %1$s:\n %2$s"
+    },
+    {
+      "name": "omemo_authbuddy_verify_buddy",
+      "value": "Verifikasi Sobat"
+    },
+    {
+      "name": "omemo_identity_keypairs_missing",
+      "value": "Perbarui OMEMO IdentityKeyPairs untuk: %1$s"
+    },
+    {
+      "name": "omemo_identity_key_invalid",
+      "value": "IdentitasKey Tidak Valid untuk omemoDevice: %1$s.\nEksepsi: %2$s."
+    },
+    {
+      "name": "omemo_identity_key_missing",
+      "value": "OMEMO IdentityKey untuk %1$s tidak ada.\nLanjutkan untuk mengunduh dari server."
+    },
+    {
+      "name": "omemo_identity_keypairs_invalid",
+      "value": "IdentitasKeyPairs Tidak Valid untuk omemoDevice: %1$s.\nEksepsi: %2$s."
+    },
+    {
+      "name": "omemo_init_failed_corrupted_omemoKey_exception",
+      "value": "Inisialisasi OmemoManager telah gagal dan pesan omemo tidak berfungsi. Jika masalah berlanjut\nsetelah memulai ulang, lanjutkan ke \"Regungkan identitas OMEMO\" untuk omomoDevice yang gagal: %1$s.\n\nPersepsi: %2$s."
+    },
+    {
+      "name": "omemo_init_failed_no_response",
+      "value": "Inisialisasi OmemoManager telah gagal dan pesan omemo mungkin tidak berfungsi dengan baik: %1$s"
+    },
+    {
+      "name": "omemo_init_failed_title",
+      "value": "OmemoManager init gagal"
+    },
+    {
+      "name": "omemo_menu_authenticated",
+      "value": "OMEMO Autentikasi"
+    },
+    {
+      "name": "omemo_send_error",
+      "value": "Pengiriman pesan gagal. Silakan coba lagi setelah semua kesalahan diperbaiki: %1$s"
+    },
+    {
+      "name": "omemo_menu_unauthenticated",
+      "value": "OMEMO unAuthenticated"
+    },
+    {
+      "name": "omemo_menu_untrusted",
+      "value": "OMEMO Tidak Dipercayai"
+    },
+    {
+      "name": "omemo_rebuild_session",
+      "value": "Rekonstruksi sesi baru karena hilang: %1$s"
+    },
+    {
+      "name": "omemo_purge_inactive_device_error",
+      "value": "Gagal menghapus perangkat omemo yang tidak aktif untuk: %1$s."
+    },
+    {
+      "name": "settings_bosh_proxy",
+      "value": "Konfigurasi Proksi"
+    },
+    {
+      "name": "settings_bosh_proxy_summary",
+      "value": "konfigurasikan koneksi melalui BOSH/Proxy untuk akun"
+    },
+    {
+      "name": "bosh_proxy_url_null",
+      "value": "Konten bidang URL BOSH tidak boleh kosong"
+    },
+    {
+      "name": "bosh_proxy_host_port_null",
+      "value": "Konten Proxy Host dan Port tidak boleh kosong"
+    },
+    {
+      "name": "bosh_proxy_type",
+      "value": "Tipe Proksi"
+    },
+    {
+      "name": "bosh_proxy_url",
+      "value": "BOSH URL:"
+    },
+    {
+      "name": "bosh_proxy_use_http",
+      "value": "Gunakan Proxy HTTP"
+    },
+    {
+      "name": "bosh_proxy_host",
+      "value": "Proxy Server"
+    },
+    {
+      "name": "bosh_proxy_port",
+      "value": "Port proxy"
+    },
+    {
+      "name": "provisioning_auto",
+      "value": "Secara otomatis menemukan URI penyediaan"
+    },
+    {
+      "name": "provisioning_bonjour",
+      "value": "Bonjour"
+    },
+    {
+      "name": "provisioning_clipboard_failed",
+      "value": "Gagal menyalin UUID ke clipboard"
+    },
+    {
+      "name": "provisioning_copy_to_clipboard",
+      "value": "Salin UUID ke clipboard"
+    },
+    {
+      "name": "provisioning_credentials",
+      "value": "Kredensial penyediaan yang tersimpan terakhir"
+    },
+    {
+      "name": "provisioning_enable",
+      "value": "Aktifkan penyediaan"
+    },
+    {
+      "name": "provisioning_exit_on_failed",
+      "value": "Keluar dari aplikasi jika provisi gagal"
+    },
+    {
+      "name": "provisioning_forget_password",
+      "value": "Lupakan kata sandi"
+    },
+    {
+      "name": "provisioning_manual",
+      "value": "Secara manual menentukan URI penyediaan"
+    },
+    {
+      "name": "provisioning_method",
+      "value": "Metode Provisioning"
+    },
+    {
+      "name": "provisioning_failed",
+      "value": "Penyediaan gagal"
+    },
+    {
+      "name": "provisioning_failed_message",
+      "value": "<html>Penyediaan gagal. %1$s!<br/>Silakan, coba lagi nanti atau hubungi administrator Anda.</html>"
+    },
+    {
+      "name": "provisioning",
+      "value": "Provisioning"
+    },
+    {
+      "name": "provisioning_summary",
+      "value": "Konfigurasikan pengaturan penyediaan"
+    },
+    {
+      "name": "provisioning_remove_credentials_message",
+      "value": "Anda yakin ingin menghapus kata sandi provisioning?"
+    },
+    {
+      "name": "provisioning_restart_alert",
+      "value": "Perhatikan bahwa perubahan Anda hanya akan berlaku pada saat Anda memulai aTalk!"
+    },
+    {
+      "name": "settings_dnssec_dane",
+      "value": "SSL/DNSSEC/DANE Security"
+    },
+    {
+      "name": "settings_dns",
+      "value": "DNS"
+    },
+    {
+      "name": "settings_dns_summary",
+      "value": "Konfigurasikan pengaturan DNS"
+    },
+    {
+      "name": "dnsconfig_dnssec",
+      "value": "Keamanan DNS (DNSSEC)"
+    },
+    {
+      "name": "dnsconfig_dnssec_domain_name",
+      "value": "Domain"
+    },
+    {
+      "name": "dnsconfig_dnssec_enable_failed",
+      "value": "Perubahan status gagal"
+    },
+    {
+      "name": "dnsconfig_dnssec_enable_failed_message",
+      "value": "Perubahan status yang diaktifkan DNSSEC telah gagal."
+    },
+    {
+      "name": "dnsconfig_dnssec_mode",
+      "value": "Perilaku"
+    },
+    {
+      "name": "dnsconfig_dnssec_restart_alert",
+      "value": "<html>Perhatikan bahwa mengaktifkan atau menonaktifkan DNSSEC akan menonaktifkan resolver paralel dan hanya akan berlaku pada saat Anda memulai aTalk.</html>"
+    },
+    {
+      "name": "dnsconfig_dnssec_title",
+      "value": "Penyelesai cadangan"
+    },
+    {
+      "name": "dnsconfig_dnssec_check_absolute",
+      "value": "Perlakukan semua nama domain sebagai absolut"
+    },
+    {
+      "name": "dnsconfig_dnssec_check_enable",
+      "value": "Aktifkan penyelesai DNSSEC"
+    },
+    {
+      "name": "dnsconfig_dnssec_label_default",
+      "value": "Perilaku default"
+    },
+    {
+      "name": "dnsconfig_dnssec_label_name_servers",
+      "value": "Server nama khusus"
+    },
+    {
+      "name": "dnsconfig_dnssec_label_name_servers_hint",
+      "value": "<html>Beberapa server dapat dipisahkan dengan koma, mis. 149.20.64.20, 149.20.64.21 (OARC's Buka DNSSEC Validating Resolver)</html>"
+    },
+    {
+      "name": "dns_insecure_answer_title",
+      "value": "Kegagalan DNSSEC"
+    },
+    {
+      "name": "dns_insecure_answer_message_insecure",
+      "value": "Jawaban DNS untuk %1$s tidak aman."
+    },
+    {
+      "name": "dns_insecure_answer_message_reason",
+      "value": "Jawaban DNS untuk %1$s tidak aman.\nAlason: %2$s"
+    },
+    {
+      "name": "dns_dnssec_advanced_options",
+      "value": "Tampilkan opsi lanjutan"
+    },
+    {
+      "name": "dns_dnssec_advanced_reason_invalid",
+      "value": "<html>zona bertanda DNSSEC %1$s mengembalikan data yang tidak valid.<br>%2$s</html>"
+    },
+    {
+      "name": "dns_dnssec_advanced_reason_unsigned",
+      "value": "%1$s query untuk %2$s tidak ditandatangani."
+    },
+    {
+      "name": "dns_dnssec_warning",
+      "value": "<html><div width=\"600\">%1$s telah mencoba menyambung ke server di<b>%2$s<</b>,\nyang merupakan domain yang membawa perlindungan kuat yang disebut DNSSEC. Informasi yang diperoleh %1$s\ndari server DNS tidak sesuai dengan informasi yang disediakan DNSSEC tentang domain ini.<br><br><b>\nIni tidak boleh terjadi kecuali kesalahan yang sangat serius terjadi pada %2$s. Oleh karena itu merupakan indikasi yang sangat kuat bahwa ada sesuatu\nsalah serius dengan kepercayaan koneksi jaringan Anda.</b><br><br>\nJika Anda menggunakan koneksi internet orang lain (seperti hotspot WiFi) atau jika ada keadaan khusus yang membuat Anda tidak percaya\npenyedia internet reguler Anda, kami sangat menyarankan Anda untuk segera berhenti menggunakannya dan mencari jalur akses internet alternatif.\nKetika Anda terhubung dengan aman ke jaringan lain, masalahnya harus diselesaikan secara otomatis. Jika ini bukan masalahnya, hubungi Anda\npenyedia layanan untuk memberi tahu mereka tentang masalah ini.</div></html>"
+    },
+    {
+      "name": "settings_ssl_certificate",
+      "value": "Sertifikat SSL"
+    },
+    {
+      "name": "settings_ssl_certificate_purge",
+      "value": "Bersihkan sertifikat yang disetujui pengguna bagi: %1$s"
+    },
+    {
+      "name": "settings_ssl_certificate_remove",
+      "value": "Hapus sertifikat"
+    },
+    {
+      "name": "settings_ssl_certificate_summary",
+      "value": "Kelola Sertifikat SSL"
+    },
+    {
+      "name": "tls_cert",
+      "value": "Sertifikat TLS Klien"
+    },
+    {
+      "name": "tls_cert_prompt",
+      "value": "Harap pilih sertifikat TLS"
+    },
+    {
+      "name": "tls_cert_summary",
+      "value": "Penggunaan sertifikat dalam otentikasi pengguna dengan server"
+    },
+    {
+      "name": "zid_reset_summary",
+      "value": "Setel ulang pengidentifikasi ZRTP berumur panjang"
+    },
+    {
+      "name": "zid_reset_title",
+      "value": "Setel ulang ZID"
+    },
+    {
+      "name": "zid_reset_done",
+      "value": "ZID telah diatur ulang"
+    },
+    {
+      "name": "commit_progress_message",
+      "value": "Menyimpan perubahan akun, harap tunggu…"
+    },
+    {
+      "name": "commit_progress_title",
+      "value": "\"Berkomitmen…\""
+    },
+    {
+      "name": "settings_not_set",
+      "value": "(Tidak ditentukan)"
+    },
+    {
+      "name": "enc_audio_title",
+      "value": "Enkode audio"
+    },
+    {
+      "name": "enc_override_global",
+      "value": "Ganti global"
+    },
+    {
+      "name": "enc_video_title",
+      "value": "Enkode video"
+    },
+    {
+      "name": "none",
+      "value": "Tidak ada"
+    },
+    {
+      "name": "sec_encryption",
+      "value": "Enkripsi"
+    },
+    {
+      "name": "sec_protocols_title",
+      "value": "Protokol keamanan"
+    },
+    {
+      "name": "sec_protocols_message",
+      "value": "Silakan pilih protokol yang diinginkan agar"
+    },
+    {
+      "name": "discard",
+      "value": "Buang"
+    },
+    {
+      "name": "sec_zrtp_signalling_on",
+      "value": "ZRTP akan diiklankan melalui protokol pensinyalan"
+    },
+    {
+      "name": "sec_zrtp_signalling_off",
+      "value": "Tidak akan ada iklan ZRTP"
+    },
+    {
+      "name": "service_gui_SERVERS_LIST_ADD_SERVER",
+      "value": "Tambah server"
+    },
+    {
+      "name": "service_gui_SERVERS_LIST_EMPTY",
+      "value": "Daftarnya kosong. Klik untuk menambahkan entri baru…"
+    },
+    {
+      "name": "service_gui_JINGLE_EDIT_JID",
+      "value": "Alamat JID"
+    },
+    {
+      "name": "service_gui_JINGLE_EDIT_SUPPORT_RELAY",
+      "value": "Dukungan relai"
+    },
+    {
+      "name": "stun_turn_server",
+      "value": "STUN/TURN Server"
+    },
+    {
+      "name": "ip_address",
+      "value": "Alamat IP"
+    },
+    {
+      "name": "server_port",
+      "value": "Port server"
+    },
+    {
+      "name": "turn_supported",
+      "value": "Dukungan TURN"
+    },
+    {
+      "name": "username",
+      "value": "Nama"
+    },
+    {
+      "name": "security_dtls_srtp",
+      "value": "pensinyalan DTLS_SRTP"
+    },
+    {
+      "name": "security_dtls_title",
+      "value": "Algoritma Tanda Tangan Sertifikat TLS"
+    },
+    {
+      "name": "security_encryption_enable",
+      "value": "Aktifkan enkripsi panggilan"
+    },
+    {
+      "name": "security_encryption_protocols",
+      "value": "Protokol enkripsi"
+    },
+    {
+      "name": "security_rtp_savp",
+      "value": "Indikasi RTP/SAVP"
+    },
+    {
+      "name": "security_rtp_savp_title",
+      "value": "Metode indikasi RTP/SAVP"
+    },
+    {
+      "name": "security_sdes",
+      "value": "Opsi SDES"
+    },
+    {
+      "name": "security_sdes_dlg_title",
+      "value": "Pilih cipher suite yang diinginkan"
+    },
+    {
+      "name": "security_sdes_title",
+      "value": "cipher suite SDES"
+    },
+    {
+      "name": "security_zrtp_options",
+      "value": "Opsi ZRTP"
+    },
+    {
+      "name": "security_zrtp_signalling",
+      "value": "pensinyalan ZRTP"
+    },
+    {
+      "name": "audio_encoding",
+      "value": "Enkode audio"
+    },
+    {
+      "name": "audio_enc_global_override_summary",
+      "value": "Mengganti format audio yang ditentukan dengan gloabal untuk akun ini"
+    },
+    {
+      "name": "call_encryption",
+      "value": "Pengaturan Enkripsi Panggilan"
+    },
+    {
+      "name": "video_encoding",
+      "value": "Enkode video"
+    },
+    {
+      "name": "video_enc_global_override_summary",
+      "value": "Mengganti format video global yang ditentukan untuk akun ini"
+    },
+    {
+      "name": "jbr_auto_sign_in",
+      "value": "Terhubung saat Memulai"
+    },
+    {
+      "name": "jbr_auto_stun_discovery",
+      "value": "Menemukan server STUN/TURN otomatis"
+    },
+    {
+      "name": "jbr_connection_summary",
+      "value": "Setel Detail Koneksi…"
+    },
+    {
+      "name": "jbr_connection",
+      "value": "Pengaturan Koneksi"
+    },
+    {
+      "name": "jbr_jingle_disable",
+      "value": "Nonaktifkan panggilan (Jingle)"
+    },
+    {
+      "name": "jbr_jingle_summary",
+      "value": "(panggilan audio dan video dengan XMPP)"
+    },
+    {
+      "name": "jbr_dtmf_method",
+      "value": "Metode DTMF"
+    },
+    {
+      "name": "jbr_dtmf_summary",
+      "value": "pemilihan metode DTMF"
+    },
+    {
+      "name": "jbr_gmail_notifications",
+      "value": "Pemberitahuan Gmail untuk pesan baru"
+    },
+    {
+      "name": "jbr_google_contact_search",
+      "value": "pencarian Google Contacts"
+    },
+    {
+      "name": "jbr_gtalk_domain",
+      "value": "Domain yang akan menggunakan panggilan GTalk"
+    },
+    {
+      "name": "jbr_ice_summary",
+      "value": "Konfigurasikan opsi ICE…"
+    },
+    {
+      "name": "jbr_jingle_auto",
+      "value": "Auto temukan relai Jingle Nodes"
+    },
+    {
+      "name": "jbr_jingle_list",
+      "value": "Tambahan Jingle Nodes…"
+    },
+    {
+      "name": "jbr_jingle_list_summary",
+      "value": "Node Jingle tambahan yang ditetapkan pengguna untuk digunakan"
+    },
+    {
+      "name": "jbr_jingle_nodes",
+      "value": "Jingle Nodes"
+    },
+    {
+      "name": "jbr_jingle_use",
+      "value": "Gunakan node jingle"
+    },
+    {
+      "name": "jbr_keep_alive",
+      "value": "Tetap hidup"
+    },
+    {
+      "name": "jbr_keep_alive_enable",
+      "value": "Aktifkan opsi Keep Alive"
+    },
+    {
+      "name": "jbr_keep_alive_summary",
+      "value": "Aktifkan jika mengalami pemutusan jaringan seluler yang sering"
+    },
+    {
+      "name": "jbr_tls_ver_min",
+      "value": "Versi TLS minimum"
+    },
+    {
+      "name": "jbr_tls_ver_min_summary",
+      "value": "Hubungkan menggunakan ini atau versi protokol TLS yang lebih tinggi"
+    },
+    {
+      "name": "jbr_non_secure_allow",
+      "value": "Izinkan koneksi tidak aman"
+    },
+    {
+      "name": "jbr_non_ssk_summary",
+      "value": "Nonaktifkan enkripsi koneksi server SSL/TLS"
+    },
+    {
+      "name": "jbr_server_override",
+      "value": "Ganti opsi default server"
+    },
+    {
+      "name": "jbr_password",
+      "value": "Masukkan Kata Sandi"
+    },
+    {
+      "name": "jbr_ping_interval",
+      "value": "Interval Ping (1~3600 detik)"
+    },
+    {
+      "name": "jbr_ping_interval_tune_enable",
+      "value": "Lakukan optimasi interval ping untuk koneksi jaringan seluler"
+    },
+    {
+      "name": "jbr_ping_interval_tune_off_summary",
+      "value": "Jangan melakukan optimasi interval ping untuk koneksi jaringan seluler"
+    },
+    {
+      "name": "jbr_ping_interval_tune_on_summary",
+      "value": "Lakukan optimasi interval ping untuk koneksi jaringan seluler"
+    },
+    {
+      "name": "jbr_server_port",
+      "value": "Server Port"
+    },
+    {
+      "name": "jbr_priority",
+      "value": "Prioritas (rentang: -128~127)"
+    },
+    {
+      "name": "jbr_resource_auto_gen",
+      "value": "Menghasilkan sumber daya otomatis"
+    },
+    {
+      "name": "jbr_resource_id",
+      "value": "Sumber Daya Jabber ID"
+    },
+    {
+      "name": "jbr_resource_name",
+      "value": "Nama sumber daya"
+    },
+    {
+      "name": "jbr_server_ip",
+      "value": "Hubungkan Server IP"
+    },
+    {
+      "name": "jbr_server_options",
+      "value": "Opsi server"
+    },
+    {
+      "name": "jbr_store_password",
+      "value": "Menyimpan kata sandi"
+    },
+    {
+      "name": "jbr_store_password_summary",
+      "value": "Simpan kata sandi untuk masuk otomatis saat aplikasi memulai"
+    },
+    {
+      "name": "jbr_stun_list",
+      "value": "Server STUN/TURN tambahan…"
+    },
+    {
+      "name": "jbr_stun_list_summary",
+      "value": "Server STUN/TURN tambahan yang ditetapkan pengguna untuk digunakan"
+    },
+    {
+      "name": "jbr_telephony_domain",
+      "value": "Domain telepon"
+    },
+    {
+      "name": "jbr_telephony_voip_pbx",
+      "value": "Telephony VoIP-PBX"
+    },
+    {
+      "name": "jbr_telephony_summary",
+      "value": "Konfigurasikan opsi telephony…"
+    },
+    {
+      "name": "jbr_use_default_stun",
+      "value": "Gunakan server Jitsi STUN (fallback)"
+    },
+    {
+      "name": "jbr_use_ice",
+      "value": "Gunakan ICE"
+    },
+    {
+      "name": "jbr_use_google_ice",
+      "value": "Gunakan Google Jingle/ICE (eksperimental)"
+    },
+    {
+      "name": "jbr_use_upnp",
+      "value": "Gunakan UPnP"
+    },
+    {
+      "name": "jbr_user_id",
+      "value": "USER ID"
+    },
+    {
+      "name": "jbr_user_name_password",
+      "value": "Nama pengguna dan kata sandi"
+    },
+    {
+      "name": "contact_phone",
+      "value": "Nama/Telepon/Jid Kontak:"
+    },
+    {
+      "name": "call_via",
+      "value": "Panggilan melalui:"
+    },
+    {
+      "name": "contact_phone_empty",
+      "value": "Nomor telepon kontak tidak boleh kosong!"
+    },
+    {
+      "name": "recipient_error_non_ascii",
+      "value": "Karakter khusus saat ini tidak didukung!"
+    },
+    {
+      "name": "domain_not_in_roster",
+      "value": "Domain Telephony yang ditentukan '%1$s' bukan anggota daftar kontak"
+    },
+    {
+      "name": "not_in_call_group",
+      "value": "%1$s bukan milik grup panggilan yang ditentukan"
+    },
+    {
+      "name": "jingle_not_supported",
+      "value": "%1$s\ntidak mendukung protokol Jingle"
+    },
+    {
+      "name": "recipient_error_parse_failed",
+      "value": "Galat menguraikan alamat!"
+    },
+    {
+      "name": "unknown_recipient",
+      "value": "<Penerima Tidak Dikenal>"
+    },
+    {
+      "name": "disabled",
+      "value": "Nonaktif"
+    },
+    {
+      "name": "enabled",
+      "value": "Diaktifkan"
+    },
+    {
+      "name": "general",
+      "value": "Umum"
+    },
+    {
+      "name": "settings_webview_dlg_title",
+      "value": "Masuk ke halaman akses default webView:"
+    },
+    {
+      "name": "settings_webview_page",
+      "value": "Halaman Akses Web"
+    },
+    {
+      "name": "settings_messaging",
+      "value": "Messaging"
+    },
+    {
+      "name": "settings_multichat_off",
+      "value": "Jendela terpisah untuk ech percakapan"
+    },
+    {
+      "name": "settings_multichat_on",
+      "value": "Kelompokkan pesan obrolan dalam satu jendela"
+    },
+    {
+      "name": "settings_multichat_window",
+      "value": "Jendela multichat"
+    },
+    {
+      "name": "settings_history_log_off",
+      "value": "Riwayat obrolan dinonaktifkan"
+    },
+    {
+      "name": "settings_history_log_on",
+      "value": "Log riwayat obrolan"
+    },
+    {
+      "name": "settings_history_logging",
+      "value": "Pencatatan log riwayat obrolan"
+    },
+    {
+      "name": "settings_history_mam_warning",
+      "value": "Kesalahan dimenyetel opsi MAM untuk pengguna luring: %1$s"
+    },
+    {
+      "name": "settings_history_dlg_title",
+      "value": "Berapa banyak pesan terbaru yang harus ditampilkan?"
+    },
+    {
+      "name": "settings_history_size",
+      "value": "Tampilkan pesan terbaru"
+    },
+    {
+      "name": "settings_history_summary",
+      "value": "%d pesan terbaru dalam obrolan baru"
+    },
+    {
+      "name": "settings_history_show",
+      "value": "Tampilkan riwayat"
+    },
+    {
+      "name": "settings_message_delivery_receipt",
+      "value": "Kwitansi pengiriman pesan"
+    },
+    {
+      "name": "settings_message_delivery_receipt_summary",
+      "value": "Biarkan kontak Anda tahu kapan Anda telah menerima dan membaca pesan mereka"
+    },
+    {
+      "name": "settings_typing_notifications",
+      "value": "Kirim pemberitahuan status obrolan"
+    },
+    {
+      "name": "settings_thumbnail_option",
+      "value": "Kirim/Terima pratinjau thumbnail"
+    },
+    {
+      "name": "settings_file_max_auto_accept",
+      "value": "Otomatis menerima ukuran file maksimal"
+    },
+    {
+      "name": "settings_presence_subscribe_approval_mode",
+      "value": "Kehadiran berlangganan persetujuan"
+    },
+    {
+      "name": "settings_presence_subscribe_approval_auto",
+      "value": "Berlangganan persetujuan - otomatis terima semua"
+    },
+    {
+      "name": "settings_presence_subscribe_approval_manual",
+      "value": "Berlangganan persetujuan - manual"
+    },
+    {
+      "name": "settings_chat_notifications",
+      "value": "Tampilkan pemberitahuan bilah status"
+    },
+    {
+      "name": "settings_notifications",
+      "value": "Pemberitahuan"
+    },
+    {
+      "name": "settings_auto_update_check_enable",
+      "value": "Aktifkan pemeriksaan pembaruan SW otomatis"
+    },
+    {
+      "name": "settings_popup_handler",
+      "value": "Jenis notifikasi popup"
+    },
+    {
+      "name": "pref_heads_up_notifications",
+      "value": "Pemberitahuan Head-up"
+    },
+    {
+      "name": "pref_heads_up_notifications_summary",
+      "value": "Tampilkan Pemberitahuan Head-up"
+    },
+    {
+      "name": "popup_auto",
+      "value": "Otomatis"
+    },
+    {
+      "name": "popup_status_bar",
+      "value": "Pemberitahuan bilah status"
+    },
+    {
+      "name": "settings_event_summary",
+      "value": "Konfigurasikan pemberitahuan individual"
+    },
+    {
+      "name": "settings_event_title",
+      "value": "Acara"
+    },
+    {
+      "name": "quiet_hours",
+      "value": "Jam Tenang"
+    },
+    {
+      "name": "quiet_hours_start_time",
+      "value": "Waktu mulai"
+    },
+    {
+      "name": "quiet_hours_end_time",
+      "value": "Akhir waktu"
+    },
+    {
+      "name": "quiet_hours_enable",
+      "value": "Aktifkan jam tenang"
+    },
+    {
+      "name": "quiet_hours_summary",
+      "value": "Pemberitahuan akan dibungkam selama jam tenang"
+    },
+    {
+      "name": "settings_show_icon",
+      "value": "Tunjukkan ikon aTalk"
+    },
+    {
+      "name": "settings_show_icon_summary_off",
+      "value": "Sembunyikan indikator aktif aTalk di notifikasi"
+    },
+    {
+      "name": "settings_show_icon_summary_on",
+      "value": "Menungjukkan indikator aktif aTalk di notifikasi"
+    },
+    {
+      "name": "settings_auto_start",
+      "value": "Mulai otomatis aTalk saat reboot"
+    },
+    {
+      "name": "settings_auto_start_summary_disable",
+      "value": "Nonaktifkan aTalk secara otomatis mulai pada reboot berikutnya"
+    },
+    {
+      "name": "settings_auto_start_summary_enable",
+      "value": "Aktifkan aTalk otomatis mulai pada reboot berikutnya"
+    },
+    {
+      "name": "settings_locale",
+      "value": "Bahasa"
+    },
+    {
+      "name": "settings_locale_system",
+      "value": "Default sistem"
+    },
+    {
+      "name": "settings_theme_dark",
+      "value": "Gelap"
+    },
+    {
+      "name": "settings_theme_light",
+      "value": "Light"
+    },
+    {
+      "name": "settings_theme",
+      "value": "Tema"
+    },
+    {
+      "name": "tts_delay",
+      "value": "Pesan Teks ke Speech delay (ms)"
+    },
+    {
+      "name": "tts_settings",
+      "value": "Pengaturan TTS umum…"
+    },
+    {
+      "name": "tts_disable",
+      "value": "Nonaktifkan Text ➡ Speech"
+    },
+    {
+      "name": "tts_enable",
+      "value": "Aktifkan Text ➡ Speech"
+    },
+    {
+      "name": "tts_synthesis",
+      "value": "Isikan teks untuk berbicara atau disintesis dan simpan ke file:"
+    },
+    {
+      "name": "tts_voice",
+      "value": "Suara TTS default:"
+    },
+    {
+      "name": "loading_wait",
+      "value": "Sedang memuat, harap tunggu…"
+    },
+    {
+      "name": "settings_normalize_number",
+      "value": "Simbol khusus dalam nomor telepon"
+    },
+    {
+      "name": "settings_normalize_off",
+      "value": "Tidak ada modifikasi nomor telepon"
+    },
+    {
+      "name": "settings_normalize_on",
+      "value": "Simbol khusus akan dihapus dari nomor"
+    },
+    {
+      "name": "settings_phone_alpha_no_allow",
+      "value": "Tidak ada modifikasi nomor telepon"
+    },
+    {
+      "name": "settings_phone_alpha_allow",
+      "value": "Surat di nomor telepon"
+    },
+    {
+      "name": "call",
+      "value": "Panggil"
+    },
+    {
+      "name": "media_call",
+      "value": "Panggilan media"
+    },
+    {
+      "name": "audio",
+      "value": "Audio"
+    },
+    {
+      "name": "settings_echo_cancel",
+      "value": "Pembatalan gema"
+    },
+    {
+      "name": "settings_echo_cancel_off",
+      "value": "Nonaktif"
+    },
+    {
+      "name": "settings_echo_cancel_on",
+      "value": "Diaktifkan"
+    },
+    {
+      "name": "settings_agc",
+      "value": "Kontrol penguatan otomatis"
+    },
+    {
+      "name": "settings_agc_off",
+      "value": "Nonaktif"
+    },
+    {
+      "name": "settings_agc_on",
+      "value": "Diaktifkan"
+    },
+    {
+      "name": "settings_denoise",
+      "value": "Penindasan kebisingan"
+    },
+    {
+      "name": "settings_denoise_off",
+      "value": "Nonaktif"
+    },
+    {
+      "name": "settings_denoise_on",
+      "value": "Diaktifkan"
+    },
+    {
+      "name": "settings_audio_codecs_summary",
+      "value": "Pilih dan tentukan prioritas untuk codec audio"
+    },
+    {
+      "name": "settings_audio_codecs",
+      "value": "Codec audio"
+    },
+    {
+      "name": "video",
+      "value": "Video"
+    },
+    {
+      "name": "settings_system_android_camera",
+      "value": "AndroidCamera"
+    },
+    {
+      "name": "settings_system_media_recorder",
+      "value": "MediaRecorder"
+    },
+    {
+      "name": "settings_camera",
+      "value": "Kamera"
+    },
+    {
+      "name": "settings_no_camera",
+      "value": "Tidak ditemukan perangkat kamera yang kompatibel"
+    },
+    {
+      "name": "settings_use_back_camera",
+      "value": "Gunakan kamera belakang"
+    },
+    {
+      "name": "settings_use_front_camera",
+      "value": "Gunakan kamera depan"
+    },
+    {
+      "name": "settings_use_match_camera_resolution",
+      "value": "Gunakan resolusi kamera yang paling mendekati: %1$s"
+    },
+    {
+      "name": "settings_direct_surface_decode",
+      "value": "Gunakan dekode permukaan langsung"
+    },
+    {
+      "name": "settings_direct_surface_encode",
+      "value": "Gunakan pengkodean permukaan langsung"
+    },
+    {
+      "name": "settings_hw_decode",
+      "value": "Gunakan decoding perangkat keras (restart diperlukan)"
+    },
+    {
+      "name": "settings_hw_encode",
+      "value": "Gunakan pengkodean perangkat keras (restart diperlukan)"
+    },
+    {
+      "name": "settings_media_codec_list",
+      "value": "MediaCodecs"
+    },
+    {
+      "name": "settings_media_codec_list_summary",
+      "value": "Daftar pembuat enkode/dekoder internal"
+    },
+    {
+      "name": "settings_restart_require",
+      "value": "Perlu memulai ulang aTalk"
+    },
+    {
+      "name": "settings_video_codec_summary",
+      "value": "Pilih dan tentukan prioritas untuk codec video"
+    },
+    {
+      "name": "settings_video_codec",
+      "value": "Codec video"
+    },
+    {
+      "name": "settings_video_resolution",
+      "value": "Resolusi video"
+    },
+    {
+      "name": "settings_fps_limit_off",
+      "value": "Tidak Terbatas"
+    },
+    {
+      "name": "settings_fps_limit_on",
+      "value": "Kecepatan frame yang disesuaikan"
+    },
+    {
+      "name": "settings_video_bitrate",
+      "value": "Bitrate video (kilobita/detik)"
+    },
+    {
+      "name": "settings_video_frame_rate",
+      "value": "Kecepatan bingkai video"
+    },
+    {
+      "name": "settings_video_fps_description",
+      "value": "Nilai yang diterima antara 5 dan 30 fps"
+    },
+    {
+      "name": "settings_video_max_bw",
+      "value": "Ambang batas proses RTP (kBytes/s)"
+    },
+    {
+      "name": "settings_video_fps_target",
+      "value": "Rasio frame target (per detik)"
+    },
+    {
+      "name": "settings_messaging_security_summary",
+      "value": "Pengaturan keamanan enkripsi pesan"
+    },
+    {
+      "name": "settings_messaging_security",
+      "value": "Keamanan Pesan"
+    },
+    {
+      "name": "omemo_messaging_security",
+      "value": "Keamanan Pemesejan OMEMO"
+    },
+    {
+      "name": "omemo_blind_trust_before_verification",
+      "value": "Kepercayaan buta sebelum verifikasi"
+    },
+    {
+      "name": "omemo_blind_trust_before_verification_summary",
+      "value": "Memercayai otomatis semua perangkat kontak baru yang belum diverifikasi sebelumnya;meminta konfirmasi manual ketika kontak terverifikasi menambahkan perangkat baru."
+    },
+    {
+      "name": "omemo_regenerate_identities_summary",
+      "value": "Setelah meregenerasi identitas OMEMO Anda, semua kontak Anda akan menerima sidik jari baru dan diminta untuk memverifikasi ulang Anda. Lakukan hanya ketika memiliki masalah pengaturan sesi omemo."
+    },
+    {
+      "name": "omemo_regenerate_identities",
+      "value": "Meregenerasi identitas OMEMO"
+    },
+    {
+      "name": "omemo_regenerate_title",
+      "value": "OMEMO Identitas Segarkan"
+    },
+    {
+      "name": "omemo_purge_devices_summary",
+      "value": "Hapus semua perangkat tidak aktif;hanya mempublikasikan perangkat aktif saat ini yang Anda gunakan."
+    },
+    {
+      "name": "omemo_purge_device_unused",
+      "value": "Membersihkan identitas yang tidak digunakan"
+    },
+    {
+      "name": "omemo_purge_device",
+      "value": "Perangkat OMEMO Hapus"
+    },
+    {
+      "name": "key_fingerprint_security",
+      "value": "Kunci & Keamanan Cap Jari"
+    },
+    {
+      "name": "settings_crypto_priv_key_empty",
+      "value": "Ditemukan nol pengguna terdaftar"
+    },
+    {
+      "name": "settings_crypto_priv_key_summary",
+      "value": "Kelola sidik jari pribadi kripto"
+    },
+    {
+      "name": "settings_crypto_priv_key",
+      "value": "Kunci pribadi Crypto"
+    },
+    {
+      "name": "settings_fingerprint_summary",
+      "value": "Kelola semua sidik jari perangkat yang dikenal\nwarna: cyan=ownDevice;abu-abu=tidak aktif"
+    },
+    {
+      "name": "settings_fingerprint_title",
+      "value": "Cap jari peranti Crypto"
+    },
+    {
+      "name": "crypto_key_generate_prompt",
+      "value": "Apakah anda ingin menghasilkan kunci baru untuk %1$s %2$s"
+    },
+    {
+      "name": "crypto_key_generate_title",
+      "value": "Pembuatan kunci pribadi"
+    },
+    {
+      "name": "crypto_key_regenerate_prompt",
+      "value": "Apakah anda ingin membuat ulang kunci untuk %1$s\n\n %2$s"
+    },
+    {
+      "name": "delete_selected",
+      "value": "Hapus yang Dipilih"
+    },
+    {
+      "name": "regenerate_selected",
+      "value": "Regenerate Selected"
+    },
+    {
+      "name": "crypto_menu_key_generate",
+      "value": "Hasilkan kunci baru"
+    },
+    {
+      "name": "crypto_menu_key_regenerate",
+      "value": "Regenerate key"
+    },
+    {
+      "name": "crypto_menu_fingerprint_copy",
+      "value": "Salin Sidik Jari"
+    },
+    {
+      "name": "crypto_menu_fingerprint_distrust",
+      "value": "Simbol Ketidakpercayaan"
+    },
+    {
+      "name": "crypto_menu_fingerprint_trust",
+      "value": "Kepercayaan Sidik Jari"
+    },
+    {
+      "name": "crypto_msg_omemo_session_setup_failed",
+      "value": "Pengaturan sesi OMEMO tidak berhasil! %1$s"
+    },
+    {
+      "name": "crypto_msg_omemo_session_untrusted",
+      "value": "Menemukan Sobat tepercaya ZERO untuk menerima pesan OMEMO!"
+    },
+    {
+      "name": "crypto_msg_omemo_session_unverified",
+      "value": "Mengirim pesan OMEMO ke beberapa teman yang tidak dikenal dengan sidik jari yang tidak terverifikasi!"
+    },
+    {
+      "name": "crypto_msg_omemo_session_unverified_untrusted",
+      "value": "MultiUserChat dengan beberapa teman yang tidak dipercaya atau dengan sidik jari yang tidak terverifikasi!"
+    },
+    {
+      "name": "crypto_msg_omemo_session_verified",
+      "value": "*** Semua teman telah diautentikasi! ***"
+    },
+    {
+      "name": "crypto_fingerprint_status",
+      "value": "Diverifikasi: %1$s"
+    },
+    {
+      "name": "crypto_no_key_present",
+      "value": "Tidak ada kunci yang hadir"
+    },
+    {
+      "name": "crypto_fingerprint_copy",
+      "value": "Sidik jari disalin ke papan klip!"
+    },
+    {
+      "name": "crypto_omemo_distrust_messaging_stop",
+      "value": "Hentikan pengiriman lebih lanjut pesan OMEMO ke teman: %1$s"
+    },
+    {
+      "name": "crypto_omemo_trust_messaging_resume",
+      "value": "Lanjutkan pengiriman pesan OMEMO ke teman: %1$s"
+    },
+    {
+      "name": "advanced",
+      "value": "Lanjutan"
+    },
+    {
+      "name": "settings_expert",
+      "value": "Pengaturan ahli"
+    },
+    {
+      "name": "settings_expert_summary",
+      "value": "Harap berhati-hati dengan ini"
+    },
+    {
+      "name": "port",
+      "value": "Port"
+    },
+    {
+      "name": "protocol",
+      "value": "Protokol"
+    },
+    {
+      "name": "opus",
+      "value": "Opus"
+    },
+    {
+      "name": "opus_sampling_rate",
+      "value": "Tingkat pengambilan sampel"
+    },
+    {
+      "name": "opus_bitrate",
+      "value": "Bitrate rata-rata penyandi (kbps)"
+    },
+    {
+      "name": "opus_complexity",
+      "value": "Kompleksitas penyandiaksaraan"
+    },
+    {
+      "name": "opus_min_expected_packet_loss",
+      "value": "Paket kerugian minimum yang diharapkan ( %)"
+    },
+    {
+      "name": "opus_encoder_settings",
+      "value": "Konfigurasikan pengaturan encoder Opus"
+    },
+    {
+      "name": "opus_use_dtx",
+      "value": "Gunakan DTX"
+    },
+    {
+      "name": "opus_use_fec",
+      "value": "Gunakan inband FEC"
+    },
+    {
+      "name": "silk",
+      "value": "Sutra"
+    },
+    {
+      "name": "silk_encoder_settings",
+      "value": "Konfigurasikan pengaturan encoder Sutera"
+    },
+    {
+      "name": "silk_use_fec",
+      "value": "Gunakan inband FEC"
+    },
+    {
+      "name": "silk_assume_pl",
+      "value": "Selalu anggap hilangnya paket"
+    },
+    {
+      "name": "silk_fec_sat",
+      "value": "Ambang aktivitas ucapan (0–1)"
+    },
+    {
+      "name": "silk_fec_advertise",
+      "value": "Adakan dukungan FEC dalam SDP"
+    },
+    {
+      "name": "battery_optimizations",
+      "value": "Optimasi Baterai"
+    },
+    {
+      "name": "battery_optimizations_dialog",
+      "value": "Perangkat anda memiliki optimalisasi penggunaan baterai pada aTalk;ini dapat menyebabkan pemberitahuan tertunda atau pesan hilang.\n\nSebaiknya anda menonaktifkan pengoptimalan ini untuk aTalk."
+    },
+    {
+      "name": "battery_optimization_on",
+      "value": "aTalk akan dimatikan ketika perangkat masuk ke mode siaga-tidur. Restart aTalk secara manual untuk menerima pesan baru."
+    },
+    {
+      "name": "device_does_not_support_battery_op",
+      "value": "Perangkat anda tidak mendukung memilih keluar dari optimalisasi baterai"
+    },
+    {
+      "name": "disable",
+      "value": "Nonaktifkan"
+    },
+    {
+      "name": "next",
+      "value": "Next"
+    },
+    {
+      "name": "app_info",
+      "value": "App Info…"
+    },
+    {
+      "name": "permission_app_info",
+      "value": "Info Aplikasi"
+    },
+    {
+      "name": "permission_request_all",
+      "value": "Meminta semua"
+    },
+    {
+      "name": "permission_camera",
+      "value": "Camera"
+    },
+    {
+      "name": "permission_contacts",
+      "value": "Kontak"
+    },
+    {
+      "name": "permission_location",
+      "value": "Lokasi"
+    },
+    {
+      "name": "permission_microphone",
+      "value": "Mikropon"
+    },
+    {
+      "name": "permission_music",
+      "value": "Musik dan Audio"
+    },
+    {
+      "name": "permission_notifications",
+      "value": "Notifikasi"
+    },
+    {
+      "name": "permission_phone",
+      "value": "Telepon"
+    },
+    {
+      "name": "permission_video",
+      "value": "Foto dan Video"
+    },
+    {
+      "name": "permission_storage",
+      "value": "Penyimpanan"
+    },
+    {
+      "name": "permission_hint",
+      "value": "Untuk aplikasi kinerja maksimum dan dukungan fitur lengkap, aTalk mengharuskan anda memberikan izin untuk layanan berikut. Tanpa mereka, aTalk mungkin tidak berfungsi atau mungkin memiliki perilaku yang tidak terduga!"
+    },
+    {
+      "name": "permission_denied",
+      "value": "DITOLAK"
+    },
+    {
+      "name": "permission_granted",
+      "value": "GRANTED"
+    },
+    {
+      "name": "permission_denied_permanently",
+      "value": "PERMANEN DITOLAK"
+    },
+    {
+      "name": "permission_unknown",
+      "value": "TIDAK DIKETAHUI"
+    },
+    {
+      "name": "mic_permission_denied_dialog_title",
+      "value": "Permintaan izin audio"
+    },
+    {
+      "name": "mic_permission_denied_feedback",
+      "value": "Panggilan audio tidak akan tersedia sampai anda memberikan permintaan izin"
+    },
+    {
+      "name": "camera_permission_denied_dialog_title",
+      "value": "Permintaan izin kamera"
+    },
+    {
+      "name": "camera_permission_denied_feedback",
+      "value": "Semua kegiatan yang terkait dengan kamera tidak akan tersedia sampai Anda mengabulkan permintaan izin"
+    },
+    {
+      "name": "contacts_permission_denied_dialog_title",
+      "value": "Permintaan izin kontak"
+    },
+    {
+      "name": "contacts_permission_denied_feedback",
+      "value": "Izin kontak diperlukan untuk akses status ponsel dan pengaturan panggilan"
+    },
+    {
+      "name": "music_permission_denied_dialog_title",
+      "value": "Permintaan izin musik dan audio"
+    },
+    {
+      "name": "music_permission_denied_feedback",
+      "value": "File audio media tidak dapat diakses sampai Anda memberikan permintaan izin"
+    },
+    {
+      "name": "location_permission_denied_dialog_title",
+      "value": "Permintaan izin lokasi"
+    },
+    {
+      "name": "location_permission_denied_feedback",
+      "value": "Fitur GPS-Lokasi tidak akan tersedia sampai anda memberikan permintaan izin"
+    },
+    {
+      "name": "notifications_permission_denied_dialog_title",
+      "value": "Permintaan izin pemberitahuan"
+    },
+    {
+      "name": "notifications_permission_denied_feedback",
+      "value": "Notifikasi dari aTalk akan dinonaktifkan hingga Anda mengabulkan permintaan izin"
+    },
+    {
+      "name": "phone_permission_denied_dialog_title",
+      "value": "Baca permintaan izin Negara Telepon"
+    },
+    {
+      "name": "phone_permission_denied_feedback",
+      "value": "Fitur telepon tidak akan tersedia sampai anda memberikan permintaan izin"
+    },
+    {
+      "name": "video_permission_denied_dialog_title",
+      "value": "Permintaan izin foto dan video"
+    },
+    {
+      "name": "video_permission_denied_feedback",
+      "value": "File foto dan video media tidak dapat diakses sampai Anda memberikan permintaan izin"
+    },
+    {
+      "name": "storage_permission_denied_dialog_title",
+      "value": "Permintaan izin penyimpanan"
+    },
+    {
+      "name": "storage_permission_denied_feedback",
+      "value": "Menyimpan konten yang dikirim dan diterima dalam penyimpanan tidak akan diizinkan sampai Anda mengabulkan permintaan izin"
+    },
+    {
+      "name": "all_permission_denied_dialog_title",
+      "value": "Semua permintaan izin"
+    },
+    {
+      "name": "all_permissions_denied_feedback",
+      "value": "aTalk mungkin tidak berfungsi dengan benar atau mungkin memiliki perilaku tidak terduga karena beberapa layanan telah ditolak!\nJika anda telah memilih \\\"Jangan tanyakan lagi \\\" pilihan, anda harus pergi ke Pengaturan Android - >INFO APP bagi aTalk untuk mengaktifkan izin akses sumber daya"
+    },
+    {
+      "name": "permission_denied_all_alert",
+      "value": "aTalk tidak akan berfungsi dengan baik. Anda telah menolak aTalk dari semua izin!\nAnda harus pergi ke Pengaturan Android -> INFO APP bagi aTalk untuk mengaktifkan izin akses sumber daya"
+    },
+    {
+      "name": "permission_rationale_message",
+      "value": "Anda disajikan dengan setiap layanan yang dibutuhkan olehTalk;izinkan aTalk mengakses layanan ini untuk fitur lengkap yang didukung"
+    },
+    {
+      "name": "permission_rationale_settings_button_text",
+      "value": "SETTINGS"
+    },
+    {
+      "name": "permission_rationale_title",
+      "value": "aTalk memerlukan izin"
+    },
+    {
+      "name": "location_permission_dialog_title",
+      "value": "Izin lokasi diperlukan"
+    },
+    {
+      "name": "location_permission_dialog_message",
+      "value": "Aktifkan izin Lokasi sekarang?"
+    },
+    {
+      "name": "location_services_off",
+      "value": "Layanan lokasi diTutup"
+    },
+    {
+      "name": "open_location_settings",
+      "value": "Aktifkan layanan lokasi sekarang?"
+    },
+    {
+      "name": "changelog_full_title",
+      "value": "Catatan Perubahan"
+    },
+    {
+      "name": "changelog_title",
+      "value": "Apa yang Baru"
+    },
+    {
+      "name": "changelog_show_full",
+      "value": "Lagi…"
+    },
+    {
+      "name": "changelog_version_format",
+      "value": "Versi <xliff:g id=\"version_name\">%s</xliff:g>"
+    }
+  ]
+}

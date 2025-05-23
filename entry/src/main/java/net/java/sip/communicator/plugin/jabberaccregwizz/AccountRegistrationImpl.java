@@ -6,9 +6,6 @@
  */
 package net.java.sip.communicator.plugin.jabberaccregwizz;
 
-import android.text.TextUtils;
-import android.util.Patterns;
-
 import net.java.sip.communicator.service.gui.AccountRegistrationWizard;
 import net.java.sip.communicator.service.protocol.AccountID;
 import net.java.sip.communicator.service.protocol.OperationFailedException;

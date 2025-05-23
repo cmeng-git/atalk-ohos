@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DirectionalLayout xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:width="match_parent"
+    ohos:height="match_parent"
+    ohos:top_margin="$float:between_padding"
+    ohos:orientation="vertical">
+
+    <Text
+        ohos:id="$+id:cr_attr_label"
+        ohos:text_size="$float:medium_font"
+        ohos:width="match_content"
+        ohos:height="match_content" />
+
+    <Picker
+        ohos:id="$+id:cr_Spinner"
+        ohos:background_element="$media:spinner_dark" />
+
+</DirectionalLayout>

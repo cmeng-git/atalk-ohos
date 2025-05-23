@@ -65,7 +65,6 @@ public class TransportCCEngine extends RTCPPacketListenerAdapter implements Remo
 
     /**
      * The maximum number of received packets and their timestamps to save.
-     *
      * XXX this is an uninformed value.
      */
     private static final int MAX_OUTGOING_PACKETS_HISTORY = 1000;

@@ -1,6 +1,6 @@
 /*
- * aTalk, android VoIP and Instant Messaging client
- * Copyright 2014 Eng Chong Meng
+ * aTalk, ohos VoIP and Instant Messaging client
+ * Copyright 2024 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,16 @@
  */
 package org.atalk.ohos.gui.util;
 
-import android.content.Context;
-import android.content.res.Configuration;
-import android.content.res.Resources;
-import android.text.TextUtils;
-
 import java.util.Locale;
 
+import ohos.app.Context;
+import ohos.global.configuration.Configuration;
+import ohos.global.configuration.LocaleProfile;
+
+import org.apache.http.util.TextUtils;
+
 /**
- * Implementation of LocaleHelper to support proper Locale setting for Application/Activity classes.
+ * Implementation of LocaleHelper to support proper Locale setting for Application/Ability classes.
  *
  * @author Eng Chong Meng
  */
@@ -76,12 +77,12 @@ public class LocaleHelper {
      * #return The new ContextImpl for use by caller
      */
     public static Context wrap(Context context, String language) {
-        Configuration config = context.getResources().getConfiguration();
+        Configuration config = context.getResourceManager().getConfiguration();
 
         Locale locale;
         if (TextUtils.isEmpty(language)) {
             // System default may contain regional preference i.e. 'en-US-#u-fw-sun-mu-celsius'
-            locale = Resources.getSystem().getConfiguration().getLocales().get(0);
+            locale =  config.getLocaleProfile().getLocales()[0];
 
             // Strip off any regional preferences in the language
             language = locale.toString().split("_#")[0];
@@ -100,10 +101,13 @@ public class LocaleHelper {
             xmlLocale = locale;
         }
 
-        config.setLayoutDirection(locale);
-        config.setLocale(locale);
+        Locale[] locales = {locale};
+        new LocaleProfile(locales);
+
+        config.setLocaleProfile(new LocaleProfile(locales));
 
         // Timber.d(new Exception(), "set locale: %s: %s", language, context);
-        return context.createConfigurationContext(config);
+        // Context createBundleContext(String var1, int var2);
+        return context; //.createConfigurationContext(config);
     }
 }

@@ -571,7 +571,6 @@ public class MediaUtils {
 
     /**
      * Creates value of an imgattr.
-     *
      * <a href="https://tools.ietf.org/html/rfc6236">...</a>
      *
      * @param sendSize maximum size peer can send

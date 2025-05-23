@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<set xmlns:android="http://schemas.android.com/apk/res/android">
+<set xmlns:ohos="http://schemas.huawei.com/res/ohos">
 	<scale
-		android:fromXScale="1.1" android:toXScale="1.0"
-		android:fromYScale="1.1" android:toYScale="1.0"
-		android:pivotX="50%" android:pivotY="100%"
-		android:duration="@android:integer/config_shortAnimTime"
+		ohos:fromXScale="1.1" ohos:toXScale="1.0"
+		ohos:fromYScale="1.1" ohos:toYScale="1.0"
+		ohos:pivotX="50%" ohos:pivotY="100%"
+		ohos:duration="@ohos:integer/config_shortAnimTime"
 	/>
 	<alpha
-		android:interpolator="@android:anim/decelerate_interpolator"
-		android:fromAlpha="0.0" android:toAlpha="1.0"
-		android:duration="@android:integer/config_shortAnimTime"
+		ohos:interpolator="@ohos:anim/decelerate_interpolator"
+		ohos:fromAlpha="0.0" ohos:toAlpha="1.0"
+		ohos:duration="@ohos:integer/config_shortAnimTime"
 	/>
 </set>

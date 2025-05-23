@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<DependentLayout
+    xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:height="match_parent"
+    ohos:width="match_parent"
+    ohos:orientation="vertical"
+    ohos:padding="$float:between_padding">
+
+    <ScrollView
+        ohos:id="$+id:scrollView"
+        ohos:height="match_content"
+        ohos:width="match_parent"
+        ohos:above="$id:call_info_ok">
+
+        <DependentLayout
+            ohos:height="match_content"
+            ohos:width="match_parent">
+
+            <Text
+                ohos:id="$+id:Text"
+                ohos:height="match_content"
+                ohos:width="match_content"
+                ohos:align_parent_top="true"
+                ohos:background_element="$graphic:call_status_bg"
+                ohos:text="$string:callinfo_call_information"
+                ohos:text_alignment="horizontal_center"
+                ohos:text_weight="$float:text_bold"/>
+
+            <Text
+                ohos:id="$+id:peerCountLabel"
+                ohos:height="match_content"
+                ohos:width="match_content"
+                ohos:below="$id:Text"
+                ohos:margin="10vp"
+                ohos:text="$string:callinfo_peer_count"/>
+
+            <Text
+                ohos:id="$+id:peerCount"
+                ohos:height="match_content"
+                ohos:width="match_content"
+                ohos:below="$id:Text"
+                ohos:end_of="$id:peerCountLabel"
+                ohos:max_text_lines="1"
+                ohos:start_margin="5vp"
+                ohos:text="xx"/>
+
+            <Text
+                ohos:id="$+id:confFocusLabel"
+                ohos:height="match_content"
+                ohos:width="match_content"
+                ohos:align_start="$id:Text"
+                ohos:below="$id:peerCountLabel"
+                ohos:margin="10vp"
+                ohos:text="$string:callinfo_conference_focus"/>
+
+            <Text
+                ohos:id="$+id:conferenceFocus"
+                ohos:height="match_content"
+                ohos:width="match_content"
+                ohos:below="$id:peerCountLabel"
+                ohos:end_of="$id:confFocusLabel"
+                ohos:max_text_lines="1"
+                ohos:start_margin="5vp"
+                ohos:text="true"/>
+
+            <Text
+                ohos:id="$+id:identityLabel"
+                ohos:height="match_content"
+                ohos:width="match_content"
+                ohos:align_start="$id:Text"
+                ohos:below="$id:confFocusLabel"
+                ohos:margin="10vp"
+                ohos:text="$string:callinfo_call_identity"/>
+
+            <Text
+                ohos:id="$+id:identity"
+                ohos:height="match_content"
+                ohos:width="match_content"
+                ohos:below="$id:confFocusLabel"
+                ohos:end_of="$id:identityLabel"
+                ohos:max_text_lines="1"
+                ohos:start_margin="5vp"
+                ohos:text="SIP_ID@sipproxy.com"/>
+
+            <Text
+                ohos:id="$+id:signalingLabel"
+                ohos:height="match_content"
+                ohos:width="match_content"
+                ohos:align_start="$id:Text"
+                ohos:below="$id:identityLabel"
+                ohos:margin="10vp"
+                ohos:text="$string:callinfo_call_transport"/>
+
+            <Text
+                ohos:id="$+id:transport"
+                ohos:height="match_content"
+                ohos:width="match_content"
+                ohos:below="$id:identityLabel"
+                ohos:end_of="$id:signalingLabel"
+                ohos:max_text_lines="1"
+                ohos:start_margin="5vp"
+                ohos:text="UDP"/>
+
+            <Text
+                ohos:id="$+id:callPeer"
+                ohos:height="match_content"
+                ohos:width="match_content"
+                ohos:align_start="$id:Text"
+                ohos:below="$id:signalingLabel"
+                ohos:margin="10vp"
+                ohos:text="CallPeer@other.server.com"/>
+
+            <Text
+                ohos:id="$+id:durationLabel"
+                ohos:height="match_content"
+                ohos:width="match_content"
+                ohos:align_start="$id:Text"
+                ohos:below="$id:callPeer"
+                ohos:margin="10vp"
+                ohos:text="$string:callinfo_call_duration"/>
+
+            <Text
+                ohos:id="$+id:callDuration"
+                ohos:height="match_content"
+                ohos:width="match_content"
+                ohos:below="$id:callPeer"
+                ohos:end_of="$id:durationLabel"
+                ohos:max_text_lines="1"
+                ohos:start_margin="5vp"
+                ohos:text="xx:xx:xx"/>
+
+            <Text
+                ohos:id="$+id:iceStateLabel"
+                ohos:height="match_content"
+                ohos:width="match_content"
+                ohos:below="$id:durationLabel"
+                ohos:margin="10vp"
+                ohos:text="$string:callinfo_ice_state"/>
+
+            <Text
+                ohos:id="$+id:iceState"
+                ohos:height="match_content"
+                ohos:width="match_content"
+                ohos:below="$id:iceStateLabel"
+                ohos:max_text_lines="1"
+                ohos:start_margin="20vp"
+                ohos:text="$string:callinfo_ice_state_running"/>
+
+            <Text
+                ohos:id="$+id:totalHarvestLabel"
+                ohos:height="match_content"
+                ohos:width="match_content"
+                ohos:below="$id:iceState"
+                ohos:margin="10vp"
+                ohos:text="$string:callinfo_total_harvesting_time"/>
+
+            <Text
+                ohos:id="$+id:totalHarvestTime"
+                ohos:height="match_content"
+                ohos:width="match_content"
+                ohos:below="$id:totalHarvestLabel"
+                ohos:margin="10vp"
+                ohos:text="xxx ms (for xx harvests)"/>
+
+            <Text
+                ohos:id="$+id:googleTurnLabel"
+                ohos:height="match_content"
+                ohos:width="match_content"
+                ohos:below="$id:totalHarvestTime"
+                ohos:margin="10vp"
+                ohos:text="GoogleTurnCandidateHarvester"/>
+
+            <Text
+                ohos:id="$+id:googleTurnTime"
+                ohos:height="match_content"
+                ohos:width="match_content"
+                ohos:below="$id:googleTurnLabel"
+                ohos:max_text_lines="1"
+                ohos:start_margin="20vp"
+                ohos:text="xxx ms (for xx harvests)"/>
+
+            <Text
+                ohos:id="$+id:googleTurnSSlLabel"
+                ohos:height="match_content"
+                ohos:width="match_content"
+                ohos:below="$id:googleTurnTime"
+                ohos:margin="10vp"
+                ohos:text="GoogleTurnSSLCandidateHarvester"/>
+
+            <Text
+                ohos:id="$+id:googleTurnSSlTime"
+                ohos:height="match_content"
+                ohos:width="match_content"
+                ohos:below="$id:googleTurnSSlLabel"
+                ohos:max_text_lines="1"
+                ohos:start_margin="20vp"
+                ohos:text="xxx ms (for xx harvests)"/>
+
+            <Text
+                ohos:id="$+id:hostHarvesterLabel"
+                ohos:height="match_content"
+                ohos:width="match_content"
+                ohos:below="$id:googleTurnSSlTime"
+                ohos:margin="10vp"
+                ohos:text="HostCandidateHarvester"/>
+
+            <Text
+                ohos:id="$+id:hostHarvesterTime"
+                ohos:height="match_content"
+                ohos:width="match_content"
+                ohos:below="$id:hostHarvesterLabel"
+                ohos:max_text_lines="1"
+                ohos:start_margin="20vp"
+                ohos:text="xxx ms (for xx harvests)"/>
+
+            <Text
+                ohos:id="$+id:jingleNodesLabel"
+                ohos:height="match_content"
+                ohos:width="match_content"
+                ohos:below="$id:hostHarvesterTime"
+                ohos:margin="10vp"
+                ohos:text="JingleNodesHarvester"/>
+
+            <Text
+                ohos:id="$+id:jingleNodesTime"
+                ohos:height="match_content"
+                ohos:width="match_content"
+                ohos:below="$id:jingleNodesLabel"
+                ohos:max_text_lines="1"
+                ohos:start_margin="20vp"
+                ohos:text="xxx ms (for xx harvests)"/>
+
+            <Text
+                ohos:id="$+id:stunHarvesterLabel"
+                ohos:height="match_content"
+                ohos:width="match_content"
+                ohos:below="$id:jingleNodesTime"
+                ohos:margin="10vp"
+                ohos:text="StunCandidateHarvester"/>
+
+            <Text
+                ohos:id="$+id:stunHarvesterTime"
+                ohos:height="match_content"
+                ohos:width="match_content"
+                ohos:below="$id:stunHarvesterLabel"
+                ohos:max_text_lines="1"
+                ohos:start_margin="20vp"
+                ohos:text="xxx ms (for xx harvests)"/>
+
+            <Text
+                ohos:id="$+id:turnHarvesterLabel"
+                ohos:height="match_content"
+                ohos:width="match_content"
+                ohos:below="$id:stunHarvesterTime"
+                ohos:margin="10vp"
+                ohos:text="TurnCandidateHarvester"/>
+
+            <Text
+                ohos:id="$+id:turnHarvesterTime"
+                ohos:height="match_content"
+                ohos:width="match_content"
+                ohos:below="$id:turnHarvesterLabel"
+                ohos:max_text_lines="1"
+                ohos:start_margin="20vp"
+                ohos:text="xxx ms (for xx harvests)"/>
+
+            <Text
+                ohos:id="$+id:upnpHarvesterLabel"
+                ohos:height="match_content"
+                ohos:width="match_content"
+                ohos:below="$id:turnHarvesterTime"
+                ohos:margin="10vp"
+                ohos:text="UPNPHarvester"/>
+
+            <Text
+                ohos:id="$+id:upnpHarvesterTime"
+                ohos:height="match_content"
+                ohos:width="match_content"
+                ohos:below="$id:upnpHarvesterLabel"
+                ohos:max_text_lines="1"
+                ohos:start_margin="20vp"
+                ohos:text="xxx ms (for xx harvests)"/>
+
+            <!-- Include audio video part -->
+            <include
+                ohos:id="$+id:audioInfo"
+                ohos:height="match_content"
+                ohos:width="match_parent"
+                ohos:below="$id:upnpHarvesterTime"
+                ohos:top_margin="10vp"
+                layout="$layout:audio_video_info"/>
+
+            <include
+                ohos:id="$+id:videoInfo"
+                ohos:height="match_content"
+                ohos:width="match_parent"
+                ohos:below="$id:audioInfo"
+                ohos:top_margin="10vp"
+                layout="$layout:audio_video_info"/>
+        </DependentLayout>
+    </ScrollView>
+
+    <Button
+        ohos:id="$+id:call_info_ok"
+        ohos:width="match_parent"
+        ohos:align_parent_bottom="true"
+        ohos:background_element="$graphic:btn_state_action"
+        ohos:focusable="focus_adaptable"
+        ohos:text="$string:ok"/>
+</DependentLayout>

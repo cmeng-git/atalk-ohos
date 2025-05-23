@@ -5,9 +5,6 @@
  */
 package net.java.sip.communicator.impl.protocol.jabber;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -45,7 +42,7 @@ import net.java.sip.communicator.service.protocol.ServerStoredDetails.WorkPhoneD
 import net.java.sip.communicator.service.protocol.ServerStoredDetails.WorkVideoDetail;
 import net.java.sip.communicator.service.protocol.event.ServerStoredDetailsChangeEvent;
 
-import org.atalk.ohos.R;
+import org.atalk.ohos.ResourceTable;
 import org.atalk.ohos.aTalkApp;
 import org.jivesoftware.smack.SmackException.NoResponseException;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
@@ -460,7 +457,7 @@ public class OperationSetServerStoredAccountInfoJabberImpl extends AbstractOpera
      */
     private boolean assertConnected() {
         if (((jabberProvider == null) || !jabberProvider.isRegistered())) {
-            Timber.w(aTalkApp.getResString(R.string.network_assert_error));
+            Timber.w(aTalkApp.getResString(ResourceTable.String_network_assert_error));
             return false;
         }
         return true;

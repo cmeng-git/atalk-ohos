@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<DirectionalLayout xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:width="match_parent"
+    ohos:height="match_parent"
+    ohos:alignment="vertical_center"
+    ohos:orientation="horizontal"
+    ohos:padding="$float:screen_padding">
+
+    <ProgressBar
+        ohos:id="$+id:progressBar"
+        ohos:width="match_content"
+        ohos:height="match_content"
+        ohos:infinite="true" />
+
+    <Text
+        ohos:id="$+id:messageText"
+        ohos:text_size="$float:medium_font"
+        ohos:width="match_content"
+        ohos:height="match_content"
+        ohos:start_padding="10vp"
+        ohos:text="[Ongoing action...]" />
+</DirectionalLayout>

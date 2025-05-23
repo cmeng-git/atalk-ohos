@@ -5,22 +5,11 @@
  */
 package org.atalk.impl.neomedia;
 
-import androidx.annotation.NonNull;
+import ohos.agp.utils.Point;
+import ohos.utils.zson.ZSONObject;
 
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.Window;
-import java.awt.event.HierarchyEvent;
-import java.awt.event.HierarchyListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.io.IOException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,38 +18,16 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.media.CaptureDeviceInfo;
-import javax.media.Codec;
-import javax.media.ConfigureCompleteEvent;
-import javax.media.ControllerEvent;
-import javax.media.ControllerListener;
-import javax.media.Format;
-import javax.media.Manager;
-import javax.media.MediaLocator;
-import javax.media.NotConfiguredError;
-import javax.media.Player;
-import javax.media.Processor;
-import javax.media.RealizeCompleteEvent;
-import javax.media.UnsupportedPlugInException;
-import javax.media.control.TrackControl;
-import javax.media.format.RGBFormat;
-import javax.media.protocol.DataSource;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 
 import com.sun.media.util.Registry;
 
 import org.atalk.impl.neomedia.codec.EncodingConfigurationConfigImpl;
 import org.atalk.impl.neomedia.codec.EncodingConfigurationImpl;
-import org.atalk.impl.neomedia.codec.FFmpeg;
 import org.atalk.impl.neomedia.codec.FMJPlugInConfiguration;
-import org.atalk.impl.neomedia.codec.video.AVFrameFormat;
-import org.atalk.impl.neomedia.codec.video.HFlip;
-import org.atalk.impl.neomedia.codec.video.SwScale;
 import org.atalk.impl.neomedia.device.AudioMediaDeviceImpl;
 import org.atalk.impl.neomedia.device.AudioMixerMediaDevice;
 import org.atalk.impl.neomedia.device.AudioSystem;
@@ -72,15 +39,11 @@ import org.atalk.impl.neomedia.device.VideoTranslatorMediaDevice;
 import org.atalk.impl.neomedia.format.MediaFormatFactoryImpl;
 import org.atalk.impl.neomedia.format.MediaFormatImpl;
 import org.atalk.impl.neomedia.format.VideoMediaFormatImpl;
-import org.atalk.impl.neomedia.recording.RecorderEventHandlerJSONImpl;
 import org.atalk.impl.neomedia.recording.RecorderImpl;
-import org.atalk.impl.neomedia.recording.RecorderRtpImpl;
 import org.atalk.impl.neomedia.rtp.translator.RTPTranslatorImpl;
 import org.atalk.impl.neomedia.transform.dtls.DtlsControlImpl;
 import org.atalk.impl.neomedia.transform.sdes.SDesControlImpl;
 import org.atalk.impl.neomedia.transform.zrtp.ZrtpControlImpl;
-import org.atalk.ohos.R;
-import org.atalk.ohos.aTalkApp;
 import org.atalk.service.configuration.ConfigurationService;
 import org.atalk.service.libjitsi.LibJitsi;
 import org.atalk.service.neomedia.BasicVolumeControl;
@@ -98,12 +61,8 @@ import org.atalk.service.neomedia.device.ScreenDevice;
 import org.atalk.service.neomedia.format.MediaFormat;
 import org.atalk.service.neomedia.format.MediaFormatFactory;
 import org.atalk.service.neomedia.recording.Recorder;
-import org.atalk.service.neomedia.recording.RecorderEventHandler;
 import org.atalk.util.MediaType;
-import org.atalk.util.OSUtils;
 import org.atalk.util.event.PropertyChangeNotifier;
-import org.atalk.util.swing.VideoContainer;
-import org.json.JSONObject;
 
 import timber.log.Timber;
 
@@ -191,12 +150,6 @@ public class MediaServiceImpl extends PropertyChangeNotifier implements MediaSer
     private final DeviceConfiguration deviceConfiguration = new DeviceConfiguration();
 
     /**
-     * The <code>PropertyChangeListener</code> which listens to {@link #deviceConfiguration}.
-     */
-    private final PropertyChangeListener deviceConfigurationPropertyChangeListener
-            = event -> deviceConfigurationPropertyChange(event);
-
-    /**
      * The list of audio <code>MediaDevice</code>s reported by this instance when its
      * {@link MediaService#getDevices(MediaType, MediaUseCase)} method is called with an argument
      * {@link MediaType#AUDIO}.
@@ -270,7 +223,7 @@ public class MediaServiceImpl extends PropertyChangeNotifier implements MediaSer
          * XXX The deviceConfiguration is initialized and referenced by this instance so adding
          * deviceConfigurationPropertyChangeListener does not need a matching removal.
          */
-        deviceConfiguration.addPropertyChangeListener(deviceConfigurationPropertyChangeListener);
+        deviceConfiguration.addPropertyChangeListener(this::deviceConfigurationPropertyChange);
         currentEncodingConfiguration = new EncodingConfigurationConfigImpl(ENCODING_CONFIG_PROP_PREFIX);
 
         /*
@@ -297,7 +250,7 @@ public class MediaServiceImpl extends PropertyChangeNotifier implements MediaSer
      *
      * @see MediaService#createMediaStream(MediaDevice)
      */
-    public MediaStream createMediaStream(@NonNull MediaDevice device) {
+    public MediaStream createMediaStream(MediaDevice device) {
         return createMediaStream(null, device);
     }
 
@@ -307,7 +260,7 @@ public class MediaServiceImpl extends PropertyChangeNotifier implements MediaSer
      * Implements {@link MediaService#createMediaStream(MediaType)}. Initializes a new
      * <code>AudioMediaStreamImpl</code> or <code>VideoMediaStreamImpl</code> in accord with <code>mediaType</code>
      */
-    public MediaStream createMediaStream(@NonNull MediaType mediaType) {
+    public MediaStream createMediaStream(MediaType mediaType) {
         return createMediaStream(mediaType, null, null, null);
     }
 
@@ -441,7 +394,7 @@ public class MediaServiceImpl extends PropertyChangeNotifier implements MediaSer
      *
      * @see MediaService#getDefaultDevice(MediaType, MediaUseCase)
      */
-    public MediaDevice getDefaultDevice(MediaType mediaType, @NonNull MediaUseCase useCase) {
+    public MediaDevice getDefaultDevice(MediaType mediaType, MediaUseCase useCase) {
         CaptureDeviceInfo captureDeviceInfo;
         switch (mediaType) {
             case AUDIO:
@@ -509,7 +462,7 @@ public class MediaServiceImpl extends PropertyChangeNotifier implements MediaSer
      *
      * @see MediaService#getDevices(MediaType, MediaUseCase)
      */
-    public List<MediaDevice> getDevices(@NonNull MediaType mediaType, @NonNull MediaUseCase useCase) {
+    public List<MediaDevice> getDevices(MediaType mediaType, MediaUseCase useCase) {
         List<? extends CaptureDeviceInfo> cdis;
         List<MediaDeviceImpl> privateDevices;
 
@@ -755,19 +708,11 @@ public class MediaServiceImpl extends PropertyChangeNotifier implements MediaSer
      *
      * @see MediaService#createRecorder(MediaDevice)
      */
-    public Recorder createRecorder(@NonNull MediaDevice device) {
+    public Recorder createRecorder(MediaDevice device) {
         if (device instanceof AudioMixerMediaDevice)
             return new RecorderImpl((AudioMixerMediaDevice) device);
         else
             return null;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Recorder createRecorder(@NonNull RTPTranslator translator) {
-        return new RecorderRtpImpl(translator);
     }
 
     /**
@@ -781,7 +726,6 @@ public class MediaServiceImpl extends PropertyChangeNotifier implements MediaSer
      *
      * @return a {@link Map} binding some formats to a preferred dynamic RTP payload type number.
      */
-    @NonNull
     @Override
     public Map<MediaFormat, Byte> getDynamicPayloadTypePreferences() {
         if (dynamicPayloadTypePreferences == null) {
@@ -827,285 +771,30 @@ public class MediaServiceImpl extends PropertyChangeNotifier implements MediaSer
 
                     String source = cfg.getString(propertyName);
                     if ((source != null) && (source.length() != 0)) {
-                        try {
-                            // JSONObject json = (JSONObject) JSONValue.parseWithException(source);
-                            JSONObject json = new JSONObject(source);
-                            String encoding = json.getString(MediaFormatImpl.ENCODING_PNAME);
-                            long clockRate = json.getLong(MediaFormatImpl.CLOCK_RATE_PNAME);
-                            Map<String, String> fmtps = new HashMap<>();
+                        // ZSONObject zson = (ZSONObject) ZSONValue.parseWithException(source);
+                        ZSONObject zson = ZSONObject.stringToZSON(source);
+                        String encoding = zson.getString(MediaFormatImpl.ENCODING_PNAME);
+                        long clockRate = zson.getLong(MediaFormatImpl.CLOCK_RATE_PNAME);
+                        Map<String, String> fmtps = new HashMap<>();
 
-                            if (json.has(MediaFormatImpl.FORMAT_PARAMETERS_PNAME)) {
-                                JSONObject jsonFmtps = (JSONObject) json.get(MediaFormatImpl.FORMAT_PARAMETERS_PNAME);
-                                Iterator<String> keys = jsonFmtps.keys();
-                                while (keys.hasNext()) {
-                                    String key = keys.next();
-                                    String value = jsonFmtps.getString(key);
-                                    fmtps.put(key, value);
-                                }
+                        if (zson.containsKey(MediaFormatImpl.FORMAT_PARAMETERS_PNAME)) {
+                            ZSONObject zsonFmtps = (ZSONObject) zson.get(MediaFormatImpl.FORMAT_PARAMETERS_PNAME);
+                            Set<String> keys = zsonFmtps.keySet();
+                            for (String key : keys) {
+                                String value = zsonFmtps.getString(key);
+                                fmtps.put(key, value);
                             }
+                        }
 
-                            MediaFormat mediaFormat = MediaUtils.getMediaFormat(encoding, clockRate, fmtps);
-                            if (mediaFormat != null) {
-                                dynamicPayloadTypePreferences.put(mediaFormat, dynamicPayloadTypePreference);
-                            }
-                        } catch (Throwable jsone) {
-                            Timber.w(jsone, "Ignoring dynamic payload type preference which could not be parsed: %s", source);
+                        MediaFormat mediaFormat = MediaUtils.getMediaFormat(encoding, clockRate, fmtps);
+                        if (mediaFormat != null) {
+                            dynamicPayloadTypePreferences.put(mediaFormat, dynamicPayloadTypePreference);
                         }
                     }
                 }
             }
         }
         return dynamicPayloadTypePreferences;
-    }
-
-    /**
-     * Creates a preview component for the specified device(video device) used to show video
-     * preview from that device.
-     *
-     * @param device the video device
-     * @param preferredWidth the width we prefer for the component
-     * @param preferredHeight the height we prefer for the component
-     *
-     * @return the preview component.
-     */
-    @Override
-    public Object getVideoPreviewComponent(MediaDevice device, int preferredWidth, int preferredHeight) {
-        String noPreviewText = aTalkApp.getResString(R.string.media_configform_preview);
-        JLabel noPreview = new JLabel(noPreviewText);
-
-        noPreview.setHorizontalAlignment(SwingConstants.CENTER);
-        noPreview.setVerticalAlignment(SwingConstants.CENTER);
-        final JComponent videoContainer = new VideoContainer(noPreview, false);
-
-        if ((preferredWidth > 0) && (preferredHeight > 0)) {
-            videoContainer.setPreferredSize(new Dimension(preferredWidth, preferredHeight));
-        }
-
-        try {
-            CaptureDeviceInfo captureDeviceInfo;
-            if ((device != null) && ((captureDeviceInfo = ((MediaDeviceImpl) device).getCaptureDeviceInfo()) != null)) {
-                DataSource dataSource = Manager.createDataSource(captureDeviceInfo.getLocator());
-
-                /*
-                 * Don't let the size be uselessly small just because the videoContainer has too
-                 * small a preferred size.
-                 */
-                if ((preferredWidth < 128) || (preferredHeight < 96)) {
-                    preferredWidth = 128;
-                    preferredHeight = 96;
-                }
-                VideoMediaStreamImpl.selectVideoSize(dataSource, preferredWidth, preferredHeight);
-
-                // A Player is documented to be created on a connected DataSource.
-                dataSource.connect();
-
-                Processor player = Manager.createProcessor(dataSource);
-                final VideoContainerHierarchyListener listener
-                        = new VideoContainerHierarchyListener(videoContainer, player);
-                videoContainer.addHierarchyListener(listener);
-                final MediaLocator locator = dataSource.getLocator();
-
-                player.addControllerListener(new ControllerListener() {
-                    public void controllerUpdate(ControllerEvent event) {
-                        controllerUpdateForPreview(event, videoContainer, locator, listener);
-                    }
-                });
-                player.configure();
-            }
-        } catch (Throwable t) {
-            if (t instanceof ThreadDeath)
-                throw (ThreadDeath) t;
-            else
-                Timber.e(t, "Failed to create video preview");
-        }
-        return videoContainer;
-    }
-
-    /**
-     * Listens and shows the video in the video container when needed.
-     *
-     * @param event the event when player has ready visual component.
-     * @param videoContainer the container.
-     * @param locator input DataSource locator
-     * @param listener the hierarchy listener we created for the video container.
-     */
-    private static void controllerUpdateForPreview(ControllerEvent event,
-            JComponent videoContainer, MediaLocator locator, VideoContainerHierarchyListener listener) {
-        if (event instanceof ConfigureCompleteEvent) {
-            Processor player = (Processor) event.getSourceController();
-
-            /*
-             * Use SwScale for the scaling since it produces an image with better quality and add
-             * the "flip" effect to the video.
-             */
-            TrackControl[] trackControls = player.getTrackControls();
-
-            if ((trackControls != null) && (trackControls.length != 0))
-                try {
-                    for (TrackControl trackControl : trackControls) {
-                        Codec[] codecs;
-                        SwScale scaler = new SwScale();
-
-                        // do not flip desktop
-                        if (DeviceSystem.LOCATOR_PROTOCOL_IMGSTREAMING.equals(locator.getProtocol()))
-                            codecs = new Codec[]{scaler};
-                        else
-                            codecs = new Codec[]{new HFlip(), scaler};
-
-                        trackControl.setCodecChain(codecs);
-                        break;
-                    }
-                } catch (UnsupportedPlugInException upiex) {
-                    Timber.w(upiex, "Failed to add SwScale/VideoFlipEffect to codec chain");
-                }
-
-            // Turn the Processor into a Player.
-            try {
-                player.setContentDescriptor(null);
-            } catch (NotConfiguredError nce) {
-                Timber.e(nce, "Failed to set ContentDescriptor of Processor");
-            }
-            player.realize();
-        }
-        else if (event instanceof RealizeCompleteEvent) {
-            Player player = (Player) event.getSourceController();
-            Component video = player.getVisualComponent();
-
-            // sets the preview to the listener
-            listener.setPreview(video);
-            showPreview(videoContainer, video, player);
-        }
-    }
-
-    /**
-     * Shows the preview panel.
-     *
-     * @param previewContainer the container
-     * @param preview the preview component.
-     * @param player the player.
-     */
-    private static void showPreview(final JComponent previewContainer, final Component preview, final Player player) {
-        if (!SwingUtilities.isEventDispatchThread()) {
-            SwingUtilities.invokeLater(() -> showPreview(previewContainer, preview, player));
-            return;
-        }
-
-        previewContainer.removeAll();
-        if (preview != null) {
-            previewContainer.add(preview);
-            player.start();
-
-            if (previewContainer.isDisplayable()) {
-                previewContainer.revalidate();
-                previewContainer.repaint();
-            }
-            else
-                previewContainer.doLayout();
-        }
-        else
-            disposePlayer(player);
-    }
-
-    /**
-     * Dispose the player used for the preview.
-     *
-     * @param player the player.
-     */
-    private static void disposePlayer(final Player player) {
-        // launch disposing preview player in separate thread will lock renderer and can produce
-        // lock if user has quickly requested preview component and can lock ui thread
-        new Thread(() -> {
-            player.stop();
-            player.deallocate();
-            player.close();
-        }).start();
-    }
-
-    /**
-     * Get a <code>MediaDevice</code> for a part of desktop streaming/sharing.
-     *
-     * @param width width of the part
-     * @param height height of the part
-     * @param x origin of the x coordinate (relative to the full desktop)
-     * @param y origin of the y coordinate (relative to the full desktop)
-     *
-     * @return <code>MediaDevice</code> representing the part of desktop or null if problem
-     */
-    public MediaDevice getMediaDeviceForPartialDesktopStreaming(int width, int height, int x, int y) {
-        MediaDevice device;
-        String name = "Partial desktop streaming";
-        Dimension size;
-        int multiple;
-        Point p = new Point(Math.max(x, 0), Math.max(y, 0));
-        ScreenDevice dev = getScreenForPoint(p);
-        int display;
-
-        if (dev != null)
-            display = dev.getIndex();
-        else
-            return null;
-
-        /* on Mac OS X, width have to be a multiple of 16 */
-        if (OSUtils.IS_MAC) {
-            multiple = Math.round(width / 16f);
-            width = multiple * 16;
-        }
-        else {
-            /* JMF filter graph seems to not like odd width */
-            multiple = Math.round(width / 2f);
-            width = multiple * 2;
-        }
-
-        /* JMF filter graph seems to not like odd height */
-        multiple = Math.round(height / 2f);
-        height = multiple * 2;
-
-        size = new Dimension(width, height);
-
-        Format[] formats = new Format[]{
-                new AVFrameFormat(
-                        size,
-                        Format.NOT_SPECIFIED,
-                        FFmpeg.PIX_FMT_ARGB,
-                        Format.NOT_SPECIFIED),
-                new RGBFormat(
-                        size, // size
-                        Format.NOT_SPECIFIED, // maxDataLength
-                        Format.byteArray, // dataType
-                        Format.NOT_SPECIFIED, // frameRate
-                        32, // bitsPerPixel
-                        2 /* red */,
-                        3 /* green */,
-                        4 /* blue */)
-        };
-
-        Rectangle bounds = ((ScreenDeviceImpl) dev).getBounds();
-        x -= bounds.x;
-        y -= bounds.y;
-
-        CaptureDeviceInfo devInfo
-                = new CaptureDeviceInfo(name + " " + display,
-                new MediaLocator(
-                        DeviceSystem.LOCATOR_PROTOCOL_IMGSTREAMING + ":"
-                                + display + "," + x + "," + y), formats);
-        device = new MediaDeviceImpl(devInfo, MediaType.VIDEO);
-        return device;
-    }
-
-    /**
-     * If the <code>MediaDevice</code> corresponds to partial desktop streaming device.
-     *
-     * @param mediaDevice <code>MediaDevice</code>
-     *
-     * @return true if <code>MediaDevice</code> is a partial desktop streaming device, false otherwise
-     */
-    public boolean isPartialStreaming(MediaDevice mediaDevice) {
-        if (mediaDevice == null)
-            return false;
-
-        MediaDeviceImpl dev = (MediaDeviceImpl) mediaDevice;
-        CaptureDeviceInfo cdi = dev.getCaptureDeviceInfo();
-        return (cdi != null) && cdi.getName().startsWith("Partial desktop streaming");
     }
 
     /**
@@ -1123,36 +812,6 @@ public class MediaServiceImpl extends PropertyChangeNotifier implements MediaSer
     }
 
     /**
-     * Gets the origin of a specific desktop streaming device.
-     *
-     * @param mediaDevice the desktop streaming device to get the origin on
-     *
-     * @return the origin of the specified desktop streaming device
-     */
-    public Point getOriginForDesktopStreamingDevice(MediaDevice mediaDevice) {
-        MediaDeviceImpl dev = (MediaDeviceImpl) mediaDevice;
-        CaptureDeviceInfo cdi = dev.getCaptureDeviceInfo();
-
-        if (cdi == null)
-            return null;
-
-        MediaLocator locator = cdi.getLocator();
-        if (!DeviceSystem.LOCATOR_PROTOCOL_IMGSTREAMING.equals(locator.getProtocol()))
-            return null;
-
-        String remainder = locator.getRemainder();
-        String[] split = remainder.split(",");
-        int index = Integer.parseInt(split.length > 1 ? split[0] : remainder);
-
-        List<ScreenDevice> devs = getAvailableScreenDevices();
-        if (devs.size() - 1 >= index) {
-            Rectangle r = ((ScreenDeviceImpl) devs.get(index)).getBounds();
-            return new Point(r.x, r.y);
-        }
-        return null;
-    }
-
-    /**
      * Those interested in Recorder events add listener through MediaService. This way they don't
      * need to have access to the Recorder instance. Adds a new <code>Recorder.Listener</code> to the
      * list of listeners interested in notifications from a <code>Recorder</code>.
@@ -1164,19 +823,6 @@ public class MediaServiceImpl extends PropertyChangeNotifier implements MediaSer
         synchronized (recorderListeners) {
             if (!recorderListeners.contains(listener))
                 recorderListeners.add(listener);
-        }
-    }
-
-    /**
-     * Removes an existing <code>Recorder.Listener</code> from the list of listeners interested in
-     * notifications from <code>Recorder</code>s.
-     *
-     * @param listener the existing <code>Listener</code> to be removed from the list of listeners interested in
-     * notifications from <code>Recorder</code>s
-     */
-    public void removeRecorderListener(Recorder.Listener listener) {
-        synchronized (recorderListeners) {
-            recorderListeners.remove(listener);
         }
     }
 
@@ -1366,125 +1012,5 @@ public class MediaServiceImpl extends PropertyChangeNotifier implements MediaSer
      */
     public String getRtpCname() {
         return rtpCname;
-    }
-
-    /**
-     * The listener which will be notified for changes in the video container. Whether the
-     * container is displayable or not we will stop the player or start it.
-     */
-    private static class VideoContainerHierarchyListener implements HierarchyListener {
-        /**
-         * The parent window.
-         */
-        private Window window;
-
-        /**
-         * The listener for the parent window. Used to dispose player on close.
-         */
-        private WindowListener windowListener;
-
-        /**
-         * The parent container of our preview.
-         */
-        private final JComponent container;
-
-        /**
-         * The player showing the video preview.
-         */
-        private final Player player;
-
-        /**
-         * The preview component of the player, must be set once the player has been realized.
-         */
-        private Component preview = null;
-
-        /**
-         * Creates VideoContainerHierarchyListener.
-         *
-         * @param container the video container.
-         * @param player the player.
-         */
-        VideoContainerHierarchyListener(JComponent container, Player player) {
-            this.container = container;
-            this.player = player;
-        }
-
-        /**
-         * After the player has been realized the preview can be obtained and supplied to this
-         * listener. Normally done on player RealizeCompleteEvent.
-         *
-         * @param preview the preview.
-         */
-        void setPreview(Component preview) {
-            this.preview = preview;
-        }
-
-        /**
-         * Disposes player and cleans listeners as we will no longer need them.
-         */
-        public void dispose() {
-            if (windowListener != null) {
-                if (window != null) {
-                    window.removeWindowListener(windowListener);
-                    window = null;
-                }
-                windowListener = null;
-            }
-            container.removeHierarchyListener(this);
-            disposePlayer(player);
-
-            /*
-             * We've just disposed the player which created the preview component so the preview
-             * component is of no use regardless of whether the Media configuration form will be
-             * redisplayed or not. And since the preview component appears to be a huge object even
-             * after its player is disposed, make sure to not reference it.
-             */
-            if (preview != null)
-                container.remove(preview);
-        }
-
-        /**
-         * Change in container.
-         *
-         * @param event the event for the change.
-         */
-        public void hierarchyChanged(HierarchyEvent event) {
-            if ((event.getChangeFlags() & HierarchyEvent.DISPLAYABILITY_CHANGED) == 0)
-                return;
-
-            if (!container.isDisplayable()) {
-                dispose();
-                return;
-            }
-            else {
-                // if this is just a change in the video container and preview has not been
-                // created yet, do nothing otherwise start the player which will show in preview
-                if (preview != null) {
-                    player.start();
-                }
-            }
-
-            if (windowListener == null) {
-                window = SwingUtilities.windowForComponent(container);
-                if (window != null) {
-                    windowListener = new WindowAdapter() {
-                        @Override
-                        public void windowClosing(WindowEvent event) {
-                            dispose();
-                        }
-                    };
-                    window.addWindowListener(windowListener);
-                }
-            }
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public RecorderEventHandler createRecorderEventHandlerJson(String filename)
-            throws IOException {
-        return new RecorderEventHandlerJSONImpl(filename);
     }
 }

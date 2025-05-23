@@ -1,6 +1,6 @@
 /*
- * aTalk, android VoIP and Instant Messaging client
- * Copyright 2014 Eng Chong Meng
+ * aTalk, ohos VoIP and Instant Messaging client
+ * Copyright 2024 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,16 @@
  */
 package net.java.sip.communicator.impl.filehistory;
 
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.EventObject;
 import java.util.Iterator;
+
+import ohos.data.rdb.RdbPredicates;
+import ohos.data.rdb.RdbStore;
+import ohos.data.rdb.ValuesBucket;
+import ohos.data.resultset.ResultSet;
 
 import net.java.sip.communicator.impl.protocol.jabber.OutgoingFileSendEntityImpl;
 import net.java.sip.communicator.service.contactlist.MetaContact;
@@ -74,8 +75,7 @@ public class FileHistoryServiceImpl implements FileHistoryService, ServiceListen
      */
     private BundleContext bundleContext = null;
 
-    private final ContentValues mContentValues = new ContentValues();
-    private SQLiteDatabase mDB;
+    private RdbStore mRdbStore;
     private MessageHistoryService mhs;
 
     /**
@@ -87,6 +87,7 @@ public class FileHistoryServiceImpl implements FileHistoryService, ServiceListen
     public void start(BundleContext bc) {
         Timber.d("Starting the file history implementation.");
         this.bundleContext = bc;
+        mRdbStore = DatabaseBackend.getRdbStore();
 
         // start listening for newly register or removed protocol providers
         bc.addServiceListener(this);
@@ -105,7 +106,6 @@ public class FileHistoryServiceImpl implements FileHistoryService, ServiceListen
                 handleProviderAdded(pps);
             }
         }
-        mDB = DatabaseBackend.getWritableDB();
     }
 
     /**
@@ -222,15 +222,17 @@ public class FileHistoryServiceImpl implements FileHistoryService, ServiceListen
      */
     public void fileTransferCreated(FileTransferCreatedEvent event) {
         FileTransfer fileTransfer = event.getFileTransfer();
-        ContentValues contentValues = new ContentValues();
+        ValuesBucket values = new ValuesBucket();
         try {
             String fileName = fileTransfer.getLocalFile().getCanonicalPath();
             Timber.d("File Transfer record created in DB: %s: %s", fileTransfer.getDirection(), fileName);
 
             if (fileTransfer.getDirection() == FileTransfer.IN) {
-                String[] args = {fileTransfer.getID()};
-                contentValues.put(ChatMessage.FILE_PATH, fileName);
-                mDB.update(ChatMessage.TABLE_NAME, contentValues, ChatMessage.UUID + "=?", args);
+                values.putString(ChatMessage.FILE_PATH, fileName);
+
+                RdbPredicates rdbPredicates = new RdbPredicates(ChatMessage.TABLE_NAME)
+                        .equalTo(ChatMessage.UUID, fileTransfer.getID());
+                mRdbStore.update(values, rdbPredicates);
             }
             else if (fileTransfer.getDirection() == FileTransfer.OUT) {
                 insertRecordToDB(event, ChatMessage.MESSAGE_FILE_TRANSFER_SEND, fileName);
@@ -278,7 +280,7 @@ public class FileHistoryServiceImpl implements FileHistoryService, ServiceListen
         Object entityJid = null;
         String serverMsgId = null;
         String remoteMsgId = null;
-        ContentValues contentValues = new ContentValues();
+        ValuesBucket valuesBucket = new ValuesBucket();
 
         if (evt instanceof FileTransferRequestEvent) {
             FileTransferRequestEvent event = (FileTransferRequestEvent) evt;
@@ -287,7 +289,7 @@ public class FileHistoryServiceImpl implements FileHistoryService, ServiceListen
             entityJid = req.getSender();
             timeStamp = event.getTimestamp();
             direction = FileRecord.IN;
-            contentValues.put(ChatMessage.MSG_BODY, fileName);
+            valuesBucket.putString(ChatMessage.MSG_BODY, fileName);
         }
         else if (evt instanceof FileTransferCreatedEvent) {
             FileTransferCreatedEvent event = (FileTransferCreatedEvent) evt;
@@ -325,20 +327,20 @@ public class FileHistoryServiceImpl implements FileHistoryService, ServiceListen
             mEntityJid = XmppStringUtils.parseLocalpart(mJid);
         }
 
-        contentValues.put(ChatMessage.UUID, uuid);
-        contentValues.put(ChatMessage.SESSION_UUID, sessionUuid);
-        contentValues.put(ChatMessage.TIME_STAMP, timeStamp.getTime());
-        contentValues.put(ChatMessage.ENTITY_JID, mEntityJid);
-        contentValues.put(ChatMessage.JID, mJid);
-        contentValues.put(ChatMessage.ENC_TYPE, IMessage.ENCODE_PLAIN);
-        contentValues.put(ChatMessage.MSG_TYPE, msgType);
-        contentValues.put(ChatMessage.DIRECTION, direction);
-        contentValues.put(ChatMessage.STATUS, FileRecord.STATUS_WAITING);
-        contentValues.put(ChatMessage.FILE_PATH, fileName);
-        contentValues.put(ChatMessage.SERVER_MSG_ID, serverMsgId);
-        contentValues.put(ChatMessage.REMOTE_MSG_ID, remoteMsgId);
+        valuesBucket.putString(ChatMessage.UUID, uuid);
+        valuesBucket.putString(ChatMessage.SESSION_UUID, sessionUuid);
+        valuesBucket.putLong(ChatMessage.TIME_STAMP, timeStamp);
+        valuesBucket.putString(ChatMessage.ENTITY_JID, mEntityJid);
+        valuesBucket.putString(ChatMessage.JID, mJid);
+        valuesBucket.putInteger(ChatMessage.ENC_TYPE, IMessage.ENCODE_PLAIN);
+        valuesBucket.putInteger(ChatMessage.MSG_TYPE, msgType);
+        valuesBucket.putString(ChatMessage.DIRECTION, direction);
+        valuesBucket.putInteger(ChatMessage.STATUS, FileRecord.STATUS_WAITING);
+        valuesBucket.putString(ChatMessage.FILE_PATH, fileName);
+        valuesBucket.putString(ChatMessage.SERVER_MSG_ID, serverMsgId);
+        valuesBucket.putString(ChatMessage.REMOTE_MSG_ID, remoteMsgId);
 
-        mDB.insert(ChatMessage.TABLE_NAME, null, contentValues);
+        mRdbStore.insert(ChatMessage.TABLE_NAME, valuesBucket);
         getMHS().setMamDate(sessionUuid, timeStamp);
     }
 
@@ -350,42 +352,42 @@ public class FileHistoryServiceImpl implements FileHistoryService, ServiceListen
      * @param msgUuid message UUID
      * @param status New status for update
      * @param fileName local fileName path for http downloaded file; null => no change and keep the link in MSG_BODY
-     * @param encType IMessage.ENCRYPTION_NONE, ENCRYPTION_OMEMO, ENCRYPTION_OTR
+     * @param encType IMessage.ENCRYPTION_NONE, ENCRYPTION_OMEMO
      * @param msgType File Transfer message type
      *
      * @return the number of records being updated; zero means there is no record to update historyLog disabled
      */
     public int updateFTStatusToDB(String msgUuid, int status, String fileName, int encType, int msgType) {
         // Timber.w(new Exception("### File in/out transfer status changes to: " + status));
-        String[] args = {msgUuid};
-        ContentValues contentValues = new ContentValues();
+        ValuesBucket valuesBucket = new ValuesBucket();
+        valuesBucket.putInteger(ChatMessage.STATUS, status);
 
-        contentValues.put(ChatMessage.STATUS, status);
         if (StringUtils.isNotEmpty(fileName)) {
-            contentValues.put(ChatMessage.FILE_PATH, fileName);
+            valuesBucket.putString(ChatMessage.FILE_PATH, fileName);
         }
-        contentValues.put(ChatMessage.ENC_TYPE, encType);
-        contentValues.put(ChatMessage.MSG_TYPE, msgType);
-        int count = mDB.update(ChatMessage.TABLE_NAME, contentValues, ChatMessage.UUID + "=?", args);
-        // Timber.d("updateFTStatusToDB MsgId = %s @status: %s; row count: %s", msgUuid, status, count);
-        return count;
+        valuesBucket.putInteger(ChatMessage.ENC_TYPE, encType);
+        valuesBucket.putInteger(ChatMessage.MSG_TYPE, msgType);
+
+        RdbPredicates rdbPredicates = new RdbPredicates(ChatMessage.TABLE_NAME)
+                .equalTo(ChatMessage.UUID, msgUuid);
+        return mRdbStore.update(valuesBucket, rdbPredicates);
     }
 
     /**
      * Permanently removes locally stored chatRoom messages (need cleanup - not used)
      */
     public void eraseLocallyStoredHistory() {
-        String[] args = {String.valueOf(ChatSession.MODE_MULTI)};
         String[] columns = {ChatSession.SESSION_UUID};
+        RdbPredicates rdbPredicates = new RdbPredicates(ChatSession.TABLE_NAME)
+                .equalTo(ChatSession.MODE, ChatSession.MODE_MULTI);
+        ResultSet resultSet = mRdbStore.query(rdbPredicates, columns);
 
-        Cursor cursor = mDB.query(ChatSession.TABLE_NAME, columns,
-                ChatSession.MODE + "=?", args, null, null, null);
-        while (cursor.moveToNext()) {
-            purgeLocallyStoredHistory(null, cursor.getString(0));
+        while (resultSet.goToNextRow()) {
+            purgeLocallyStoredHistory(null, resultSet.getString(0));
         }
-        cursor.close();
-        mDB.delete(ChatMessage.TABLE_NAME, null, null);
+        resultSet.close();
 
+        mRdbStore.delete(new RdbPredicates(ChatSession.TABLE_NAME));
     }
 
     /**
@@ -410,12 +412,13 @@ public class FileHistoryServiceImpl implements FileHistoryService, ServiceListen
      * - Remove both chatSessions and chatMessages for muc
      */
     private void purgeLocallyStoredHistory(Contact contact, String sessionUuid) {
-        String[] args = {sessionUuid};
         if (contact != null) {
-            mDB.delete(ChatMessage.TABLE_NAME, ChatMessage.SESSION_UUID + "=?", args);
+            mRdbStore.delete(new RdbPredicates(ChatMessage.TABLE_NAME)
+                    .equalTo(ChatMessage.SESSION_UUID, sessionUuid));
         }
         else {
-            mDB.delete(ChatSession.TABLE_NAME, ChatSession.SESSION_UUID + "=?", args);
+            mRdbStore.delete(new RdbPredicates(ChatSession.TABLE_NAME)
+                    .equalTo(ChatSession.SESSION_UUID, sessionUuid));
         }
     }
 

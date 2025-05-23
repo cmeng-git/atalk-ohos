@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:ohos="http://schemas.ohos.com/apk/res/ohos"
+    ohos:orientation="horizontal"
+    ohos:layout_width="match_parent"
+    ohos:layout_height="wrap_content"
+    ohos:padding="$float:ayp_menu_item_padding"
+    ohos:background="?attr/selectableItemBackground"
+    ohos:clickable="true"
+    ohos:focusable="true" >
+
+    <Text
+        ohos:id="$+id:text"
+        ohos:layout_width="match_parent"
+        ohos:layout_height="wrap_content"
+
+        ohos:textSize="$float:ayp_menu_item_text_size"
+        ohos:textColor="$color:ayp_menu_text"
+
+        ohos:drawablePadding="12dp"
+        ohos:gravity="center" />
+
+</LinearLayout>

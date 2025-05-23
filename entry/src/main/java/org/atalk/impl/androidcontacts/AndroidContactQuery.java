@@ -5,20 +5,15 @@
  */
 package org.atalk.impl.androidcontacts;
 
-import android.content.ContentResolver;
-import android.database.Cursor;
-import android.net.Uri;
-import android.provider.ContactsContract;
+import java.util.ArrayList;
+import java.util.List;
 
 import net.java.sip.communicator.service.contactsource.AbstractContactQuery;
 import net.java.sip.communicator.service.contactsource.ContactQuery;
 import net.java.sip.communicator.service.contactsource.SourceContact;
 
-import org.atalk.ohos.R;
+import org.atalk.ohos.ResourceTable;
 import org.atalk.ohos.aTalkApp;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Android contact query.
@@ -159,7 +154,7 @@ public class AndroidContactQuery extends AbstractContactQuery<AndroidContactSour
                 setStatus(ContactQuery.QUERY_COMPLETED);
             }
         } catch (SecurityException e) {
-            aTalkApp.showToastMessage(aTalkApp.getResString(R.string.contacts_permission_denied_feedback)
+            aTalkApp.showToastMessage(aTalkApp.getResString(ResourceTable.String_contacts_permission_denied_feedback)
                     + "\n" + e.getMessage());
         } finally {
             if (cursor != null)

@@ -1,0 +1,628 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DirectionalLayout
+    xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:id="$+id:accountInfo_layout"
+    ohos:height="match_parent"
+    ohos:width="match_parent"
+    ohos:orientation="vertical"
+    ohos:padding="5vp">
+
+    <DependentLayout
+        ohos:id="$+id:avatar"
+        ohos:height="match_content"
+        ohos:width="match_parent"
+        ohos:orientation="horizontal">
+
+        <Text
+            ohos:id="$+id:avatar_Hint"
+            ohos:height="match_content"
+            ohos:width="match_content"
+            ohos:align_parent_start="true"
+            ohos:layout_alignment="vertical_center|start"
+            ohos:text="$string:avatar_size_hint"
+            ohos:text_size="$float:medium_font"/>
+
+        <TextField
+            ohos:id="$+id:ai_ImageUrl"
+            ohos:height="0vp"
+            ohos:width="0vp"
+            ohos:visibility="invisible"/>
+
+        <Image
+            ohos:id="$+id:accountAvatar"
+            ohos:height="64vp"
+            ohos:width="64vp"
+            ohos:align_parent_start="true"
+            ohos:background_element="$color:background_light"
+            ohos:below="$id:avatar_Hint"
+            ohos:clickable="true"
+            ohos:end_margin="10vp"
+            ohos:focusable="focus_adaptable"
+            ohos:image_src="$media:person_photo"
+            ohos:start_margin="10vp"
+            ohos:top_margin="5vp"/>
+
+        <ListContainer
+            ohos:id="$+id:presenceStatusSpinner"
+            ohos:height="28vp"
+            ohos:align_top="$id:accountAvatar"
+            ohos:background_element="$media:spinner_dark"
+            ohos:end_of="$id:accountAvatar"/>
+
+        <TextField
+            ohos:id="$+id:statusMessage"
+            ohos:height="match_content"
+            ohos:width="match_parent"
+            ohos:align_bottom="$id:accountAvatar"
+            ohos:end_of="$id:accountAvatar"
+            ohos:focusable="focus_adaptable"
+            ohos:hint="$string:edit_status_message_tip"
+            ohos:text_input_type="pattern_text_uppercase_sentences"
+            ohos:text_size="$float:medium_font"
+            ohos:top_padding="10vp"/>
+    </DependentLayout>
+
+    <ScrollView
+        ohos:height="0vp"
+        ohos:width="match_parent"
+        ohos:weight="1">
+
+        <DirectionalLayout
+            ohos:height="match_content"
+            ohos:width="match_parent"
+            ohos:orientation="vertical"
+            ohos:padding="5vp">
+
+            <DirectionalLayout
+                ohos:id="$+id:ai_DisplayName_Container"
+                ohos:height="match_content"
+                ohos:width="match_parent"
+                ohos:align_baseline="false"
+                ohos:orientation="horizontal"
+                ohos:visibility="hide">
+
+                <Text
+                    ohos:id="$+id:ai_DisplayName"
+                    ohos:height="match_content"
+                    ohos:width="140vp"
+                    ohos:text="$string:accountinfo_display_name"
+                    ohos:text_alignment="vertical_center"/>
+
+                <TextField
+                    ohos:id="$+id:ai_DisplayNameField"
+                    ohos:height="match_content"
+                    ohos:width="match_parent"
+                    ohos:max_text_lines="1"
+                    ohos:text_size="$float:medium_font"/>
+            </DirectionalLayout>
+
+            <DirectionalLayout
+                ohos:id="$+id:ai_FirstName_Container"
+                ohos:height="match_content"
+                ohos:width="match_parent"
+                ohos:align_baseline="false"
+                ohos:orientation="horizontal">
+
+                <Text
+                    ohos:id="$+id:ai_FirstName"
+                    ohos:height="match_content"
+                    ohos:width="140vp"
+                    ohos:text="$string:accountinfo_first_name"
+                    ohos:text_alignment="vertical_center"/>
+
+                <TextField
+                    ohos:id="$+id:ai_FirstNameField"
+                    ohos:height="match_content"
+                    ohos:width="match_parent"
+                    ohos:max_text_lines="1"
+                    ohos:text_size="$float:medium_font"/>
+            </DirectionalLayout>
+
+            <DirectionalLayout
+                ohos:id="$+id:ai_MiddleName_Container"
+                ohos:height="match_content"
+                ohos:width="match_parent"
+                ohos:align_baseline="false"
+                ohos:orientation="horizontal">
+
+                <Text
+                    ohos:id="$+id:ai_MiddleName"
+                    ohos:height="match_content"
+                    ohos:width="140vp"
+                    ohos:text="$string:accountinfo_middle_name"
+                    ohos:text_alignment="vertical_center"/>
+
+                <TextField
+                    ohos:id="$+id:ai_MiddleNameField"
+                    ohos:height="match_content"
+                    ohos:width="match_parent"
+                    ohos:max_text_lines="1"
+                    ohos:text_size="$float:medium_font"/>
+            </DirectionalLayout>
+
+            <DirectionalLayout
+                ohos:id="$+id:ai_LastName_Container"
+                ohos:height="match_content"
+                ohos:width="match_parent"
+                ohos:align_baseline="false"
+                ohos:orientation="horizontal">
+
+                <Text
+                    ohos:id="$+id:ai_LastName"
+                    ohos:height="match_content"
+                    ohos:width="140vp"
+                    ohos:text="$string:accountinfo_last_name"
+                    ohos:text_alignment="vertical_center"/>
+
+                <TextField
+                    ohos:id="$+id:ai_LastNameField"
+                    ohos:height="match_content"
+                    ohos:width="match_parent"
+                    ohos:max_text_lines="1"
+                    ohos:text_size="$float:medium_font"/>
+            </DirectionalLayout>
+
+            <DirectionalLayout
+                ohos:id="$+id:ai_NickName_Container"
+                ohos:height="match_content"
+                ohos:width="match_parent"
+                ohos:align_baseline="false"
+                ohos:orientation="horizontal"
+                ohos:visibility="hide">
+
+                <Text
+                    ohos:id="$+id:ai_NickName"
+                    ohos:height="match_content"
+                    ohos:width="140vp"
+                    ohos:text="$string:accountinfo_nickname"
+                    ohos:text_alignment="vertical_center"/>
+
+                <TextField
+                    ohos:id="$+id:ai_NickNameField"
+                    ohos:height="match_content"
+                    ohos:width="match_parent"
+                    ohos:max_text_lines="1"
+                    ohos:text_size="$float:medium_font"/>
+            </DirectionalLayout>
+
+            <DirectionalLayout
+                ohos:id="$+id:ai_URL_Container"
+                ohos:height="match_content"
+                ohos:width="match_parent"
+                ohos:align_baseline="false"
+                ohos:orientation="horizontal"
+                ohos:visibility="hide">
+
+                <Text
+                    ohos:id="$+id:ai_URL"
+                    ohos:height="match_content"
+                    ohos:width="140vp"
+                    ohos:text="$string:contact_url"
+                    ohos:text_alignment="vertical_center"/>
+
+                <TextField
+                    ohos:id="$+id:ai_URLField"
+                    ohos:height="match_content"
+                    ohos:width="match_parent"
+                    ohos:hint="$string:url_example"
+                    ohos:max_text_lines="1"
+                    ohos:text_input_type="pattern_text_uri"
+                    ohos:text_size="$float:medium_font"/>
+            </DirectionalLayout>
+
+            <DirectionalLayout
+                ohos:id="$+id:ai_Gender_Container"
+                ohos:height="match_content"
+                ohos:width="match_parent"
+                ohos:align_baseline="false"
+                ohos:orientation="horizontal"
+                ohos:visibility="hide">
+
+                <Text
+                    ohos:id="$+id:ai_Gender"
+                    ohos:height="match_content"
+                    ohos:width="140vp"
+                    ohos:text="$string:accountinfo_gender"
+                    ohos:text_alignment="vertical_center"/>
+
+                <TextField
+                    ohos:id="$+id:ai_GenderField"
+                    ohos:height="match_content"
+                    ohos:width="match_parent"
+                    ohos:max_text_lines="1"
+                    ohos:text_size="$float:medium_font"/>
+            </DirectionalLayout>
+
+            <DirectionalLayout
+                ohos:id="$+id:ai_BirthDate_Container"
+                ohos:height="match_content"
+                ohos:width="match_parent"
+                ohos:align_baseline="false"
+                ohos:orientation="horizontal">
+
+                <Text
+                    ohos:id="$+id:ai_BirthDate"
+                    ohos:height="match_content"
+                    ohos:width="140vp"
+                    ohos:text="$string:accountinfo_birth_date"
+                    ohos:text_alignment="top"
+                    ohos:top_margin="10vp"/>
+
+                <TextField
+                    ohos:id="$+id:ai_BirthDateField"
+                    ohos:height="match_content"
+                    ohos:width="0vp"
+                    ohos:max_text_lines="1"
+                    ohos:text_input_type="pattern_datetime_date"
+                    ohos:text_size="$float:medium_font"
+                    ohos:weight="1"/>
+
+                <Image
+                    ohos:id="$+id:datePickerBtn"
+                    ohos:height="32vp"
+                    ohos:width="32vp"
+                    ohos:clickable="true"
+                    ohos:focusable="focus_adaptable"
+                    ohos:image_src="$media:ic_calender"
+                    ohos:start_margin="5vp"/>
+            </DirectionalLayout>
+
+            <DatePicker
+                ohos:id="$+id:datePicker"
+                ohos:height="match_content"
+                ohos:width="match_content"
+                ohos:layout_alignment="end"
+                ohos:visibility="hide"/>
+
+            <DirectionalLayout
+                ohos:id="$+id:ai_Age_Container"
+                ohos:height="match_content"
+                ohos:width="match_parent"
+                ohos:align_baseline="false"
+                ohos:orientation="horizontal">
+
+                <Text
+                    ohos:id="$+id:ai_Age"
+                    ohos:height="match_content"
+                    ohos:width="140vp"
+                    ohos:text="$string:accountinfo_age"
+                    ohos:text_alignment="vertical_center"/>
+
+                <TextField
+                    ohos:id="$+id:ai_AgeField"
+                    ohos:height="match_content"
+                    ohos:width="match_parent"
+                    ohos:max_text_lines="1"
+                    ohos:text_size="$float:medium_font"/>
+            </DirectionalLayout>
+
+            <DirectionalLayout
+                ohos:id="$+id:ai_StreetAddress_Container"
+                ohos:height="match_content"
+                ohos:width="match_parent"
+                ohos:align_baseline="false"
+                ohos:orientation="horizontal"
+                ohos:visibility="hide">
+
+                <Text
+                    ohos:id="$+id:ai_StreetAddress"
+                    ohos:height="match_content"
+                    ohos:width="140vp"
+                    ohos:text="$string:accountinfo_street"
+                    ohos:text_alignment="vertical_center"/>
+
+                <TextField
+                    ohos:id="$+id:ai_StreetAddressField"
+                    ohos:height="match_content"
+                    ohos:width="match_parent"
+                    ohos:max_text_lines="1"
+                    ohos:text_size="$float:medium_font"/>
+            </DirectionalLayout>
+
+            <DirectionalLayout
+                ohos:id="$+id:ai_City_Container"
+                ohos:height="match_content"
+                ohos:width="match_parent"
+                ohos:align_baseline="false"
+                ohos:orientation="horizontal"
+                ohos:visibility="hide">
+
+                <Text
+                    ohos:id="$+id:ai_City"
+                    ohos:height="match_content"
+                    ohos:width="140vp"
+                    ohos:text="$string:accountinfo_city"
+                    ohos:text_alignment="vertical_center"/>
+
+                <TextField
+                    ohos:id="$+id:ai_CityField"
+                    ohos:height="match_content"
+                    ohos:width="match_parent"
+                    ohos:max_text_lines="1"
+                    ohos:text_size="$float:medium_font"/>
+            </DirectionalLayout>
+
+            <DirectionalLayout
+                ohos:id="$+id:ai_Region_Container"
+                ohos:height="match_content"
+                ohos:width="match_parent"
+                ohos:align_baseline="false"
+                ohos:orientation="horizontal"
+                ohos:visibility="hide">
+
+                <Text
+                    ohos:id="$+id:ai_Region"
+                    ohos:height="match_content"
+                    ohos:width="140vp"
+                    ohos:text="$string:accountinfo_region"
+                    ohos:text_alignment="vertical_center"/>
+
+                <TextField
+                    ohos:id="$+id:ai_RegionField"
+                    ohos:height="match_content"
+                    ohos:width="match_parent"
+                    ohos:max_text_lines="1"
+                    ohos:text_size="$float:medium_font"/>
+            </DirectionalLayout>
+
+            <DirectionalLayout
+                ohos:id="$+id:ai_PostalCode_Container"
+                ohos:height="match_content"
+                ohos:width="match_parent"
+                ohos:align_baseline="false"
+                ohos:orientation="horizontal"
+                ohos:visibility="hide">
+
+                <Text
+                    ohos:id="$+id:ai_PostalCode"
+                    ohos:height="match_content"
+                    ohos:width="140vp"
+                    ohos:text="$string:accountinfo_postcode"
+                    ohos:text_alignment="vertical_center"/>
+
+                <TextField
+                    ohos:id="$+id:ai_PostalCodeField"
+                    ohos:height="match_content"
+                    ohos:width="match_parent"
+                    ohos:max_text_lines="1"
+                    ohos:text_size="$float:medium_font"/>
+            </DirectionalLayout>
+
+            <DirectionalLayout
+                ohos:id="$+id:ai_Country_Container"
+                ohos:height="match_content"
+                ohos:width="match_parent"
+                ohos:align_baseline="false"
+                ohos:orientation="horizontal"
+                ohos:visibility="hide">
+
+                <Text
+                    ohos:id="$+id:ai_Country"
+                    ohos:height="match_content"
+                    ohos:width="140vp"
+                    ohos:text="$string:accountinfo_country"
+                    ohos:text_alignment="vertical_center"/>
+
+                <TextField
+                    ohos:id="$+id:ai_CountryField"
+                    ohos:height="match_content"
+                    ohos:width="match_parent"
+                    ohos:max_text_lines="1"
+                    ohos:text_size="$float:medium_font"/>
+            </DirectionalLayout>
+
+            <DirectionalLayout
+                ohos:id="$+id:ai_EMail_Container"
+                ohos:height="match_content"
+                ohos:width="match_parent"
+                ohos:align_baseline="false"
+                ohos:orientation="horizontal">
+
+                <Text
+                    ohos:id="$+id:ai_EMail"
+                    ohos:height="match_content"
+                    ohos:width="140vp"
+                    ohos:text="$string:accountinfo_email"
+                    ohos:text_alignment="vertical_center"/>
+
+                <TextField
+                    ohos:id="$+id:ai_EMailField"
+                    ohos:height="match_content"
+                    ohos:width="match_parent"
+                    ohos:max_text_lines="1"
+                    ohos:text_size="$float:medium_font"/>
+            </DirectionalLayout>
+
+            <DirectionalLayout
+                ohos:id="$+id:ai_WorkEmail_Container"
+                ohos:height="match_content"
+                ohos:width="match_parent"
+                ohos:align_baseline="false"
+                ohos:orientation="horizontal"
+                ohos:visibility="hide">
+
+                <Text
+                    ohos:id="$+id:ai_WorkEmail"
+                    ohos:height="match_content"
+                    ohos:width="140vp"
+                    ohos:text="$string:accountinfo_work_email"
+                    ohos:text_alignment="vertical_center"/>
+
+                <TextField
+                    ohos:id="$+id:ai_WorkEmailField"
+                    ohos:height="match_content"
+                    ohos:width="match_parent"
+                    ohos:max_text_lines="1"
+                    ohos:text_size="$float:medium_font"/>
+            </DirectionalLayout>
+
+            <DirectionalLayout
+                ohos:id="$+id:ai_Phone_Container"
+                ohos:height="match_content"
+                ohos:width="match_parent"
+                ohos:align_baseline="false"
+                ohos:orientation="horizontal">
+
+                <Text
+                    ohos:id="$+id:ai_Phone"
+                    ohos:height="match_content"
+                    ohos:width="140vp"
+                    ohos:text="$string:accountinfo_phone"
+                    ohos:text_alignment="vertical_center"/>
+
+                <TextField
+                    ohos:id="$+id:ai_PhoneField"
+                    ohos:height="match_content"
+                    ohos:width="match_parent"
+                    ohos:max_text_lines="1"
+                    ohos:text_size="$float:medium_font"/>
+            </DirectionalLayout>
+
+            <DirectionalLayout
+                ohos:id="$+id:ai_WorkPhone_Container"
+                ohos:height="match_content"
+                ohos:width="match_parent"
+                ohos:align_baseline="false"
+                ohos:orientation="horizontal"
+                ohos:visibility="hide">
+
+                <Text
+                    ohos:id="$+id:ai_WorkPhone"
+                    ohos:height="match_content"
+                    ohos:width="140vp"
+                    ohos:text="$string:accountinfo_work_phone"
+                    ohos:text_alignment="vertical_center"/>
+
+                <TextField
+                    ohos:id="$+id:ai_WorkPhoneField"
+                    ohos:height="match_content"
+                    ohos:width="match_parent"
+                    ohos:max_text_lines="1"
+                    ohos:text_size="$float:medium_font"/>
+            </DirectionalLayout>
+
+            <DirectionalLayout
+                ohos:id="$+id:ai_MobilePhone_Container"
+                ohos:height="match_content"
+                ohos:width="match_parent"
+                ohos:align_baseline="false"
+                ohos:orientation="horizontal"
+                ohos:visibility="hide">
+
+                <Text
+                    ohos:id="$+id:ai_MobilePhone"
+                    ohos:height="match_content"
+                    ohos:width="140vp"
+                    ohos:text="$string:accountinfo_mobile_phone"
+                    ohos:text_alignment="vertical_center"/>
+
+                <TextField
+                    ohos:id="$+id:ai_MobilePhoneField"
+                    ohos:height="match_content"
+                    ohos:width="match_parent"
+                    ohos:max_text_lines="1"
+                    ohos:text_size="$float:medium_font"/>
+            </DirectionalLayout>
+
+            <DirectionalLayout
+                ohos:id="$+id:ai_OrganizationName_Container"
+                ohos:height="match_content"
+                ohos:width="match_parent"
+                ohos:align_baseline="false"
+                ohos:orientation="horizontal"
+                ohos:visibility="hide">
+
+                <Text
+                    ohos:id="$+id:ai_OrganizationName"
+                    ohos:height="match_content"
+                    ohos:width="140vp"
+                    ohos:text="$string:accountinfo_organisation"
+                    ohos:text_alignment="vertical_center"/>
+
+                <TextField
+                    ohos:id="$+id:ai_OrganizationNameField"
+                    ohos:height="match_content"
+                    ohos:width="match_parent"
+                    ohos:max_text_lines="1"
+                    ohos:text_size="$float:medium_font"/>
+            </DirectionalLayout>
+
+            <DirectionalLayout
+                ohos:id="$+id:ai_JobTitle_Container"
+                ohos:height="match_content"
+                ohos:width="match_parent"
+                ohos:align_baseline="false"
+                ohos:orientation="horizontal"
+                ohos:visibility="hide">
+
+                <Text
+                    ohos:id="$+id:ai_JobTitle"
+                    ohos:height="match_content"
+                    ohos:width="140vp"
+                    ohos:text="$string:accountinfo_job_title"
+                    ohos:text_alignment="vertical_center"/>
+
+                <TextField
+                    ohos:id="$+id:ai_JobTitleField"
+                    ohos:height="match_content"
+                    ohos:width="match_parent"
+                    ohos:max_text_lines="1"
+                    ohos:text_size="$float:medium_font"/>
+            </DirectionalLayout>
+
+            <DirectionalLayout
+                ohos:id="$+id:ai_AboutMe_Container"
+                ohos:height="match_content"
+                ohos:width="match_parent"
+                ohos:align_baseline="false"
+                ohos:orientation="vertical"
+                ohos:visibility="hide">
+
+                <Text
+                    ohos:id="$+id:ai_AboutMe"
+                    ohos:height="match_content"
+                    ohos:width="match_content"
+                    ohos:text="$string:accountinfo_about_me"
+                    ohos:text_alignment="vertical_center"
+                    ohos:top_margin="5vp"/>
+
+                <TextField
+                    ohos:id="$+id:ai_AboutMeField"
+                    ohos:height="match_content"
+                    ohos:width="match_parent"
+                    ohos:hint="$string:accountinfo_about_me_hint"
+                    ohos:text_size="$float:medium_font"
+                    ohos:top_margin="5vp"/>
+            </DirectionalLayout>
+        </DirectionalLayout>
+    </ScrollView>
+
+    <DirectionalLayout
+        ohos:id="$+id:button_Container"
+        ohos:height="match_content"
+        ohos:width="match_parent"
+        ohos:margin="5vp"
+        ohos:orientation="horizontal">
+
+        <Button
+            ohos:id="$+id:button_Cancel"
+            ohos:height="match_content"
+            ohos:width="match_parent"
+            ohos:background_element="$graphic:btn_state_action"
+            ohos:text="$string:cancel"/>
+
+        <Component
+            ohos:id="$+id:centerShim"
+            ohos:height="0vp"
+            ohos:width="0vp"
+            ohos:margin="2vp"
+            ohos:visibility="invisible"/>
+
+        <Button
+            ohos:id="$+id:button_Apply"
+            ohos:height="match_content"
+            ohos:width="match_parent"
+            ohos:background_element="$graphic:btn_state_action"
+            ohos:text="$string:apply"/>
+    </DirectionalLayout>
+</DirectionalLayout>

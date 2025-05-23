@@ -5,23 +5,22 @@
  */
 package net.java.sip.communicator.plugin.loggingutils;
 
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
-import net.java.sip.communicator.impl.protocol.jabber.JabberActivator;
+import ohos.aafwk.content.Intent;
+import ohos.app.Context;
+import ohos.utils.net.Uri;
 
-import org.atalk.ohos.R;
+import org.atalk.impl.appupdate.VersionServiceImpl;
+import org.atalk.ohos.BaseAbility;
+import org.atalk.ohos.ResourceTable;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.persistance.FileBackend;
 import org.atalk.persistance.ServerPersistentStoresRefreshDialog;
 import org.atalk.service.fileaccess.FileCategory;
 import org.atalk.service.log.LogUploadService;
-import org.atalk.service.version.VersionService;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 import timber.log.Timber;
 
@@ -71,12 +70,16 @@ public class LogUploadServiceImpl implements LogUploadService
             Context ctx = aTalkApp.getInstance();
             Uri logsUri = FileBackend.getUriForFile(ctx, externalStorageFile);
 
-            Intent sendIntent = new Intent(Intent.ACTION_SEND);
-            sendIntent.putExtra(Intent.EXTRA_EMAIL, destinations);
-            sendIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
+
+
+
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(BaseAbility.ACTION_SEND);
+            sendIntent.setParam(BaseAbility.EXTRA_EMAIL, destinations);
+            sendIntent.setParam(BaseAbility.EXTRA_SUBJECT, subject);
             sendIntent.setType("application/zip");
-            sendIntent.putExtra(Intent.EXTRA_STREAM, logsUri);
-            sendIntent.putExtra(Intent.EXTRA_TEXT, ctx.getString(R.string.send_log_info));
+            sendIntent.setParam(BaseAbility.EXTRA_STREAM, logsUri);
+            sendIntent.setParam(BaseAbility.EXTRA_TEXT, ctx.getString(ResourceTable.String_send_log_info));
 
             Intent chooserIntent = Intent.createChooser(sendIntent, title);
             // List<ResolveInfo> resInfoList = ctx.getPackageManager().queryIntentActivities(chooserIntent, PackageManager.MATCH_DEFAULT_ONLY);
@@ -88,9 +91,9 @@ public class LogUploadServiceImpl implements LogUploadService
             ctx.grantUriPermission("android", logsUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
             // chooserIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION); not working; need above statement
 
-            // Starting this activity from context that is not from the current activity; this flag is needed in this situation
+            // Starting this ability from context that is not from the current ability; this flag is needed in this situation
             chooserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            ctx.startActivity(chooserIntent);
+            ctx.startAbility(chooserIntent, 0);
         }
         else {
             Timber.e("Error sending debug log files");
@@ -110,9 +113,9 @@ public class LogUploadServiceImpl implements LogUploadService
             Timber.w(e, "An exception occurred while writing debug info");
         }
 
-        VersionService versionSerVice = JabberActivator.getVersionService();
+        VersionServiceImpl versionSerVice = VersionServiceImpl.getInstance();
         Timber.i("Device installed with aTalk version: %s, version code: %s",
-                versionSerVice.getCurrentVersion(), versionSerVice.getCurrentVersionCode());
+                versionSerVice.getCurrentVersionName(), versionSerVice.getCurrentVersionCode());
     }
 
     /**

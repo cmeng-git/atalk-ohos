@@ -57,6 +57,8 @@
 -keep class com.yalantis.ucrop** { *; }
 -keep interface com.yalantis.ucrop** { *; }
 
+# -keep class de.cketti.library.changelog** { *; }
+
 -dontwarn org.jivesoftware.**
 -keep class org.igniterealtime.jbosh.**{*;}
 -keep class org.jivesoftware.smack.**{*;}

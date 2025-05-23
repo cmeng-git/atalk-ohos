@@ -15,7 +15,7 @@
  */
 package net.java.sip.communicator.service.certificate;
 
-import androidx.annotation.NonNull;
+import ohos.agp.components.Component;
 
 /**
  * Data object for KeyStore configurations. Primarily used during adding/
@@ -33,17 +33,15 @@ public class KeyStoreType
      * Creates a new instance of this class.
      * @param name the display name of the keystore type.
      * @param fileExtensions known file name extensions (including the dot)
-     * @param hasKeyStorePassword KeyStore has password
+     * @param hasKeyStorePassword keyStore has password
      */
-    public KeyStoreType(String name, String[] fileExtensions,
-        boolean hasKeyStorePassword)
+    public KeyStoreType(String name, String[] fileExtensions, boolean hasKeyStorePassword)
     {
         this.name = name;
         this.fileExtensions = fileExtensions;
         this.hasKeyStorePassword = hasKeyStorePassword;
     }
 
-    @NonNull
     @Override
     public String toString()
     {

@@ -1,32 +1,23 @@
 ## aTalk (Jabber / XMPP)
-- an encrypted instant messaging with video call and GPS features for android
+- an encrypted instant messaging with video call and GPS features for Huawei HarmonyOS 3.0.
 
-<p align="center">
-    <a href="https://cmeng-git.github.io/atalk">
-        <img src="./art/atalk.png" alt="aTalk">
-    </a>
-    &nbsp;
-    <a href="https://cmeng-git.github.io/atalk/faq.html">
-        <img src="./art/help.png" alt="FAQ">
-    </a>
-    &nbsp;
-    <a href="https://play.google.com/store/apps/details?id=org.atalk.ohos&hl=en">
-        <img src="./art/google_play.png" alt="Google PlayStore">
-    </a>
-    &nbsp;
-    <a href="https://f-droid.org/en/packages/org.atalk.ohos/">
-        <img src="./art/fdroid-logo.png" alt="F-Droid">
-    </a>
-    &nbsp;
-    <a href="https://www.youtube.com/watch?v=9w5WwphzgBc">
-        <img src="./art/youtube.png" alt="YouTube">
-    </a>
+<p>
+This ohos aTalk project is ported from the original aTalk source designed for android; Most of aTalk source and third party libraries used are
+developed mainly based on java. Therefore the highest supported HarmonyOS is 3.0, and uses DevEco Studio 3.1.1 Release for development.
+Many of the functions used in aTalk are not available in DevEco studio 3.1.1, either in java or ETS.
+This deficiency does not provides a smooth migration path for user to move to higher version
+and makes porting of aTalk to OHOS very difficult or near impossible.
 </p>
 
+<p>
+The aTalk ohos unfinished ported source will be saved in github branch. The porting activity will likely not to move to completion state.
+Major efforts are required just to generate all the DevEco unsupported functions for aTalk.
+The latest sources released in this repository are only partial ported, and do not undergo any system testing.
+</p>
 
 ## Features
 aTalk is an xmpp client designed for android and supports the following features:
-* Instant messaging in plain text and End-to-End encryption with [OMEMO](https://conversations.im/omemo/) or [OTR](https://otr.cypherpunks.ca/)
+* Instant messaging in plain text and End-to-End encryption with [OMEMO](https://conversations.im/omemo/)
 * SSL Certificate authentication, DNSSEC and DANE Security implementation for enhanced secure Connection Establishment
 * OMEMO encryption in group chat session enhancing privacy and security
 * OMEMO Media File Sharing for all files including Stickers, Bitmoji and Emoji rich contents
@@ -155,7 +146,6 @@ Libraries used in this project:
 * [Android Support Library](https://developer.android.com/topic/libraries/support-library/index.html)
 * [android-betterpickers](https://github.com/code-troopers/android-betterpickers)
 * [Android-EasyLocation](https://github.com/akhgupta/Android-EasyLocation)
-* [android-youtube-player](https://github.com/PierfrancescoSoffritti/android-youtube-player)
 * [annotations-java5](https://mvnrepository.com/artifact/org.jetbrains/annotations)
 * [apache-mime4j-core](https://github.com/apache/james-mime4j)
 * [bouncycastle](https://github.com/bcgit/bc-java)
@@ -203,27 +193,20 @@ Other contributors:
 * [FAQ](https://cmeng-git.github.io/atalk/faq.html)
 * [Release Notes](https://github.com/cmeng-git/atalk-ohos/blob/master/aTalk/ReleaseNotes.txt)
 
-## aTalk apk build for android
-* Following development environment setups are used to build aTalk.apk<br/>
-  a. Android Studio Hedgehog | 2023.1.1 Patch<br/>
-  b. distributionUrl=https://services.gradle.org/distributions/gradle-8.5-bin.zip
-  c. classpath 'com.android.tools.build:gradle:8.2.2'
-  d. Ubuntu 22.04 with proper environment setup for development<br>
-  Note: all shell scripts in aTalk are written to run on linux OS only e.g. Ubuntu
-* aTalk uses native jni libraries, required to be built manually or downloaded prior to android NDK build.<br/>
-  The static jni libraries must be built prior to android studio apk build process.
+## aTalk hap build for HarmonyOS
+* Following development environment setups are used to build aTalk.hap<br/>
+  a. DevEco Studio 3.1.1 Release<br>
+  b. distributionUrl=https://services.gradle.org/distributions/gradle-7.3-bin.zip
+
+* Note: all shell scripts in aTalk are written to run on linux OS only e.g. Ubuntu
+* Ubuntu 24.04 with proper environment setup is required for JNI libraries built<br>
+* aTalk uses native jni libraries, required to be built manually or downloaded prior to hap build.<br/>
+  The static jni libraries must be built prior to ohos hap build process.
 * You must run the gradle task 'initJniLibs' to build all the jni libraries used in aTalk.<br/>
   See entry/jni/static_library_build directory readme files for more information<br/>
   on linux environment setup, and the execution of jni libraries build scripts.
 * You must run the gradle task 'getJniLibs' to fetch the jni libraries prior to android ndk build process.<br/>
   These libraries sources include: opus, speex and ogg
-
-## Feedback and Contributions
-If you can't find your language in UI and would like to help then translate the app on https://toolate.othing.xyz/projects/atalk/.
-Or copy the [strings.xml](./aTalk/src/main/res/values/strings.xml) to `values-LOCALE` where the `LOCALE` is language-COUNTRY e.g. `pt-rBR`. 
-Then create a pull request or forward the file to the developer.
-
-If you have found bug, wish for new feature, or have other questions, [file an issue](https://github.com/cmeng-git/atalk-ohos/issues).
 
 License
 -------

@@ -1,0 +1,4816 @@
+{
+  "string": [
+    {
+      "name": "accept_call_video",
+      "value": "Atender ligação de vídeo"
+    },
+    {
+      "name": "account_delete_on_server",
+      "value": "Excluir conta no servidor"
+    },
+    {
+      "name": "account_delete_on_server_unregistered",
+      "value": "Falha ao excluir conta no servidor, usuário não registrado!"
+    },
+    {
+      "name": "account_delete_on_server_failed",
+      "value": "Falha ao excluir conta no servidor:\n%1$s"
+    },
+    {
+      "name": "account_delete_on_server_successful",
+      "value": "Excluir conta no servidor com sucesso:\n%1$s"
+    },
+    {
+      "name": "account_show_password",
+      "value": "Mostrar senha"
+    },
+    {
+      "name": "account_server_override",
+      "value": "Substituir a configuração do servidor"
+    },
+    {
+      "name": "account_ibr_on_server",
+      "value": "Registrar nova conta no servidor"
+    },
+    {
+      "name": "account_server_ip",
+      "value": "Conectar ao servidor com IP"
+    },
+    {
+      "name": "ibr_registration",
+      "value": "Registração via IB"
+    },
+    {
+      "name": "captcha_ibr_request",
+      "value": "Registração via captcha"
+    },
+    {
+      "name": "captcha_ibr_failed",
+      "value": "Falha ao registrar via captcha!\n%1$s"
+    },
+    {
+      "name": "captcha_ibr_success",
+      "value": "Registração via captcha concluída.\nAgora pode fazer o login!"
+    },
+    {
+      "name": "captcha_ibr_reason",
+      "value": "Registração Inband solicitada pelo usuário"
+    },
+    {
+      "name": "captcha_ibr_pwd_empty",
+      "value": "Erro: o campo da senha está em branco!"
+    },
+    {
+      "name": "captcha_ibr_hint",
+      "value": "Digite o texto que você está vendo"
+    },
+    {
+      "name": "captcha_ibr_retry",
+      "value": "Clique no 'OK' para tentar novamente ou no 'Cancelar' para terminar"
+    },
+    {
+      "name": "captcha_challenge",
+      "value": "O desafio do captcha"
+    },
+    {
+      "name": "captcha_protected",
+      "value": "A sala é protegida com o desafio captcha"
+    },
+    {
+      "name": "captcha_text_empty",
+      "value": "A entrada de texto captcha não pode estar vazia"
+    },
+    {
+      "name": "captcha_verification_valid",
+      "value": "A verificação captcha é válida"
+    },
+    {
+      "name": "captcha_verification_failed",
+      "value": "A verificação do captcha falhou"
+    },
+    {
+      "name": "captcha_wait_timeout",
+      "value": "O tempo %1$s do desafio captcha da sala expirou;\npor favor, volte para a sala e tente novamente."
+    },
+    {
+      "name": "choose_network",
+      "value": "Escolha uma rede"
+    },
+    {
+      "name": "encrypt_tooltip",
+      "value": "Criptografar conversa"
+    },
+    {
+      "name": "encrypt_choices",
+      "value": "Escolha criptografia"
+    },
+    {
+      "name": "encrypt_unencrypted",
+      "value": "Não criptografado"
+    },
+    {
+      "name": "muc_name",
+      "value": "Nome"
+    },
+    {
+      "name": "network",
+      "value": "Rede"
+    },
+    {
+      "name": "notification_setting",
+      "value": "Configurações de notificação…"
+    },
+    {
+      "name": "open_file_no_application",
+      "value": "Nenhum app encontrado para abrir o arquivo"
+    },
+    {
+      "name": "password",
+      "value": "senha"
+    },
+    {
+      "name": "password_change_on_server_failed",
+      "value": "Falha na alteração da senha no servidor:\n%1$s"
+    },
+    {
+      "name": "password_change_on_server_successful",
+      "value": "Alteração de senha no servidor com sucesso!"
+    },
+    {
+      "name": "password_",
+      "value": "Senha:"
+    },
+    {
+      "name": "send_process_signal",
+      "value": "Enviar sinal de processo"
+    },
+    {
+      "name": "call_info",
+      "value": "Detalhes da ligação"
+    },
+    {
+      "name": "call_info_zrtp",
+      "value": "Detalhes ZRTP da ligação"
+    },
+    {
+      "name": "osgi_framework_stop",
+      "value": "Parar o Framework OSGi"
+    },
+    {
+      "name": "save_password",
+      "value": "Salvar a senha"
+    },
+    {
+      "name": "system_settings",
+      "value": "Configurações…"
+    },
+    {
+      "name": "username_hint",
+      "value": "usuário@exemplo.com"
+    },
+    {
+      "name": "username_",
+      "value": "Usuário:"
+    },
+    {
+      "name": "call_hang_up",
+      "value": "Terminar a ligação"
+    },
+    {
+      "name": "call_on_hold",
+      "value": "Colocar em espera"
+    },
+    {
+      "name": "call_max_transfer",
+      "value": "Máximo de 2 chamadas são permitidas para transferência de chamada assistida!"
+    },
+    {
+      "name": "call_transfer_call",
+      "value": "Transferir chamada"
+    },
+    {
+      "name": "call_transfer",
+      "value": "Transferência"
+    },
+    {
+      "name": "call_transfer_failed",
+      "value": "Falha ao prosseguir com a transferência de chamada: %1$s ⇢ %2$s\n%3$s"
+    },
+    {
+      "name": "call_transfer_hint",
+      "value": "Selecione o nome do contato que você deseja transferir e depois clique em Transferir."
+    },
+    {
+      "name": "call_transfer_msg",
+      "value": "%1$s transferência de chamada para… %2$s"
+    },
+    {
+      "name": "attach_picture",
+      "value": "Fotos"
+    },
+    {
+      "name": "attach_take_picture",
+      "value": "Fazer uma foto"
+    },
+    {
+      "name": "attach_video",
+      "value": "Vídeos"
+    },
+    {
+      "name": "attach_record_video",
+      "value": "Gravar vídeo"
+    },
+    {
+      "name": "attach_file",
+      "value": "Compartilhar arquivo"
+    },
+    {
+      "name": "copy",
+      "value": "Copiar"
+    },
+    {
+      "name": "delete",
+      "value": "Excluir"
+    },
+    {
+      "name": "edit",
+      "value": "Editar"
+    },
+    {
+      "name": "forward",
+      "value": "Encaminhar…"
+    },
+    {
+      "name": "chat_message_long_press_hint",
+      "value": "Evite clicar dentro da área de mensagens para selecionar vários itens"
+    },
+    {
+      "name": "quote",
+      "value": "Citação"
+    },
+    {
+      "name": "reply",
+      "value": "Responder"
+    },
+    {
+      "name": "select_all",
+      "value": "Selecionar tudo"
+    },
+    {
+      "name": "subject",
+      "value": "Asunto"
+    },
+    {
+      "name": "settings",
+      "value": "Configurações"
+    },
+    {
+      "name": "contact_block_text",
+      "value": "Deseja bloquear o recebimento de mensagens de %1$s?"
+    },
+    {
+      "name": "contact_unblock_text",
+      "value": "Deseja desbloquear o recebimento de mensagens de %1$s?"
+    },
+    {
+      "name": "domain_blocking",
+      "value": "Aplicar a todos os contatos de: %1$s"
+    },
+    {
+      "name": "contact_block",
+      "value": "Bloquear o contato"
+    },
+    {
+      "name": "contact_unblock",
+      "value": "Desbloquear contato"
+    },
+    {
+      "name": "contact_blocked",
+      "value": "Contato bloqueado"
+    },
+    {
+      "name": "block",
+      "value": "Bloquear"
+    },
+    {
+      "name": "unblock",
+      "value": "Desbloquear"
+    },
+    {
+      "name": "block_list_title",
+      "value": "Lista de bloqueios"
+    },
+    {
+      "name": "block_list_show",
+      "value": "Exibir a lista de bloqueios"
+    },
+    {
+      "name": "accept",
+      "value": "Aceitar"
+    },
+    {
+      "name": "account",
+      "value": "Conta"
+    },
+    {
+      "name": "account_me",
+      "value": "Eu"
+    },
+    {
+      "name": "account_settings",
+      "value": "Configurações da conta…"
+    },
+    {
+      "name": "account_unregistered",
+      "value": "%1$s não está registrado"
+    },
+    {
+      "name": "add",
+      "value": "Adicionar"
+    },
+    {
+      "name": "add_contact",
+      "value": "Adicione um contato"
+    },
+    {
+      "name": "add_contact_to_list",
+      "value": "Adicione %1$s para sua lista de contatos"
+    },
+    {
+      "name": "add_contact_to",
+      "value": "Adicionar contato a"
+    },
+    {
+      "name": "add_contact_failed",
+      "value": "Falha ao adicionar o contato com a ID: %1$s"
+    },
+    {
+      "name": "add_contact_error",
+      "value": "Erro ao adicionar o contato"
+    },
+    {
+      "name": "add_contact_error_exist",
+      "value": "O contato %1$s já existe na sua lista."
+    },
+    {
+      "name": "add_contact_error_network",
+      "value": "O servidor não respondeu ao pedido de adicionar o contato com JID: %1$s."
+    },
+    {
+      "name": "add_contact_error_not_supported",
+      "value": "Falha ao adicionar contato com a ID: %1$s. Operação não suportada."
+    },
+    {
+      "name": "add_contact_error_not_connected",
+      "value": "Você precisa estar conectado à internet para adicionar um contato. Por favor, faça o login no provedor selecionado e tente novamente."
+    },
+    {
+      "name": "add_group_error_local",
+      "value": "Falha ao adicionar o grupo com nome: %1$s. O problema ocorreu durante a operação local IO."
+    },
+    {
+      "name": "add_group_error_exist",
+      "value": "O grupo %1$s já existe na sua lista de contatos. Por favor, escolha outro nome."
+    },
+    {
+      "name": "add_group_error_network",
+      "value": "Falha ao adicionar grupo com nome: %1$s. O problema ocorreu devido a uma falha na rede. Por favor, verifique sua conexão da internet e tente novamente."
+    },
+    {
+      "name": "add_group_failed",
+      "value": "Falha ao adicionar grupo com nome: %1$s."
+    },
+    {
+      "name": "add_group_error_empty_name",
+      "value": "O nome do grupo não deve estar em branco."
+    },
+    {
+      "name": "add_group_create",
+      "value": "Criar um grupo"
+    },
+    {
+      "name": "add_group_name",
+      "value": "Digite nome do grupo"
+    },
+    {
+      "name": "answer",
+      "value": "Atender…"
+    },
+    {
+      "name": "apply",
+      "value": "Aplicar"
+    },
+    {
+      "name": "apply_changes",
+      "value": "Aplicando alterações da conta (~60S) …"
+    },
+    {
+      "name": "at",
+      "value": "em"
+    },
+    {
+      "name": "authentication_failed",
+      "value": "Falha na autenticação de %1$s. A senha que você digitou não é válida."
+    },
+    {
+      "name": "authentication_requested",
+      "value": "Solicitação de autenticação"
+    },
+    {
+      "name": "authentication_requested_by_server",
+      "value": "O servidor %1$s solicitou sua autenticação."
+    },
+    {
+      "name": "authentication_title",
+      "value": "%1$s autorização"
+    },
+    {
+      "name": "authorize",
+      "value": "Autorize"
+    },
+    {
+      "name": "authorization_accepted",
+      "value": "O contato aceitou seu pedido de autorização"
+    },
+    {
+      "name": "authorization_rejected",
+      "value": "O contato recusou seu pedido de autorização."
+    },
+    {
+      "name": "authorization_requested",
+      "value": "Solicitação de autorização"
+    },
+    {
+      "name": "authorization_request_info",
+      "value": "O contato %1$s solicita autorização."
+    },
+    {
+      "name": "authorization_request",
+      "value": "Solicitação de autorização"
+    },
+    {
+      "name": "avatar_size_hint",
+      "value": "Ícone recomendado: 64*64 (96*96 px quadrado máx.)"
+    },
+    {
+      "name": "away",
+      "value": "Indisponível"
+    },
+    {
+      "name": "avatar_set_error",
+      "value": "Falha ao definir o avatar para %1$s"
+    },
+    {
+      "name": "avatar_retrieving",
+      "value": "Recuperando avatar para %1$s"
+    },
+    {
+      "name": "busy",
+      "value": "Ocupado"
+    },
+    {
+      "name": "call_audio",
+      "value": "Ligação de voz"
+    },
+    {
+      "name": "call_answered",
+      "value": "%1$s respondeu à ligação."
+    },
+    {
+      "name": "call_disable_on_fault",
+      "value": "aTalk falhou ao iniciar %1$s\nTodas as ligações da mídia e os serviços serão desativados.\n%2$s"
+    },
+    {
+      "name": "call_ended",
+      "value": "O interlocutor remoto terminou a ligação: %1$s"
+    },
+    {
+      "name": "call_error",
+      "value": "A parte remota retorna um erro: %1$s"
+    },
+    {
+      "name": "call_failed",
+      "value": "Ligação falhou"
+    },
+    {
+      "name": "call_history_name",
+      "value": "Histórico de ligações"
+    },
+    {
+      "name": "call_history_remove_count",
+      "value": "Número de registros do histórico de chamadas excluídos: %1$s"
+    },
+    {
+      "name": "call_history_remove_before_date_warning",
+      "value": "Tem certeza de que deseja limpar todos os registros de chamadas antes da data: %1$s?"
+    },
+    {
+      "name": "call_history_remove_none",
+      "value": "Nenhum registro selecionado para exclusão"
+    },
+    {
+      "name": "call_history_remove_warning",
+      "value": "Tem certeza de que quer excluir todos os registros de ligações selecionadas?"
+    },
+    {
+      "name": "call_incoming",
+      "value": "Ligação: %1$s"
+    },
+    {
+      "name": "call_incoming_status",
+      "value": "Ligação recebida"
+    },
+    {
+      "name": "call_initiating",
+      "value": "Iniciando a ligação"
+    },
+    {
+      "name": "call_rejected",
+      "value": "%1$s recusou a ligação."
+    },
+    {
+      "name": "call_retracted",
+      "value": "%1$s retirou a ligação."
+    },
+    {
+      "name": "call_missed",
+      "value": "Ligações perdidas de:"
+    },
+    {
+      "name": "call_no_active_device",
+      "value": "O aTalk não conseguiu encontrar nenhum dispositivo de áudio/vídeo ativo, portanto, não conseguiu criar a chamada."
+    },
+    {
+      "name": "call_no_audio_device",
+      "value": "Nenhum serviço de áudio configurado."
+    },
+    {
+      "name": "call_no_audio_codec",
+      "value": "Nenhum codec de áudio ativado."
+    },
+    {
+      "name": "call_no_device_codec_H",
+      "value": "Pode ser o aparelho ou codec que não está configurado corretamente em 'Configurações…': %1$s"
+    },
+    {
+      "name": "call_no_device_codec_Q",
+      "value": "Gostaria de continuar com a ligação?"
+    },
+    {
+      "name": "call_no_matching_format",
+      "value": "Não foram encontrados formatos de mídia compatíveis com a %1$s para receber ligações. Por favor, verifique a configuração do aparelho e do codec em 'Configurações…'."
+    },
+    {
+      "name": "call_outgoing",
+      "value": "Ligação de saída"
+    },
+    {
+      "name": "call_outgoing_with",
+      "value": "Ligação com %1$s…"
+    },
+    {
+      "name": "call_video",
+      "value": "Ligação de vídeo"
+    },
+    {
+      "name": "call_via_",
+      "value": "Ligação via: %1$s"
+    },
+    {
+      "name": "call_with",
+      "value": "Ligação com:"
+    },
+    {
+      "name": "cancel",
+      "value": "Cancelar"
+    },
+    {
+      "name": "contact_invalid",
+      "value": "O contato selecionado não é válido: %1$s"
+    },
+    {
+      "name": "dismiss",
+      "value": "Recusar"
+    },
+    {
+      "name": "done",
+      "value": "Concluído"
+    },
+    {
+      "name": "mark_as_read",
+      "value": "Marcar como lido"
+    },
+    {
+      "name": "reason",
+      "value": "Motivo:"
+    },
+    {
+      "name": "set",
+      "value": "Definir"
+    },
+    {
+      "name": "share",
+      "value": "Compartilhar…"
+    },
+    {
+      "name": "share_text",
+      "value": "Compartilhar texto…"
+    },
+    {
+      "name": "share_file",
+      "value": "Compartilhar arquivo…"
+    },
+    {
+      "name": "snooze",
+      "value": "Adiar"
+    },
+    {
+      "name": "playback_error",
+      "value": "Não foi possível encontrar nenhum conteúdo de mídia para reproduzir"
+    },
+    {
+      "name": "playback_buffering",
+      "value": "Carregando no buffer…"
+    },
+    {
+      "name": "playback_completed",
+      "value": "Reprodução de mídia terminou"
+    },
+    {
+      "name": "playback_rate",
+      "value": "Taxa de reprodução: %1$s"
+    },
+    {
+      "name": "auto_join",
+      "value": "Participação automática"
+    },
+    {
+      "name": "change_nickname",
+      "value": "Alterar o apelido"
+    },
+    {
+      "name": "change_nickname_",
+      "value": "Alterar o apelido…"
+    },
+    {
+      "name": "change_nickname_error_conflict",
+      "value": "O apelido já existe"
+    },
+    {
+      "name": "change_nickname_error",
+      "value": "Falha ao alterar o apelido de %1$s: %2$s"
+    },
+    {
+      "name": "change_nickname_label",
+      "value": "No campo abaixo, você pode digitar um novo apelido."
+    },
+    {
+      "name": "change_nickname_null",
+      "value": "O conteúdo no campo de apelido não pode estar em branco"
+    },
+    {
+      "name": "chatroom_change_info",
+      "value": "Alterar detalhes sobre a sala"
+    },
+    {
+      "name": "chatroom_change_subject",
+      "value": "No campo abaixo, você pode digitar o novo assunto desta sala."
+    },
+    {
+      "name": "change_video_remote_quality",
+      "value": "Alterar a qualidade do vídeo remoto"
+    },
+    {
+      "name": "chatroom_conference_item",
+      "value": "Conferência do %1$s"
+    },
+    {
+      "name": "chatroom_conference",
+      "value": "Conferências"
+    },
+    {
+      "name": "chatroom",
+      "value": "Sala de conversa"
+    },
+    {
+      "name": "chatroom_already_joined",
+      "value": "Você já participa nesta sala %1$s."
+    },
+    {
+      "name": "chatroom_configuration",
+      "value": "Configuração da sala"
+    },
+    {
+      "name": "chatroom_configuration_failed",
+      "value": "Falha na obtenção de registro de configuração da sala %1$s."
+    },
+    {
+      "name": "chatroom_configuration_forbidden",
+      "value": "Não foi possível obter registro de configuração da sala %1$s. Somente os admins da sala podem ver e alterar a forma de configuração."
+    },
+    {
+      "name": "chatroom_configuration_members_edit_description",
+      "value": "A lista à direita contém os usuários que têm atribuição de membro nesta sala. Quando a sala é 'Somente para membros' só eles poderão participar."
+    },
+    {
+      "name": "chatroom_configuration_members_edit_title",
+      "value": "Editar lista de membros"
+    },
+    {
+      "name": "chatroom_configuration_submit_failed",
+      "value": "Ocorreu um erro ao tentar enviar o registro de configuração para a sala %1$s."
+    },
+    {
+      "name": "chatroom_remove_tooltip",
+      "value": "Exclua a sala selecionada da lista de salas salvas"
+    },
+    {
+      "name": "chatroom_save_tooltip",
+      "value": "Salvar a sala para futuras interações"
+    },
+    {
+      "name": "chatroom_send_message_forbidden",
+      "value": "O envio de mensagens é proibido (participação revogada)"
+    },
+    {
+      "name": "chatroom_user_joined",
+      "value": "entrou %1$s"
+    },
+    {
+      "name": "chatroom_user_kicked",
+      "value": "foi expulso de %1$s"
+    },
+    {
+      "name": "chatroom_user_left",
+      "value": "saiu %1$s"
+    },
+    {
+      "name": "chatroom_user_quit",
+      "value": "desistiu %1$s"
+    },
+    {
+      "name": "chatroom_name",
+      "value": "Nome da sala"
+    },
+    {
+      "name": "chatroom_name_info",
+      "value": "Digite no campo abaixo o nome da sala que você gostaria de criar."
+    },
+    {
+      "name": "chatroom_not_exist",
+      "value": "A sala %1$s não foi encontrada no servidor %2$s. Por favor, verifique se o nome digitado está correcto."
+    },
+    {
+      "name": "chatroom_not_connected",
+      "value": "Você precisa estar online para entrar na sala %1$s."
+    },
+    {
+      "name": "chatroom_leave_not_connected",
+      "value": "Você precisa estar online para poder sair de uma sala."
+    },
+    {
+      "name": "chatroom_not_joined",
+      "value": "Você precisa entrar na sala para fazer operações nela."
+    },
+    {
+      "name": "chatroom_options",
+      "value": "Opções de salas"
+    },
+    {
+      "name": "chatroom_required_password",
+      "value": "A sala %1$s solicitou uma senha."
+    },
+    {
+      "name": "chatroom_status_disable",
+      "value": "Desativar status de conversa"
+    },
+    {
+      "name": "chatroom_status_enable",
+      "value": "Ativar status de conversa"
+    },
+    {
+      "name": "chatroom_subject_changed",
+      "value": "Alteração de assunto: '%1$s' =>'%2$s'"
+    },
+    {
+      "name": "chatroom_nickname_changed",
+      "value": "%1$s é agora conhecido como %2$s"
+    },
+    {
+      "name": "clear_custom_messages",
+      "value": "Excluir mensagens personalizadas"
+    },
+    {
+      "name": "close",
+      "value": "Fechar"
+    },
+    {
+      "name": "close_all_active_chats",
+      "value": "Fechar todos as conversas ativas"
+    },
+    {
+      "name": "close_current_chat",
+      "value": "Fechar sessão actual de conversa"
+    },
+    {
+      "name": "connected",
+      "value": "Conectado"
+    },
+    {
+      "name": "connecting_",
+      "value": "Conectando %1$s"
+    },
+    {
+      "name": "connecting_status",
+      "value": "Conectando…"
+    },
+    {
+      "name": "connection_failed_message",
+      "value": "Falha ao fazer login na conta: Nome de usuário: %1$s\n\nNome do servidor: %2$s\nPor favor, verifique a sua conexão de internet OU contacte administrador da sua rede para mais informações."
+    },
+    {
+      "name": "connecting",
+      "value": "Conectando"
+    },
+    {
+      "name": "contact_active",
+      "value": "** %1$s está activo na sessão de conversa"
+    },
+    {
+      "name": "contact_composing",
+      "value": "** %1$s está digitando uma mensagem"
+    },
+    {
+      "name": "contact_inactive",
+      "value": "** %1$s está temporariamente indisponível"
+    },
+    {
+      "name": "contact_gone",
+      "value": "** %1$s saiu da sessão de conversa"
+    },
+    {
+      "name": "contact_info",
+      "value": "Detalhes do contato"
+    },
+    {
+      "name": "contact_name",
+      "value": "JID do contato ou Número"
+    },
+    {
+      "name": "contact_name_empty",
+      "value": "O nome de contato não deve estar em branco."
+    },
+    {
+      "name": "contact_owner",
+      "value": "Contate o admin: %1$s"
+    },
+    {
+      "name": "contact_pause_typing",
+      "value": "** %1$s parou de digitar"
+    },
+    {
+      "name": "contact_rename",
+      "value": "Novo nome de contato:"
+    },
+    {
+      "name": "contact_rename_tooltip",
+      "value": "Digite o novo nome de contato"
+    },
+    {
+      "name": "contact_rename_title",
+      "value": "Alterar o nome de contato"
+    },
+    {
+      "name": "contacts",
+      "value": "Contatos"
+    },
+    {
+      "name": "contact_offline_hide",
+      "value": "Ocultar contatos indisponíveis"
+    },
+    {
+      "name": "contact_offline_show",
+      "value": "Mostrar contatos indisponíveis"
+    },
+    {
+      "name": "copy_message_text",
+      "value": "Copiar texto da mensagem"
+    },
+    {
+      "name": "create",
+      "value": "Criar"
+    },
+    {
+      "name": "create_call_failed",
+      "value": "Falha ao fazer a ligação."
+    },
+    {
+      "name": "create_conference_call",
+      "value": "Criar uma ligação de conferência…"
+    },
+    {
+      "name": "create_conference_chat",
+      "value": "Criar uma conferência…"
+    },
+    {
+      "name": "create_group",
+      "value": "Criar um grupo…"
+    },
+    {
+      "name": "create_group_name_invalid",
+      "value": "Nome do grupo inválido: %1$s"
+    },
+    {
+      "name": "create_group_name",
+      "value": "No campo abaixo, digite o nome de grupo que você gostaria de criar."
+    },
+    {
+      "name": "create_group_first_wizard",
+      "value": "Sua lista de contatos não contém nenhum grupo. Por favor, primeiro crie um grupo (Arquivo/Criar grupo)."
+    },
+    {
+      "name": "aboutDialog_help",
+      "value": "<a href=\"https://cmeng-git.github.io/atalk\">Ajuda online</a>"
+    },
+    {
+      "name": "About",
+      "value": "Sobre"
+    },
+    {
+      "name": "version_",
+      "value": "Versão %1$s"
+    },
+    {
+      "name": "help",
+      "value": "Ajuda"
+    },
+    {
+      "name": "check_new_version",
+      "value": "Verificar por atualizações"
+    },
+    {
+      "name": "show_history_log",
+      "value": "Histórico de mudanças"
+    },
+    {
+      "name": "online_help",
+      "value": "Ajuda online"
+    },
+    {
+      "name": "delete_database",
+      "value": "Excluir banco de dados"
+    },
+    {
+      "name": "http_authorization_request",
+      "value": "Pedido de autorização HTTP"
+    },
+    {
+      "name": "http_authorization_request_instruction",
+      "value": "HTTP (%1$s) Autorização para %2$s\nCódigo de validação: %3$s\nVocê quer aceitar este pedido para conta:\n%4$s?\n\nVerifique se a ID corresponde ao site, se disponível"
+    },
+    {
+      "name": "app_authors_fmt",
+      "value": "Autores: %1$s"
+    },
+    {
+      "name": "app_libraries",
+      "value": "aTalk usa as seguintes bibliotecas de terceiros: %1$s"
+    },
+    {
+      "name": "app_revision_fmt",
+      "value": "Informações de revisão: %1$s"
+    },
+    {
+      "name": "app_xep",
+      "value": "aTalk suporta os seguintes XEPs: %1$s"
+    },
+    {
+      "name": "powered_by",
+      "value": "Desenvolvido por atalk.org"
+    },
+    {
+      "name": "chat_audio_buddy_offline",
+      "value": "Não é permitida a conversa de áudio com um destinatário que está offline."
+    },
+    {
+      "name": "chat_audio_cancel",
+      "value": "< deslize à esquerda\npara cancelar"
+    },
+    {
+      "name": "chat_audio_start_record",
+      "value": "Iniciar gravação"
+    },
+    {
+      "name": "latitude",
+      "value": "Latitude:"
+    },
+    {
+      "name": "location",
+      "value": "Localização:"
+    },
+    {
+      "name": "longitude",
+      "value": "Longitude:"
+    },
+    {
+      "name": "altitude",
+      "value": "Altitude:"
+    },
+    {
+      "name": "geo_send",
+      "value": "Enviar localização do GPS"
+    },
+    {
+      "name": "geo_street_views_map",
+      "value": "Vistas da rua & Mapa"
+    },
+    {
+      "name": "geo_share",
+      "value": "Compartilhar geolocalizações"
+    },
+    {
+      "name": "apply_new_location_setting",
+      "value": "Clique no botão \\\"Siga-me\\\" para aplicar a nova configuração"
+    },
+    {
+      "name": "btn_center_map",
+      "value": "Centralizar na minha localização"
+    },
+    {
+      "name": "btn_follow_me",
+      "value": "Siga-me"
+    },
+    {
+      "name": "single_location_fix",
+      "value": "Atualização de local único"
+    },
+    {
+      "name": "follow_me_start",
+      "value": "Me siga (%1$dm) @%2$dS"
+    },
+    {
+      "name": "follow_me_stop",
+      "value": "Pare de me seguir (%1$dm) @%2$dS"
+    },
+    {
+      "name": "google_map",
+      "value": "Mapas do Google"
+    },
+    {
+      "name": "legal_info",
+      "value": "Informações legais"
+    },
+    {
+      "name": "play_service_not_installed",
+      "value": "Serviços de Google Play não estão instalados neste aparelho."
+    },
+    {
+      "name": "split_street_view_panorama_and_map_description",
+      "value": "Demonstra como exibir vista panorâmica da rua e mapa."
+    },
+    {
+      "name": "split_street_view_panorama_and_map_label",
+      "value": "Vista panorâmica da rua e Mapa"
+    },
+    {
+      "name": "map",
+      "value": "Mapa"
+    },
+    {
+      "name": "permission_location_rationale",
+      "value": "O acesso ao serviço de localização é necessário para exibir a 'minha localização', que mostra suas coordenadas atuais no mapa."
+    },
+    {
+      "name": "permission_location_denied",
+      "value": "Esta demonstração requer permissão de localização para ativar a camada com 'minha localização'. Por favor, tente novamente e conceda a permissão para poder usar a localização.\nSe a permissão tiver sido negada, ela pode ser reativada em Configurações do sistema > Apps > 'Google Maps API Demos'."
+    },
+    {
+      "name": "permission_location_required",
+      "value": "É necessária permissão de localização para esta demonstração."
+    },
+    {
+      "name": "export_sql_db",
+      "value": "Exportar base de dados SQL do aTalk"
+    },
+    {
+      "name": "purge_debug_log",
+      "value": "Remover o arquivo de registro do aTalk"
+    },
+    {
+      "name": "purge_sql_db",
+      "value": "Aviso! Remover a base de dados SQL do aTalk"
+    },
+    {
+      "name": "refresh_apply",
+      "value": "Aplicar"
+    },
+    {
+      "name": "refresh_store",
+      "value": "Atualizar memória persistente…"
+    },
+    {
+      "name": "refresh_store_avatar",
+      "value": "XEP-0084/XEP-0153: Avatar"
+    },
+    {
+      "name": "refresh_store_caps",
+      "value": "XEP-0115: Capacidades da entidade"
+    },
+    {
+      "name": "refresh_store_disc_info",
+      "value": "XEP-0030: Descoberta do serviço"
+    },
+    {
+      "name": "refresh_store_hint",
+      "value": "Marcar o item para que sua memória persistente seja excluída e atualizada; Realizar somente quando for necessário!\n"
+    },
+    {
+      "name": "refresh_store_roster",
+      "value": "XEP-0237: Lista"
+    },
+    {
+      "name": "refresh_store_omemo",
+      "value": "XEP-0384: Criptografia OMEMO"
+    },
+    {
+      "name": "unregistered_message",
+      "value": "Falha ao fazer login na conta:\nNome de usuário: %1$s\nNome do servidor: %2$s\nA conta está offline."
+    },
+    {
+      "name": "create_videoBridge",
+      "value": "Criar conexão de vídeo de ponte…"
+    },
+    {
+      "name": "create_videoBridge_menu",
+      "value": "Criar uma conexão de vídeo de ponte"
+    },
+    {
+      "name": "create_join_video_conference",
+      "value": "Criar / Participar em uma videoconferência"
+    },
+    {
+      "name": "create_video_conference",
+      "value": "Criar uma nova videoconferência para esta sala"
+    },
+    {
+      "name": "video_format_not_supported",
+      "value": "Falha ao definir a pré-visualização de câmera no aparelho para: %1$s; Excepção: %2$s."
+    },
+    {
+      "name": "disconnected",
+      "value": "Desconectado"
+    },
+    {
+      "name": "disconnecting_",
+      "value": "Desconectando %1$s"
+    },
+    {
+      "name": "deny",
+      "value": "Recusar"
+    },
+    {
+      "name": "display_name",
+      "value": "Nome exibido"
+    },
+    {
+      "name": "contact_display_name",
+      "value": "Nome de contato mostrado"
+    },
+    {
+      "name": "do_not_disturb",
+      "value": "Não perturbar"
+    },
+    {
+      "name": "duration",
+      "value": "duração"
+    },
+    {
+      "name": "edit_status_message_tip",
+      "value": "Definir mensagem de status"
+    },
+    {
+      "name": "edited",
+      "value": "editado"
+    },
+    {
+      "name": "enter_name_or_number",
+      "value": "Digite um nome ou número"
+    },
+    {
+      "name": "error",
+      "value": "Erro"
+    },
+    {
+      "name": "error_was_",
+      "value": "Erro foi: %1$s"
+    },
+    {
+      "name": "exit",
+      "value": "Sair"
+    },
+    {
+      "name": "extended_away",
+      "value": "Indisponível por um tempo"
+    },
+    {
+      "name": "free_for_chat",
+      "value": "Disponível para conversar"
+    },
+    {
+      "name": "file_byte_sent",
+      "value": "%1$s enviado"
+    },
+    {
+      "name": "file_receive_completed",
+      "value": "O arquivo foi recebido de %1$s"
+    },
+    {
+      "name": "file_receive_failed",
+      "value": "Ocorreu um erro durante a transferência do arquivo de %1$s"
+    },
+    {
+      "name": "file_receive_from",
+      "value": "Recebendo arquivo de %1$s"
+    },
+    {
+      "name": "file_send_completed",
+      "value": "O arquivo foi enviado com sucesso para %1$s"
+    },
+    {
+      "name": "file_send_declined",
+      "value": "%1$s recusou este arquivo"
+    },
+    {
+      "name": "file_sending_to",
+      "value": "Enviando arquivo para %1$s"
+    },
+    {
+      "name": "file_transfer_accepted",
+      "value": "A transferência de ficheiros foi aceite"
+    },
+    {
+      "name": "file_transfer_canceled",
+      "value": "A transferência de arquivos foi cancelada"
+    },
+    {
+      "name": "file_transfer_preparing",
+      "value": "Preparando a transferência de arquivos com %1$s. Aguarde…"
+    },
+    {
+      "name": "file_transfer_declined",
+      "value": "A transferência de arquivos foi recusada"
+    },
+    {
+      "name": "file_transfer_request_received",
+      "value": "%1$s esta compartilhando o arquivo com você"
+    },
+    {
+      "name": "file_transfer_send_error",
+      "value": "Ocorreu um erro ao enviar o arquivo para %1$s"
+    },
+    {
+      "name": "file_transfer_waiting_acceptance",
+      "value": "Aguardando %1$s para aceitar seu arquivo"
+    },
+    {
+      "name": "purge",
+      "value": "Eliminar"
+    },
+    {
+      "name": "estimated_time_",
+      "value": "Tempo estimado: %1$s"
+    },
+    {
+      "name": "file",
+      "value": "Arquivo"
+    },
+    {
+      "name": "file_delivery_error",
+      "value": "Falha ao enviar o arquivo selecionado. %1$s"
+    },
+    {
+      "name": "file_does_not_exist",
+      "value": "O arquivo especificado não foi encontrado. Foi excluído ou movido"
+    },
+    {
+      "name": "file_open_failed",
+      "value": "Falha ao abrir o arquivo. Ele podia ser excluído ou movido"
+    },
+    {
+      "name": "file_open_no_application",
+      "value": "Não foi encontrado um app adequado para este tipo de arquivo"
+    },
+    {
+      "name": "file_open_no_permission",
+      "value": "Você não tem permissão para abrir este arquivo. Por favor, verifique suas permissões de leitura e tente novamente"
+    },
+    {
+      "name": "file_transfer_not_secure",
+      "value": "XEP-0096: O protocolo SI File Transfer não suporta o envio de arquivos criptografados!"
+    },
+    {
+      "name": "file_open_not_supported",
+      "value": "Não é possível arbir o arquivo, ação não é suportada pela plataforma do aparelho"
+    },
+    {
+      "name": "file_send_client_error",
+      "value": "Erro de cliente remoto no arquivo enviado: %1$s"
+    },
+    {
+      "name": "file_send_failed",
+      "value": "Falha ao enviar arquivo: %1$s"
+    },
+    {
+      "name": "file_send_not_allow",
+      "value": "Não é possível enviar arquivo durante a ligação de conferência!"
+    },
+    {
+      "name": "file_attachment",
+      "value": "Enviar anexo"
+    },
+    {
+      "name": "file_size_too_big",
+      "value": "O tamanho do arquivo excede o máximo permitido para este protocolo: %1$s"
+    },
+    {
+      "name": "file_transfer_active",
+      "value": "A transferência de arquivos foi interrompida. Status de progresso @ %1$s foi perdido!"
+    },
+    {
+      "name": "file_transfer_not_supported",
+      "value": "Cliente ou servidor do contato (%1$s) não tem suporte para transferências de arquivos ou protocolos necessários"
+    },
+    {
+      "name": "finish",
+      "value": "Concluir"
+    },
+    {
+      "name": "folder_not_exist",
+      "value": "A pasta que contém este arquivo não foi encontrada. Podia ser excluída ou movida"
+    },
+    {
+      "name": "folder_open_failed",
+      "value": "Falha ao abrir a pasta"
+    },
+    {
+      "name": "folder_open_no_permission",
+      "value": "Você não tem permissão para abrir esta pasta. Por favor, verifique suas permissões de leitura e tente novamente"
+    },
+    {
+      "name": "folder_open_no_application",
+      "value": "Não foi encontrado um app para abrir esta pasta"
+    },
+    {
+      "name": "group_chat",
+      "value": "Conversa de grupo"
+    },
+    {
+      "name": "hide",
+      "value": "Ocultar"
+    },
+    {
+      "name": "history",
+      "value": "Histórico"
+    },
+    {
+      "name": "history_contact",
+      "value": "Histórico - %1$s"
+    },
+    {
+      "name": "history_off_for_contact",
+      "value": "Desative o histórico para este contato"
+    },
+    {
+      "name": "history_off_all",
+      "value": "Desative o histórico de todos as conversas e contatos"
+    },
+    {
+      "name": "history_erase_for_contact",
+      "value": "Excluir este histórico de contatos"
+    },
+    {
+      "name": "history_erase_all",
+      "value": "Excluir histórico de conversa para todos os contatos"
+    },
+    {
+      "name": "history_purge_for_contact_warning",
+      "value": "Tem certeza de que deseja limpar todas as mensagens selecionadas para %1$s?"
+    },
+    {
+      "name": "history_purge_all_warning",
+      "value": "Tem certeza de que quer excluir todas as mensagens de todos?"
+    },
+    {
+      "name": "history_purge_count",
+      "value": "Número de registros do histórico excluídos: %1$s"
+    },
+    {
+      "name": "history_purge_error",
+      "value": "Falha ao excluir mensagens armazenadas localmente para %1$s."
+    },
+    {
+      "name": "history_purge_media",
+      "value": "Excluir mídia do meu aparelho"
+    },
+    {
+      "name": "history_offline_warning",
+      "value": "Feche e abra esta sessão de bate-papo para visualizar MAM e mensagens off-line quando estiver on-line"
+    },
+    {
+      "name": "chatroom_alternate_venue",
+      "value": "Lugar alternativo:"
+    },
+    {
+      "name": "chatroom_alternate_address",
+      "value": "Você pode continuar a conversa na seguinte sala: %1$s"
+    },
+    {
+      "name": "chatroom_bookmark_title",
+      "value": "Favoritos da sala"
+    },
+    {
+      "name": "chatroom_bookmark",
+      "value": "Favoritos"
+    },
+    {
+      "name": "chatroom_auto_join",
+      "value": "Participação automática"
+    },
+    {
+      "name": "chatroom_bookmark_update_failed",
+      "value": "Falha na atualização de favoritos para %1$s: %2$s"
+    },
+    {
+      "name": "chatroom_occupant",
+      "value": "Participantes da sala"
+    },
+    {
+      "name": "chatroom_history_erase_per",
+      "value": "Excluir este histórico da sala"
+    },
+    {
+      "name": "chatroom_history_erase_all",
+      "value": "Remover todo o histórico de salas"
+    },
+    {
+      "name": "chatroom_history_off_per",
+      "value": "Exclua o histórico desta sala"
+    },
+    {
+      "name": "chatroom_info",
+      "value": "Informações sobre a sala"
+    },
+    {
+      "name": "chatroom_info_name",
+      "value": "Nome"
+    },
+    {
+      "name": "chatroom_info_subject",
+      "value": "Assunto"
+    },
+    {
+      "name": "chatroom_info_description",
+      "value": "Descrição"
+    },
+    {
+      "name": "chatroom_info_occupants",
+      "value": "Participantes"
+    },
+    {
+      "name": "chatroom_info_member_only",
+      "value": "Apenas membros"
+    },
+    {
+      "name": "chatroom_info_moderated",
+      "value": "Moderado"
+    },
+    {
+      "name": "chatroom_info_non_anonymous",
+      "value": "Não anônimo"
+    },
+    {
+      "name": "chatroom_info_password_protected",
+      "value": "Protegido pela senha"
+    },
+    {
+      "name": "chatroom_info_persistent",
+      "value": "Persistente"
+    },
+    {
+      "name": "chatroom_info_max_history_fetch",
+      "value": "Histórico máximo"
+    },
+    {
+      "name": "chatroom_info_contact_jid",
+      "value": "Jid do contacto"
+    },
+    {
+      "name": "chatroom_info_subject_modifiable",
+      "value": "Assunto modificável"
+    },
+    {
+      "name": "chatroom_info_language",
+      "value": "Idioma"
+    },
+    {
+      "name": "chatroom_info_ldap_group",
+      "value": "Grupo LDAP"
+    },
+    {
+      "name": "chatroom_create",
+      "value": "Criar uma sala…"
+    },
+    {
+      "name": "chatroom_create_error",
+      "value": "Falha ao criar a sala para:\n%1$s"
+    },
+    {
+      "name": "chatroom_create_join",
+      "value": "Criar / Participar na sala"
+    },
+    {
+      "name": "chatroom_create_wizard",
+      "value": "Criar assistente para sala"
+    },
+    {
+      "name": "chatroom_destroy",
+      "value": "Destrua esta sala"
+    },
+    {
+      "name": "chatroom_destroy_exception",
+      "value": "Ocorreu um erro durante a destruição da sala:\n%1$s"
+    },
+    {
+      "name": "chatroom_destroy_error",
+      "value": "Falha ao remover a sala do servidor:\n'%1$s'\n%2$s\n\nProceder com a remoção da sala local."
+    },
+    {
+      "name": "chatroom_destroy_message",
+      "value": "Este sala foi destruída!\nMotivo: %1$s"
+    },
+    {
+      "name": "chatroom_destroy_note",
+      "value": "Para informar os outros participantes, por favor, digite um motivo e um lugar alternativo para participar."
+    },
+    {
+      "name": "chatroom_destroy_prompt",
+      "value": "Admin da conta: %1$s.\nTem certeza de que quer destruir\n'%2$s'\ne todo seu histórico de conversa?"
+    },
+    {
+      "name": "chatroom_destroy_reason",
+      "value": "conversa de grupo inativa"
+    },
+    {
+      "name": "chatroom_destroy_successful",
+      "value": "'%1$s' foi excluído com sucesso!"
+    },
+    {
+      "name": "chatroom_destroy_title",
+      "value": "Destruir a sala"
+    },
+    {
+      "name": "chatroom_join_failed",
+      "value": "Falha ao entrar na sala com este apelido: %1$s\n%2$s."
+    },
+    {
+      "name": "chatroom_join_failed_reason",
+      "value": "Falha ao entrar na sala %1$s:\n%2$s"
+    },
+    {
+      "name": "chatroom_join_password",
+      "value": "A sala solicita uma senha."
+    },
+    {
+      "name": "chatroom_join_failed_registration",
+      "value": "A sala requer registração."
+    },
+    {
+      "name": "chatroom_join_title",
+      "value": "Participe na sala"
+    },
+    {
+      "name": "chatroom_join_name",
+      "value": "Por favor, digite o nome da sala em qual você gostaria de participar."
+    },
+    {
+      "name": "chatroom_join_subject_null",
+      "value": "Por favor, digite o nome da sala que você gostaria de participar."
+    },
+    {
+      "name": "chatroom_join_wizard",
+      "value": "Participe e acompanhe assistente da sala"
+    },
+    {
+      "name": "cr_member_start_conversation",
+      "value": "Iniciar conversa"
+    },
+    {
+      "name": "cr_member_grant_owner_privilege",
+      "value": "Conceder privilégios de proprietário"
+    },
+    {
+      "name": "cr_member_revoke_owner_privilege",
+      "value": "Revogar privilégios de proprietário"
+    },
+    {
+      "name": "cr_member_kick",
+      "value": "Remover do bate-papo em grupo"
+    },
+    {
+      "name": "invitation_message",
+      "value": "Mensagem de convite:"
+    },
+    {
+      "name": "invitation_received",
+      "value": "Convite recebido"
+    },
+    {
+      "name": "invitation_received_message",
+      "value": "%1$s convidou você a participar na sala %2$s. Você pode aceitar, recusar ou ignorar este convite."
+    },
+    {
+      "name": "invitation_rejected",
+      "value": "%1$s recusou seu convite para entrar na sala. Motivo: %2$s."
+    },
+    {
+      "name": "invite",
+      "value": "Convite"
+    },
+    {
+      "name": "invite_contact_message",
+      "value": "Selecione os nomes de contato que você gostaria de adicionar a esta conversa e depois clique em convidar."
+    },
+    {
+      "name": "invite_contact_to_call",
+      "value": "Convidar contatos para ligar"
+    },
+    {
+      "name": "invite_contact_to_chat",
+      "value": "Convidar contatos para conversar"
+    },
+    {
+      "name": "invite_contact_to_videoBridge",
+      "value": "Convidar contatos (uma conexão de vídeo de ponte)"
+    },
+    {
+      "name": "invite_group_chat",
+      "value": "Convite para conversa de grupo"
+    },
+    {
+      "name": "invite_reason",
+      "value": "Motivo de convite:"
+    },
+    {
+      "name": "invite_reject_reason",
+      "value": "Motivo (de recusar):"
+    },
+    {
+      "name": "invite_reject_busy",
+      "value": "Ocupado"
+    },
+    {
+      "name": "ignore",
+      "value": "Ignorar"
+    },
+    {
+      "name": "info",
+      "value": "Informação"
+    },
+    {
+      "name": "address",
+      "value": "Endereço"
+    },
+    {
+      "name": "city",
+      "value": "Cidade"
+    },
+    {
+      "name": "country",
+      "value": "País"
+    },
+    {
+      "name": "email",
+      "value": "E-mail"
+    },
+    {
+      "name": "emails",
+      "value": "E-mails"
+    },
+    {
+      "name": "fax",
+      "value": "Fax"
+    },
+    {
+      "name": "home",
+      "value": "Início"
+    },
+    {
+      "name": "home_page",
+      "value": "Página inicial"
+    },
+    {
+      "name": "invalid_address",
+      "value": "Endereço inválido: %1$s"
+    },
+    {
+      "name": "join",
+      "value": "Participar"
+    },
+    {
+      "name": "join_as",
+      "value": "Participar como"
+    },
+    {
+      "name": "join_existing_video_conference",
+      "value": "Participe na videoconferência existente"
+    },
+    {
+      "name": "join_video",
+      "value": "Participe em videoconferência"
+    },
+    {
+      "name": "job_title",
+      "value": "Função"
+    },
+    {
+      "name": "join_automatically",
+      "value": "Participar automaticamente"
+    },
+    {
+      "name": "do_not_join_automatically",
+      "value": "Não participe automaticamente"
+    },
+    {
+      "name": "kick",
+      "value": "Expulsar"
+    },
+    {
+      "name": "kick_failed",
+      "value": "Não foi possível expulsar"
+    },
+    {
+      "name": "kick_failed_general_error",
+      "value": "Não foi possível expulsar %1$s. Ocorreu um erro geral no servidor."
+    },
+    {
+      "name": "kick_failed_not_allowed",
+      "value": "Não foi possível expulsar %1$s. O dono e o administrador da sala não podia ser expulso."
+    },
+    {
+      "name": "kick_failed_not_enough_permission",
+      "value": "Não foi possível expulsar %1$s. Não tem permissões suficientes para fazer isso."
+    },
+    {
+      "name": "last",
+      "value": "Último"
+    },
+    {
+      "name": "last_message_correction",
+      "value": "Correção da última mensagem"
+    },
+    {
+      "name": "last_name",
+      "value": "Último nome"
+    },
+    {
+      "name": "last_seen",
+      "value": "Hoje: %s"
+    },
+    {
+      "name": "leave",
+      "value": "Sair"
+    },
+    {
+      "name": "leave_chat_room",
+      "value": "Sair da sala"
+    },
+    {
+      "name": "locally_on_hold",
+      "value": "Em espera"
+    },
+    {
+      "name": "login_credential",
+      "value": "Credenciais de login do usuário"
+    },
+    {
+      "name": "login_failed",
+      "value": "Falha ao fazer login"
+    },
+    {
+      "name": "logoff_failed",
+      "value": "Ocorreu um erro ao sair da conta: Nome do usuário: %1$s, Nome do servidor: %2$s."
+    },
+    {
+      "name": "mobile",
+      "value": "Aparelho"
+    },
+    {
+      "name": "move",
+      "value": "Mover"
+    },
+    {
+      "name": "move_contact",
+      "value": "Mover contatos"
+    },
+    {
+      "name": "move_contact_error",
+      "value": "O contato não pode ser movido"
+    },
+    {
+      "name": "move_contact_message",
+      "value": "Selecione um contato ou grupo onde gostaria mover ele."
+    },
+    {
+      "name": "move_contact_failed",
+      "value": "O contato que você escolheu é o mesmo que\no da fonte. Por favor, escolha outro contato!"
+    },
+    {
+      "name": "move_contact_prompt",
+      "value": "Tem certeza de que quer movê-lo de %1$s para %2$s?"
+    },
+    {
+      "name": "move_contact_to_group",
+      "value": "Mover ao grupo"
+    },
+    {
+      "name": "nickname",
+      "value": "Apelido"
+    },
+    {
+      "name": "chatroom_open_automatically",
+      "value": "Abrir esta sala automaticamente quando"
+    },
+    {
+      "name": "personal",
+      "value": "Pessoal"
+    },
+    {
+      "name": "message_delivery_error",
+      "value": "Falha ao entregar a mensagem."
+    },
+    {
+      "name": "message_delivery_failed",
+      "value": "A mensagem acima não pôde ser entregue"
+    },
+    {
+      "name": "message_delivery_internal_error",
+      "value": "Ocorreu um erro interno. Isto é muito provavelmente uma falha. Por favor, informe através do registro de depuração."
+    },
+    {
+      "name": "message_delivery_not_supported",
+      "value": "O protocolo que você está usando não suporta mensagens offline. Você poderia tentar alcançar %1$s através de outro protocolo ou esperar até que usuário esteja online."
+    },
+    {
+      "name": "message_delivery_unknown_error",
+      "value": "Ocorreu um erro desconhecido durante a entrega da sua mensagem."
+    },
+    {
+      "name": "message_delivery_unsupported_operation",
+      "value": "Operação sem suporte."
+    },
+    {
+      "name": "message_delivery_network_error",
+      "value": "Ocorreu um problema da rede. Por favor, verifique sua configuração de internet e tente novamente."
+    },
+    {
+      "name": "message_received",
+      "value": "%1$s escreveu"
+    },
+    {
+      "name": "message_delivery_not_registered",
+      "value": "Você deve fazer o login primeiro para enviar a mensagem."
+    },
+    {
+      "name": "multiple_login",
+      "value": "Não são permitidos múltiplos instantes de login. A seguinte conta: Nome do usuário: %1$s, Nome do servidor: %2$s foi desconectada."
+    },
+    {
+      "name": "mutually_on_hole",
+      "value": "Mutualmente em espera"
+    },
+    {
+      "name": "add_new_account",
+      "value": "Adicionar nova conta"
+    },
+    {
+      "name": "network_assert_error",
+      "value": "O provedor de Jabber deve ser registrado antes de começar a comunicação."
+    },
+    {
+      "name": "no",
+      "value": "Não"
+    },
+    {
+      "name": "no_online_telephony_account",
+      "value": "Pelo menos uma conta online é necessária para fazer a ligação. Faça o login em uma das suas contas de telefonia e tente novamente."
+    },
+    {
+      "name": "not_authorized",
+      "value": "Não autorizado"
+    },
+    {
+      "name": "not_authorized_hint",
+      "value": "Você não está autorizado a acessar o servidor. Verifique as configurações da conta, senha ou ative o registro IB e tente novamente:\n%s\""
+    },
+    {
+      "name": "off",
+      "value": "Desativado"
+    },
+    {
+      "name": "offline",
+      "value": "Offline"
+    },
+    {
+      "name": "ok",
+      "value": "OK"
+    },
+    {
+      "name": "on",
+      "value": "Ativado"
+    },
+    {
+      "name": "online",
+      "value": "Online"
+    },
+    {
+      "name": "open",
+      "value": "Abrir"
+    },
+    {
+      "name": "open_file_vai_image",
+      "value": "Clique para abrir o arquivo."
+    },
+    {
+      "name": "folder",
+      "value": "Pasta"
+    },
+    {
+      "name": "other",
+      "value": "Outro"
+    },
+    {
+      "name": "organization",
+      "value": "Organização"
+    },
+    {
+      "name": "phone",
+      "value": "Aparelho"
+    },
+    {
+      "name": "phones",
+      "value": "Aparelhos"
+    },
+    {
+      "name": "play",
+      "value": "Reproduzir"
+    },
+    {
+      "name": "postal_code",
+      "value": "CEP"
+    },
+    {
+      "name": "rename",
+      "value": "Renomear"
+    },
+    {
+      "name": "registration_required",
+      "value": "Erro ao registrar conta no servidor:\n%s\""
+    },
+    {
+      "name": "save",
+      "value": "Salvar"
+    },
+    {
+      "name": "show_stack_trace",
+      "value": "Mostrar o Stack Trace"
+    },
+    {
+      "name": "street",
+      "value": "Rua"
+    },
+    {
+      "name": "submit",
+      "value": "Submeter"
+    },
+    {
+      "name": "user_login",
+      "value": "Faça o login"
+    },
+    {
+      "name": "work",
+      "value": "Trabalho"
+    },
+    {
+      "name": "xmpp_connection_error",
+      "value": "Problema durante a conexão ao XMPP:\n%s\""
+    },
+    {
+      "name": "btn_video_tooltip",
+      "value": "Alternar o vídeo"
+    },
+    {
+      "name": "mic_control_title",
+      "value": "Nível do microfone"
+    },
+    {
+      "name": "btn_mute_tooltip",
+      "value": "Ajustar o som do microfone"
+    },
+    {
+      "name": "presence_not_supported",
+      "value": "Presença não é suportada por %1$s"
+    },
+    {
+      "name": "proactive_notification",
+      "value": "está escrevendo uma mensagem (%1$s)"
+    },
+    {
+      "name": "recent_messages",
+      "value": "Últimas conversas"
+    },
+    {
+      "name": "received_",
+      "value": "%1$s recebeu"
+    },
+    {
+      "name": "referred",
+      "value": "Indicou"
+    },
+    {
+      "name": "restoring_",
+      "value": "Restaurando…"
+    },
+    {
+      "name": "decline",
+      "value": "Recusar"
+    },
+    {
+      "name": "remove",
+      "value": "Excluir"
+    },
+    {
+      "name": "remove_account",
+      "value": "Excluir conta"
+    },
+    {
+      "name": "remove_account_prompt",
+      "value": "Tem certeza de que quer excluir a conta:\n%1$s?"
+    },
+    {
+      "name": "remove_contact",
+      "value": "Excluir contato"
+    },
+    {
+      "name": "remove_contact_prompt",
+      "value": "Contate o admin: %1$s.\n\nTem certeza de que deseja excluir o contato: '%2$s' da sua lista de contatos?"
+    },
+    {
+      "name": "remove_contact_not_connected",
+      "value": "Você precisa estar conectado para excluir este contato. Por favor, faça login e tente novamente."
+    },
+    {
+      "name": "remove_group",
+      "value": "Exluir grupo"
+    },
+    {
+      "name": "remove_group_prompt",
+      "value": "Tem certeza de que quer excluir o grupo: '%1$s' e todos os contatos associados da sua lista de contatos?"
+    },
+    {
+      "name": "remotely_on_hold",
+      "value": "Em espera"
+    },
+    {
+      "name": "rename_contact",
+      "value": "Alterar nome do contato"
+    },
+    {
+      "name": "ringing",
+      "value": "Ligando"
+    },
+    {
+      "name": "request",
+      "value": "Pedido"
+    },
+    {
+      "name": "request_authorization",
+      "value": "Solicitação de autorização"
+    },
+    {
+      "name": "request_authorization_prompt",
+      "value": "Contate o admin: %1$s\n\nPrecisa autorização de '%2$s' para adicionar uma pessoa a sua lista de contatos. Faça pedido outra vez."
+    },
+    {
+      "name": "retry",
+      "value": "Tente de novo"
+    },
+    {
+      "name": "search",
+      "value": "Pesquisar"
+    },
+    {
+      "name": "search_contact",
+      "value": "Procure contato"
+    },
+    {
+      "name": "phonebook",
+      "value": "Agenda"
+    },
+    {
+      "name": "security",
+      "value": "Segurança"
+    },
+    {
+      "name": "select_account_owner",
+      "value": "Selecione admin da conta"
+    },
+    {
+      "name": "assign_group",
+      "value": "Contato atribuído ao grupo:"
+    },
+    {
+      "name": "no_group",
+      "value": "Nenhum grupo"
+    },
+    {
+      "name": "send_log",
+      "value": "Relatar falhas"
+    },
+    {
+      "name": "send_log_prompt",
+      "value": "aTalk acabou de se recuperar de um falha grave. Você quer relatar isto aos desenvolvedores?"
+    },
+    {
+      "name": "send_log_subject",
+      "value": "Relatar falhas do aTalk"
+    },
+    {
+      "name": "send_log_title",
+      "value": "Relatar falhas do aTalk via email"
+    },
+    {
+      "name": "send_log_info",
+      "value": "As informações abaixo podem ajudar ao desenvolvedor a consertar o problema:\n\n\n1. Qual foi a última coisa que você fez antes de que o problema aconteceu?\n\n\n\n2. Qual é o problema que você vê, inclua um captura de tela, se possível?\n\n\n\n3. Você pode dizer como podemos reproduzir o problema?"
+    },
+    {
+      "name": "send_message",
+      "value": "Enviar mensagem"
+    },
+    {
+      "name": "send_message_failed",
+      "value": "Falha ao enviar a mensagem: %1$s"
+    },
+    {
+      "name": "send_message_not_supported",
+      "value": "A entrada que você selecionou não suporta mensagens instantâneas: %1$s"
+    },
+    {
+      "name": "send_message_as_sms",
+      "value": "Enviar via SMS"
+    },
+    {
+      "name": "send_message_private",
+      "value": "Enviar mensagem privada"
+    },
+    {
+      "name": "send_via",
+      "value": "Enviar via"
+    },
+    {
+      "name": "sent",
+      "value": "enviou"
+    },
+    {
+      "name": "server_chatroom",
+      "value": "Salas do servidor"
+    },
+    {
+      "name": "shutting_down",
+      "value": "desligando…"
+    },
+    {
+      "name": "status",
+      "value": "Status"
+    },
+    {
+      "name": "type_your_request_reason",
+      "value": "Digite o motivo da sua solicitação"
+    },
+    {
+      "name": "unknown",
+      "value": "Desconhecido"
+    },
+    {
+      "name": "unknown_user",
+      "value": "Usuário desconhecido"
+    },
+    {
+      "name": "unknown_state",
+      "value": "Status desconhecido"
+    },
+    {
+      "name": "url_example",
+      "value": "https://www.exemplo.com"
+    },
+    {
+      "name": "volume_control_title",
+      "value": "Nível de volume da saída"
+    },
+    {
+      "name": "volume_control_tooltip",
+      "value": "Ajustar volume"
+    },
+    {
+      "name": "volume_gain_level",
+      "value": "Nível de volume: %1$s%%"
+    },
+    {
+      "name": "waiting_for_authorization",
+      "value": "Aguardando autorização"
+    },
+    {
+      "name": "warning",
+      "value": "Aviso"
+    },
+    {
+      "name": "call_in_progress_warning",
+      "value": "Não posso fazer isso durante a ligação"
+    },
+    {
+      "name": "yes",
+      "value": "Sim"
+    },
+    {
+      "name": "account_create_failed",
+      "value": "Falha ao criar uma nova conta devido ao erro: %1$s"
+    },
+    {
+      "name": "create_account",
+      "value": "Criar conta"
+    },
+    {
+      "name": "general_error",
+      "value": "Erro geral"
+    },
+    {
+      "name": "network_failure",
+      "value": "Falha na rede"
+    },
+    {
+      "name": "select_avatar",
+      "value": "Selecione novo avatar"
+    },
+    {
+      "name": "set_status",
+      "value": "Alterar o status"
+    },
+    {
+      "name": "sign_in",
+      "value": "Entrar"
+    },
+    {
+      "name": "sign_out",
+      "value": "Sair"
+    },
+    {
+      "name": "server_info_not_complete",
+      "value": "Favor completar a parte do servidor da sua conta."
+    },
+    {
+      "name": "speed_info",
+      "value": "Velocidade: %1$s/sec (%2$s)"
+    },
+    {
+      "name": "status_change_general_error",
+      "value": "Falha ao mudar o status da conta: Nome do usuário: %1$s, Nome do servidor: %2$s, devido a um erro geral."
+    },
+    {
+      "name": "status_change_message",
+      "value": "virou %1$s"
+    },
+    {
+      "name": "status_change_network_failure",
+      "value": "Falha na mudança do Status da conta: Nome do usuário %1$s, Nome do Servidor: %2$s, devido a um erro da rede."
+    },
+    {
+      "name": "security_error",
+      "value": "Erro de segurança"
+    },
+    {
+      "name": "security_info",
+      "value": "Detalhes de segurança"
+    },
+    {
+      "name": "security_warning",
+      "value": "Aviso de segurança"
+    },
+    {
+      "name": "username_password_null",
+      "value": "Por favor, digite o nome de usuário ou/e a senha correta."
+    },
+    {
+      "name": "username_change_warning",
+      "value": "Aviso: Ao alterar o nome de usuário da conta para '%1$s' você também excluirá %2$s mensagens da conta existente '%3$s'. Continuar?"
+    },
+    {
+      "name": "user_exist_error",
+      "value": "Este usuário já existe na rede selecionada. Por favor, escolha outro usuário ou rede."
+    },
+    {
+      "name": "jan",
+      "value": "Jan"
+    },
+    {
+      "name": "feb",
+      "value": "Fev"
+    },
+    {
+      "name": "mar",
+      "value": "Mar"
+    },
+    {
+      "name": "apr",
+      "value": "Abr"
+    },
+    {
+      "name": "may",
+      "value": "Mai"
+    },
+    {
+      "name": "jun",
+      "value": "Jun"
+    },
+    {
+      "name": "jul",
+      "value": "Jul"
+    },
+    {
+      "name": "aug",
+      "value": "Ago"
+    },
+    {
+      "name": "sep",
+      "value": "Set"
+    },
+    {
+      "name": "oct",
+      "value": "Out"
+    },
+    {
+      "name": "nov",
+      "value": "Nov"
+    },
+    {
+      "name": "dec",
+      "value": "Dez"
+    },
+    {
+      "name": "service_protocol_ICE_FAILED",
+      "value": "Não foi possível estabelecer a conexão (falha do ICE e nenhum relay encontrado)"
+    },
+    {
+      "name": "callinfo_audio_info",
+      "value": "Detalhes de áudio"
+    },
+    {
+      "name": "callinfo_bandwidth",
+      "value": "Banda larga:"
+    },
+    {
+      "name": "callinfo_call_duration",
+      "value": "Duração da ligação:"
+    },
+    {
+      "name": "callinfo_call_identity",
+      "value": "Identidade:"
+    },
+    {
+      "name": "callinfo_call_information",
+      "value": "Detalhes da ligação"
+    },
+    {
+      "name": "callinfo_call_transport",
+      "value": "Sinalizar ligação de transporte:"
+    },
+    {
+      "name": "callinfo_codec",
+      "value": "Codec/Frequência:"
+    },
+    {
+      "name": "callinfo_conference_focus",
+      "value": "Foco da conferência:"
+    },
+    {
+      "name": "callinfo_default_encrypted",
+      "value": "Criptografia ativada:"
+    },
+    {
+      "name": "callinfo_jitter",
+      "value": "Jitter:"
+    },
+    {
+      "name": "callinfo_key_exchange_protocol",
+      "value": "Protocolo de troca das chaves"
+    },
+    {
+      "name": "callinfo_local_ip",
+      "value": "IP/Porta local:"
+    },
+    {
+      "name": "callinfo_loss_rate",
+      "value": "Taxa de perda:"
+    },
+    {
+      "name": "callinfo_media_stream_rip",
+      "value": "RTP:"
+    },
+    {
+      "name": "callinfo_media_srtp",
+      "value": "SRTP:"
+    },
+    {
+      "name": "callinfo_media_stream_transport_protocol",
+      "value": "Protocolo de transporte de transmissão de mídia:"
+    },
+    {
+      "name": "callinfo_na",
+      "value": "N.A."
+    },
+    {
+      "name": "callinfo_peer_count",
+      "value": "Numero de participantes:"
+    },
+    {
+      "name": "callinfo_remote_ip",
+      "value": "IP/Porta remoto:"
+    },
+    {
+      "name": "callinfo_rtt",
+      "value": "RTT:"
+    },
+    {
+      "name": "callinfo_details",
+      "value": "Informações de ligação"
+    },
+    {
+      "name": "callinfo_tls_cipher_suite",
+      "value": "Conjunto de codificação TLS:"
+    },
+    {
+      "name": "callinfo_tls_certificate_content",
+      "value": "O conteúdo do certificado do servidor TLS é exibido abaixo."
+    },
+    {
+      "name": "callinfo_tls_protocol",
+      "value": "Protocolo TLS:"
+    },
+    {
+      "name": "callinfo_view_certificate",
+      "value": "Ver certificado"
+    },
+    {
+      "name": "callinfo_video_size",
+      "value": "Tamanho do vídeo"
+    },
+    {
+      "name": "callinfo_video_info",
+      "value": "Detalhes do vídeo"
+    },
+    {
+      "name": "callinfo_adaptive_jitter_buffer",
+      "value": "Buffer adaptativo do Jitter:"
+    },
+    {
+      "name": "callinfo_decoded_with_fec",
+      "value": "Pacotes decodificados com FEC:"
+    },
+    {
+      "name": "callinfo_discarded_percent",
+      "value": "Pacotes atualmente sendo descartados:"
+    },
+    {
+      "name": "callinfo_discarded_total",
+      "value": "Número de pacotes descartados:"
+    },
+    {
+      "name": "callinfo_harvesting_data",
+      "value": "%1$d ms (para captação de %2$d)"
+    },
+    {
+      "name": "callinfo_harvesting_time",
+      "value": "Tempo de captação:"
+    },
+    {
+      "name": "callinfo_candidate_extended_type",
+      "value": "Candidato ICE do tipo estendido:"
+    },
+    {
+      "name": "callinfo_localhost_address",
+      "value": "IP/Porta de local host:"
+    },
+    {
+      "name": "callinfo_ice_local_reflexive_address",
+      "value": "IP/Porta reflexivo local:"
+    },
+    {
+      "name": "callinfo_ice_local_relayed_address",
+      "value": "IP/Porta de relay local:"
+    },
+    {
+      "name": "callinfo_ice_remote_host_address",
+      "value": "IP/Porta de host remoto:"
+    },
+    {
+      "name": "callinfo_ice_remote_reflexive_address",
+      "value": "IP/Porta reflexivo remoto:"
+    },
+    {
+      "name": "callinfo_ice_remote_relayed_address",
+      "value": "IP/Porta de relay remoto:"
+    },
+    {
+      "name": "callinfo_ice_state",
+      "value": "Status de processamento do ICE:"
+    },
+    {
+      "name": "callinfo_ice_state_completed",
+      "value": "Concluído"
+    },
+    {
+      "name": "callinfo_ice_state_failed",
+      "value": "Falha"
+    },
+    {
+      "name": "callinfo_ice_state_running",
+      "value": "Verificações de conectividade"
+    },
+    {
+      "name": "callinfo_ice_state_waiting",
+      "value": "Obter candidatos"
+    },
+    {
+      "name": "callinfo_ice_state_jitter_buffer_delay",
+      "value": "Buffer do Jitter:"
+    },
+    {
+      "name": "callinfo_total_harvesting_time",
+      "value": "Tempo total de captação:"
+    },
+    {
+      "name": "trust_always",
+      "value": "Confie sempre neste certificado"
+    },
+    {
+      "name": "cert_dialog_title",
+      "value": "Verificação do Certificado"
+    },
+    {
+      "name": "cert_dialog_description",
+      "value": "<html>%1$s não pode verificar a identidade do servidor ao conectar-se a<br/><b>%2$s</b><br/><br/>O certificado não é confiável (certificado auto-assinado), o que significa que a identidade do servidor não pode ser verificada automaticamente.<br/><br/>Proceder com a conexão apenas esta vez?<br/>Para mais opções e informações, clique em Mostrar Certificado.</html>"
+    },
+    {
+      "name": "cert_dialog_description_no_host",
+      "value": "<html>%1$s não pode verificar a\nidentidade do certificado do servidor.<br/><br/>\nO certificado não é confiável (um certificado autoassinado), o que significa que\na identidade do servidor não pode ser verificada automaticamente.<br/><br/>\nProceder com conexão apenas esta vez?<br/>\nPara mais opções e informações, clique em \"Mostrar Certificado\".</html>"
+    },
+    {
+      "name": "cert_dialog_client_description",
+      "value": "<html>%1$s não pode verificar a\nidentidade do cliente conectando.<br/><br/>\nO certificado não é confiável (um certificado autoassinado), o que significa que\na identidade do cliente não pode ser verificada automaticamente.<br/><br/>\nProceder com conexão apenas esta vez?<br/>\nPara mais opções e informações, clique em \"Mostrar Certificado\".</html>"
+    },
+    {
+      "name": "cert_dialog_peer_description",
+      "value": "<html>%1$s não pode verificar o\nidentidade do Peer %2$s.<br/><br/>\nO certificado não é confiável (um certificado autoassinado), o que significa que\na identidade do Peer não pode ser verificada automaticamente.<br/><br/>\nProceder com conexão apenas esta vez?<br/>\nPara mais opções e informações, clique em \"Mostrar Certificado\".</html>"
+    },
+    {
+      "name": "proceed",
+      "value": "Continuar"
+    },
+    {
+      "name": "cert_info_issued_to",
+      "value": "<b>Emitido para</b>"
+    },
+    {
+      "name": "cert_info_chain",
+      "value": "Cadeia de certificados:"
+    },
+    {
+      "name": "cert_info_cn",
+      "value": "Nome comum:"
+    },
+    {
+      "name": "cert_info_O",
+      "value": "Organização:"
+    },
+    {
+      "name": "cert_info_C",
+      "value": "Nome do País:"
+    },
+    {
+      "name": "cert_info_ST",
+      "value": "Nome do Estado ou Município:"
+    },
+    {
+      "name": "cert_info_L",
+      "value": "Nome de Local:"
+    },
+    {
+      "name": "cert_info_issued_by",
+      "value": "<b>Emitido para</b>"
+    },
+    {
+      "name": "cert_info_OU",
+      "value": "Unidade Organizacional:"
+    },
+    {
+      "name": "cert_info_validity",
+      "value": "<b>Validade</b>"
+    },
+    {
+      "name": "cert_info_issued_on",
+      "value": "Emitido em:"
+    },
+    {
+      "name": "cert_info_expires_on",
+      "value": "Expira em:"
+    },
+    {
+      "name": "cert_info_fingerprints",
+      "value": "<b>Impressões digitais</b>"
+    },
+    {
+      "name": "cert_info_details",
+      "value": "<b>Detalhes do certificado</b>"
+    },
+    {
+      "name": "cert_info_SN",
+      "value": "Número de série:"
+    },
+    {
+      "name": "cert_info_version",
+      "value": "Versão:"
+    },
+    {
+      "name": "cert_info_sign_algo",
+      "value": "Algoritmo da assinatura:"
+    },
+    {
+      "name": "cert_info_pubkey_info",
+      "value": "<b>Detalhes da chave pública</b>"
+    },
+    {
+      "name": "cert_info_algo",
+      "value": "Algoritmo:"
+    },
+    {
+      "name": "cert_info_pubkey",
+      "value": "Chave pública:"
+    },
+    {
+      "name": "cert_info_key_bytes",
+      "value": "%1$s bytes: %2$s"
+    },
+    {
+      "name": "cert_info_key_bits",
+      "value": "%1$s bits"
+    },
+    {
+      "name": "cert_info_exponent",
+      "value": "Exponente:"
+    },
+    {
+      "name": "cert_info_key_size",
+      "value": "Tamanho da chave:"
+    },
+    {
+      "name": "cert_info_signature",
+      "value": "Assinatura:"
+    },
+    {
+      "name": "service_gui_CONTINUE",
+      "value": "Continuar"
+    },
+    {
+      "name": "certificate_show",
+      "value": "Mostrar certificado"
+    },
+    {
+      "name": "certificate_hide",
+      "value": "Ocultar certificado"
+    },
+    {
+      "name": "unsaved_changes",
+      "value": "Você fez alterações e não salvou. Salvar ou cancelar e sair."
+    },
+    {
+      "name": "unsaved_changes_title",
+      "value": "Alterações não salvas"
+    },
+    {
+      "name": "please_wait",
+      "value": "Aguarde…"
+    },
+    {
+      "name": "server_info_fetching",
+      "value": "Buscando recursos/informações anunciadas no servidor…"
+    },
+    {
+      "name": "security_audio_not_secure",
+      "value": "Áudio inseguro"
+    },
+    {
+      "name": "security_call_not_secured_tooltip",
+      "value": "Ligação insegura."
+    },
+    {
+      "name": "security_call_secured_compare_tooltip",
+      "value": "Clique aqui para comparar a chave secreta de segurança com outro participante."
+    },
+    {
+      "name": "security_call_secured_tooltip",
+      "value": "Ligação segura. Para mais informações, clique aqui."
+    },
+    {
+      "name": "security_cipher",
+      "value": "Cipher: %1$s"
+    },
+    {
+      "name": "security_clear",
+      "value": "Limpar"
+    },
+    {
+      "name": "security_compare_with_partner_short",
+      "value": "Comparar com outro participante:"
+    },
+    {
+      "name": "confirm",
+      "value": "Confirmar"
+    },
+    {
+      "name": "security_encryption_required",
+      "value": "Criptografia exigida!"
+    },
+    {
+      "name": "security_no_video",
+      "value": "Sem vídeo"
+    },
+    {
+      "name": "security_secure_audio",
+      "value": "Áudio seguro"
+    },
+    {
+      "name": "security_secure_video",
+      "value": "Vídeo seguro"
+    },
+    {
+      "name": "security_alert",
+      "value": "Tentando proteger a ligação. Irá desconectar em"
+    },
+    {
+      "name": "security_string_compared",
+      "value": "Sequencia comparada:"
+    },
+    {
+      "name": "security_verify_toast",
+      "value": "Ativada proteção da ligação! Toque para comparar a sequencia da segurança agora ou use o menu mais tarde."
+    },
+    {
+      "name": "security_video_not_secured",
+      "value": "Vídeo inseguro"
+    },
+    {
+      "name": "avatar_chose_icon",
+      "value": "Selecione uma imagem"
+    },
+    {
+      "name": "avatar_remove_icon",
+      "value": "Exclua a imagem atual"
+    },
+    {
+      "name": "update_download",
+      "value": "Download"
+    },
+    {
+      "name": "update_install",
+      "value": "Instalar"
+    },
+    {
+      "name": "update_reInstall",
+      "value": "Reinstalar"
+    },
+    {
+      "name": "update_download_completed",
+      "value": "Download concluído"
+    },
+    {
+      "name": "update_download_ready",
+      "value": "A atualização (%1$s) foi baixada e está pronta para ser instalada."
+    },
+    {
+      "name": "update_in_progress",
+      "value": "Em andamento"
+    },
+    {
+      "name": "update_download_in_progress",
+      "value": "O download de atualização está em andamento."
+    },
+    {
+      "name": "update_update_available",
+      "value": "Uma nova versão lançada (%1$s-%2$s) para %3$s está disponível. Versão instalada atual: (%4$s-%5$s)."
+    },
+    {
+      "name": "update_up_to_date",
+      "value": "Sua versão instalada atual: (%1$s-%2$s) está atualizada. Versão disponível online: (%3$s-%4$s)."
+    },
+    {
+      "name": "update_new_version_none",
+      "value": "Não há atualizações"
+    },
+    {
+      "name": "update_install_update",
+      "value": "Instalar atualização"
+    },
+    {
+      "name": "update_download_failed",
+      "value": "Falha ao baixar a nova atualização!"
+    },
+    {
+      "name": "update_check_update",
+      "value": "Verificar por atualizações"
+    },
+    {
+      "name": "update_version_invalid",
+      "value": "O apk baixado não corresponde; atual: %1$s (%2$s)"
+    },
+    {
+      "name": "update_vew_version_available",
+      "value": "Uma nova versão (%1$s) de software está disponível."
+    },
+    {
+      "name": "accountinfo_about_me",
+      "value": "Sobre mim:"
+    },
+    {
+      "name": "accountinfo_about_me_hint",
+      "value": "Digite uma breve descrição sobre você aqui"
+    },
+    {
+      "name": "accountinfo_age",
+      "value": "Idade:"
+    },
+    {
+      "name": "accountinfo_birth_date",
+      "value": "Data de nascimento:"
+    },
+    {
+      "name": "accountinfo_change",
+      "value": "Alterar"
+    },
+    {
+      "name": "accountinfo_city",
+      "value": "Cidade:"
+    },
+    {
+      "name": "accountinfo_country",
+      "value": "País:"
+    },
+    {
+      "name": "accountinfo_discard_change",
+      "value": "Quando usuário fica offline - descartadas todas as alterações de informações da conta."
+    },
+    {
+      "name": "accountinfo_display_name",
+      "value": "Nome exibido:"
+    },
+    {
+      "name": "accountinfo_email",
+      "value": "E-mail:"
+    },
+    {
+      "name": "accountinfo_extended",
+      "value": "Estendido"
+    },
+    {
+      "name": "accountinfo_first_name",
+      "value": "Primeiro nome:"
+    },
+    {
+      "name": "accountinfo_gender",
+      "value": "Sexo:"
+    },
+    {
+      "name": "accountinfo_global_icon",
+      "value": "Usar ícone global"
+    },
+    {
+      "name": "accountinfo_job_title",
+      "value": "Profissão:"
+    },
+    {
+      "name": "accountinfo_last_name",
+      "value": "Sobrenome:"
+    },
+    {
+      "name": "accountinfo_local_icon",
+      "value": "Usar este ícone:"
+    },
+    {
+      "name": "accountinfo_middle_name",
+      "value": "Segundo nome:"
+    },
+    {
+      "name": "accountinfo_mobile_phone",
+      "value": "Número de telefone:"
+    },
+    {
+      "name": "accountinfo_nickname",
+      "value": "Apelido:"
+    },
+    {
+      "name": "accountinfo_not_registered_message",
+      "value": "Está offline - deve estar online para mudar as informações da conta."
+    },
+    {
+      "name": "accountinfo_not_supported",
+      "value": "Informações da conta indisponíveis."
+    },
+    {
+      "name": "accountinfo_only_message",
+      "value": "Somente mensagens"
+    },
+    {
+      "name": "accountinfo_organisation",
+      "value": "Nome da organização:"
+    },
+    {
+      "name": "accountinfo_phone",
+      "value": "Telefone:"
+    },
+    {
+      "name": "accountinfo_postcode",
+      "value": "CEP:"
+    },
+    {
+      "name": "accountinfo_region",
+      "value": "Região:"
+    },
+    {
+      "name": "accountinfo_select_account",
+      "value": "Por favor, selecione uma conta:"
+    },
+    {
+      "name": "accountinfo_street",
+      "value": "Nome da rua:"
+    },
+    {
+      "name": "accountinfo_title",
+      "value": "Informações sobre conta"
+    },
+    {
+      "name": "accountinfo_user_picture",
+      "value": "Foto do usuário"
+    },
+    {
+      "name": "accountinfo_work_email",
+      "value": "E-mail do trabalho:"
+    },
+    {
+      "name": "accountinfo_work_phone",
+      "value": "Telefone do trabalho:"
+    },
+    {
+      "name": "certconfig_title",
+      "value": "Configuração de TLS"
+    },
+    {
+      "name": "certconfig_trusted_store",
+      "value": "Fonte de certificados root confiáveis"
+    },
+    {
+      "name": "certconfig_cert_list_title",
+      "value": "Configurações de autenticação do cliente TLS"
+    },
+    {
+      "name": "certconfig_cert_list_description",
+      "value": "As configurações gerenciadas aqui podem ser escolhidas como certificados TLS de cliente em configurações de conta (p.ex., para autenticar com um certificado contra seu provedor SIP em vez de um nome de usuário e senha)."
+    },
+    {
+      "name": "certconfig_alias",
+      "value": "Nome alternativo em KeyStore"
+    },
+    {
+      "name": "certconfig_keystore_type",
+      "value": "Tipo"
+    },
+    {
+      "name": "certconfig_cert_entry_title",
+      "value": "Certificado de cliente TLS"
+    },
+    {
+      "name": "certconfig_keystore_file",
+      "value": "Arquivo"
+    },
+    {
+      "name": "certconfig_keystore_password",
+      "value": "Senha"
+    },
+    {
+      "name": "certconfig_incomplete",
+      "value": "Favor digitar algo para todos os campos"
+    },
+    {
+      "name": "certconfig_show_cert_exception",
+      "value": "Não foi possível mostrar o certificado (%1$s)."
+    },
+    {
+      "name": "certconfig_keystore_exception",
+      "value": "Não foi possível carregar o Keystore (%1$s)."
+    },
+    {
+      "name": "certconfig_file_type_description",
+      "value": "Certificados incluem (Modulo PKCS#11, arquivos PKCS#12, Java ks Keystore)"
+    },
+    {
+      "name": "certconfig_alias_load_exception",
+      "value": "Não foi possível obter aliases de Keystore (%1$s)."
+    },
+    {
+      "name": "certconfig_invalid_keystore_type",
+      "value": "O tipo de Keystore selecionado parece ser inválido (%1$s)."
+    },
+    {
+      "name": "certconfig_revocation_title",
+      "value": "Opções de revogação de certificados"
+    },
+    {
+      "name": "certconfig_revocation_check_enabled",
+      "value": "CRL (Lista de revogação de certificados) verificação ativada"
+    },
+    {
+      "name": "certconfig_revocation_ocsp_enabled",
+      "value": "OCSP (Protocolo Online de Status do Certificado) verificação ativada"
+    },
+    {
+      "name": "connectioninfo_title",
+      "value": "Detalhes sobre conexão"
+    },
+    {
+      "name": "contactinfo_title",
+      "value": "Detalhes do contato"
+    },
+    {
+      "name": "contactinfo_contact_summary_description",
+      "value": "Resumo das informações de contato para"
+    },
+    {
+      "name": "contactinfo_contact_extended_description",
+      "value": "Informações detalhadas de contato para"
+    },
+    {
+      "name": "contactinfo_not_specified",
+      "value": "[Não especificado]"
+    },
+    {
+      "name": "contactinfo_user_pictures",
+      "value": "Foto do usuário"
+    },
+    {
+      "name": "contactinfo_status_message",
+      "value": "Mensagem no status"
+    },
+    {
+      "name": "notificationconfig_event_BusyCall",
+      "value": "ligação ocupada"
+    },
+    {
+      "name": "notificationconfig_event_BusyCall_description",
+      "value": "Descrição sobre ligação ocupada"
+    },
+    {
+      "name": "notificationconfig_event_CallSaved",
+      "value": "Ligação salva"
+    },
+    {
+      "name": "notificationconfig_event_CallSecurityError",
+      "value": "Erro de segurança da ligação"
+    },
+    {
+      "name": "notificationconfig_event_CallSecurityError_description",
+      "value": "Descrição sobre erro de segurança da ligação"
+    },
+    {
+      "name": "notificationconfig_event_CallSecurityOn",
+      "value": "Ligação segura ativada"
+    },
+    {
+      "name": "notificationconfig_event_CallSecurityOn_description",
+      "value": "Descrição sobre ligação segura ativada"
+    },
+    {
+      "name": "notificationconfig_event_Dialing",
+      "value": "Discando"
+    },
+    {
+      "name": "notificationconfig_event_Dialing_description",
+      "value": "Descrição da discagem"
+    },
+    {
+      "name": "notificationconfig_event_HangUp",
+      "value": "Desligar"
+    },
+    {
+      "name": "notificationconfig_event_HangUp_description",
+      "value": "Descrição sobre desligar"
+    },
+    {
+      "name": "notificationconfig_event_IncomingCall",
+      "value": "Ligação recebida"
+    },
+    {
+      "name": "notificationconfig_event_IncomingCall_description",
+      "value": "Descrição sobre ligação recebida."
+    },
+    {
+      "name": "notificationconfig_event_IncomingFile",
+      "value": "Arquivo recebido"
+    },
+    {
+      "name": "notificationconfig_event_IncomingInvitation",
+      "value": "Invitação recebida"
+    },
+    {
+      "name": "notificationconfig_event_IncomingMessage",
+      "value": "Mensagem recebida"
+    },
+    {
+      "name": "notificationconfig_event_IncomingMessage_description",
+      "value": "Descrição sobre a mensagem recebida"
+    },
+    {
+      "name": "notificationconfig_event_LogFilesArchived",
+      "value": "Registros arquivados"
+    },
+    {
+      "name": "notificationconfig_event_MissedCall",
+      "value": "Ligação perdida"
+    },
+    {
+      "name": "notificationconfig_event_NetworkNotifications",
+      "value": "Notificações da rede"
+    },
+    {
+      "name": "notificationconfig_event_NetworkNotifications_description",
+      "value": "Descrição sobre notificações da rede"
+    },
+    {
+      "name": "notificationconfig_event_ProactiveNotification",
+      "value": "Notificações ao digitar"
+    },
+    {
+      "name": "notificationconfig_event_ProactiveNotification_description",
+      "value": "Descrição proativa do estado da notificação de conversa"
+    },
+    {
+      "name": "notificationconfig_event_OutgoingCall",
+      "value": "Ligação efectuada"
+    },
+    {
+      "name": "notificationconfig_event_OutgoingCall_description",
+      "value": "Descrição sobre ligação efectuada"
+    },
+    {
+      "name": "notificationconfig_event_SecurityMessage",
+      "value": "Mensagem de segurança"
+    },
+    {
+      "name": "notificationconfig_event_SecurityMessage_description",
+      "value": "Descrição sobre mensagem de segurança"
+    },
+    {
+      "name": "notificationconfig_notification_sound",
+      "value": "Som de notificação no aparelho"
+    },
+    {
+      "name": "notificationconfig_playback_sound",
+      "value": "Som reproduzido no aparelho"
+    },
+    {
+      "name": "notificationconfig_popup_notification",
+      "value": "Notificação popup"
+    },
+    {
+      "name": "notificationconfig_vibration",
+      "value": "Vibração"
+    },
+    {
+      "name": "notificationconfig_sound_file",
+      "value": "Arquivo de som:"
+    },
+    {
+      "name": "callrecordingconfig_call_saved",
+      "value": "Ligação salva com sucesso"
+    },
+    {
+      "name": "callrecordingconfig_call_saved_to",
+      "value": "Salvar para: %1$s"
+    },
+    {
+      "name": "media_configform_audio_device_config_changed",
+      "value": "A configuração do áudio foi alterada"
+    },
+    {
+      "name": "media_configform_audio_device_config_management_click",
+      "value": "Clique aqui para gerenciar o aparelho"
+    },
+    {
+      "name": "media_configform_preview",
+      "value": "Pré-visualização"
+    },
+    {
+      "name": "media_security_checksum_mismatch",
+      "value": "<html>Divergência do checksum em pacotes internos do ZRTP.<br/>Se você vê esta mensagem, isto pode ser um ataque de negação de serviço!</html>"
+    },
+    {
+      "name": "media_security_data_send_failed",
+      "value": "<html>Falha no envio de dados criptografados. A conexão da internet ou o Peer não está disponível.<br/><b>Sua ligação não é segura</b><br/>Código de erro: %1$s</html>"
+    },
+    {
+      "name": "imedia_security_retry_rate_exceeded",
+      "value": "<html>Muitas tentativas durante as negociações de segurança. Isto pode significar que a outra parte tem problemas com a internet.<br/><b>Sua ligação não é segura</b><br/>Código de erro: %1$s</html>"
+    },
+    {
+      "name": "media_security_internal_protocol_error",
+      "value": "<html>Ocorreu erro de protocolo interno.<br/><b>Sua ligação não é segura</b><br/>Código de erro: %1$s</html>"
+    },
+    {
+      "name": "media_security_off",
+      "value": "Desativado o suporte para criptografia em ligações"
+    },
+    {
+      "name": "media_security_on",
+      "value": "Ativado o suporte para criptografia em ligações"
+    },
+    {
+      "name": "media_security_severe_generic_message",
+      "value": "<html>Foi detectado um grave problema da segurança.<br/><b>Sua ligação não é segura</b><br/>Código de erro: %1$s</html>"
+    },
+    {
+      "name": "media_security_warning_no_rs_match",
+      "value": "<html>Nenhum segredo compartilhado preservado disponível.<br/><b>Recomenda-se a verificação SAS</b></html>"
+    },
+    {
+      "name": "media_security_warning_no_expected_rs_match",
+      "value": "<html>Falta um segredo compartilhado retido previsto.<br/><b>Requerida verificação SAS</b><br/>Se os códigos SAS não corresponderem, desligue e tente novamente</html>"
+    },
+    {
+      "name": "media_security_zrtp_generic_message",
+      "value": "<html>Foi detectado um grave problema com o ZRTP.<br/><b>Sua ligação não está segura</b><br/>Código de erro: %1$s</html>"
+    },
+    {
+      "name": "media_security_zrtp_handshake_timeout",
+      "value": "A chamada não é segura; Tempo limite de handshake RTP: %1$s"
+    },
+    {
+      "name": "media_security_encryption_ended",
+      "value": "A ligação cryptografada terminou: %1$s"
+    },
+    {
+      "name": "menu_crypto_plain_text",
+      "value": "Texto puro"
+    },
+    {
+      "name": "omemo_authbuddy_authenticate_buddy",
+      "value": "Autenticar amigo"
+    },
+    {
+      "name": "omemo_authbuddy_authenticate_info",
+      "value": "Você tem amigos não autenticados. Amigos não autenticados não podem receber mensagem via OMEMO. Marcar para autenticar."
+    },
+    {
+      "name": "omemo_authbuddy_local_fingerprint",
+      "value": "Minha impressão digital %1$s:\n%2$s"
+    },
+    {
+      "name": "omemo_authbuddy_verify_buddy",
+      "value": "Verificar amigo"
+    },
+    {
+      "name": "omemo_identity_keypairs_missing",
+      "value": "Está faltando pares de chaves de identidade do OMEMO para: %1$s"
+    },
+    {
+      "name": "omemo_identity_key_invalid",
+      "value": "Chave de identidade inválida para aparelho do OMEMO: %1$s.\nExceção: %2$s."
+    },
+    {
+      "name": "omemo_identity_key_missing",
+      "value": "Chave de identidade do OMEMO para %1$s não está disponível.\nProceder para obter do servidor."
+    },
+    {
+      "name": "omemo_identity_keypairs_invalid",
+      "value": "Pares de chaves de identidade inválidos para aparelho do OMEMO: %1$s.\nExceção: %2$s."
+    },
+    {
+      "name": "omemo_init_failed_corrupted_omemoKey_exception",
+      "value": "Inicialização do gerenciador do OMEMO falhou e o envio de mensagens OMEMO não está funcionando. Se ao reiniciar o problema persistir,\nproceder para \"Regenerar as identidades do OMEMO\" para o aparelho de OMOMO: %1$s.\n\nExceção: %2$s."
+    },
+    {
+      "name": "omemo_init_failed_no_response",
+      "value": "Falha ao iniciar o gerenciador do OMEMO, o envio de mensagens do OMEMO pode não funcionar corretamente: %1$s"
+    },
+    {
+      "name": "omemo_init_failed_title",
+      "value": "O init de gerenciador do OMEMO falhou"
+    },
+    {
+      "name": "omemo_menu_authenticated",
+      "value": "OMEMO Autenticado"
+    },
+    {
+      "name": "omemo_send_error",
+      "value": "O envio da mensagem falhou. Por favor, tente novamente após todos os erros terem sido corrigidos: %1$s"
+    },
+    {
+      "name": "omemo_menu_unauthenticated",
+      "value": "OMEMO não-autenticado"
+    },
+    {
+      "name": "omemo_menu_untrusted",
+      "value": "OMEMO não-confiável"
+    },
+    {
+      "name": "omemo_rebuild_session",
+      "value": "Reconstruir nova sessão para obter: %1$s"
+    },
+    {
+      "name": "omemo_purge_inactive_device_error",
+      "value": "Falha ao remover o aparelho inativo do OMEMO para: %1$s."
+    },
+    {
+      "name": "settings_bosh_proxy",
+      "value": "Configuração BOSH-Proxy"
+    },
+    {
+      "name": "settings_bosh_proxy_summary",
+      "value": "Criar conexão via BOSH/Proxy para a conta"
+    },
+    {
+      "name": "bosh_proxy_url_null",
+      "value": "O conteúdo do campo da URL BOSH não pode estar em branco"
+    },
+    {
+      "name": "bosh_proxy_host_port_null",
+      "value": "O conteúdo em campos de host de proxy e porta não podem estar em branco"
+    },
+    {
+      "name": "bosh_proxy_type",
+      "value": "Tipo:"
+    },
+    {
+      "name": "bosh_proxy_url",
+      "value": "BOSH URL:"
+    },
+    {
+      "name": "bosh_proxy_use_http",
+      "value": "Usar proxy de HTTP"
+    },
+    {
+      "name": "bosh_proxy_host",
+      "value": "Host de proxy:"
+    },
+    {
+      "name": "bosh_proxy_port",
+      "value": "Porta de proxy:"
+    },
+    {
+      "name": "provisioning_auto",
+      "value": "Descobrir automaticamente URI de provisionamento"
+    },
+    {
+      "name": "provisioning_bonjour",
+      "value": "Bonjour"
+    },
+    {
+      "name": "provisioning_clipboard_failed",
+      "value": "Falha ao copiar UUID ao clipboard"
+    },
+    {
+      "name": "provisioning_copy_to_clipboard",
+      "value": "Copiar UUID ao clipboard"
+    },
+    {
+      "name": "provisioning_credentials",
+      "value": "Últimas credenciais de provisionamento armazenadas"
+    },
+    {
+      "name": "provisioning_enable",
+      "value": "Ativar o provisionamento"
+    },
+    {
+      "name": "provisioning_exit_on_failed",
+      "value": "Sair do app quando o provisionamento falhar"
+    },
+    {
+      "name": "provisioning_forget_password",
+      "value": "Esquecer a senha"
+    },
+    {
+      "name": "provisioning_manual",
+      "value": "Especificar manualmente um URI de provisionamento"
+    },
+    {
+      "name": "provisioning_method",
+      "value": "Método de provisionamento"
+    },
+    {
+      "name": "provisioning_failed",
+      "value": "O provisionamento falhou"
+    },
+    {
+      "name": "provisioning_failed_message",
+      "value": "<html>O provisionamento falhou. %1$s!<br/>Por favor, tente novamente mais tarde ou entre em contato com administrador.</html>"
+    },
+    {
+      "name": "provisioning",
+      "value": "Provisionamento"
+    },
+    {
+      "name": "provisioning_summary",
+      "value": "Definir as configurações de provisionamento"
+    },
+    {
+      "name": "provisioning_remove_credentials_message",
+      "value": "Você tem certeza de que deseja remover a senha de provisionamento?"
+    },
+    {
+      "name": "provisioning_restart_alert",
+      "value": "Aviso, suas mudanças só entrarão em vigor na próxima vez que você iniciar o aTalk!"
+    },
+    {
+      "name": "settings_dnssec_dane",
+      "value": "Segurança de SSL/DNSSEC/DANE"
+    },
+    {
+      "name": "settings_dns",
+      "value": "DNS"
+    },
+    {
+      "name": "settings_dns_summary",
+      "value": "Definir as configurações do DNS"
+    },
+    {
+      "name": "dnsconfig_dnssec",
+      "value": "Segurança do DNS (DNSSEC)"
+    },
+    {
+      "name": "dnsconfig_dnssec_domain_name",
+      "value": "Domínio"
+    },
+    {
+      "name": "dnsconfig_dnssec_enable_failed",
+      "value": "A alteração de status falhou"
+    },
+    {
+      "name": "dnsconfig_dnssec_enable_failed_message",
+      "value": "A alteração do status de ativação do DNSSEC falhou."
+    },
+    {
+      "name": "dnsconfig_dnssec_mode",
+      "value": "Comportamento"
+    },
+    {
+      "name": "dnsconfig_dnssec_restart_alert",
+      "value": "<html>Aviso, ao ativar ou desativar o DNSSEC, você desativa o resolvedor paralelo e só terá efeito na próxima vez que você iniciar o aTalk.</html>"
+    },
+    {
+      "name": "dnsconfig_dnssec_title",
+      "value": "Resolvedor de reserva"
+    },
+    {
+      "name": "dnsconfig_dnssec_check_absolute",
+      "value": "Tratar todos os nomes de domínio como absolutos"
+    },
+    {
+      "name": "dnsconfig_dnssec_check_enable",
+      "value": "Ativar resolver de DNSSEC"
+    },
+    {
+      "name": "dnsconfig_dnssec_label_default",
+      "value": "Comportamento padrão"
+    },
+    {
+      "name": "dnsconfig_dnssec_label_name_servers",
+      "value": "Servidores com nomes personalizados"
+    },
+    {
+      "name": "dnsconfig_dnssec_label_name_servers_hint",
+      "value": "<html>Vários servidores podem ser delimitados com uma vírgula, p.ex. 149.20.64.20, 149.20.64.21 (Open DNSSEC resolvedor de validação de OARC)</html>"
+    },
+    {
+      "name": "dns_insecure_answer_title",
+      "value": "Falha de DNSSEC"
+    },
+    {
+      "name": "dns_insecure_answer_message_insecure",
+      "value": "Resposta de DNS para %1$s é insegura."
+    },
+    {
+      "name": "dns_insecure_answer_message_reason",
+      "value": "Resposta de DNS para %1$s é insegura.\nMotivo: %2$s"
+    },
+    {
+      "name": "dns_dnssec_advanced_options",
+      "value": "Mostrar opções avançadas"
+    },
+    {
+      "name": "dns_dnssec_advanced_reason_invalid",
+      "value": "<html>DNSSEC zona assinada %1$s devolveu dados inválidos.<br/>%2$s</html>"
+    },
+    {
+      "name": "dns_dnssec_advanced_reason_unsigned",
+      "value": "%1$s consulta para %2$s não é assinada."
+    },
+    {
+      "name": "dns_dnssec_warning",
+      "value": "<html><div width=\"600\">%1$s tentou conectar-se ao servidor em <b>%2$s<</b>,\nque é um domínio com uma forte proteção chamada DNSSEC. As informações que %1$s obteve\ndo servidor de DNS não está de acordo com as informações que o DNSSEC fornece sobre este domínio.<br/><br/><b>\nIsto não deve acontecer a menos que sejam cometidos erros muito graves em %2$s. É, portanto, uma indicação muito forte de que algo é\nseriamente errado com a confiabilidade da sua conexão na rede.</b><br/><br/>\nSe você estiver usando a conexão de internet de outra pessoa (como um Hotspot WiFi) ou se houver circunstâncias especiais, que o façam desconfiar de\nseu provedor regular de internet, fortemente aconselhamos que você pare de usá-lo imediatamente e procure um ponto alternativo de acesso à internet.\nQuando você estiver conectado de forma segura a outra rede, o problema deve ser resolvido automaticamente. Se este não for o caso, entre em contato com seu\nprestador de serviços para informá-lo sobre o assunto. </div></html>"
+    },
+    {
+      "name": "settings_ssl_certificate",
+      "value": "Certificado de SSL"
+    },
+    {
+      "name": "settings_ssl_certificate_purge",
+      "value": "Remover certificados aprovados pelo usuário para: %1$s"
+    },
+    {
+      "name": "settings_ssl_certificate_remove",
+      "value": "Retirar certificado"
+    },
+    {
+      "name": "settings_ssl_certificate_summary",
+      "value": "Gerenciar certificados de SSL"
+    },
+    {
+      "name": "tls_cert",
+      "value": "Certificado do cliente de TLS"
+    },
+    {
+      "name": "tls_cert_prompt",
+      "value": "Por favor, selecione o certificado de TLS"
+    },
+    {
+      "name": "tls_cert_summary",
+      "value": "Uso de certificado na autenticação do usuário com servidor"
+    },
+    {
+      "name": "zid_reset_summary",
+      "value": "Resetar identificador ZRTP de longa duração"
+    },
+    {
+      "name": "zid_reset_title",
+      "value": "Resetar ZID"
+    },
+    {
+      "name": "zid_reset_done",
+      "value": "ZID foi resetado"
+    },
+    {
+      "name": "commit_progress_message",
+      "value": "Salvando alterações da conta, por favor aguarde…"
+    },
+    {
+      "name": "commit_progress_title",
+      "value": "\"Alocando…\""
+    },
+    {
+      "name": "settings_not_set",
+      "value": "(Não definido)"
+    },
+    {
+      "name": "enc_audio_title",
+      "value": "Codificação de áudio"
+    },
+    {
+      "name": "enc_override_global",
+      "value": "Aplicação global"
+    },
+    {
+      "name": "enc_video_title",
+      "value": "Codificação de vídeo"
+    },
+    {
+      "name": "none",
+      "value": "Nenhum"
+    },
+    {
+      "name": "sec_encryption",
+      "value": "Criptografia"
+    },
+    {
+      "name": "sec_protocols_title",
+      "value": "Protocolos de segurança"
+    },
+    {
+      "name": "sec_protocols_message",
+      "value": "Por favor, selecione os protocolos desejados em ordem"
+    },
+    {
+      "name": "discard",
+      "value": "Descartar"
+    },
+    {
+      "name": "sec_zrtp_signalling_on",
+      "value": "ZRTP será anunciado sobre o protocolo sinalizador"
+    },
+    {
+      "name": "sec_zrtp_signalling_off",
+      "value": "Não será anunciado o ZRTP"
+    },
+    {
+      "name": "service_gui_SERVERS_LIST_ADD_SERVER",
+      "value": "Adicionar servidor"
+    },
+    {
+      "name": "service_gui_SERVERS_LIST_EMPTY",
+      "value": "A lista está vazia. Clique para adicionar uma nova entrada…"
+    },
+    {
+      "name": "service_gui_JINGLE_EDIT_JID",
+      "value": "Endereço JID"
+    },
+    {
+      "name": "service_gui_JINGLE_EDIT_SUPPORT_RELAY",
+      "value": "Suporte para relay"
+    },
+    {
+      "name": "stun_turn_server",
+      "value": "Servidor STUN/TURN"
+    },
+    {
+      "name": "ip_address",
+      "value": "Endereço IP"
+    },
+    {
+      "name": "server_port",
+      "value": "Porta do servidor"
+    },
+    {
+      "name": "turn_supported",
+      "value": "Suportar TURN"
+    },
+    {
+      "name": "username",
+      "value": "Nome de usuário"
+    },
+    {
+      "name": "security_dtls_srtp",
+      "value": "Sinalizador DTLS_SRTP"
+    },
+    {
+      "name": "security_dtls_title",
+      "value": "Algoritmo de assinatura de certificado TLS"
+    },
+    {
+      "name": "security_encryption_enable",
+      "value": "Ativar a criptografia em ligações"
+    },
+    {
+      "name": "security_encryption_protocols",
+      "value": "Protocolos de criptografia"
+    },
+    {
+      "name": "security_rtp_savp",
+      "value": "Indicação RTP/SAVP"
+    },
+    {
+      "name": "security_rtp_savp_title",
+      "value": "Método de indicação RTP/SAVP"
+    },
+    {
+      "name": "security_sdes",
+      "value": "Opções SDES"
+    },
+    {
+      "name": "security_sdes_dlg_title",
+      "value": "Selecione desejado conjunto de codificação"
+    },
+    {
+      "name": "security_sdes_title",
+      "value": "Conjunto de codificação de SDES"
+    },
+    {
+      "name": "security_zrtp_options",
+      "value": "Opções ZRTP"
+    },
+    {
+      "name": "security_zrtp_signalling",
+      "value": "Sinalizador ZRTP"
+    },
+    {
+      "name": "audio_encoding",
+      "value": "Codificação de áudio"
+    },
+    {
+      "name": "audio_enc_global_override_summary",
+      "value": "Substituir formatos de áudio definidos globalmente para esta conta"
+    },
+    {
+      "name": "call_encryption",
+      "value": "Configurações de criptografia de ligações"
+    },
+    {
+      "name": "video_encoding",
+      "value": "Codificação de vídeo"
+    },
+    {
+      "name": "video_enc_global_override_summary",
+      "value": "Substituir formatos de vídeo definidos globalmente para esta conta"
+    },
+    {
+      "name": "jbr_auto_sign_in",
+      "value": "Conectar ao iniciar"
+    },
+    {
+      "name": "jbr_auto_stun_discovery",
+      "value": "Auto descobrir servidores STUN/TURN"
+    },
+    {
+      "name": "jbr_connection_summary",
+      "value": "Definir detalhes de conexão…"
+    },
+    {
+      "name": "jbr_connection",
+      "value": "Configurações de conexão"
+    },
+    {
+      "name": "jbr_jingle_disable",
+      "value": "Desativar ligações da mídia (Jingle)"
+    },
+    {
+      "name": "jbr_jingle_summary",
+      "value": "(ligações de áudio e vídeo via XMPP)"
+    },
+    {
+      "name": "jbr_dtmf_method",
+      "value": "Método DTMF"
+    },
+    {
+      "name": "jbr_dtmf_summary",
+      "value": "Seleção do método DTMF"
+    },
+    {
+      "name": "jbr_gmail_notifications",
+      "value": "Notificações para novas mensagens de Gmail"
+    },
+    {
+      "name": "jbr_google_contact_search",
+      "value": "Busca de contatos do Google"
+    },
+    {
+      "name": "jbr_gtalk_domain",
+      "value": "Domínio que usará a ligação GTalk"
+    },
+    {
+      "name": "jbr_ice_summary",
+      "value": "Configurar as opções de ICE…"
+    },
+    {
+      "name": "jbr_jingle_auto",
+      "value": "Descoberta automática de nodos de relays do Jingle"
+    },
+    {
+      "name": "jbr_jingle_list",
+      "value": "Nodos additional de Jingle…"
+    },
+    {
+      "name": "jbr_jingle_list_summary",
+      "value": "Nodos de Jingle definidos pelo usuário para usar"
+    },
+    {
+      "name": "jbr_jingle_nodes",
+      "value": "Nodos de Jingle"
+    },
+    {
+      "name": "jbr_jingle_use",
+      "value": "Usar nodos de Jingle"
+    },
+    {
+      "name": "jbr_keep_alive",
+      "value": "Manter ativo"
+    },
+    {
+      "name": "jbr_keep_alive_enable",
+      "value": "Ativar opção de manter Ativo"
+    },
+    {
+      "name": "jbr_keep_alive_summary",
+      "value": "Ativar se tiver conexão instável na rede móvel"
+    },
+    {
+      "name": "jbr_tls_ver_min",
+      "value": "Versão mínima do TLS"
+    },
+    {
+      "name": "jbr_tls_ver_min_summary",
+      "value": "Conectar usando esta versão ou uma posterior do protocolo TLS"
+    },
+    {
+      "name": "jbr_non_secure_allow",
+      "value": "Permitir conexões não seguras"
+    },
+    {
+      "name": "jbr_non_ssk_summary",
+      "value": "Desativar a criptografia na conexão do servidor SSL/TLS"
+    },
+    {
+      "name": "jbr_server_override",
+      "value": "Substituir as opções padrão do servidor"
+    },
+    {
+      "name": "jbr_password",
+      "value": "Digite a senha"
+    },
+    {
+      "name": "jbr_ping_interval",
+      "value": "Intervalo de ping (1~3600 segundos)"
+    },
+    {
+      "name": "jbr_ping_interval_tune_enable",
+      "value": "Ativar a otimização de intervalo do ping"
+    },
+    {
+      "name": "jbr_ping_interval_tune_off_summary",
+      "value": "Não realizar a otimização de intervalo do ping para conexão de rede móvel"
+    },
+    {
+      "name": "jbr_ping_interval_tune_on_summary",
+      "value": "Realizar a otimização de intervalo do ping para conexão de rede móvel"
+    },
+    {
+      "name": "jbr_server_port",
+      "value": "Porta do servidor"
+    },
+    {
+      "name": "jbr_priority",
+      "value": "Prioridade (faixa:-128~127)"
+    },
+    {
+      "name": "jbr_resource_auto_gen",
+      "value": "Geração automática de recursos"
+    },
+    {
+      "name": "jbr_resource_id",
+      "value": "Recurso do Jabber ID"
+    },
+    {
+      "name": "jbr_resource_name",
+      "value": "Nome de recurso"
+    },
+    {
+      "name": "jbr_server_ip",
+      "value": "Conectar IP do servidor"
+    },
+    {
+      "name": "jbr_server_options",
+      "value": "Opções de servidor"
+    },
+    {
+      "name": "jbr_store_password",
+      "value": "Lembrar a senha"
+    },
+    {
+      "name": "jbr_store_password_summary",
+      "value": "Salvar a senha para login automático ao iniciar o app"
+    },
+    {
+      "name": "jbr_stun_list",
+      "value": "Servidores adicionais de STUN/TURN…"
+    },
+    {
+      "name": "jbr_stun_list_summary",
+      "value": "Servidores adicionais de STUN/TURN definidos pelo usuário para usar"
+    },
+    {
+      "name": "jbr_telephony_domain",
+      "value": "Domínio da telefonia"
+    },
+    {
+      "name": "jbr_telephony_voip_pbx",
+      "value": "Telefonia VoIP-PBX"
+    },
+    {
+      "name": "jbr_telephony_summary",
+      "value": "Configurar as opções de telefonia…"
+    },
+    {
+      "name": "jbr_use_default_stun",
+      "value": "Usar servidor Jitsi STUN (recurso alternativo)"
+    },
+    {
+      "name": "jbr_use_ice",
+      "value": "Usar ICE"
+    },
+    {
+      "name": "jbr_use_google_ice",
+      "value": "Usar Jingle/ICE do Google (experimental)"
+    },
+    {
+      "name": "jbr_use_upnp",
+      "value": "Usar UPnP"
+    },
+    {
+      "name": "jbr_user_id",
+      "value": "ID do USUÁRIO"
+    },
+    {
+      "name": "jbr_user_name_password",
+      "value": "Nome de usuário e senha"
+    },
+    {
+      "name": "contact_phone",
+      "value": "Nome/Telefone/Jid de Contato:"
+    },
+    {
+      "name": "call_via",
+      "value": "Ligar via:"
+    },
+    {
+      "name": "contact_phone_empty",
+      "value": "O número de telefone de contato não pode estar em branco!"
+    },
+    {
+      "name": "recipient_error_non_ascii",
+      "value": "Carateres especiais não são suportados!"
+    },
+    {
+      "name": "domain_not_in_roster",
+      "value": "O domínio telefônico especificado '%1$s' não é um membro da lista de contatos"
+    },
+    {
+      "name": "not_in_call_group",
+      "value": "%1$s não pertence ao grupo de ligação definido"
+    },
+    {
+      "name": "jingle_not_supported",
+      "value": "%1$s\nnão suporta o protocolo Jingle"
+    },
+    {
+      "name": "recipient_error_parse_failed",
+      "value": "Erro ao analisar o endereço!"
+    },
+    {
+      "name": "unknown_recipient",
+      "value": "<Recipiente desconhecido>"
+    },
+    {
+      "name": "disabled",
+      "value": "Desativado"
+    },
+    {
+      "name": "enabled",
+      "value": "Ativado"
+    },
+    {
+      "name": "general",
+      "value": "Geral"
+    },
+    {
+      "name": "settings_webview_dlg_title",
+      "value": "Entrar na página de acesso padrão do WebView:"
+    },
+    {
+      "name": "settings_webview_page",
+      "value": "Página de acesso web"
+    },
+    {
+      "name": "settings_messaging",
+      "value": "Envio de mensagens"
+    },
+    {
+      "name": "settings_multichat_off",
+      "value": "Janela separada para cada conversa"
+    },
+    {
+      "name": "settings_multichat_on",
+      "value": "Mensagens de conversa em grupo em uma janela"
+    },
+    {
+      "name": "settings_multichat_window",
+      "value": "Janela de conversa múltipla"
+    },
+    {
+      "name": "settings_history_log_off",
+      "value": "Histórico da conversa desativado"
+    },
+    {
+      "name": "settings_history_log_on",
+      "value": "Registrar o histórico de conversa"
+    },
+    {
+      "name": "settings_history_logging",
+      "value": "Registro de histórico de conversa"
+    },
+    {
+      "name": "settings_history_mam_warning",
+      "value": "Erro ao configurar a opção MAM para usuário offline: %1$s"
+    },
+    {
+      "name": "settings_history_dlg_title",
+      "value": "Quantas mensagens recentes deveriam ser exibidas?"
+    },
+    {
+      "name": "settings_history_size",
+      "value": "Mostrar mensagens recentes"
+    },
+    {
+      "name": "settings_history_summary",
+      "value": "%d novas mensagens recentes em conversa"
+    },
+    {
+      "name": "settings_history_show",
+      "value": "Mostrar histórico"
+    },
+    {
+      "name": "settings_message_delivery_receipt",
+      "value": "Recibo de entrega de mensagem"
+    },
+    {
+      "name": "settings_message_delivery_receipt_summary",
+      "value": "Informe seus contatos quando você tiver recebido e lido suas mensagens"
+    },
+    {
+      "name": "settings_typing_notifications",
+      "value": "Enviar notificações de estado de conversa"
+    },
+    {
+      "name": "settings_thumbnail_option",
+      "value": "Enviar/Receber visualização em miniaturas"
+    },
+    {
+      "name": "settings_file_max_auto_accept",
+      "value": "Aceita automaticamente o tamanho máximo do arquivo"
+    },
+    {
+      "name": "settings_presence_subscribe_approval_mode",
+      "value": "Aprovar notificações de presença"
+    },
+    {
+      "name": "settings_presence_subscribe_approval_auto",
+      "value": "Assine a aprovação - auto aceitar todos"
+    },
+    {
+      "name": "settings_presence_subscribe_approval_manual",
+      "value": "Assine a aprovação - manualmente"
+    },
+    {
+      "name": "settings_chat_notifications",
+      "value": "Mostrar notificações na barra de status"
+    },
+    {
+      "name": "settings_notifications",
+      "value": "Notificações"
+    },
+    {
+      "name": "settings_auto_update_check_enable",
+      "value": "Ativar verificação automática de atualização SW"
+    },
+    {
+      "name": "settings_popup_handler",
+      "value": "Tipo de notificações popup"
+    },
+    {
+      "name": "pref_heads_up_notifications",
+      "value": "Notificações heads-up"
+    },
+    {
+      "name": "pref_heads_up_notifications_summary",
+      "value": "Mostrar Notificações heads-up"
+    },
+    {
+      "name": "popup_auto",
+      "value": "Auto"
+    },
+    {
+      "name": "popup_status_bar",
+      "value": "Notificações de barra de status"
+    },
+    {
+      "name": "settings_event_summary",
+      "value": "Configurar notificações individuais"
+    },
+    {
+      "name": "settings_event_title",
+      "value": "Eventos"
+    },
+    {
+      "name": "quiet_hours",
+      "value": "Horário de silêncio"
+    },
+    {
+      "name": "quiet_hours_start_time",
+      "value": "Hora inicial"
+    },
+    {
+      "name": "quiet_hours_end_time",
+      "value": "Hora final"
+    },
+    {
+      "name": "quiet_hours_enable",
+      "value": "Ativar horário de silêncio"
+    },
+    {
+      "name": "quiet_hours_summary",
+      "value": "Notificações serão silenciadas durante as horas de silêncio"
+    },
+    {
+      "name": "settings_show_icon",
+      "value": "Mostrar ícone do aTalk"
+    },
+    {
+      "name": "settings_show_icon_summary_off",
+      "value": "Ocultar indicador ativo na notificação do aTalk"
+    },
+    {
+      "name": "settings_show_icon_summary_on",
+      "value": "Mostrar indicador ativo na notificação do aTalk"
+    },
+    {
+      "name": "settings_auto_start",
+      "value": "Iniciar aTalk automaticamente ao reiniciar o aparelho"
+    },
+    {
+      "name": "settings_auto_start_summary_disable",
+      "value": "Desativar iniciação automatica do aTalk ao reiniciar o aparelho"
+    },
+    {
+      "name": "settings_auto_start_summary_enable",
+      "value": "Ativar iniciação automática do aTalk no próximo reinício do aparelho"
+    },
+    {
+      "name": "settings_locale",
+      "value": "Idioma"
+    },
+    {
+      "name": "settings_locale_system",
+      "value": "Padrão do sistema"
+    },
+    {
+      "name": "settings_theme_dark",
+      "value": "Escuro"
+    },
+    {
+      "name": "settings_theme_light",
+      "value": "Claro"
+    },
+    {
+      "name": "settings_theme",
+      "value": "Tema"
+    },
+    {
+      "name": "tts_delay",
+      "value": "Adiar mensagem de texto-em-fala (ms)"
+    },
+    {
+      "name": "tts_settings",
+      "value": "Configurações gerais do TTS…"
+    },
+    {
+      "name": "tts_disable",
+      "value": "Desativar texto ➡ fala"
+    },
+    {
+      "name": "tts_enable",
+      "value": "Ativar texto ➡ fala"
+    },
+    {
+      "name": "tts_synthesis",
+      "value": "Digite texto para falar ou sintetizar e salve em arquivo:"
+    },
+    {
+      "name": "tts_voice",
+      "value": "Voz padrão no TTS:"
+    },
+    {
+      "name": "loading_wait",
+      "value": "Carregando, aguarde…"
+    },
+    {
+      "name": "settings_normalize_number",
+      "value": "Símbolos especiais em números de telefone"
+    },
+    {
+      "name": "settings_normalize_off",
+      "value": "Nenhuma modificação do número de telefone"
+    },
+    {
+      "name": "settings_normalize_on",
+      "value": "Os símbolos especiais serão excluidos do número"
+    },
+    {
+      "name": "settings_phone_alpha_no_allow",
+      "value": "Nenhuma modificação do número de telefone"
+    },
+    {
+      "name": "settings_phone_alpha_allow",
+      "value": "Letras em números de telefone"
+    },
+    {
+      "name": "call",
+      "value": "Ligar"
+    },
+    {
+      "name": "media_call",
+      "value": "Ligação de média"
+    },
+    {
+      "name": "audio",
+      "value": "Áudio"
+    },
+    {
+      "name": "settings_echo_cancel",
+      "value": "Cancelamento do eco"
+    },
+    {
+      "name": "settings_echo_cancel_off",
+      "value": "Desativado"
+    },
+    {
+      "name": "settings_echo_cancel_on",
+      "value": "Ativado"
+    },
+    {
+      "name": "settings_agc",
+      "value": "Controle de ganho automático"
+    },
+    {
+      "name": "settings_agc_off",
+      "value": "Desativado"
+    },
+    {
+      "name": "settings_agc_on",
+      "value": "Ativado"
+    },
+    {
+      "name": "settings_denoise",
+      "value": "Supressão de ruídos"
+    },
+    {
+      "name": "settings_denoise_off",
+      "value": "Desativado"
+    },
+    {
+      "name": "settings_denoise_on",
+      "value": "Ativado"
+    },
+    {
+      "name": "settings_audio_codecs_summary",
+      "value": "Selecionar e definir prioridade para os codecs de áudio"
+    },
+    {
+      "name": "settings_audio_codecs",
+      "value": "Codecs de áudio"
+    },
+    {
+      "name": "video",
+      "value": "Vídeo"
+    },
+    {
+      "name": "settings_system_android_camera",
+      "value": "Câmara do Android"
+    },
+    {
+      "name": "settings_system_media_recorder",
+      "value": "Gravador de média"
+    },
+    {
+      "name": "settings_camera",
+      "value": "Câmara"
+    },
+    {
+      "name": "settings_no_camera",
+      "value": "Nenhum dispositivo de câmera compatível encontrado"
+    },
+    {
+      "name": "settings_use_back_camera",
+      "value": "Usar a câmera traseira"
+    },
+    {
+      "name": "settings_use_front_camera",
+      "value": "Usar a câmera frontal"
+    },
+    {
+      "name": "settings_use_match_camera_resolution",
+      "value": "Use a resolução de câmera mais próxima: %1$s"
+    },
+    {
+      "name": "settings_direct_surface_decode",
+      "value": "Usar decodificação Direct Surface"
+    },
+    {
+      "name": "settings_direct_surface_encode",
+      "value": "Usar codificação Direct Surface"
+    },
+    {
+      "name": "settings_hw_decode",
+      "value": "Usar decodificação de hardware (reinício necessário)"
+    },
+    {
+      "name": "settings_hw_encode",
+      "value": "Usar codificação de hardware (reinício necessário)"
+    },
+    {
+      "name": "settings_media_codec_list",
+      "value": "Codecs de mídia"
+    },
+    {
+      "name": "settings_media_codec_list_summary",
+      "value": "Lista de codificadores/descodificadores de mídia integrados"
+    },
+    {
+      "name": "settings_restart_require",
+      "value": "Requer reiniciação do aTalk"
+    },
+    {
+      "name": "settings_video_codec_summary",
+      "value": "Selecionar e definir prioridade para os codecs de vídeo"
+    },
+    {
+      "name": "settings_video_codec",
+      "value": "Codecs de vídeo"
+    },
+    {
+      "name": "settings_video_resolution",
+      "value": "Resolução de vídeo"
+    },
+    {
+      "name": "settings_fps_limit_off",
+      "value": "Ilimitado"
+    },
+    {
+      "name": "settings_fps_limit_on",
+      "value": "Taxa de quadros ajustada"
+    },
+    {
+      "name": "settings_video_bitrate",
+      "value": "Bitrate do vídeo (kilobits/s)"
+    },
+    {
+      "name": "settings_video_frame_rate",
+      "value": "Taxa de quadros de vídeo"
+    },
+    {
+      "name": "settings_video_fps_description",
+      "value": "Valores aceitos entre 5 e 30 fps"
+    },
+    {
+      "name": "settings_video_max_bw",
+      "value": "Taxa limite de RTP (kBytes/s)"
+    },
+    {
+      "name": "settings_video_fps_target",
+      "value": "Taxa de quadro alvo (per sec.)"
+    },
+    {
+      "name": "settings_messaging_security_summary",
+      "value": "Configurações de segurança de criptografia de mensagens"
+    },
+    {
+      "name": "settings_messaging_security",
+      "value": "Segurança de mensagens"
+    },
+    {
+      "name": "omemo_messaging_security",
+      "value": "Segurança de mensagens OMEMO"
+    },
+    {
+      "name": "omemo_blind_trust_before_verification",
+      "value": "Confiança cega antes da verificação"
+    },
+    {
+      "name": "omemo_blind_trust_before_verification_summary",
+      "value": "Confiar automaticamente todos os novos contatos que ainda não tenham sido verificados; solicitar confirmação manual quando um contato verificado adicionar novo aparelho."
+    },
+    {
+      "name": "omemo_regenerate_identities_summary",
+      "value": "Após a regeneração da sua identidade do OMEMO, todos os seus contatos receberão a nova impressão digital e serão obrigados a verificar novamente sua identidade. Realize somente quando tiver problemas de configuração com sessão OMEMO."
+    },
+    {
+      "name": "omemo_regenerate_identities",
+      "value": "Regenerar as identidades OMEMO"
+    },
+    {
+      "name": "omemo_regenerate_title",
+      "value": "Atualizar as identidades OMEMO"
+    },
+    {
+      "name": "omemo_purge_devices_summary",
+      "value": "Remova todos os aparelhos inativos; divulgar apenas o aparelho ativo atual que você está usando."
+    },
+    {
+      "name": "omemo_purge_device_unused",
+      "value": "Exclua as identidades não usadas"
+    },
+    {
+      "name": "omemo_purge_device",
+      "value": "Excluir aparelhos OMEMO"
+    },
+    {
+      "name": "key_fingerprint_security",
+      "value": "Chave & Segurança de impressão digital"
+    },
+    {
+      "name": "settings_crypto_priv_key_empty",
+      "value": "Nenhum usuário registrado encontrado"
+    },
+    {
+      "name": "settings_crypto_priv_key_summary",
+      "value": "Gerenciar impressões digitais privadas criptografadas"
+    },
+    {
+      "name": "settings_crypto_priv_key",
+      "value": "Chaves privadas criptografadas"
+    },
+    {
+      "name": "settings_fingerprint_summary",
+      "value": "Gerenciar todas as impressões digitais conhecidas de todos os aparelhos\ncor: ciano=aparelhoPróprio; cinza=inativo"
+    },
+    {
+      "name": "settings_fingerprint_title",
+      "value": "Impressões digitais de aparelhos criptografadas"
+    },
+    {
+      "name": "crypto_key_generate_prompt",
+      "value": "Você quer gerar uma nova chave para %1$s%2$s"
+    },
+    {
+      "name": "crypto_key_generate_title",
+      "value": "Geração de chaves privadas"
+    },
+    {
+      "name": "crypto_key_regenerate_prompt",
+      "value": "Você quer gerar uma nova chave para %1$s\n\n%2$s"
+    },
+    {
+      "name": "delete_selected",
+      "value": "Excluir selecionado"
+    },
+    {
+      "name": "regenerate_selected",
+      "value": "Regenerar selecionados"
+    },
+    {
+      "name": "crypto_menu_key_generate",
+      "value": "Gerar nova chave"
+    },
+    {
+      "name": "crypto_menu_key_regenerate",
+      "value": "Regenerar a chave"
+    },
+    {
+      "name": "crypto_menu_fingerprint_copy",
+      "value": "Copiar impressão digital"
+    },
+    {
+      "name": "crypto_menu_fingerprint_distrust",
+      "value": "Desconfie de impressão digital"
+    },
+    {
+      "name": "crypto_menu_fingerprint_trust",
+      "value": "Confie em Impressão digital"
+    },
+    {
+      "name": "crypto_msg_omemo_session_setup_failed",
+      "value": "A configuração da sessão OMEMO não foi bem sucedida! %1$s"
+    },
+    {
+      "name": "crypto_msg_omemo_session_untrusted",
+      "value": "Não foi encontrado nenhum amigo com confiança confirmada para receber mensagens OMEMO!"
+    },
+    {
+      "name": "crypto_msg_omemo_session_unverified",
+      "value": "Enviando mensagens do OMEMO para alguns amigos desconhecidos com impressões digitais não verificadas!"
+    },
+    {
+      "name": "crypto_msg_omemo_session_unverified_untrusted",
+      "value": "Conversa para múltiplos usuários com alguns amigos sem confiança confirmada ou com impressões digitais não verificadas!"
+    },
+    {
+      "name": "crypto_msg_omemo_session_verified",
+      "value": "*** Todos os amigos foram autenticados! ***"
+    },
+    {
+      "name": "crypto_fingerprint_status",
+      "value": "Verificado: %1$s"
+    },
+    {
+      "name": "crypto_no_key_present",
+      "value": "Nenhuma chave presente"
+    },
+    {
+      "name": "crypto_fingerprint_copy",
+      "value": "Impressão digital copiada ao clipboard!"
+    },
+    {
+      "name": "crypto_omemo_distrust_messaging_stop",
+      "value": "Pare de enviar mais mensagens do OMEMO ao amigo: %1$s"
+    },
+    {
+      "name": "crypto_omemo_trust_messaging_resume",
+      "value": "Retomar o envio de mensagens OMEMO ao amigo: %1$s"
+    },
+    {
+      "name": "advanced",
+      "value": "Avançado"
+    },
+    {
+      "name": "settings_expert",
+      "value": "Configurações avançadas"
+    },
+    {
+      "name": "settings_expert_summary",
+      "value": "Por favor, tenha cuidado com isto"
+    },
+    {
+      "name": "port",
+      "value": "Porta"
+    },
+    {
+      "name": "protocol",
+      "value": "Protocolo"
+    },
+    {
+      "name": "opus",
+      "value": "Opus"
+    },
+    {
+      "name": "opus_sampling_rate",
+      "value": "Taxa de amostragem"
+    },
+    {
+      "name": "opus_bitrate",
+      "value": "Taxa média de bits do codificador (kbps)"
+    },
+    {
+      "name": "opus_complexity",
+      "value": "Complexidade do codificador"
+    },
+    {
+      "name": "opus_min_expected_packet_loss",
+      "value": "Perda mínima esperada de pacotes(%)"
+    },
+    {
+      "name": "opus_encoder_settings",
+      "value": "Definir as configurações do codificador Opus"
+    },
+    {
+      "name": "opus_use_dtx",
+      "value": "Usar DTX"
+    },
+    {
+      "name": "opus_use_fec",
+      "value": "Usar inband FEC"
+    },
+    {
+      "name": "silk",
+      "value": "Silk"
+    },
+    {
+      "name": "silk_encoder_settings",
+      "value": "Definir as configurações do codificador SILK"
+    },
+    {
+      "name": "silk_use_fec",
+      "value": "Usar inband FEC"
+    },
+    {
+      "name": "silk_assume_pl",
+      "value": "Sempre assumir a perda de pacotes"
+    },
+    {
+      "name": "silk_fec_sat",
+      "value": "Limite de atividade de fala (0–1)"
+    },
+    {
+      "name": "silk_fec_advertise",
+      "value": "Anunciar o suporte de FEC no SDP"
+    },
+    {
+      "name": "battery_optimizations",
+      "value": "Otimização da bateria"
+    },
+    {
+      "name": "battery_optimizations_dialog",
+      "value": "Seu aparelho tem otimização da bateria implementada para o aTalk; isto pode provocar atrasos de notificações ou perda de mensagens.\n\nRecomenda-se que você desative esta otimização para o aTalk."
+    },
+    {
+      "name": "battery_optimization_on",
+      "value": "aTalk será suspenso quando o aparelho entrar em modo de suspensão. Reinicie manualmente aTalk para receber novas mensagens."
+    },
+    {
+      "name": "device_does_not_support_battery_op",
+      "value": "Seu aparelho não suporta a opção de não otimização da bateria"
+    },
+    {
+      "name": "disable",
+      "value": "Desativar"
+    },
+    {
+      "name": "next",
+      "value": "Próximo"
+    },
+    {
+      "name": "app_info",
+      "value": "App Info…"
+    },
+    {
+      "name": "permission_app_info",
+      "value": "Detalhes do app"
+    },
+    {
+      "name": "permission_request_all",
+      "value": "Solicite todos"
+    },
+    {
+      "name": "permission_camera",
+      "value": "Câmara"
+    },
+    {
+      "name": "permission_contacts",
+      "value": "Contatos"
+    },
+    {
+      "name": "permission_location",
+      "value": "Localização"
+    },
+    {
+      "name": "permission_microphone",
+      "value": "Microfone"
+    },
+    {
+      "name": "permission_music",
+      "value": "Música e Áudio"
+    },
+    {
+      "name": "permission_notifications",
+      "value": "Notifications"
+    },
+    {
+      "name": "permission_phone",
+      "value": "Telefone"
+    },
+    {
+      "name": "permission_video",
+      "value": "Foto e Vídeo"
+    },
+    {
+      "name": "permission_storage",
+      "value": "Armazenamento"
+    },
+    {
+      "name": "permission_hint",
+      "value": "Para o máximo desempenho do app e suporte total de todas as características, aTalk exige que você conceda permissões para os seguintes serviços. SEM elas, aTalk pode não funcionar ou pode ter um comportamento inesperado!"
+    },
+    {
+      "name": "permission_denied",
+      "value": "NEGADO"
+    },
+    {
+      "name": "permission_granted",
+      "value": "CONCEDIDO"
+    },
+    {
+      "name": "permission_denied_permanently",
+      "value": "PERMANENTEMENTE NEGADO"
+    },
+    {
+      "name": "permission_unknown",
+      "value": "DESCONOCIDO"
+    },
+    {
+      "name": "mic_permission_denied_dialog_title",
+      "value": "Pedido de permissão de áudio"
+    },
+    {
+      "name": "mic_permission_denied_feedback",
+      "value": "Ligação de áudio não será disponível até que você conceda a permissão necessária"
+    },
+    {
+      "name": "camera_permission_denied_dialog_title",
+      "value": "Pedido de permissão da câmara"
+    },
+    {
+      "name": "camera_permission_denied_feedback",
+      "value": "Todas as atividades associadas à câmera não serão disponíveis até que você conceda a permissão necessária"
+    },
+    {
+      "name": "contacts_permission_denied_dialog_title",
+      "value": "Pedido de permissão de contatos"
+    },
+    {
+      "name": "contacts_permission_denied_feedback",
+      "value": "É necessária permissão de contatos para acesso ao estado de telefone e configuração de ligações"
+    },
+    {
+      "name": "music_permission_denied_dialog_title",
+      "value": "Pedido de permissão de música e áudio"
+    },
+    {
+      "name": "music_permission_denied_feedback",
+      "value": "O arquivo de áudio de mídia não estará acessível até que você conceda a solicitação de permissão"
+    },
+    {
+      "name": "location_permission_denied_dialog_title",
+      "value": "Pedido de permissão de localização"
+    },
+    {
+      "name": "location_permission_denied_feedback",
+      "value": "Os recursos da localização do GPS não serão disponíveis até que você conceda a permissão necessária"
+    },
+    {
+      "name": "notifications_permission_denied_dialog_title",
+      "value": "Solicitação de permissão de notificações"
+    },
+    {
+      "name": "notifications_permission_denied_feedback",
+      "value": "As notificações do aTalk serão desativadas até que você conceda a solicitação de permissão"
+    },
+    {
+      "name": "phone_permission_denied_dialog_title",
+      "value": "Pedido de permissão de acesso ao estado de telefone"
+    },
+    {
+      "name": "phone_permission_denied_feedback",
+      "value": "Os recursos do telefone não estarão disponíveis até que você conceda a solicitação de permissão"
+    },
+    {
+      "name": "video_permission_denied_dialog_title",
+      "value": "Pedido de permissão de fotos e vídeos"
+    },
+    {
+      "name": "video_permission_denied_feedback",
+      "value": "O arquivo de foto e vídeo de mídia não estará acessível até que você conceda a solicitação de permissão"
+    },
+    {
+      "name": "storage_permission_denied_dialog_title",
+      "value": "Pedido de permissão de acesso ao armazenamento"
+    },
+    {
+      "name": "storage_permission_denied_feedback",
+      "value": "Não será possível salvar o conteúdo de mensagens enviadas e recebidas em armazenamento até que você conceda a permissão requerida"
+    },
+    {
+      "name": "all_permission_denied_dialog_title",
+      "value": "Pedido para todas as permissões"
+    },
+    {
+      "name": "all_permissions_denied_feedback",
+      "value": "aTalk pode não funcionar corretamente ou pode ter um comportamento inesperado, já que alguns serviços foram negados!\nSe você tiver selecionado opção \\\"Não perguntar novamente\\\", você precisa voltar para as Configurações do Android -> Detalhes do aTalk app para permitir as permissões de acesso aos recursos"
+    },
+    {
+      "name": "permission_denied_all_alert",
+      "value": "aTalk não funcionaria corretamente. Você negou a aTalk todas as permissões!\nvocê precisa ir às Configurações do Android -> Detalhes do aTalk app para permitir as permissões de acesso aos recursos."
+    },
+    {
+      "name": "permission_rationale_message",
+      "value": "Será exibido cada serviço necessário para aTalk; por favor, permita ao aTalk ter acesso a estes serviços para poder usar todos os recursos suportados"
+    },
+    {
+      "name": "permission_rationale_settings_button_text",
+      "value": "CONFIGURAÇÕES"
+    },
+    {
+      "name": "permission_rationale_title",
+      "value": "aTalk precisa de permissões"
+    },
+    {
+      "name": "location_permission_dialog_title",
+      "value": "Permissão de localização necessária"
+    },
+    {
+      "name": "location_permission_dialog_message",
+      "value": "Ativar permissão de localização agora?"
+    },
+    {
+      "name": "location_services_off",
+      "value": "Serviços de localização desativados"
+    },
+    {
+      "name": "open_location_settings",
+      "value": "Ativar serviços de localização agora?"
+    },
+    {
+      "name": "changelog_full_title",
+      "value": "Registro de alterações"
+    },
+    {
+      "name": "changelog_title",
+      "value": "O que há de novo"
+    },
+    {
+      "name": "changelog_show_full",
+      "value": "Mais…"
+    },
+    {
+      "name": "changelog_version_format",
+      "value": "Versão <xliff:g id=\"version_name\">%s</xliff:g>"
+    }
+  ]
+}

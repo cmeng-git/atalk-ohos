@@ -5,10 +5,9 @@
  */
 package org.atalk.ohos.gui.contactlist.model;
 
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-
 import java.util.Iterator;
+
+import ohos.media.image.PixelMap;
 
 import net.java.sip.communicator.service.contactlist.MetaContact;
 import net.java.sip.communicator.service.protocol.Contact;
@@ -22,12 +21,12 @@ import net.java.sip.communicator.service.protocol.PresenceStatus;
 import net.java.sip.communicator.util.StatusUtil;
 
 import org.apache.commons.lang3.StringUtils;
-import org.atalk.impl.neomedia.device.util.AndroidCamera;
-import org.atalk.ohos.R;
+import org.atalk.impl.neomedia.device.util.OhosCamera;
+import org.atalk.ohos.ResourceTable;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.chat.ChatSessionManager;
 import org.atalk.ohos.util.AppImageUtil;
-import org.atalk.ohos.gui.util.DrawableCache;
+import org.atalk.ohos.gui.util.PixelMapCache;
 import org.jxmpp.jid.DomainBareJid;
 
 /**
@@ -39,7 +38,7 @@ import org.jxmpp.jid.DomainBareJid;
 public class MetaContactRenderer implements UIContactRenderer {
     @Override
     public boolean isSelected(Object contactImpl) {
-        return MetaContactListAdapter.isContactSelected((MetaContact) contactImpl);
+        return MetaContactListProvider.isContactSelected((MetaContact) contactImpl);
     }
 
     @Override
@@ -60,13 +59,13 @@ public class MetaContactRenderer implements UIContactRenderer {
     }
 
     @Override
-    public Drawable getAvatarImage(Object contactImpl) {
-        return getAvatarDrawable((MetaContact) contactImpl);
+    public PixelMap getAvatarImage(Object contactImpl) {
+        return getAvatarPixelMap((MetaContact) contactImpl);
     }
 
     @Override
-    public Drawable getStatusImage(Object contactImpl) {
-        return getStatusDrawable((MetaContact) contactImpl);
+    public PixelMap getStatusImage(Object contactImpl) {
+        return getStatusPixelMap((MetaContact) contactImpl);
     }
 
     @Override
@@ -78,7 +77,7 @@ public class MetaContactRenderer implements UIContactRenderer {
             boolean isBlocked = (contact != null) && contact.isContactBlock();
             return !isBlocked
                     && isShowButton(metaContact, OperationSetVideoTelephony.class)
-                    && (AndroidCamera.getCameras().length != 0);
+                    && (OhosCamera.getCameras().length != 0);
         }
         return false;
     }
@@ -136,9 +135,9 @@ public class MetaContactRenderer implements UIContactRenderer {
             SubscriptionStatus status = authOpSet.getSubscriptionStatus(protoContact);
             if (!SubscriptionStatus.Subscribed.equals(status)) {
                 if (SubscriptionStatus.SubscriptionPending.equals(status))
-                    subscriptionDetails = aTalkApp.getResString(R.string.waiting_for_authorization);
+                    subscriptionDetails = aTalkApp.getResString(ResourceTable.String_waiting_for_authorization);
                 else if (SubscriptionStatus.NotSubscribed.equals(status))
-                    subscriptionDetails = aTalkApp.getResString(R.string.not_authorized);
+                    subscriptionDetails = aTalkApp.getResString(ResourceTable.String_not_authorized);
             }
             else if (StringUtils.isNotEmpty(protoContact.getStatusMessage())) {
                 displayDetails = protoContact.getStatusMessage();
@@ -158,33 +157,33 @@ public class MetaContactRenderer implements UIContactRenderer {
     }
 
     /**
-     * Returns the avatar <code>Drawable</code> for the given <code>MetaContact</code>.
+     * Returns the avatar <code>PixelMap</code> for the given <code>MetaContact</code>.
      *
-     * @param metaContact the <code>MetaContact</code>, which status drawable we're looking for
+     * @param metaContact the <code>MetaContact</code>, which status PixelMap we're looking for
      *
-     * @return a <code>BitmapDrawable</code> object representing the status of the given <code>MetaContact</code>
+     * @return a <code>PixelMap</code> object representing the status of the given <code>MetaContact</code>
      */
-    public static BitmapDrawable getAvatarDrawable(MetaContact metaContact) {
+    public static PixelMap getAvatarPixelMap(MetaContact metaContact) {
         return getCachedAvatarFromBytes(metaContact.getAvatar());
     }
 
     /**
-     * Returns avatar <code>BitmapDrawable</code> with rounded corners. Bitmap will be cached in app global drawable cache.
+     * Returns avatar <code>PixelMap</code> with rounded corners. Bitmap will be cached in app global PixelMap cache.
      *
      * @param avatar raw avatar image data.
      *
-     * @return avatar <code>BitmapDrawable</code> with rounded corners
+     * @return avatar <code>PixelMap</code> with rounded corners
      */
-    public static BitmapDrawable getCachedAvatarFromBytes(byte[] avatar) {
+    public static PixelMap getCachedAvatarFromBytes(byte[] avatar) {
         if (avatar == null)
             return null;
 
         String bmpKey = String.valueOf(avatar.hashCode());
-        DrawableCache cache = aTalkApp.getImageCache();
+        PixelMapCache cache = aTalkApp.getImageCache();
 
-        BitmapDrawable avatarImage = cache.getBitmapFromMemCache(bmpKey);
+        PixelMap avatarImage = cache.getPixelMapFromMemCache(bmpKey);
         if (avatarImage == null) {
-            BitmapDrawable roundedAvatar = AppImageUtil.roundedDrawableFromBytes(avatar);
+            PixelMap roundedAvatar = AppImageUtil.getCircularPixelMapFromBytes(avatar);
             if (roundedAvatar != null) {
                 avatarImage = roundedAvatar;
                 cache.cacheImage(bmpKey, avatarImage);
@@ -194,17 +193,17 @@ public class MetaContactRenderer implements UIContactRenderer {
     }
 
     /**
-     * Returns the status <code>Drawable</code> for the given <code>MetaContact</code>.
+     * Returns the status <code>     * @return avatar <code>PixelMap</code> with rounded corners</code> for the given <code>MetaContact</code>.
      *
-     * @param metaContact the <code>MetaContact</code>, which status drawable we're looking for
+     * @param metaContact the <code>MetaContact</code>, which status pixelMap we're looking for
      *
-     * @return a <code>Drawable</code> object representing the status of the given <code>MetaContact</code>
+     * @return a <code>PixelMap</code> object representing the status of the given <code>MetaContact</code>
      */
-    public static Drawable getStatusDrawable(MetaContact metaContact) {
+    public static PixelMap getStatusPixelMap(MetaContact metaContact) {
         byte[] statusImage = getStatusImage(metaContact);
 
         if ((statusImage != null) && (statusImage.length > 0))
-            return AppImageUtil.drawableFromBytes(statusImage);
+            return AppImageUtil.pixelMapFromBytes(statusImage);
 
         return null;
     }

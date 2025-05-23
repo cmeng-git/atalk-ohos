@@ -15,23 +15,23 @@
  */
 package org.atalk.util.swing;
 
-import java.awt.Component;
-import java.awt.Container;
+import ohos.agp.components.ComponentContainer;
+import ohos.agp.utils.DimensFloat;
+import ohos.agp.utils.LayoutAlignment;
+import ohos.agp.utils.Rect;
+
+import org.atalk.ohos.agp.components.JComponent;
+
 import java.awt.Dimension;
-import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.JLabel;
-
 /**
  * Implements the <code>LayoutManager</code> which lays out the local and remote videos in a video <code>Call</code>.
  *
- * @author Lyubomir Marinov
- * @author Yana Stamcheva
  * @author Eng Chong Meng
  */
 public class VideoLayout extends FitLayout {
@@ -56,7 +56,7 @@ public class VideoLayout extends FitLayout {
     public static final String EAST_REMOTE = "EAST_REMOTE";
 
     /**
-     * The horizontal gap between the <code>Component</code> being laid out by <code>VideoLayout</code>.
+     * The horizontal gap between the <code>JComponent</code> being laid out by <code>VideoLayout</code>.
      */
     private static final int HGAP = 10;
 
@@ -73,12 +73,12 @@ public class VideoLayout extends FitLayout {
     /**
      * The video canvas.
      */
-    private Component canvas;
+    private JComponent canvas;
 
     /**
      * The close local video button component.
      */
-    private Component closeButton;
+    private JComponent closeButton;
 
     /**
      * The indicator which determines whether this instance is dedicated to a conference.
@@ -88,22 +88,22 @@ public class VideoLayout extends FitLayout {
     /**
      * The map of component constraints.
      */
-    private final Map<Component, Object> constraints = new HashMap<>();
+    private final Map<JComponent, Object> constraints = new HashMap<>();
 
     /**
      * The component containing the local video.
      */
-    private Component local;
+    private JComponent local;
 
     /**
      * The x coordinate alignment of the remote video.
      */
-    private float remoteAlignmentX = Component.CENTER_ALIGNMENT;
+    private int remoteAlignmentX = LayoutAlignment.CENTER;
 
     /**
-     * The list of <code>Component</code>s depicting remote videos.
+     * The list of <code>JComponent</code>s depicting remote videos.
      */
-    private final List<Component> remotes = new LinkedList<Component>();
+    private final List<JComponent> remotes = new LinkedList<JComponent>();
 
     /**
      * Creates an instance of <code>VideoLayout</code> by also indicating if this
@@ -123,7 +123,7 @@ public class VideoLayout extends FitLayout {
      * @param comp the component to add
      */
     @Override
-    public void addLayoutComponent(String name, Component comp) {
+    public void addLayoutComponent(String name, JComponent comp) {
         super.addLayoutComponent(name, comp);
         synchronized (constraints) {
             constraints.put(comp, name);
@@ -132,12 +132,12 @@ public class VideoLayout extends FitLayout {
         if ((name == null) || name.equals(CENTER_REMOTE)) {
             if (!remotes.contains(comp))
                 remotes.add(comp);
-            remoteAlignmentX = Component.CENTER_ALIGNMENT;
+            remoteAlignmentX = LayoutAlignment.CENTER;
         }
         else if (name.equals(EAST_REMOTE)) {
             if (!remotes.contains(comp))
                 remotes.add(comp);
-            remoteAlignmentX = Component.RIGHT_ALIGNMENT;
+            remoteAlignmentX = LayoutAlignment.RIGHT;
         }
         else if (name.equals(LOCAL))
             local = comp;
@@ -176,14 +176,14 @@ public class VideoLayout extends FitLayout {
     }
 
     /**
-     * Determines how may columns to use for the grid display of specific remote visual/video <code>Component</code>s.
+     * Determines how may columns to use for the grid display of specific remote visual/video <code>JComponent</code>s.
      *
-     * @param remotes the remote visual/video <code>Component</code>s to be displayed in a grid
+     * @param remotes the remote visual/video <code>JComponent</code>s to be displayed in a grid
      *
      * @return the number of columns to use for the grid display of the
-     * specified remote visual/video <code>Component</code>s
+     * specified remote visual/video <code>JComponent</code>s
      */
-    private int calculateColumnCount(List<Component> remotes) {
+    private int calculateColumnCount(List<JComponent> remotes) {
         int remoteCount = remotes.size();
 
         if (remoteCount == 1)
@@ -200,7 +200,7 @@ public class VideoLayout extends FitLayout {
      * @return the remote video component
      */
     @Override
-    protected Component getComponent(Container parent) {
+    protected JComponent getComponent(ComponentContainer parent) {
         return (remotes.size() == 1) ? remotes.get(0) : null;
     }
 
@@ -211,7 +211,7 @@ public class VideoLayout extends FitLayout {
      *
      * @return the constraints for the given component
      */
-    public Object getComponentConstraints(Component c) {
+    public Object getComponentConstraints(JComponent c) {
         synchronized (constraints) {
             return constraints.get(c);
         }
@@ -222,7 +222,7 @@ public class VideoLayout extends FitLayout {
      *
      * @return the local video component
      */
-    public Component getLocal() {
+    public JComponent getLocal() {
         return local;
     }
 
@@ -231,28 +231,28 @@ public class VideoLayout extends FitLayout {
      *
      * @return the local video close button
      */
-    public Component getLocalCloseButton() {
+    public JComponent getLocalCloseButton() {
         return closeButton;
     }
 
     /**
-     * Lays out the specified <code>Container</code> (i.e. the <code>Component</code>s
+     * Lays out the specified <code>Container</code> (i.e. the <code>JComponent</code>s
      * it contains) in accord with the logic implemented by this <code>LayoutManager</code>.
      *
      * @param parent the <code>Container</code> to lay out
      */
     @Override
-    public void layoutContainer(Container parent) {
+    public void layoutContainer(ComponentContainer parent) {
         /*
          * XXX The methods layoutContainer and preferredLayoutSize must be kept in sync.
          */
 
-        List<Component> visibleRemotes = new ArrayList<>();
-        List<Component> remotes;
-        Component local = getLocal();
+        List<JComponent> visibleRemotes = new ArrayList<>();
+        List<JComponent> remotes;
+        JComponent local = getLocal();
 
-        for (Component remote : this.remotes) {
-            if (remote.isVisible())
+        for (JComponent remote : this.remotes) {
+            if (remote.getVisibility() == JComponent.VISIBLE)
                 visibleRemotes.add(remote);
         }
 
@@ -267,11 +267,13 @@ public class VideoLayout extends FitLayout {
             if (local != null)
                 remotes.add(local);
         }
-        else
+        else {
             remotes = visibleRemotes;
+        }
 
         int remoteCount = remotes.size();
-        Dimension parentSize = parent.getSize();
+        DimensFloat sizef = parent.getComponentSize();
+        Dimension parentSize = new Dimension(sizef.getSizeXToInt(), sizef.getSizeYToInt());
 
         if (!conference && (remoteCount == 1)) {
             /*
@@ -280,15 +282,14 @@ public class VideoLayout extends FitLayout {
              * placed on top of the remote video. The remote video will be laid
              * out now and the local video will be laid out later/further bellow.
              */
-            super.layoutContainer(parent,
-                    (local == null) ? Component.CENTER_ALIGNMENT : remoteAlignmentX);
+            super.layoutContainer(parent, (local == null) ? LayoutAlignment.CENTER : remoteAlignmentX);
         }
         else if (remoteCount > 0) {
             int columns = calculateColumnCount(remotes);
             int columnsMinus1 = columns - 1;
             int rows = (remoteCount + columnsMinus1) / columns;
             int rowsMinus1 = rows - 1;
-            Rectangle bounds = new Rectangle(0, 0,
+            Rect bounds = new Rect(0, 0,
                     /*
                      * HGAP is the horizontal gap between the Components
                      * being laid out by this VideoLayout so the number of
@@ -307,7 +308,7 @@ public class VideoLayout extends FitLayout {
                  * subsequent column starts relative to the end of its preceding column.
                  */
                 if (column == 0) {
-                    bounds.x = 0;
+                    bounds.left = 0;
                     /*
                      * Eventually, there may be empty cells in the last row. Center the non-empty cells horizontally.
                      */
@@ -315,19 +316,19 @@ public class VideoLayout extends FitLayout {
                         int available = remoteCount - i;
 
                         if (available < columns) {
-                            bounds.x = (parentSize.width - available * bounds.width - (available - 1) * HGAP) / 2;
+                            bounds.top = (parentSize.width - available * bounds.right - (available - 1) * HGAP) / 2;
                         }
                     }
                 }
                 else
-                    bounds.x += (bounds.width + HGAP);
-                bounds.y = row * bounds.height;
+                    bounds.left += (bounds.getWidth() + HGAP);
+                bounds.top = row * bounds.getHeight();
 
                 super.layoutComponent(
                         remotes.get(i),
                         bounds,
-                        Component.CENTER_ALIGNMENT,
-                        Component.CENTER_ALIGNMENT);
+                        LayoutAlignment.CENTER,
+                        LayoutAlignment.CENTER);
             }
         }
 
@@ -336,15 +337,15 @@ public class VideoLayout extends FitLayout {
              * It is plain wrong to display a close button for the local video if there is no local video.
              */
             if (closeButton != null)
-                closeButton.setVisible(false);
+                closeButton.setVisibility(JComponent.HIDE);
         }
         else {
             /*
-             * If the local visual/video Component is not displayed as if it is
+             * If the local visual/video JComponent is not displayed as if it is
              * a remote one, it will be placed on top of a remote one.
              */
             if (!remotes.contains(local)) {
-                Component remote0 = remotes.isEmpty() ? null : remotes.get(0);
+                JComponent remote0 = remotes.isEmpty() ? null : remotes.get(0);
                 int localX;
                 int localY;
                 int height = Math.round(parentSize.height * LOCAL_TO_REMOTE_RATIO);
@@ -352,24 +353,24 @@ public class VideoLayout extends FitLayout {
                 float alignmentX;
 
                 /*
-                 * XXX The remote Component being a JLabel is meant to signal
+                 * XXX The remote JComponent being a JLabel is meant to signal
                  * that there is no remote video and the remote is the photoLabel.
                  */
-                if ((remoteCount == 1) && (remote0 instanceof JLabel)) {
+                if ((remoteCount == 1) && (remote0 != null)) {
                     localX = (parentSize.width - width) / 2;
                     localY = parentSize.height - height;
-                    alignmentX = Component.CENTER_ALIGNMENT;
+                    alignmentX = LayoutAlignment.CENTER;
                 }
                 else {
-                    localX = ((remote0 == null) ? 0 : remote0.getX()) + 5;
+                    localX = ((remote0 == null) ? 0 : remote0.getRight()) + 5;
                     localY = parentSize.height - height - 5;
-                    alignmentX = Component.LEFT_ALIGNMENT;
+                    alignmentX = LayoutAlignment.LEFT;
                 }
                 super.layoutComponent(
                         local,
-                        new Rectangle(localX, localY, width, height),
+                        new Rect(localX, localY, width, height),
                         alignmentX,
-                        Component.BOTTOM_ALIGNMENT);
+                        LayoutAlignment.BOTTOM);
             }
 
             /* The closeButton has to be on top of the local video. */
@@ -379,13 +380,12 @@ public class VideoLayout extends FitLayout {
                  * client (who has initialized the close button) but it is wrong
                  * to display a close button for the local video if the local video is not visible.
                  */
-                closeButton.setVisible(local.isVisible());
+                closeButton.setVisibility(local.getVisibility());
 
-                super.layoutComponent(
-                        closeButton,
-                        new Rectangle(local.getX() + local.getWidth() - closeButton.getWidth(),
-                                local.getY(), closeButton.getWidth(), closeButton.getHeight()),
-                        Component.CENTER_ALIGNMENT, Component.CENTER_ALIGNMENT);
+                super.layoutComponent(closeButton,
+                        new Rect(local.getLeft() + local.getWidth() - closeButton.getWidth(),
+                                local.getRight(), closeButton.getWidth(), closeButton.getHeight()),
+                        LayoutAlignment.CENTER, LayoutAlignment.CENTER);
             }
         }
 
@@ -394,7 +394,7 @@ public class VideoLayout extends FitLayout {
          * paint so it has to cover the parent completely.
          */
         if (canvas != null)
-            canvas.setBounds(0, 0, parentSize.width, parentSize.height);
+            canvas.arrange(0, 0, parentSize.width, parentSize.height);
     }
 
     /**
@@ -405,13 +405,13 @@ public class VideoLayout extends FitLayout {
      * @return a Dimension containing, the preferred layout size for the given container
      */
     @Override
-    public Dimension preferredLayoutSize(Container parent) {
-        List<Component> visibleRemotes = new ArrayList<>();
-        List<Component> remotes;
-        Component local = getLocal();
+    public Dimension preferredLayoutSize(ComponentContainer parent) {
+        List<JComponent> visibleRemotes = new ArrayList<>();
+        List<JComponent> remotes;
+        JComponent local = getLocal();
 
-        for (Component component : this.remotes) {
-            if (component.isVisible())
+        for (JComponent component : this.remotes) {
+            if (component.getVisibility() == JComponent.VISIBLE)
                 visibleRemotes.add(component);
         }
 
@@ -448,7 +448,7 @@ public class VideoLayout extends FitLayout {
             Dimension[] prefSizes = new Dimension[columns * rows];
 
             for (int x = 0; x < remoteCount; x++) {
-                Component remote = remotes.get(0);
+                JComponent remote = remotes.get(0);
                 int column = columnsMinus1 - (x % columns);
                 int row = x / columns;
                 prefSizes[column + row * columns] = remote.getPreferredSize();
@@ -492,7 +492,7 @@ public class VideoLayout extends FitLayout {
 
         if (local != null) {
             /*
-             * If the local visual/video Component is not displayed as if it is
+             * If the local visual/video JComponent is not displayed as if it is
              * a remote one, it will be placed on top of a remote one. Then for
              * the purposes of the preferredLayoutSize method it needs to be
              * considered only if there is no remote video whatsoever.
@@ -536,7 +536,7 @@ public class VideoLayout extends FitLayout {
      * @param comp the component to remove from the layout
      */
     @Override
-    public void removeLayoutComponent(Component comp) {
+    public void removeLayoutComponent(JComponent comp) {
         super.removeLayoutComponent(comp);
 
         synchronized (constraints) {

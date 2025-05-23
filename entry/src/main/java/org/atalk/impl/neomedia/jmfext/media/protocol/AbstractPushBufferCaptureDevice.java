@@ -25,87 +25,73 @@ import javax.media.protocol.PushBufferStream;
  * @author Lyubomir Marinov
  */
 public abstract class AbstractPushBufferCaptureDevice extends PushBufferDataSource
-        implements CaptureDevice
-{
+        implements CaptureDevice {
     /**
      * The <code>AbstractBufferCaptureDevice</code> which provides the implementation of this
      * <code>AbstractPushBufferCaptureDevice</code>.
      */
     private final AbstractBufferCaptureDevice<AbstractPushBufferStream<?>> impl
-            = new AbstractBufferCaptureDevice<AbstractPushBufferStream<?>>()
-    {
+            = new AbstractBufferCaptureDevice<AbstractPushBufferStream<?>>() {
         @Override
-        protected FrameRateControl createFrameRateControl()
-        {
+        protected FrameRateControl createFrameRateControl() {
             return AbstractPushBufferCaptureDevice.this.createFrameRateControl();
         }
 
         @Override
-        protected AbstractPushBufferStream<?> createStream(int streamIndex, FormatControl formatControl)
-        {
+        protected AbstractPushBufferStream<?> createStream(int streamIndex, FormatControl formatControl) {
             return AbstractPushBufferCaptureDevice.this.createStream(streamIndex, formatControl);
         }
 
         @Override
         protected void doConnect()
-                throws IOException
-        {
+                throws IOException {
             AbstractPushBufferCaptureDevice.this.doConnect();
         }
 
         @Override
-        protected void doDisconnect()
-        {
+        protected void doDisconnect() {
             AbstractPushBufferCaptureDevice.this.doDisconnect();
         }
 
         @Override
         protected void doStart()
-                throws IOException
-        {
+                throws IOException {
             AbstractPushBufferCaptureDevice.this.doStart();
         }
 
         @Override
         protected void doStop()
-                throws IOException
-        {
+                throws IOException {
             AbstractPushBufferCaptureDevice.this.doStop();
         }
 
         @Override
-        public CaptureDeviceInfo getCaptureDeviceInfo()
-        {
+        public CaptureDeviceInfo getCaptureDeviceInfo() {
             return AbstractPushBufferCaptureDevice.this.getCaptureDeviceInfo();
         }
 
         /**
          * Overrides {@link AbstractBufferCaptureDevice#getControls()} to add controls specific to
          * this <code>AbstractPushBufferCaptureDevice</code>.
-         *
          * {@inheritDoc}
          */
         @Override
-        public Object[] getControls()
-        {
+        public Object[] getControls() {
             return AbstractPushBufferCaptureDevice.this.getControls();
         }
 
         @Override
-        protected Format getFormat(int streamIndex, Format oldValue)
-        {
+        protected Format getFormat(int streamIndex, Format oldValue) {
             return AbstractPushBufferCaptureDevice.this.getFormat(streamIndex, oldValue);
         }
 
         @Override
-        protected Format[] getSupportedFormats(int streamIndex)
-        {
+        protected Format[] getSupportedFormats(int streamIndex) {
             return AbstractPushBufferCaptureDevice.this.getSupportedFormats(streamIndex);
         }
 
         @Override
-        protected Format setFormat(int streamIndex, Format oldValue, Format newValue)
-        {
+        protected Format setFormat(int streamIndex, Format oldValue, Format newValue) {
             return AbstractPushBufferCaptureDevice.this.setFormat(streamIndex, oldValue, newValue);
         }
     };
@@ -113,8 +99,7 @@ public abstract class AbstractPushBufferCaptureDevice extends PushBufferDataSour
     /**
      * Initializes a new <code>AbstractPushBufferCaptureDevice</code> instance.
      */
-    protected AbstractPushBufferCaptureDevice()
-    {
+    protected AbstractPushBufferCaptureDevice() {
         this(null);
     }
 
@@ -123,8 +108,7 @@ public abstract class AbstractPushBufferCaptureDevice extends PushBufferDataSour
      *
      * @param locator the <code>MediaLocator</code> to create the new instance from
      */
-    protected AbstractPushBufferCaptureDevice(MediaLocator locator)
-    {
+    protected AbstractPushBufferCaptureDevice(MediaLocator locator) {
         if (locator != null)
             setLocator(locator);
     }
@@ -137,8 +121,7 @@ public abstract class AbstractPushBufferCaptureDevice extends PushBufferDataSour
      */
     @Override
     public void connect()
-            throws IOException
-    {
+            throws IOException {
         impl.connect();
     }
 
@@ -149,8 +132,7 @@ public abstract class AbstractPushBufferCaptureDevice extends PushBufferDataSour
      * @return a new <code>FrameRateControl</code> instance which is to allow the getting and
      * setting of the frame rate of this <code>AbstractPushBufferCaptureDevice</code>
      */
-    protected FrameRateControl createFrameRateControl()
-    {
+    protected FrameRateControl createFrameRateControl() {
         return null;
     }
 
@@ -163,6 +145,7 @@ public abstract class AbstractPushBufferCaptureDevice extends PushBufferDataSour
      * <code>PushBufferDataSource</code>
      * @param formatControl the <code>FormatControl</code> which is to abstract the <code>Format</code>-related
      * information of the new instance
+     *
      * @return a new <code>PushBufferStream</code> which is to be at the specified <code>streamIndex</code>
      * in the list of streams of this <code>PushBufferDataSource</code> and which has its
      * <code>Format</code>-related information abstracted by the specified <code>formatControl</code>
@@ -174,8 +157,7 @@ public abstract class AbstractPushBufferCaptureDevice extends PushBufferDataSour
      * <code>DataSource</code>. If such a connection has not been opened, the call is ignored.
      */
     @Override
-    public void disconnect()
-    {
+    public void disconnect() {
         impl.disconnect();
     }
 
@@ -188,8 +170,7 @@ public abstract class AbstractPushBufferCaptureDevice extends PushBufferDataSour
      * the <code>MediaLocator</code> of this <code>DataSource</code>
      */
     protected void doConnect()
-            throws IOException
-    {
+            throws IOException {
     }
 
     /**
@@ -197,8 +178,7 @@ public abstract class AbstractPushBufferCaptureDevice extends PushBufferDataSour
      * <code>DataSource</code>. Allows extenders to override and be sure that there will be no request
      * to close a connection if the connection has not been opened yet.
      */
-    protected void doDisconnect()
-    {
+    protected void doDisconnect() {
         /*
          * While it is not clear whether the streams can be released upon disconnect,
          * com.imb.media.protocol.SuperCloneableDataSource gets the streams of the DataSource it
@@ -215,8 +195,7 @@ public abstract class AbstractPushBufferCaptureDevice extends PushBufferDataSour
      * @throws IOException if anything goes wrong while starting the transfer of media data from this <code>DataSource</code>
      */
     protected void doStart()
-            throws IOException
-    {
+            throws IOException {
         impl.defaultDoStart();
     }
 
@@ -228,8 +207,7 @@ public abstract class AbstractPushBufferCaptureDevice extends PushBufferDataSour
      * @throws IOException if anything goes wrong while stopping the transfer of media data from this <code>DataSource</code>
      */
     protected void doStop()
-            throws IOException
-    {
+            throws IOException {
         impl.defaultDoStop();
     }
 
@@ -238,8 +216,7 @@ public abstract class AbstractPushBufferCaptureDevice extends PushBufferDataSour
      *
      * @return the <code>CaptureDeviceInfo</code> of this <code>CaptureDevice</code> which describes it
      */
-    public CaptureDeviceInfo getCaptureDeviceInfo()
-    {
+    public CaptureDeviceInfo getCaptureDeviceInfo() {
         return AbstractBufferCaptureDevice.getCaptureDeviceInfo(this);
     }
 
@@ -251,8 +228,7 @@ public abstract class AbstractPushBufferCaptureDevice extends PushBufferDataSour
      * @return the content type of the media represented by this instance
      */
     @Override
-    public String getContentType()
-    {
+    public String getContentType() {
         return ContentDescriptor.RAW;
     }
 
@@ -260,12 +236,12 @@ public abstract class AbstractPushBufferCaptureDevice extends PushBufferDataSour
      * Gets the control of the specified type available for this instance.
      *
      * @param controlType the type of the control available for this instance to be retrieved
+     *
      * @return an <code>Object</code> which represents the control of the specified type available for
      * this instance if such a control is indeed available; otherwise, <code>null</code>
      */
     @Override
-    public Object getControl(String controlType)
-    {
+    public Object getControl(String controlType) {
         return impl.getControl(controlType);
     }
 
@@ -275,8 +251,7 @@ public abstract class AbstractPushBufferCaptureDevice extends PushBufferDataSour
      * @return an array of <code>Object</code>s which represent the controls available for this instance
      */
     @Override
-    public Object[] getControls()
-    {
+    public Object[] getControls() {
         return impl.defaultGetControls();
     }
 
@@ -287,8 +262,7 @@ public abstract class AbstractPushBufferCaptureDevice extends PushBufferDataSour
      * @return the duration of the media represented by this instance
      */
     @Override
-    public Time getDuration()
-    {
+    public Time getDuration() {
         return DURATION_UNBOUNDED;
     }
 
@@ -304,12 +278,12 @@ public abstract class AbstractPushBufferCaptureDevice extends PushBufferDataSour
      * to be retrieved
      * @param oldValue the last-known <code>Format</code> for the <code>PushBufferStream</code> at the specified
      * <code>streamIndex</code>
+     *
      * @return the <code>Format</code> to be reported by the <code>FormatControl</code> of the
      * <code>PushBufferStream</code> at the specified <code>streamIndex</code> in the list of
      * streams of this <code>PushBufferDataSource</code>.
      */
-    protected Format getFormat(int streamIndex, Format oldValue)
-    {
+    protected Format getFormat(int streamIndex, Format oldValue) {
         return impl.defaultGetFormat(streamIndex, oldValue);
     }
 
@@ -320,8 +294,7 @@ public abstract class AbstractPushBufferCaptureDevice extends PushBufferDataSour
      * @return an array of <code>FormatControl</code> instances each one of which can be used before
      * {@link #connect()} to get and set the capture <code>Format</code> of each one of the capture streams
      */
-    public FormatControl[] getFormatControls()
-    {
+    public FormatControl[] getFormatControls() {
         return impl.getFormatControls();
     }
 
@@ -330,8 +303,7 @@ public abstract class AbstractPushBufferCaptureDevice extends PushBufferDataSour
      *
      * @return the <code>Object</code> which is to synchronize the access to {@link #streams()} and its return value
      */
-    protected Object getStreamSyncRoot()
-    {
+    protected Object getStreamSyncRoot() {
         return impl.getStreamSyncRoot();
     }
 
@@ -343,8 +315,7 @@ public abstract class AbstractPushBufferCaptureDevice extends PushBufferDataSour
      * <code>PushBufferDataSource</code> gives access to its media data
      */
     @Override
-    public PushBufferStream[] getStreams()
-    {
+    public PushBufferStream[] getStreams() {
         return impl.getStreams(PushBufferStream.class);
     }
 
@@ -355,12 +326,12 @@ public abstract class AbstractPushBufferCaptureDevice extends PushBufferDataSour
      *
      * @param streamIndex the zero-based index of the <code>PushBufferStream</code> for which the specified
      * <code>FormatControl</code> is to report the list of supported <code>Format</code>s
+     *
      * @return an array of <code>Format</code>s to be reported by a <code>FormatControl</code> as the
      * supported formats for the <code>PushBufferStream</code> at the specified
      * <code>streamIndex</code> in the list of streams of this <code>PushBufferDataSource</code>
      */
-    protected Format[] getSupportedFormats(int streamIndex)
-    {
+    protected Format[] getSupportedFormats(int streamIndex) {
         return impl.defaultGetSupportedFormats(streamIndex);
     }
 
@@ -377,13 +348,13 @@ public abstract class AbstractPushBufferCaptureDevice extends PushBufferDataSour
      * @param streamIndex the zero-based index of the <code>PushBufferStream</code> the <code>Format</code> of which is to be set
      * @param oldValue the last-known <code>Format</code> for the <code>PushBufferStream</code> at the specified <code>streamIndex</code>
      * @param newValue the <code>Format</code> which is to be set
+     *
      * @return the <code>Format</code> to be reported by the <code>FormatControl</code> of the
      * <code>PushBufferStream</code> at the specified <code>streamIndex</code> in the list of
      * streams of this <code>PushBufferStream</code> or <code>null</code> if the attempt to set the
      * <code>Format</code> did not success and any last-known <code>Format</code> is to be left in effect
      */
-    protected Format setFormat(int streamIndex, Format oldValue, Format newValue)
-    {
+    protected Format setFormat(int streamIndex, Format oldValue, Format newValue) {
         return oldValue;
     }
 
@@ -394,8 +365,7 @@ public abstract class AbstractPushBufferCaptureDevice extends PushBufferDataSour
      */
     @Override
     public void start()
-            throws IOException
-    {
+            throws IOException {
         impl.start();
     }
 
@@ -406,8 +376,7 @@ public abstract class AbstractPushBufferCaptureDevice extends PushBufferDataSour
      */
     @Override
     public void stop()
-            throws IOException
-    {
+            throws IOException {
         impl.stop();
     }
 
@@ -418,8 +387,7 @@ public abstract class AbstractPushBufferCaptureDevice extends PushBufferDataSour
      * @return the internal array of <code>AbstractPushBufferStream</code>s through which this
      * <code>AbstractPushBufferCaptureDevice</code> gives access to its media data
      */
-    protected AbstractBufferStream<?>[] streams()
-    {
+    protected AbstractBufferStream<?>[] streams() {
         return impl.streams();
     }
 }

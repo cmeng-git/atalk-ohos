@@ -1,56 +1,62 @@
 /*
- * Jitsi, the OpenSource Java VoIP and Instant Messaging client.
+ * aTalk, ohos VoIP and Instant Messaging client
+ * Copyright 2024 Eng Chong Meng
  *
- * Distributable under LGPL license. See terms of license at gnu.org.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.atalk.ohos.gui.controller;
 
-import android.app.Activity;
-import android.os.Bundle;
-import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
+import ohos.aafwk.ability.Ability;
+import ohos.aafwk.content.Intent;
+import ohos.aafwk.content.Operation;
+import ohos.agp.animation.Animator;
+import ohos.agp.animation.AnimatorProperty;
+import ohos.agp.animation.AnimatorScatter;
+import ohos.agp.components.Component;
+import ohos.agp.components.DirectionalLayout;
 
-import androidx.annotation.Nullable;
+import org.atalk.ohos.BaseAbility;
+import org.atalk.ohos.BaseSlice;
+import org.atalk.ohos.ResourceTable;
 
 import java.util.Timer;
 import java.util.TimerTask;
-
-import org.atalk.ohos.BaseFragment;
-import org.atalk.ohos.R;
-
 import timber.log.Timber;
 
 /**
- * The fragment is a controller which hides the given <code>View</code> after specified delay interval. To reset
- * and prevent from hiding for another period of call <code>show</code> method. This method will also instantly
- * display controlled <code>View</code> if it's currently hidden.
+ * The Slice is a controller which hides the given <code>Component.</code> after specified delay interval.
+ * To reset and prevent from hiding for another period, call <code>show</code> method.
+ * This method will also instantly display controlled <code>Component</code> if it's currently hidden.
  *
- * @author Pawel Domas
  * @author Eng Chong Meng
  */
-public class AutoHideController extends BaseFragment implements Animation.AnimationListener {
+public class AutoHideController extends BaseSlice implements Animator.StateChangedListener {
     /**
-     * Argument key for the identifier of <code>View</code> that will be auto hidden. It must exist in the parent
-     * <code>Activity</code> view hierarchy.
+     * Argument key for the identifier of <code>Component</code> that will be auto hidden.
+     * It must exist in the parent <code>Ability</code> view hierarchy.
      */
-    private static final String ARG_VIEW_ID = "view_id";
+    private static final String ARG_COMPONENT_ID = "component_id";
+
     /**
-     * Argument key for the delay interval, before the <code>View</code> will be hidden
+     * Argument key for the delay interval, before the <code>Component</code> will be hidden
      */
     private static final String ARG_HIDE_TIMEOUT = "hide_timeout";
 
-    // private Animation inAnimation;
-
     /**
-     * Hide animation
+     * Controlled <code>Component</code>
      */
-    private Animation outAnimation;
-
-    /**
-     * Controlled <code>View</code>
-     */
-    private View view;
+    private DirectionalLayout component;
+    private AnimatorProperty animatorProperty;
 
     /**
      * Timer used for the hide task scheduling
@@ -58,7 +64,7 @@ public class AutoHideController extends BaseFragment implements Animation.Animat
     private Timer autoHideTimer;
 
     /**
-     * Hide <code>View</code> timeout
+     * Hide <code>Component</code> timeout
      */
     private long hideTimeout;
 
@@ -71,33 +77,38 @@ public class AutoHideController extends BaseFragment implements Animation.Animat
      * {@inheritDoc}
      */
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Activity activity = getActivity();
+    public void onStart(Intent intent) {
+        super.onStart(intent);
+        Ability activity = getAbility();
 
         if (activity instanceof AutoHideListener) {
-            listener = (AutoHideListener) getActivity();
+            listener = (AutoHideListener) getAbility();
         }
 
-        view = activity.findViewById(getArguments().getInt(ARG_VIEW_ID));
-        if (view == null)
+        component = activity.findComponentById(intent.getIntParam(ARG_COMPONENT_ID, 0));
+        if (component == null)
             throw new NullPointerException("The view is null");
+        hideTimeout = intent.getLongParam(ARG_HIDE_TIMEOUT, -1);
 
-        hideTimeout = getArguments().getLong(ARG_HIDE_TIMEOUT);
-        // inAnimation = AnimationUtils.loadAnimation(getActivity(),
-        // R.anim.show_from_bottom);
-        // inAnimation.setAnimationListener(this);
-
-        outAnimation = AnimationUtils.loadAnimation(activity, R.anim.hide_to_bottom);
-        outAnimation.setAnimationListener(this);
+        AnimatorScatter scatter = AnimatorScatter.getInstance(getContext());
+        Animator animator = scatter.parse(ResourceTable.Animation_hide_to_bottom);
+        if (animator instanceof AnimatorProperty) {
+            animatorProperty = (AnimatorProperty) animator;
+            animatorProperty.moveFromX(0).moveFromY(0)
+                    .moveToX(0).moveToY(100)
+                    .alphaFrom(1.0f).alpha(0.5f)
+                    .setLoopedCount(1);
+            animatorProperty.setTarget(component);
+        }
+        animatorProperty.setStateChangedListener(this);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onActive() {
+        super.onActive();
         show();
     }
 
@@ -105,8 +116,8 @@ public class AutoHideController extends BaseFragment implements Animation.Animat
      * {@inheritDoc}
      */
     @Override
-    public void onPause() {
-        super.onPause();
+    public void onInactive() {
+        super.onInactive();
         cancelAutoHideTask();
     }
 
@@ -132,7 +143,7 @@ public class AutoHideController extends BaseFragment implements Animation.Animat
     }
 
     /**
-     * Hides controlled <code>View</code>
+     * Hides controlled <code>Component</code>
      */
     public void hide() {
         if (!isViewVisible())
@@ -141,94 +152,102 @@ public class AutoHideController extends BaseFragment implements Animation.Animat
         // This call is required to clear the timer task
         cancelAutoHideTask();
         // Starts hide animation
-        view.startAnimation(outAnimation);
+        animatorProperty.start();
     }
 
     /**
-     * Shows controlled <code>View</code> and/or resets hide delay timer.
+     * Shows controlled <code>Component</code> and/or resets hide delay timer.
      */
     public void show() {
-        if (view == null) {
+        if (animatorProperty == null) {
             Timber.e("The view has not been created yet");
             return;
         }
-        // This means that the View is hidden or animation is in progress
+        // This means that the Component is hidden or animation is in progress
         if (autoHideTimer == null) {
-            view.clearAnimation();
-            // Need to re-layout the View
-            view.setVisibility(View.GONE);
-            view.setVisibility(View.VISIBLE);
+            animatorProperty.reset();
+            // Need to re-layout the Component
+            component.setVisibility(Component.HIDE);
+            component.setVisibility(Component.VISIBLE);
 
             if (listener != null) {
-                listener.onAutoHideStateChanged(this, View.VISIBLE);
+                listener.onAutoHideStateChanged(this, Component.VISIBLE);
             }
         }
         reScheduleAutoHideTask();
     }
 
     /**
-     * Returns <code>true</code> if controlled <code>View</code> is currently visible.
+     * Returns <code>true</code> if controlled <code>Component</code> is currently visible.
      *
-     * @return <code>true</code> if controlled <code>View</code> is currently visible.
+     * @return <code>true</code> if controlled <code>Component</code> is currently visible.
      */
     private boolean isViewVisible() {
-        return view.getVisibility() == View.VISIBLE;
+        return component.getVisibility() == Component.VISIBLE;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void onAnimationStart(Animation animation) {
-        // if(animation == inAnimation)
-        // {
-        // view.setVisibility(View.VISIBLE);
-        // reScheduleAutoHideTask();
-        // }
+    public void onStart(Animator animator) {
+        component.setVisibility(Component.VISIBLE);
+        reScheduleAutoHideTask();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void onAnimationEnd(Animation animation) {
+    public void onEnd(Animator animator) {
         // If it's hide animation and the task wasn't cancelled
-        if (animation == outAnimation && autoHideTimer == null) {
-            view.setVisibility(View.GONE);
+        if (animator.isRunning() && autoHideTimer == null) {
+            animator.stop();
+            component.setVisibility(Component.HIDE);
 
             if (listener != null) {
-                listener.onAutoHideStateChanged(this, View.GONE);
+                listener.onAutoHideStateChanged(this, Component.HIDE);
             }
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public void onAnimationRepeat(Animation animation) {
+    public void onResume(Animator animator) {
+
+    }
+
+    @Override
+    public void onStop(Animator animator) {
+    }
+
+    @Override
+    public void onCancel(Animator animator) {
+    }
+
+    @Override
+    public void onPause(Animator animator) {
     }
 
     /**
-     * Hide <code>View</code> timer task class.
+     * Hide <code>Component</code> timer task class.
      */
     class AutoHideTask extends TimerTask {
         @Override
         public void run() {
-            runOnUiThread(AutoHideController.this::hide);
+            BaseAbility.runOnUiThread(AutoHideController.this::hide);
         }
     }
 
     /**
      * Interface which can be used for listening to controlled view visibility state changes. Must be implemented by
-     * the parent <code>Activity</code>, which will be registered as a listener when this fragment is created.
+     * the parent <code>Ability</code>, which will be registered as a listener when this fragment is created.
      */
     public interface AutoHideListener {
         /**
-         * Fired when controlled <code>View</code> visibility is changed by this controller.
+         * Fired when controlled <code>Component</code> visibility is changed by this controller.
          *
          * @param source the source <code>AutoHideController</code> of the event.
-         * @param visibility controlled <code>View</code> visibility state.
+         * @param visibility controlled <code>Component</code> visibility state.
          */
         void onAutoHideStateChanged(AutoHideController source, int visibility);
     }
@@ -236,19 +255,22 @@ public class AutoHideController extends BaseFragment implements Animation.Animat
     /**
      * Creates new parametrized instance of <code>AutoHideController</code>.
      *
-     * @param viewId identifier of the <code>View</code> that will be auto hidden
+     * @param viewId identifier of the <code>Component</code> that will be auto hidden
      * @param hideTimeout auto hide delay in ms
-     *
-     * @return new parametrized instance of <code>AutoHideController</code>.
      */
-    public static AutoHideController getInstance(int viewId, long hideTimeout) {
+    public static void getInstance(int viewId, long hideTimeout) {
         AutoHideController ahCtrl = new AutoHideController();
+        Intent intent = new Intent();
+        Operation operation = new Intent.OperationBuilder()
+                .withDeviceId("")
+                .withBundleName("")
+                .withAbilityName(ahCtrl.getLocalClassName())
+                .build();
 
-        Bundle args = new Bundle();
-        args.putInt(ARG_VIEW_ID, viewId);
-        args.putLong(ARG_HIDE_TIMEOUT, hideTimeout);
-        ahCtrl.setArguments(args);
+        intent.setOperation(operation);
+        intent.setParam(ARG_COMPONENT_ID, viewId);
+        intent.setParam(ARG_HIDE_TIMEOUT, hideTimeout);
 
-        return ahCtrl;
+        ahCtrl.present(ahCtrl, intent);
     }
 }

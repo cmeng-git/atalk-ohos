@@ -15,19 +15,20 @@
  */
 package net.java.sip.communicator.service.callhistory;
 
-import android.icu.text.MeasureFormat;
-import android.icu.util.Measure;
-import android.icu.util.MeasureUnit;
-import android.text.format.DateUtils;
-
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Vector;
 
+import ohos.global.icu.text.MeasureFormat;
+import ohos.global.icu.util.Measure;
+import ohos.global.icu.util.MeasureUnit;
+
 import net.java.sip.communicator.service.protocol.ProtocolProviderService;
 
+import org.apache.commons.lang3.time.DateUtils;
+import org.atalk.util.TimeUtils;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -38,8 +39,12 @@ import org.jetbrains.annotations.NotNull;
  * @author Yana Stamcheva
  * @author Eng Chong Meng
  */
-public class CallRecord
-{
+public class CallRecord {
+    protected static final long ONE_DAY = 86400000L;
+    protected static final int ONE_HOUR = 3600000;
+    protected static final int ONE_MINUTE = 60000;
+    protected static final int ONE_SECOND = 1000;
+
     /**
      * The outgoing call direction.
      */
@@ -93,8 +98,7 @@ public class CallRecord
      * @param startTime Date
      * @param endTime Date
      */
-    public CallRecord(String uuid, String direction, Date startTime, Date endTime)
-    {
+    public CallRecord(String uuid, String direction, Date startTime, Date endTime) {
         if (uuid == null) {
             Date date = new Date();
             uuid = String.valueOf(date.getTime()) + Math.abs(date.hashCode());
@@ -110,10 +114,10 @@ public class CallRecord
      * Finds a CallPeer with the supplied address
      *
      * @param address EntityFullJid or callParticipantIDs
+     *
      * @return CallPeerRecord
      */
-    public CallPeerRecord findPeerRecord(String address)
-    {
+    public CallPeerRecord findPeerRecord(String address) {
         for (CallPeerRecord item : peerRecords) {
             if (item.getPeerAddress().equals(address))
                 return item;
@@ -126,8 +130,7 @@ public class CallRecord
      *
      * @return String
      */
-    public String getCallUuid()
-    {
+    public String getCallUuid() {
         return uuid;
     }
 
@@ -136,8 +139,7 @@ public class CallRecord
      *
      * @return String
      */
-    public String getDirection()
-    {
+    public String getDirection() {
         return direction;
     }
 
@@ -146,8 +148,7 @@ public class CallRecord
      *
      * @return Date
      */
-    public Date getEndTime()
-    {
+    public Date getEndTime() {
         return endTime;
     }
 
@@ -156,8 +157,7 @@ public class CallRecord
      *
      * @return Vector
      */
-    public List<CallPeerRecord> getPeerRecords()
-    {
+    public List<CallPeerRecord> getPeerRecords() {
         return peerRecords;
     }
 
@@ -166,8 +166,7 @@ public class CallRecord
      *
      * @return Date
      */
-    public Date getStartTime()
-    {
+    public Date getStartTime() {
         return startTime;
     }
 
@@ -176,8 +175,7 @@ public class CallRecord
      *
      * @return the protocol provider used for the call
      */
-    public ProtocolProviderService getProtocolProvider()
-    {
+    public ProtocolProviderService getProtocolProvider() {
         return protocolProvider;
     }
 
@@ -186,18 +184,16 @@ public class CallRecord
      *
      * @return end reason code if any.
      */
-    public int getEndReason()
-    {
+    public int getEndReason() {
         return endReason;
     }
 
     @NotNull
-    public String toString()
-    {
+    public String toString() {
         String callStart;
 
         long start = startTime.getTime();
-        if (DateUtils.isToday(start)) {
+        if (TimeUtils.isToday(startTime)) {
             DateFormat df = DateFormat.getTimeInstance(DateFormat.MEDIUM);
             callStart = df.format(startTime);
         }
@@ -219,22 +215,21 @@ public class CallRecord
         return callInfo.toString();
     }
 
-    public static CharSequence formatDuration(long millis)
-    {
+    public static CharSequence formatDuration(long millis) {
         final MeasureFormat.FormatWidth width;
         width = MeasureFormat.FormatWidth.SHORT;
 
         final MeasureFormat formatter = MeasureFormat.getInstance(Locale.getDefault(), width);
-        if (millis >= DateUtils.HOUR_IN_MILLIS) {
-            final int hours = (int) ((millis + 1800000) / DateUtils.HOUR_IN_MILLIS);
+        if (millis >= ONE_DAY) {
+            final int hours = (int) ((millis + 1800000) / ONE_HOUR);
             return formatter.format(new Measure(hours, MeasureUnit.HOUR));
         }
-        else if (millis >= DateUtils.MINUTE_IN_MILLIS) {
-            final int minutes = (int) ((millis + 30000) / DateUtils.MINUTE_IN_MILLIS);
+        else if (millis >= ONE_MINUTE) {
+            final int minutes = (int) ((millis + 30000) / ONE_MINUTE);
             return formatter.format(new Measure(minutes, MeasureUnit.MINUTE));
         }
         else {
-            final int seconds = (int) ((millis + 500) / DateUtils.SECOND_IN_MILLIS);
+            final int seconds = (int) ((millis + 500) / ONE_SECOND);
             return formatter.format(new Measure(seconds, MeasureUnit.SECOND));
         }
     }

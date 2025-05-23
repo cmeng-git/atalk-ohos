@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<DependentLayout
+    xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:height="match_parent"
+    ohos:width="match_parent"
+    ohos:background_element="$color:call_background"
+    ohos:orientation="vertical">
+
+    <DirectionalLayout
+        ohos:id="$+id:layout1"
+        ohos:height="match_content"
+        ohos:width="match_parent"
+        ohos:horizontal_center="true"
+        ohos:orientation="vertical"
+        ohos:top_margin="$float:screen_padding">
+
+        <TextField
+            ohos:id="$+id:callField"
+            ohos:height="50vp"
+            ohos:width="$float:call_field_width"
+            ohos:hint="$string:enter_name_or_number"
+            ohos:horizontal_center="true"
+            ohos:margin="$float:between_padding"
+            ohos:text_input_type="pattern_text"/>
+    </DirectionalLayout>
+
+    <Button
+        ohos:id="$+id:callButtonFull"
+        ohos:height="100vp"
+        ohos:width="match_parent"
+        ohos:align_parent_bottom="true"
+        ohos:background_element="#40000000"
+        ohos:component_description="$string:call_audio"
+        ohos:focusable="focus_adaptable"
+        ohos:image_src="$media:call_button"/>
+</DependentLayout>

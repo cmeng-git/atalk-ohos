@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<DirectionalLayout xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:width="match_parent"
+    ohos:height="match_parent"
+    ohos:orientation="vertical"
+    ohos:padding="$float:list_padding">
+
+    <Text
+        ohos:id="$+id:protocolProvider"
+        ohos:text_size="$float:medium_font"
+        ohos:width="match_content"
+        ohos:height="match_content"
+        ohos:text="account@server.org" />
+
+    <Text
+        ohos:id="$+id:fingerprint"
+        ohos:text_size="$float:medium_font"
+        ohos:width="match_content"
+        ohos:height="match_content"
+        ohos:text="{private key text}" />
+
+    <Text
+        ohos:id="$+id:fingerprint_status"
+        ohos:text_size="$float:medium_font"
+        ohos:width="match_content"
+        ohos:height="match_content"
+        ohos:text="Verified: {verified?}" />
+</DirectionalLayout>

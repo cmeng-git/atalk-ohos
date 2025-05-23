@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DependentLayout xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:id="$+id:playerView"
+    ohos:width="match_parent"
+    ohos:height="90vp"
+    ohos:padding="5vp"
+    ohos:background_element="$graphic:border_grey"
+    ohos:visibility="visible"
+    ohos:orientation="horizontal">
+
+    <Text
+        ohos:id="$+id:filename_audio"
+        ohos:text_size="$float:small_font"
+        ohos:width="match_content"
+        ohos:height="match_content"
+        ohos:top_margin="5vp"
+        ohos:text_alignment="start"
+        ohos:text="{Voice File Name}"
+        ohos:text_color="$color:textColorBlack" />
+
+    <Slider
+        ohos:id="$+id:playback_seekbar"
+        ohos:progress_width="5vp"
+        ohos:width="match_parent"
+        ohos:height="12vp"
+        ohos:below="$id:filename_audio"
+        ohos:start_of="$id:playback_play"
+        ohos:top_margin="18vp"
+        ohos:top_padding="5vp"
+        ohos:bottom_padding="5vp"
+        ohos:start_padding="0vp"
+        ohos:end_padding="5vp"
+        ohos:visibility="visible" />
+
+    <Text
+        ohos:id="$+id:playback_position"
+        ohos:text_size="$float:small_font"
+        ohos:width="match_content"
+        ohos:height="match_content"
+        ohos:below="$id:playback_seekbar"
+        ohos:align_start="$id:playback_seekbar"
+        ohos:text="00:00"
+        ohos:text_color="$color:grey"
+        ohos:visibility="visible" />
+
+    <Text
+        ohos:id="$+id:playback_duration"
+        ohos:text_size="$float:small_font"
+        ohos:width="match_content"
+        ohos:height="match_content"
+        ohos:below="$id:playback_seekbar"
+        ohos:align_end="$id:playback_seekbar"
+        ohos:text="00:00"
+        ohos:text_color="$color:grey"
+        ohos:visibility="visible" />
+
+    <Image
+        ohos:id="$+id:playback_play"
+        ohos:width="48vp"
+        ohos:height="48vp"
+        ohos:below="$id:filename_audio"
+        ohos:align_parent_end="true"
+        ohos:background_element="$graphic:ic_player_playing"
+        ohos:image_src="$media:ic_player_stop" />
+
+</DependentLayout>

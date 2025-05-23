@@ -5,14 +5,14 @@
  */
 package org.atalk.impl.libjitsi;
 
-import org.atalk.ohos.R;
-import org.atalk.ohos.aTalkApp;
-import org.atalk.ohos.gui.aTalk;
-import org.atalk.service.libjitsi.LibJitsi;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.locks.ReentrantLock;
+
+import org.atalk.ohos.ResourceTable;
+import org.atalk.ohos.aTalkApp;
+import org.atalk.ohos.gui.aTalk;
+import org.atalk.service.libjitsi.LibJitsi;
 
 import timber.log.Timber;
 
@@ -22,8 +22,7 @@ import timber.log.Timber;
  * @author Lyubomir Marinov
  * @author Eng Chong Meng
  */
-public class LibJitsiImpl extends LibJitsi
-{
+public class LibJitsiImpl extends LibJitsi {
     /**
      * The service instances associated with this implementation of the
      * <code>libjitsi</code> library mapped by their respective type/class names.
@@ -33,8 +32,7 @@ public class LibJitsiImpl extends LibJitsi
     /**
      * Initializes a new <code>LibJitsiImpl</code> instance.
      */
-    public LibJitsiImpl()
-    {
+    public LibJitsiImpl() {
         /*
          * The AudioNotifierService implementation uses a non-standard package location so work around it.
          */
@@ -50,12 +48,12 @@ public class LibJitsiImpl extends LibJitsi
      * Get a service of a specific type associated with this implementation of the <code>libjitsi</code> library.
      *
      * @param serviceClass the type of the service to be retrieved
+     *
      * @return a service of the specified type if there is such an association known to this
      * implementation of the <code>libjitsi</code> library; otherwise, <code>null</code>
      */
     @Override
-    protected <T> T getService(Class<T> serviceClass)
-    {
+    protected <T> T getService(Class<T> serviceClass) {
         String className = serviceClass.getName();
         ServiceLock lock;
 
@@ -76,8 +74,7 @@ public class LibJitsiImpl extends LibJitsi
      * {@code Lock} in order to prevent concurrent, repeating, and/or recursive
      * initializations are the same OSGi service {@code Class}.
      */
-    private static class ServiceLock
-    {
+    private static class ServiceLock {
         /**
          * The {@code Lock} associated with {@link #_service}.
          */
@@ -92,11 +89,11 @@ public class LibJitsiImpl extends LibJitsi
          * Gets the OSGi service {@code Object} associated with {@link #_lock}.
          *
          * @param clazz the runtime type of the returned value
+         *
          * @return the OSGi service {@code Object} associated with {@link #_lock}
          */
         @SuppressWarnings("unchecked")
-        public <T> T getService(String className, Class<T> clazz)
-        {
+        public <T> T getService(String className, Class<T> clazz) {
             T t;
             // Do not allow repeating/recursive requests to create multiple
             // instances of the specified clazz.
@@ -120,10 +117,10 @@ public class LibJitsiImpl extends LibJitsi
          * @param className the {@code name} of {@code clazz} which has already
          * been retrieved from {@code clazz}
          * @param clazz the {@code Class} of the OSGi service instance to be initialized
+         *
          * @return a new instance of the specified OSGi service {@code clazz}
          */
-        private static <T> T initializeService(String className, Class<T> clazz)
-        {
+        private static <T> T initializeService(String className, Class<T> clazz) {
             // Allow the service implementation class names to be specified as
             // System properties akin to standard Java class factory names.
             String implClassName = System.getProperty(className);
@@ -176,7 +173,7 @@ public class LibJitsiImpl extends LibJitsi
                 Timber.d("Failed to initialize service implementation %s. Will continue without it: %s.",
                         implClassName, exception.getMessage());
                 if (implClassName.contains("MediaServiceImpl")) {
-                    aTalkApp.showGenericError(R.string.call_disable_on_fault, implClassName,
+                    aTalkApp.showGenericError(ResourceTable.String_call_disable_on_fault, implClassName,
                             exception.getMessage());
                     aTalk.disableMediaServiceOnFault = true;
                 }

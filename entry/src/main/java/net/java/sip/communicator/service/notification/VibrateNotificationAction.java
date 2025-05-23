@@ -5,6 +5,8 @@
  */
 package net.java.sip.communicator.service.notification;
 
+import ohos.vibrator.bean.VibrationPattern;
+
 /**
  * <code>VibrateNotificationAction</code> is meant to define haptic feedback notification using device's vibrator.<br/>
  * <br/>
@@ -24,7 +26,9 @@ public class VibrateNotificationAction extends NotificationAction
     /**
      * The pattern of off/on intervals in millis that will be played.
      */
-    private final long[] pattern;
+    private final int[] pattern;
+
+    private final VibrationPattern vPattern;
 
     /**
      * Repeat index into the pattern(-1 to disable repeat).
@@ -42,30 +46,32 @@ public class VibrateNotificationAction extends NotificationAction
      * @param descriptor string identifier of this action.
      * @param millis the number of milliseconds to vibrate.
      */
-    public VibrateNotificationAction(String descriptor, long millis)
+    public VibrateNotificationAction(String descriptor, int millis)
     {
         super(NotificationAction.ACTION_VIBRATE);
-        this.pattern = new long[2];
+        this.pattern = new int[2];
         pattern[0] = 0;
         pattern[1] = millis;
         repeat = -1;
         this.descriptor = descriptor;
+        vPattern = VibrationPattern.createPeriod(pattern, repeat);
     }
 
     /**
      * Vibrate using given <code>patter</code> and optionally loop if the <code>repeat</code> index is not <code>-1</code>.
      *
      * @param descriptor the string identifier of this action.
-     * @param patter the array containing vibrate pattern intervals.
+     * @param pattern the array containing vibrate pattern intervals.
      * @param repeat the index into the patter at which it will be looped (-1 to disable repeat).
      * @see VibrateNotificationAction
      */
-    public VibrateNotificationAction(String descriptor, long[] patter, int repeat)
+    public VibrateNotificationAction(String descriptor, int[] pattern, int repeat)
     {
         super(NotificationAction.ACTION_VIBRATE);
-        this.pattern = patter;
+        this.pattern = pattern;
         this.repeat = repeat;
         this.descriptor = descriptor;
+        vPattern = VibrationPattern.createPeriod(pattern, repeat);
     }
 
     /**
@@ -83,9 +89,13 @@ public class VibrateNotificationAction extends NotificationAction
      *
      * @return vibrate pattern array.
      */
-    public long[] getPattern()
+    public int[] getPattern()
     {
         return pattern;
+    }
+
+    public VibrationPattern getvPattern() {
+        return vPattern;
     }
 
     /**

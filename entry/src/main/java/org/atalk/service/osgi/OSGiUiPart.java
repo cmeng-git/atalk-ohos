@@ -25,7 +25,7 @@ public interface OSGiUiPart
             throws Exception;
 
     /**
-     * Fired when parent <code>OSGiActivity</code> is being stopped or this fragment is being detached.
+     * Fired when parent <code>OSGiAbility</code> is being stopped or this fragment is being detached.
      *
      * @param bundleContext the OSGI bundle context.
      */

@@ -188,16 +188,6 @@ public interface MediaService
     Recorder createRecorder(MediaDevice device);
 
     /**
-     * Creates a new <code>Recorder</code> instance that can be used to record media from a specific
-     * <code>RTPTranslator</code>.
-     *
-     * @param translator the <code>RTPTranslator</code> for which to create a <code>Recorder</code>
-     * @return a new <code>Recorder</code> instance that can be used to record media from a specific
-     * <code>RTPTranslator</code>.
-     */
-    Recorder createRecorder(RTPTranslator translator);
-
-    /**
      * Initializes a new <code>RTPTranslator</code> which is to forward RTP and RTCP traffic between
      * multiple <code>MediaStream</code>s.
      *
@@ -291,25 +281,6 @@ public interface MediaService
     VolumeControl getInputVolumeControl();
 
     /**
-     * Get a <code>MediaDevice</code> for a part of desktop streaming/sharing.
-     *
-     * @param width width of the part
-     * @param height height of the part
-     * @param x origin of the x coordinate (relative to the full desktop)
-     * @param y origin of the y coordinate (relative to the full desktop)
-     * @return <code>MediaDevice</code> representing the part of desktop or null if problem
-     */
-    MediaDevice getMediaDeviceForPartialDesktopStreaming(int width, int height, int x, int y);
-
-    /**
-     * Get origin for desktop streaming device.
-     *
-     * @param mediaDevice media device
-     * @return origin
-     */
-    Point getOriginForDesktopStreamingDevice(MediaDevice mediaDevice);
-
-    /**
      * Gets the <code>VolumeControl</code> which controls the volume level of audio output/playback.
      *
      * @return the <code>VolumeControl</code> which controls the volume level of audio output/playback
@@ -324,26 +295,6 @@ public interface MediaService
     Iterator<Recorder.Listener> getRecorderListeners();
 
     /**
-     * Creates a preview component for the specified device(video device) used to show video preview
-     * from it.
-     *
-     * @param device the video device
-     * @param preferredWidth the width we prefer for the component
-     * @param preferredHeight the height we prefer for the component
-     * @return the preview component.
-     */
-    Object getVideoPreviewComponent(MediaDevice device, int preferredWidth,
-            int preferredHeight);
-
-    /**
-     * If the <code>MediaDevice</code> corresponds to partial desktop streaming device.
-     *
-     * @param mediaDevice <code>MediaDevice</code>
-     * @return true if <code>MediaDevice</code> is a partial desktop streaming device, false otherwise
-     */
-    boolean isPartialStreaming(MediaDevice mediaDevice);
-
-    /**
      * Removes a <code>PropertyChangeListener</code> to no longer be notified about changes in the
      * values of the properties of this instance.
      *
@@ -353,15 +304,6 @@ public interface MediaService
     void removePropertyChangeListener(PropertyChangeListener listener);
 
     /**
-     * Removes an existing <code>Recorder.Listener</code> from the list of listeners interested in
-     * notifications from <code>Recorder</code>s.
-     *
-     * @param listener the existing <code>Listener</code> to be removed from the list of listeners interested in
-     * notifications from <code>Recorder</code>s
-     */
-    void removeRecorderListener(Recorder.Listener listener);
-
-    /**
      * Returns the value which will be used for the canonical end-point identifier (CNAME) in RTCP
      * packets sent by this running instance of libjitsi.
      *
@@ -369,15 +311,4 @@ public interface MediaService
      * packets sent by this running instance of libjitsi.
      */
     String getRtpCname();
-
-    /**
-     * Creates a <code>RecorderEventHandler</code> instance that saves received events in JSON format.
-     *
-     * @param filename the filename into which the created <code>RecorderEventHandler</code> will save received
-     * events.
-     * @return a <code>RecorderEventHandler</code> instance that saves received events in JSON format.
-     * @throws IOException if a <code>RecorderEventHandler</code> could not be created for <code>filename</code>.
-     */
-    RecorderEventHandler createRecorderEventHandlerJson(String filename)
-            throws IOException;
 }

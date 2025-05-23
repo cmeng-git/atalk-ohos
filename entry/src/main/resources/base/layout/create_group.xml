@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<DirectionalLayout xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:width="match_parent"
+    ohos:height="match_parent"
+    ohos:orientation="vertical" >
+
+    <Text
+        ohos:width="match_parent"
+        ohos:height="match_content"
+        ohos:bottom_margin="8vp"
+        ohos:text="$string:create_group_name"
+        ohos:text_size="$float:medium_font" />
+
+    <TextField
+        ohos:id="$+id:editText"
+        ohos:background_element="$graphic:bg_text_field"
+        ohos:width="match_parent"
+        ohos:hint="$string:add_group_name" />
+</DirectionalLayout>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DirectionalLayout
+    xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:id="$+id:menu"
+    ohos:height="match_content"
+    ohos:width="match_content"
+    ohos:margin="$float:between_padding"
+    ohos:orientation="vertical">
+
+    <Text
+        ohos:id="$+id:chatroom_start_im"
+        ohos:title="$string:cr_member_start_conversation">
+    </Text>
+
+    <Text
+        ohos:id="$+id:chatroom_manage_privilege"
+        ohos:title="$string:cr_member_grant_owner_privilege">
+    </Text>
+
+    <Text
+        ohos:id="$+id:chatroom_kick"
+        ohos:title="$string:cr_member_kick">
+    </Text>
+</DirectionalLayout>

@@ -1,47 +1,53 @@
 /*
- * Jitsi, the OpenSource Java VoIP and Instant Messaging client.
+ * aTalk, ohos VoIP and Instant Messaging client
+ * Copyright 2024 Eng Chong Meng
  *
- * Distributable under LGPL license. See terms of license at gnu.org.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.atalk.ohos.gui.widgets;
 
-import android.content.Context;
-import android.content.res.TypedArray;
-import android.graphics.Bitmap;
-import android.graphics.PixelFormat;
-import android.graphics.Rect;
-import android.util.AttributeSet;
-import android.view.Gravity;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewConfiguration;
-import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.ImageView;
-import android.widget.ListView;
+import ohos.agp.components.AttrSet;
+import ohos.agp.components.Component;
+import ohos.agp.components.Image;
+import ohos.agp.components.ListComponent;
+import ohos.agp.components.ListContainer;
+import ohos.agp.components.element.ShapeElement;
+import ohos.agp.utils.Rect;
+import ohos.app.Context;
+import ohos.media.image.PixelMap;
+import ohos.multimodalinput.event.TouchEvent;
 
-import org.atalk.ohos.R;
+import org.atalk.ohos.ResourceTable;
 
 import timber.log.Timber;
+
+import static org.bouncycastle.asn1.eac.ECDSAPublicKey.R;
 
 /**
  * Modified version of class of the same name from android source of the music app. The widget displays a list of items.
  * User can set order of items by dragging them on the screen.<br/>
- * This <code>View</code> requires following XML attributes:<br/>
+ * This <code>Component.</code> requires following XML attributes:<br/>
  * - <code>itemHeight</code> the height of list item<br/>
  * - <code>itemExpandedHeight</code> the height that will be set to expanded item(the one tha makes space for dragged item)<br/>
  * - <code>dragRegionStartX</code> and <code>dragRegionEndX</code> item can be grabbed when start x coordinate is between them
  *
- * @author Pawel Domas
  * @author Eng Chong Meng
  */
-public class TouchInterceptor extends ListView
-{
+public class TouchInterceptor extends ListComponent {
     /**
      * The view representing dragged item
      */
-    private ImageView dragView;
+    private Image dragView;
     /**
      * The {@link android.view.WindowManager} used to display dragged view
      */
@@ -91,7 +97,7 @@ public class TouchInterceptor extends ListView
      */
     private int lowerBound;
     /**
-     * View's height
+     * Component.'s height
      */
     private int height;
     /**
@@ -99,9 +105,9 @@ public class TouchInterceptor extends ListView
      */
     private Rect tempRect = new Rect();
     /**
-     * The background of dragged <code>View</code>
+     * The background of dragged <code>Component.</code>
      */
-    private Bitmap dragBitmap;
+    private PixelMap dragBitmap;
     /**
      * The touch slop
      */
@@ -109,23 +115,23 @@ public class TouchInterceptor extends ListView
     /**
      * Normal list item's height
      */
-    private int itemHeightNormal;
+    private final int itemHeightNormal;
     /**
      * The height of expanded item
      */
-    private int itemHeightExpanded;
+    private final int itemHeightExpanded;
     /**
      * Half of the normal item's height
      */
-    private int itemHeightHalf;
+    private final int itemHeightHalf;
     /**
      * Start x coordinate of draggable area
      */
-    private int dragRegionStartX;
+    private final int dragRegionStartX;
     /**
      * End x coordinate of draggable area
      */
-    private int dragRegionEndX;
+    private final int dragRegionEndX;
 
     /**
      * Creates new instance of {@link TouchInterceptor}. The attribute set must contain:</br> - <code>itemHeight</code> the
@@ -134,16 +140,14 @@ public class TouchInterceptor extends ListView
      * - <code>dragRegionStartX</code> and <code>dragRegionEndX</code> item can be grabbed when start x coordinate is between
      * them
      *
-     * @param context the {@link android.content.Context}
-     * @param attrs the {@link android.util.AttributeSet}
+     * @param context the Context
+     * @param attrset the AttrSet
      */
-    public TouchInterceptor(Context context, AttributeSet attrs)
-    {
-        super(context, attrs);
+    public TouchInterceptor(Context context, AttrSet attrset) {
+        super(context, attrset);
 
         touchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
-
-        TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.TouchInterceptor, 0, 0);
+        TypedArray a = context.getTheme().obtainStyledAttributes(attrset, R.styleable.TouchInterceptor, 0, 0);
         try {
             itemHeightNormal = a.getDimensionPixelSize(R.styleable.TouchInterceptor_itemHeight, -1);
             itemHeightHalf = itemHeightNormal / 2;
@@ -167,8 +171,7 @@ public class TouchInterceptor extends ListView
     }
 
     @Override
-    public boolean onInterceptTouchEvent(MotionEvent ev)
-    {
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
         if (dragListener != null || dropListener != null) {
             if (!isEnabled()) {
                 return true;
@@ -178,10 +181,10 @@ public class TouchInterceptor extends ListView
                     int x = (int) ev.getX();
                     int y = (int) ev.getY();
                     int itemnum = pointToPosition(x, y);
-                    if (itemnum == AdapterView.INVALID_POSITION) {
+                    if (itemnum == ListContainer.INVALID_POSITION) {
                         break;
                     }
-                    View item = getChildAt(itemnum - getFirstVisiblePosition());
+                    Component item = getChildAt(itemnum - getFirstVisiblePosition());
                     dragPointX = x - ((item == null) ? 0 : item.getLeft());
                     dragPointY = y - ((item == null) ? 0 : item.getTop());
                     xOffset = ((int) ev.getRawX()) - x;
@@ -213,8 +216,7 @@ public class TouchInterceptor extends ListView
     /*
      * pointToPosition() doesn't consider invisible views, but we need to, so implement a slightly different version.
      */
-    private int myPointToPosition(int x, int y)
-    {
+    private int myPointToPosition(int x, int y) {
 
         if (y < 0) {
             // when dragging off the top of the screen, calculate position
@@ -228,7 +230,7 @@ public class TouchInterceptor extends ListView
         Rect frame = tempRect;
         final int count = getChildCount();
         for (int i = count - 1; i >= 0; i--) {
-            final View child = getChildAt(i);
+            final Component child = getChildAt(i);
             child.getHitRect(frame);
             if (frame.contains(x, y)) {
                 return getFirstVisiblePosition() + i;
@@ -237,8 +239,7 @@ public class TouchInterceptor extends ListView
         return INVALID_POSITION;
     }
 
-    private int getItemForPosition(int y)
-    {
+    private int getItemForPosition(int y) {
         int adjustedy = y - dragPointY - itemHeightHalf;
         int pos = myPointToPosition(0, adjustedy);
         if (pos >= 0) {
@@ -254,8 +255,7 @@ public class TouchInterceptor extends ListView
         return pos;
     }
 
-    private void adjustScrollBounds(int y)
-    {
+    private void adjustScrollBounds(int y) {
         if (y >= height / 3) {
             upperBound = height / 3;
         }
@@ -267,17 +267,16 @@ public class TouchInterceptor extends ListView
     /*
      * Restore size and visibility for all listitems
      */
-    private void unExpandViews(boolean deletion)
-    {
-        int y0 = (getChildAt(0) == null) ? 0: getChildAt(0).getTop();
+    private void unExpandViews(boolean deletion) {
+        int y0 = (getChildAt(0) == null) ? 0 : getChildAt(0).getTop();
 
         for (int i = 0; ; i++) {
-            View v = getChildAt(i);
+            Component v = getChildAt(i);
             if (v == null) {
                 if (deletion) {
                     // HACK force update of mItemCount
                     int position = getFirstVisiblePosition();
-                     getChildAt(0);
+                    getChildAt(0);
                     setAdapter(getAdapter());
                     setSelectionFromTop(position, y0);
                     // end hack
@@ -295,10 +294,10 @@ public class TouchInterceptor extends ListView
                     return;
                 }
             }
-            ViewGroup.LayoutParams params = v.getLayoutParams();
+            ComponentContainer.LayoutParams params = v.getLayoutParams();
             params.height = itemHeightNormal;
             v.setLayoutParams(params);
-            v.setVisibility(View.VISIBLE);
+            v.setVisibility(Component.VISIBLE);
         }
     }
 
@@ -309,28 +308,27 @@ public class TouchInterceptor extends ListView
      * it as small as possible and expand the item below the insert point. If the dragged item is not on screen, only
      * expand the item below the current insertpoint.
      */
-    private void doExpansion()
-    {
+    private void doExpansion() {
         int childnum = dragPos - getFirstVisiblePosition();
         if (dragPos > srcDragPos) {
             childnum++;
         }
         int numheaders = getHeaderViewsCount();
 
-        View first = getChildAt(srcDragPos - getFirstVisiblePosition());
+        Component first = getChildAt(srcDragPos - getFirstVisiblePosition());
         for (int i = 0; ; i++) {
-            View vv = getChildAt(i);
+            Component vv = getChildAt(i);
             if (vv == null) {
                 break;
             }
 
             int height = itemHeightNormal;
-            int visibility = View.VISIBLE;
+            int visibility = Component.VISIBLE;
             if (dragPos < numheaders && i == numheaders) {
                 // dragging on top of the header item, so adjust the item below
                 // instead
                 if (vv.equals(first)) {
-                    visibility = View.INVISIBLE;
+                    visibility = Component.INVISIBLE;
                 }
                 else {
                     height = itemHeightExpanded;
@@ -340,7 +338,7 @@ public class TouchInterceptor extends ListView
                 // processing the item that is being dragged
                 if (dragPos == srcDragPos || getPositionForView(vv) == getCount() - 1) {
                     // hovering over the original location
-                    visibility = View.INVISIBLE;
+                    visibility = Component.INVISIBLE;
                 }
                 else {
                     // not hovering over it
@@ -355,16 +353,19 @@ public class TouchInterceptor extends ListView
                     height = itemHeightExpanded;
                 }
             }
-            ViewGroup.LayoutParams params = vv.getLayoutParams();
+            ComponentContainer.LayoutParams params = vv.getLayoutParams();
             params.height = height;
             vv.setLayoutParams(params);
             vv.setVisibility(visibility);
         }
     }
 
+    public boolean onTouchEvent(Component component, TouchEvent touchEvent) {
+        return false;
+    }
+
     @Override
-    public boolean onTouchEvent(MotionEvent ev)
-    {
+    public boolean onTouchEvent(MotionEvent ev) {
         if ((dragListener != null || dropListener != null) && dragView != null) {
             int action = ev.getAction();
             switch (action) {
@@ -408,8 +409,8 @@ public class TouchInterceptor extends ListView
                             // scroll the list down a bit
                             speed = y < upperBound / 2 ? -16 : -4;
 
-                            int y0 = (getChildAt(0) == null) ? 0: getChildAt(0).getTop();
-                            if ((getFirstVisiblePosition() == 0) && (y0 >= getPaddingTop())) {
+                            int y0 = (getChildAt(0) == null) ? 0 : getChildAt(0).getTop();
+                            if ((getFirstVisiblePosition() == 0) && (y0 >= gettop_padding())) {
                                 // if we're already at the top, don't try to
                                 // scroll, because it causes the framework to
                                 // do some extra drawing that messes up our animation
@@ -427,12 +428,11 @@ public class TouchInterceptor extends ListView
         return super.onTouchEvent(ev);
     }
 
-    private void startDragging(Bitmap bm, int x, int y)
-    {
+    private void startDragging(PixelMap bm, int x, int y) {
         stopDragging();
 
         windowParams = new WindowManager.LayoutParams();
-        windowParams.gravity = Gravity.TOP | Gravity.LEFT;
+        windowParams.gravity = Gravity.TOP | Gravity.START;
         windowParams.x = xOffset;
         windowParams.y = y - dragPointY + yOffset;
 
@@ -445,11 +445,10 @@ public class TouchInterceptor extends ListView
         windowParams.windowAnimations = 0;
 
         Context context = getContext();
-        ImageView v = new ImageView(context);
-        int backGroundColor = context.getResources().getColor(R.color.blue, null);
-        v.setBackgroundColor(backGroundColor);
+        Image v = new Image(context);
+        v.setBackground(new ShapeElement(context, ResourceTable.Color_blue));
         v.setPadding(0, 0, 0, 0);
-        v.setImageBitmap(bm);
+        v.setPixelMap(bm);
         dragBitmap = bm;
 
         windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
@@ -457,17 +456,15 @@ public class TouchInterceptor extends ListView
         dragView = v;
     }
 
-    private void dragView(int x, int y)
-    {
+    private void dragView(int x, int y) {
         windowParams.x = xOffset;
         windowParams.y = y - dragPointY + yOffset;
         windowManager.updateViewLayout(dragView, windowParams);
     }
 
-    private void stopDragging()
-    {
+    private void stopDragging() {
         if (dragView != null) {
-            dragView.setVisibility(GONE);
+            dragView.setVisibility(Component.HIDE);
             WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
             wm.removeView(dragView);
             dragView.setImageDrawable(null);
@@ -484,8 +481,7 @@ public class TouchInterceptor extends ListView
      *
      * @param l the drag listener
      */
-    public void setDragListener(DragListener l)
-    {
+    public void setDragListener(DragListener l) {
         dragListener = l;
     }
 
@@ -494,16 +490,14 @@ public class TouchInterceptor extends ListView
      *
      * @param l the drop listener
      */
-    public void setDropListener(DropListener l)
-    {
+    public void setDropListener(DropListener l) {
         dropListener = l;
     }
 
     /**
      * Drag events occur when currently dragged item moves around the screen over other items.
      */
-    public interface DragListener
-    {
+    public interface DragListener {
         /**
          * Fired when item is dragged over other list item.
          *
@@ -516,8 +510,7 @@ public class TouchInterceptor extends ListView
     /**
      * Drop events occur when the dragged item is finally dropped.
      */
-    public interface DropListener
-    {
+    public interface DropListener {
         /**
          * Fired when dragged item is dropped on other list item.
          *

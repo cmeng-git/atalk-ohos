@@ -12,13 +12,14 @@ import android.provider.ContactsContract.Contacts.Data;
 import androidx.annotation.Nullable;
 import androidx.loader.content.AsyncTaskLoader;
 
+import org.atalk.ohos.BaseAbility;
+import org.atalk.ohos.aTalkApp;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.atalk.ohos.R;
-import org.atalk.ohos.aTalkApp;
+import java.util.concurrent.Executors;
 
 public class RecipientLoader extends AsyncTaskLoader<List<RecipientSelectView.Recipient>> {
     /*
@@ -89,7 +90,17 @@ public class RecipientLoader extends AsyncTaskLoader<List<RecipientSelectView.Re
         contentResolver = context.getContentResolver();
     }
 
-    @Override
+    public void execute() {
+        final List<RecipientSelectView.Recipient> recipients = loadInBackground();
+
+        Executors.newSingleThreadExecutor().execute(() -> {
+            BaseAbility.runOnUiThread(() -> {
+                onPostExecute(roomInfo);
+            });
+        });
+    }
+
+    // @Override
     public List<RecipientSelectView.Recipient> loadInBackground() {
         List<RecipientSelectView.Recipient> recipients = new ArrayList<>();
         Map<String, RecipientSelectView.Recipient> recipientMap = new HashMap<>();
@@ -233,7 +244,7 @@ public class RecipientLoader extends AsyncTaskLoader<List<RecipientSelectView.Re
         try {
             cursor = contentResolver.query(queryUri, PROJECTION, selection, selectionArgs, SORT_ORDER);
         } catch (SecurityException e) {
-            aTalkApp.showToastMessage(R.string.contacts_permission_denied_feedback);
+            aTalkApp.showToastMessage(ResourceTable.String_contacts_permission_denied_feedback);
         }
         if (cursor == null) {
             return false;

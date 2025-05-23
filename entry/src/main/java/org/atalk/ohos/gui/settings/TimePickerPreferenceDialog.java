@@ -1,6 +1,6 @@
 /*
- * aTalk, android VoIP and Instant Messaging client
- * Copyright 2014 Eng Chong Meng
+ * aTalk, ohos VoIP and Instant Messaging client
+ * Copyright 2024 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,7 @@
  */
 package org.atalk.ohos.gui.settings;
 
-import android.content.Context;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.TimePicker;
-
-import androidx.preference.PreferenceDialogFragmentCompat;
+import ohos.agp.components.TimePicker;
 
 /**
  * This module is for managing the visual aspect of the dialog TimePreference UI display.
@@ -50,7 +45,7 @@ public class TimePickerPreferenceDialog extends PreferenceDialogFragmentCompat {
      * @return a reference copy of the TimePicker
      */
     @Override
-    protected View onCreateDialogView(Context context) {
+    protected Component onCreateDialogView(Context context) {
         timePicker = new TimePicker(context);
         timePicker.setIs24HourView(android.text.format.DateFormat.is24HourFormat(getContext()));
         return timePicker;
@@ -59,10 +54,10 @@ public class TimePickerPreferenceDialog extends PreferenceDialogFragmentCompat {
     /**
      * Get the TimePreference to set that value into the TimePicker.
      *
-     * @param v View
+     * @param v Component.
      */
     @Override
-    protected void onBindDialogView(View v) {
+    protected void onBindDialogView(Component v) {
         super.onBindDialogView(v);
         TimePreference pref = (TimePreference) getPreference();
         long time = pref.getPersistedValue();

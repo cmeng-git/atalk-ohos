@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DirectionalLayout
+    xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    xmlns:tools="http://schemas.huawei.com/tools"
+    ohos:height="match_content"
+    ohos:width="match_parent"
+    ohos:margin="$float:between_padding"
+    ohos:orientation="vertical">
+
+    <DirectionalLayout
+        ohos:id="$+id:alternate_container_header"
+        ohos:height="match_content"
+        ohos:width="match_parent"
+        ohos:alignment="center"
+        ohos:left_margin="10vp"
+        ohos:min_height="$float:item_height"
+        ohos:orientation="horizontal">
+
+        <DirectionalLayout
+            ohos:height="match_content"
+            ohos:width="0vp"
+            ohos:orientation="vertical"
+            ohos:weight="1">
+
+            <Text
+                ohos:id="$+id:alternate_header_name"
+                ohos:height="match_content"
+                ohos:width="match_content"
+                ohos:truncation_mode="ellipsis_at_end"
+                ohos:max_text_lines="1"
+                ohos:start_margin="6vp"
+                ohos:text_size="$float:medium_font"
+                tools:text="Mr. Firstname Lastname"/>
+
+            <Text
+                ohos:id="$+id:alternate_header_label"
+                ohos:height="match_content"
+                ohos:width="match_content"
+                ohos:truncation_mode="ellipsis_at_end"
+                ohos:max_text_lines="1"
+                ohos:start_margin="6vp"
+                ohos:text_size="$float:small_font"
+                tools:text="Other"/>
+        </DirectionalLayout>
+
+        <Image
+            ohos:id="$+id:alternate_remove"
+            ohos:height="match_content"
+            ohos:width="match_content"
+            ohos:image_src="$media:ic_cancel"
+            ohos:margin="6vp"
+            ohos:padding="8vp"/>
+
+    </DirectionalLayout>
+
+    <DirectionalLayout
+        ohos:id="$+id:alternate_container_item"
+        ohos:height="match_content"
+        ohos:width="match_parent"
+        ohos:layout_alignment="vertical_center"
+        ohos:left_margin="10vp"
+        ohos:min_height="$float:item_height"
+        ohos:orientation="horizontal">
+
+        <Text
+            ohos:id="$+id:alternate_address_label"
+            ohos:height="match_content"
+            ohos:width="60vp"
+            ohos:truncation_mode="ellipsis_at_end"
+            ohos:horizontal_center="true"
+            ohos:max_text_lines="1"
+            ohos:text_size="$float:small_font"
+            tools:text="Home"/>
+
+        <Text
+            ohos:id="$+id:alternate_address"
+            ohos:height="match_content"
+            ohos:width="0vp"
+            ohos:truncation_mode="ellipsis_at_end"
+            ohos:start_padding="6vp"
+            ohos:end_padding="6vp"
+            ohos:max_text_lines="1"
+            ohos:text_size="$float:small_font"
+            ohos:weight="1"
+            tools:text="address@example.com"/>
+
+    </DirectionalLayout>
+</DirectionalLayout>

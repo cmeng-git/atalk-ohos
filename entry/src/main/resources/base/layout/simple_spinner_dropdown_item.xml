@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheckedTextView xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:id="$+id:text1"
+    style="$style:SpinnerItem.DropDownItem"
+    ohos:ellipsize="marquee"
+    ohos:max_text_lines="1" />

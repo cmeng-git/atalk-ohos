@@ -16,7 +16,7 @@
 package net.java.sip.communicator.service.contactlist.event;
 
 /**
- * The MetaContactListAdapter provides a default implementation of the
+ * The MetaContactListProvider provides a default implementation of the
  * MetaContactListListener, which can be registered with a
  * MetaContactListService so that it will receive any changes that have occurred
  * in the contact list layout.

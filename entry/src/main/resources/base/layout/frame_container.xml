@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DirectionalLayout xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:width="match_parent"
+    ohos:height="match_parent"
+    ohos:background_element="$color:color_bg_share"
+    ohos:baselineAligned="false"
+    ohos:orientation="vertical">
+
+    <StackLayout
+        ohos:id="$+id:frameContainer"
+        ohos:width="match_parent"
+        ohos:height="match_parent" />
+
+</DirectionalLayout>

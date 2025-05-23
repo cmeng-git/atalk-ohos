@@ -1,115 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceScreen xmlns:ohos="http://schemas.huawei.com/res/ohos" >
 
-    android:summary="@string/service_gui_settings_EXPERT_SUMMARY"
-    android:title="@string/service_gui_settings_EXPERT">
+    ohos:summary="$string:service_gui_settings_EXPERT_SUMMARY"
+    ohos:title="$string:service_gui_settings_EXPERT">
 
     <!-- Video Settings -->
     <PreferenceCategory
-        android:key="pref.cat.settings.video"
-        android:title="@string/video">
+        ohos:key="pref.cat.settings.video"
+        ohos:title="$string:video">
 
         <CheckBoxPreference
-            android:key="pref.key.video.limit_fps"
-            android:summaryOff="@string/settings_fps_limit_off"
-            android:summaryOn="@string/settings_fps_limit_on"
-            android:title="@string/settings_video_frame_rate" />
+            ohos:key="pref.key.video.limit_fps"
+            ohos:summaryOff="$string:settings_fps_limit_off"
+            ohos:summaryOn="$string:settings_fps_limit_on"
+            ohos:title="$string:settings_video_frame_rate" />
 
         <EditTextPreference
-            android:dependency="pref.key.video.limit_fps"
-            android:dialogMessage="@string/settings_video_fps_description"
-            android:inputType="number"
-            android:key="pref.key.video.frame_rate"
-            android:title="@string/settings_video_fps_target" />
+            ohos:dependency="pref.key.video.limit_fps"
+            ohos:dialogMessage="$string:settings_video_fps_description"
+            ohos:inputType="number"
+            ohos:key="pref.key.video.frame_rate"
+            ohos:title="$string:settings_video_fps_target" />
 
         <org.atalk.ohos.gui.settings.widget.ConfigCheckBox
-            android:key="neomedia.android.hw_encode"
-            android:title="@string/settings_hw_encode" />
+            ohos:key="neomedia.android.hw_encode"
+            ohos:title="$string:settings_hw_encode" />
 
         <org.atalk.ohos.gui.settings.widget.ConfigCheckBox
-            android:dependency="neomedia.android.hw_encode"
-            android:key="neomedia.android.surface_encode"
-            android:title="@string/settings_direct_surface_encode" />
+            ohos:dependency="neomedia.android.hw_encode"
+            ohos:key="neomedia.android.surface_encode"
+            ohos:title="$string:settings_direct_surface_encode" />
 
         <org.atalk.ohos.gui.settings.widget.ConfigCheckBox
-            android:key="neomedia.android.hw_decode"
-            android:title="@string/settings_hw_decode" />
+            ohos:key="neomedia.android.hw_decode"
+            ohos:title="$string:settings_hw_decode" />
 
         <org.atalk.ohos.gui.settings.widget.ConfigCheckBox
-            android:dependency="neomedia.android.hw_decode"
-            android:key="neomedia.android.surface_decode"
-            android:title="@string/settings_direct_surface_decode" />
+            ohos:dependency="neomedia.android.hw_decode"
+            ohos:key="neomedia.android.surface_decode"
+            ohos:title="$string:settings_direct_surface_decode" />
 
         <EditTextPreference
-            android:inputType="number"
-            android:key="pref.key.video.max_bandwidth"
-            android:title="@string/settings_video_max_bw" />
+            ohos:inputType="number"
+            ohos:key="pref.key.video.max_bandwidth"
+            ohos:title="$string:settings_video_max_bw" />
 
         <EditTextPreference
-            android:inputType="number"
-            android:key="pref.key.video.bitrate"
-            android:title="@string/settings_video_bitrate" />
+            ohos:inputType="number"
+            ohos:key="pref.key.video.bitrate"
+            ohos:title="$string:settings_video_bitrate" />
 
         <Preference
-            android:summary="@string/settings_media_codec_list_summary"
-            android:title="@string/settings_media_codec_list">
+            ohos:summary="$string:settings_media_codec_list_summary"
+            ohos:title="$string:settings_media_codec_list">
             <intent
-                android:action="android.intent.action.VIEW"
-                android:targetClass="org.atalk.ohos.gui.settings.MediaCodecList"
-                android:targetPackage="org.atalk.ohos" />
+                ohos:action="android.intent.action.VIEW"
+                ohos:targetClass="org.atalk.ohos.gui.settings.MediaCodecList"
+                ohos:targetPackage="org.atalk.ohos" />
         </Preference>
     </PreferenceCategory>
 
     <!-- Audio Settings -->
     <PreferenceCategory
-        android:key="pref.cat.settings.audio"
-        android:title="@string/audio">
+        ohos:key="pref.cat.settings.audio"
+        ohos:title="$string:audio">
 
         <CheckBoxPreference
-            android:key="pref.key.audio.echo_cancel"
-            android:summaryOff="@string/settings_echo_cancel_off"
-            android:summaryOn="@string/settings_echo_cancel_on"
-            android:title="@string/settings_echo_cancel" />
+            ohos:key="pref.key.audio.echo_cancel"
+            ohos:summaryOff="$string:settings_echo_cancel_off"
+            ohos:summaryOn="$string:settings_echo_cancel_on"
+            ohos:title="$string:settings_echo_cancel" />
 
         <CheckBoxPreference
-            android:key="pref.key.audio.agc"
-            android:summaryOff="@string/settings_agc_off"
-            android:summaryOn="@string/settings_agc_on"
-            android:title="@string/settings_agc" />
+            ohos:key="pref.key.audio.agc"
+            ohos:summaryOff="$string:settings_agc_off"
+            ohos:summaryOn="$string:settings_agc_on"
+            ohos:title="$string:settings_agc" />
 
         <CheckBoxPreference
-            android:key="pref.key.audio.denoise"
-            android:summaryOff="@string/settings_denoise_off"
-            android:summaryOn="@string/settings_denoise_on"
-            android:title="@string/settings_denoise" />
+            ohos:key="pref.key.audio.denoise"
+            ohos:summaryOff="$string:settings_denoise_off"
+            ohos:summaryOn="$string:settings_denoise_on"
+            ohos:title="$string:settings_denoise" />
 
         <Preference
-            android:summary="@string/opus_encoder_settings"
-            android:title="@string/opus">
+            ohos:summary="$string:opus_encoder_settings"
+            ohos:title="$string:opus">
             <intent
-                android:action="android.intent.action.VIEW"
-                android:targetClass="org.atalk.ohos.gui.settings.OpusSettings"
-                android:targetPackage="org.atalk.ohos" />
+                ohos:action="android.intent.action.VIEW"
+                ohos:targetClass="org.atalk.ohos.gui.settings.OpusSettings"
+                ohos:targetPackage="org.atalk.ohos" />
         </Preference>
 
         <Preference
-            android:summary="@string/silk_encoder_settings"
-            android:title="@string/silk">
+            ohos:summary="$string:silk_encoder_settings"
+            ohos:title="$string:silk">
             <intent
-                android:action="android.intent.action.VIEW"
-                android:targetClass="org.atalk.ohos.gui.settings.SilkSettings"
-                android:targetPackage="org.atalk.ohos" />
+                ohos:action="android.intent.action.VIEW"
+                ohos:targetClass="org.atalk.ohos.gui.settings.SilkSettings"
+                ohos:targetPackage="org.atalk.ohos" />
         </Preference>
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/other">
+    <PreferenceCategory ohos:title="$string:other">
         <Preference
-            android:summary="@string/provisioning_summary"
-            android:title="@string/provisioning" >
+            ohos:summary="$string:provisioning_summary"
+            ohos:title="$string:provisioning" >
             <intent
-                android:action="android.intent.action.VIEW"
-                android:targetClass="org.atalk.ohos.gui.settings.ProvisioningSettings"
-                android:targetPackage="org.atalk.ohos" />
+                ohos:action="android.intent.action.VIEW"
+                ohos:targetClass="org.atalk.ohos.gui.settings.ProvisioningSettings"
+                ohos:targetPackage="org.atalk.ohos" />
         </Preference>
     </PreferenceCategory>
 </PreferenceScreen>

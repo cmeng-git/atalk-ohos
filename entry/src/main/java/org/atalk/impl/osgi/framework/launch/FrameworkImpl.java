@@ -231,7 +231,7 @@ public class FrameworkImpl extends BundleImpl implements Framework
     }
 
     // public ServiceRegistration<?> registerService(BundleImpl origin, Class<?> clazz, String[] classNames,
-    public ServiceRegistration registerService(BundleImpl origin, Class<?> clazz, String[] classNames,
+    public ServiceRegistration<?> registerService(BundleImpl origin, Class<?> clazz, String[] classNames,
             Object service, Dictionary<String, ?> properties)
     {
         if ((classNames == null) || (classNames.length == 0))

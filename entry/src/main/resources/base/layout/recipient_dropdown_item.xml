@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DirectionalLayout xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    xmlns:tools="http://schemas.huawei.com/tools"
+    ohos:width="match_parent"
+    ohos:height="match_content"
+    ohos:alignment="center"
+    ohos:min_height="$float:item_height"
+    ohos:orientation="horizontal">
+
+    <Image
+        ohos:id="$+id:contact_photo"
+        ohos:width="36vp"
+        ohos:height="36vp"
+        ohos:start_margin="12vp" />
+
+    <DirectionalLayout
+        ohos:width="0vp"
+        ohos:height="match_content"
+        ohos:weight="1"
+        ohos:orientation="vertical">
+
+        <Text
+            ohos:id="$+id:text1"
+            ohos:width="match_content"
+            ohos:height="match_content"
+            ohos:truncation_mode="ellipsis_at_end"
+            ohos:start_padding="6vp"
+            ohos:max_text_lines="1"
+            ohos:text_size="$float:medium_font"
+            tools:text="Mr. Firstname Lastname" />
+
+        <Text
+            ohos:id="$+id:text2"
+            ohos:width="match_content"
+            ohos:height="match_content"
+            ohos:truncation_mode="ellipsis_at_end"
+            ohos:start_padding="12vp"
+            ohos:max_text_lines="1"
+            ohos:text_size="$float:small_font"
+            tools:text="address@example.com" />
+    </DirectionalLayout>
+</DirectionalLayout>

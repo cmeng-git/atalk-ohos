@@ -100,7 +100,7 @@ public class SystemActivityNotificationsServiceImpl
      * The android impl class name.
      */
     private static final String SYSTEM_ACTIVITY_MANAGER_ANDROID_CLASS
-            = "net.java.sip.communicator.impl.sysactivity.ConnectivityManagerListenerImpl";
+            = "net.java.sip.communicator.impl.sysactivity.NetManagerListenerImpl";
 
     /**
      * The currently instantiated and working manager.

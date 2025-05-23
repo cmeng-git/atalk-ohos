@@ -1,46 +1,55 @@
 /*
- * Jitsi, the OpenSource Java VoIP and Instant Messaging client.
+ * aTalk, ohos VoIP and Instant Messaging client
+ * Copyright 2024 Eng Chong Meng
  *
- * Distributable under LGPL license. See terms of license at gnu.org.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.atalk.ohos.gui.chat;
-
-import android.Manifest;
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.graphics.drawable.AnimationDrawable;
-import android.net.Uri;
-import android.os.Bundle;
-import android.speech.RecognitionListener;
-import android.speech.RecognizerIntent;
-import android.speech.SpeechRecognizer;
-import android.text.Editable;
-import android.text.Html;
-import android.text.TextUtils;
-import android.text.TextWatcher;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
-
-import androidx.core.view.inputmethod.InputContentInfoCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import ohos.aafwk.ability.Ability;
+import ohos.aafwk.content.Intent;
+import ohos.aafwk.content.Operation;
+import ohos.agp.animation.AnimatorProperty;
+import ohos.agp.animation.AnimatorScatter;
+import ohos.agp.colors.RgbColor;
+import ohos.agp.components.Component;
+import ohos.agp.components.ComponentContainer;
+import ohos.agp.components.DragEvent;
+import ohos.agp.components.Image;
+import ohos.agp.components.ListContainer;
+import ohos.agp.components.Text;
+import ohos.agp.components.element.FrameAnimationElement;
+import ohos.agp.components.element.ShapeElement;
+import ohos.ai.asr.AsrClient;
+import ohos.ai.asr.AsrIntent;
+import ohos.ai.asr.AsrListener;
+import ohos.app.Context;
+import ohos.event.commonevent.CommonEventData;
+import ohos.event.commonevent.CommonEventManager;
+import ohos.event.commonevent.CommonEventSubscribeInfo;
+import ohos.event.commonevent.CommonEventSubscriber;
+import ohos.event.commonevent.MatchingSkills;
+import ohos.multimodalinput.event.KeyEvent;
+import ohos.multimodalinput.event.TouchEvent;
+import ohos.rpc.RemoteException;
+import ohos.security.SystemPermission;
+import ohos.utils.PacMap;
+import ohos.utils.net.Uri;
 
 import net.java.sip.communicator.impl.protocol.jabber.CallJabberImpl;
 import net.java.sip.communicator.impl.protocol.jabber.CallPeerJabberImpl;
@@ -51,42 +60,53 @@ import net.java.sip.communicator.service.protocol.IMessage;
 import net.java.sip.communicator.util.ConfigurationUtils;
 
 import org.apache.commons.lang3.StringUtils;
-import org.atalk.ohos.R;
+import org.apache.http.util.TextUtils;
+import org.atalk.ohos.BaseAbility;
+import org.atalk.ohos.ResourceTable;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.AppGUIActivator;
 import org.atalk.ohos.gui.aTalk;
 import org.atalk.ohos.gui.call.CallManager;
+import org.atalk.ohos.gui.call.JingleMessageCallAbility;
 import org.atalk.ohos.gui.call.notification.CallNotificationManager;
 import org.atalk.ohos.gui.share.Attachment;
-import org.atalk.ohos.gui.share.MediaPreviewAdapter;
+import org.atalk.ohos.gui.share.MediaPreviewProvider;
 import org.atalk.ohos.gui.util.ContentEditText;
 import org.atalk.ohos.gui.util.HtmlImageGetter;
-import org.atalk.ohos.gui.util.ViewUtil;
 import org.atalk.ohos.plugin.audioservice.AudioBgService;
 import org.atalk.ohos.plugin.audioservice.SoundMeter;
+import org.atalk.ohos.util.ComponentUtil;
+import org.atalk.ohos.util.LogUtil;
 import org.atalk.persistance.FilePathHelper;
 import org.jivesoftware.smackx.chatstates.ChatState;
 
 import timber.log.Timber;
 
+import static ohos.ai.asr.util.AsrResultKey.RESULTS_RECOGNITION;
+
 /**
- * Class is used to separate the logic of send message editing process from <code>ChatFragment</code>.
+ * Class is used to separate the logic of send message editing process from <code>ChatSlice</code>.
  * It handles last messages correction, editing, sending messages and chat state notifications.
  * It also restores edit state when the chat fragment is scrolled in view again.
  *
  * @author Pawel Domas
  * @author Eng Chong Meng
  */
-public class ChatController implements View.OnClickListener, View.OnLongClickListener, View.OnTouchListener,
-        TextWatcher, ContentEditText.CommitListener {
+public class ChatController implements Component.ClickedListener, Component.LongClickedListener,
+        Component.OnDragListener, Text.TextObserver, ContentEditText.CommitListener {
+
+    private static final String TAG = ChatController.class.getSimpleName();
+
+    /**
+     * Parent activity: ChatAbility pass in from ChatSlice.
+     */
+    private final Ability mChatAbility;
     /**
      * The chat fragment used by this instance.
      */
-    private final ChatFragment mChatFragment;
-    /**
-     * Parent activity: ChatActivity pass in from ChatFragment.
-     */
-    private final Activity parent;
+    private final ChatSlice mChatSlice;
+    private AudioCommonEventSubscriber mEventSubscriber;
+
     /**
      * Indicates that this controller is attached to the views.
      */
@@ -94,34 +114,34 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
     /**
      * Correction indicator / cancel button.
      */
-    private View cancelCorrectionBtn;
+    private Component cancelCorrectionBtn;
     /**
-     * Send button's View.
+     * Send button's Component.
      */
-    private View sendBtn;
+    private Component sendBtn;
     /**
-     * media call button's View.
+     * media call button's Component.
      */
-    private View callBtn;
+    private Component callBtn;
     /**
      * Audio recording button.
      */
-    private View audioBtn;
+    private Image audioBtn;
     /**
-     * Message <code>EditText</code>.
+     * Message <code>TextField</code>.
      */
     private ContentEditText msgEdit;
 
     /**
      * Message editing area background.
      */
-    private View msgEditBg;
+    private Component msgEditBg;
 
-    private RecyclerView mediaPreview;
-    private ImageView imagePreview;
+    private ComponentContainer mediaPreview;
+    private Image imagePreview;
 
-    private View chatReplyCancel;
-    private TextView chatMessageReply;
+    private Component chatReplyCancel;
+    private Text chatMessageReply;
     private String quotedMessage;
 
     /**
@@ -154,15 +174,16 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
     private final boolean isAudioAllowed;
     private boolean isRecording;
 
-    private View msgRecordView;
-    private TextView mRecordTimer;
-    private TextView mdBTextView;
-    private ImageView mTrash;
+    private Component msgRecordView;
+    private Text mRecordTimer;
+    private Text mdBTextView;
+    private Image mTrash;
     private SoundMeter mSoundMeter;
 
-    private AnimationDrawable mTtsAnimate;
-    private AnimationDrawable mTrashAnimate;
-    private Animation animBlink, animZoomOut, animSlideUp;
+    private final Intent recordIntent = new Intent();
+    private FrameAnimationElement mTtsAnimate;
+    private FrameAnimationElement mTrashAnimate;
+    private AnimatorProperty micAnimate, smAnimate, dbTextAnimate, recordAnimate;
 
     // Constant to detect slide left to cancel audio recording
     private static final int min_distance = 100;
@@ -173,19 +194,20 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
     /**
      * Creates new instance of <code>ChatController</code>.
      *
-     * @param activity the parent <code>Activity</code>.
-     * @param fragment the parent <code>ChatFragment</code>.
+     * @param activity the parent <code>Ability</code>.
+     * @param fragment the parent <code>ChatSlice</code>.
      */
-    public ChatController(Activity activity, ChatFragment fragment) {
-        parent = activity;
-        mChatFragment = fragment;
+    public ChatController(Ability activity, ChatSlice fragment) {
+        mChatAbility = activity;
+        mChatSlice = fragment;
+
         // Do not use aTalk.getInstance, may not have initialized
-        isAudioAllowed = aTalk.hasPermission(parent, false,
-                aTalk.PRC_RECORD_AUDIO, Manifest.permission.RECORD_AUDIO);
+        isAudioAllowed = aTalk.hasPermission(mChatAbility, false,
+                aTalk.PRC_RECORD_AUDIO, SystemPermission.MICROPHONE);
     }
 
     /**
-     * Method called by the <code>ChatFragment</code> when it is displayed to the user and its <code>View</code> is created.
+     * Method called by the <code>ChatSlice</code> when it is displayed to the user and its <code>Component.</code> is created.
      */
     public void onShow() {
         if (!isAttached) {
@@ -200,8 +222,9 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
                 isBlocked = metaContact.getDefaultContact().isContactBlock();
             }
             if (isBlocked) {
-                msgEdit.setText(R.string.contact_blocked);
-            } else {
+                msgEdit.setText(ResourceTable.String_contact_blocked);
+            }
+            else {
                 // Restore edited text
                 msgEdit.setText(chatPanel.getEditedText());
             }
@@ -210,32 +233,42 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
 
             // Timber.d("ChatController attached to %s", chatFragment.hashCode());
             msgEdit.setCommitListener(this);
-            msgEdit.setFocusableInTouchMode(true);
-            msgEdit.addTextChangedListener(this);
+            msgEdit.setFocusable(Component.FOCUS_ENABLE);
+            msgEdit.setOnDragListener(this);
 
-            chatMessageReply.setVisibility(View.GONE);
-            chatReplyCancel.setVisibility(View.GONE);
-            chatReplyCancel.setOnClickListener(this);
-            cancelCorrectionBtn.setOnClickListener(this);
+            chatMessageReply.setVisibility(Component.HIDE);
+            chatReplyCancel.setVisibility(Component.HIDE);
+            chatReplyCancel.setClickedListener(this);
+            cancelCorrectionBtn.setClickedListener(this);
 
-            sendBtn.setOnClickListener(this);
+            sendBtn.setClickedListener(this);
             if (isAudioAllowed) {
-                audioBtn.setOnClickListener(this);
-                audioBtn.setOnLongClickListener(this);
-                audioBtn.setOnTouchListener(this);
+                audioBtn.setClickedListener(this);
+                audioBtn.setLongClickedListener(this);
+                audioBtn.setOnDragListener(this);
             }
             else {
                 Timber.w("Audio recording is not allowed - permission denied!");
             }
 
-            callBtn.setOnClickListener(this);
-            mTrashAnimate = (AnimationDrawable) mTrash.getBackground();
+            callBtn.setClickedListener(this);
+            mTrashAnimate = new FrameAnimationElement(mChatAbility, ResourceTable.Graphic_trash_animate);
+            mTrash.setBackground(mTrashAnimate);
 
-            animBlink = AnimationUtils.loadAnimation(parent, R.anim.blink);
-            animZoomOut = AnimationUtils.loadAnimation(parent, R.anim.zoom_out);
-            animZoomOut.setDuration(1000);
-            animSlideUp = AnimationUtils.loadAnimation(parent, R.anim.slide_up);
-            animSlideUp.setDuration(1000);
+            AnimatorScatter scatter = AnimatorScatter.getInstance(mChatAbility);
+            micAnimate = (AnimatorProperty) scatter.parse(ResourceTable.Animation_blink);
+
+            smAnimate = (AnimatorProperty) scatter.parse(ResourceTable.Animation_zoom_out);
+            smAnimate.setDuration(1000);
+            smAnimate.setTarget(mSoundMeter);
+
+            dbTextAnimate = (AnimatorProperty) scatter.parse(ResourceTable.Animation_slide_up);
+            dbTextAnimate.setDuration(1000);
+            dbTextAnimate.setTarget(mdBTextView);
+
+            recordAnimate = (AnimatorProperty) scatter.parse(ResourceTable.Animation_slide_up);
+            recordAnimate.setDuration(1000);
+            recordAnimate.setTarget(mRecordTimer);
 
             updateCorrectionState();
             initChatController();
@@ -247,38 +280,38 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
      * Initialize all the view
      */
     private void initViews() {
-        chatPanel = mChatFragment.getChatPanel();
+        chatPanel = mChatSlice.getChatPanel();
 
         // Gets message edit view
-        msgEdit = parent.findViewById(R.id.chatWriteText);
+        msgEdit = mChatAbility.findComponentById(ResourceTable.Id_chatWriteText);
 
         // Message typing area background
-        msgEditBg = parent.findViewById(R.id.chatTypingArea);
+        msgEditBg = mChatAbility.findComponentById(ResourceTable.Id_chatTypingArea);
 
         // Gets the cancel correction button and hooks on click action
-        cancelCorrectionBtn = parent.findViewById(R.id.cancelCorrectionBtn);
+        cancelCorrectionBtn = mChatAbility.findComponentById(ResourceTable.Id_cancelCorrectionBtn);
 
         // Quoted reply message view
-        chatMessageReply = parent.findViewById(R.id.chatMsgReply);
-        chatReplyCancel = parent.findViewById(R.id.chatReplyCancel);
+        chatMessageReply = mChatAbility.findComponentById(ResourceTable.Id_chatMsgReply);
+        chatReplyCancel = mChatAbility.findComponentById(ResourceTable.Id_chatReplyCancel);
 
         // Gets the send message button and hooks on click action
-        sendBtn = parent.findViewById(R.id.sendMessageButton);
+        sendBtn = mChatAbility.findComponentById(ResourceTable.Id_sendMessageButton);
         // Gets the send audio button and hooks on click action if permission allowed
-        audioBtn = parent.findViewById(R.id.audioMicButton);
+        audioBtn = mChatAbility.findComponentById(ResourceTable.Id_audioMicButton);
         // Gets the call switch button
-        callBtn = parent.findViewById(R.id.chatBackToCallButton);
-        mTrash = parent.findViewById(R.id.ic_mic_trash);
+        callBtn = mChatAbility.findComponentById(ResourceTable.Id_chatBackToCallButton);
+        mTrash = mChatAbility.findComponentById(ResourceTable.Id_ic_mic_trash);
 
         // Bind all image previews
-        msgRecordView = parent.findViewById(R.id.recordView);
-        imagePreview = parent.findViewById(R.id.imagePreview);
-        mediaPreview = parent.findViewById(R.id.media_preview);
+        msgRecordView = mChatAbility.findComponentById(ResourceTable.Id_recordView);
+        imagePreview = mChatAbility.findComponentById(ResourceTable.Id_imagePreview);
+        mediaPreview = mChatAbility.findComponentById(ResourceTable.Id_media_preview);
 
         // Bind all sound record views
-        mSoundMeter = parent.findViewById(R.id.sound_meter);
-        mRecordTimer = parent.findViewById(R.id.recordTimer);
-        mdBTextView = parent.findViewById(R.id.dBTextView);
+        mSoundMeter = mChatAbility.findComponentById(ResourceTable.Id_sound_meter);
+        mRecordTimer = mChatAbility.findComponentById(ResourceTable.Id_recordTimer);
+        mdBTextView = mChatAbility.findComponentById(ResourceTable.Id_dBTextView);
     }
 
     /**
@@ -287,11 +320,10 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
      * Otherwise the non-focus chatFragment will cause out-of-sync between chatFragment and
      * chatController i.e. entered msg display in wrong chatFragment
      */
-    @SuppressLint("ClickableViewAccessibility")
     private void initChatController() {
-        if (!mChatFragment.isVisible()) {
+        if (!mChatSlice.getAbilityInfo().isVisible()) {
             Timber.w("Skip init current Chat Transport to: %s; with visible State: %s",
-                    mChatTransport, mChatFragment.isVisible());
+                    mChatTransport, false);
             return;
         }
 
@@ -300,8 +332,8 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
                 && ConfigurationUtils.isSendChatStateNotifications());
 
         if (allowsChatStateNotifications) {
-            msgEdit.setOnTouchListener((v, event) -> {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            msgEdit.setTouchEventListener((v, event) -> {
+                if (event.getAction() == TouchEvent.PRIMARY_POINT_DOWN) {
                     onTouchAction();
                 }
                 return false;
@@ -318,7 +350,7 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
     }
 
     /**
-     * Method called by <code>ChatFragment</code> when it's no longer displayed to the user.
+     * Method called by <code>ChatSlice</code> when it's no longer displayed to the user.
      * This happens when user scroll pagerAdapter, and the chat window is out of view
      */
     public void onHide() {
@@ -326,12 +358,12 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
             isAttached = false;
 
             // Remove text listener
-            msgEdit.removeTextChangedListener(this);
+            msgEdit.removeTextObserver(this);
             // Store edited text in chatPanel
-            if ((chatPanel != null) && !isBlocked && (msgEdit.getText() != null))
-                chatPanel.setEditedText(msgEdit.getText().toString());
+            if ((chatPanel != null) && (msgEdit.getText() != null))
+                chatPanel.setEditedText(msgEdit.getText());
 
-            mediaPreview.setVisibility(View.GONE);
+            mediaPreview.setVisibility(Component.HIDE);
         }
     }
 
@@ -346,7 +378,7 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
         // Sometimes it seems the chatPanel is not inSync with the chatSession or initialized,
         // i.e Conference instead of MetaContact; and may also be null, so check to ensure
         if (chatPanel == null)
-            chatPanel = mChatFragment.getChatPanel();
+            chatPanel = mChatSlice.getChatPanel();
 
         String correctionUID = chatPanel.getCorrectionUID();
 
@@ -371,7 +403,7 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
         }
 
         // must run on UiThread when access view
-        parent.runOnUiThread(() -> {
+        BaseAbility.runOnUiThread(() -> {
             // Clears edit text field
             if (msgEdit != null)
                 msgEdit.setText("");
@@ -388,25 +420,25 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
 
     /**
      * Method fired when the chat message is clicked. {@inheritDoc}.
-     * Trigger from @see ChatFragment#
+     * Trigger from @see ChatSlice#
      */
-    public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
+    public void onItemClick(ListContainer adapter, Component view, int position, long id) {
         // Detect outgoing message area
-        if ((view.getId() != R.id.outgoingMessageView) && (view.getId() != R.id.outgoingMessageHolder)) {
+        if ((view.getId() != ResourceTable.Id_outgoingMessageView) && (view.getId() != ResourceTable.Id_outgoingMessageHolder)) {
             cancelCorrection();
             return;
         }
-        ChatFragment.ChatListAdapter chatListAdapter = mChatFragment.getChatListAdapter();
+        ChatSlice.ChatItemProvider chatItemProvider = mChatSlice.getChatListAdapter();
 
         // Position must be aligned to the number of header views included
-        int headersCount = ((ListView) adapter).getHeaderViewsCount();
+        int headersCount = adapter.getHeaderViewsCount();
         int cPos = position - headersCount;
-        ChatMessage chatMessage = chatListAdapter.getMessage(cPos);
+        ChatMessage chatMessage = chatItemProvider.getMessage(cPos);
 
         // Ensure the selected message is really the last outgoing message
-        if (cPos != chatListAdapter.getCount() - 1) {
-            for (int i = cPos + 1; i < chatListAdapter.getCount(); i++) {
-                if (chatListAdapter.getItemViewType(i) == ChatFragment.ChatListAdapter.OUTGOING_MESSAGE_VIEW) {
+        if (cPos != chatItemProvider.getCount() - 1) {
+            for (int i = cPos + 1; i < chatItemProvider.getCount(); i++) {
+                if (chatItemProvider.getItemViewType(i) == ChatSlice.ChatItemProvider.OUTGOING_MESSAGE_VIEW) {
                     cancelCorrection();
                     return;
                 }
@@ -423,8 +455,8 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
         }
     }
 
-    public void editText(AdapterView adapter, ChatMessage chatMessage, int position) {
-        // ListView cListView = chatFragment.getChatListView();
+    public void editText(ListContainer adapter, ChatMessage chatMessage, int position) {
+        // ListContainer cListContainer = chatFragment.getChatListContainer();
         String uidToCorrect = chatMessage.getUidForCorrection();
         String content = chatMessage.getContentForCorrection();
 
@@ -439,7 +471,7 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
                 chatPanel.setCorrectionUID(uidToCorrect);
                 updateCorrectionState();
 
-                InputMethodManager inputMethodManager = (InputMethodManager) parent.getSystemService(Context.INPUT_METHOD_SERVICE);
+                InputMethodManager inputMethodManager = (InputMethodManager) mChatAbility.getSystemService(Context.INPUT_METHOD_SERVICE);
                 if (inputMethodManager != null)
                     inputMethodManager.showSoftInput(msgEdit, InputMethodManager.SHOW_IMPLICIT);
 
@@ -452,22 +484,22 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
 
     public void setQuoteMessage(ChatMessage replyMessage) {
         if (replyMessage != null) {
-            chatMessageReply.setVisibility(View.VISIBLE);
-            chatReplyCancel.setVisibility(View.VISIBLE);
+            chatMessageReply.setVisibility(Component.VISIBLE);
+            chatReplyCancel.setVisibility(Component.VISIBLE);
 
             Html.ImageGetter imageGetter = new HtmlImageGetter();
             String body = replyMessage.getMessage();
             if (!body.matches(ChatMessage.HTML_MARKUP)) {
                 body = body.replace("\n", "<br/>");
             }
-            quotedMessage = aTalkApp.getResString(R.string.chat_reply_quote,
+            quotedMessage = aTalkApp.getResString(ResourceTable.String_chat_reply_quote,
                     replyMessage.getSender(), body);
-            chatMessageReply.setText(Html.fromHtml(quotedMessage, imageGetter, null));
+            chatMessageReply.setText(Html.fromHtml(quotedMessage, Html.FROM_HTML_MODE_LEGACY, imageGetter, null));
         }
         else {
             quotedMessage = null;
-            chatMessageReply.setVisibility(View.GONE);
-            chatReplyCancel.setVisibility(View.GONE);
+            chatMessageReply.setVisibility(Component.HIDE);
+            chatReplyCancel.setVisibility(Component.HIDE);
         }
     }
 
@@ -477,25 +509,25 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
      * {@inheritDoc}
      */
     @Override
-    public void onClick(View v) {
+    public void onClick(Component v) {
         switch (v.getId()) {
-            case R.id.sendMessageButton:
+            case ResourceTable.Id_sendMessageButton:
                 if (chatPanel.getProtocolProvider().isRegistered()) {
-                    if (mediaPreview.getVisibility() == View.VISIBLE) {
+                    if (mediaPreview.getVisibility() == Component.VISIBLE) {
                         // Disable to prevent user multiple clicks.
-                        sendBtn.setVisibility(View.INVISIBLE);
-                        MediaPreviewAdapter mpAdapter = (MediaPreviewAdapter) mediaPreview.getAdapter();
+                        sendBtn.setVisibility(Component.INVISIBLE);
+                        MediaPreviewProvider mpAdapter = (MediaPreviewProvider) mediaPreview.getAdapter();
                         if (mpAdapter != null) {
                             List<Attachment> mediaPreviews = mpAdapter.getAttachments();
                             if (!mediaPreviews.isEmpty()) {
                                 for (Attachment attachment : mediaPreviews) {
-                                    String filePath = FilePathHelper.getFilePath(parent, attachment);
+                                    String filePath = FilePathHelper.getFilePath(mChatAbility, attachment);
                                     if (StringUtils.isNotEmpty(filePath)) {
                                         if (new File(filePath).exists()) {
                                             chatPanel.addFTSendRequest(filePath, ChatMessage.MESSAGE_FILE_TRANSFER_SEND);
                                         }
                                         else {
-                                            aTalkApp.showToastMessage(R.string.file_does_not_exist);
+                                            aTalkApp.showToastMessage(ResourceTable.String_file_does_not_exist);
                                         }
                                     }
                                 }
@@ -506,7 +538,7 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
                     else {
                         // allow last message correction to send empty string to clear last sent text
                         String correctionUID = chatPanel.getCorrectionUID();
-                        String textEdit = ViewUtil.toString(msgEdit);
+                        String textEdit = ComponentUtil.toString(msgEdit);
                         if ((textEdit == null) && (correctionUID != null)) {
                             textEdit = " ";
                         }
@@ -518,8 +550,8 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
                             textEdit = quotedMessage + textEdit;
                         }
                         // Send http link as xhtml to avoid being interpreted by the receiver as http file download link
-                        else if (textEdit.matches("(?s)^http[s]:.*") && !textEdit.contains("\\s")) {
-                            textEdit = aTalkApp.getResString(R.string.chat_url_link, textEdit, textEdit);
+                        else if (textEdit.matches("(?s)^https:.*") && !textEdit.contains("\\s")) {
+                            textEdit = aTalkApp.getResString(ResourceTable.String_chat_url_link, textEdit, textEdit);
                         }
 
                         // if text contains markup tag then send message as ENCODE_HTML mode
@@ -534,25 +566,25 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
                     updateSendModeState();
                 }
                 else {
-                    aTalkApp.showToastMessage(R.string.message_delivery_not_registered);
+                    aTalkApp.showToastMessage(ResourceTable.String_message_delivery_not_registered);
                 }
                 if (quotedMessage == null)
                     break;
                 // else continue to cleanup quotedMessage after sending
 
-            case R.id.chatReplyCancel:
+            case ResourceTable.Id_chatReplyCancel:
                 quotedMessage = null;
-                chatMessageReply.setVisibility(View.GONE);
-                chatReplyCancel.setVisibility(View.GONE);
+                chatMessageReply.setVisibility(Component.HIDE);
+                chatReplyCancel.setVisibility(Component.HIDE);
                 break;
 
-            case R.id.cancelCorrectionBtn:
+            case ResourceTable.Id_cancelCorrectionBtn:
                 cancelCorrection();
                 // Clear last message text
                 msgEdit.setText("");
                 break;
 
-            case R.id.chatBackToCallButton:
+            case ResourceTable.Id_chatBackToCallButton:
                 if (CallManager.getActiveCallsCount() > 0) {
                     String callId = null;
                     for (Call call : CallManager.getActiveCalls()) {
@@ -570,7 +602,7 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
                     updateSendModeState();
                 break;
 
-            case R.id.audioMicButton:
+            case ResourceTable.Id_audioMicButton:
                 if (chatPanel.isChatTtsEnable()) {
                     speechToText();
                 }
@@ -579,49 +611,42 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
     }
 
     /**
-     * Audio sending is disabled if permission.RECORD_AUDIO is denied.
+     * Audio sending is disabled if SystemPermission.MICROPHONE is denied.
      * Audio chat message is allowed even for offline contact and in conference
      */
     @Override
-    public boolean onLongClick(View v) {
-        if (v.getId() == R.id.audioMicButton) {
+    public void onLongClicked(Component v) {
+        if (v.getId() == ResourceTable.Id_audioMicButton) {
             Timber.d("Current Chat Transport for audio: %s", mChatTransport.toString());
             Timber.d("Audio recording started!!!");
             isRecording = true;
             // Hide normal edit text view
-            msgEdit.setVisibility(View.GONE);
+            msgEdit.setVisibility(Component.HIDE);
 
             // Show audio record information
-            msgRecordView.setVisibility(View.VISIBLE);
-            mTrash.setImageResource(R.drawable.ic_record);
-            mTrash.startAnimation(animBlink);
-
-            // Set up audio background service and receiver
-            IntentFilter filter = new IntentFilter();
-            filter.addAction(AudioBgService.ACTION_AUDIO_RECORD);
-            filter.addAction(AudioBgService.ACTION_SMI);
-            LocalBroadcastManager.getInstance(parent).registerReceiver(mReceiver, filter);
+            msgRecordView.setVisibility(Component.VISIBLE);
+            mTrash.setPixelMap(ResourceTable.Media_ic_record);
+            micAnimate.setTarget(mTrash);
+            micAnimate.start();
+            subscribe();
             startAudioService(AudioBgService.ACTION_RECORDING);
-            return true;
         }
-        return false;
     }
 
     /**
-     * onTouch is disabled if permission.RECORD_AUDIO is denied
+     * onDrag is disabled if permission.RECORD_AUDIO is denied
      */
-    @SuppressLint("ClickableViewAccessibility")
     @Override
-    public boolean onTouch(View v, MotionEvent event) {
+    public boolean onDrag(Component component, DragEvent dragEvent) {
         boolean done = false;
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN: {
-                downX = event.getX();
+        switch (dragEvent.getAction()) {
+            case TouchEvent.PRIMARY_POINT_DOWN: {
+                downX = dragEvent.getX();
                 return false;  // to allow long press detection
             }
 
-            case MotionEvent.ACTION_UP: {
-                float upX = event.getX();
+            case TouchEvent.PRIMARY_POINT_UP: {
+                float upX = dragEvent.getX();
                 float deltaX = downX - upX;
 
                 //Swipe horizontal detected
@@ -630,16 +655,16 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
                         Timber.d("Audio recording cancelled!!!");
                         isRecording = false;
                         audioBtn.setEnabled(false); // disable while in animation
-                        LocalBroadcastManager.getInstance(parent).unregisterReceiver(mReceiver);
+                        unSubscribe();
                         startAudioService(AudioBgService.ACTION_CANCEL);
 
                         // Start audio sending cancel animation
-                        mSoundMeter.startAnimation(animZoomOut);
-                        mdBTextView.startAnimation(animSlideUp);
-                        mRecordTimer.startAnimation(animSlideUp);
+                        smAnimate.start();
+                        dbTextAnimate.start();
+                        recordAnimate.start();
 
-                        mTrash.clearAnimation();
-                        mTrash.setImageDrawable(null);
+                        micAnimate.stop();
+                        mTrash.setPixelMap(null);
                         mTrashAnimate.start();
                         onAnimationEnd(1200);
                         done = true;
@@ -660,13 +685,13 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
     }
 
     /**
-     * Handling of KeyCode in ChatController, called from ChatActivity
-     * Note: KeyEvent.Callback is only available in Activity
+     * Handling of KeyCode in ChatController, called from ChatAbility
+     * Note: KeyEvent.Callback is only available in Ability
      */
     public boolean onKeyUp(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_ENTER) {
-            if (mChatFragment != null) {
-                sendBtn.performClick();
+        if (keyCode == KeyEvent.KEY_ENTER) {
+            if (mChatSlice != null) {
+                sendBtn.callOnClick();
             }
             return true;
         }
@@ -678,15 +703,15 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
         new Thread(() -> {
             try {
                 Thread.sleep(wait);
-                parent.runOnUiThread(() -> {
+                BaseAbility.runOnUiThread(() -> {
                     mTrashAnimate.stop();
-                    mTrashAnimate.selectDrawable(0);
-                    msgEdit.setVisibility(View.VISIBLE);
+                    mTrashAnimate.setPreDecodeFrames(0);
+                    msgEdit.setVisibility(Component.VISIBLE);
 
-                    msgRecordView.setVisibility(View.GONE);
-                    mSoundMeter.clearAnimation();
-                    mdBTextView.clearAnimation();
-                    mRecordTimer.clearAnimation();
+                    msgRecordView.setVisibility(Component.HIDE);
+                    smAnimate.cancel();
+                    dbTextAnimate.cancel();
+                    recordAnimate.cancel();
                     audioBtn.setEnabled(true);
                 });
             } catch (Exception ex) {
@@ -696,17 +721,63 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
     }
 
     private void startAudioService(String mAction) {
-        Intent intent = new Intent(parent, AudioBgService.class);
-        intent.setAction(mAction);
-        parent.startService(intent);
+
+        Operation operation = new Intent.OperationBuilder()
+                .withBundleName(mChatAbility.getBundleName())
+                .withAbilityName(JingleMessageCallAbility.class)
+                .build();
+
+        recordIntent.setAction(mAction)
+                .setOperation(operation);
+        mChatAbility.startAbility(recordIntent);
     }
 
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+    private CommonEventSubscribeInfo getSubscribeInfo() {
+        MatchingSkills filter = new MatchingSkills();
+        // Set up audio background service and receiver
+
+        filter.addEvent(AudioBgService.ACTION_AUDIO_RECORD);
+        filter.addEvent(AudioBgService.ACTION_SMI);
+        return new CommonEventSubscribeInfo(filter);
+    }
+
+    private void subscribe() {
+        MatchingSkills filter = new MatchingSkills();
+        filter.addEvent(AudioBgService.ACTION_AUDIO_RECORD);
+        filter.addEvent(AudioBgService.ACTION_SMI);
+
+        CommonEventSubscribeInfo subscribeInfo = new CommonEventSubscribeInfo(filter);
+        mEventSubscriber = new AudioCommonEventSubscriber(subscribeInfo);
+        try {
+            CommonEventManager.subscribeCommonEvent(mEventSubscriber);
+        } catch (RemoteException e) {
+            LogUtil.error(TAG, "subscribeCommonEvent occur exception. " + e.getMessage());
+        }
+    }
+
+    public void unSubscribe() {
+        try {
+            CommonEventManager.unsubscribeCommonEvent(mEventSubscriber);
+        } catch (RemoteException e) {
+            LogUtil.error(TAG, "Unsubscribe exception: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Media player EventSubscriber to animate and update player view holder info
+     */
+    private class AudioCommonEventSubscriber extends CommonEventSubscriber {
+        AudioCommonEventSubscriber(CommonEventSubscribeInfo info) {
+            super(info);
+        }
+
         @Override
-        public void onReceive(Context context, Intent intent) {
+        public void onReceiveEvent(CommonEventData eventData) {
+            Intent intent = eventData.getIntent();
+
             if (isRecording && AudioBgService.ACTION_SMI.equals(intent.getAction())) {
-                String mDuration = intent.getStringExtra(AudioBgService.RECORD_TIMER);
-                double mdBSpl = intent.getDoubleExtra(AudioBgService.SPL_LEVEL, 1.0);
+                String mDuration = intent.getStringParam(AudioBgService.RECORD_TIMER);
+                double mdBSpl = intent.getDoubleParam(AudioBgService.SPL_LEVEL, 1.0);
                 double dBspl = (mdBSpl * AudioBgService.mDBRange);
                 String sdBSpl = String.format(Locale.US, "%.02f", dBspl) + "dB";
 
@@ -716,29 +787,45 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
             }
             else if (AudioBgService.ACTION_AUDIO_RECORD.equals(intent.getAction())) {
                 Timber.i("Sending audio recorded file!!!");
-                LocalBroadcastManager.getInstance(parent).unregisterReceiver(mReceiver);
-                String filePath = intent.getStringExtra(AudioBgService.URI);
+                unSubscribe();
+                String filePath = intent.getStringParam(AudioBgService.URI);
                 if (StringUtils.isNotEmpty(filePath)) {
                     chatPanel.addFTSendRequest(filePath, ChatMessage.MESSAGE_FILE_TRANSFER_SEND);
                 }
-                parent.stopService(new Intent(parent, AudioBgService.class));
+                mChatAbility.stopAbility(recordIntent);
             }
         }
-    };
+    }
 
     /**
      * Built-in speech to text recognition without a soft keyboard popup.
      * To use the soft keyboard mic, click on text entry and then click on mic.
      */
     private void speechToText() {
-        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        SpeechRecognizer recognizer = SpeechRecognizer.createSpeechRecognizer(parent);
+        AsrIntent asrIntent = new AsrIntent();
+        asrIntent.setEngineType(AsrIntent.AsrEngineType.ASR_ENGINE_TYPE_LOCAL);
+        asrIntent.setAudioSourceType(AsrIntent.AsrAudioSrcType.ASR_SRC_TYPE_PCM);
 
-        RecognitionListener listener = new RecognitionListener() {
+        AsrListener listener = new AsrListener() {
             @Override
-            public void onResults(Bundle results) {
-                ArrayList<String> voiceResults = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+            public void onInit(PacMap pacMap) {
+                Timber.d("Ready for speech");
+                mTtsAnimate = new FrameAnimationElement(mChatAbility, ResourceTable.Graphic_ic_tts_mic_play);
+                audioBtn.setBackground(mTtsAnimate);
+                mTtsAnimate.start();
+            }
+
+            @Override
+            public void onBeginningOfSpeech() {
+                Timber.d("Speech starting");
+            }
+
+            public void onRmsChanged(float rmsdB) {
+            }
+
+            @Override
+            public void onResults(PacMap pacMap) {
+                ArrayList<String> voiceResults = pacMap.getStringList(RESULTS_RECOGNITION);
                 if (voiceResults == null) {
                     Timber.w("No voice results");
                     updateSendModeState();
@@ -751,14 +838,6 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
                     // }
                     msgEdit.setText(voiceResults.get(0));
                 }
-            }
-
-            @Override
-            public void onReadyForSpeech(Bundle params) {
-                Timber.d("Ready for speech");
-                audioBtn.setBackgroundResource(R.drawable.ic_tts_mic_play);
-                mTtsAnimate = (AnimationDrawable) audioBtn.getBackground();
-                mTtsAnimate.start();
             }
 
             /**
@@ -782,39 +861,39 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
             }
 
             @Override
-            public void onBeginningOfSpeech() {
-                Timber.d("Speech starting");
+            public void onIntermediateResults(PacMap pacMap) {
+            }
+
+            @Override
+            public void onEnd() {
+            }
+
+            @Override
+            public void onEvent(int i, PacMap pacMap) {
+            }
+
+            @Override
+            public void onAudioStart() {
+            }
+
+            @Override
+            public void onAudioEnd() {
             }
 
             @Override
             public void onBufferReceived(byte[] buffer) {
-                // TODO Auto-generated method stub
             }
 
             @Override
             public void onEndOfSpeech() {
                 mTtsAnimate.stop();
-                mTtsAnimate.selectDrawable(0);
-            }
-
-            @Override
-            public void onEvent(int eventType, Bundle params) {
-                // TODO Auto-generated method stub
-            }
-
-            @Override
-            public void onPartialResults(Bundle partialResults) {
-                // TODO Auto-generated method stub
-            }
-
-            @Override
-            public void onRmsChanged(float rmsdB) {
-                // TODO Auto-generated method stub
+                audioBtn.setPixelMap(ResourceTable.Media_ic_tts_mic_on);
             }
         };
 
-        recognizer.setRecognitionListener(listener);
-        recognizer.startListening(intent);
+        AsrClient asrClient = AsrClient.createAsrClient(mChatAbility).get();
+        asrClient.init(asrIntent, listener);
+        asrClient.startListening(asrIntent);
     }
 
     /**
@@ -838,7 +917,7 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
         if (buddy != null) {
             String nickName = buddy.replaceAll("(\\w+)[:|@].*", "$1");
 
-            String editText = ViewUtil.toString(msgEdit);
+            String editText = ComponentUtil.toString(msgEdit);
             if (editText == null) {
                 nickName += ": ";
             }
@@ -864,19 +943,10 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
      */
     private void updateCorrectionState() {
         boolean correctionMode = (chatPanel.getCorrectionUID() != null);
-        int bgColorId = correctionMode ? R.color.msg_input_correction_bg : R.color.msg_input_bar_bg;
-
-        msgEditBg.setBackgroundColor(parent.getResources().getColor(bgColorId, null));
-        cancelCorrectionBtn.setVisibility(correctionMode ? View.VISIBLE : View.GONE);
-        mChatFragment.getChatListView().invalidateViews();
-    }
-
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-    }
-
-    @Override
-    public void afterTextChanged(Editable s) {
+        int bgColorId = correctionMode ? ResourceTable.Color_msg_input_correction_bg : ResourceTable.Color_msg_input_bar_bg;
+        msgEditBg.setBackground(new ShapeElement(new RgbColor(bgColorId)));
+        cancelCorrectionBtn.setVisibility(correctionMode ? Component.VISIBLE : Component.HIDE);
+        mChatSlice.getChatListContainer().invalidate();
     }
 
     /**
@@ -884,7 +954,7 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
      * {@inheritDoc}
      */
     @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
+    public void onTextUpdated(String s, int start, int before, int count) {
         if (allowsChatStateNotifications) {
             if (s.length() > 0) {
                 // Start or refreshComposing chat state control thread
@@ -907,46 +977,46 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
      */
     public void updateSendModeState() {
         boolean hasAttachments = (mediaPreview.getAdapter() != null)
-                && ((MediaPreviewAdapter) mediaPreview.getAdapter()).hasAttachments();
+                && ((MediaPreviewProvider) mediaPreview.getAdapter()).hasAttachments();
         if (mediaPreview != null)
-            mediaPreview.setVisibility(View.GONE);
+            mediaPreview.setVisibility(Component.HIDE);
 
-        imagePreview.setVisibility(View.GONE);
-        imagePreview.setImageDrawable(null);
+        imagePreview.setVisibility(Component.HIDE);
+        imagePreview.setPixelMap(null);
 
-        callBtn.setVisibility(View.INVISIBLE);
-        audioBtn.setVisibility(View.INVISIBLE);
-        msgEdit.setVisibility(View.VISIBLE);
+        callBtn.setVisibility(Component.INVISIBLE);
+        audioBtn.setVisibility(Component.INVISIBLE);
+        msgEdit.setVisibility(Component.VISIBLE);
 
         // Enabled send text button if text entry box contains text or in correction mode
         // Sending Text before attachment
         if (!TextUtils.isEmpty(msgEdit.getText()) || (chatPanel.getCorrectionUID() != null)) {
-            sendBtn.setVisibility(View.VISIBLE);
+            sendBtn.setVisibility(Component.VISIBLE);
         }
         else if (hasAttachments) {
-            msgEdit.setVisibility(View.GONE);
-            mediaPreview.setVisibility(View.VISIBLE);
-            imagePreview.setVisibility(View.VISIBLE);
-            sendBtn.setVisibility(View.VISIBLE);
+            msgEdit.setVisibility(Component.HIDE);
+            mediaPreview.setVisibility(Component.VISIBLE);
+            imagePreview.setVisibility(Component.VISIBLE);
+            sendBtn.setVisibility(Component.VISIBLE);
         }
         else {
-            sendBtn.setVisibility(View.INVISIBLE);
+            sendBtn.setVisibility(Component.INVISIBLE);
 
             if (CallManager.getActiveCallsCount() > 0) {
-                callBtn.setVisibility(View.VISIBLE);
+                callBtn.setVisibility(Component.VISIBLE);
             }
             else if (isAudioAllowed) {
-                audioBtn.setBackgroundResource(R.drawable.ic_voice_mic);
-                audioBtn.setVisibility(View.VISIBLE);
+                audioBtn.setPixelMap(ResourceTable.Media_ic_voice_mic);
+                audioBtn.setVisibility(Component.VISIBLE);
             }
             else {
-                sendBtn.setVisibility(View.VISIBLE);
+                sendBtn.setVisibility(Component.VISIBLE);
             }
         }
     }
 
     /**
-     * Method called by <code>ChatFragment</code> and <code>ChatController</code>. when user touches the
+     * Method called by <code>ChatSlice</code> and <code>ChatController</code>. when user touches the
      * display. Re-init chat state to active when user return to chat session
      */
     public void onTouchAction() {
@@ -960,7 +1030,7 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
     }
 
     /**
-     * Method called by <code>ChatFragment</code> when user closes the chat window.
+     * Method called by <code>ChatSlice</code> when user closes the chat window.
      * Update that user is no longer in this chat session and end state ctrl thread
      */
     public void onChatCloseAction() {
@@ -986,15 +1056,15 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
     public void onCommitContent(InputContentInfoCompat info) {
         if (chatPanel.getProtocolProvider().isRegistered()) {
             Uri contentUri = info.getContentUri();
-            String filePath = FilePathHelper.getFilePath(parent, contentUri);
+            String filePath = FilePathHelper.getFilePath(mChatAbility, contentUri);
             if (StringUtils.isNotEmpty(filePath)) {
                 sendSticker(filePath);
             }
             else
-                aTalkApp.showToastMessage(R.string.file_does_not_exist);
+                aTalkApp.showToastMessage(ResourceTable.String_file_does_not_exist);
         }
         else {
-            aTalkApp.showToastMessage(R.string.message_delivery_not_registered);
+            aTalkApp.showToastMessage(ResourceTable.String_message_delivery_not_registered);
         }
     }
 
@@ -1101,7 +1171,7 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
         }
     }
 
-    public Activity getParent() {
-        return parent;
+    public Ability getChatAbility() {
+        return mChatAbility;
     }
 }

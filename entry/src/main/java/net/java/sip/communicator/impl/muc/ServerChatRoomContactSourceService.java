@@ -17,7 +17,6 @@ import net.java.sip.communicator.service.contactsource.ContactQuery;
 import net.java.sip.communicator.service.contactsource.ContactSourceService;
 import net.java.sip.communicator.service.muc.ChatRoomProviderWrapper;
 
-import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 
 /**
@@ -51,7 +50,7 @@ public class ServerChatRoomContactSourceService implements ContactSourceService
      */
     public String getDisplayName()
     {
-        return aTalkApp.getResString(R.string.server_chatroom);
+        return aTalkApp.getResString(ResourceTable.String_server_chatroom);
     }
 
     /**

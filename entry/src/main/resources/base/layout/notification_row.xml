@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableRow xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:width="match_parent"
+    ohos:height="match_content"
+    ohos:min_height="$float:item_height">
+
+    <ToggleButton
+        ohos:gravity="center"
+        ohos:onClick="onEnableItemClicked"
+        ohos:tag="enable" />
+
+    <Checkbox
+        ohos:gravity="center"
+        ohos:onClick="onPopupItemClicked"
+        ohos:tag="popup" />
+
+    <Checkbox
+        ohos:gravity="center"
+        ohos:onClick="onSoundNotificationItemClicked"
+        ohos:tag="soundNotification" />
+
+    <Checkbox
+        ohos:gravity="center"
+        ohos:onClick="onSounvplaybackItemClicked"
+        ohos:tag="sounvplayback" />
+
+    <Checkbox
+        ohos:gravity="center"
+        ohos:onClick="onVibrateItemClicked"
+        ohos:tag="vibrate" />
+
+    <Text
+        ohos:width="match_parent"
+        ohos:height="match_parent"
+        ohos:gravity="center"
+        ohos:tag="description" />
+</TableRow>

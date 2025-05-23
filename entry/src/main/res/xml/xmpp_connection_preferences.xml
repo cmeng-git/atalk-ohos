@@ -1,86 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceScreen xmlns:ohos="http://schemas.huawei.com/res/ohos" >
 
     <PreferenceCategory
-        android:key="pref.cat.jbr.conn.general"
-        android:title="@string/general">
+        ohos:key="pref.cat.jbr.conn.general"
+        ohos:title="$string:general">
         <CheckBoxPreference
-            android:key="pref_key_gmail_notifications"
-            android:title="@string/jbr_gmail_notifications" />
+            ohos:key="pref_key_gmail_notifications"
+            ohos:title="$string:jbr_gmail_notifications" />
         <CheckBoxPreference
-            android:key="pref_key_google_contact_enabled"
-            android:title="@string/jbr_google_contact_search" />
+            ohos:key="pref_key_google_contact_enabled"
+            ohos:title="$string:jbr_google_contact_search" />
         <ListPreference
-            android:dialogTitle="@string/jbr_dtmf_summary"
-            android:entries="@array/pref_jabber_dtmf_method"
-            android:entryValues="@array/pref_jabber_dtmf_method_values"
-            android:key="pref_key_dtmf_method"
-            android:title="@string/jbr_dtmf_method" />
+            ohos:dialogTitle="$string:jbr_dtmf_summary"
+            ohos:entries="@array/pref_jabber_dtmf_method"
+            ohos:entryValues="@array/pref_jabber_dtmf_method_values"
+            ohos:key="pref_key_dtmf_method"
+            ohos:title="$string:jbr_dtmf_method" />
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:key="pref.cat.jbr.server.options"
-        android:title="@string/jbr_server_options">
+        ohos:key="pref.cat.jbr.server.options"
+        ohos:title="$string:jbr_server_options">
         <CheckBoxPreference
-            android:key="pref_key_is_keep_alive_enable"
-            android:summary="@string/jbr_keep_alive_summary"
-            android:title="@string/jbr_keep_alive_enable" />
+            ohos:key="pref_key_is_keep_alive_enable"
+            ohos:summary="$string:jbr_keep_alive_summary"
+            ohos:title="$string:jbr_keep_alive_enable" />
         <EditTextPreference
-            android:defaultValue="240"
-            android:dependency="pref_key_is_keep_alive_enable"
-            android:inputType="number"
-            android:key="pref_key_ping_interval"
-            android:title="@string/jbr_ping_interval" />
+            ohos:defaultValue="240"
+            ohos:dependency="pref_key_is_keep_alive_enable"
+            ohos:inputType="number"
+            ohos:key="pref_key_ping_interval"
+            ohos:title="$string:jbr_ping_interval" />
         <CheckBoxPreference
-            android:key="pref_key_ping_auto_tune_enable"
-            android:summaryOff="@string/jbr_ping_interval_tune_off_summary"
-            android:summaryOn="@string/jbr_ping_interval_tune_on_summary"
-            android:title="@string/jbr_ping_interval_tune_enable" />
+            ohos:key="pref_key_ping_auto_tune_enable"
+            ohos:summaryOff="$string:jbr_ping_interval_tune_off_summary"
+            ohos:summaryOn="$string:jbr_ping_interval_tune_on_summary"
+            ohos:title="$string:jbr_ping_interval_tune_enable" />
 
         <ListPreference
-            android:dialogTitle="@string/tls_cert_prompt"
-            android:key="pref_key_client_tls_cert"
-            android:title="@string/tls_cert" />
+            ohos:dialogTitle="$string:tls_cert_prompt"
+            ohos:key="pref_key_client_tls_cert"
+            ohos:title="$string:tls_cert" />
 
         <CheckBoxPreference
-            android:key="pref_key_is_server_overridden"
-            android:title="@string/jbr_server_override" />
+            ohos:key="pref_key_is_server_overridden"
+            ohos:title="$string:jbr_server_override" />
         <EditTextPreference
-            android:dependency="pref_key_is_server_overridden"
-            android:key="pref_key_server_address"
-            android:title="@string/jbr_server_ip" />
+            ohos:dependency="pref_key_is_server_overridden"
+            ohos:key="pref_key_server_address"
+            ohos:title="$string:jbr_server_ip" />
         <EditTextPreference
-            android:dependency="pref_key_is_server_overridden"
-            android:inputType="number"
-            android:key="pref_key_server_port"
-            android:title="@string/jbr_server_port" />
+            ohos:dependency="pref_key_is_server_overridden"
+            ohos:inputType="number"
+            ohos:key="pref_key_server_port"
+            ohos:title="$string:jbr_server_port" />
         <ListPreference
-            android:entries="@array/TLS_version_name"
-            android:entryValues="@array/TLS_version_value"
-            android:key="pref_key_minimum_TLS_version"
-            android:summary="@string/jbr_tls_ver_min_summary"
-            android:title="@string/jbr_tls_ver_min" />
+            ohos:entries="@array/TLS_version_name"
+            ohos:entryValues="@array/TLS_version_value"
+            ohos:key="pref_key_minimum_TLS_version"
+            ohos:summary="$string:jbr_tls_ver_min_summary"
+            ohos:title="$string:jbr_tls_ver_min" />
         <CheckBoxPreference
-            android:key="pref_key_allow_non_secure_conn"
-            android:summary="@string/jbr_non_ssk_summary"
-            android:title="@string/jbr_non_secure_allow" />
+            ohos:key="pref_key_allow_non_secure_conn"
+            ohos:summary="$string:jbr_non_ssk_summary"
+            ohos:title="$string:jbr_non_secure_allow" />
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:key="pref.cat.jbr.resource"
-        android:title="@string/jbr_resource_id">
+        ohos:key="pref.cat.jbr.resource"
+        ohos:title="$string:jbr_resource_id">
         <CheckBoxPreference
-            android:disableDependentsState="true"
-            android:key="pref_key_auto_gen_resource"
-            android:title="@string/jbr_resource_auto_gen" />
+            ohos:disableDependentsState="true"
+            ohos:key="pref_key_auto_gen_resource"
+            ohos:title="$string:jbr_resource_auto_gen" />
         <EditTextPreference
-            android:dependency="pref_key_auto_gen_resource"
-            android:key="pref_key_resource_name"
-            android:title="@string/jbr_resource_name" />
+            ohos:dependency="pref_key_auto_gen_resource"
+            ohos:key="pref_key_resource_name"
+            ohos:title="$string:jbr_resource_name" />
         <EditTextPreference
-            android:inputType="number"
-            android:key="pref_key_resource_priority"
-            android:title="@string/jbr_priority" />
+            ohos:inputType="number"
+            ohos:key="pref_key_resource_priority"
+            ohos:title="$string:jbr_priority" />
     </PreferenceCategory>
 </PreferenceScreen>
