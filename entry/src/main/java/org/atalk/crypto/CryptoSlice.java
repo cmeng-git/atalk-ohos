@@ -162,8 +162,8 @@ public class CryptoSlice extends BaseSlice
     }
 
     @Override
-    public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
-        // This happens when Activity is recreated by the system after OSGi service has been killed (and the whole process)
+    public void onCreateMenu(Menu menu, MenuInflater menuInflater) {
+        // This happens when Ability is recreated by the system after OSGi service has been killed (and the whole process)
         if (AppGUIActivator.bundleContext == null) {
             Timber.e("OSGi service probably not initialized");
             return;
@@ -175,7 +175,7 @@ public class CryptoSlice extends BaseSlice
          * Add chat encryption choices if not found
          */
         if (menu.findComponentById(ResourceTable.Id_encryption_none) == null)
-            inflater.parse(ResourceTable.Layout_menu_crypto_choices, menu);
+            menuInflater.parse(ResourceTable.Layout_menu_crypto_choices, menu);
 
         mCryptoChoice = menu.findComponentById(ResourceTable.Id_crypto_choice);
         mNone = menu.findComponentById(ResourceTable.Id_encryption_none);

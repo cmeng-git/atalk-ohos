@@ -11,7 +11,7 @@ import java.net.URL;
 import java.util.Iterator;
 import java.util.Locale;
 
-import javax.swing.ImageIcon;
+import ohos.media.image.PixelMap;
 
 /**
  * The Resource Management Service gives easy access to common resources for the application
@@ -242,10 +242,9 @@ public interface ResourceManagementService {
      * Constructs an <code>ImageIcon</code> from the specified image ID and returns it.
      *
      * @param imageID The identifier of the image.
-     *
-     * @return An <code>ImageIcon</code> containing the image with the given identifier.
+     * @return An <code>PixelMap</code> containing the image with the given identifier.
      */
-    ImageIcon getImage(String imageID);
+    PixelMap getImage(String imageID);
 
     /**
      * Loads the image with the specified ID and returns a byte array containing it.

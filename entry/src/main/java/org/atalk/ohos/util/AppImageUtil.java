@@ -16,6 +16,10 @@
  */
 package org.atalk.ohos.util;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+
 import ohos.agp.components.element.PixelMapElement;
 import ohos.agp.render.Canvas;
 import ohos.agp.render.Paint;
@@ -31,10 +35,6 @@ import ohos.media.image.PixelMap;
 import ohos.media.image.common.PixelFormat;
 import ohos.media.image.common.Size;
 import ohos.utils.net.Uri;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.ByteBuffer;
 
 /**
  * Class containing utility methods for Android's Displayable and Bitmap

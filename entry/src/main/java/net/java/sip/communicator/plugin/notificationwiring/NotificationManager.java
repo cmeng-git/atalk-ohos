@@ -5,6 +5,8 @@
  */
 package net.java.sip.communicator.plugin.notificationwiring;
 
+import ohos.aafwk.ability.AbilitySlice;
+
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -99,7 +101,6 @@ import org.atalk.ohos.gui.chat.ChatTransport;
 import org.atalk.ohos.gui.chat.conference.ConferenceChatManager;
 import org.atalk.ohos.gui.chatroomslist.ChatRoomListSlice;
 import org.atalk.ohos.gui.contactlist.ContactListSlice;
-import org.atalk.ohos.gui.util.XhtmlUtil;
 import org.atalk.ohos.util.AppImageUtil;
 import org.atalk.service.neomedia.MediaService;
 import org.atalk.service.neomedia.SrtpControl;
@@ -112,10 +113,6 @@ import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceEvent;
 import org.osgi.framework.ServiceListener;
 import org.osgi.framework.ServiceReference;
-
-import ohos.aafwk.ability.AbilitySlice;
-
-import com.google.common.html.HtmlEscapers;
 
 import timber.log.Timber;
 
