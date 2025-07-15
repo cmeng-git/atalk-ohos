@@ -18,7 +18,6 @@
 package org.atalk.ohos.gui.menu;
 
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -62,6 +61,7 @@ import org.atalk.ohos.gui.contactlist.AddContactActivity;
 import org.atalk.ohos.gui.contactlist.ContactBlockListActivity;
 import org.atalk.ohos.gui.contactlist.ContactListFragment;
 import org.atalk.ohos.gui.contactlist.model.MetaContactListAdapter;
+import org.atalk.ohos.gui.dialogs.ProgressDialog;
 import org.atalk.ohos.gui.settings.SettingsActivity;
 import org.atalk.ohos.plugin.geolocation.GeoLocationActivity;
 import org.atalk.ohos.plugin.permissions.PermissionsActivity;
@@ -147,6 +147,7 @@ public class MainMenuActivity extends ExitMenuActivity implements ServiceListene
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
+        menu.findItem(R.id.add_contact).setVisible(!ConfigurationUtils.isAddContactDisabled());
 
         // Get the SearchView and set the search theme
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
@@ -234,14 +235,14 @@ public class MainMenuActivity extends ExitMenuActivity implements ServiceListene
         if (disableMediaServiceOnFault || (videoBridgeMenuItem == null))
             return;
 
-        final ProgressDialog progressDialog;
+        final long pDialogId;
         if (!done) {
-            progressDialog = ProgressDialog.show(MainMenuActivity.this,
+            pDialogId = ProgressDialog.show(MainMenuActivity.this,
                     getString(R.string.please_wait),
-                    getString(R.string.server_info_fetching), true, true);
+                    getString(R.string.server_info_fetching), true);
         }
         else {
-            progressDialog = null;
+            pDialogId = -1;
         }
 
         new Thread(() -> {
@@ -251,9 +252,9 @@ public class MainMenuActivity extends ExitMenuActivity implements ServiceListene
             } catch (Exception ex) {
                 Timber.e("Init VideoBridge: %s ", ex.getMessage());
             }
-            if (progressDialog != null && progressDialog.isShowing()) {
+            if (ProgressDialog.isShowing(pDialogId)) {
+                ProgressDialog.dismiss(pDialogId);
                 done = true;
-                progressDialog.dismiss();
             }
         }).start();
     }

@@ -9,6 +9,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -22,6 +23,7 @@ import android.text.Editable;
 import android.text.Html;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Pair;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -29,11 +31,14 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import androidx.core.view.inputmethod.InputContentInfoCompat;
+import androidx.core.view.ContentInfoCompat;
+import androidx.core.view.OnReceiveContentListener;
+import androidx.core.view.ViewCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -59,7 +64,6 @@ import org.atalk.ohos.gui.call.CallManager;
 import org.atalk.ohos.gui.call.notification.CallNotificationManager;
 import org.atalk.ohos.gui.share.Attachment;
 import org.atalk.ohos.gui.share.MediaPreviewAdapter;
-import org.atalk.ohos.gui.util.ContentEditText;
 import org.atalk.ohos.gui.util.HtmlImageGetter;
 import org.atalk.ohos.gui.util.ViewUtil;
 import org.atalk.ohos.plugin.audioservice.AudioBgService;
@@ -77,8 +81,10 @@ import timber.log.Timber;
  * @author Pawel Domas
  * @author Eng Chong Meng
  */
-public class ChatController implements View.OnClickListener, View.OnLongClickListener, View.OnTouchListener,
-        TextWatcher, ContentEditText.CommitListener {
+public class ChatController implements View.OnClickListener, View.OnLongClickListener, View.OnTouchListener, TextWatcher {
+
+    public static final String[] MIME_TYPES_MEDIA = new String[]{"image/*", "video/*"};
+
     /**
      * The chat fragment used by this instance.
      */
@@ -110,7 +116,7 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
     /**
      * Message <code>EditText</code>.
      */
-    private ContentEditText msgEdit;
+    private EditText msgEdit;
 
     /**
      * Message editing area background.
@@ -179,7 +185,6 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
     public ChatController(Activity activity, ChatFragment fragment) {
         parent = activity;
         mChatFragment = fragment;
-
         // Do not use aTalk.getInstance, may not have initialized
         isAudioAllowed = aTalk.hasPermission(parent, false,
                 aTalk.PRC_RECORD_AUDIO, Manifest.permission.RECORD_AUDIO);
@@ -202,7 +207,8 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
             }
             if (isBlocked) {
                 msgEdit.setText(R.string.contact_blocked);
-            } else {
+            }
+            else {
                 // Restore edited text
                 msgEdit.setText(chatPanel.getEditedText());
             }
@@ -210,7 +216,8 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
             sendBtn.setEnabled(!isBlocked);
 
             // Timber.d("ChatController attached to %s", chatFragment.hashCode());
-            msgEdit.setCommitListener(this);
+            // Listener to handle media content.
+            ViewCompat.setOnReceiveContentListener(msgEdit, MIME_TYPES_MEDIA, contentReceiver);
             msgEdit.setFocusableInTouchMode(true);
             msgEdit.addTextChangedListener(this);
 
@@ -983,10 +990,8 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
         }
     }
 
-    @Override
-    public void onCommitContent(InputContentInfoCompat info) {
+    public void onCommitContent(Uri contentUri) {
         if (chatPanel.getProtocolProvider().isRegistered()) {
-            Uri contentUri = info.getContentUri();
             String filePath = FilePathHelper.getFilePath(parent, contentUri);
             if (StringUtils.isNotEmpty(filePath)) {
                 sendSticker(filePath);
@@ -1005,6 +1010,23 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
             chatPanel.addFTSendRequest(filePath, ChatMessage.MESSAGE_STICKER_SEND);
         }
     }
+
+    OnReceiveContentListener contentReceiver = (view, contentInfo) -> {
+        Pair<ContentInfoCompat, ContentInfoCompat> split = contentInfo.partition(item -> item.getUri() != null);
+        ContentInfoCompat uriContent = split.first;
+        ContentInfoCompat remaining = split.second;
+        // App-specific logic to handle the URI(s) in uriContent.
+        if (uriContent != null) {
+            ClipData clip = uriContent.getClip();
+            for (int i = 0; i < clip.getItemCount(); i++) {
+                Uri uri = clip.getItemAt(i).getUri();
+                onCommitContent(uri);
+            }
+        }
+        // Return anything that we didn't handle. This preserves the default platform
+        // behavior for text and anything else that you aren't implementing custom handling for.
+        return remaining;
+    };
 
     /**
      * The thread lowers chat state from composing to inactive state. When

@@ -29,6 +29,7 @@ import net.java.sip.communicator.service.protocol.AccountID;
 import net.java.sip.communicator.service.protocol.AccountManager;
 import net.java.sip.communicator.service.protocol.OperationFailedException;
 import net.java.sip.communicator.service.protocol.ProtocolProviderService;
+import net.java.sip.communicator.util.ConfigurationUtils;
 import net.java.sip.communicator.util.ServiceUtils;
 import net.java.sip.communicator.util.account.AccountUtils;
 
@@ -74,7 +75,7 @@ public class AccountsListActivity extends BaseActivity {
     /**
      * Keeps track of displayed "in progress" dialog during account registration.
      */
-    private static long progressDialog;
+    private static long pDialogId;
 
     /**
      * Keeps track of thread used to register accounts and prevents from starting multiple at one time.
@@ -121,6 +122,7 @@ public class AccountsListActivity extends BaseActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.account_settings_menu, menu);
+        menu.findItem(R.id.add_group).setVisible(!ConfigurationUtils.isCreateGroupDisabled());
         return true;
     }
 
@@ -341,7 +343,8 @@ public class AccountsListActivity extends BaseActivity {
                 accEnableThread = new AccountEnableThread(account.getAccountID(), enable);
                 String message = enable ? getString(R.string.connecting_, account.getAccountName())
                         : getString(R.string.disconnecting_, account.getAccountName());
-                progressDialog = ProgressDialog.showProgressDialog(getString(R.string.info), message);
+                pDialogId = ProgressDialog.show(AccountsListActivity.this,
+                        getString(R.string.info), message, false);
                 accEnableThread.start();
             });
             return rowView;
@@ -390,11 +393,11 @@ public class AccountsListActivity extends BaseActivity {
                                 .show());
                 Timber.e("Account de/activate Exception: %s", e.getMessage());
             } finally {
-                if (DialogActivity.waitForDialogOpened(progressDialog)) {
-                    DialogActivity.closeDialog(progressDialog);
+                if (DialogActivity.waitForDialogOpened(pDialogId)) {
+                    ProgressDialog.dismiss(pDialogId);
                 }
                 else {
-                    Timber.e("Failed to wait for the dialog: %s", progressDialog);
+                    Timber.e("Failed to wait for the dialog: %s", pDialogId);
                 }
                 accEnableThread = null;
             }

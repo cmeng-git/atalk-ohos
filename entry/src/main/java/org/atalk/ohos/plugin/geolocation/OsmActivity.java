@@ -32,9 +32,10 @@ import java.util.ArrayList;
 import org.atalk.ohos.BaseActivity;
 import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
-import org.atalk.service.httputil.HttpConnectionManager;
+import org.atalk.service.httputil.OkHttpUtils;
 import org.osmdroid.config.Configuration;
 
+import okhttp3.OkHttp;
 import timber.log.Timber;
 
 /**
@@ -81,7 +82,7 @@ public class OsmActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.osm_map_main);
 
-        Configuration.getInstance().setUserAgentValue(HttpConnectionManager.getUserAgent());
+        Configuration.getInstance().setUserAgentValue(OkHttpUtils.getUserAgent());
 
         // noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

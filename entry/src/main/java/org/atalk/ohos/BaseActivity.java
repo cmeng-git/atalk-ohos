@@ -16,20 +16,26 @@
  */
 package org.atalk.ohos;
 
+import android.app.KeyguardManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.TypedValue;
+import android.view.Display;
+import android.view.Surface;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import org.atalk.ohos.gui.actionbar.ActionBarUtil;
@@ -163,6 +169,16 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     /**
+     * Should return current {@link Display} rotation as defined in {@link Display#getRotation()}.
+     *
+     * @return current {@link Display} rotation as one of values:
+     * {@link Surface#ROTATION_0}, {@link Surface#ROTATION_90}, {@link Surface#ROTATION_180}, {@link Surface#ROTATION_270}.
+     */
+    public int getDisplayRotation() {
+        return ActivityCompat.getDisplayOrDefault(this).getRotation();
+    }
+
+    /**
      * Set preference title using android inbuilt toolbar
      *
      * @param resId preference tile resourceID
@@ -176,6 +192,21 @@ public class BaseActivity extends AppCompatActivity {
 
             actionBar.setLogo(R.drawable.ic_icon);
             actionBar.setTitle(resId);
+        }
+    }
+
+    public void setScreenOn() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+            setTurnScreenOn(true);
+            setShowWhenLocked(true);
+            KeyguardManager keyguardManager = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
+            keyguardManager.requestDismissKeyguard(this, null);
+        }
+        else {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+                    | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
+                    | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+                    | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         }
     }
 

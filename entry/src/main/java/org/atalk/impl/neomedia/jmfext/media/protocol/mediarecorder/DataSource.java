@@ -505,7 +505,7 @@ public class DataSource extends AbstractPushBufferCaptureDevice
                     try {
                         DataSource.super.doStart();
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        Timber.e("createCaptureSession: %s", e.getMessage());
                     }
                 }
 
@@ -516,7 +516,7 @@ public class DataSource extends AbstractPushBufferCaptureDevice
                 }
             }, mBackgroundHandler);
         } catch (CameraAccessException | IOException e) {
-            e.printStackTrace();
+            Timber.e("startVideoRecording: %s", e.getMessage());
         }
     }
 

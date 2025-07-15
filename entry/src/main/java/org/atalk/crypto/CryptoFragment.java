@@ -767,13 +767,13 @@ public class CryptoFragment extends BaseFragment
             switch (chatType) {
                 case MSGTYPE_NORMAL:
                 case MSGTYPE_MUC_NORMAL:
-                    onOptionsItemSelected(mNone);
+                    onMenuItemSelected(mNone);
                     break;
 
                 case MSGTYPE_OMEMO:
                     // Do not emulate Omemo button press if mOmemoManager is null
                     if (mOmemoManager != null) {
-                        onOptionsItemSelected(mOmemo);
+                        onMenuItemSelected(mOmemo);
                     }
                     break;
             }

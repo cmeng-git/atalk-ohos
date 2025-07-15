@@ -16,6 +16,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
+import java.util.List;
+
 import net.java.sip.communicator.service.protocol.AccountID;
 import net.java.sip.communicator.service.protocol.ProtocolNames;
 import net.java.sip.communicator.util.account.AccountUtils;
@@ -23,8 +25,6 @@ import net.java.sip.communicator.util.account.AccountUtils;
 import org.atalk.ohos.BaseActivity;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.call.AppCallUtil;
-
-import java.util.List;
 
 /**
  * The activity runs preference fragments for different protocols.

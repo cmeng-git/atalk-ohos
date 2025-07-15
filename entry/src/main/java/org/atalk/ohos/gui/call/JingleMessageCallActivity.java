@@ -65,12 +65,7 @@ public class JingleMessageCallActivity extends BaseActivity implements JingleMes
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.call_received);
-
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
-                | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
-                | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
-                | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
-        );
+        setScreenOn();
 
         // Implementation not supported currently
         findViewById(R.id.videoCallButton).setVisibility(View.GONE);

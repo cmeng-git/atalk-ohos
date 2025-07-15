@@ -101,15 +101,4 @@
                 android:targetPackage="org.atalk.ohos" />
         </Preference>
     </PreferenceCategory>
-
-    <PreferenceCategory android:title="@string/other">
-        <Preference
-            android:summary="@string/provisioning_summary"
-            android:title="@string/provisioning" >
-            <intent
-                android:action="android.intent.action.VIEW"
-                android:targetClass="org.atalk.ohos.gui.settings.ProvisioningSettings"
-                android:targetPackage="org.atalk.ohos" />
-        </Preference>
-    </PreferenceCategory>
 </PreferenceScreen>

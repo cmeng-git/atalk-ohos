@@ -14,7 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+
+import org.atalk.ohos.BaseActivity;
 
 import timber.log.Timber;
 
@@ -46,7 +47,7 @@ public class PreviewSurfaceProvider extends ViewDependentProvider<SurfaceHolder>
      * @param setZMediaOverlay if set to <code>true</code> then the <code>SurfaceView</code> will be
      * displayed on the top of other surfaces e.g. local camera surface preview
      */
-    public PreviewSurfaceProvider(AppCompatActivity parent, ViewGroup container, boolean setZMediaOverlay) {
+    public PreviewSurfaceProvider(BaseActivity parent, ViewGroup container, boolean setZMediaOverlay) {
         super(parent, container);
         this.setZMediaOverlay = setZMediaOverlay;
     }
@@ -90,13 +91,13 @@ public class PreviewSurfaceProvider extends ViewDependentProvider<SurfaceHolder>
     }
 
     /**
-     * Should return current {@link Display} rotation as defined in {@link android.view.Display#getRotation()}.
+     * Should return current {@link Display} rotation.
      *
      * @return current {@link Display} rotation as one of values:
      * {@link Surface#ROTATION_0}, {@link Surface#ROTATION_90}, {@link Surface#ROTATION_180}, {@link Surface#ROTATION_270}.
      */
     public int getDisplayRotation() {
-        return mActivity.getWindowManager().getDefaultDisplay().getRotation();
+        return mActivity.getDisplayRotation();
     }
 
     // ============== SurfaceHolder.Callback ================== //

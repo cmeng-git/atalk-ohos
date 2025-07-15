@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.core.content.IntentCompat;
 import org.atalk.impl.appnotification.NotificationHelper;
 import org.atalk.impl.appupdate.OnlineUpdateService;
 import org.atalk.ohos.R;
@@ -73,7 +74,7 @@ public class LauncherDebugActivity extends OSGiActivity {
         // Get restore Intent and display "Restoring..." label
         Intent intent = getIntent();
         if (intent != null) {
-            this.restoreIntent = intent.getParcelableExtra(ARG_RESTORE_INTENT);
+            restoreIntent = IntentCompat.getParcelableExtra(intent, ARG_RESTORE_INTENT, Intent.class);
             startOnReboot = intent.getBooleanExtra(SystemEventReceiver.AUTO_START_ONBOOT, false);
         }
 

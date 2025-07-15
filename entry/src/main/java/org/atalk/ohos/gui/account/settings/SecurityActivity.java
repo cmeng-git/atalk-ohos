@@ -12,6 +12,8 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.widget.Toast;
 
+import androidx.core.content.IntentCompat;
+import androidx.core.os.BundleCompat;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.preference.CheckBoxPreference;
 import androidx.preference.ListPreference;
@@ -108,6 +110,7 @@ public class SecurityActivity extends BaseActivity implements SecurityProtocolsD
         else {
             securityFragment = (SecurityPreferenceFragment) getSupportFragmentManager().findFragmentById(android.R.id.content);
         }
+        // getOnBackPressedDispatcher().addCallback(backPressedCallback);
     }
 
     public void onDialogClosed(SecurityProtocolsDialogFragment dialog) {
@@ -125,6 +128,22 @@ public class SecurityActivity extends BaseActivity implements SecurityProtocolsD
         }
         return super.onKeyUp(keyCode, event);
     }
+
+    /*
+     * If the user is currently looking at the first page, allow the system to handle the
+     * Back button. If Telephony fragment is shown, backKey closes the fragment only.
+     * The call finish() on this activity and pops the back stack.
+     */
+//    OnBackPressedCallback backPressedCallback = new OnBackPressedCallback(true) {
+//        @Override
+//        public void handleOnBackPressed() {
+//            Intent result = new Intent();
+//            result.putExtra(EXTR_KEY_SEC_REGISTRATION, securityFragment.securityReg);
+//            result.putExtra(EXTR_KEY_HAS_CHANGES, securityFragment.hasChanges);
+//            setResult(Activity.RESULT_OK, result);
+//            finish();
+//        }
+//    };
 
     /**
      * Fragment handles {@link Preference}s used for manipulating security settings.
@@ -147,10 +166,11 @@ public class SecurityActivity extends BaseActivity implements SecurityProtocolsD
             setPrefTitle(R.string.settings_messaging_security);
             if (savedInstanceState == null) {
                 Intent intent = ((Activity) mContext).getIntent();
-                securityReg = (SecurityAccountRegistration) intent.getSerializableExtra(EXTR_KEY_SEC_REGISTRATION);
+                securityReg = IntentCompat.getSerializableExtra(intent,
+                        EXTR_KEY_SEC_REGISTRATION, SecurityAccountRegistration.class);
             }
             else {
-                securityReg = (SecurityAccountRegistration) savedInstanceState.get(STATE_SEC_REG);
+                securityReg = BundleCompat.getSerializable(savedInstanceState, STATE_SEC_REG, SecurityAccountRegistration.class);
             }
 
             // Load the preferences from an XML resource - findPreference() to work properly
@@ -252,8 +272,8 @@ public class SecurityActivity extends BaseActivity implements SecurityProtocolsD
             Map<String, Boolean> encryptionStatus = securityReg.getEncryptionProtocolStatus();
 
             Bundle args = new Bundle();
-            args.putSerializable(SecurityProtocolsDialogFragment.ARG_ENCRYPTION, (Serializable) encryption);
-            args.putSerializable(SecurityProtocolsDialogFragment.ARG_ENCRYPTION_STATUS, (Serializable) encryptionStatus);
+            args.putSerializable(SecurityProtocolsDialogFragment.ENCRYPTION_PRIORITY, (Serializable) encryption);
+            args.putSerializable(SecurityProtocolsDialogFragment.ENCRYPTION_STATE, (Serializable) encryptionStatus);
             securityDialog.setArguments(args);
 
             FragmentTransaction ft = getParentFragmentManager().beginTransaction();

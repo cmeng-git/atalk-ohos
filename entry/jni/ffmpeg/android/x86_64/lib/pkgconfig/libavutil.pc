@@ -1,7 +1,7 @@
-prefix=/home/cmeng/workspace/android/atalk-android/aTalk/jni/static_library_built/ffmpeg-x264/../../ffmpeg/android/x86_64
+prefix=/home/cmeng/workspace/android/atalk-ohos/entry/jni/static_library_built/ffmpeg-x264/../../ffmpeg/android/x86_64
 exec_prefix=${prefix}
-libdir=/home/cmeng/workspace/android/atalk-android/aTalk/jni/static_library_built/ffmpeg-x264/../../ffmpeg/android/x86_64/lib
-includedir=/home/cmeng/workspace/android/atalk-android/aTalk/jni/static_library_built/ffmpeg-x264/../../ffmpeg/android/x86_64/include
+libdir=/home/cmeng/workspace/android/atalk-ohos/entry/jni/static_library_built/ffmpeg-x264/../../ffmpeg/android/x86_64/lib
+includedir=/home/cmeng/workspace/android/atalk-ohos/entry/jni/static_library_built/ffmpeg-x264/../../ffmpeg/android/x86_64/include
 
 Name: libavutil
 Description: FFmpeg utility library

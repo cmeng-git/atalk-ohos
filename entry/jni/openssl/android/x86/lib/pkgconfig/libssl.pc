@@ -1,4 +1,4 @@
-prefix=/home/cmeng/workspace/android/atalk-android/aTalk/jni/static_library_built/openssl/../../openssl/android/x86
+prefix=/home/cmeng/workspace/android/atalk-ohos/entry/jni/static_library_built/openssl/../../openssl/android/x86
 exec_prefix=${prefix}
 libdir=${exec_prefix}/lib
 includedir=${prefix}/include
