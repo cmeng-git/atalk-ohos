@@ -38,7 +38,7 @@ include ./ffmpeg/Android_a.mk
 #include ./ffmpeg/Android_so.mk
 
 ### FFMPEG Shared Library built from source (see version.h) - not working
-#include ./ffmpeg/Android.mk
+#include ./ffmpeg/Android_ndk.mk
 
 # ================================= Openmax-h264 ======================================
 ### H264 library build using android internal library
@@ -49,13 +49,15 @@ include $(CLEAR_VARS)
 # ================================= LibVPX static library ============================================
 # LOCAL_PATH := $(ROOT)/static_library_built/libvpx
 # include $(CLEAR_VARS)
-# include $(LOCAL_PATH)/libvpx/build/make/Android.mk
+# include $(LOCAL_PATH)/libvpx/build/make/Android_ndk.mk
 
 # ================================= LibVPX (VP8 / VP9) ================================
-### VPX shared library build using static libraries pre-built from source (v1.12.0) on Ubuntu
+### VPX shared library build using static libraries pre-built from source (v1.15.2) on Ubuntu
 LOCAL_PATH := $(ROOT)
 include $(CLEAR_VARS)
-include ./vpx/Android.mk
+VPX_DIR   := vpx
+include $(VPX_DIR)/Android_a.mk
+# include $(VPX_DIR)/Android_ndk.mk
 
 # ================================= Opus ==============================================
 ### Opus sources is in directory jni/opus
@@ -97,14 +99,14 @@ G729_DIR  := g729
 include $(G729_DIR)/Android.mk
 
 # ================================= OpenSSL ===========================================
-### OpenSSL shared library build (version 1.1.1t)
+### OpenSSL shared library build (version 3.5.2)
 LOCAL_PATH  := $(ROOT)
 include $(CLEAR_VARS)
 
 # https://github.com/aosp-mirror/platform_external_openssl/tree/android-5.1.1_r38
 # Local AS NDK built from source - problem but build ok on Ubuntu Android Studio
-# include openssl/Android.mk
+# include openssl/Android_ndk.mk
 
 ## Built from static library from source on ubuntu 22.04
-# (unable to build from source in jni - #TODO)
+# (unable to build from source in jni using Android_ndk.mk)
 include ./openssl/Android_a.mk

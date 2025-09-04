@@ -72,6 +72,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.regex.Pattern;
 
@@ -2304,21 +2305,23 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
         }
 
         public void execute() {
-            Executors.newSingleThreadExecutor().execute(() -> {
-                List<ChatMessage> chatMessages = chatPanel.getHistory(init);
+            try (ExecutorService eService = Executors.newSingleThreadExecutor()) {
+                eService.execute(() -> {
+                    List<ChatMessage> chatMessages = chatPanel.getHistory(init);
 
-                runOnUiThread(() -> {
-                    chatListAdapter.prependMessages(chatMessages);
+                    runOnUiThread(() -> {
+                        chatListAdapter.prependMessages(chatMessages);
 
-                    header.setVisibility(View.GONE);
-                    chatListAdapter.notifyDataSetChanged();
-                    loadHistoryTask = null;
+                        header.setVisibility(View.GONE);
+                        chatListAdapter.notifyDataSetChanged();
+                        loadHistoryTask = null;
 
-                    int loaded = chatListAdapter.getCount() - preSize;
-                    int scrollTo = loaded + scrollFirstVisible;
-                    chatListView.setSelectionFromTop(scrollTo, scrollTopOffset);
+                        int loaded = chatListAdapter.getCount() - preSize;
+                        int scrollTo = loaded + scrollFirstVisible;
+                        chatListView.setSelectionFromTop(scrollTo, scrollTopOffset);
+                    });
                 });
-            });
+            }
         }
     }
 
@@ -2615,17 +2618,19 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
         }
 
         public void execute() {
-            Executors.newSingleThreadExecutor().execute(() -> {
-                final Exception ex = doInBackground();
+            try (ExecutorService eService = Executors.newSingleThreadExecutor()) {
+                eService.execute(() -> {
+                    final Exception ex = doInBackground();
 
-                mChatActivity.runOnUiThread(() -> {
-                    if (ex != null) {
-                        Timber.e("Failed to send file: %s", ex.getMessage());
-                        chatPanel.addMessage(currentChatTransport.getName(), new Date(), ChatMessage.MESSAGE_ERROR,
-                                IMessage.ENCODE_PLAIN, aTalkApp.getResString(R.string.file_delivery_error, ex.getMessage()));
-                    }
+                    mChatActivity.runOnUiThread(() -> {
+                        if (ex != null) {
+                            Timber.e("Failed to send file: %s", ex.getMessage());
+                            chatPanel.addMessage(currentChatTransport.getName(), new Date(), ChatMessage.MESSAGE_ERROR,
+                                    IMessage.ENCODE_PLAIN, aTalkApp.getResString(R.string.file_delivery_error, ex.getMessage()));
+                        }
+                    });
                 });
-            });
+            }
         }
 
         private void onPreExecute() {
