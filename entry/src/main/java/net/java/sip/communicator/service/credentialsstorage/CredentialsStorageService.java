@@ -48,9 +48,11 @@ public interface CredentialsStorageService {
      *
      * @param accountUuid account UUID
      *
-     * <code>accountUuid</code> was successfully removed; otherwise, <code>false</code>
+     * @return <code>true</code> if the password for the specified
+     * <code>accountUuid</code> was successfully removed; otherwise,
+     * <code>false</code>
      */
-    void removePassword(String accountUuid);
+    boolean removePassword(String accountUuid);
 
     /**
      * Checks if master password was set by the user and
@@ -78,12 +80,14 @@ public interface CredentialsStorageService {
      *
      * @param master the master password to verify
      *
-     * @return <code>true</code> if the password is correct; <code>false</code>, otherwise
+     * @return <code>true</code> if the password is correct; <code>false</code>,
+     * otherwise
      */
     boolean verifyMasterPassword(String master);
 
     /**
-     * Checks if the account password that starts with the given prefix is saved in encrypted form.
+     * Checks if the account password that starts with the given prefix is saved
+     * in encrypted form.
      *
      * @param accountUuid account UUID
      *

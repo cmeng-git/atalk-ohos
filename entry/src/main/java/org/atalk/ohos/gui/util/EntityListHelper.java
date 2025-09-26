@@ -71,24 +71,24 @@ public class EntityListHelper {
     /**
      * Set the contact blocking status with option apply to all contacts on domain
      *
-     * @param ctx Context
+     * @param context Context
      * @param contact Contact
      * @param setBlock ture to block contact
      *
      * @see OperationSetPersistentPresenceJabberImpl#onJidsBlocked(List) etc
      */
-    public static void setEntityBlockState(final Context ctx, final Contact contact, boolean setBlock) {
+    public static void setEntityBlockState(final Context context, final Contact contact, boolean setBlock) {
         Jid contactJid = contact.getJid();
 
         // Disable Domain Block option if user is on the same Domain
         boolean cbEnable = !contactJid.asDomainBareJid().isParentOf(contact.getProtocolProvider().getOurJid());
 
-        String title = ctx.getString(setBlock ?
+        String title = context.getString(setBlock ?
                 ResourceTable.String_contact_block : ResourceTable.String_contact_unblock);
-        String message = ctx.getString(setBlock ?
+        String message = context.getString(setBlock ?
                 ResourceTable.String_contact_block_text : ResourceTable.String_contact_unblock_text, contactJid);
-        String cbMessage = ctx.getString(ResourceTable.String_domain_blocking, contactJid.asDomainBareJid());
-        String btnText = ctx.getString(setBlock ? ResourceTable.String_block : ResourceTable.String_unblock);
+        String cbMessage = context.getString(ResourceTable.String_domain_blocking, contactJid.asDomainBareJid());
+        String btnText = context.getString(setBlock ? ResourceTable.String_block : ResourceTable.String_unblock);
 
         PacMap pacMap = new PacMap();
         pacMap.putString(DialogComponent.ARG_MESSAGE, message);
@@ -98,7 +98,7 @@ public class EntityListHelper {
         Component dialogComponent = new DialogComponent(ctx, pacMap);
 
         // Displays the history delete dialog and waits for user confirmation
-        DialogH.getInstance(ctx).showCustomDialog(ctx, title, dialogComponent,
+        DialogH.getInstance(ctx).showCustomDialog(context, title, dialogComponent,
                 btnText, new DialogH.DialogListener() {
                     public boolean onConfirmClicked(DialogH dialog) {
                         Checkbox cbDomain = dialogComponent.findComponentById(ResourceTable.Id_cb_option);
@@ -139,23 +139,23 @@ public class EntityListHelper {
         String message;
         String title;
 
-        Context ctx = aTalkApp.getInstance();
-        title = ctx.getString(ResourceTable.String_remove_contact);
+        Context context = aTalkApp.getInstance();
+        title = context.getString(ResourceTable.String_remove_contact);
         Contact contact = metaContact.getDefaultContact();
         Jid contactJid = contact.getJid();
 
         // Allow both contact or DomainBareJid to be remove
         if (contactJid != null) {
             Jid userJid = contact.getProtocolProvider().getAccountID().getEntityBareJid();
-            message = ctx.getString(ResourceTable.String_remove_contact_prompt, userJid, contactJid);
+            message = context.getString(ResourceTable.String_remove_contact_prompt, userJid, contactJid);
         }
         else {
             aTalkApp.showToastMessage(ResourceTable.String_contact_invalid, contact);
             return;
         }
 
-        DialogH.getInstance(ctx).showConfirmDialog(ctx, title, message,
-                ctx.getString(ResourceTable.String_remove), new DialogH.DialogListener() {
+        DialogH.getInstance(ctx).showConfirmDialog(context, title, message,
+                context.getString(ResourceTable.String_remove), new DialogH.DialogListener() {
                     @Override
                     public boolean onConfirmClicked(DialogH dialog) {
                         doRemoveContact(caller, metaContact);
@@ -188,8 +188,8 @@ public class EntityListHelper {
                 CHS.eraseLocallyStoredCallHistory(metaContact);
                 metaContactListService.removeMetaContact(metaContact);
             } catch (Exception ex) {
-                Context ctx = aTalkApp.getInstance();
-                DialogH.getInstance(ctx).showDialog(ctx,
+                Context context = aTalkApp.getInstance();
+                DialogH.getInstance(context).showDialog(context,
                         aTalkApp.getResString(ResourceTable.String_remove_contact), ex.getMessage());
             }
         }).start();
@@ -260,11 +260,11 @@ public class EntityListHelper {
         else
             return;
 
-        Context ctx = aTalkApp.getInstance();
-        String title = ctx.getString(ResourceTable.String_history_contact, entityJid);
-        String message = ctx.getString(ResourceTable.String_history_purge_for_contact_warning, entityJid);
-        String cbMessage = ctx.getString(ResourceTable.String_history_purge_media);
-        String btnText = ctx.getString(ResourceTable.String_purge);
+        Context context = aTalkApp.getInstance();
+        String title = context.getString(ResourceTable.String_history_contact, entityJid);
+        String message = context.getString(ResourceTable.String_history_purge_for_contact_warning, entityJid);
+        String cbMessage = context.getString(ResourceTable.String_history_purge_media);
+        String btnText = context.getString(ResourceTable.String_purge);
 
         PacMap pacMap = new PacMap();
         pacMap.putString(DialogComponent.ARG_MESSAGE, message);
@@ -274,7 +274,7 @@ public class EntityListHelper {
         Component dialogComponent = new DialogComponent(ctx, pacMap);
 
         // Displays the history delete dialog and waits for user confirmation
-        DialogH.getInstance(ctx).showCustomDialog(ctx, title, dialogComponent,
+        DialogH.getInstance(context).showCustomDialog(context, title, dialogComponent,
                 btnText, new DialogH.DialogListener() {
                     public boolean onConfirmClicked(DialogH dialog) {
                         Checkbox cbMediaDelete = dialogComponent.findComponentById(ResourceTable.Id_cb_option);

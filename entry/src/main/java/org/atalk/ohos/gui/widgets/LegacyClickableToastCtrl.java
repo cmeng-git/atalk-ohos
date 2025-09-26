@@ -83,9 +83,7 @@ public class LegacyClickableToastCtrl {
      */
     public LegacyClickableToastCtrl(Component toastView, Component.ClickedListener clickListener, int toastButtonId) {
         this.toastView = toastView;
-
         this.clickListener = clickListener;
-
         messageView = toastView.findComponentById(ResourceTable.Id_toast_msg);
 
         toastView.findComponentById(toastButtonId).setClickedListener(view -> {

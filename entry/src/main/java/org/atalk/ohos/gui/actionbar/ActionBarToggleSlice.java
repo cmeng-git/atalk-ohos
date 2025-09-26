@@ -95,7 +95,7 @@ public class ActionBarToggleSlice extends BaseSlice {
     }
 
     @Override
-    public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+    public boolean onMenuItemSelected(MenuItem menuItem) {
         return false;
     }
 

@@ -5,6 +5,9 @@
  */
 package org.atalk.ohos.gui.account.settings;
 
+import ohos.aafwk.content.Intent;
+import ohos.utils.PacMap;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -13,11 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import ohos.aafwk.ability.Ability;
-import ohos.aafwk.content.Intent;
-import ohos.utils.PacMap;
-
-import net.java.sip.communicator.service.protocol.EncodingsRegistrationUtil;
+import net.java.sip.communicator.service.protocol.EncodingsRegistration;
 import net.java.sip.communicator.service.protocol.ProtocolProviderFactory;
 
 import org.atalk.impl.neomedia.MediaServiceImpl;
@@ -29,7 +28,6 @@ import org.atalk.ohos.agp.components.Menu;
 import org.atalk.ohos.gui.actionbar.ActionBarToggleSlice;
 import org.atalk.service.neomedia.codec.EncodingConfiguration;
 import org.atalk.service.neomedia.format.MediaFormat;
-import org.atalk.service.osgi.OSGiAbility;
 import org.atalk.util.MediaType;
 
 /**
@@ -53,7 +51,7 @@ public class MediaEncodingAbility extends BaseAbility
     public static final String ENC_MEDIA_TYPE_KEY = "media_type";
 
     /**
-     * The intent's key for {@link EncodingsRegistrationUtil}
+     * The intent's key for {@link EncodingsRegistration}
      */
     public static final String EXTRA_KEY_ENC_REG = "encRegObj";
 
@@ -90,9 +88,9 @@ public class MediaEncodingAbility extends BaseAbility
     private boolean isOverrideEncodings;
 
     /**
-     * The {@link EncodingsRegistrationUtil} object that stores encoding and their priorities
+     * The {@link EncodingsRegistration} object that stores encoding and their priorities
      */
-    private EncodingsRegistrationUtil mEncReg;
+    private EncodingsRegistration mEncReg;
 
     /**
      * Flag indicating whether any changes has been made to the configuration

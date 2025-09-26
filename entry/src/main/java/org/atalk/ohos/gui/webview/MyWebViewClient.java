@@ -68,10 +68,8 @@ public class MyWebViewClient extends WebAgent {
      */
     @Override
     public boolean isNeedLoadUrl(WebView webView, ResourceRequest request) {
-        String url = request.getRequestUrl().toString();
-
-        // Timber.d("shouldOverrideUrlLoading for url (webView url): %s (%s)", url, webView.getUrl());
         // This user clicked url is from the same website, so do not override; let MyWebViewClient load the page
+        String url = request.getRequestUrl().toString();
         if (isDomainMatch(webView, url)) {
             viewFragment.addLastUrl(url);
             return false;

@@ -38,8 +38,7 @@ import org.atalk.service.neomedia.event.VolumeChangeListener;
  * @author Pawel Domas
  * @author Eng Chong Meng
  */
-public class CallVolumeCtrlSlice extends BaseSlice implements VolumeChangeListener
-{
+public class CallVolumeCtrlSlice extends BaseSlice implements VolumeChangeListener {
     /**
      * Current volume gain "position" in range from 0 to 10.
      */
@@ -56,8 +55,7 @@ public class CallVolumeCtrlSlice extends BaseSlice implements VolumeChangeListen
     private AudioManager audioManager;
 
     @Override
-    public void onStart(Intent intent)
-    {
+    public void onStart(Intent intent) {
         super.onStart(intent);
         audioManager = (AudioManager)  aTalkApp.getInstance().getSystemService(Context.AUDIO_SERVICE);
         MediaServiceImpl mediaService = NeomediaActivator.getMediaServiceImpl();
@@ -66,8 +64,7 @@ public class CallVolumeCtrlSlice extends BaseSlice implements VolumeChangeListen
     }
 
     @Override
-    public void onActive()
-    {
+    public void onActive() {
         super.onActive();
         if (volumeControl == null)
             return;
@@ -84,8 +81,7 @@ public class CallVolumeCtrlSlice extends BaseSlice implements VolumeChangeListen
     }
 
     @Override
-    public void onInactive()
-    {
+    public void onInactive() {
         if (volumeControl != null) {
             volumeControl.removeVolumeChangeListener(this);
         }
@@ -97,16 +93,14 @@ public class CallVolumeCtrlSlice extends BaseSlice implements VolumeChangeListen
      *
      * @return current volume index for <code>AudioManager.STREAM_VOICE_CALL</code>.
      */
-    private int getAudioStreamVolume()
-    {
+    private int getAudioStreamVolume() {
         return audioManager.getStreamVolume(AudioManager.STREAM_VOICE_CALL);
     }
 
     /**
      * Method should be called by the parent <code>Ability</code> when volume up key is pressed.
      */
-    public void onKeyVolUp()
-    {
+    public void onKeyVolUp() {
         int controlMode = AudioManager.ADJUST_RAISE;
         if (position < 5) {
             controlMode = AudioManager.ADJUST_SAME;
@@ -127,8 +121,7 @@ public class CallVolumeCtrlSlice extends BaseSlice implements VolumeChangeListen
     /**
      * Method should be called by the parent <code>Ability</code> when volume down key is pressed.
      */
-    public void onKeyVolDown()
-    {
+    public void onKeyVolDown() {
         int controlMode = AudioManager.ADJUST_LOWER;
         if (position > 5) {
             // We adjust the same just to show the gui
@@ -147,22 +140,19 @@ public class CallVolumeCtrlSlice extends BaseSlice implements VolumeChangeListen
         }
     }
 
-    private int calcPosition(float volumeGain)
-    {
+    private int calcPosition(float volumeGain) {
         return (int) ((volumeGain / getVolumeCtrlRange()) * 10f);
     }
 
-    private void setVolumeGain(int newPosition)
-    {
+    private void setVolumeGain(int newPosition) {
         float newVolume = getVolumeCtrlRange() * (((float) newPosition) / 10f);
         this.position = calcPosition(volumeControl.setVolume(newVolume));
     }
 
     @Override
-    public void volumeChange(VolumeChangeEvent volumeChangeEvent)
-    {
-        position = calcPosition(volumeChangeEvent.getLevel() / getVolumeCtrlRange());
-        BaseAbility.runOnUiThread(() -> {
+    public void volumeChange(VolumeChangeEvent volumeChangeEvent) {
+        runOnUiThread(() -> {
+            position = calcPosition(volumeChangeEvent.getLevel() / getVolumeCtrlRange());
             Ability parent = getAbility();
             if (parent == null)
                 return;
@@ -175,8 +165,7 @@ public class CallVolumeCtrlSlice extends BaseSlice implements VolumeChangeListen
      *
      * @return the volume control range calculated for current volume control min and max values.
      */
-    private float getVolumeCtrlRange()
-    {
+    private float getVolumeCtrlRange() {
         return volumeControl.getMaxValue() - volumeControl.getMinValue();
     }
 }

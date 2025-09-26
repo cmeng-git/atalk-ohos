@@ -58,15 +58,15 @@ class CtrlNotificationThread {
     /**
      * The Android context.
      */
-    private final Context ctx;
+    private final Context mContext;
     /**
      * The call that is controlled by notification.
      */
-    private final Call call;
+    private final Call mCall;
     /**
      * The notification ID.
      */
-    private final int id;
+    private final int mId;
 
     /**
      * Creates new instance of {@link CtrlNotificationThread}.
@@ -77,23 +77,23 @@ class CtrlNotificationThread {
      * @param notificationR call control notification that will be updated by this thread.
      */
     public CtrlNotificationThread(Context ctx, Call call, int id, NotificationRequest notificationR) {
-        this.ctx = ctx;
-        this.call = call;
-        this.id = id;
-        this.notificationRequest = notificationR;
+        mContext = ctx;
+        mCall = call;
+        mId = id;
+        notificationRequest = notificationR;
     }
 
     /**
      * Starts notification update thread.
      */
     public void start() {
-        this.thread = new Thread(this::notificationLoop);
+        thread = new Thread(this::notificationLoop);
         thread.start();
     }
 
     private void notificationLoop() {
         NotificationHelper mNotificationManager
-                = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
+                = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
         boolean micEnabled
                 = ctx.verifySelfPermission(SystemPermission.MICROPHONE) == IBundleManager.PERMISSION_GRANTED;
 
@@ -102,7 +102,7 @@ class CtrlNotificationThread {
 
             // Update call duration timer on call notification
             long callStartDate = CallPeer.CALL_DURATION_START_TIME_UNKNOWN;
-            Iterator<? extends CallPeer> peers = call.getCallPeers();
+            Iterator<? extends CallPeer> peers = mCall.getCallPeers();
             if (peers.hasNext()) {
                 callStartDate = peers.next().getCallDurationStartTime();
             }
@@ -118,18 +118,18 @@ class CtrlNotificationThread {
                     : ResourceTable.Media_call_receiver_on_dark);
 
             // Update notification call mute status
-            boolean isMute = (!micEnabled || CallManager.isMute(call));
+            boolean isMute = (!micEnabled || CallManager.isMute(mCall));
 
             notificationRequest.contentView.setImageViewResource(ResourceTable.Id_button_mute,
                     isMute ? ResourceTable.Media_call_microphone_mute_dark : ResourceTable.Media_call_microphone_dark);
 
             // Update notification call hold status
-            boolean isOnHold = CallManager.isLocallyOnHold(call);
+            boolean isOnHold = CallManager.isLocallyOnHold(mCall);
             notificationRequest.contentView.setImageViewResource(ResourceTable.Id_button_hold,
                     isOnHold ? ResourceTable.Media_call_hold_on_dark : ResourceTable.Media_call_hold_off_dark);
 
             if (run && (mNotificationManager != null)) {
-                mNotificationManager.notify(id, notificationRequest);
+                mNotificationManager.notify(mId, notificationRequest);
             }
 
             synchronized (this) {
@@ -143,7 +143,7 @@ class CtrlNotificationThread {
     }
 
     public int getCtrlId() {
-        return id;
+        return mId;
     }
 
     /**

@@ -16,6 +16,8 @@
  */
 package net.java.sip.communicator.impl.protocol.jabber;
 
+import static org.jivesoftware.smackx.omemo.util.OmemoConstants.OMEMO_NAMESPACE_V_AXOLOTL;
+
 import ohos.app.Context;
 
 import java.io.IOException;
@@ -114,8 +116,6 @@ import org.jxmpp.jid.EntityFullJid;
 import org.jxmpp.jid.Jid;
 
 import timber.log.Timber;
-
-import static org.jivesoftware.smackx.omemo.util.OmemoConstants.OMEMO_NAMESPACE_V_AXOLOTL;
 
 /**
  * A straightforward implementation of the basic instant messaging operation set.

@@ -158,7 +158,7 @@ public class CallInfoDialog {
     private void doUpdateView() {
         CallConference conference = mCall.getConference();
         List<Call> calls = conference.getCalls();
-        if (calls.size() == 0)
+        if (calls.isEmpty())
             return;
 
         Call aCall = calls.get(0);

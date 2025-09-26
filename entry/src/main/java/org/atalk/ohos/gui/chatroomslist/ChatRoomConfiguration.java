@@ -101,7 +101,7 @@ public class ChatRoomConfiguration extends BaseSlice {
      * Constructs the <code>ChatRoomConfiguration</code>.
      *
      * @param chatRoomWrapper user joined ChatRoomWrapper for the <code>Chat Session</code>
-     * @param crcListener
+     * @param crcListener ChatRoomConfigListener
      */
     public static ChatRoomConfiguration getInstance(ChatRoomWrapper chatRoomWrapper, ChatRoomConfigListener crcListener) {
         ChatRoomConfiguration fragment = new ChatRoomConfiguration();

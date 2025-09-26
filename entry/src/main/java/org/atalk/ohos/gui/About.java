@@ -187,10 +187,6 @@ public class About extends BaseAbility implements Component.ClickedListener {
     @Override
     public void onClick(Component view) {
         switch (view.getId()) {
-            case ResourceTable.Id_ok_button:
-                terminateAbility();
-                break;
-
             case ResourceTable.Id_check_new_version:
                 new Thread() {
                     @Override
@@ -213,6 +209,7 @@ public class About extends BaseAbility implements Component.ClickedListener {
             case ResourceTable.Id_atalk_link:
                 atalkUrlAccess(this, getString(ResourceTable.String_AboutDialog_Link));
                 break;
+            case ResourceTable.Id_ok_button:
             default:
                 terminateAbility();
                 break;

@@ -10,7 +10,6 @@ import java.util.Date;
 /**
  * A "ProgressEvent" event gets delivered through the search process of HistoryReader Service. The event is created with
  * arguments - the search conditions (if they do not exist null is passed).
- * <p>
  * We must know the search conditions due the fact that we must differ searches if more than one exist. The real
  * information is the progress of the current search.
  *

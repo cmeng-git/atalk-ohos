@@ -103,6 +103,7 @@ public class CallHistorySlice extends BaseSlice
      * The call history list view representing the chat.
      */
     private MListContainer callListContainer;
+
     private Component callDateTime;
     private DatePicker datePicker;
     private TimePicker timePicker;
@@ -116,6 +117,7 @@ public class CallHistorySlice extends BaseSlice
      * Component for room configuration title description from the room configuration form
      */
     private Text mTitle;
+
     /**
      * {@inheritDoc}
      */
@@ -254,7 +256,7 @@ public class CallHistorySlice extends BaseSlice
                 Executors.newSingleThreadExecutor().execute(() -> {
                     doInBackground();
 
-                    BaseAbility.runOnUiThread(() -> {
+                    runOnUiThread(() -> {
                         if (!callRecords.isEmpty()) {
                             callHistoryProvider.notifyDataChanged();
                         }
@@ -384,7 +386,7 @@ public class CallHistorySlice extends BaseSlice
 
     @Override
     public void contactPresenceStatusChanged(ContactPresenceStatusChangeEvent evt) {
-        BaseAbility.runOnUiThread(() -> callHistoryProvider.notifyDataChanged());
+        runOnUiThread(() -> callHistoryProvider.notifyDataChanged());
     }
 
     @Override
@@ -601,9 +603,11 @@ public class CallHistorySlice extends BaseSlice
         Image callType;
         Image callButton;
         Image callVideoButton;
+
         Text contactId;
         Text callInfo;
         MetaContact metaContact;
+
         int childPosition;
     }
 }

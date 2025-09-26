@@ -42,11 +42,10 @@ import ohos.app.Context;
  * @author Stefan Sieber
  * @author Eng Chong Meng
  */
-public class LoginByPasswordStrategy implements JabberLoginStrategy
-{
+public class LoginByPasswordStrategy implements JabberLoginStrategy {
     private final AbstractProtocolProviderService protocolProvider;
     private final AccountID accountID;
-    private ConnectionConfiguration.Builder<?, ?> ccBuilder;
+    private final ConnectionConfiguration.Builder<?, ?> ccBuilder;
     private String password;
 
     /**
@@ -56,8 +55,7 @@ public class LoginByPasswordStrategy implements JabberLoginStrategy
      * @param accountID The accountID to use for the login.
      */
     public LoginByPasswordStrategy(AbstractProtocolProviderService protocolProvider, AccountID accountID,
-            ConnectionConfiguration.Builder<?, ?>  ccBuilder)
-    {
+            ConnectionConfiguration.Builder<?, ?> ccBuilder) {
         this.protocolProvider = protocolProvider;
         this.accountID = accountID;
         this.ccBuilder = ccBuilder;
@@ -70,10 +68,10 @@ public class LoginByPasswordStrategy implements JabberLoginStrategy
      * @param reasonCode reasonCode why we're preparing for login
      * @param reason the reason descriptive text why we're preparing for login
      * @param isShowAlways <code>true</code> always show the credential prompt for user entry
+     *
      * @return UserCredentials in case they need to be cached for this session (i.e. password is not persistent)
      */
-    public UserCredentials prepareLogin(SecurityAuthority authority, int reasonCode, String reason, Boolean isShowAlways)
-    {
+    public UserCredentials prepareLogin(SecurityAuthority authority, int reasonCode, String reason, Boolean isShowAlways) {
         return loadPassword(authority, reasonCode, reason, isShowAlways);
     }
 
@@ -82,8 +80,7 @@ public class LoginByPasswordStrategy implements JabberLoginStrategy
      *
      * @return True when the password was successfully loaded.
      */
-    public boolean loginPreparationSuccessful()
-    {
+    public boolean loginPreparationSuccessful() {
         return (password != null);
     }
 
@@ -93,13 +90,14 @@ public class LoginByPasswordStrategy implements JabberLoginStrategy
      * @param connection The connection on which the login is performed.
      * @param userName The full Jid username for the login.
      * @param resource The XMPP resource.
+     *
      * @return always true.
+     *
      * @throws XMPPException xmppException
      */
     @Override
     public boolean login(AbstractXMPPConnection connection, String userName, Resourcepart resource)
-            throws XMPPException, SmackException
-    {
+            throws XMPPException, SmackException {
         try {
             connection.login(userName, password, resource);
         } catch (IOException | InterruptedException ex) {
@@ -123,8 +121,7 @@ public class LoginByPasswordStrategy implements JabberLoginStrategy
      * @param pps The protocolServiceProvider.
      * @param accountId The username accountID for registration.
      */
-    public boolean registerAccount(final ProtocolProviderServiceJabberImpl pps, final AccountID accountId)
-    {
+    public boolean registerAccount(final ProtocolProviderServiceJabberImpl pps, final AccountID accountId) {
         // Wait for right moment before proceed, otherwise captcha dialog will be
         // obscured by other launching activities in progress on first aTalk launch.
         aTalkApp.waitForFocus();
@@ -142,10 +139,9 @@ public class LoginByPasswordStrategy implements JabberLoginStrategy
      * Requires TLS by default (i.e. it will not connect to a non-TLS server and will not fallback to clear-text)
      * BOSH connection does not support TLS - return false always
      *
-     * @see net.java.sip.communicator.impl.protocol.jabber.JabberLoginStrategy# isTlsRequired()
+     * @see net.java.sip.communicator.impl.protocol.jabber.JabberLoginStrategy#isTlsRequired
      */
-    public boolean isTlsRequired()
-    {
+    public boolean isTlsRequired() {
         boolean tlsRequire = !accountID.getAccountPropertyBoolean(ProtocolProviderFactory.IS_ALLOW_NON_SECURE, false);
         return tlsRequire && !(ccBuilder instanceof BOSHConfiguration.Builder);
     }
@@ -155,12 +151,13 @@ public class LoginByPasswordStrategy implements JabberLoginStrategy
      *
      * @param cs The certificate service that provides the context.
      * @param trustManager The TrustManager to use within the context.
+     *
      * @return An initialized context for the current provider.
-     * @throws GeneralSecurityException
+     *
+     * @throws GeneralSecurityException exception
      */
     public SSLContext createSslContext(CertificateService cs, X509TrustManager trustManager)
-            throws GeneralSecurityException
-    {
+            throws GeneralSecurityException {
         return cs.getSSLContext(trustManager);
     }
 
@@ -169,10 +166,10 @@ public class LoginByPasswordStrategy implements JabberLoginStrategy
      *
      * @param authority SecurityAuthority
      * @param reasonCode the authentication reason code. Indicates the reason of this authentication.
+     *
      * @return The UserCredentials in case they should be cached for this session (i.e. are not persistent)
      */
-    private UserCredentials loadPassword(SecurityAuthority authority, int reasonCode, String loginReason, boolean isShowAlways)
-    {
+    private UserCredentials loadPassword(SecurityAuthority authority, int reasonCode, String loginReason, boolean isShowAlways) {
         /*
          * Get the persistent password from the database if unavailable from accountID
          * Note: the last password entered by user is only available in accountID i.e mAccountProperties until
@@ -253,8 +250,7 @@ public class LoginByPasswordStrategy implements JabberLoginStrategy
     }
 
     @Override
-    public ConnectionConfiguration.Builder<?, ?> getConnectionConfigurationBuilder()
-    {
+    public ConnectionConfiguration.Builder<?, ?> getConnectionConfigurationBuilder() {
         return ccBuilder;
     }
 }

@@ -367,7 +367,7 @@ public class NotificationPopupHandler extends AbstractPopupMessageHandler
             }
             if (chatPanel != null) {
                 Timber.d("Popup action reply message to: %s %s", tag, replyText);
-                chatPanel.sendMessage(replyText, IMessage.ENCODE_PLAIN);
+                chatPanel.replyMessage(replyText, IMessage.ENCODE_PLAIN);
             }
         }
 
@@ -387,10 +387,6 @@ public class NotificationPopupHandler extends AbstractPopupMessageHandler
             Timber.e("No valid notification exists for %s", notificationId);
             return;
         }
-
-        // Remove the notification for all actions except ACTION_SNOOZE.
-        if (!PopupClickCallBack.ACTION_SNOOZE.equals(action))
-            removeNotification(notificationId);
 
         // Retrieve the popup tag to process
         PopupMessage message = popup.getPopupMessage();
@@ -447,6 +443,10 @@ public class NotificationPopupHandler extends AbstractPopupMessageHandler
             default:
                 Timber.w("Unsupported action: %s", action);
         }
+
+        // Remove the notification for all actions except ACTION_SNOOZE.
+        if (!PopupClickCallBack.ACTION_SNOOZE.equals(action))
+            removeNotification(notificationId);
 
         PopupMessage msg = popup.getPopupMessage();
         if (msg == null) {

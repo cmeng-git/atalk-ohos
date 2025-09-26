@@ -32,6 +32,7 @@ import org.atalk.ohos.util.AppImageUtil;
 public class MenuItem extends RadioButton {
     private PixelMap mIcon;
     private String mTitle;
+    private int mItemId;
     private boolean mSticky;
 
     private final Context mContext;
@@ -49,6 +50,10 @@ public class MenuItem extends RadioButton {
         mItemId = itemId;
         mTitle = title;
         mIcon = icon;
+    }
+
+    public int getItemId() {
+        return mItemId;
     }
 
     /**

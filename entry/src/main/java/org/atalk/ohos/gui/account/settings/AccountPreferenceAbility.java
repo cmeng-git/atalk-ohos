@@ -87,7 +87,7 @@ public class AccountPreferenceAbility extends BaseAbility
             // Gets the registration wizard service for account protocol
             String protocolName = account.getProtocolName();
 
-            if (savedInstanceState == null) {
+            if (mInState == null) {
                 preferencesSlice = createPreferencesFragment(userUniqueID, protocolName);
 
                 // Display the fragment as the main content.

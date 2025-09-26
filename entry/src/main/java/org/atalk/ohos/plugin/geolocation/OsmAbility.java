@@ -24,12 +24,13 @@ import ohos.net.NetManager;
 import ohos.net.NetStatusCallback;
 import ohos.utils.PacMap;
 
+import java.util.ArrayList;
+
 import org.atalk.ohos.BaseAbility;
 import org.atalk.ohos.ResourceTable;
 import org.atalk.ohos.aTalkApp;
-import org.atalk.service.httputil.HttpConnectionManager;
+import org.atalk.service.httputil.OkHttpUtils;
 
-import java.util.ArrayList;
 import timber.log.Timber;
 
 /**
@@ -75,7 +76,7 @@ public class OsmAbility extends BaseAbility {
         super.onStart(intent);
         this.setUIContent(ResourceTable.Layout_osm_map_main);
 
-        Configuration.getInstance().setUserAgentValue(HttpConnectionManager.getUserAgent());
+        Configuration.getInstance().setUserAgentValue(OkHttpUtils.getUserAgent());
 
         // noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -96,15 +97,15 @@ public class OsmAbility extends BaseAbility {
 //        }
 
 
-        if (savedInstanceState == null) {
+        if (mInState == null) {
             mLocationFetchMode = intent.getIntParam(GeoIntentKey.LOCATION_FETCH_MODE, GeoConstants.FOLLOW_ME_FIX);
             mLocation = intent.getSerializableParam(GeoIntentKey.LOCATION);
             mLocations = intent.getSequenceableArrayListParam(GeoIntentKey.LOCATION_LIST);
         }
         else {
-            mLocationFetchMode = savedInstanceState.getInt(GeoIntentKey.LOCATION_FETCH_MODE, GeoConstants.FOLLOW_ME_FIX);
-            mLocation = savedInstanceState.getParcelable(GeoIntentKey.LOCATION);
-            mLocations = savedInstanceState.getParcelableArrayList(GeoIntentKey.LOCATION_LIST);
+            mLocationFetchMode = mInState.getInt(GeoIntentKey.LOCATION_FETCH_MODE, GeoConstants.FOLLOW_ME_FIX);
+            mLocation = mInState.getParcelable(GeoIntentKey.LOCATION);
+            mLocations = mInState.getParcelableArrayList(GeoIntentKey.LOCATION_LIST);
         }
 
         FragmentManager fm = getSupportFragmentManager();
@@ -139,7 +140,7 @@ public class OsmAbility extends BaseAbility {
 
     @Override
     public boolean onSupportNavigateUp() {
-        onBackPressed();
+        terminateAbility();
         return true;
     }
 

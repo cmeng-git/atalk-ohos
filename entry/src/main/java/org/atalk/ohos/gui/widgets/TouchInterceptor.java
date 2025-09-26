@@ -97,7 +97,7 @@ public class TouchInterceptor extends ListComponent {
      */
     private int lowerBound;
     /**
-     * Component.'s height
+     * Component's height
      */
     private int height;
     /**
@@ -176,48 +176,52 @@ public class TouchInterceptor extends ListComponent {
             if (!isEnabled()) {
                 return true;
             }
-            switch (ev.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    int x = (int) ev.getX();
-                    int y = (int) ev.getY();
-                    int itemnum = pointToPosition(x, y);
-                    if (itemnum == ListContainer.INVALID_POSITION) {
-                        break;
-                    }
-                    Component item = getChildAt(itemnum - getFirstVisiblePosition());
-                    dragPointX = x - ((item == null) ? 0 : item.getLeft());
-                    dragPointY = y - ((item == null) ? 0 : item.getTop());
-                    xOffset = ((int) ev.getRawX()) - x;
-                    yOffset = ((int) ev.getRawY()) - y;
-                    Timber.d("Dragging %s, %s sxy: %s, %s", x, y, dragRegionStartX, dragRegionEndX);
+            if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+                int x = (int) ev.getX();
+                int y = (int) ev.getY();
+                int itemnum = pointToPosition(x, y);
+                if (itemnum == ListContainer.INVALID_POSITION) {
+                    return super.onInterceptTouchEvent(ev);
+                }
+                Component view = getChildAt(itemnum - getFirstVisiblePosition());
+                dragPointX = x - ((view == null) ? 0 : view.getLeft());
+                dragPointY = y - ((view == null) ? 0 : view.getTop());
+                xOffset = ((int) ev.getRawX()) - x;
+                yOffset = ((int) ev.getRawY()) - y;
+                Timber.d("Dragging %s, %s sxy: %s, %s", x, y, dragRegionStartX, dragRegionEndX);
 
-                    if (x >= dragRegionStartX && x <= dragRegionEndX) {
-                        item.setDrawingCacheEnabled(true);
-                        // Create a copy of the drawing cache so that it does
-                        // not get recycled by the framework when the list tries
-                        // to clean up memory
-                        Bitmap bitmap = Bitmap.createBitmap(item.getDrawingCache());
-                        startDragging(bitmap, x, y);
-                        dragPos = itemnum;
-                        srcDragPos = dragPos;
-                        height = getHeight();
-                        int touchSlop = this.touchSlop;
-                        upperBound = Math.min(y - touchSlop, height / 3);
-                        lowerBound = Math.max(y + touchSlop, height * 2 / 3);
-                        return false;
-                    }
-                    stopDragging();
-                    break;
+                if (x >= dragRegionStartX && x <= dragRegionEndX && item != null) {
+                    // view.setDrawingCacheEnabled(true);
+                    // Create a copy of the drawing cache so that it does not get recycled
+					// by the framework when the list tries to clean up memory
+                    // Bitmap bitmap = Bitmap.createBitmap(view.getDrawingCache());
+                    Bitmap bitmap = getBitmapFromView(view);
+                    startDragging(bitmap, x, y);
+                    dragPos = itemnum;
+                    srcDragPos = dragPos;
+                    height = getHeight();
+                    int touchSlop = this.touchSlop;
+                    upperBound = Math.min(y - touchSlop, height / 3);
+                    lowerBound = Math.max(y + touchSlop, height * 2 / 3);
+                    return false;
+                }
+                stopDragging();
             }
         }
         return super.onInterceptTouchEvent(ev);
+    }
+
+    private Bitmap getBitmapFromView(View view) {
+        Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        view.draw(canvas);
+        return bitmap;
     }
 
     /*
      * pointToPosition() doesn't consider invisible views, but we need to, so implement a slightly different version.
      */
     private int myPointToPosition(int x, int y) {
-
         if (y < 0) {
             // when dragging off the top of the screen, calculate position
             // by going back from a visible item

@@ -54,7 +54,7 @@ public class EncodingSettings extends BaseAbility {
             setMainTitle(ResourceTable.String_settings_video_codec);
         }
 
-        if (savedInstanceState == null) {
+        if (mInState == null) {
             MediaServiceImpl mediaSrvc = NeomediaActivator.getMediaServiceImpl();
             if (mediaSrvc != null) {
                 EncodingConfiguration encConfig = mediaSrvc.getCurrentEncodingConfiguration();

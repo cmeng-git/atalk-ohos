@@ -9,10 +9,12 @@ package net.java.sip.communicator.service.history.records;
  * @author Alexander Pelov
  */
 public class HistoryRecordStructure {
-    private String[] propertyNames;
+
+    private final String[] propertyNames;
 
     /**
      * Creates an entry structure object used to define the shape of the data stored in the history.
+     *
      * Note that the property names are not unique, i.e. a single property may have 0, 1 or more values.
      *
      * @param propertyNames

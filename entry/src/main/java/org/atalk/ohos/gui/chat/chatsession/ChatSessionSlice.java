@@ -324,7 +324,7 @@ public class ChatSessionSlice extends BaseSlice implements Component.ClickedList
                 Executors.newSingleThreadExecutor().execute(() -> {
                     doInBackground();
 
-                    BaseAbility.runOnUiThread(() -> {
+                    runOnUiThread(() -> {
                         if (!sessionRecords.isEmpty()) {
                             chatSessionProvider.notifyDataChanged();
                         }
@@ -365,7 +365,7 @@ public class ChatSessionSlice extends BaseSlice implements Component.ClickedList
             if (chatRecordViewHolder == null)
                 return;
 
-            BaseAbility.runOnUiThread(() -> {
+            runOnUiThread(() -> {
                 if (count == 0) {
                     chatRecordViewHolder.unreadCount.setVisibility(Component.HIDE);
                 }
@@ -471,7 +471,7 @@ public class ChatSessionSlice extends BaseSlice implements Component.ClickedList
 
     @Override
     public void contactPresenceStatusChanged(ContactPresenceStatusChangeEvent evt) {
-        BaseAbility.runOnUiThread(() -> chatSessionProvider.notifyDataChanged());
+        runOnUiThread(() -> chatSessionProvider.notifyDataChanged());
     }
 
     /**
@@ -479,7 +479,7 @@ public class ChatSessionSlice extends BaseSlice implements Component.ClickedList
      */
     @Override
     public void contentChanged(ChatRoomListChangeEvent evt) {
-        BaseAbility.runOnUiThread(() -> chatSessionProvider.notifyDataChanged());
+        runOnUiThread(() -> chatSessionProvider.notifyDataChanged());
     }
 
     @Override
@@ -499,7 +499,7 @@ public class ChatSessionSlice extends BaseSlice implements Component.ClickedList
             Executors.newSingleThreadExecutor().execute(() -> {
                 doInBackground();
 
-                BaseAbility.runOnUiThread(() -> {
+                runOnUiThread(() -> {
                 });
             });
         }

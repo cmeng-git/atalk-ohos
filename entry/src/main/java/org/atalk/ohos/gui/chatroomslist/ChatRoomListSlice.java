@@ -38,6 +38,8 @@ import org.atalk.ohos.BaseAbility;
 import org.atalk.ohos.BaseSlice;
 import org.atalk.ohos.ResourceTable;
 import org.atalk.ohos.aTalkApp;
+import org.atalk.ohos.agp.components.Menu;
+import org.atalk.ohos.agp.components.MenuInflater;
 import org.atalk.ohos.gui.AppGUIActivator;
 import org.atalk.ohos.gui.aTalk;
 import org.atalk.ohos.gui.chat.ChatPanel;
@@ -215,7 +217,7 @@ public class ChatRoomListSlice extends BaseSlice
      * @param menu the options menu
      */
     @Override
-    public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+    public void onCreateMenu(Menu menu, MenuInflater menuInflater) {
         // Get the SearchBar MenuItem
         mSearchItem = menu.findItem(ResourceTable.Id_search);
         if (mSearchItem == null)

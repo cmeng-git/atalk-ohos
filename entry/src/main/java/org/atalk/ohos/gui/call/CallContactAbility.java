@@ -31,7 +31,7 @@ public class CallContactAbility extends BaseAbility {
         super.onStart(intent);
 
         // There's no need to create fragment if the Ability is being restored.
-        if (savedInstanceState == null) {
+        if (mInState == null) {
             // Create new call contact fragment
             String phoneNumber = null;
             Intent intent = getIntent();

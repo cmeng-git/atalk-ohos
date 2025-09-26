@@ -8,7 +8,8 @@ package net.java.sip.communicator.service.history;
 import net.java.sip.communicator.service.history.records.HistoryRecordStructure;
 
 /**
- * @author Eng Chong Meng
+ * @author Alexander Pelov
+ * @author Yana Stamcheva
  */
 public interface History {
     /**

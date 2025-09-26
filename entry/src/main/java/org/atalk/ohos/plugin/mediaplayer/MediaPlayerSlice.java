@@ -45,7 +45,7 @@ import static org.atalk.ohos.plugin.mediaplayer.YoutubePlayerSlice.rateMin;
 
 /**
  * The class handles the actual content source address decoding for the user selected hymn
- * see https://developer.android.com/codelabs/exoplayer-intro#0
+ * see <a href="https://developer.android.com/codelabs/exoplayer-intro#0">...</a>
  * <p>
  * This MediaExoPlayerFragment requires its parent AbilitySlice to handle onOrientationChanged()
  * It does not consider onSaveInstanceState(); it uses the speed in the user configuration setting.

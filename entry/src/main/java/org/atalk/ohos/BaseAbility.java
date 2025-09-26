@@ -59,7 +59,7 @@ public class BaseAbility extends Ability {
      */
     public final static EventHandler uiHandler = new EventHandler(EventRunner.getMainEventRunner());
 
-    public PacMap savedInstanceState;
+    public PacMap mInState;
 
     /**
      * Override Ability#onStart() to support Theme setting
@@ -95,15 +95,7 @@ public class BaseAbility extends Ability {
     protected void onActive() {
         super.onActive();
         aTalkApp.setCurrentAbility(this);
-     }
-    /**
-     * Called when an activity is destroyed.
-     */
-    @Override
-    protected void onStop() {
-        super.onStop();
     }
-
 
     /**
      * Convenience method which starts a new abilityClass for given <code>abilityClass</code> class
@@ -180,7 +172,7 @@ public class BaseAbility extends Ability {
     @Override
     public void onRestoreAbilityState(PacMap inState) {
         super.onRestoreAbilityState(inState);
-        savedInstanceState = inState;
+        mInState = inState;
     }
 
     /**
@@ -211,6 +203,21 @@ public class BaseAbility extends Ability {
         @Override
         protected void onStart(Intent intent) {
             terminateAbility();
+        }
+    }
+
+    public void setScreenOn() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+            setTurnScreenOn(true);
+            setShowWhenLocked(true);
+            KeyguardManager keyguardManager = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
+            keyguardManager.requestDismissKeyguard(this, null);
+        }
+        else {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+                    | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
+                    | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+                    | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         }
     }
 

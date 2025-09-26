@@ -78,12 +78,14 @@ public class LocationBgService extends Ability {
         Timber.d("Location background service start command %s", actionIntent);
         if (actionIntent.equals(GeoConstants.ACTION_LOCATION_FETCH_START)) {
             GeoLocationRequest geoLocationRequest = intent.getSerializableParam(GeoIntentKey.LOCATION_REQUEST);
-            mLocationMode = geoLocationRequest.getLocationFetchMode();
-            mAddressRequest = geoLocationRequest.getAddressRequest();
-            mLocationUpdateMinTime = geoLocationRequest.getLocationUpdateMinTime();
-            mLocationUpdateMinDistance = geoLocationRequest.getLocationUpdateMinDistance();
-            fallBackToLastLocationTime = geoLocationRequest.getFallBackToLastLocationTime();
-            requestLocationUpdates();
+            if (geoLocationRequest != null) {
+                mLocationMode = geoLocationRequest.getLocationFetchMode();
+                mAddressRequest = geoLocationRequest.getAddressRequest();
+                mLocationUpdateMinTime = geoLocationRequest.getLocationUpdateMinTime();
+                mLocationUpdateMinDistance = geoLocationRequest.getLocationUpdateMinDistance();
+                fallBackToLastLocationTime = geoLocationRequest.getFallBackToLastLocationTime();
+                requestLocationUpdates();
+            }
         }
         // Tells the system to not try to recreate the service after it has been killed.
         else if (actionIntent.equals(GeoConstants.ACTION_LOCATION_FETCH_STOP)) {

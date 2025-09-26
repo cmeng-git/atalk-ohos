@@ -61,12 +61,7 @@ public class JingleMessageCallAbility extends BaseAbility implements JingleMessa
     protected void onStart(Intent intent) {
         super.onStart(intent);
         setUIContent(ResourceTable.Layout_call_received);
-
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
-                | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
-                | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
-                | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
-        );
+        setScreenOn();
 
         // Implementation not supported currently
         findComponentById(ResourceTable.Id_videoCallButton).setVisibility(Component.HIDE);

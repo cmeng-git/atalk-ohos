@@ -107,13 +107,10 @@ public class AccountID {
     protected String rosterVersion;
 
     protected String statusMessage = "status_Message";
-
     protected final ZSONObject mKeys;
 
-
     /**
-     * The default properties common key prefix used in lib/atalk-defaults.properties which are
-     * independent of protocol.
+     * The default properties common key prefix used in lib/atalk-defaults.properties which are independent of protocol.
      */
     protected static final String DEFAULT_PREFIX = "protocol.";
 
@@ -1087,7 +1084,7 @@ public class AccountID {
         ProtocolProviderFactory providerFactory
                 = ProtocolProviderFactory.getProtocolProviderFactory(bundleContext, accountID.getSystemProtocolName());
 
-        String password = null;
+        String password;
         String className = providerFactory.getClass().getName();
         String packageSourceName = className.substring(0, className.lastIndexOf('.'));
 
@@ -1495,9 +1492,9 @@ public class AccountID {
         }
     }
 
-    public void unsetKey(String key) {
+    public boolean unsetKey(String key) {
         synchronized (mKeys) {
-            mKeys.remove(key);
+            return mKeys.remove(key) != null;
         }
     }
 }

@@ -5,10 +5,10 @@
  */
 package net.java.sip.communicator.service.history;
 
+import java.util.Date;
+
 import net.java.sip.communicator.service.history.event.HistorySearchProgressListener;
 import net.java.sip.communicator.service.history.records.HistoryRecord;
-
-import java.util.Date;
 
 /**
  * Used to search over the history records
@@ -24,8 +24,8 @@ public interface HistoryReader {
      *
      * @return the found records
      *
-     * @throws RuntimeException Thrown if an exception occurs during the execution of the query, such as internal IO
-     * error.
+     * @throws RuntimeException Thrown if an exception occurs during the execution of the query,
+     * such as internal IO error.
      */
     QueryResultSet<HistoryRecord> findByStartDate(Date startDate)
             throws RuntimeException;
@@ -37,8 +37,8 @@ public interface HistoryReader {
      *
      * @return the found records
      *
-     * @throws RuntimeException Thrown if an exception occurs during the execution of the query, such as internal IO
-     * error.
+     * @throws RuntimeException Thrown if an exception occurs during the execution of the query,
+     * such as internal IO error.
      */
     QueryResultSet<HistoryRecord> findByEndDate(Date endDate)
             throws RuntimeException;
@@ -52,8 +52,8 @@ public interface HistoryReader {
      *
      * @return the found records
      *
-     * @throws RuntimeException Thrown if an exception occurs during the execution of the query, such as internal IO
-     * error.
+     * @throws RuntimeException Thrown if an exception occurs during the execution of the query,
+     * such as internal IO error.
      */
     QueryResultSet<HistoryRecord> findByPeriod(Date startDate, Date endDate)
             throws RuntimeException;
@@ -66,8 +66,8 @@ public interface HistoryReader {
      *
      * @return the found records
      *
-     * @throws RuntimeException Thrown if an exception occurs during the execution of the query, such as internal IO
-     * error.
+     * @throws RuntimeException Thrown if an exception occurs during the execution of the query,
+     * such as internal IO error.
      */
     QueryResultSet<HistoryRecord> findByKeyword(String keyword, String field)
             throws RuntimeException;
@@ -81,8 +81,8 @@ public interface HistoryReader {
      *
      * @return the found records
      *
-     * @throws RuntimeException Thrown if an exception occurs during the execution of the query, such as internal IO
-     * error.
+     * @throws RuntimeException Thrown if an exception occurs during the execution of the query,
+     * such as internal IO error.
      */
     QueryResultSet<HistoryRecord> findByKeyword(String keyword, String field, boolean
             caseSensitive)
@@ -96,8 +96,8 @@ public interface HistoryReader {
      *
      * @return the found records
      *
-     * @throws RuntimeException Thrown if an exception occurs during the execution of the query, such as internal IO
-     * error.
+     * @throws RuntimeException Thrown if an exception occurs during the execution of the query,
+     * such as internal IO error.
      */
     QueryResultSet<HistoryRecord> findByKeywords(String[] keywords, String field)
             throws RuntimeException;
@@ -111,8 +111,8 @@ public interface HistoryReader {
      *
      * @return the found records
      *
-     * @throws RuntimeException Thrown if an exception occurs during the execution of the query, such as internal IO
-     * error.
+     * @throws RuntimeException Thrown if an exception occurs during the execution of the query,
+     * such as internal IO error.
      */
     QueryResultSet<HistoryRecord> findByKeywords(String[] keywords, String field, boolean
             caseSensitive)
@@ -120,8 +120,7 @@ public interface HistoryReader {
 
     /**
      * Searches for all history records containing all <code>keywords</code>, with timestamp between
-     * <code>startDate</code> and
-     * <code>endDate</code>.
+     * <code>startDate</code> and <code>endDate</code>.
      *
      * @param startDate start of the interval in which we search
      * @param endDate end of the interval in which we search
@@ -130,8 +129,8 @@ public interface HistoryReader {
      *
      * @return the found records
      *
-     * @throws UnsupportedOperationException Thrown if an exception occurs during the execution of the query, such as internal IO
-     * error.
+     * @throws UnsupportedOperationException Thrown if an exception occurs during the execution of the query,
+     * such as internal IO error.
      */
     QueryResultSet<HistoryRecord> findByPeriod(Date startDate, Date endDate, String[]
             keywords, String field)
@@ -139,8 +138,7 @@ public interface HistoryReader {
 
     /**
      * Searches for all history records containing all <code>keywords</code>, with timestamp between
-     * <code>startDate</code> and
-     * <code>endDate</code>.
+     * <code>startDate</code> and <code>endDate</code>.
      *
      * @param startDate start of the interval in which we search
      * @param endDate end of the interval in which we search
@@ -150,8 +148,8 @@ public interface HistoryReader {
      *
      * @return the found records
      *
-     * @throws UnsupportedOperationException Thrown if an exception occurs during the execution of the query, such as internal IO
-     * error.
+     * @throws UnsupportedOperationException Thrown if an exception occurs during the execution of the query,
+     * such as internal IO error.
      */
     QueryResultSet<HistoryRecord> findByPeriod(Date startDate, Date endDate, String[]
             keywords, String field, boolean caseSensitive)
@@ -230,8 +228,8 @@ public interface HistoryReader {
      *
      * @return the number of searched messages
      *
-     * @throws UnsupportedOperationException Thrown if an exception occurs during the execution of the query, such as internal IO
-     * error.
+     * @throws UnsupportedOperationException Thrown if an exception occurs during the execution of the query,
+     * such as internal IO error.
      */
     int countRecords()
             throws UnsupportedOperationException;

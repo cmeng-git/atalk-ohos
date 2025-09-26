@@ -69,9 +69,6 @@ import org.osgi.framework.ServiceReference;
 
 import timber.log.Timber;
 
-import static org.atalk.ohos.gui.settings.QuietTimeSlice.*;
-import static org.atalk.ohos.gui.settings.SettingsSlice.P_KEY_HEADS_UP_ENABLE;
-
 /**
  * Cares about all common configurations. Storing and retrieving configuration values.
  *
@@ -175,7 +172,6 @@ public class ConfigurationUtils {
      */
     private static boolean isRecentMessagesShown = true;
 
-
     /**
      * Initial default wait time for incoming message alert to end before start TTS
      */
@@ -275,6 +271,8 @@ public class ConfigurationUtils {
      * Indicates if the rename group functionality is disabled.
      */
     private static boolean isGroupRenameDisabled;
+    private static boolean isExpertSettingDisabled;
+    private static boolean isProvisioningDisabled;
 
     /**
      * Indicates if the pre set status messages are enabled.
@@ -686,6 +684,10 @@ public class ConfigurationUtils {
         sendFileLastDir = mConfigService.getString("gui.chat.filetransfer.SEND_FILE_LAST_DIR");
 
         // Load the "ADD_CONTACT_DISABLED" property.
+        isExpertSettingDisabled = mConfigService.getBoolean("gui.EXPERT_SETTING_DISABLED", false);
+        isProvisioningDisabled = mConfigService.getBoolean("gui.PROVISIONING_DISABLED", false);
+
+        // Load the "ADD_CONTACT_DISABLED" property.
         isAddContactDisabled = mConfigService.getBoolean("gui.contactlist.CONTACT_ADD_DISABLED", false);
 
         // Load the "MERGE_CONTACT_DISABLED" property.
@@ -722,11 +724,10 @@ public class ConfigurationUtils {
         String advancedConfigDisabledDefaultProp
                 = UtilActivator.getResources().getSettingsString("gui.account.ADVANCED_CONFIG_DISABLED");
 
+        // Load the advanced account configuration disabled.
         boolean isAdvancedConfigDisabled = false;
         if (StringUtils.isNotEmpty(advancedConfigDisabledDefaultProp))
             isAdvancedConfigDisabled = Boolean.parseBoolean(advancedConfigDisabledDefaultProp);
-
-        // Load the advanced account configuration disabled.
         isAdvancedAccountConfigDisabled
                 = mConfigService.getBoolean("gui.account.ADVANCED_CONFIG_DISABLED", isAdvancedConfigDisabled);
 
@@ -1354,6 +1355,14 @@ public class ConfigurationUtils {
         return isAdvancedAccountConfigDisabled;
     }
 
+    public static boolean isExpertSettingDisabled() {
+        return isExpertSettingDisabled;
+    }
+
+    public static boolean isProvisioningDisabled() {
+        return isProvisioningDisabled;
+    }
+
     /**
      * Indicates if the chat room user configuration functionality is disabled.
      *
@@ -1381,6 +1390,15 @@ public class ConfigurationUtils {
         if (StringUtils.isNotEmpty(defaultFontSize))
             return Integer.parseInt(defaultFontSize);
         return -1;
+    }
+
+    /**
+     * Returns the default chat font color.
+     *
+     * @return the default chat font color
+     */
+    public static Color getChatDefaultFontColor() {
+        return defaultFontColor == -1 ? null : new Color(defaultFontColor);
     }
 
     /**

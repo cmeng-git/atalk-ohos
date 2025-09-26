@@ -179,7 +179,7 @@ public class SystemActivityEventDispatcher implements Runnable {
                 List<SystemActivityChangeListener> listenersCopy;
 
                 synchronized (eventsToDispatch) {
-                    if (eventsToDispatch.size() == 0) {
+                    if (eventsToDispatch.isEmpty()) {
                         try {
                             eventsToDispatch.wait();
                         } catch (InterruptedException ignore) {
@@ -188,7 +188,7 @@ public class SystemActivityEventDispatcher implements Runnable {
 
                     //no point in dispatching if there's no one
                     //listening
-                    if (listeners.size() == 0)
+                    if (listeners.isEmpty())
                         continue;
 
                     //store the ref of the listener in case someone resets

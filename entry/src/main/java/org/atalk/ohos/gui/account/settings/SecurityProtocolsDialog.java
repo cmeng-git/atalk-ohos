@@ -44,7 +44,6 @@ public class SecurityProtocolsDialog {
     /*
      * The encryption protocols managed by this dialog.
      */
-    // public static final String[] encryptionProtocols = {"ZRTP", "SDES"};
 
     /**
      * The list model for the protocols

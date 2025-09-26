@@ -15,6 +15,12 @@
  */
 package net.java.sip.communicator.impl.callhistory;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
 import net.java.sip.communicator.service.callhistory.CallHistoryQuery;
 import net.java.sip.communicator.service.callhistory.CallRecord;
 import net.java.sip.communicator.service.callhistory.event.CallHistoryQueryListener;
@@ -29,12 +35,6 @@ import net.java.sip.communicator.service.contactsource.SourceContact;
 
 import org.atalk.ohos.ResourceTable;
 import org.atalk.ohos.aTalkApp;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * The <code>CallHistoryContactSource</code> is the contact source for the call history.

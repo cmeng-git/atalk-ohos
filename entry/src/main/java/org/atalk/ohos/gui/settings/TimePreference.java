@@ -76,7 +76,7 @@ public class TimePreference extends DialogPreference
      * get the TimePreference persistent value the timePicker value update
      */
     public Long getPersistedValue() {
-        return (long) getPersistedLong(DEFAULT_VALUE);
+        return getPersistedLong(DEFAULT_VALUE);
     }
 
     @Override

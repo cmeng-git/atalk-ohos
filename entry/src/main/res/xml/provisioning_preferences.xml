@@ -10,14 +10,14 @@
         <org.atalk.ohos.gui.settings.widget.ConfigListPreference
             ohos:entries="@array/pref_provisioning_method"
             ohos:entryValues="@array/pref_provisioning_method_values"
-            ohos:key="pref.key.provisioning_METHOD"
+            ohos:key="plugin.provisioning.METHOD"
             ohos:title="$string:provisioning_method"
             custom:disableDependentsValue="Manual"
             custom:disableOnNotEqualValue="true" />
 
         <org.atalk.ohos.gui.settings.widget.ConfigEditText
-            ohos:dependency="pref.key.provisioning_METHOD"
-            ohos:key="pref.key.provisioning_URL"
+            ohos:dependency="plugin.provisioning.METHOD"
+            ohos:key="plugin.provisioning.URL"
             ohos:title="$string:provisioning_manual" />
 
         <org.atalk.ohos.gui.settings.widget.ConfigEditText
@@ -31,19 +31,18 @@
         ohos:title="$string:provisioning_credentials">
 
         <org.atalk.ohos.gui.settings.widget.ConfigEditText
-            ohos:key="plugin.provisioning.auth.USERNAME"
-            ohos:title="$string:username_"
-            custom:editable="false" />
+            ohos:key="plugin.provisioning.USERNAME"
+            ohos:title="$string:username_" />
 
         <org.atalk.ohos.gui.settings.widget.ConfigEditText
             ohos:inputType="textPassword"
-            ohos:key="plugin.provisioning.auth"
+            ohos:key="plugin.provisioning.PASSWORD"
             ohos:title="$string:password_"
             custom:editable="false" />
 
         <Preference
-            ohos:enabled="false"
-            ohos:key="pref.key.provisioning.forget_password"
+            ohos:key="pref.key.provisioning.FORGET_PASSWORD"
             ohos:title="$string:provisioning_forget_password" />
+            ohos:layout="@layout/style_pref_button"/>
     </PreferenceCategory>
 </PreferenceScreen>

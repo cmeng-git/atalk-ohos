@@ -253,13 +253,22 @@
 
     <!-- Advanced Settings -->
     <PreferenceCategory
-        ohos:key="pref.cat.settings.advanced"
         ohos:title="$string:advanced">
 
         <Preference
+            android:key="pref.key.settings.advanced"
             ohos:summary="$string:settings_expert_summary"
             ohos:title="$string:settings_expert"
             app:fragment="org.atalk.ohos.gui.settings.ExpertSettingsSlice" />
 
+        <Preference
+            ohos:key="pref.key.provisioning"
+            ohos:summary="@string/provisioning_summary"
+            ohos:title="@string/provisioning" >
+            <intent
+                ohos:action="android.intent.action.VIEW"
+                ohos:targetClass="org.atalk.ohos.gui.settings.ProvisioningSettings"
+                ohos:targetPackage="org.atalk.ohos" />
+        </Preference>
     </PreferenceCategory>
 </PreferenceScreen>

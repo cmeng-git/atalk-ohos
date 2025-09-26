@@ -55,7 +55,7 @@ public class AccountLoginAbility extends ExitMenuAbility
         super.onStart(intent);
 
         // If we have instance state it means the fragment is already created
-        if (savedInstanceState == null) {
+        if (mInState == null) {
             // Create AccountLoginFragment fragment
             String login = getIntent().getStringExtra(USERNAME);
             String password = getIntent().getStringExtra(PASSWORD);

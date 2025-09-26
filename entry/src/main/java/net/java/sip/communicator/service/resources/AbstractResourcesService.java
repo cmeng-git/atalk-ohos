@@ -169,12 +169,10 @@ public abstract class AbstractResourcesService implements ResourceManagementServ
         }
 
         ResourcePack resourcePack = (ResourcePack) sService;
-
         if (event.getType() == ServiceEvent.REGISTERED) {
             Timber.i("Resource registered %s", resourcePack);
 
             Map<String, String> resources = getResources(resourcePack);
-
             if (resourcePack instanceof ColorPack && colorPack == null) {
                 colorPack = resourcePack;
                 colorResources = resources;
@@ -491,7 +489,7 @@ public abstract class AbstractResourcesService implements ResourceManagementServ
      */
     public URL getSettingsURL(String urlKey) {
         String path = getSettingsString(urlKey);
-        if (path == null || path.length() == 0) {
+        if (path == null || path.isEmpty()) {
             Timber.w("Missing resource for key: %s", urlKey);
             return null;
         }
@@ -520,7 +518,7 @@ public abstract class AbstractResourcesService implements ResourceManagementServ
      */
     public InputStream getSettingsInputStream(String streamKey, Class<?> resourceClass) {
         String path = getSettingsString(streamKey);
-        if (path == null || path.length() == 0) {
+        if (path == null || path.isEmpty()) {
             Timber.w("Missing resource for key: %s", streamKey);
             return null;
         }

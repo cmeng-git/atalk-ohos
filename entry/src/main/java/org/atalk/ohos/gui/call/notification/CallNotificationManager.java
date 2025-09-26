@@ -286,4 +286,14 @@ public class CallNotificationManager {
     public synchronized boolean isNotificationRunning() {
         return mNotificationHandler != null;
     }
+
+    public void backToCall() {
+        if (pVideo != null) {
+            try {
+                pVideo.send();
+            } catch (PendingIntent.CanceledException e) {
+                Timber.w("Back to call: %s", e.getMessage());
+            }
+        }
+    }
 }

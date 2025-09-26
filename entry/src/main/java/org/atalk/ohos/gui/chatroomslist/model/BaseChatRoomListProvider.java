@@ -309,7 +309,6 @@ public abstract class BaseChatRoomListProvider extends BaseItemProvider // BaseE
         updateUnreadCount(crWrapper, crWrapper.getUnreadCount());
 
         UIChatRoomRenderer renderer = getChatRoomRenderer(groupPosition);
-
         if (renderer.isSelected(child)) {
             convertView.setBackground(new ShapeElement(aTalkApp.getInstance(), ResourceTable.Graphic_color_blue_gradient));
         }
@@ -327,7 +326,7 @@ public abstract class BaseChatRoomListProvider extends BaseItemProvider // BaseE
         chatRoomViewHolder.bookmark.setChecked(renderer.isBookmark(child));
 
         if (renderer.isDisplayBold(child)) {
-            chatRoomViewHolder.roomName. setTypeface(Typeface.DEFAULT_BOLD);
+            chatRoomViewHolder.roomName.setTypeface(Typeface.DEFAULT_BOLD);
         }
         else {
             chatRoomViewHolder.roomName.setTypeface(Typeface.DEFAULT);

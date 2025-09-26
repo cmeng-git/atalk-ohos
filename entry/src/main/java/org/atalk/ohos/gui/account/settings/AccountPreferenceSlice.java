@@ -181,8 +181,8 @@ public abstract class AccountPreferenceSlice extends BasePreferenceSlice
         setPrefTitle(ResourceTable.String_account_settings);
         setPreferencesFromResource(preferencesResourceId, rootKey);
 
-        if (mAbility.savedInstanceState != null) {
-            initialized = mAbility.savedInstanceState.getBooleanValue(STATE_INIT_FLAG);
+        if (mAbility.mInState != null) {
+            initialized = mAbility.mInState.getBooleanValue(STATE_INIT_FLAG);
         }
 
         mAbility = (AccountPreferenceAbility) getAbility();

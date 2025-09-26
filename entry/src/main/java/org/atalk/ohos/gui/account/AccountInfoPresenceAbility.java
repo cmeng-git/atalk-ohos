@@ -104,7 +104,7 @@ import timber.log.Timber;
 
 /**
  * Ability allows user to set presence status, status message, change the user avatar
- * and all the vCard-temp information for the {@link # Account}.
+ * and all the vCard-temp information for the {@link Account}.
  * <p>
  * The main panel that allows users to view and edit their account information.
  * Different instances of this class are created for every registered
@@ -1276,8 +1276,7 @@ public class AccountInfoPresenceAbility extends BaseAbility
         if (eventObject.getEventType() != AccountEvent.AVATAR_CHANGE) {
             return;
         }
-
-        BaseAbility.runOnUiThread(() -> {
+        runOnUiThread(() -> {
             Account account = eventObject.getSource();
             avatarView.setPixelMap(account.getAvatarIcon());
         });
@@ -1314,7 +1313,6 @@ public class AccountInfoPresenceAbility extends BaseAbility
         mProgressBar.setIndeterminate(true);
         mProgressBar.setProgressHintText(getString(ResourceTable.String_please_wait)
                 + "\n" + getString(ResourceTable.String_apply_changes));
-
         new Thread(() -> {
             try {
                 commitStatusChanges();
@@ -1349,16 +1347,12 @@ public class AccountInfoPresenceAbility extends BaseAbility
     // Events to show or hide buttons for bigger view space for text entry
     @Override
     public void onSoftKeyboardHide() {
-        BaseAbility.runOnUiThread(() -> {
-            mButtonContainer.setVisibility(Component.VISIBLE);
-        });
+        runOnUiThread(() -> mButtonContainer.setVisibility(Component.VISIBLE));
     }
 
     @Override
     public void onSoftKeyboardShow() {
-        BaseAbility.runOnUiThread(() -> {
-            mButtonContainer.setVisibility(Component.HIDE);
-        });
+        runOnUiThread(() -> mButtonContainer.setVisibility(Component.HIDE));
     }
 
     private class EditTextWatcher implements Text.TextObserver {

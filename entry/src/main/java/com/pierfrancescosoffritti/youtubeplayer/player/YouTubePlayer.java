@@ -27,7 +27,7 @@ public interface YouTubePlayer {
      */
     void loadPlaylist(String playlist, int startIndex);
 
-    void loadPlaylist_videoIds(String videoIds);
+    void loadPlaylistVideoIds(String videoIds);
 
     void play();
     void pause();

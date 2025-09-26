@@ -31,6 +31,9 @@ import org.atalk.ohos.BaseAbility;
 import org.atalk.ohos.BaseSlice;
 import org.atalk.ohos.ResourceTable;
 import org.atalk.ohos.aTalkApp;
+import org.atalk.ohos.agp.components.Menu;
+import org.atalk.ohos.agp.components.MenuInflater;
+import org.atalk.ohos.agp.components.MenuItem;
 
 import java.awt.Dimension;
 import java.util.ArrayList;

@@ -83,7 +83,7 @@ public class QueryChatRoomListProvider extends BaseChatRoomListProvider
      */
     private List<ContactSourceService> getSources() {
         ServiceReference<ContactSourceService>[] serRefs
-		        = ServiceUtils.getServiceReferences(AppGUIActivator.bundleContext, ContactSourceService.class);
+                = ServiceUtils.getServiceReferences(AppGUIActivator.bundleContext, ContactSourceService.class);
 
         List<ContactSourceService> contactSources = new ArrayList<>(serRefs.length);
         for (ServiceReference<ContactSourceService> serRef : serRefs) {

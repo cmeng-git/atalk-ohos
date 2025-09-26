@@ -25,12 +25,13 @@ aTalk is an xmpp client designed for android and supports the following features
 * Support Stickers, Bitmoji and Emoji rich content sharing via Google Gboard
 * Send and receive files for all document types and images with thumbnail preview and gif animation
 * Auto accept file transfer with max file size option
-* Implement fault-tolerance file transfer algorithm, via Jingle File Transfer, Legacy In-Band/SOCK5 Bytestreams and HttpFileUpload protocols to ease and enhance file sharing reliability
+* Implement fault-tolerance file transfer algorithm, via HttpFileUpload, Jingle File Transfer, and Legacy In-Band/SOCK5 Bytestreams protocols to ease and enhance file sharing reliability
+* Support secured file transfer via HttpFileUpload using aesgcm://, or via Jingle Encrypted Transport (JET)
 * Enhance and harmonize UI for file sharing in chat and chatRoom
 * Support share, quote and forward of messages and media with previews prior to sending
 * Support multi-instances of audio media player with functions: Play, Pause, Resume, Stop and Seek
 * Support unread message badges in contact and chatRoom list views
-* User selectable option for heads-up notification and quite hours
+* User selectable option for heads-up notification and quiet hours
 * Share of social media links are tagged with thumbnail and title
 * Support Text to Speech and speech recognition UI with enable option per chat session (contact and group chat)
 * XEP-0012: Last Activity time associated with contacts

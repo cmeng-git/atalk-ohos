@@ -103,7 +103,7 @@ public class JabberPreferenceSlice extends AccountPreferenceSlice {
      * {@inheritDoc}
      */
     @Override
-    protected EncodingsRegistrationUtil getEncodingsRegistration() {
+    protected EncodingsRegistration getEncodingsRegistration() {
         return jbrReg.getEncodingsRegistration();
     }
 

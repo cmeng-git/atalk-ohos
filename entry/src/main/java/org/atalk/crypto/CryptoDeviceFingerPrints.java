@@ -37,6 +37,7 @@ import org.atalk.crypto.omemo.SQLiteOmemoStore;
 import org.atalk.ohos.BaseAbility;
 import org.atalk.ohos.ResourceTable;
 import org.atalk.ohos.aTalkApp;
+import org.atalk.ohos.agp.components.Menu;
 import org.atalk.ohos.agp.components.MenuInflater;
 import org.atalk.ohos.agp.components.MenuItem;
 import org.atalk.ohos.gui.util.ThemeHelper;

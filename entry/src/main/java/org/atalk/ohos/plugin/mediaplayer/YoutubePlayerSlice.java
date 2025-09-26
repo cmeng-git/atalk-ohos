@@ -187,7 +187,7 @@ public class YoutubePlayerSlice extends BaseSlice {
                 view -> youTubePlayer.nextVideo());
 
         if (videoId.contains(SEPARATOR)) {
-            youTubePlayer.loadPlaylist_videoIds(videoId);
+            youTubePlayer.loadPlaylistVideoIds(videoId);
         }
         else {
             youTubePlayer.loadPlaylist(videoId, 0);

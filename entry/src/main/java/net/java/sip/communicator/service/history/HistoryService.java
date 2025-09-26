@@ -1,6 +1,6 @@
 /*
- * aTalk, ohos VoIP and Instant Messaging client
- * Copyright 2024 Eng Chong Meng
+ * aTalk, android VoIP and Instant Messaging client
+ * Copyright 2014 Eng Chong Meng
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,16 @@
  */
 package net.java.sip.communicator.service.history;
 
-import net.java.sip.communicator.service.history.records.HistoryRecordStructure;
-
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
+import net.java.sip.communicator.service.history.records.HistoryRecordStructure;
+
 /**
  * This service provides the functionality to store history records. The records are called <code>HistoryRecord</code>s and
  * are grouped by ID.
+ *
  * The ID may be used to set hierarchical structure. In a typical usage one may set the first string to be the userID,
  * and the second - the service name.
  *
@@ -32,7 +33,6 @@ import java.util.List;
  * @author Eng Chong Meng
  */
 public interface HistoryService {
-
     /**
      * Property and values used to be set in configuration Used in implementation to cache every opened history document
      * or not to cache them and to access them on every read

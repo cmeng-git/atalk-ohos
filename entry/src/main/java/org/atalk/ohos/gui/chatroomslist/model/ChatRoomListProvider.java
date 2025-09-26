@@ -259,17 +259,16 @@ public class ChatRoomListProvider extends BaseChatRoomListProvider
     private void addChatRooms(List<ChatRoomProviderWrapper> providers) {
         for (ChatRoomProviderWrapper provider : providers) {
             List<ChatRoomWrapper> chatRoomWrappers = initBookmarkChatRooms(provider);
-            if ((chatRoomWrappers != null) && (chatRoomWrappers.size() > 0)) {
+
+            if ((chatRoomWrappers != null) && (!chatRoomWrappers.isEmpty())) {
                 addGroup(provider);
 
-                // Use Iterator to avoid ConcurrentModificationException on addChatRoom(); do not user foreach
+                // Use Iterator to avoid ConcurrentModificationException on addChatRoom();
+                // Do not use for loop as suggested: ConcurrentModificationException
                 Iterator<ChatRoomWrapper> iteratorCRW = chatRoomWrappers.iterator();
                 while (iteratorCRW.hasNext()) {
                     addChatRoom(provider, iteratorCRW.next());
                 }
-                // for (ChatRoomWrapper crWrapper : chatRoomWrappers) {
-                //     addChatRoom(provider, crWrapper); // ConcurrentModificationException
-                // }
             }
         }
 
@@ -465,7 +464,7 @@ public class ChatRoomListProvider extends BaseChatRoomListProvider
      */
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        if (mCrWrapperList.size() > 0) {
+        if (!mCrWrapperList.isEmpty()) {
             TreeSet<ChatRoomWrapper> crWrapperList = getCrWrapperList(groupPosition);
             if (crWrapperList != null) {
                 int i = 0;
@@ -517,7 +516,7 @@ public class ChatRoomListProvider extends BaseChatRoomListProvider
                         filteredList.add(crWrapper);
                     }
                 }
-                if (filteredList.size() > 0) {
+                if (!filteredList.isEmpty()) {
                     mCrpWrapperGroup.add(crpWrapper);
                     mCrWrapperList.add(filteredList);
                 }
@@ -539,7 +538,7 @@ public class ChatRoomListProvider extends BaseChatRoomListProvider
             int groupIndex = originalCrpWrapperGroup.indexOf(crpWrapper);
             if (groupIndex != -1) {
                 TreeSet<ChatRoomWrapper> orgCrwList = getOriginalCrWrapperList(groupIndex);
-                if ((orgCrwList != null) && (orgCrwList.size() > 0)) {
+                if ((orgCrwList != null) && (!orgCrwList.isEmpty())) {
                     mCrpWrapperGroup.add(crpWrapper);
                     mCrWrapperList.add(orgCrwList);
                 }
@@ -620,11 +619,11 @@ public class ChatRoomListProvider extends BaseChatRoomListProvider
     @Override
     public void chatRoomProviderWrapperAdded(ChatRoomProviderWrapper crpWrapper) {
         // Add the original/filtered chatRoomProvider Wrapper and its list.
-        if ((originalCrpWrapperGroup.indexOf(crpWrapper) < 0)
-                || (mCrpWrapperGroup.indexOf(crpWrapper) < 0)) {
+        if ((!originalCrpWrapperGroup.contains(crpWrapper))
+                || (!mCrpWrapperGroup.contains(crpWrapper))) {
 
             List<ChatRoomWrapper> chatRoomWrappers = crpWrapper.getChatRooms();
-            if (chatRoomWrappers.size() > 0) {
+            if (!chatRoomWrappers.isEmpty()) {
                 addGroup(crpWrapper);
 
                 for (ChatRoomWrapper crWrapper : chatRoomWrappers) {
@@ -643,8 +642,8 @@ public class ChatRoomListProvider extends BaseChatRoomListProvider
     @Override
     public void chatRoomProviderWrapperRemoved(ChatRoomProviderWrapper crpWrapper) {
         // Remove the original/filtered chatRoomProvider Wrapper and its chatRoomWrapper if exist.
-        if ((originalCrpWrapperGroup.indexOf(crpWrapper) >= 0)
-                || (mCrpWrapperGroup.indexOf(crpWrapper) >= 0)) {
+        if ((originalCrpWrapperGroup.contains(crpWrapper))
+                || (mCrpWrapperGroup.contains(crpWrapper))) {
 
             removeChatRooms(Collections.singletonList(crpWrapper));
             uiChangeUpdate();
@@ -661,13 +660,14 @@ public class ChatRoomListProvider extends BaseChatRoomListProvider
             case ChatRoomListChangeEvent.CHAT_ROOM_ADDED:
                 addChatRoom(chatRoomWrapper.getParentProvider(), chatRoomWrapper);
                 break;
+
             case ChatRoomListChangeEvent.CHAT_ROOM_REMOVED:
                 removeChatRoom(chatRoomWrapper.getParentProvider(), chatRoomWrapper);
                 aTalkApp.showToastMessage(ResourceTable.String_chatroom_destroy_successful,
                         chatRoomWrapper.getChatRoomID());
                 break;
+
             case ChatRoomListChangeEvent.CHAT_ROOM_CHANGED:
-                break;
             default:
                 break;
         }

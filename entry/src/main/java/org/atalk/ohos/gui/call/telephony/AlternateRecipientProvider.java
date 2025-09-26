@@ -11,12 +11,10 @@ import ohos.agp.components.ComponentContainer;
 import ohos.agp.components.Text;
 import ohos.app.Context;
 
-public class AlternateRecipientProvider extends BaseItemProvider
-{
+public class AlternateRecipientProvider extends BaseItemProvider {
     private static final int NUMBER_OF_FIXED_LIST_ITEMS = 2;
     private static final int POSITION_HEADER_VIEW = 0;
     private static final int POSITION_CURRENT_ADDRESS = 1;
-
 
     private final Context context;
     private final AlternateRecipientListener listener;
@@ -24,21 +22,17 @@ public class AlternateRecipientProvider extends BaseItemProvider
     private Recipient currentRecipient;
     private boolean showAdvancedInfo;
 
-
-    public AlternateRecipientProvider(Context context, AlternateRecipientListener listener)
-    {
+    public AlternateRecipientProvider(Context context, AlternateRecipientListener listener) {
         super();
         this.context = context;
         this.listener = listener;
     }
 
-    public void setCurrentRecipient(Recipient currentRecipient)
-    {
+    public void setCurrentRecipient(Recipient currentRecipient) {
         this.currentRecipient = currentRecipient;
     }
 
-    public void setAlternateRecipientInfo(List<Recipient> recipients)
-    {
+    public void setAlternateRecipientInfo(List<Recipient> recipients) {
         this.recipients = recipients;
         int indexOfCurrentRecipient = recipients.indexOf(currentRecipient);
         if (indexOfCurrentRecipient >= 0) {
@@ -49,8 +43,7 @@ public class AlternateRecipientProvider extends BaseItemProvider
     }
 
     @Override
-    public int getCount()
-    {
+    public int getCount() {
         if (recipients == null) {
             return NUMBER_OF_FIXED_LIST_ITEMS;
         }
@@ -58,8 +51,7 @@ public class AlternateRecipientProvider extends BaseItemProvider
     }
 
     @Override
-    public Recipient getItem(int position)
-    {
+    public Recipient getItem(int position) {
         if (position == POSITION_HEADER_VIEW || position == POSITION_CURRENT_ADDRESS) {
             return currentRecipient;
         }
@@ -67,19 +59,16 @@ public class AlternateRecipientProvider extends BaseItemProvider
     }
 
     @Override
-    public long getItemId(int position)
-    {
+    public long getItemId(int position) {
         return position;
     }
 
-    private Recipient getRecipientFromPosition(int position)
-    {
+    private Recipient getRecipientFromPosition(int position) {
         return recipients.get(position - NUMBER_OF_FIXED_LIST_ITEMS);
     }
 
     @Override
-    public Component getComponent(int position, Component view, ComponentContainer parent)
-    {
+    public Component getComponent(int position, Component view, ComponentContainer parent) {
         if (view == null) {
             view = newView(parent);
         }
@@ -95,8 +84,7 @@ public class AlternateRecipientProvider extends BaseItemProvider
         return view;
     }
 
-    public Component newView(ComponentContainer parent)
-    {
+    public Component newView(ComponentContainer parent) {
         FloatRange LayoutScatter;
         Component view = LayoutScatter.from(context).parse(ResourceTable.Layout_recipient_alternate_item, parent, false);
 
@@ -106,13 +94,11 @@ public class AlternateRecipientProvider extends BaseItemProvider
     }
 
     @Override
-    public boolean isEnabled(int position)
-    {
+    public boolean isEnabled(int position) {
         return position != POSITION_HEADER_VIEW;
     }
 
-    public void bindHeaderView(Component view, Recipient recipient)
-    {
+    public void bindHeaderView(Component view, Recipient recipient) {
         RecipientTokenHolder holder = (RecipientTokenHolder) view.getTag();
         holder.setShowAsHeader(true);
 
@@ -128,8 +114,7 @@ public class AlternateRecipientProvider extends BaseItemProvider
         holder.headerRemove.setClickedListener(v -> listener.onRecipientRemove(currentRecipient));
     }
 
-    public void bindItemView(Component view, final Recipient recipient)
-    {
+    public void bindItemView(Component view, final Recipient recipient) {
         RecipientTokenHolder holder = (RecipientTokenHolder) view.getTag();
         holder.setShowAsHeader(false);
 
@@ -150,13 +135,11 @@ public class AlternateRecipientProvider extends BaseItemProvider
         holder.layoutItem.setClickedListener(v -> listener.onRecipientChange(currentRecipient, recipient));
     }
 
-    public void setShowAdvancedInfo(boolean showAdvancedInfo)
-    {
+    public void setShowAdvancedInfo(boolean showAdvancedInfo) {
         this.showAdvancedInfo = showAdvancedInfo;
     }
 
-    private static class RecipientTokenHolder
-    {
+    private static class RecipientTokenHolder {
         public final Component layoutHeader, layoutItem;
         public final Text headerName;
         public final Text headerAddressLabel;
@@ -165,8 +148,7 @@ public class AlternateRecipientProvider extends BaseItemProvider
         public final Text itemAddressLabel;
 
 
-        public RecipientTokenHolder(Component view)
-        {
+        public RecipientTokenHolder(Component view) {
             layoutHeader = view.findComponentById(ResourceTable.Id_alternate_container_header);
             layoutItem = view.findComponentById(ResourceTable.Id_alternate_container_item);
 
@@ -178,15 +160,13 @@ public class AlternateRecipientProvider extends BaseItemProvider
             itemAddressLabel = view.findComponentById(ResourceTable.Id_alternate_address_label);
         }
 
-        public void setShowAsHeader(boolean isHeader)
-        {
+        public void setShowAsHeader(boolean isHeader) {
             layoutHeader.setVisibility(isHeader ? Component.VISIBLE : Component.HIDE);
             layoutItem.setVisibility(isHeader ? Component.HIDE : Component.VISIBLE);
         }
     }
 
-    public interface AlternateRecipientListener
-    {
+    public interface AlternateRecipientListener {
         void onRecipientRemove(Recipient currentRecipient);
 
         void onRecipientChange(Recipient currentRecipient, Recipient alternateRecipient);

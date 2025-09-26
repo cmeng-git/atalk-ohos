@@ -17,6 +17,7 @@
 package org.atalk.ohos.gui.chat;
 
 import ohos.aafwk.content.Intent;
+import ohos.aafwk.content.Operation;
 import ohos.agp.colors.RgbColor;
 import ohos.agp.components.BaseItemProvider;
 import ohos.agp.components.Button;
@@ -32,6 +33,9 @@ import ohos.agp.components.Text;
 import ohos.agp.components.element.Element;
 import ohos.agp.components.element.FrameAnimationElement;
 import ohos.agp.components.element.ShapeElement;
+import ohos.agp.text.RichText;
+import ohos.agp.text.richstyles.RangedRichStyle.Flag;
+import ohos.agp.text.richstyles.UrlRichStyle;
 import ohos.app.Context;
 import ohos.app.dispatcher.TaskDispatcher;
 import ohos.app.dispatcher.task.Revocable;
@@ -43,6 +47,19 @@ import ohos.miscservices.pasteboard.PasteData;
 import ohos.miscservices.pasteboard.SystemPasteboard;
 import ohos.multimodalinput.event.TouchEvent;
 import ohos.utils.PlainBooleanArray;
+import ohos.utils.net.Uri;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.Executors;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import net.java.sip.communicator.impl.protocol.jabber.HttpFileDownloadJabberImpl;
 import net.java.sip.communicator.impl.protocol.jabber.OperationSetPersistentPresenceJabberImpl;
@@ -84,7 +101,7 @@ import org.atalk.ohos.MListContainer;
 import org.atalk.ohos.ResourceTable;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.agp.components.Menu;
-import org.atalk.ohos.agp.components.MenuInflater;
+import org.atalk.ohos.agp.components.MenuItem;
 import org.atalk.ohos.gui.AppGUIActivator;
 import org.atalk.ohos.gui.aTalk;
 import org.atalk.ohos.gui.account.AppLoginRenderer;
@@ -111,16 +128,6 @@ import org.jxmpp.jid.Jid;
 import org.jxmpp.util.XmppStringUtils;
 import org.osgi.framework.Bundle;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.Executors;
-import java.util.regex.Pattern;
 import timber.log.Timber;
 
 /**
@@ -754,12 +761,18 @@ public class ChatSlice extends BaseSlice implements ChatSessionManager.CurrentCh
                     }
 
                     if (ResourceTable.Id_chat_message_forward == item.getItemId()) {
-                        Intent shareIntent = new Intent(mChatAbility, ShareAbility.class);
+                        Intent shareIntent = new Intent();
+                        Operation operation = new Intent.OperationBuilder()
+                                .withDeviceId("")
+                                .withBundleName(getBundleName())
+                                .withAbilityName(ShareAbility.class)
+                                .build();
+                        shareIntent.setOperation(operation);
                         shareIntent = ShareUtil.shareLocal(mContext, shareIntent, sBuilder.toString(), imageUris);
                         startAbility(shareIntent);
                         mode.finish();
                         // close current chat and show contact/chatRoom list view for content forward
-                        mChatAbility.onBackPressed();
+                        mChatAbility.terminateAbility();
                     }
                     else {
                         ShareUtil.share(mChatAbility, sBuilder.toString(), imageUris);
@@ -835,7 +848,7 @@ public class ChatSlice extends BaseSlice implements ChatSessionManager.CurrentCh
                         }
                     }
                     // Timber.d("Transfer file message delete msgUid: %s; files: %s", msgUidDel, msgFilesDel);
-                    mChatActivity.setEraseMode(EntityListHelper.SINGLE_ENTITY);
+                    mChatAbility.setEraseMode(EntityListHelper.SINGLE_ENTITY);
                     EntityListHelper.eraseEntityChatHistory(mChatAbility,
                             chatPanel.getChatSession().getDescriptor(), msgUidDel, msgFilesDel);
                     mode.finish();
@@ -850,7 +863,7 @@ public class ChatSlice extends BaseSlice implements ChatSessionManager.CurrentCh
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             // Inflate the menu for the CAB
-            MenuInflater inflater = getMenuInflater();
+            LayoutScatter inflater = LayoutScatter.getInstance(mContext);
             inflater.parse(ResourceTable.Layout_menu_chat_msg_share, menu);
             headerCount = chatListContainer.getHeaderViewsCount();
 
@@ -1237,8 +1250,6 @@ public class ChatSlice extends BaseSlice implements ChatSessionManager.CurrentCh
          *
          * @param msgId the associated chat message UUid
          * @param receiptStatus Delivery status to be updated
-         *
-         * @return the viewHolder of which the content being affected (not use currently).
          */
         public void updateMessageDeliveryStatusForId(String msgId, final int receiptStatus) {
             if (TextUtils.isEmpty(msgId))
@@ -1278,7 +1289,8 @@ public class ChatSlice extends BaseSlice implements ChatSessionManager.CurrentCh
         public void updateMessageFTStatus(String msgUuid, int status, String fileName, int encType, int msgType) {
             // Remove deleted message from display messages; merged messages may return null
             Integer row = msgUuid2Idx.get(msgUuid);
-            if (row != null) {
+            // Fix IndexOutOfBoundsException: Index: 55, Size: 31
+            if (row != null && row < messages.size()) {
                 ChatMessageImpl chatMessage = (ChatMessageImpl) messages.get(row).getChatMessage();
                 chatMessage.updateFTStatus(chatPanel.getDescriptor(), msgUuid, status, fileName,
                         encType, msgType, chatMessage.getMessageDir());
@@ -1500,8 +1512,8 @@ public class ChatSlice extends BaseSlice implements ChatSessionManager.CurrentCh
 
                     case ChatMessage.MESSAGE_FILE_TRANSFER_HISTORY:
                         fileRecord = msgDisplay.getFileRecord();
-                        FileHistoryConversation fileXferH = FileHistoryConversation.newInstance(currentChatSlice,
-                                fileRecord, chatMessage);
+                        FileHistoryConversation fileXferH
+						        = FileHistoryConversation.newInstance(currentChatSlice, fileRecord, chatMessage);
                         viewTemp = fileXferH.FileHistoryConversationForm(inflater, messageViewHolder, parent, init);
                         break;
 
@@ -1726,8 +1738,14 @@ public class ChatSlice extends BaseSlice implements ChatSessionManager.CurrentCh
                         else {
                             aTalkApp.showToastMessage(ResourceTable.String_send_message_not_supported, contactJid);
                             // Show ContactList UI for user selection if groupChat contact is anonymous.
-                            Intent intent = new Intent(mContext, aTalk.class);
-                            intent.setAction(BaseAbility.ACTION_SEND_TO);
+                            Intent intent = new Intent();
+                            Operation operation = new Intent.OperationBuilder()
+                                    .withDeviceId("")
+                                    .withBundleName(getBundleName())
+                                    .withAbilityName( aTalk.class)
+                                    .withAction(BaseAbility.ACTION_SEND_TO)
+                                    .build();
+                            intent.setOperation(operation);
                             startAbility(intent);
                         }
                         break;
@@ -1931,7 +1949,7 @@ public class ChatSlice extends BaseSlice implements ChatSessionManager.CurrentCh
             /**
              * Message body cache
              */
-            private Spanned msgBody;
+            private RichText msgBody;
 
             /**
              * Incoming message has LatLng info
@@ -2100,7 +2118,7 @@ public class ChatSlice extends BaseSlice implements ChatSessionManager.CurrentCh
              *
              * @return <code>Spanned</code> message body if contains no "<img" tag.
              */
-            public Spanned getBody(Text msgView) {
+            public RichText getBody(Text msgView) {
                 String body = msg.getMessage();
                 if ((msgBody == null) && !TextUtils.isEmpty(body)) {
                     boolean hasHtmlTag = body.matches(ChatMessage.HTML_MARKUP);
@@ -2116,18 +2134,26 @@ public class ChatSlice extends BaseSlice implements ChatSessionManager.CurrentCh
                         return null;
                     }
                     else {
-                        msgBody = Html.fromHtml(body, imageGetter, null);
+                        // msgBody = Html.fromHtml(body, imageGetter, null);
+                        msgBody = new RichText(body);
                     }
 
                     // Proceed with Linkify process if msgBody contains no HTML tags
                     if (!hasHtmlTag) {
                         try {
                             Pattern urlMatcher = Pattern.compile("\\b[A-Za-z]+://[A-Za-z0-9:./?=]+\\b");
-                            Linkify.addLinks((Spannable) msgBody, urlMatcher, null);
+                            Matcher matcher = urlMatcher.matcher(msgBody);
+                            if (matcher.find()) {
+                                String url = matcher.group();
+                                int start = matcher.start();
+                                int end = matcher.end();
+                                msgBody.setRichStyle(new UrlRichStyle(url), start, end, Flag.EXCLUDE);
+                            }
 
                             // second level of adding links if not aesgcm link
-                            if (!msgBody.toString().matches("(?s)^aesgcm:.*")) {
-                                Linkify.addLinks((Spannable) msgBody, Linkify.ALL);
+                            String bodyStr = msgBody.toString();
+                            if (!bodyStr.matches("(?s)^aesgcm:.*")) {
+                                msgBody.setRichStyle(new UrlRichStyle(bodyStr), 0, bodyStr.length(), Flag.INCLUDE_START_AND_END);
                             }
                         } catch (Exception ex) {
                             Timber.w("Error in Linkify process: %s", msgBody);
@@ -2147,7 +2173,7 @@ public class ChatSlice extends BaseSlice implements ChatSessionManager.CurrentCh
                 // Must update body if there is no process done for html tags i.e. (msgBody != null)
                 else {
                     if (msgView != null)
-                        msgView.setText(msgBody);
+                        msgView.setRichText(msgBody);
                 }
                 return msgBody;
             }
@@ -2296,7 +2322,8 @@ public class ChatSlice extends BaseSlice implements ChatSessionManager.CurrentCh
 
                     int loaded = chatItemProvider.getCount() - preSize;
                     int scrollTo = loaded + scrollFirstVisible;
-                    chatListContainer.setSelectionFromTop(scrollTo, scrollTopOffset);
+                    // chatListContainer.setSelectionFromTop(scrollTo, scrollTopOffset);
+                    chatListContainer.scrollTo(scrollTo);
                 });
             });
         }
@@ -2306,7 +2333,7 @@ public class ChatSlice extends BaseSlice implements ChatSessionManager.CurrentCh
      * Updates the status user interface.
      */
     private void updateStatusTask() {
-        BaseAbility.runOnUiThread(() -> {
+        runOnUiThread(() -> {
             if (chatListContainer == null || chatPanel == null) {
                 return;
             }
@@ -2360,7 +2387,7 @@ public class ChatSlice extends BaseSlice implements ChatSessionManager.CurrentCh
      * @param deliveryStatus the encryption
      */
     private void setMessageReceiptStatus(Image receiptStatusView, int deliveryStatus) {
-        BaseAbility.runOnUiThread(() -> {
+        runOnUiThread(() -> {
             if (receiptStatusView != null) {
                 switch (deliveryStatus) {
                     case ChatMessage.MESSAGE_DELIVERY_NONE:
@@ -2387,7 +2414,7 @@ public class ChatSlice extends BaseSlice implements ChatSessionManager.CurrentCh
      * @param encType the encryption
      */
     private void setEncState(Image encStateView, int encType) {
-        BaseAbility.runOnUiThread(() -> {
+        runOnUiThread(() -> {
             switch (encType) {
                 case IMessage.ENCRYPTION_NONE:
                     encStateView.setPixelMap(ResourceTable.Media_encryption_none);
@@ -2409,7 +2436,7 @@ public class ChatSlice extends BaseSlice implements ChatSessionManager.CurrentCh
             return;
         }
 
-        BaseAbility.runOnUiThread(() -> {
+        runOnUiThread(() -> {
             if (chatState != null) {
                 Text chatStateTextView = chatStateView.findComponentById(ResourceTable.Id_chatStateTextView);
                 Image chatStateImgView = chatStateView.findComponentById(ResourceTable.Id_chatStateImageView);
@@ -2536,6 +2563,7 @@ public class ChatSlice extends BaseSlice implements ChatSessionManager.CurrentCh
      *
      * @param event the file transfer status change event the notified us for the change
      */
+    @Override
     public void statusChanged(FileTransferStatusChangeEvent event) {
         FileTransfer fileTransfer = event.getFileTransfer();
         final int newStatus = event.getNewStatus();
@@ -2599,7 +2627,7 @@ public class ChatSlice extends BaseSlice implements ChatSessionManager.CurrentCh
             Executors.newSingleThreadExecutor().execute(() -> {
                 final Exception ex = doInBackground();
 
-                BaseAbility.runOnUiThread(() -> {
+                runOnUiThread(() -> {
                     if (ex != null) {
                         Timber.e("Failed to send file: %s", ex.getMessage());
                         chatPanel.addMessage(currentChatTransport.getName(), new Date(), ChatMessage.MESSAGE_ERROR,
@@ -2670,8 +2698,11 @@ public class ChatSlice extends BaseSlice implements ChatSessionManager.CurrentCh
                                 aTalkApp.getResString(ResourceTable.String_file_send_failed, "HttpFileUpload"));
                     }
                     else {
+                        // send HttpFileDownload text message with OOB extension to recipient without a local encho.
+                        int encType = IMessage.FLAG_REMOTE_ONLY | IMessage.FLAG_MSG_OOB | IMessage.ENCODE_PLAIN;
                         sendFTConversion.setStatus(FileTransferStatusChangeEvent.COMPLETED, entityJid, mEncryption, "");
-                        mChatController.sendMessage(urlLink, IMessage.FLAG_REMOTE_ONLY | IMessage.ENCODE_PLAIN);
+                        String msgUuid = sendFTConversion.getMessageUuid();
+                        mChatController.sendMessage(urlLink, encType, msgUuid);
                     }
                 }
             } catch (Exception e) {
@@ -2680,7 +2711,7 @@ public class ChatSlice extends BaseSlice implements ChatSessionManager.CurrentCh
             }
             return result;
         }
-   }
+    }
 
     @Override
     public void onCurrentChatChanged(String chatId) {
@@ -2712,23 +2743,22 @@ public class ChatSlice extends BaseSlice implements ChatSessionManager.CurrentCh
             return;
 
         mChatType = chatType;
-        BaseAbility.runOnUiThread(() -> {
-                    switch (chatType) {
-                        case MSGTYPE_OMEMO:
-                            focusView.setBackground(new ShapeElement(new RgbColor(ResourceTable.Color_chat_background_omemo)));
-                            break;
-                        case MSGTYPE_OMEMO_UA:
-                        case MSGTYPE_OMEMO_UT:
-                            focusView.setBackground(new ShapeElement(new RgbColor(ResourceTable.Color_chat_background_omemo_ua)));
-                            break;
-                        case MSGTYPE_MUC_NORMAL:
-                            focusView.setBackground(new ShapeElement(new RgbColor(ResourceTable.Color_chat_background_muc)));
-                            break;
-                        case MSGTYPE_NORMAL:
-                        default:
-                            focusView.setBackground(new ShapeElement(new RgbColor(ResourceTable.Color_chat_background_normal)));
-                    }
-                }
-        );
+        runOnUiThread(() -> {
+            switch (chatType) {
+                case MSGTYPE_OMEMO:
+                    focusView.setBackground(new ShapeElement(new RgbColor(ResourceTable.Color_chat_background_omemo)));
+                    break;
+                case MSGTYPE_OMEMO_UA:
+                case MSGTYPE_OMEMO_UT:
+                    focusView.setBackground(new ShapeElement(new RgbColor(ResourceTable.Color_chat_background_omemo_ua)));
+                    break;
+                case MSGTYPE_MUC_NORMAL:
+                    focusView.setBackground(new ShapeElement(new RgbColor(ResourceTable.Color_chat_background_muc)));
+                    break;
+                case MSGTYPE_NORMAL:
+                default:
+                    focusView.setBackground(new ShapeElement(new RgbColor(ResourceTable.Color_chat_background_normal)));
+            }
+        });
     }
 }

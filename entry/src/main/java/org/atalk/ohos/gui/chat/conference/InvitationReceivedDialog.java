@@ -32,6 +32,8 @@ import org.atalk.ohos.gui.dialogs.DialogA;
 import org.atalk.ohos.util.ComponentUtil;
 import org.jxmpp.jid.EntityJid;
 
+import timber.log.Timber;
+
 /**
  * The dialog that pops up when a chat room invitation is received.
  *
@@ -154,7 +156,7 @@ public class InvitationReceivedDialog {
             try {
                 mMultiUserChatManager.acceptInvitation(mInvitationAdHoc, mMultiUserChatAdHocOpSet);
             } catch (OperationFailedException e1) {
-                e1.printStackTrace();
+                Timber.w("Invitation Accepted: %s", e1.getMessage());
             }
         }
     }
@@ -165,7 +167,7 @@ public class InvitationReceivedDialog {
             try {
                 MUCActivator.getMUCService().rejectInvitation(mMultiUserChatOpSet, mInvitation, reasonField);
             } catch (OperationFailedException e) {
-                e.printStackTrace();
+                Timber.w("Invitation Rejected: %s", e.getMessage());
             }
         }
         if (mMultiUserChatAdHocOpSet != null)

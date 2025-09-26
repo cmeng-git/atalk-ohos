@@ -425,6 +425,7 @@ public class DataSource extends AbstractPushBufferCaptureDevice
 
     /**
      * Must use H264/RTP for video encoder
+     *
      * After API 23, android doesn't allow non seekable file descriptors i.e. mOutputFile = null
      * org.atalk.ohos E/(DataSource.java:294)#startVideoRecording: IllegalStateException (media recorder) in configuring data source: : null
      *     java.lang.IllegalStateException
@@ -483,7 +484,7 @@ public class DataSource extends AbstractPushBufferCaptureDevice
                     try {
                         DataSource.super.doStart();
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        Timber.e("createCaptureSession: %s", e.getMessage());
                     }
                 }
 
@@ -494,7 +495,7 @@ public class DataSource extends AbstractPushBufferCaptureDevice
                 }
             }, mBackgroundHandler);
         } catch (CameraAccessException | IOException e) {
-            e.printStackTrace();
+            Timber.e("startVideoRecording: %s", e.getMessage());
         }
     }
 

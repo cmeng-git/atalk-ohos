@@ -38,6 +38,7 @@ import net.java.sip.communicator.service.protocol.jabber.JabberAccountID;
 import net.java.sip.communicator.service.protocol.media.AbstractOperationSetBasicTelephony;
 import net.java.sip.communicator.service.protocol.media.MediaAwareCallPeer;
 
+import org.atalk.ohos.ResourceTable;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.aTalk;
 import org.atalk.ohos.gui.call.JingleMessageSessionImpl;

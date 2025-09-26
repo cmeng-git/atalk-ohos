@@ -43,7 +43,7 @@ public class ChatSecuritySettings extends BaseAbility {
     @Override
     protected void onStart(Intent intent) {
         super.onStart(intent);
-        if (savedInstanceState == null) {
+        if (mInState == null) {
             // Display the fragment as the main content.
             setMainRoute(SettingsSlice.class.getName());
         }

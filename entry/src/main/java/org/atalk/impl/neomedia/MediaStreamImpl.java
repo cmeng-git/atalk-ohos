@@ -222,7 +222,7 @@ public class MediaStreamImpl extends AbstractMediaStream
 
     /**
      * Our own SSRC identifier.
-     * <p>
+     *
      * XXX(gp) how about taking the local source ID directly from {@link this.rtpManager}, given
      * that it offers this information with its getLocalSSRC() method? TAG(cat4-local-ssrc-hurricane)
      */
@@ -267,7 +267,7 @@ public class MediaStreamImpl extends AbstractMediaStream
 
     /**
      * The SSRC identifiers of the party that we are exchanging media with.
-     * <p>
+     *
      * XXX(gp) I'm sure there's a reason why we do it the way we do it, but we might want to
      * re-think about how we manage receive SSRCs. We keep track of the receive SSRC in at least 3
      * places, in the MediaStreamImpl (we have a remoteSourceIDs vector), in
@@ -1643,7 +1643,7 @@ public class MediaStreamImpl extends AbstractMediaStream
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * Returns the last element of {@link #getRemoteSourceIDs()} which may or may not always be appropriate.
      *
      * @see MediaStream#getRemoteSourceID()
@@ -3055,7 +3055,7 @@ public class MediaStreamImpl extends AbstractMediaStream
      * @param pkt the packet from which to get the temporal layer id
      *
      * @return the TID of the packet, -1 otherwise.
-     * <p>
+     *
      * FIXME(gp) conceptually this belongs to the {@link VideoMediaStreamImpl},
      * but I don't want to be obliged to cast to use this method.
      */
@@ -3099,7 +3099,7 @@ public class MediaStreamImpl extends AbstractMediaStream
      * @param pkt the RTP packet.
      *
      * @return the SID of the packet, -1 otherwise.
-     * <p>
+     *
      * FIXME(gp) conceptually this belongs to the {@link VideoMediaStreamImpl},
      * but I don't want to be obliged to cast to use this method.
      */
@@ -3164,7 +3164,7 @@ public class MediaStreamImpl extends AbstractMediaStream
      * @param pkt raw rtp packet.
      *
      * @return true if the packet is the start of a frame, false otherwise.
-     * <p>
+     *
      * FIXME(gp) conceptually this belongs to the {@link VideoMediaStreamImpl},
      * but I don't want to be obliged to cast to use this method.
      */
@@ -3210,7 +3210,7 @@ public class MediaStreamImpl extends AbstractMediaStream
      * @param pkt raw rtp packet.
      *
      * @return true if the packet is the end of a frame, false otherwise.
-     * <p>
+     *
      * FIXME(gp) conceptually this belongs to the {@link VideoMediaStreamImpl},
      * but I don't want to be obliged to cast to use this method.
      */
@@ -3246,7 +3246,7 @@ public class MediaStreamImpl extends AbstractMediaStream
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * This is absolutely terrible, but we need a RawPacket and the method is
      * used from RTPTranslator, which doesn't work with RawPacket.
      */
@@ -3326,14 +3326,6 @@ public class MediaStreamImpl extends AbstractMediaStream
     @Override
     public TransformEngineChain getTransformEngineChain() {
         return transformEngineChain;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public REDBlock getPrimaryREDBlock(ByteArrayBuffer baf) {
-        return getPrimaryREDBlock(new RawPacket(baf.getBuffer(), baf.getOffset(), baf.getLength()));
     }
 
     /**

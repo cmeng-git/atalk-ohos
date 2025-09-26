@@ -210,7 +210,7 @@ public class ChatRoomBookmarksDialog implements ListContainer.ItemSelectedListen
                 doInBackground();
 
                 BaseAbility.runOnUiThread(() -> {
-                    if (mAccountBookmarkConferencesList.size() > 0) {
+                    if (!mAccountBookmarkConferencesList.isEmpty()) {
                         Object[] keySet = mAccountBookmarkConferencesList.keySet().toArray();
                         if (keySet.length > 0) {
                             String accountId = (String) keySet[0];
@@ -308,7 +308,7 @@ public class ChatRoomBookmarksDialog implements ListContainer.ItemSelectedListen
         chatRoomSpinner.setItemProvider(mAdapter);
         chatRoomSpinner.setItemSelectedListener(this);
 
-        if (mChatRoomList.size() > 0) {
+        if (!mChatRoomList.isEmpty()) {
             String chatRoom = mChatRoomList.get(0);
             initBookMarkForm(chatRoom);
         }

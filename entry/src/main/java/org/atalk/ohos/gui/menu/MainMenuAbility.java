@@ -104,7 +104,6 @@ public class MainMenuAbility extends ExitMenuAbility implements ServiceListener,
      */
     @Override
     protected void onStart(Intent intent) {
-        // protected void onStart(Intent intent) {
         super.onStart(intent);
         mContext = this;
     }
@@ -193,19 +192,20 @@ public class MainMenuAbility extends ExitMenuAbility implements ServiceListener,
         else
             enableMenu = false;
 
-        // runOnUiThread to update view
-        runOnUiThread(() -> {
-            // videoBridgeMenuItem is always enabled - allow user to re-trigger if earlier init failed
-            videoBridgeMenuItem.setEnabled(true);
+        if (videoBridgeMenuItem != null) {
+            runOnUiThread(() -> {
+                // videoBridgeMenuItem is always enabled - allow user to re-trigger if earlier init failed
+                videoBridgeMenuItem.setEnabled(true);
 
-            if (enableMenu) {
-                videoBridgeMenuItem.setAlpha(255);
-            }
-            else {
-                videoBridgeMenuItem.setAlpha(80);
-                menuVbItem = null;
-            }
-        });
+                if (enableMenu) {
+                    videoBridgeMenuItem.setAlpha(255);
+                }
+                else {
+                    videoBridgeMenuItem.setAlpha(80);
+                    menuVbItem = null;
+                }
+            });
+        }
     }
 
     /**
@@ -231,11 +231,11 @@ public class MainMenuAbility extends ExitMenuAbility implements ServiceListener,
                 initVideoBridge_task();
                 Thread.sleep(100);
             } catch (Exception ex) {
-                ex.printStackTrace();
+                Timber.e("Init VideoBridge: %s ", ex.getMessage());
             }
             if (progressBar != null) {
-                done = true;
                 progressBar.release();
+                done = true;
             }
         }).start();
     }

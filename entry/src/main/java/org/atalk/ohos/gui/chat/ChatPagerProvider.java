@@ -114,7 +114,6 @@ public class ChatPagerProvider extends PageSliderProvider implements ChatListene
     public void removeChatSession(String chatId) {
         synchronized (mChats) {
             if (mChats.remove(chatId)) {
-                mChatSlices.remove(chatId);
                 notifyDataChanged();
             }
         }
@@ -126,7 +125,6 @@ public class ChatPagerProvider extends PageSliderProvider implements ChatListene
     public void removeAllChatSessions() {
         synchronized (mChats) {
             mChats.clear();
-            mChatSlices.clear();
         }
         notifyDataChanged();
     }

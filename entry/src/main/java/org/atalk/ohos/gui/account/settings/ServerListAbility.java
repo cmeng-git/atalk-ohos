@@ -39,12 +39,12 @@ public class ServerListAbility extends BaseAbility {
     /**
      * Request code when launched for STUN servers list edit
      */
-    public static int RC_STUN_TURN = 1;
+    public static int RCODE_STUN_TURN = 1;
 
     /**
      * Request code used when launched for Jingle Nodes edit
      */
-    public static int RC_JINGLE_NODES = 2;
+    public static int RCODE_JINGLE_NODES = 2;
 
     /**
      * Request code intent's extra key
@@ -72,11 +72,11 @@ public class ServerListAbility extends BaseAbility {
         this.registration = intent.getSerializableParam(JABBER_REGISTRATION_KEY);
         int listType = intent.getIntParam(REQUEST_CODE_KEY, -1);
 
-        if (listType == RC_STUN_TURN) {
+        if (listType == RCODE_STUN_TURN) {
             mAdapter = new StunServerProvider(this, registration);
             setMainTitle(ResourceTable.String_stun_turn_server);
         }
-        else if (listType == RC_JINGLE_NODES) {
+        else if (listType == RCODE_JINGLE_NODES) {
             mAdapter = new JingleNodeProvider(this, registration);
             setMainTitle(ResourceTable.String_jbr_jingle_nodes);
         }

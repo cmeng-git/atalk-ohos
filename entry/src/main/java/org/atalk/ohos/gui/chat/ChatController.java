@@ -24,6 +24,8 @@ import java.util.Locale;
 import ohos.aafwk.ability.Ability;
 import ohos.aafwk.content.Intent;
 import ohos.aafwk.content.Operation;
+import ohos.accessibility.ability.AccessibleAbility;
+import ohos.accessibility.ability.SoftKeyBoardController;
 import ohos.agp.animation.AnimatorProperty;
 import ohos.agp.animation.AnimatorScatter;
 import ohos.agp.colors.RgbColor;
@@ -44,12 +46,14 @@ import ohos.event.commonevent.CommonEventManager;
 import ohos.event.commonevent.CommonEventSubscribeInfo;
 import ohos.event.commonevent.CommonEventSubscriber;
 import ohos.event.commonevent.MatchingSkills;
+import ohos.miscservices.inputmethodability.InputMethodAbility;
 import ohos.multimodalinput.event.KeyEvent;
 import ohos.multimodalinput.event.TouchEvent;
 import ohos.rpc.RemoteException;
 import ohos.security.SystemPermission;
 import ohos.utils.PacMap;
 import ohos.utils.net.Uri;
+import ohos.utils.system.SystemCapability.Accessibility;
 
 import net.java.sip.communicator.impl.protocol.jabber.CallJabberImpl;
 import net.java.sip.communicator.impl.protocol.jabber.CallPeerJabberImpl;
@@ -471,13 +475,18 @@ public class ChatController implements Component.ClickedListener, Component.Long
                 chatPanel.setCorrectionUID(uidToCorrect);
                 updateCorrectionState();
 
-                InputMethodManager inputMethodManager = (InputMethodManager) mChatAbility.getSystemService(Context.INPUT_METHOD_SERVICE);
-                if (inputMethodManager != null)
-                    inputMethodManager.showSoftInput(msgEdit, InputMethodManager.SHOW_IMPLICIT);
+                // InputMethodManager inputMethodManager = (InputMethodManager) mChatAbility.getSystemService(Context.INPUT_METHOD_SERVICE);
+                // InputMethodAbility inputMethodAbility = new InputMethodAbility();
 
+                // if (inputMethodManager != null)
+                //    inputMethodManager.showSoftInput(msgEdit, InputMethodManager.SHOW_IMPLICIT);
+
+                SoftKeyBoardController kbController = new SoftKeyBoardController(1, new Object());
+                if (kbController != null) {
+                    kbController.setShowMode(AccessibleAbility.SHOW_MODE_AUTO);
+                }
                 // Select corrected message
-                // TODO: it doesn't work when keyboard is displayed for the first time
-                adapter.setSelection(position);
+                adapter.setSelectedItemIndex(position);
             }
         }
     }

@@ -102,7 +102,7 @@ public class aTalk extends MainMenuAbility {
         }
 
         setUIContent(ResourceTable.Layout_main_view);
-        if (savedInstanceState == null) {
+        if (mInState == null) {
             // Inserts ActionBar functionality
             // getSupportFragmentManager().beginTransaction().add(new ActionBarStatusSlice(), "action_bar").commit();
             setMainRoute(ActionBarStatusSlice.class.getCanonicalName());

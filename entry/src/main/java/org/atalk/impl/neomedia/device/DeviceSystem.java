@@ -393,7 +393,7 @@ public abstract class DeviceSystem extends PropertyChangeNotifier {
         String className = getRendererClassName();
         if (className != null) {
             try {
-                return (Renderer) Class.forName(className).newInstance();
+                return (Renderer) Class.forName(className).getDeclaredConstructor().newInstance();
             } catch (Throwable t) {
                 if (t instanceof ThreadDeath)
                     throw (ThreadDeath) t;

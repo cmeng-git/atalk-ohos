@@ -80,9 +80,9 @@ public class WebViewYouTubePlayer extends WebView implements YouTubePlayer, YouT
     }
 
     @Override
-    public void loadPlaylist_videoIds(final String videoIds) {
+    public void loadPlaylistVideoIds(final String videoIds) {
         BaseAbility.runOnUiThread(() -> {
-            load("javascript:loadPlaylist_videoIds('" + videoIds + ")");
+            load("javascript:loadPlaylistVideoIds('" + videoIds + ")");
         });
     }
 

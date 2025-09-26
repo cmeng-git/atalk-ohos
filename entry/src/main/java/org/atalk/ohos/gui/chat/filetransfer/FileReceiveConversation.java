@@ -244,7 +244,7 @@ public class FileReceiveConversation extends FileTransferConversation
             Executors.newSingleThreadExecutor().execute(() -> {
                 doInBackground();
 
-                BaseAbility.runOnUiThread(() -> {
+                runOnUiThread(() -> {
                     if (mFileTransfer != null) {
                         setFileTransfer(mFileTransfer, fileTransferRequest.getFileSize());
                     }
@@ -299,7 +299,7 @@ public class FileReceiveConversation extends FileTransferConversation
         final String reason = event.getReason();
 
         // Event thread - Must execute in UiThread to Update UI information
-        BaseAbility.runOnUiThread(() -> {
+        runOnUiThread(() -> {
             updateStatus(status, reason);
             if (isFileTransferEnd(status)) {
                 // must update this in UI, otherwise the status is not being updated to FileRecord
@@ -346,7 +346,7 @@ public class FileReceiveConversation extends FileTransferConversation
         updateFTStatus(request.getId(), FileTransferStatusChangeEvent.DECLINED);
 
         // Event triggered - Must execute in UiThread to Update UI information
-        BaseAbility.runOnUiThread(() -> {
+        runOnUiThread(() -> {
             if (request.equals(fileTransferRequest)) {
                 updateXferFileViewState(FileTransferStatusChangeEvent.DECLINED,
                         aTalkApp.getResString(ResourceTable.String_file_transfer_declined));
@@ -367,7 +367,7 @@ public class FileReceiveConversation extends FileTransferConversation
         updateFTStatus(request.getId(), FileTransferStatusChangeEvent.CANCELED);
 
         // Event triggered - Must execute in UiThread to Update UI information
-        BaseAbility.runOnUiThread(() -> {
+        runOnUiThread(() -> {
             if (request.equals(fileTransferRequest)) {
                 updateXferFileViewState(FileTransferStatusChangeEvent.DECLINED,
                         aTalkApp.getResString(ResourceTable.String_file_transfer_canceled));

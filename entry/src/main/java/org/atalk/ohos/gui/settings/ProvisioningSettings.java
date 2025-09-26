@@ -20,14 +20,15 @@ import ohos.aafwk.ability.AbilitySlice;
 import ohos.aafwk.content.Intent;
 import ohos.data.preferences.Preferences;
 
+import net.java.sip.communicator.plugin.provisioning.ProvisioningServiceImpl;
 import net.java.sip.communicator.service.credentialsstorage.CredentialsStorageService;
 
-import org.apache.commons.lang3.StringUtils;
 import org.atalk.ohos.BaseAbility;
 import org.atalk.ohos.ResourceTable;
 import org.atalk.ohos.gui.AppGUIActivator;
 import org.atalk.ohos.gui.dialogs.DialogA;
 import org.atalk.service.configuration.ConfigurationService;
+import org.atalk.util.StringUtils;
 
 /**
  * Provisioning preferences Settings.
@@ -48,84 +49,70 @@ public class ProvisioningSettings extends BaseAbility {
     public static class MyPreferenceSlice extends AbilitySlice
             implements Preferences.PreferencesObserver {
         /**
-         * Used preference keys
+         * value defined in preference keys
          */
-        private final static String P_KEY_PROVISIONING_METHOD = "plugin.provisioning.METHOD";
+        private final static String P_KEY_PROVISIONING_METHOD = ProvisioningServiceImpl.PROVISIONING_METHOD_PROP;
+        private final static String P_KEY_UUID = ProvisioningServiceImpl.PROVISIONING_UUID_PROP;
+        private final static String P_KEY_URL = ProvisioningServiceImpl.PROVISIONING_URL_PROP;
+        private final static String P_KEY_USERNAME = ProvisioningServiceImpl.PROVISIONING_USERNAME_PROP;
+        private final static String P_KEY_PASSWORD = ProvisioningServiceImpl.PROVISIONING_PASSWORD_PROP;
+        private final static String P_KEY_FORGET_PASSWORD = "pref.key.provisioning.FORGET_PASSWORD";
 
-        private final static String P_KEY_USER = "plugin.provisioning.auth.USERNAME";
-
-        private final static String P_KEY_PASS = "plugin.provisioning.auth";
-
-        private final static String P_KEY_FORGET_PASS = "pref.key.provisioning.forget_password";
-
-        private final static String P_KEY_UUID = "net.java.sip.communicator.UUID";
-
-        private final static String P_KEY_URL = "plugin.provisioning.URL";
-
+        private CredentialsStorageService credentialsService;
+        private ConfigurationService mConfig;
         private Preferences mPref;
 
         /**
          * Username edit text
          */
-        private EditTextPreference usernamePreference;
+        private EditTextPreference prefUsername;
 
         /**
-         * Password edit text
+         * Password edit text; Do not use ConfigEditText preference,
+         * else another copy of the unencrypted pwd is also stored in DB.
          */
-        private EditTextPreference passwordPreference;
+        private EditTextPreference prefPassword;
+        private Preferences prefForgetPass;
 
         /**
          * {@inheritDoc}
+         * All setText() will be handled by onCreatePreferences itself on init
          */
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(ResourceTable.xml.provisioning_preferences, rootKey);
+            mConfig = AppGUIActivator.getConfigurationService();
+            credentialsService = ProvisioningActivator.getCredentialsStorageService();
 
             // Load UUID
-            EditTextPreference edtPref = findPreference(P_KEY_UUID);
-            edtPref.setText(AppGUIActivator.getConfigurationService().getString(edtPref.getKey()));
+            // EditTextPreference uuidPref = findPreference(P_KEY_UUID);
+            // uuidPref.setText(mConfig.getString(P_KEY_UUID));
 
-            CredentialsStorageService cSS = AppGUIActivator.getCredentialsStorageService();
-            String password = cSS.loadPassword(P_KEY_PASS);
+            // Initialize username and password fields
+            prefUsername = findPreference(P_KEY_USERNAME);
+            prefUsername.setEnabled(true);
+            // prefUsername.setText(mConfig.getString(P_KEY_USERNAME));
 
-            Preference forgetPass = findPreference(P_KEY_FORGET_PASS);
-            ConfigurationService config = AppGUIActivator.getConfigurationService();
+            String password = credentialsService.loadPassword(P_KEY_PASSWORD);
+            prefPassword = findPreference(P_KEY_PASSWORD);
+            prefPassword.setText(password);
+            // prefPassword.setText(password); // not necessary, get set when onCreatePreferences
+            prefPassword.setEnabled(true);
+
             // Enable clear credentials button if password exists
-            if (StringUtils.isNotEmpty(password)) {
-                forgetPass.setEnabled(true);
-            }
+            prefForgetPass = findPreference(P_KEY_FORGET_PASSWORD);
+            prefForgetPass.setVisible(!TextUtils.isEmpty(password));
+
             // Forget password action handler
-            forgetPass.setOnPreferenceClickListener(preference -> {
+            prefForgetPass.setOnPreferenceClickListener(preference -> {
                 askForgetPassword();
                 return false;
             });
-
-            // Initialize username and password fields
-            usernamePreference = findPreference(P_KEY_USER);
-            usernamePreference.setText(config.getString(P_KEY_USER));
-
-            passwordPreference = findPreference(P_KEY_PASS);
-            passwordPreference.setText(password);
         }
 
         /**
-         * Asks the user for confirmation of password clearing and eventually clears it.
+         * {@inheritDoc}
          */
-        private void askForgetPassword() {
-            DialogA.Builder askForget = new DialogA.Builder(getContext());
-            askForget.setTitle(ResourceTable.String_remove)
-                    .setContent(ResourceTable.String_provisioning_remove_credentials_message)
-                    .setPositiveButton(ResourceTable.String_yes, dialog -> {
-                        AppGUIActivator.getCredentialsStorageService().removePassword(P_KEY_PASS);
-                        AppGUIActivator.getConfigurationService().removeProperty(P_KEY_USER);
-
-                        usernamePreference.setText("");
-                        passwordPreference.setText("");
-                    })
-                    .setNegativeButton(ResourceTable.String_no, DialogA::remove)
-                    .create().show();
-        }
-
         @Override
         protected void onActive() {
             super.onActive();
@@ -143,14 +130,67 @@ public class ProvisioningSettings extends BaseAbility {
         }
 
         /**
+         * Asks the user for confirmation of password clearing and eventually clears it.
+         */
+        private void askForgetPassword() {
+            if (StringUtils.isNullOrEmpty(prefPassword.getText())) {
+                return;
+            }
+
+            DialogA.Builder askForget = new DialogA.Builder(getContext());
+            askForget.setTitle(ResourceTable.String_remove)
+                    .setContent(ResourceTable.String_provisioning_remove_credentials_message)
+                    .setPositiveButton(ResourceTable.String_yes, dialog -> {
+                        credentialsService.removePassword(P_KEY_USERNAME);
+                        prefUsername.setText(null);
+                        prefPassword.setText(null);
+                        prefForgetPass.setVisible(false);
+                    })
+                    .setNegativeButton(ResourceTable.String_no, DialogA::remove)
+                    .create().show();
+        }
+
+        /**
          * {@inheritDoc}
          */
         @Override
-        public void onChange(Preferences prefs, String key) {
-            if (key.equals(P_KEY_PROVISIONING_METHOD)) {
-                if ("NONE".equals(prefs.getString(P_KEY_PROVISIONING_METHOD, null))) {
-                    AppGUIActivator.getConfigurationService().setProperty(P_KEY_URL, null);
-                }
+        public void onChange(Preferences sharedPreferences, String key) {
+            if (StringUtils.isNullOrEmpty(key))
+                return;
+
+            switch (key) {
+                case P_KEY_PROVISIONING_METHOD:
+                    if ("NONE".equals(sharedPreferences.getString(P_KEY_PROVISIONING_METHOD, null))) {
+                        mConfig.setProperty(ProvisioningServiceImpl.PROVISIONING_URL_PROP, null);
+                    }
+                    break;
+
+                case P_KEY_URL:
+                    String url = sharedPreferences.getString(P_KEY_URL, null);
+                    if (!StringUtils.isNullOrEmpty(url))
+                        mConfig.setProperty(ProvisioningServiceImpl.PROVISIONING_URL_PROP, url);
+                    else
+                        mConfig.setProperty(ProvisioningServiceImpl.PROVISIONING_URL_PROP, null);
+                    break;
+
+                // Seems Jitsi impl does not allow user to change user and password
+                case P_KEY_USERNAME:
+                    String username = sharedPreferences.getString(P_KEY_USERNAME, null);
+                    if (!StringUtils.isNullOrEmpty(username))
+                        mConfig.setProperty(ProvisioningServiceImpl.PROVISIONING_USERNAME_PROP, username);
+                    break;
+
+                case P_KEY_PASSWORD:
+                    String password = sharedPreferences.getString(P_KEY_PASSWORD, null);
+                    if (StringUtils.isNullOrEmpty(password, true)) {
+                        credentialsService.removePassword(ProvisioningServiceImpl.PROVISIONING_PASSWORD_PROP);
+                        prefForgetPass.setVisible(false);
+                    }
+                    else {
+                        credentialsService.storePassword(ProvisioningServiceImpl.PROVISIONING_PASSWORD_PROP, password);
+                        prefForgetPass.setVisible(true);
+                    }
+                    break;
             }
         }
     }

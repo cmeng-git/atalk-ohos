@@ -222,7 +222,6 @@ public class ShareUtil {
         @Override
         public void onReceive(Context context, Intent intent) {
             ComponentName clickedComponent = intent.getParcelableExtra(Intent.EXTRA_CHOSEN_COMPONENT);
-
             if (mediaIntent == null)
                 return;
 

@@ -77,7 +77,6 @@ public class SettingsSlice extends BasePreferenceSlice
     // Interface Display settings
     public static final String P_KEY_LOCALE = "pref.key.locale";
     public static final String P_KEY_THEME = "pref.key.theme";
-
     private static final String P_KEY_WEB_PAGE = "gui.WEB_PAGE_ACCESS";
 
     // Message section
@@ -162,6 +161,19 @@ public class SettingsSlice extends BasePreferenceSlice
         // Notifications section
         initNotificationPreferences();
         initAutoStart();
+
+        // android OS cannot support removal of nested PreferenceCategory, so just disable all advance settings
+        if (ConfigurationUtils.isExpertSettingDisabled()) {
+            Preference prefAdvance = findPreference(P_KEY_ADVANCED);
+            if (prefAdvance != null)
+                prefAdvance.setVisible(false);
+        }
+
+        if (ConfigurationUtils.isProvisioningDisabled()) {
+            Preference prefProvisioning = findPreference(P_KEY_PROVISIONING);
+            if (prefProvisioning != null)
+                prefProvisioning.setVisible(false);
+        }
 
         if (!aTalk.disableMediaServiceOnFault) {
             MediaServiceImpl mediaServiceImpl = NeomediaActivator.getMediaServiceImpl();
@@ -429,7 +441,7 @@ public class SettingsSlice extends BasePreferenceSlice
         if (myPrefCat != null)
             mPreferenceScreen.removePreference(myPrefCat);
 
-        // android OS cannot support removal of nested PreferenceCategory, so just disable all advance settings
+        // disable Expert setting if media call is disable
         myPrefCat = findPreference(P_KEY_ADVANCED);
         if (myPrefCat != null) {
             mPreferenceScreen.removePreference(myPrefCat);
@@ -524,6 +536,7 @@ public class SettingsSlice extends BasePreferenceSlice
                 minDiff = Math.abs(size.getHeight() - h);
             }
         }
+        aTalkApp.showToastMessage(R.string.settings_use_match_camera_resolution, resToStr(optSize));
         return optSize;
     }
 

@@ -45,7 +45,7 @@ import timber.log.Timber;
 
 /**
  * The class displays the content accessed via given web link
- * https://developer.android.com/guide/webapps/webview
+ * <a href="https://developer.android.com/guide/webapps/webview">...</a>
  *
  * @author Eng Chong Meng
  */

@@ -181,8 +181,8 @@ public class GeoLocationBase extends BaseAbility implements Component.ClickedLis
                 GeoLocationRequest geoLocationRequest = new GeoLocationRequest.GeoLocationRequestBuilder()
                         .setLocationFetchMode(mLocationFetchMode)
                         .setAddressRequest(true)
-                        .setLocationUpdateMinTime(0)
-                        .setLocationUpdateMinDistance(0)
+                        .setLocationUpdateMinTime(0L)
+                        .setLocationUpdateMinDistance(0.0f)
                         .setFallBackToLastLocationTime(3000)
                         .build();
 
@@ -201,9 +201,9 @@ public class GeoLocationBase extends BaseAbility implements Component.ClickedLis
                     geoLocationRequest = new GeoLocationRequest.GeoLocationRequestBuilder()
                             .setLocationFetchMode(mLocationFetchMode)
                             .setAddressRequest(true)
-                            .setLocationUpdateMinTime(sendTimeInterval * 1000)
+                            .setLocationUpdateMinTime(sendTimeInterval * 1000L)
                             .setLocationUpdateMinDistance(gpsMinDistance)
-                            .setFallBackToLastLocationTime(sendTimeInterval * 500)
+                            .setFallBackToLastLocationTime(sendTimeInterval * 500L)
                             .build();
 
                     requestLocationUpdates(geoLocationRequest);
@@ -231,12 +231,12 @@ public class GeoLocationBase extends BaseAbility implements Component.ClickedLis
 
     @Override
     public void onLocationPermissionGranted() {
-        aTalkApp.showToastMessage("Location permission granted");
+        showToast("Location permission granted");
     }
 
     @Override
     public void onLocationPermissionDenied() {
-        aTalkApp.showToastMessage("Location permission denied");
+        showToast("Location permission denied");
     }
 
     public void onLocationReceived(Location location, String locAddress) {
@@ -277,17 +277,17 @@ public class GeoLocationBase extends BaseAbility implements Component.ClickedLis
 
     @Override
     public void onLocationReceivedNone() {
-        aTalkApp.showToastMessage("No location received");
+        showToast("No location received");
     }
 
     @Override
     public void onLocationProviderEnabled() {
-        aTalkApp.showToastMessage("Location services are now ON");
+        showToast("Location services are now ON");
     }
 
     @Override
     public void onLocationProviderDisabled() {
-        aTalkApp.showToastMessage("Location services are still Off");
+        showToast("Location services are still Off");
     }
 
     /**
@@ -323,7 +323,11 @@ public class GeoLocationBase extends BaseAbility implements Component.ClickedLis
         if (isFollowMe) {
             mBtnFollowMe.setText(getString(ResourceTable.String_follow_me_stop, gpsMinDistance, sendTimeInterval));
         }
-        aTalkApp.showToastMessage(ResourceTable.String_apply_new_location_setting);
+        showToastMessage(ResourceTable.String_apply_new_location_setting);
+    }
+
+    private void showToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
     public static void registeredLocationListener(LocationListener listener) {

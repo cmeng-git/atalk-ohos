@@ -43,7 +43,6 @@ import static org.atalk.impl.appstray.NotificationPopupHandler.getIntentFlag;
  * {@link #ACTION_TOGGLE_MUTE} - toggles between muted and not muted call state. <br/>
  * {@link #ACTION_TOGGLE_ON_HOLD} - toggles the on hold call state.
  * {@link #ACTION_HANGUP} - ends the call. <br/>
- * {@link #ACTION_TRANSFER_CALL} - start call transfer dialog. <br/>
  *
  * @author Eng Chong Meng
  */
@@ -83,9 +82,6 @@ public class CallControl implements IntentAgent.OnCompleted {
      */
     public static final int ACTION_HANGUP = 5;
 
-    // ACTION_TRANSFER_CALL is handled via VideoCallAbility Directly
-    public static final int ACTION_TRANSFER_CALL = 6;
-
     /**
      * {@inheritDoc}
      */
@@ -113,7 +109,7 @@ public class CallControl implements IntentAgent.OnCompleted {
         switch (action) {
             case ACTION_TOGGLE_SPEAKER:
                 Timber.log(TimberLog.FINER, "Action TOGGLE SPEAKER");
-//                AudioManager audio = (AudioManager) aTalkApp.getInstance().getSystemService(Context.AUDIO_SERVICE);
+//                AudioManager audio = aTalkApp.getAudioManager();
 //                audio.setSpeakerphoneOn(!audio.isSpeakerphoneOn());
                 break;
 

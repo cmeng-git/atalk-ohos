@@ -206,6 +206,7 @@ public class VideoCallAbility extends BaseAbility implements CallPeerRenderer, C
      */
     private volatile boolean finishing = false;
 
+    private FullScreenHelper fullScreenHelper;
     private Image peerAvatar;
     private Image microphoneButton;
     private Image speakerphoneButton;
@@ -339,6 +340,10 @@ public class VideoCallAbility extends BaseAbility implements CallPeerRenderer, C
         if (mCall == null)
             return;
 
+        // To take care when the phone orientation is changed while call is in progress
+        if (videoFragment == null)
+            videoFragment = (VideoHandlerFragment) getSupportFragmentManager().findFragmentByTag("video");
+
         // Registers as the call state listener
         mCall.addCallChangeListener(this);
 
@@ -423,6 +428,10 @@ public class VideoCallAbility extends BaseAbility implements CallPeerRenderer, C
                 callState.callDuration = ComponentUtil.getTextViewValue(findComponentById(ResourceTable.Id_content), ResourceTable.Id_callTime);
                 callState.callEnded = true;
 
+                // Remove video fragment
+                if (videoFragment != null) {
+                    getSupportFragmentManager().beginTransaction().remove(videoFragment).commit();
+                }
                 // Remove auto hide slice
                 ensureAutoHideFragmentDetached();
                 // !!! below is not working in kotlin code; merged with this activity
@@ -430,7 +439,6 @@ public class VideoCallAbility extends BaseAbility implements CallPeerRenderer, C
 
                 // auto exit 3 seconds after call ended
                 new EventHandler(EventRunner.create()).postTask(this::terminateAbility, 5000);
-
             });
         }).start();
     }
@@ -449,23 +457,12 @@ public class VideoCallAbility extends BaseAbility implements CallPeerRenderer, C
 
     @Override
     public void onRemoteVideoChange(boolean isRemoteVideoVisible) {
-        if (isRemoteVideoVisible)
-            hideSystemUI();
-        else
-            showSystemUI();
-    }
-
-    private void hideSystemUI() {
-        Window window = getWindow();
-        window.addFlags(LayoutConfig.MARK_FULL_SCREEN);
-    }
-
-    // Restore the system bars by removing all the flags. On end call,
-    // do not request for full screen nor hide navigation bar, let user selected navigation state take control.
-    public void showSystemUI() {
-        Window window = getWindow();
-        window.clearFlags(LayoutConfig.MARK_FULL_SCREEN);
-        window.addFlags(LayoutConfig.SYSTEM_BAR_BRIGHT_NAVIGATION);
+        if (isRemoteVideoVisible) {
+            fullScreenHelper.enterFullScreen();
+        }
+        else {
+            fullScreenHelper.exitFullScreen();
+        }
     }
 
     /**

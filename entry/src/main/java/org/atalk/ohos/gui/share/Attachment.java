@@ -107,9 +107,9 @@ public class Attachment extends Parcel {
     }
 
     public static List<Attachment> extractAttachments(final Context context, final Intent intent, Type type) {
-        List<Attachment> attachments = new ArrayList<>();
+        List<Attachment> uris = new ArrayList<>();
         if (intent == null) {
-            return attachments;
+            return uris;
         }
 
         final String contentType = intent.getType();
@@ -121,16 +121,16 @@ public class Attachment extends Parcel {
                     final Uri uri = clipData.getItemAt(i).getUri();
                     final String mime = FileBackend.getMimeType(context, uri, contentType);
                     Timber.d("uri = %s; contentType = %s; mime = %s", uri, contentType, mime);
-                    attachments.add(new Attachment(uri, type, mime));
+                    uris.add(new Attachment(uri, type, mime));
                 }
             }
         }
         else {
             // final String mime = MimeUtils.guessMimeTypeFromUriAndMime(context, data, contentType);
             String mime = FileBackend.getMimeType(context, data, contentType);
-            attachments.add(new Attachment(data, type, mime));
+            uris.add(new Attachment(data, type, mime));
         }
-        return attachments;
+        return uris;
     }
 
     public boolean renderThumbnail() {

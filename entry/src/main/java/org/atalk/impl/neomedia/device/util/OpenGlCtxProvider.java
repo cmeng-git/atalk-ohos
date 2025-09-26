@@ -99,7 +99,8 @@ public class OpenGlCtxProvider extends ViewDependentProvider<OpenGLContext> impl
      * and also the size of `mTextureView` is fixed.
      * <p>
      * Note: The transform is not working when the local preview container is very first setup;
-     * Subsequence device rotation work but it also affects change the stream video; so far unable to solve this problem.
+     * Subsequence device rotation work but it also affects change the stream video; so far unable to solve
+     * this problem.
      *
      * @param viewWidth The width of `mTextureView`
      * @param viewHeight The height of `mTextureView`

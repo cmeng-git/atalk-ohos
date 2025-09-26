@@ -497,8 +497,10 @@ public class IceUdpTransportManager extends TransportManagerJabberImpl implement
      *
      * @param mediaType the <code>MediaType</code> of the <code>MediaStream</code> which is to have its
      * <code>target</code> set to the returned <code>MediaStreamTarget</code>
+     *
      * @return the <code>MediaStreamTarget</code> to be used as the <code>target</code> of the
      * <code>MediaStream</code> with the specified <code>MediaType</code>
+     *
      * @see TransportManagerJabberImpl#getStreamTarget(MediaType)
      */
     @Override
@@ -553,6 +555,7 @@ public class IceUdpTransportManager extends TransportManagerJabberImpl implement
      * the Jingle transport implemented by this <code>TransportManagerJabberImpl</code>.
      *
      * @return the XML namespace of the Jingle transport implemented by this <code>TransportManagerJabberImpl</code>
+     *
      * @see TransportManagerJabberImpl#getXmlNamespace()
      */
     @Override

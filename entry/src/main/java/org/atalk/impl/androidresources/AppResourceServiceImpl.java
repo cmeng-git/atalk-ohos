@@ -87,7 +87,7 @@ public class AppResourceServiceImpl extends AbstractResourcesService {
     /**
      * The application package name(org.atalk.ohos)
      */
-    private String packageName;
+    private final String packageName;
 
     /**
      * The Android application context

@@ -106,7 +106,6 @@ import org.atalk.ohos.gui.chat.chatsession.ChatSessionRecord;
 import org.atalk.persistance.DatabaseBackend;
 import org.atalk.service.configuration.ConfigurationService;
 import org.jivesoftware.smack.SmackException;
-import org.jivesoftware.smack.packet.ExtensionElement;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Stanza;
 import org.jivesoftware.smackx.delay.packet.DelayInformation;
@@ -120,7 +119,6 @@ import org.jivesoftware.smackx.omemo.exceptions.NoRawSessionException;
 import org.jivesoftware.smackx.omemo.util.OmemoConstants;
 import org.jivesoftware.smackx.receipts.ReceiptReceivedListener;
 import org.jivesoftware.smackx.sid.element.OriginIdElement;
-import org.jivesoftware.smackx.sid.element.StanzaIdElement;
 import org.jxmpp.jid.EntityBareJid;
 import org.jxmpp.jid.EntityFullJid;
 import org.jxmpp.jid.Jid;
@@ -198,22 +196,17 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
 
         // Check if the message history is enabled in the configuration service;
         // if not, then do not register the service.
-        boolean isMessageHistoryEnabled = configService.getBoolean(
-                MessageHistoryService.PNAME_IS_MESSAGE_HISTORY_ENABLED,
-                Boolean.parseBoolean(MessageHistoryActivator.getResources().getSettingsString(
-                        MessageHistoryService.PNAME_IS_MESSAGE_HISTORY_ENABLED)));
+        boolean isMessageHistoryEnabled = configService.getBoolean(PNAME_IS_MESSAGE_HISTORY_ENABLED,
+                Boolean.parseBoolean(MessageHistoryActivator.getResources().getSettingsString(PNAME_IS_MESSAGE_HISTORY_ENABLED)));
 
         // Load the "IS_MESSAGE_HISTORY_ENABLED" property.
-        isHistoryLoggingEnabled = configService.getBoolean(
-                MessageHistoryService.PNAME_IS_MESSAGE_HISTORY_ENABLED,
-                Boolean.parseBoolean(UtilActivator.getResources().getSettingsString(
-                        MessageHistoryService.PNAME_IS_MESSAGE_HISTORY_ENABLED)));
+        isHistoryLoggingEnabled = configService.getBoolean(PNAME_IS_MESSAGE_HISTORY_ENABLED,
+                Boolean.parseBoolean(UtilActivator.getResources().getSettingsString(PNAME_IS_MESSAGE_HISTORY_ENABLED)));
 
         // We are adding a property change listener in order to
         // listen for modifications of the isMessageHistoryEnabled property.
         msgHistoryPropListener = new MessageHistoryPropertyChangeListener();
-        configService.addPropertyChangeListener(
-                MessageHistoryService.PNAME_IS_MESSAGE_HISTORY_ENABLED, msgHistoryPropListener);
+        configService.addPropertyChangeListener(PNAME_IS_MESSAGE_HISTORY_ENABLED, msgHistoryPropListener);
 
         if (isMessageHistoryEnabled) {
             Timber.d("Starting the msg history implementation.");
@@ -790,11 +783,15 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
     }
 
     /**
-     * Update the last mam retrieval message timeStamp for the specified sessionUuid.
+     * Update the last mam retrieval message timeStamp for the specified sessionUuid;
+     * The mamDate is also used to store last Message sent/received, in case the last message is deleted.
+     * only if the specified date is after the current mamDate.
      * Always advance timeStamp by 10ms to avoid last message being included in future mam fetching.
      *
      * @param sessionUuid the chat sessions record id to which to save the timestamp
      * @param date last mam message timestamp
+     *
+     * @return a value of 0 means there is no chatSession record associated with this sessionUuid
      */
     public int setMamDate(String sessionUuid, Date date) {
         Date mamDate = getMamDate(sessionUuid);
@@ -832,12 +829,19 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
                 continue;
             }
 
+            // Ignore any OOB or empty body message
+            // if (msg.hasExtension(OutOfBandData.QNAME) || TextUtils.isEmpty(msg.getBody())) {
+            if (TextUtils.isEmpty(msg.getBody())) {
+                Timber.w("Skip empty or OOB forward MAM message: %s", msg.getStanzaId());
+                continue;
+            }
+
             // Some received/DomainBareJid message does not have msgId. So use stanzaId from StanzaIdElement if found.
             String msgId = msg.getStanzaId();
             if (TextUtils.isEmpty(msgId)) {
-                ExtensionElement stanzaIdElement = msg.getExtension(StanzaIdElement.QNAME);
-                if (stanzaIdElement instanceof StanzaIdElement) {
-                    msgId = ((StanzaIdElement) stanzaIdElement).getId();
+                OriginIdElement orgStanzaElement = OriginIdElement.getOriginId(msg);
+                if (orgStanzaElement != null) {
+                    msgId = orgStanzaElement.getId();
                 }
             }
             if (TextUtils.isEmpty(msgId)) {
@@ -923,9 +927,6 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
                     .equalTo(ChatMessage.UUID, msgId)
                     .and()
                     .equalTo(ChatMessage.DIRECTION, ChatMessage.DIR_IN);
-//            ResultSet resultSet = mRdbStore.query(rdbPredicates, null);
-//            resultSet.close();
-
             long msgCount = mRdbStore.count(rdbPredicates);
             isUnexpected = msgCount != 0;
             if (isUnexpected)
@@ -1334,6 +1335,7 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
         // Return FileRecord if it is of file transfer message type, but excluding MESSAGE_HTTP_FILE_LINK
         int msgType = Integer.parseInt(Objects.requireNonNull(mProperties.get(ChatMessage.MSG_TYPE)));
         if ((msgType == ChatMessage.MESSAGE_FILE_TRANSFER_HISTORY)
+                || (msgType == ChatMessage.MESSAGE_HTTP_FILE_DOWNLOAD)
                 || (msgType == ChatMessage.MESSAGE_FILE_TRANSFER_RECEIVE)
                 || (msgType == ChatMessage.MESSAGE_FILE_TRANSFER_SEND)
                 || (msgType == ChatMessage.MESSAGE_STICKER_SEND)) {
@@ -2322,8 +2324,8 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
         configService.addPropertyChangeListener(
                 MessageHistoryService.PNAME_IS_RECENT_MESSAGES_DISABLED, msgHistoryPropListener);
 
-        boolean isRecentMessagesDisabled
-                = configService.getBoolean(MessageHistoryService.PNAME_IS_RECENT_MESSAGES_DISABLED, false);
+        boolean isRecentMessagesDisabled = configService.getBoolean(
+                MessageHistoryService.PNAME_IS_RECENT_MESSAGES_DISABLED, false);
 
         if (!isRecentMessagesDisabled)
             loadRecentMessages();

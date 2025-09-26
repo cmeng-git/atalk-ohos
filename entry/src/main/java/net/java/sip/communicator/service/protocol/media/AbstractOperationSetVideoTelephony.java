@@ -93,7 +93,7 @@ public abstract class AbstractOperationSetVideoTelephony<
      *
      * @param peer the <code>CallPeer</code> that we are sending our local video to.
      *
-     * @return the <code>Component</code> containing the local video.
+     * @return the <code>JComponent</code> containing the local video.
      *
      * @throws OperationFailedException if we fail extracting the local video.
      */
@@ -105,11 +105,11 @@ public abstract class AbstractOperationSetVideoTelephony<
     }
 
     /**
-     * Gets the visual/video <code>Component</code> available in this telephony for a specific <code>CallPeer</code>.
+     * Gets the visual/video <code>JComponent</code> available in this telephony for a specific <code>CallPeer</code>.
      *
      * @param peer the <code>CallPeer</code> whose video is to be retrieved
      *
-     * @return the visual/video <code>Component</code> available in this telephony for the specified
+     * @return the visual/video <code>JComponent</code> available in this telephony for the specified
      * <code>peer</code> if any; otherwise, <code>null</code>
      */
     @Deprecated
@@ -123,7 +123,7 @@ public abstract class AbstractOperationSetVideoTelephony<
      *
      * @param peer the <code>CallPeer</code> whose videos are to be retrieved
      *
-     * @return the visual/video <code>Component</code>s available in this telephony for the specified <code>peer</code>
+     * @return the visual/video <code>JComponent</code>s available in this telephony for the specified <code>peer</code>
      */
     @SuppressWarnings("unchecked")
     // work with MediaAware* in media package

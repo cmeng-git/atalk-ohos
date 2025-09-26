@@ -131,7 +131,7 @@ public class NotificationDetails extends BaseAbility
         // The SoundNotification init
         initSoundNotification();
 
-        if (savedInstanceState == null) {
+        if (mInState == null) {
             getSupportFragmentManager().beginTransaction().add(ActionBarToggleSlice.newInstance(""),
                     "action_bar_toggle").commit();
         }

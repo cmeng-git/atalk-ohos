@@ -836,5 +836,4 @@ public class VideoHandlerSlice extends BaseSlice implements JComponent.LongClick
             handleRemoteVideoEvent((JComponent) remoteVideoAccessor, null);
         }
     }
-
 }

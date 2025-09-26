@@ -70,9 +70,6 @@ public class LogUploadServiceImpl implements LogUploadService
             Context ctx = aTalkApp.getInstance();
             Uri logsUri = FileBackend.getUriForFile(ctx, externalStorageFile);
 
-
-
-
             Intent sendIntent = new Intent();
             sendIntent.setAction(BaseAbility.ACTION_SEND);
             sendIntent.setParam(BaseAbility.EXTRA_EMAIL, destinations);

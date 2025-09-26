@@ -41,7 +41,6 @@ import timber.log.Timber;
  * @author Pawel Domas
  * @author Eng Chong Meng
  */
-
 public class ReceivedCallAbility extends BaseAbility implements CallChangeListener {
     /**
      * The identifier of the call.
@@ -67,12 +66,7 @@ public class ReceivedCallAbility extends BaseAbility implements CallChangeListen
     protected void onStart(Intent intent) {
         super.onStart(intent);
         setUIContent(ResourceTable.Layout_call_received);
-
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
-                | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
-                | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
-                | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
-        );
+        setScreenOn();
 
         Image hangupView = findComponentById(ResourceTable.Id_hangupButton);
         hangupView.setClickedListener(v -> hangupCall());

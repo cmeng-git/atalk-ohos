@@ -38,8 +38,7 @@ import ohos.net.RouteInfo;
  * Requires the ACCESS_NETWORK_STATE permission.
  *
  */
-public class AndroidUsingLinkProperties extends AbstractDnsServerLookupMechanism
-{
+public class AndroidUsingLinkProperties extends AbstractDnsServerLookupMechanism {
     private final NetManager netManager;
 
     /**
@@ -47,25 +46,23 @@ public class AndroidUsingLinkProperties extends AbstractDnsServerLookupMechanism
      * ideally before you do your first DNS lookup.
      *
      * @param context a Context instance.
+     *
      * @return the instance of the newly setup mechanism
      */
-    public static AndroidUsingLinkProperties setup(Context context)
-    {
+    public static AndroidUsingLinkProperties setup(Context context) {
         AndroidUsingLinkProperties androidUsingLinkProperties = new AndroidUsingLinkProperties(context);
         DnsClient.addDnsServerLookupMechanism(androidUsingLinkProperties);
         return androidUsingLinkProperties;
     }
 
-    public AndroidUsingLinkProperties(Context context)
-    {
+    public AndroidUsingLinkProperties(Context context) {
         super(AndroidUsingLinkProperties.class.getSimpleName(), AndroidUsingExec.PRIORITY - 1);
         netManager = NetManager.getInstance(context);
     }
 
     @Override
-    public boolean isAvailable()
-    {
-		return true;
+    public boolean isAvailable() {
+        return true;
     }
 
     /**
@@ -74,8 +71,7 @@ public class AndroidUsingLinkProperties extends AbstractDnsServerLookupMechanism
      * @return servers list or null
      */
     @Override
-    public List<String> getDnsServerAddresses()
-    {
+    public List<String> getDnsServerAddresses() {
         final List<String> servers = new ArrayList<>();
         final NetHandle netHandle = netManager.getDefaultNet();
         if (netHandle == null) {
@@ -114,10 +110,10 @@ public class AndroidUsingLinkProperties extends AbstractDnsServerLookupMechanism
      * Sort and return the list of given InetAddress in IPv4-IPv6 order, and keeping original in order
      *
      * @param in list of unsorted InetAddress
+     *
      * @return sorted vp4 vp6 IP addresses
      */
-    private static List<String> getIPv4First(List<InetAddress> in)
-    {
+    private static List<String> getIPv4First(List<InetAddress> in) {
         List<String> out = new ArrayList<>();
         int i = 0;
         for (InetAddress addr : in) {
@@ -131,8 +127,7 @@ public class AndroidUsingLinkProperties extends AbstractDnsServerLookupMechanism
         return out;
     }
 
-    private static boolean hasDefaultRoute(ConnectionProperties linkProperties)
-    {
+    private static boolean hasDefaultRoute(LinkProperties linkProperties) {
         for (RouteInfo route : linkProperties.getRoutes()) {
             if (route.isDefaultRoute()) {
                 return true;

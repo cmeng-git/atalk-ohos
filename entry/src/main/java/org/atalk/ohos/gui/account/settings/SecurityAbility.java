@@ -57,8 +57,7 @@ public class SecurityAbility extends BaseAbility implements SecurityProtocolsDia
     /**
      * Default value for cipher suites string property
      */
-    private static final String defaultCiphers =
-            UtilActivator.getResources().getSettingsString(SDesControl.SDES_CIPHER_SUITES);
+    private static final String defaultCiphers = UtilActivator.getResources().getSettingsString(SDesControl.SDES_CIPHER_SUITES);
 
     private static final String PREF_KEY_SEC_ENABLED = "pref_key_enable_encryption";
 
@@ -97,7 +96,7 @@ public class SecurityAbility extends BaseAbility implements SecurityProtocolsDia
     @Override
     protected void onStart(Intent intent) {
         super.onStart(intent);
-        if (savedInstanceState == null) {
+        if (mInState == null) {
             securitySlice = new SecurityPreferenceSlice();
 
             // Display the fragment as the main content.

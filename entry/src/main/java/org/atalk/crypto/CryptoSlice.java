@@ -147,8 +147,8 @@ public class CryptoSlice extends BaseSlice
     }
 
     @Override
-    public void onActive(@NonNull Context context) {
-        super.onActive(context);
+    public void onActive() {
+        super.onActive();
         requireActivity().addMenuProvider(this);
     }
 
@@ -175,7 +175,7 @@ public class CryptoSlice extends BaseSlice
          * Add chat encryption choices if not found
          */
         if (menu.findComponentById(ResourceTable.Id_encryption_none) == null)
-            menuInflater.parse(ResourceTable.Layout_menu_crypto_choices, menu);
+            inflater.parse(ResourceTable.Layout_menu_crypto_choices, menu);
 
         mCryptoChoice = menu.findComponentById(ResourceTable.Id_crypto_choice);
         mNone = menu.findComponentById(ResourceTable.Id_encryption_none);
@@ -186,9 +186,9 @@ public class CryptoSlice extends BaseSlice
     }
 
     @Override
-    public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+    public boolean onMenuItemSelected(MenuItem menuItem) {
         boolean hasChange = false;
-        item.setSelected(true);
+        menuItem.setSelected(true);
 
         switch (menuItem.getId()) {
             case ResourceTable.Id_crypto_choice:

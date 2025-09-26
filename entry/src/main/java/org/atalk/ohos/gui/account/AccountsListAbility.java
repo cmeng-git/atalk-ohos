@@ -177,6 +177,7 @@ public class AccountsListAbility extends BaseAbility {
         PopupMenu menu = new PopupMenu(getContext(), accountView);
 
         menu.setupMenu(ResourceTable.Layout_menu_account);
+        // Set menu title
         menu.setHeaderTitle(clickedAccount.getAccountName());
 
         boolean isRegistered = clickedAccount.getProtocolProvider() != null;
@@ -321,9 +322,9 @@ public class AccountsListAbility extends BaseAbility {
                     startPreferenceActivity(account);
                 }
                 else {
-                    String msg = getString(R.string.account_unregistered, account.getAccountName());
+                    String msg = getString(ResourceTable.String_account_unregistered, account.getAccountName());
                     if (offlineToast == null) {
-                        offlineToast = Toast.makeText(AccountsListActivity.this, msg, Toast.LENGTH_SHORT);
+                        offlineToast = Toast.makeText(AccountsListAbility.this, msg, Toast.LENGTH_SHORT);
                     }
                     else {
                         offlineToast.setText(msg);

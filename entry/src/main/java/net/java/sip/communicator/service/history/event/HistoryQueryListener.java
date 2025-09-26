@@ -17,12 +17,12 @@ public interface HistoryQueryListener {
      *
      * @param event the <code>HistoryRecordEvent</code> containing information about the query results.
      */
-    void historyRecordReceived(HistoryRecordEvent event);
+    public void historyRecordReceived(HistoryRecordEvent event);
 
     /**
      * Indicates that the status of the history has changed.
      *
      * @param event the <code>HistoryQueryStatusEvent</code> containing information about the status change
      */
-    void queryStatusChanged(HistoryQueryStatusEvent event);
+    public void queryStatusChanged(HistoryQueryStatusEvent event);
 }

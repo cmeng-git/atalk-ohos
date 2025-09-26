@@ -37,7 +37,7 @@ import org.atalk.ohos.gui.settings.util.SummaryMapper;
 public class ExpertSettingsSlice extends BasePreferenceSlice
         implements Preferences.PreferencesObserver {
     // Advance video/audio settings
-    private static final String PC_KEY_ADVANCED = "pref.cat.settings.advanced";
+    public static final String P_KEY_ADVANCED = "pref.key.settings.advanced";
     // private static final String PC_KEY_VIDEO = "pref.cat.settings.video";
     // private static final String PC_KEY_AUDIO = "pref.cat.settings.audio";
 
@@ -47,11 +47,11 @@ public class ExpertSettingsSlice extends BasePreferenceSlice
     private static final String P_KEY_AUDIO_DENOISE = "pref.key.audio.denoise";
 
     // Hardware encoding/decoding (>=API16)
-    private static final String P_KEY_VIDEO_HW_ENCODE = "neomedia.android.hw_encode";
-    private static final String P_KEY_VIDEO_HW_DECODE = "neomedia.android.hw_decode";
+    private static final String P_KEY_VIDEO_HW_ENCODE = AndroidEncoder.HW_ENCODING_ENABLE_PROPERTY; // "neomedia.android.hw_encode";
+    private static final String P_KEY_VIDEO_HW_DECODE = AndroidDecoder.HW_DECODING_ENABLE_PROPERTY; // "neomedia.android.hw_decode";
     // Direct surface encoding(hw encoding required and API18)
-    private static final String P_KEY_VIDEO_ENC_DIRECT_SURFACE = "neomedia.android.surface_encode";
-    private static final String P_KEY_VIDEO_DEC_DIRECT_SURFACE = "neomedia.android.surface_decode";
+    private static final String P_KEY_VIDEO_ENC_DIRECT_SURFACE = AndroidEncoder.DIRECT_SURFACE_ENCODE_PROPERTY; // "neomedia.android.surface_encode";
+    private static final String P_KEY_VIDEO_DEC_DIRECT_SURFACE = AndroidDecoder.DIRECT_SURFACE_DECODE_PROPERTY; // "neomedia.android.surface_decode";
 
     // Video advanced settings
     private static final String P_KEY_VIDEO_LIMIT_FPS = "pref.key.video.limit_fps";
@@ -206,7 +206,6 @@ public class ExpertSettingsSlice extends BasePreferenceSlice
 
     /**
      * Update the android codec preferences enabled status based on camera device selected option.
-     * <p>
      * Note: Current aTalk implementation requires direct surface option to be enabled in order
      * for fmj to use the android codec if enabled. So couple both the surface and codec options
      *
@@ -229,24 +228,24 @@ public class ExpertSettingsSlice extends BasePreferenceSlice
     /**
      * {@inheritDoc}
      */
-    public void onChange(Preferences preg, String key) {
+    public void onChange(Preferences pref, String key) {
         // Echo cancellation
         switch (key) {
             case P_KEY_AUDIO_ECHO_CANCEL:
-                mAudioSystem.setEchoCancel(preg.getBoolean(P_KEY_AUDIO_ECHO_CANCEL, true));
+                mAudioSystem.setEchoCancel(pref.getBoolean(P_KEY_AUDIO_ECHO_CANCEL, true));
                 break;
             // Auto gain control
             case P_KEY_AUDIO_AGC:
-                mAudioSystem.setAutomaticGainControl(preg.getBoolean(P_KEY_AUDIO_AGC, true));
+                mAudioSystem.setAutomaticGainControl(pref.getBoolean(P_KEY_AUDIO_AGC, true));
                 break;
             // Noise reduction
             case P_KEY_AUDIO_DENOISE:
-                mAudioSystem.setDenoise(preg.getBoolean(P_KEY_AUDIO_DENOISE, true));
+                mAudioSystem.setDenoise(pref.getBoolean(P_KEY_AUDIO_DENOISE, true));
                 break;
             // Frame rate
             case P_KEY_VIDEO_LIMIT_FPS:
             case P_KEY_VIDEO_TARGET_FPS:
-                boolean isLimitOn = preg.getBoolean(P_KEY_VIDEO_LIMIT_FPS, false);
+                boolean isLimitOn = pref.getBoolean(P_KEY_VIDEO_LIMIT_FPS, false);
                 if (isLimitOn) {
                     EditTextPreference fpsPref = findPreference(P_KEY_VIDEO_TARGET_FPS);
                     String fpsStr = fpsPref.getText();
@@ -268,7 +267,7 @@ public class ExpertSettingsSlice extends BasePreferenceSlice
                 break;
             // Max bandwidth
             case P_KEY_VIDEO_MAX_BANDWIDTH:
-                String resStr = preg.getString(P_KEY_VIDEO_MAX_BANDWIDTH, null);
+                String resStr = pref.getString(P_KEY_VIDEO_MAX_BANDWIDTH, null);
                 if (!TextUtils.isEmpty(resStr)) {
                     int maxBw = Integer.parseInt(resStr);
                     if (maxBw > 999) {
@@ -287,7 +286,7 @@ public class ExpertSettingsSlice extends BasePreferenceSlice
                 break;
             // Video bit rate
             case P_KEY_VIDEO_BITRATE:
-                String bitrateStr = preg.getString(P_KEY_VIDEO_BITRATE, "");
+                String bitrateStr = pref.getString(P_KEY_VIDEO_BITRATE, "");
                 int bitrate = 0;
                 if (bitrateStr != null) {
                     bitrate = !TextUtils.isEmpty(bitrateStr)
@@ -298,6 +297,11 @@ public class ExpertSettingsSlice extends BasePreferenceSlice
                 }
                 mDeviceConfig.setVideoBitrate(bitrate);
                 ((EditTextPreference) findPreference(P_KEY_VIDEO_BITRATE)).setText(Integer.toString(bitrate));
+                break;
+            case P_KEY_VIDEO_HW_DECODE:
+            case P_KEY_VIDEO_HW_ENCODE:
+                // must get aTalk to restart onResume to make HW codec change effective
+                aTalk.setPrefChange(aTalk.HW_Codec_Change);
                 break;
         }
     }

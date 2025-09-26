@@ -475,7 +475,6 @@ public class ChatAbility extends BaseAbility
         mChatRoomMember = mMenu.findComponentById(ResourceTable.Id_show_chatroom_occupant);
         mChatRoomConfig = mMenu.findComponentById(ResourceTable.Id_chatroom_config);
         mChatRoomNickSubject = mMenu.findComponentById(ResourceTable.Id_chatroom_info_change);
-
         setOptionItem();
         return true;
     }
@@ -787,7 +786,6 @@ public class ChatAbility extends BaseAbility
     public void onPageChosen(int pos) {
         updateSelectedChatInfo(pos);
     }
-
 
     /**
      * Update the selected chat fragment actionBar info when user changes chat session.
@@ -1245,7 +1243,7 @@ public class ChatAbility extends BaseAbility
                 mUrl = params[0];
                 final String result = getUrlInfo(mUrl);
 
-                BaseAbility.runOnUiThread(() -> {
+                runOnUiThread(() -> {
                     String urlInfo = null;
                     if (!TextUtils.isEmpty(result)) {
                         final ZSONObject attributes = ZSONObject.stringToZSON(result);
@@ -1256,7 +1254,7 @@ public class ChatAbility extends BaseAbility
                         selectedChatPanel.sendMessage(urlInfo, IMessage.ENCODE_HTML);
                     }
                     // send mUrl instead fetch urlInfo failed
-                    else { //if (urlInfo == null) {
+                    if (urlInfo == null) {
                         // selectedChatPanel.setEditedText(mUrl); too late as controller msgEdit is already initialized
                         selectedChatPanel.sendMessage(mUrl, IMessage.ENCODE_PLAIN);
                     }

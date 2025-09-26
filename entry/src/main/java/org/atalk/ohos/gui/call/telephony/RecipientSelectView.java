@@ -26,7 +26,7 @@ import org.atalk.ohos.gui.aTalk;
 
 import timber.log.Timber;
 
-public class RecipientSelectView extends TokTokenCompleteTextView<RecipientSelectView.Recipient>
+public class RecipientSelectView extends TokenCompleteTextView<RecipientSelectView.Recipient>
         implements LoaderCallbacks<List<RecipientSelectView.Recipient>>, AlternateRecipientProvider.AlternateRecipientListener {
     private static final int MINIMUM_LENGTH_FOR_FILTERING = 2;
     private static final String ARG_QUERY = "query";
@@ -34,7 +34,7 @@ public class RecipientSelectView extends TokTokenCompleteTextView<RecipientSelec
     private static final int LOADER_ID_ALTERNATES = 1;
 
     private RecipientProvider mRecipientProvider;
-    private LoaderManager loaderManager;
+    private LoaderManager mLoaderManager;
 
     private ListPopupWindow alternatesPopup;
     private AlternateRecipientProvider alternatesProvider;
@@ -74,8 +74,8 @@ public class RecipientSelectView extends TokTokenCompleteTextView<RecipientSelec
         setAdapter(mRecipientProvider);
         setLongClickable(true);
 
-        // cmeng - must init loaderManager in initView to take care of screen rotation
-        loaderManager = LoaderManager.getInstance(aTalk.getFragment(aTalk.CL_FRAGMENT));
+        // cmeng - must init mLoaderManager in initView to take care of screen rotation
+        mLoaderManager = LoaderManager.getInstance(aTalk.getFragment(aTalk.CL_FRAGMENT));
     }
 
     @Override
@@ -142,16 +142,16 @@ public class RecipientSelectView extends TokTokenCompleteTextView<RecipientSelec
     }
 
     public void setLoaderManager(LoaderManager loaderManager) {
-        this.loaderManager = loaderManager;
+        mLoaderManager = loaderManager;
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        if (loaderManager != null) {
-            loaderManager.destroyLoader(LOADER_ID_ALTERNATES);
-            loaderManager.destroyLoader(LOADER_ID_FILTERING);
-            loaderManager = null;
+        if (mLoaderManager != null) {
+            mLoaderManager.destroyLoader(LOADER_ID_ALTERNATES);
+            mLoaderManager.destroyLoader(LOADER_ID_FILTERING);
+            mLoaderManager = null;
         }
     }
 
@@ -207,18 +207,18 @@ public class RecipientSelectView extends TokTokenCompleteTextView<RecipientSelec
 
     @Override
     protected void performFiltering(CharSequence text, int keyCode) {
-        if (loaderManager == null) {
+        if (mLoaderManager == null) {
             return;
         }
 
         String query = text.toString();
         if (TextUtils.isEmpty(query) || query.length() < MINIMUM_LENGTH_FOR_FILTERING) {
-            loaderManager.destroyLoader(LOADER_ID_FILTERING);
+            mLoaderManager.destroyLoader(LOADER_ID_FILTERING);
             return;
         }
         Bundle args = new Bundle();
         args.putString(ARG_QUERY, query);
-        loaderManager.restartLoader(LOADER_ID_FILTERING, args, this);
+        mLoaderManager.restartLoader(LOADER_ID_FILTERING, args, this);
     }
 
     private void redrawAllTokens() {
@@ -249,7 +249,7 @@ public class RecipientSelectView extends TokTokenCompleteTextView<RecipientSelec
     }
 
     private void showAlternates(Recipient recipient) {
-        if (loaderManager == null) {
+        if (mLoaderManager == null) {
             return;
         }
 
@@ -258,7 +258,7 @@ public class RecipientSelectView extends TokTokenCompleteTextView<RecipientSelec
             imm.hideSoftInputFromWindow(getWindowToken(), 0);
 
         alternatesPopupRecipient = recipient;
-        loaderManager.restartLoader(LOADER_ID_ALTERNATES, null, RecipientSelectView.this);
+        mLoaderManager.restartLoader(LOADER_ID_ALTERNATES, null, RecipientSelectView.this);
     }
 
     public void postShowAlternatesPopup(final List<Recipient> data) {
@@ -269,7 +269,7 @@ public class RecipientSelectView extends TokTokenCompleteTextView<RecipientSelec
     }
 
     public void showAlternatesPopup(List<Recipient> data) {
-        if (loaderManager == null) {
+        if (mLoaderManager == null) {
             return;
         }
 
@@ -317,7 +317,7 @@ public class RecipientSelectView extends TokTokenCompleteTextView<RecipientSelec
 
     @Override
     public void onLoadFinished(Loader<List<Recipient>> loader, List<Recipient> data) {
-        if (loaderManager == null) {
+        if (mLoaderManager == null) {
             return;
         }
 
@@ -328,7 +328,7 @@ public class RecipientSelectView extends TokTokenCompleteTextView<RecipientSelec
             }
             case LOADER_ID_ALTERNATES: {
                 postShowAlternatesPopup(data);
-                loaderManager.destroyLoader(LOADER_ID_ALTERNATES);
+                mLoaderManager.destroyLoader(LOADER_ID_ALTERNATES);
                 break;
             }
         }
