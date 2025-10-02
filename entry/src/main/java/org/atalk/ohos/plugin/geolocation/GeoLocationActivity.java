@@ -27,19 +27,16 @@ import org.atalk.ohos.aTalkApp;
  *
  * @author Eng Chong Meng
  */
-public class GeoLocationActivity extends GeoLocationBase
-{
+public class GeoLocationActivity extends GeoLocationBase {
     private OsmActivity mSVP = null;
 
     @Override
-    protected void onResume()
-    {
+    protected void onResume() {
         super.onResume();
         mSVP = null;
     }
 
-    public void showStreetMap(Location location)
-    {
+    public void showStreetMap(Location location) {
         if (!mSVP_Started) {
             mSVP_Started = true;
             Intent intent = new Intent(this, OsmActivity.class);

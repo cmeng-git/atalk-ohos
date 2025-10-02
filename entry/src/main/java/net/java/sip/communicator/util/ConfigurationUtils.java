@@ -2285,8 +2285,7 @@ public class ConfigurationUtils {
      *
      * @return the value of the property, saved through the <code>ConfigurationService</code>.
      */
-    public static String getChatRoomProperty(ProtocolProviderService protocolProvider,
-            String chatRoomId, String property) {
+    public static String getChatRoomProperty(ProtocolProviderService protocolProvider, String chatRoomId, String property) {
         JSONObject attributes = getChatRoomAttributes(protocolProvider, chatRoomId);
         try {
             return attributes.getString(property);

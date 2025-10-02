@@ -186,8 +186,8 @@ public class TouchInterceptor extends ListView {
 
                 if (x >= dragRegionStartX && x <= dragRegionEndX && view != null) {
                     // view.setDrawingCacheEnabled(true);
-                    // Create a copy of the drawing cache so that it does not get recycled by the framework
-                    // when the list tries to clean up memory
+                    // Create a copy of the drawing cache so that it does not get recycled
+					// by the framework when the list tries to clean up memory
                     // Bitmap.createBitmap(view.getDrawingCache(false));
                     Bitmap bitmap = getBitmapFromView(view);
                     startDragging(bitmap, x, y);

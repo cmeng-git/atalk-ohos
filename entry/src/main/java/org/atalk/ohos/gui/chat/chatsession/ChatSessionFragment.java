@@ -489,7 +489,7 @@ public class ChatSessionFragment extends BaseFragment implements View.OnClickLis
 
     @Override
     public void contactPresenceStatusChanged(ContactPresenceStatusChangeEvent evt) {
-        BaseActivity.uiHandler.post(() -> chatSessionAdapter.notifyDataSetChanged());
+        runOnUiThread(() -> chatSessionAdapter.notifyDataSetChanged());
     }
 
     /**
@@ -497,7 +497,7 @@ public class ChatSessionFragment extends BaseFragment implements View.OnClickLis
      */
     @Override
     public void contentChanged(ChatRoomListChangeEvent evt) {
-        BaseActivity.uiHandler.post(() -> chatSessionAdapter.notifyDataSetChanged());
+        runOnUiThread(() -> chatSessionAdapter.notifyDataSetChanged());
     }
 
     @Override

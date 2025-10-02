@@ -453,7 +453,7 @@ public class MainMenuActivity extends ExitMenuActivity implements ServiceListene
             case ServiceEvent.REGISTERED:
             case ServiceEvent.UNREGISTERING:
                 if (videoBridgeMenuItem != null) {
-                    BaseActivity.uiHandler.post(this::initVideoBridge);
+                    runOnUiThread(this::initVideoBridge);
                 }
                 break;
         }
@@ -462,7 +462,7 @@ public class MainMenuActivity extends ExitMenuActivity implements ServiceListene
     @Override
     public void contactPresenceStatusChanged(final ContactPresenceStatusChangeEvent evt) {
         // cmeng - how to add the listener onResume - multiple protocol providers???
-        BaseActivity.uiHandler.post(() -> {
+        runOnUiThread(() -> {
             Contact sourceContact = evt.getSourceContact();
             initVideoBridge();
         });

@@ -32,7 +32,7 @@ import net.java.sip.communicator.service.notification.event.NotificationActionTy
 import net.java.sip.communicator.service.notification.event.NotificationEventTypeEvent;
 import net.java.sip.communicator.util.ServiceUtils;
 
-import org.atalk.impl.androidresources.AndroidResourceServiceImpl;
+import org.atalk.impl.androidresources.AppResourceServiceImpl;
 import org.atalk.ohos.BaseActivity;
 import org.atalk.ohos.R;
 import org.atalk.ohos.gui.AppGUIActivator;
@@ -160,7 +160,7 @@ public class NotificationDetails extends BaseActivity
             soundDefaultUri = Uri.parse(soundFile);
 
             String descriptor = soundHandler.getDescriptor();
-            if (descriptor.startsWith(AndroidResourceServiceImpl.PROTOCOL)) {
+            if (descriptor.startsWith(AppResourceServiceImpl.PROTOCOL)) {
                 soundDescriptorUri = soundDefaultUri;
                 ringToneTitle = eventTitle;
             }

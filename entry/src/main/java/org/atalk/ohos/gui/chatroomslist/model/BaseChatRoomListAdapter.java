@@ -407,6 +407,7 @@ public abstract class BaseChatRoomListAdapter extends BaseExpandableListAdapter
      * We keep one instance of view click listener to avoid unnecessary allocations.
      * Clicked positions are obtained from the view holder.
      */
+    @Override
     public void onClick(View view) {
         Object object = view.getTag();
         if (object instanceof ChatRoomViewHolder) {
@@ -461,6 +462,7 @@ public abstract class BaseChatRoomListAdapter extends BaseExpandableListAdapter
                             = ChatRoomBookmarkDialog.getInstance(chatRoomWrapper, this);
                     chatRoomBookmarkFragment.show(ft, "bmDdialog");
                     break;
+
                 default:
                     break;
             }

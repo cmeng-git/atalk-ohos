@@ -22,11 +22,11 @@ import androidx.core.content.res.ResourcesCompat;
 
 import net.java.sip.communicator.service.muc.ChatRoomWrapper;
 
+import org.apache.commons.lang3.StringUtils;
 import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.chat.ChatPanel;
 import org.atalk.ohos.gui.chat.ChatSessionManager;
-import org.jivesoftware.smack.util.StringUtils;
 
 /**
  * Class used to obtain UI specific data for <code>ChatRoom</code> instances.

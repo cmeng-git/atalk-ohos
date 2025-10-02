@@ -35,11 +35,11 @@
     <string name="account_ibr_on_server">Зарегистрировать новую учётную запись на сервере</string>
     <string name="account_server_ip">IP-адрес сервера для подключения</string>
 
-    <string name="ibr_registration">Регистрация IB</string>
+    <string name="ibr_registration">Регистрация на сервере</string>
     <string name="captcha_ibr_request">Регистрация проверка через Captcha</string>
     <string name="captcha_ibr_failed">Ошибка регистрации неверный код с проверочной капчи!\n%1$s</string>
-    <string name="captcha_ibr_success">Регистрация-Captcha прошла успешно.\nВы можете перейти к регистрации!</string>
-    <string name="captcha_ibr_reason">Inband регистрация, запрошенная пользователем</string>
+    <string name="captcha_ibr_success">Регистрация-Captcha прошла успешно.\nВы можете теперь войти!</string>
+    <string name="captcha_ibr_reason">Регистрация, запрошенная пользователем</string>
     <string name="captcha_ibr_pwd_empty">Ошибка: поле пароля пусто!</string>
     <string name="captcha_ibr_hint">Введите текст, который вы видите</string>
     <string name="captcha_ibr_retry">Нажмите «ОК», чтобы повторить попытку, или «Отмена», чтобы завершить</string>
@@ -49,12 +49,12 @@
     <string name="captcha_text_empty">Текст капчи не может быть пустым</string>
     <string name="captcha_verification_valid">Проверка CAPTCHA действительна</string>
     <string name="captcha_verification_failed">Не удалось выполнить проверку CAPTCHA</string>
-    <string name="captcha_wait_timeout">%1$s тайм-аут вызова ChatRoom CAPTCHA;\nпожалуйста, присоединитесь к chatRoom и попробуйте снова.</string>
+    <string name="captcha_wait_timeout">%1$s тайм-аут вызова капчи чат-комнаты;\nпожалуйста, присоединитесь к чат-комнате и попробуйте снова.</string>
 
     <string name="choose_network">Выберите сеть</string>
     <string name="encrypt_tooltip">Шифровать чат</string>
-    <string name="encrypt_choices">EncryptChoices</string>
-    <string name="encrypt_unencrypted">Незашифровано</string>
+    <string name="encrypt_choices">Способы шифрования</string>
+    <string name="encrypt_unencrypted">Незашифрованно</string>
     <string name="network">Сеть</string>
     <string name="notification_setting">Настройки уведомлений…</string>
     <string name="open_file_no_application">Не найдено приложения для открытия файла</string>
@@ -72,8 +72,8 @@
     <string name="username_">Имя пользователя:</string>
 
     <!-- Call Transfer -->
-    <string name="call_hang_up">Повесьте вызов</string>
-    <string name="call_on_hold">Удерживать вызов</string>
+    <string name="call_hang_up">Закончить вызов</string>
+    <string name="call_on_hold">Удержать вызов</string>
     <string name="call_max_transfer">Максимум 2 вызова разрешены для сопровождаемой передачи вызова!</string>
     <string name="call_transfer_call">Переадресовать вызов</string>
     <string name="call_transfer">Передача</string>
@@ -81,8 +81,8 @@
     <string name="call_transfer_hint">Выберите контакт, который хотите передать, и нажмите Передача.</string>
     <string name="call_transfer_msg">%1$s перевод вызова на… %2$s</string>
 
-    <string name="attach_picture">Картинки</string>
-    <string name="attach_take_picture">Сделать изображение</string>
+    <string name="attach_picture">Изображение</string>
+    <string name="attach_take_picture">Сделать снимок</string>
     <string name="attach_video">Видео</string>
     <string name="attach_record_video">Записать видео</string>
     <string name="attach_file">Поделиться файлом</string>
@@ -106,8 +106,8 @@
     <string name="contact_blocked">Контакт заблокирован</string>
     <string name="block">Блокировать</string>
     <string name="unblock">Разблокировать</string>
-    <string name="block_list_title">Чёрный список</string>
-    <string name="block_list_show">Показать чёрный список</string>
+    <string name="block_list_title">Список заблокированных</string>
+    <string name="block_list_show">Показать заблокированных</string>
 
     <!-- General -->
     <string name="accept">Принять</string>
@@ -134,7 +134,7 @@
     <string name="add_group_name">Введите имя группы</string>
     <string name="answer">Ответ…</string>
     <string name="apply">Применить</string>
-    <string name="apply_changes">Применение изменений учётной записи (~60S) …</string>
+    <string name="apply_changes">Применение изменений учётной записи (~60с) …</string>
     <string name="at">в</string>
     <string name="authentication_failed">Ошибка аутентификации для %1$s. Введённый пароль недействителен.</string>
     <string name="authentication_requested">Запрошенная аутентификация</string>
@@ -153,7 +153,7 @@
 
     <string name="busy">Занято</string>
     <string name="call_audio">Аудиозвонок</string>
-    <string name="call_answered">%1$sответил на звонок.</string>
+    <string name="call_answered">%1$s ответил на звонок.</string>
     <string name="call_disable_on_fault">aTalk не удалось инициализировать %1$s\nЗвонки будут отключены.\n%2$s</string>
     <string name="call_ended">Абонент завершил звонок: %1$s</string>
     <string name="call_error">Отдалённая сторона возвращает ошибку: %1$s</string>
@@ -209,11 +209,11 @@
     <string name="chatroom_change_info">Изменить информацию комнаты чата</string>
     <string name="chatroom_change_subject">В поле ниже вы можете ввести новый предмет для этой комнаты.</string>
     <string name="change_video_remote_quality">Изменить качество отдалённого видео</string>
-    <string name="chatroom_conference_item">%1$s\'s конференция</string>
+    <string name="chatroom_conference_item">Чат-комната пользователя %1$s</string>
     <string name="chatroom_conference">Конференции</string>
     <string name="chatroom">Чат</string>
     <string name="chatroom_already_joined">Вы уже вошли в чат-комнату %1$s.</string>
-    <string name="chatroom_configuration">Конфигурация чат-комнаты</string>
+    <string name="chatroom_configuration">Настройка чат-комнаты</string>
     <string name="chatroom_configuration_failed">Не удалось получить конфигурационную форму чат-комнаты %1$s.</string>
     <string name="chatroom_configuration_forbidden">Не удалось получить форму конфигурации комнаты чата %1$s. Только владельцы чата могут видеть и изменять конфигурационную форму.</string>
     <string name="chatroom_configuration_members_edit_description">Список справа содержит пользователей, которые имеют роль участника в этом чате. Когда в чате есть «Только члены», это будут пользователи, которым разрешено присоединиться.</string>
@@ -230,11 +230,11 @@
     <string name="chatroom_name_info">В поле ниже введите имя комнаты для чата, которую вы хотите создать.</string>
     <string name="chatroom_not_exist">Комната %1$s не найдена на сервере %2$s. Проверьте правильность введённого имени.</string>
     <string name="chatroom_not_connected">Вам нужно быть в сети, чтобы присоединиться к чат-комнате %1$s.</string>
-    <string name="chatroom_leave_not_connected">Вам нужно быть в сети, чтобы выйти из чата.</string>
+    <string name="chatroom_leave_not_connected">Вам нужно быть в сети, чтобы выйти из чат-комнаты.</string>
     <string name="chatroom_not_joined">Вам нужно войти в комнату чата, чтобы выполнить дальнейшие операции с ним.</string>
     <string name="chatroom_options">Параметры чата</string>
     <string name="chatroom_required_password">Чат чата %1$s запросил пароль.</string>
-    <string name="chatroom_status_disable">Отключить статус номера</string>
+    <string name="chatroom_status_disable">Отключить статус чат-комнтаты</string>
     <string name="chatroom_status_enable">Включить статус комнаты</string>
     <string name="chatroom_subject_changed">Тема номера изменилась: \'%1$s\' =&gt; \'%2$s\'</string>
     <string name="chatroom_nickname_changed">%1$s теперь известен как %2$s</string>
@@ -261,17 +261,17 @@
     <string name="contact_rename_title">Изменить имя контакта</string>
     <string name="contacts">Контакты</string>
     <string name="contact_offline_hide">Скрыть отключённых</string>
-    <string name="contact_offline_show">Показать автономные контакты</string>
+    <string name="contact_offline_show">Показать отключённые контакты</string>
     <string name="copy_message_text">Копировать текст сообщения</string>
 
     <string name="create">Создать</string>
     <string name="create_call_failed">Не удалось создать вызов.</string>
-    <string name="create_conference_call">Создать конференцию…</string>
-    <string name="create_conference_chat">Создать чат конференции…</string>
+    <string name="create_conference_call">Сделать звонок…</string>
+    <string name="create_conference_chat">Создать чат-конференцию…</string>
     <string name="create_group">Создать группу…</string>
     <string name="create_group_name_invalid">Неверное название группы: %1$s</string>
     <string name="create_group_name">В поле ниже введите имя группы, которую вы хотите создать.</string>
-    <string name="create_group_first_wizard">Ваш список контактов не содержит групп. Сначала создайте группу (File/Create group).</string>
+    <string name="create_group_first_wizard">Ваш список контактов не содержит групп. Сначала создайте группу (Файл/Создать группу).</string>
 
     <!-- About Dialog -->
     <string name="aboutDialog_help"><a href="https://cmeng-git.github.io/atalk">Справка в интернете</a></string>
@@ -279,7 +279,7 @@
     <string name="version_">Версия %1$s</string>
     <string name="help">Справка</string>
     <string name="check_new_version">Проверить обновление</string>
-    <string name="show_history_log">История журналов</string>
+    <string name="show_history_log">Примечания к выпускам</string>
     <string name="online_help">Справка в интернете</string>
 
     <!-- HTTP Authorization Request Dialog -->
@@ -292,13 +292,13 @@
     <string name="powered_by">Работает на atalk.org</string>
 
     <!-- PTT Chat -->
-    <string name="chat_audio_buddy_offline">Аудио-чат с автономным получателем не разрешён.</string>
+    <string name="chat_audio_buddy_offline">Звонок отключённому контакту невозможен.</string>
     <string name="chat_audio_cancel">&lt;сдвинуть влево\nчтобы отменить</string>
     <string name="chat_audio_start_record">Начать запись</string>
 
     <!-- GPS Location -->
     <string name="latitude">Широта:</string>
-    <string name="location">Местоположение:</string>
+    <string name="location">Место:</string>
     <string name="longitude">Долгота:</string>
     <string name="altitude">Высота:</string>
     <string name="geo_send">Отправить GPS-местоположение</string>
@@ -331,23 +331,23 @@
     <string name="refresh_apply">Применить</string>
     <string name="refresh_store">Обновить постоянные хранилища…</string>
     <string name="refresh_store_avatar">XEP-0084/XEP-0153: Аватар</string>
-    <string name="refresh_store_caps">XEP-0115: возможности сущности</string>
+    <string name="refresh_store_caps">XEP-0115: Возможности сущности</string>
     <string name="refresh_store_disc_info">XEP-0030: Обнаружение служб</string>
-    <string name="refresh_store_hint">Проверить, что элемент для его постоянного хранилища должен быть очищен и обновлен; Выполняйте только при необходимости!\n</string>
+    <string name="refresh_store_hint">Проверить, что элемент для его постоянного хранилища должен быть очищен и обновлён; Выполняйте только при необходимости!\n</string>
     <string name="refresh_store_roster">XEP-0237: Реестр</string>
-    <string name="refresh_store_omemo">XEP-0384: шифрование OMEMO</string>
+    <string name="refresh_store_omemo">XEP-0384: Шифрование OMEMO</string>
 
     <string name="unregistered_message">Не удалось подключиться к учётной записи:\nИмя пользователя: %1$s\nНазвание сервера: %2$s\nУчётная запись отключена.</string>
     <string name="create_videoBridge">Создать видеомост…</string>
     <string name="create_videoBridge_menu">Создать видеомост</string>
-    <string name="create_join_video_conference">Создать/Присоединиться к видеоконференции</string>
-    <string name="create_video_conference">Создать новую видеоконференцию для этого чата</string>
+    <string name="create_join_video_conference">Создать или присоединиться к видеозвонку</string>
+    <string name="create_video_conference">Сделать новый видеозвонок для этого чата</string>
     <string name="video_format_not_supported">Не удалось установить предварительный просмотр камеры устройства на: %1$s; Исключение: %2$s.</string>
     <string name="disconnected">Отключено</string>
     <string name="disconnecting_">Отключение %1$s</string>
     <string name="deny">Запретить</string>
     <string name="display_name">отображаемое имя</string>
-    <string name="contact_display_name">Контактное отображаемое имя</string>
+    <string name="contact_display_name">Отображаемое имя</string>
     <string name="do_not_disturb">Не беспокоить</string>
     <string name="duration">длительность</string>
 
@@ -371,7 +371,7 @@
     <string name="file_transfer_accepted">Была принята передача файла</string>
     <string name="file_transfer_canceled">Передача файла отменена</string>
     <string name="file_transfer_preparing">Преобразование передачи файлов с %1$s. Подождите…</string>
-    <string name="file_transfer_declined">Отказано в передаче отклоненный</string>
+    <string name="file_transfer_declined">Отказано в передаче файла</string>
     <string name="file_transfer_request_received">%1$s делится файлом с вами</string>
     <string name="file_transfer_send_error">Произошла ошибка при отправке файла в %1$s</string>
     <string name="file_transfer_waiting_acceptance">Выйти для %1$s, чтобы принять ваш файл</string>
@@ -387,11 +387,11 @@
     <string name="file_open_not_supported">Операция открытого файла не поддерживается текущей платформой вашего устройства</string>
     <string name="file_send_client_error">Ошибка отдалённого клиента при отправке файла: %1$s</string>
     <string name="file_send_failed">Не удалось отправить файл: %1$s</string>
-    <string name="file_send_not_allow">Не удаётся отправить файл во время телефонной конференции!</string>
+    <string name="file_send_not_allow">Нельзя отправить файл во время звонка!</string>
     <string name="file_attachment">Отправить вложение</string>
     <string name="file_size_too_big">Размер файла превышает максимально допустимый для этого протокола: %1$s</string>
     <string name="file_transfer_active">Прерывание передачи файлов прерывается. Отслеживание состояния @ %1$s потеряно!</string>
-    <string name="file_transfer_not_secure">XEP-0096: Протокол передачи файлов SI не поддерживает отправку зашифрованных файлов!</string>
+    <string name="file_transfer_not_secure">XEP-0096: Протокол передачи файлов напрямую (SI) не поддерживает отправку зашифрованных файлов!</string>
     <string name="file_transfer_not_supported">Контактный клиент (%1$s) или сервер не поддерживает передачу файлов или требуемые протоколы</string>
 
     <string name="finish">Закончить</string>
@@ -405,7 +405,7 @@
     <string name="history_contact">История - %1$s</string>
     <string name="history_off_for_contact">Отключить историю для этого контакта</string>
     <string name="history_off_all">Отключить историю для всех чатов и контактов</string>
-    <string name="history_erase_for_contact">Удалить эту историю контактов</string>
+    <string name="history_erase_for_contact">Стереть историю общения</string>
     <string name="history_erase_all">Удалить все истории чатов контактов</string>
     <string name="history_purge_for_contact_warning">Вы уверены, что хотите удалить все выбранные сообщения для %1$s?</string>
     <string name="history_purge_all_warning">Вы действительно хотите очистить все сообщения отовсюду?</string>
@@ -421,20 +421,20 @@
     <string name="chatroom_auto_join">Авто вступать</string>
     <string name="chatroom_bookmark_update_failed">Не удалось обновить закладки для %1$s: %2$s</string>
 
-    <string name="chatroom_occupant">Жители чатов</string>
-    <string name="chatroom_history_erase_per">Удалить эту историю чата</string>
+    <string name="chatroom_occupant">Участники чат-комнаты</string>
+    <string name="chatroom_history_erase_per">Стереть историю этого разговора</string>
     <string name="chatroom_history_erase_all">Стереть всю историю чатов</string>
     <string name="chatroom_history_off_per">Отключить историю для этой чат-комнаты</string>
     <string name="chatroom_info">Информация о чат-комнате</string>
     <string name="chatroom_info_name">Название</string>
     <string name="chatroom_info_subject">Тема</string>
     <string name="chatroom_info_description">Описание</string>
-    <string name="chatroom_info_occupants">Участники</string>
+    <string name="chatroom_info_occupants">Участников</string>
     <string name="chatroom_info_member_only">Только для участников</string>
     <string name="chatroom_info_moderated">Модерируется</string>
     <string name="chatroom_info_non_anonymous">Неанонимно</string>
     <string name="chatroom_info_password_protected">Защищёно паролем</string>
-    <string name="chatroom_info_persistent">Постоянный</string>
+    <string name="chatroom_info_persistent">Постоянная чат-комната</string>
     <string name="chatroom_info_max_history_fetch">Макс. история</string>
     <string name="chatroom_info_contact_jid">JID-адрес контакта</string>
     <string name="chatroom_info_subject_modifiable">Тема изменяема</string>
@@ -446,7 +446,7 @@
     <string name="chatroom_create_join">Создать / Вступить в чат</string>
     <string name="chatroom_create_wizard">Создать мастер чата</string>
 
-    <string name="chatroom_destroy">Уничтожить этот chatRoom</string>
+    <string name="chatroom_destroy">Удалить эту чат-комнату</string>
     <string name="chatroom_destroy_exception">Произошла ошибка при уничтожении комнаты чата:\n%1$s</string>
     <string name="chatroom_destroy_error">Не удалось удалить чат-комнаты на сервере:\n\'%1$s\'\n%2$s\n\nПродолжить очистку локального чат-комнаты.</string>
     <string name="chatroom_destroy_message">Этот групповой чат был уничтожен!\nПричина: %1$s</string>
@@ -454,7 +454,7 @@
     <string name="chatroom_destroy_prompt">Владелец учётной записи: %1$s.\nВы уверены, что хотите уничтожить\n\'%2$s\'\nи всю историю чатов?</string>
     <string name="chatroom_destroy_reason">неактивный групповой чат</string>
     <string name="chatroom_destroy_successful">\'%1$s\' удалено успешно!</string>
-    <string name="chatroom_destroy_title">Уничтожить chatRoom</string>
+    <string name="chatroom_destroy_title">Удалить чат комнату</string>
 
     <string name="chatroom_join_failed_reason">Не удалось присоединиться к чату %1$s:\n%2$s</string>
     <string name="chatroom_join_password">Комната чата запрашивает пароль.</string>
@@ -478,9 +478,9 @@
     <string name="invite_contact_message">Выберите имена контактов, которые вы хотите добавить в этот разговор, и нажмите «Пригласить».</string>
     <string name="invite_contact_to_call">Приглашать контакты для вызова</string>
     <string name="invite_contact_to_chat">Приглашение контактов в чат</string>
-    <string name="invite_contact_to_videoBridge">Пригласить контакты (видеобридж)</string>
-    <string name="invite_group_chat">Приглашение в групповое чат</string>
-    <string name="invite_reason">Пригласить Причина:</string>
+    <string name="invite_contact_to_videoBridge">Пригласить контакты (видеомост)</string>
+    <string name="invite_group_chat">Приглашение в групповой чат</string>
+    <string name="invite_reason">Текст приглашения:</string>
     <string name="invite_reject_reason">Причина (при отклонении):</string>
     <string name="invite_reject_busy">Занято</string>
     <string name="ignore">Игнорировать</string>
@@ -495,10 +495,10 @@
     <string name="home">Главная</string>
     <string name="home_page">Домашняя страница</string>
     <string name="invalid_address">Недействительный адрес: %1$s</string>
-    <string name="join">Присоединить</string>
+    <string name="join">Присоединиться</string>
     <string name="join_as">Присоединиться как</string>
     <string name="join_existing_video_conference">Присоединиться к существующей видеоконференции</string>
-    <string name="join_video">Присоединить видео</string>
+    <string name="join_video">Присоединиться с видео</string>
     <string name="job_title">Название работы</string>
 
     <string name="join_automatically">Автоматически присоединяться</string>
@@ -512,8 +512,8 @@
     <string name="last_message_correction">Коррекция последнего сообщения</string>
     <string name="last_name">Фамилия</string>
     <string name="last_seen">сегодня: %s</string>
-    <string name="leave">Оставить</string>
-    <string name="leave_chat_room">оставить chatRoom</string>
+    <string name="leave">Покинуть</string>
+    <string name="leave_chat_room">Покинуть чат-комнату</string>
     <string name="locally_on_hold">Локально в режиме ожидания</string>
     <string name="login_credential">Учётные данные пользователя</string>
     <string name="login_failed">Ошибка входа</string>
@@ -521,19 +521,19 @@
     <string name="mobile">Мобильный</string>
     <string name="move">Переместить</string>
     <string name="move_contact">Переместить контакт</string>
-    <string name="move_contact_error">Контакт не может быть перемещен</string>
+    <string name="move_contact_error">Контакт не может быть перемещён</string>
     <string name="move_contact_message">Выберите контакт или группу, в которую вы хотите переместить выбранный контакт.</string>
-    <string name="move_contact_failed">Контакт, который вы выбрали, совпадает с\nthe исходным. Выберите другой контакт!</string>
+    <string name="move_contact_failed">Контакт, который вы выбрали, совпадает с исходным.\nВыберите другой контакт!</string>
     <string name="move_contact_prompt">Вы действительно хотите переместить %1$s в %2$s?</string>
     <string name="move_contact_to_group">Переместить в группу</string>
     <string name="nickname">Псевдоним</string>
     <string name="chatroom_open_automatically">Откройте эту комнату автоматически, когда</string>
-    <string name="personal">Личный</string>
+    <string name="personal">Личное</string>
 
     <string name="message_delivery_error">Не удалось доставить сообщение.</string>
-    <string name="message_delivery_failed">Приведенное выше сообщение не может быть доставлено</string>
+    <string name="message_delivery_failed">Сообщение выше не может быть доставлено</string>
     <string name="message_delivery_internal_error">Произошла внутренняя ошибка. Скорее всего, Пожалуйста, сообщите об этом через журнал отладки.</string>
-    <string name="message_delivery_not_supported">Используемый протокол не поддерживает автономные сообщения. Вы можете попытаться достигнуть %1$s через другой протокол или подождать, пока он не появится в сети.</string>
+    <string name="message_delivery_not_supported">Используемый протокол не поддерживает сообщения отключённым контактам. Вы можете попытаться связаться с %1$s через другой протокол или подождать, пока он не появится в сети.</string>
     <string name="message_delivery_unknown_error">Неизвестная ошибка произошла при доставке вашего сообщения.</string>
     <string name="message_delivery_unsupported_operation">Неподдерживаемая операция.</string>
     <string name="message_delivery_network_error">Произошла сетевая проблема. Проверьте конфигурацию сети и повторите попытку.</string>
@@ -550,7 +550,7 @@
     <string name="not_authorized">Не разрешено</string>
     <string name="not_authorized_hint">Вы не авторизованы для доступа к серверу. Проверьте настройки учётной записи, пароль или включите регистрацию IB и повторите попытку:\n%s</string>
     <string name="off">Выкл</string>
-    <string name="offline">Offline</string>
+    <string name="offline">Не в сети</string>
     <string name="ok">OK</string>
     <string name="on">Вкл</string>
     <string name="online">В сети</string>
@@ -561,12 +561,12 @@
     <string name="organization">Организация</string>
     <string name="phone">Телефон</string>
     <string name="phones">Телефоны</string>
-    <string name="play">Играть</string>
+    <string name="play">Озвучить</string>
     <string name="postal_code">Почтовый код</string>
     <string name="rename">Переименовать</string>
     <string name="registration_required">Ошибка при регистрации учётной записи на сервере:\n%s</string>
     <string name="save">Сохранить</string>
-    <string name="show_stack_trace">Показать трассировку стека</string>
+    <string name="show_stack_trace">Показать подробности ошибки</string>
     <string name="street">Улица</string>
     <string name="submit">Отправить</string>
     <string name="user_login">Пожалуйста, войдите</string>
@@ -593,8 +593,8 @@
     <string name="remove_contact_not_connected">Чтобы удалить этот контакт, необходимо подключиться. Войдите в систему и повторите попытку.</string>
     <string name="remove_group">Удалить группу</string>
     <string name="remove_group_prompt">Вы действительно хотите удалить группу: \'%1$s\' и все связанные с ней контакты из списка контактов?</string>
-    <string name="remotely_on_hold">Удаленное удержание</string>
-    <string name="rename_contact">Изменить контактное имя</string>
+    <string name="remotely_on_hold">Отдалённо на удержании</string>
+    <string name="rename_contact">Изменить имя контакта</string>
 
     <string name="ringing">Звонок</string>
     <string name="request">Запрос</string>
@@ -606,18 +606,15 @@
     <string name="phonebook">Телефонная книга</string>
     <string name="security">Безопасность</string>
     <string name="select_account_owner">Выбрать владельца учётной записи</string>
-    <string name="assign_group">Назначенная группа для контакта:</string>
+    <string name="assign_group">Группа:</string>
     <string name="no_group">Нет группы</string>
 
     <!-- Logs -->
-    <string name="send_log">Сообщить об ошибках</string>
-    <string name="send_log_prompt">aTalk только что восстановился после серьезного сбоя. Вы хотите сообщить об ошибках?</string>
-    <string name="send_log_subject">Отчет об ошибках aTalk</string>
-    <string name="send_log_title">Отчет об ошибках aTalk по электронной почте</string>
-    <string name="send_log_info">Приведенная ниже информация может помочь разработчику решить проблему:\n\n
-         1. Что было последним, что вы сделали, прежде чем возникла проблема?\n\n\n
-         2. В чем была проблема, которую вы видите, включая снимок экрана, если он доступен?\n\n\n
-         3. Можно или как воспроизвести проблему?</string>
+    <string name="send_log">Сообщить об ошибке</string>
+    <string name="send_log_prompt">aTalk только что восстановился после серьёзного сбоя. Вы хотите сообщить об ошибках?</string>
+    <string name="send_log_subject">Отчёт об ошибках aTalk</string>
+    <string name="send_log_title">Отчёт об ошибках aTalk по электронной почте</string>
+    <string name="send_log_info">Приведённая ниже информация может помочь разработчику решить проблему:\n\n 1. Что было последним, что вы сделали, прежде чем возникла проблема?\n\n\n 2. В чем была проблема, которую вы видите, включая снимок экрана, если он доступен?\n\n\n 3. Можно или как воспроизвести проблему?</string>
 
     <string name="send_message">Отправить сообщение</string>
     <string name="send_message_failed">Не удалось отправить сообщение: %1$s</string>
@@ -627,14 +624,14 @@
     <string name="send_via">Отправить через</string>
     <string name="sent">отправлено</string>
     <string name="server_chatroom">Серверные чаты</string>
-    <string name="shutting_down">shuting down…</string>
+    <string name="shutting_down">выключение…</string>
     <string name="status">Статус</string>
     <string name="type_your_request_reason">Введите причину запроса</string>
     <string name="unknown">Неизвестно</string>
     <string name="unknown_user">Неизвестный пользователь</string>
     <string name="unknown_state">Неизвестное состояние</string>
     <string name="url_example">https://www.example.com</string>
-    <string name="volume_control_title">Уровень усиления выходного объема</string>
+    <string name="volume_control_title">Уровень усиления выходного объёма</string>
     <string name="volume_control_tooltip">Отрегулировать громкость</string>
     <string name="volume_gain_level">Уровень усиления уровня: %1$d%%</string>
     <string name="waiting_for_authorization">Ожидание авторизации</string>
@@ -663,18 +660,18 @@
     <string name="username_change_warning">Предупреждение. Изменение имени пользователя учётной записи на \'%1$s\' также удалит сообщения %2$s для существующей учётной записи \'%3$s\'. Продолжить?. Proceed?</string>
     <string name="user_exist_error">Этот пользователь уже существует в выбранной сети. Выберите другого пользователя или сеть.</string>
 
-    <string name="jan">Jan</string>
-    <string name="feb">Feb</string>
+    <string name="jan">Янв</string>
+    <string name="feb">Фев</string>
     <string name="mar">Мар</string>
-    <string name="apr">Apr</string>
-    <string name="may">May</string>
-    <string name="jun">Jun</string>
-    <string name="jul">Jul</string>
-    <string name="aug">Aug</string>
-    <string name="sep">Sep</string>
-    <string name="oct">Oct</string>
-    <string name="nov">Nov</string>
-    <string name="dec">Dec</string>
+    <string name="apr">Апр</string>
+    <string name="may">Май</string>
+    <string name="jun">Июн</string>
+    <string name="jul">Июл</string>
+    <string name="aug">Авг</string>
+    <string name="sep">Сен</string>
+    <string name="oct">Окт</string>
+    <string name="nov">Ноя</string>
+    <string name="dec">Дек</string>
 
     <!-- Call info -->
     <string name="protocol_ice_failed">Не удалось установить соединение (ICE не удалось и не найдено)</string>
@@ -696,9 +693,9 @@
     <string name="callinfo_media_stream_transport_protocol">Протокол передачи медиапотоков:</string>
     <string name="callinfo_na">N.A.</string>
     <string name="callinfo_peer_count">Количество участников:</string>
-    <string name="callinfo_remote_ip">Удаленный IP/Порт:</string>
+    <string name="callinfo_remote_ip">Отдалённый IP/Порт:</string>
     <string name="callinfo_rtt">RTT:</string>
-    <string name="callinfo_details">Информация о запросе вызовов</string>
+    <string name="callinfo_details">Информация о звонке</string>
     <string name="callinfo_tls_cipher_suite">Шифрованный набор TLS:</string>
     <string name="callinfo_tls_certificate_content">Содержимое сертификата сервера TLS отображается ниже.</string>
     <string name="callinfo_tls_protocol">Протокол TLS:</string>
@@ -740,33 +737,28 @@
     <string name="cert_dialog_client_description">&lt;html&gt;%1$s не может проверить идентичность соединительного клиента. &lt;br/&gt;
 		&lt;br/&gt;Сертификату не доверяют (самозаверяющий сертификат), что означает, что клиентский идентификация не может быть автоматически проверена.
 		&lt;br/&gt;&lt;br/&gt; Продолжить подключение только для этого экземпляра? &lt;br/&gt; Для получения дополнительной информации и информации нажмите «Показать сертификат».&lt;/html&gt;</string>
-    <string name="cert_dialog_peer_description">&lt;html&gt;%1$s не может проверить
-        идентичность равного %2$s. &lt;br/&gt;&lt;br/&gt;
-        Сертификату не доверяют (самозаверяющий сертификат), что означает, что сверстник
-        идентификация не может быть автоматически проверена. &lt;br/&gt;&lt;br/&gt;
-        Продолжить подключение только для этого экземпляра? &lt;br/&gt;
-        Для получения дополнительной информации и информации нажмите «Показать сертификат». &lt;/html&gt;</string>
+    <string name="cert_dialog_peer_description"><html>%1$s не может проверить идентичность контакта %2$s. <br/><br/> Сертификат не доверен (самозаверяный сертификат), что означает, что идентификация контакта не может быть автоматически проверена. <br/><br/> Продолжить подключение только для этого сервера? <br/> Для получения дополнительной информации и информации нажмите «Показать сертификат». </html></string>
     <string name="proceed">Продолжить</string>
-    <string name="cert_info_issued_to">&lt;b&gt;Выдан To &lt;/b&gt;</string>
+    <string name="cert_info_issued_to"><b>Выдан для</b></string>
     <string name="cert_info_chain">Цепочка сертификатов:</string>
     <string name="cert_info_cn">Общее имя:</string>
     <string name="cert_info_O">Организация:</string>
     <string name="cert_info_C">Название страны:</string>
     <string name="cert_info_ST">Название штата или провинции:</string>
     <string name="cert_info_L">Локальное имя:</string>
-    <string name="cert_info_issued_by">&lt;b&gt;Выдано по &lt;/b&gt;</string>
+    <string name="cert_info_issued_by"><b>Выдано от</b></string>
     <string name="cert_info_OU">Организационное подразделение:</string>
-    <string name="cert_info_validity">&lt;b&gt;Validity &lt;/b&gt;</string>
-    <string name="cert_info_issued_on">Выпущено:</string>
+    <string name="cert_info_validity"><b>Достоверность</b></string>
+    <string name="cert_info_issued_on">Выпущено в:</string>
     <string name="cert_info_expires_on">Срок действия:</string>
-    <string name="cert_info_fingerprints">&lt;b&gt;Отпечатки пальцев &lt;/b&gt;</string>
-    <string name="cert_info_details">&lt;b&gt;Информация о сертификате &lt;/b&gt;</string>
+    <string name="cert_info_fingerprints"><b>Отпечатки</b></string>
+    <string name="cert_info_details"><b>Информация о сертификате</b></string>
     <string name="cert_info_SN">Серийный номер:</string>
     <string name="cert_info_version">Версия:</string>
     <string name="cert_info_sign_algo">Алгоритм подписи:</string>
-    <string name="cert_info_pubkey_info">&lt;b&gt;Информация открытого ключа &lt;/b&gt;</string>
+    <string name="cert_info_pubkey_info"><b>Информация публичного ключа</b></string>
     <string name="cert_info_algo">Алгоритм:</string>
-    <string name="cert_info_pubkey">Открытый ключ:</string>
+    <string name="cert_info_pubkey">Публичный ключ:</string>
     <string name="cert_info_key_bytes">%1$s bytes: %2$s</string>
     <string name="cert_info_key_bits">%1$s битов</string>
     <string name="cert_info_exponent">Экспонента:</string>
@@ -782,30 +774,30 @@
 
     <!-- Security info -->
     <string name="security_audio_not_secure">Аудио не защищено</string>
-    <string name="security_call_not_secured_tooltip">Вызов не защищен.</string>
-    <string name="security_call_secured_compare_tooltip">Нажмите здесь, чтобы сравнить секрет секретности с вашим партнером.</string>
-    <string name="security_call_secured_tooltip">Звонок защищен. Для получения дополнительной информации нажмите здесь.</string>
+    <string name="security_call_not_secured_tooltip">Вызов не защищён.</string>
+    <string name="security_call_secured_compare_tooltip">Нажмите здесь, чтобы сравнить секретный шифр с вашим контактом.</string>
+    <string name="security_call_secured_tooltip">Звонок защищён. Для получения дополнительной информации нажмите здесь.</string>
     <string name="security_cipher">Шифр: %1$s</string>
     <string name="security_clear">Очистить</string>
-    <string name="security_compare_with_partner_short">Сравнить с партнером:</string>
+    <string name="security_compare_with_partner_short">Сравнить с контактом:</string>
     <string name="confirm">Подтвердить</string>
     <string name="security_encryption_required">Требуется шифрование!</string>
     <string name="security_no_video">Нет видео</string>
-    <string name="security_secure_audio">Защищенный звук</string>
-    <string name="security_secure_video">Защищенное видео</string>
+    <string name="security_secure_audio">Защищённый звук</string>
+    <string name="security_secure_video">Защищённое видео</string>
     <string name="security_alert">Попытка обеспечить безопасный вызов. Отключится в</string>
-    <string name="security_string_compared">String сравнивается:</string>
+    <string name="security_string_compared">Строка для сравнения:</string>
     <string name="security_verify_toast">Включена защита звонков! Нажмите, чтобы сравнить строку безопасности сейчас или используйте меню позже.</string>
     <string name="security_video_not_secured">Видео не защищено</string>
     <string name="avatar_chose_icon">Выберите изображение</string>
     <string name="avatar_remove_icon">Удалить текущее изображение</string>
 
     <!-- Update checker -->
-    <string name="update_download">Загрузить</string>
+    <string name="update_download">Скачать</string>
     <string name="update_install">Установить</string>
     <string name="update_reInstall">Переустановить</string>
-    <string name="update_download_completed">Загрузить готовый</string>
-    <string name="update_download_ready">Обновление (%1$s) загружается и готово к установке.</string>
+    <string name="update_download_completed">Скачивание завершено</string>
+    <string name="update_download_ready">Обновление (%1$s) скачано и готово к установке.</string>
     <string name="update_in_progress">Выполняется</string>
     <string name="update_download_in_progress">Выполняется обновление загрузки.</string>
     <string name="update_update_available">Доступна новая выпущенная версия (%1$s-%2$s) для %3$s. Текущая установленная версия: (%4$s-%5$s).</string>
@@ -825,9 +817,9 @@
     <string name="accountinfo_change">Изменить</string>
     <string name="accountinfo_city">Город:</string>
     <string name="accountinfo_country">Страна:</string>
-    <string name="accountinfo_discard_change">Пользователь переходит в автономный режим - Отбрасывает все изменения учётной записи.</string>
+    <string name="accountinfo_discard_change">Пользователь отключается - Отброшены все изменения учётной записи.</string>
     <string name="accountinfo_display_name">Отображаемое имя:</string>
-    <string name="accountinfo_email">E-mail:</string>
+    <string name="accountinfo_email">Эл. почта:</string>
     <string name="accountinfo_extended">Расширенные</string>
     <string name="accountinfo_first_name">Имя:</string>
     <string name="accountinfo_gender">Пол:</string>
@@ -849,11 +841,11 @@
     <string name="accountinfo_street">Улица:</string>
     <string name="accountinfo_title">Информация об учётной записи</string>
     <string name="accountinfo_user_picture">Пользовательские изображения</string>
-    <string name="accountinfo_work_email">Работа E-mail:</string>
+    <string name="accountinfo_work_email">Рабочая почта:</string>
     <string name="accountinfo_work_phone">Рабочий телефон:</string>
 
     <!-- Certificate configuration plugin -->
-    <string name="certconfig_title">Конфигурация TLS</string>
+    <string name="certconfig_title">Настройка TLS</string>
     <string name="certconfig_trusted_store">Источник доверенных корневых сертификатов</string>
     <string name="certconfig_cert_list_title">Конфигурации аутентификации клиента TLS</string>
     <string name="certconfig_cert_list_description">Управляемые здесь конфигурации могут быть выбраны в качестве клиентских сертификатов TLS в конфигурациях учётной записи (например, для аутентификации с помощью сертификата против вашего поставщика SIP вместо имени пользователя и пароля).</string>
@@ -886,7 +878,7 @@
     <!-- Notification strings (do not change; getI18NString(NotificationSettings.NOTICE_PREFIX + eventType))-->
     <string name="notificationconfig_event_BusyCall">Занятый вызов</string>
     <string name="notificationconfig_event_BusyCall_description">Описание занятого вызова</string>
-    <string name="notificationconfig_event_CallSaved">Сохраненный вызов</string>
+    <string name="notificationconfig_event_CallSaved">Сохранённый вызов</string>
     <string name="notificationconfig_event_CallSecurityError">Ошибка безопасности вызовов</string>
     <string name="notificationconfig_event_CallSecurityError_description">Описание ошибки безопасности вызова</string>
     <string name="notificationconfig_event_CallSecurityOn">Безопасность вызовов в</string>
@@ -922,19 +914,19 @@
     <string name="callrecordingconfig_call_saved_to">Сохранить в: %1$s</string>
 
     <!-- ZRTP Securing -->
-    <string name="media_configform_audio_device_config_changed">Изменена конфигурация аудиоустройства</string>
+    <string name="media_configform_audio_device_config_changed">Изменена настройка аудиоустройства</string>
     <string name="media_configform_audio_device_config_management_click">Нажмите здесь для управления устройством</string>
     <string name="media_configform_preview">Предварительный просмотр</string>
     <string name="media_security_checksum_mismatch">&lt;html&gt;Внутренняя несоответствие контрольной суммы пакета ZRTP. &lt;br/&gt;Если вы часто видите это сообщение, это может означать атаку отказа в обслуживании! &lt;/html&gt;</string>
     <string name="media_security_data_send_failed">&lt;html&gt;Не удалось отправить данные шифрования. Интернет-соединение для передачи данных или одноранговое соединение отключено. &lt;br/&gt;&lt;b&gt;Ваш вызов не является безопасным &lt;/b&gt;&lt;br/&gt;Код ошибки: %1$s &lt;/html&gt;</string>
     <string name="imedia_security_retry_rate_exceeded">&lt;html&gt;Слишком много попыток во время переговоров по безопасности. Это может означать, что у другой стороны проблемы с подключением к Интернету. &lt;br/&gt;&lt;b&gt;Ваш вызов не является безопасным &lt;/b&gt;&lt;br/&gt;Код ошибки: %1$s &lt;/html&gt;</string>
-    <string name="media_security_internal_protocol_error">&lt;html&gt;Произошла ошибка внутреннего протокола. &lt;br/&gt;&lt;b&gt;Ваш вызов не защищен &lt;/b&gt;&lt;br/&gt;Код ошибки: %1$s &lt;/html &gt;</string>
+    <string name="media_security_internal_protocol_error"><html>Произошла ошибка внутреннего протокола. <br/><b>Ваш вызов не защищён </b><br/>Код ошибки: %1$s </html></string>
     <string name="media_security_off">Поддержка шифрования вызовов</string>
     <string name="media_security_on">Поддержка шифрования вызовов в</string>
-    <string name="media_security_severe_generic_message">&lt;html&gt;Была обнаружена серьезная проблема безопасности. &lt;br/&gt;&lt;b&gt;Ваш вызов не защищен &lt;/b&gt;&lt;br/&gt;Код ошибки: %1$s&lt;/html&gt;</string>
-    <string name="media_security_warning_no_rs_match">&lt;html&gt;Недоступен сохраненный общий секрет. &lt;br/&gt;&lt;b&gt;Рекомендуется проверка SAS &lt;/b&gt;&lt;/html&gt;</string>
-    <string name="media_security_warning_no_expected_rs_match">&lt;html&gt;Отсутствует ожидаемый сохраненный общий секрет. &lt;br/&gt;&lt;b&gt;Требуется проверка SAS &lt;/b&gt;&lt;br/&gt;Если коды SAS не совпадают, то зависание и повторите попытку &lt;/html&gt;</string>
-    <string name="media_security_zrtp_generic_message">&lt;html&gt;Была обнаружена серьезная проблема ZRTP. &lt;br/&gt;&lt;b&gt;Ваш вызов не является безопасным &lt;/b&gt;&lt;br/&gt;Код ошибки : %1$s &lt;/html&gt;</string>
+    <string name="media_security_severe_generic_message"><html>Была обнаружена серьёзная проблема безопасности. <br/><b>Ваш вызов не защищён </b><br/>Код ошибки: %1$s</html></string>
+    <string name="media_security_warning_no_rs_match"><html>Недоступен сохранённый общий секрет. <br/><b>Рекомендуется проверка SAS </b></html></string>
+    <string name="media_security_warning_no_expected_rs_match"><html>Отсутствует ожидаемый сохранённый общий секрет. <br/><b>Требуется проверка SAS </b><br/>Если коды SAS не совпадают, то зависание и повторите попытку </html></string>
+    <string name="media_security_zrtp_generic_message"><html>Была обнаружена серьёзная проблема ZRTP. <br/><b>Ваш вызов не является безопасным </b><br/>Код ошибки : %1$s </html></string>
     <string name="media_security_zrtp_handshake_timeout">вызов не является безопасным; Время ожидания рукопожатия RTP: %s</string>
 
     <!-- DTLS-SRTP Securing -->
@@ -946,7 +938,7 @@
     <string name="omemo_authbuddy_authenticate_info">У вас есть неаутентифицированные контакты. Непроверенные друзья не могут получать сообщение OMEMO. Проверить подлинность.</string>
     <string name="omemo_authbuddy_local_fingerprint">Мой отпечаток %1$s:\n%2$s</string>
     <string name="omemo_authbuddy_verify_buddy">Проверить контакт</string>
-    <string name="omemo_identity_keypairs_missing">Создайте OMEMO IdentityKeyPairs для: %1$s</string>
+    <string name="omemo_identity_keypairs_missing">Создание ключей OMEMO для: %1$s</string>
     <string name="omemo_identity_key_invalid">Недопустимый IdentityKey для omemoDevice: %1$s.\nException: %2$s.</string>
     <string name="omemo_identity_key_missing">OMEMO IdentityKey для %1$s отсутствует.\nПродолжить загрузку с сервера.</string>
     <string name="omemo_identity_keypairs_invalid">Недопустимый IdentityKeyPairs для omemoDevice: %1$s.\nException: %2$s.</string>
@@ -962,7 +954,7 @@
     <string name="omemo_purge_inactive_device_error">Не удалось удалить неактивное устройство OMEMO для: %1$s.</string>
 
     <!-- Account proxy settings -->
-    <string name="settings_bosh_proxy">Конфигурация прокси-сервера</string>
+    <string name="settings_bosh_proxy">Настройка прокси-сервера для BOSH</string>
     <string name="settings_bosh_proxy_summary">Настройка подключения через BOSH/Proxy для учётной записи</string>
     <string name="bosh_proxy_url_null">Содержимое поля BOSH URL не может быть пустым</string>
     <string name="bosh_proxy_host_port_null">Содержимое прокси-хоста и порта не может быть пустым</string>
@@ -1045,12 +1037,12 @@
     <string name="settings_not_set">(Не задано)</string>
 
     <!-- Encoding settings -->
-    <string name="enc_audio_title">Кодировка аудио</string>
+    <string name="enc_audio_title">Кодирование аудио</string>
     <string name="enc_override_global">Переопределить глобальную</string>
     <string name="enc_video_title">Кодирование видео</string>
 
     <!-- Security protocols dialog -->
-    <string name="none">None</string>
+    <string name="none">Нету</string>
     <string name="sec_encryption">Шифрование</string>
     <string name="sec_protocols_title">Протоколы безопасности</string>
     <string name="sec_protocols_message">Выберите нужные протоколы в порядке</string>
@@ -1087,11 +1079,11 @@
     <string name="security_zrtp_signalling">Передача сигналов ZRTP</string>
 
     <!-- Common preferences -->
-    <string name="audio_encoding">Кодировка аудио</string>
+    <string name="audio_encoding">Кодирование аудио</string>
     <string name="audio_enc_global_override_summary">Переопределить звуковые форматы для этой учётной записи</string>
     <string name="call_encryption">Настройки шифрования вызовов</string>
     <string name="video_encoding">Кодирование видео</string>
-    <string name="video_enc_global_override_summary">Переопределить глобальные определенные видеоформаты для этой учётной записи</string>
+    <string name="video_enc_global_override_summary">Переопределить глобальные определённые видеоформаты для этой учётной записи</string>
 
     <!-- Jabber preferences -->
     <string name="jbr_auto_sign_in">Подключиться при запуске</string>
@@ -1116,7 +1108,7 @@
     <string name="jbr_keep_alive_summary">Включить, если наблюдается частая отключение мобильной сети</string>
     <string name="jbr_tls_ver_min">Минимальная версия TLS</string>
     <string name="jbr_tls_ver_min_summary">Соединитесь, используя эту или более позднюю версию протокола TLS</string>
-    <string name="jbr_non_secure_allow">Разрешить незащищенные соединения</string>
+    <string name="jbr_non_secure_allow">Разрешить незащищённые соединения</string>
     <string name="jbr_non_ssk_summary">Отключить шифрование соединения с сервером SSL/TLS</string>
     <string name="jbr_server_override">Изменить параметры сервера по умолчанию</string>
     <string name="jbr_password">Введите пароль</string>
@@ -1146,12 +1138,12 @@
     <string name="jbr_user_name_password">Имя пользователя и пароль</string>
 
     <!-- Telephony -->
-    <string name="contact_phone">Контактное имя/Телефон/Jid:</string>
+    <string name="contact_phone">Имя, телефон или XMPP-адрес (JID):</string>
     <string name="call_via">Позвоните через:</string>
     <string name="contact_phone_empty">Контактный номер телефона не может быть пустым!</string>
     <string name="recipient_error_non_ascii">Специальные символы в настоящее время не поддерживаются!</string>
     <string name="domain_not_in_roster">Указанный домен телефонии \'%1$s\' не входит в список контактов</string>
-    <string name="not_in_call_group">%1$s не относится к определенной группе вызовов</string>
+    <string name="not_in_call_group">%1$s не относится к определённой группе вызовов</string>
     <string name="jingle_not_supported">%1$s\nне поддерживает протокол Jingle</string>
     <string name="recipient_error_parse_failed">Ошибка анализа адреса!</string>
     <string name="unknown_recipient"><![CDATA[<Неизвестный получатель>]]></string>
@@ -1257,12 +1249,12 @@
     <string name="settings_theme">Тема оформления</string>
 
     <!-- TTS Language -->
-    <string name="tts_delay">Текст сообщения в задержку речи (ms)</string>
-    <string name="tts_settings">Общие настройки TTS…</string>
-    <string name="tts_disable">Отключить текст в речь</string>
-    <string name="tts_enable">Включить текст в речь</string>
-    <string name="tts_synthesis">Введите текст, чтобы говорить или синтезировать и сохранить в файл:</string>
-    <string name="tts_voice">Голос TTS по умолчанию:</string>
+    <string name="tts_delay">Задержка синтеза речи (мс)</string>
+    <string name="tts_settings">Настройки синтеза речи…</string>
+    <string name="tts_disable">Отключить синтез речи</string>
+    <string name="tts_enable">Включить синтез речи</string>
+    <string name="tts_synthesis">Введите текст который проговорить или сохранить в файл:</string>
+    <string name="tts_voice">Голос по умолчанию:</string>
     <string name="loading_wait">Загрузка, пожалуйста подождите…</string>
 
     <!-- Remove special characters from phone number -->
@@ -1340,8 +1332,8 @@
     <string name="omemo_blind_trust_before_verification">Слепое доверие перед проверкой</string>
     <string name="omemo_blind_trust_before_verification_summary">Автоматическое доверие ко всем новым устройствам контактов, которые ранее не были проверены; запрос на подтверждение вручную, когда подтверждённый контакт добавляет новые устройства.</string>
     <!-- OMEMO regenerate screen -->
-    <string name="omemo_regenerate_identities_summary">После восстановления вашей идентичности OMEMO все ваши контакты получат новый отпечаток пальца и должны будут повторно подтвердить вас. Выполняйте только при наличии проблемы установки omemo.</string>
-    <string name="omemo_regenerate_identities">Регенерировать идентификаторы OMEMO</string>
+    <string name="omemo_regenerate_identities_summary">После восстановления вашей идентичности OMEMO все ваши контакты получат новый отпечаток и должны будут повторно подтвердить вас. Выполняйте только при наличии проблемы установки OMEMO.</string>
+    <string name="omemo_regenerate_identities">Перегенерировать идентификаторы OMEMO</string>
     <string name="omemo_regenerate_title">Оповещения OMEMO Обновить</string>
     <!-- OMEMO purge device screen -->
     <string name="omemo_purge_devices_summary">Удалить все неактивные устройства; только опубликовать текущее активное устройство, которое вы используете.</string>
@@ -1355,8 +1347,8 @@
     <string name="settings_crypto_priv_key_summary">Управление секретными отпечатками crypto</string>
     <string name="settings_crypto_priv_key">Закрытые ключи Crypto</string>
     <!-- Crypto fingerprints screen -->
-    <string name="settings_fingerprint_summary">Управление всеми известными отпечатками устройств\n\цвет: циан=собственное устройство; серый=неактивный</string>
-    <string name="settings_fingerprint_title">Отпечатки пальцев криптографических устройств</string>
+    <string name="settings_fingerprint_summary">Управление всеми известными отпечатками устройств\nвет: бирюзовый=собственное устройство; серый=неактивный</string>
+    <string name="settings_fingerprint_title">Отпечаток криптографических устройств</string>
 
     <!-- Crypto contextMenu, dialog, message and toast -->
     <string name="crypto_key_generate_prompt">Вы хотите создать новый ключ для %1$s%2$s</string>
@@ -1375,8 +1367,8 @@
 
     <string name="crypto_msg_omemo_session_setup_failed">Настройка сеанса OMEMO не удалась! %1$s</string>
     <string name="crypto_msg_omemo_session_untrusted">Найден доверенный приятель ZERO для получения сообщений OMEMO!</string>
-    <string name="crypto_msg_omemo_session_unverified">Отправка сообщений OMEMO некоторым неизвестным друзьям с непроверенными отпечатками пальцев!</string>
-    <string name="crypto_msg_omemo_session_unverified_untrusted">MultiUserChat с некоторыми друзьями не доверенными или с непроверенными отпечатками пальцев!</string>
+    <string name="crypto_msg_omemo_session_unverified">Отправка сообщений OMEMO некоторым неизвестным друзьям с непроверенными отпечатками ключей!</string>
+    <string name="crypto_msg_omemo_session_unverified_untrusted">Многопользовательский чат с некоторыми контактами, которым вы не доверяете или у которых непроверенные отпечатки ключей!</string>
     <string name="crypto_msg_omemo_session_verified">*** Все контакты прошли проверку подлинности! ***</string>
     <string name="crypto_fingerprint_status">Проверено: %1$s</string>
     <string name="crypto_no_key_present">Отсутствует ключ</string>
@@ -1414,7 +1406,7 @@
     <!-- Android Battery Usage Optimization -->
     <string name="battery_optimizations">Оптимизация аккумулятора</string>
     <string name="battery_optimizations_dialog">У вашего устройства оптимизация использования аккумулятора на aTalk; это может привести к задержке уведомлений или потерям сообщения.\n\nРекомендуется отключить эту оптимизацию для aTalk.</string>
-    <string name="battery_optimization_on">aTalk будет переведён в режим сна, когда устройство перейдет в режим ожидания. Перезапустите aTalk вручную, чтобы получать новые сообщения.</string>
+    <string name="battery_optimization_on">aTalk будет переведён в режим сна, когда устройство перейдёт в режим ожидания. Перезапустите aTalk вручную, чтобы получать новые сообщения.</string>
     <string name="device_does_not_support_battery_op">Ваше устройство не поддерживает отказ от оптимизации батареи</string>
     <string name="disable">Отключить</string>
     <string name="next">Далее</string>

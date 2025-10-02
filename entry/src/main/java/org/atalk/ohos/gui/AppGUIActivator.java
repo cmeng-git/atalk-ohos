@@ -29,7 +29,7 @@ import net.java.sip.communicator.util.ServiceUtils;
 import net.java.sip.communicator.util.account.LoginManager;
 
 import org.atalk.crypto.CryptoFragment;
-import org.atalk.ohos.gui.account.AndroidLoginRenderer;
+import org.atalk.ohos.gui.account.AppLoginRenderer;
 import org.atalk.ohos.gui.chat.ChatSessionManager;
 import org.atalk.ohos.gui.login.AndroidSecurityAuthority;
 import org.atalk.service.configuration.ConfigurationService;
@@ -67,7 +67,7 @@ public class AppGUIActivator implements BundleActivator {
     /**
      * Android login renderer impl.
      */
-    private static AndroidLoginRenderer loginRenderer;
+    private static AppLoginRenderer loginRenderer;
 
     /**
      * Configuration service instance.
@@ -119,7 +119,7 @@ public class AppGUIActivator implements BundleActivator {
         this.presenceStatusHandler = new PresenceStatusHandler();
         presenceStatusHandler.start(bundleContext);
 
-        loginRenderer = new AndroidLoginRenderer(securityAuthority);
+        loginRenderer = new AppLoginRenderer(securityAuthority);
         loginManager = new LoginManager(loginRenderer);
 
         AccountManager accountManager = ServiceUtils.getService(bundleContext, AccountManager.class);
@@ -244,7 +244,7 @@ public class AppGUIActivator implements BundleActivator {
      *
      * @return Android login renderer.
      */
-    public static AndroidLoginRenderer getLoginRenderer() {
+    public static AppLoginRenderer getLoginRenderer() {
         return loginRenderer;
     }
 

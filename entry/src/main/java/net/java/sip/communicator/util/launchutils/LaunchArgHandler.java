@@ -346,11 +346,11 @@ public class LaunchArgHandler {
         String name = getApplicationName();
         String version = getVersion();
 
-        if (name.trim().isEmpty()) {
+        if (name == null || name.trim().isEmpty()) {
             name = "atalk";
         }
 
-        if (version.trim().isEmpty()) {
+        if (version == null || version.trim().isEmpty()) {
             version = "build.by.SVN";
         }
         System.out.println(name + " " + version);

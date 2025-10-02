@@ -140,7 +140,7 @@ public class YoutubePlayerFragment extends BaseFragment {
                     }
                     else {
                         onErrorOnce = true;
-                        YouTubePlayerUtils.loadOrCueVideo(youTubePlayer, getLifecycle(), mVideoId, 0f);
+                        YouTubePlayerUtils.loadOrCueVideo(youTubePlayer, getLifecycle(), mVideoId, 0.0f);
                     }
                 }
                 addActionsToPlayer(youTubePlayer);

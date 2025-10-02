@@ -35,7 +35,7 @@ import org.atalk.ohos.BaseFragment;
 import org.atalk.ohos.R;
 import org.atalk.ohos.gui.AppGUIActivator;
 import org.atalk.ohos.gui.aTalk;
-import org.atalk.ohos.gui.account.AndroidLoginRenderer;
+import org.atalk.ohos.gui.account.AppLoginRenderer;
 import org.atalk.ohos.gui.menu.GlobalStatusMenu;
 import org.atalk.ohos.gui.util.event.EventListener;
 import org.atalk.ohos.gui.widgets.ActionMenuItem;
@@ -89,7 +89,7 @@ public class ActionBarStatusFragment extends BaseFragment
     private AppCompatActivity mActivity;
 
     private static GlobalDisplayDetailsService displayDetailsService;
-    private static AndroidLoginRenderer loginRenderer;
+    private static AppLoginRenderer loginRenderer;
 
     /**
      * {@inheritDoc}

@@ -1195,14 +1195,14 @@ public class AccountID {
      * selected. Depending on the value of the <code>exactPrefixMatch</code> parameter the method will
      * (when false) or will not (when exactPrefixMatch is true) include property names that have
      * prefixes longer than the specified <code>prefix</code> param.
-     *
+     * <p>
      * Example:
      * Imagine a configuration service instance containing 2 properties only:<br>
      * <code>
      * net.java.sip.communicator.PROP1=value1<br>
      * net.java.sip.communicator.service.protocol.PROP1=value2
      * </code>
-     *
+     * <p>
      * A call to this method with a prefix="net.java.sip.communicator" and exactPrefixMatch=true
      * would only return the first property - net.java.sip.communicator.PROP1, whereas the same
      * call with exactPrefixMatch=false would return both properties as the second prefix includes
@@ -1235,14 +1235,14 @@ public class AccountID {
      * selected. Depending on the value of the <code>exactPrefixMatch</code> parameter the method will
      * (when false) or will not (when exactPrefixMatch is true) include property names that have
      * prefixes longer than the specified <code>prefix</code> param.
-     *
+     * <p>
      * Example:
      * Imagine a configuration service instance containing 2 properties only:<br>
      * <code>
      * net.java.sip.communicator.PROP1=value1<br>
      * net.java.sip.communicator.service.protocol.PROP1=value2
      * </code>
-     *
+     * <p>
      * A call to this method with a prefix="net.java.sip.communicator" and exactPrefixMatch=true
      * would only return the first property - net.java.sip.communicator.PROP1, whereas the same
      * call with exactPrefixMatch=false would return both properties as the second prefix includes
@@ -1272,14 +1272,14 @@ public class AccountID {
      * have the specified prefix. Depending on the value of the <code>exactPrefixMatch</code> parameter
      * the method will (when false) or will not (when exactPrefixMatch is true) include property
      * names that have prefixes longer than the specified <code>prefix</code> param.
-     *
+     * <p>
      * Example:
      * Imagine a configuration service instance containing 2 properties only:<br>
      * <code>
      * net.java.sip.communicator.PROP1=value1<br>
      * net.java.sip.communicator.service.protocol.PROP1=value2
      * </code>
-     *
+     * <p>
      * A call to this method with a prefix="net.java.sip.communicator" and exactPrefixMatch=true
      * would only return the first property - net.java.sip.communicator.PROP1, whereas the same call
      * with exactPrefixMatch=false would return both properties as the second prefix includes the

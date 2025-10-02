@@ -31,7 +31,6 @@ import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
-import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.URLSpan;
@@ -106,6 +105,7 @@ import net.java.sip.communicator.util.ByteFormat;
 import net.java.sip.communicator.util.GuiUtils;
 import net.java.sip.communicator.util.StatusUtil;
 
+import org.apache.commons.lang3.StringUtils;
 import org.atalk.crypto.CryptoFragment;
 import org.atalk.crypto.listener.CryptoModeChangeListener;
 import org.atalk.impl.timberlog.TimberLog;
@@ -114,7 +114,7 @@ import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.AppGUIActivator;
 import org.atalk.ohos.gui.aTalk;
-import org.atalk.ohos.gui.account.AndroidLoginRenderer;
+import org.atalk.ohos.gui.account.AppLoginRenderer;
 import org.atalk.ohos.gui.chat.chatsession.ChatSessionFragment;
 import org.atalk.ohos.gui.chat.filetransfer.FileHistoryConversation;
 import org.atalk.ohos.gui.chat.filetransfer.FileHttpDownloadConversation;
@@ -130,7 +130,6 @@ import org.atalk.ohos.gui.util.event.EventListener;
 import org.atalk.ohos.plugin.geolocation.SvpApiImpl;
 import org.atalk.persistance.FileBackend;
 import org.jivesoftware.smack.packet.Stanza;
-import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.smackx.chatstates.ChatState;
 import org.jivesoftware.smackx.omemo_media_sharing.AesgcmUrl;
 import org.jxmpp.jid.Jid;
@@ -507,8 +506,8 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
      * passing in focus state as parameter; taking the appropriate actions pending the focus state;
      */
     private void initChatController(boolean inFocus) {
-        // chatController => NPE from field
-        if ((mChatController != null)) {
+        // chatController => NPE from field && FFR indicates chatPanel may be null???
+        if ((mChatController != null  && chatPanel != null)) {
             if (!inFocus) {
                 mChatController.onHide();
                 // Also remove global status listener
@@ -809,7 +808,7 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
                                     else {
                                         String msgId = chatMsg.getMessageUID();
                                         // Cannot delete system messages or room status message which has null msgUuid
-                                        if (TextUtils.isEmpty(msgId))
+                                        if (StringUtils.isEmpty(msgId))
                                             continue;
 
                                         msgUidDel.add(msgId);
@@ -1254,7 +1253,7 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
          * @param receiptStatus Delivery status to be updated
          */
         public void updateMessageDeliveryStatusForId(String msgId, final int receiptStatus) {
-            if (TextUtils.isEmpty(msgId))
+            if (StringUtils.isEmpty(msgId))
                 return;
 
             for (int index = messages.size(); index-- > 0; ) {
@@ -1615,7 +1614,7 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
                 if (messageViewHolder.viewType == SYSTEM_MESSAGE_VIEW) {
                     messageViewHolder.messageView.setMovementMethod(LinkMovementMethod.getInstance());
                 }
-                else if (!TextUtils.isEmpty(body) && !body.toString().matches("(?s)^aesgcm:.*")) {
+                else if (StringUtils.isNotEmpty(body) && !body.toString().matches("(?s)^aesgcm:.*")) {
                     // Set up link movement method i.e. make all links in TextView clickable
                     messageViewHolder.messageView.setMovementMethod(LinkMovementMethod.getInstance());
                 }
@@ -1809,7 +1808,7 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
             }
             else if (viewHolder.viewType == OUTGOING_MESSAGE_VIEW
                     || viewHolder.viewType == CORRECTED_MESSAGE_VIEW) {
-                AndroidLoginRenderer loginRenderer = AppGUIActivator.getLoginRenderer();
+                AppLoginRenderer loginRenderer = AppGUIActivator.getLoginRenderer();
                 avatar = loginRenderer.getLocalAvatarDrawable(mProvider);
                 status = loginRenderer.getLocalStatusDrawable();
             }
@@ -1990,7 +1989,7 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
                 String str = msg.getMessage();
                 int msgTye = msg.getMessageType();
 
-                if (!TextUtils.isEmpty(str) && ((msgTye == ChatMessage.MESSAGE_IN)
+                if (StringUtils.isNotEmpty(str) && ((msgTye == ChatMessage.MESSAGE_IN)
                         || (msgTye == ChatMessage.MESSAGE_OUT)
                         || (msgTye == ChatMessage.MESSAGE_MUC_IN)
                         || (msgTye == ChatMessage.MESSAGE_MUC_OUT))) {
@@ -2122,7 +2121,7 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
              */
             public Spanned getBody(TextView msgView) {
                 String body = msg.getMessage();
-                if ((msgBody == null) && !TextUtils.isEmpty(body)) {
+                if ((msgBody == null) && StringUtils.isNotEmpty(body)) {
                     boolean hasHtmlTag = body.matches(ChatMessage.HTML_MARKUP);
                     boolean hasImgSrcTag = hasHtmlTag && body.contains("<img");
 
@@ -2617,22 +2616,6 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
             onPreExecute();
         }
 
-        public void execute() {
-            try (ExecutorService eService = Executors.newSingleThreadExecutor()) {
-                eService.execute(() -> {
-                    final Exception ex = doInBackground();
-
-                    mChatActivity.runOnUiThread(() -> {
-                        if (ex != null) {
-                            Timber.e("Failed to send file: %s", ex.getMessage());
-                            chatPanel.addMessage(currentChatTransport.getName(), new Date(), ChatMessage.MESSAGE_ERROR,
-                                    IMessage.ENCODE_PLAIN, aTalkApp.getResString(R.string.file_delivery_error, ex.getMessage()));
-                        }
-                    });
-                });
-            }
-        }
-
         private void onPreExecute() {
             long maxFileLength = currentChatTransport.getMaximumFileLength();
             if (mFile.length() > maxFileLength) {
@@ -2651,6 +2634,22 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
                 // request? causing double send requests in slow Android devices.
                 // chatListAdapter.setXferStatus(msgViewId, FileTransferStatusChangeEvent.PREPARING);
                 sendFTConversion.setStatus(FileTransferStatusChangeEvent.PREPARING, entityJid, mEncryption, null);
+            }
+        }
+
+        public void execute() {
+            try (ExecutorService eService = Executors.newSingleThreadExecutor()) {
+                eService.execute(() -> {
+                    final Exception ex = doInBackground();
+
+                    runOnUiThread(() -> {
+                        if (ex != null) {
+                            Timber.e("Failed to send file: %s", ex.getMessage());
+                            chatPanel.addMessage(currentChatTransport.getName(), new Date(), ChatMessage.MESSAGE_ERROR,
+                                    IMessage.ENCODE_PLAIN, aTalkApp.getResString(R.string.file_delivery_error, ex.getMessage()));
+                        }
+                    });
+                });
             }
         }
 
@@ -2689,7 +2688,7 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
                         urlLink = (fileXfer == null) ? null : fileXfer.toString();
                     }
                     // Timber.w("HTTP link: %s: %s", mFile.getName(), urlLink);
-                    if (TextUtils.isEmpty(urlLink)) {
+                    if (StringUtils.isEmpty(urlLink)) {
                         sendFTConversion.setStatus(FileTransferStatusChangeEvent.FAILED, entityJid, mEncryption,
                                 aTalkApp.getResString(R.string.file_send_failed, "HttpFileUpload"));
                     }

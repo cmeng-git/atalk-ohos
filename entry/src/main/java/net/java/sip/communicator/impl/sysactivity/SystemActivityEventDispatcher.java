@@ -120,10 +120,8 @@ public class SystemActivityEventDispatcher implements Runnable {
      */
     protected void fireSystemActivityEventCurrentThread(SystemActivityEvent evt) {
         List<SystemActivityChangeListener> listenersCopy = new ArrayList<>(listeners);
-        for (int i = 0; i < listenersCopy.size(); i++) {
-            fireSystemActivityEvent(
-                    evt,
-                    listenersCopy.get(i));
+        for (SystemActivityChangeListener systemActivityChangeListener : listenersCopy) {
+            fireSystemActivityEvent(evt, systemActivityChangeListener);
         }
     }
 
@@ -140,7 +138,7 @@ public class SystemActivityEventDispatcher implements Runnable {
 
             eventsToDispatch.notifyAll();
 
-            if (dispatcherThread == null && !listeners.isEmpty()) {
+            if (dispatcherThread == null && listeners.size() > 0) {
                 dispatcherThread = new Thread(this);
                 dispatcherThread.start();
             }
@@ -213,8 +211,8 @@ public class SystemActivityEventDispatcher implements Runnable {
                             }
                         }
 
-                    for (int i = 0; i < listenersCopy.size(); i++) {
-                        fireSystemActivityEvent(eventToProcess.getKey(), listenersCopy.get(i));
+                    for (SystemActivityChangeListener systemActivityChangeListener : listenersCopy) {
+                        fireSystemActivityEvent(eventToProcess.getKey(), systemActivityChangeListener);
                     }
                 }
             }

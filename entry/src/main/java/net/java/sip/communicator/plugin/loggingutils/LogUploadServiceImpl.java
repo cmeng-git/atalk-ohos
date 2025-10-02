@@ -5,6 +5,10 @@
  */
 package net.java.sip.communicator.plugin.loggingutils;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -19,10 +23,6 @@ import org.atalk.persistance.ServerPersistentStoresRefreshDialog;
 import org.atalk.service.fileaccess.FileCategory;
 import org.atalk.service.log.LogUploadService;
 import org.atalk.service.version.VersionService;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 import timber.log.Timber;
 

@@ -342,17 +342,6 @@ public class ChatActivity extends BaseActivity
         super.onPause();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        outState.putString(ChatSessionManager.CHAT_IDENTIFIER, currentChatId);
-        outState.putInt(ChatSessionManager.CHAT_MODE, currentChatMode);
-        outState.putInt(ChatSessionManager.CHAT_MSGTYPE, mCurrentChatType);
-        super.onSaveInstanceState(outState);
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -362,6 +351,17 @@ public class ChatActivity extends BaseActivity
 
         // Clear last chat intent
         AppUtils.clearGeneralNotification(aTalkApp.getInstance());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putString(ChatSessionManager.CHAT_IDENTIFIER, currentChatId);
+        outState.putInt(ChatSessionManager.CHAT_MODE, currentChatMode);
+        outState.putInt(ChatSessionManager.CHAT_MSGTYPE, mCurrentChatType);
+        super.onSaveInstanceState(outState);
     }
 
     /**
