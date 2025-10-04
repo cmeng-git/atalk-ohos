@@ -97,17 +97,6 @@ public class MetaContactListProvider extends BaseContactListProvider
 
     private final List<OperationSetPresence> opSetPresence = new ArrayList<>();
 
-//    /**
-//     * The default filter is initially set to the PresenceFilter. But anyone
-//     * could change it by calling setDefaultFilter().
-//     */
-//    private final ContactListFilter defaultFilter = presenceFilter;
-
-//    /**
-//     * The current filter.
-//     */
-//    private final ContactListFilter currentFilter = defaultFilter;
-
     /**
      * The currently used filter query.
      */
@@ -730,7 +719,7 @@ public class MetaContactListProvider extends BaseContactListProvider
      */
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        if (contacts.size() > 0) {
+        if (!contacts.isEmpty()) {
             TreeSet<MetaContact> contactList = getContactList(groupPosition);
             if (contactList != null) {
                 int i = 0;
@@ -795,7 +784,7 @@ public class MetaContactListProvider extends BaseContactListProvider
                                     filteredList.add(metaContact);
                             }
 
-                            if (filteredList.size() > 0) {
+                            if (!filteredList.isEmpty()) {
                                 groups.add(metaGroup);
                                 contacts.add(filteredList);
                             }
@@ -953,7 +942,7 @@ public class MetaContactListProvider extends BaseContactListProvider
             if (connection == null)
                 continue;
 
-            Timber.e("addContactStatusListener: %s", pps);
+            // Timber.e("addContactStatusListener: %s", pps);
             OperationSetPresence opSetPresence = pps.getOperationSet(OperationSetPresence.class);
             if (opSetPresence != null) {
                 this.opSetPresence.add(opSetPresence);
@@ -1003,44 +992,6 @@ public class MetaContactListProvider extends BaseContactListProvider
             return metaGroup.getGroupName();
     }
 
-    //	/**
-    //	 * Sets the default filter to the given <code>filter</code>.
-    //	 *
-    //	 * @param filter the <code>ContactListFilter</code> to set as default
-    //	 */
-    //	public void setDefaultFilter(ContactListFilter filter) {
-    //		this.defaultFilter = filter;
-    //		this.currentFilter = defaultFilter;
-    //	}
-    //
-    //	/**
-    //	 * Gets the default filter for this contact list.
-    //	 *
-    //	 * @return the default filter for this contact list
-    //	 */
-    //	public ContactListFilter getDefaultFilter() {
-    //		return defaultFilter;
-    //	}
-    //
-    //	/**
-    //	 * Returns the currently applied filter.
-    //	 *
-    //	 * @return the currently applied filter
-    //	 */
-    //	public ContactListFilter getCurrentFilter() {
-    //		return currentFilter;
-    //	}
-    //
-    //	/**
-    //	 * Returns the currently applied filter.
-    //	 *
-    //	 * @return the currently applied filter
-    //	 */
-    //
-    //	public String getCurrentFilterQuery() {
-    //		return currentFilterQuery;
-    //	}
-    //
     //	/**
     //	 * Initializes the list of available contact sources for this contact list.
     //	 */

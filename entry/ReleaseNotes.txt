@@ -1,5 +1,12 @@
 Project aTalk-ohos Release Notes
 =========================================================================
+Version:        00.04.010 (0004010)
+Release Date:   10/04/2025
+Author:         cmeng
+Update source to include all changes upto android/atalk-ohos:
+Version: 00.09.010 (0009010); Release Date: 10/02/2025
+
+=========================================================================
 Version:        00.04.000 (0004000)
 Release Date:   09/26/2025
 Author:         cmeng

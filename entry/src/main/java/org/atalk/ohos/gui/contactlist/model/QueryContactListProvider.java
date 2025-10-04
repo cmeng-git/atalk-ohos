@@ -133,7 +133,7 @@ public class QueryContactListProvider extends BaseContactListProvider
             return metaContactList.getChildrenCount(groupPosition);
         }
         else {
-            return (results.size() == 0) ? 0 : results.get(groupPosition - metaGroupCount).getCount();
+            return (results.isEmpty()) ? 0 : results.get(groupPosition - metaGroupCount).getCount();
         }
     }
 
@@ -144,7 +144,7 @@ public class QueryContactListProvider extends BaseContactListProvider
             return metaContactList.getChild(groupPosition, childPosition);
         }
         else {
-            if (results.size() == 0)
+            if (results.isEmpty())
                 return null;
 
             List<SourceContact> contacts = results.get(0).contacts;

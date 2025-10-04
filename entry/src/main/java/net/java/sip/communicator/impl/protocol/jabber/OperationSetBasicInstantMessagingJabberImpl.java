@@ -172,7 +172,7 @@ public class OperationSetBasicInstantMessagingJabberImpl extends AbstractOperati
     /**
      * A prefix helps to make sure that thread ID's are unique across multiple instances.
      */
-    private static final String prefix = RandomStringUtils.random(5);
+    private static final String prefix = RandomStringUtils.secure().next(5);
 
     /**
      * Keeps track of the current increment, which is appended to the prefix to forum a unique thread ID.
@@ -937,7 +937,7 @@ public class OperationSetBasicInstantMessagingJabberImpl extends AbstractOperati
         if (isForwardedSentMessage) {
             msgEvt = new MessageDeliveredEvent(newMessage, sourceContact, null, sender, timestamp);
             // Update message unread count for carbon message for the actual recipient.
-            NotificationManager.updateMessageCount(sourceContact);
+            NotificationManager.updateUnreadCount(sourceContact);
         }
         else {
             msgEvt = new MessageReceivedEvent(newMessage, sourceContact, resource, sender, timestamp,
@@ -1116,7 +1116,7 @@ public class OperationSetBasicInstantMessagingJabberImpl extends AbstractOperati
         if (isForwardedSentOmemoMessage) {
             msgEvt = new MessageDeliveredEvent(newMessage, contact, null, sender, timeStamp);
             // Update message unread count for carbon message for the actual recipient.
-            NotificationManager.updateMessageCount(contact);
+            NotificationManager.updateUnreadCount(contact);
         }
         else {
             msgEvt = new MessageReceivedEvent(newMessage, contact, null, sender, timeStamp, correctedMsgID);

@@ -6,7 +6,7 @@ import ohos.agp.components.Button;
 import ohos.agp.components.Image;
 import ohos.agp.components.Text;
 import ohos.agp.components.element.ShapeElement;
-import ohos.media.codec.PixelMap;
+import ohos.media.image.PixelMap;
 
 import net.java.sip.communicator.service.contactlist.MetaContact;
 import net.java.sip.communicator.service.protocol.Contact;
@@ -68,7 +68,6 @@ import timber.log.Timber;
  * @author Eng Chong Meng
  * @link ContactListSlice#getClickedContact()
  */
-
 public class ContactInfoAbility extends BaseAbility
         implements OperationSetServerStoredContactInfo.DetailsResponseListener {
     /**
@@ -240,12 +239,11 @@ public class ContactInfoAbility extends BaseAbility
         detailToTextField.put(JobTitleDetail.class, jobTitleField);
 
         Text aboutMeArea = findComponentById(ResourceTable.Id_ci_AboutMeField);
-        aboutMeArea.setBackground(new ShapeElement(getContext(), ResourceTable.Graphic_alpha_blue_01));
-        detailToTextField.put(AboutMeDetail.class, aboutMeArea);
-
         //InputFilter[] filterArray = new InputFilter[1];
         //filterArray[0] = new LengthFilter(ABOUT_ME_MAX_CHARACTERS);
         //aboutMeArea.setInputFilters(filterArray);
+        aboutMeArea.setBackground(new ShapeElement(getContext(), ResourceTable.Graphic_alpha_blue_01));
+        detailToTextField.put(AboutMeDetail.class, aboutMeArea);
 
         Button mOkButton = findComponentById(ResourceTable.Id_button_OK);
         mOkButton.setClickedListener(v -> terminateAbility());
@@ -275,7 +273,7 @@ public class ContactInfoAbility extends BaseAbility
 
             // If the user has a contact image, let's use it. If not, leave the default as it
             byte[] avatarImage = (byte[]) detail.getDetailValue();
-            PixelMap bitmap = BitmapFactory.decodeByteArray(avatarImage, 0, avatarImage.length);
+            PixelMap bitmap = AppImageUtil.pixelMapFromBytes(avatarImage);
             avatarView.setPixelMap(bitmap);
 
         }

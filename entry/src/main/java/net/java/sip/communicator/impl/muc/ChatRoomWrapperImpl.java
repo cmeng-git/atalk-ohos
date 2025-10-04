@@ -15,6 +15,10 @@
  */
 package net.java.sip.communicator.impl.muc;
 
+
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
 import net.java.sip.communicator.service.msghistory.MessageHistoryService;
 import net.java.sip.communicator.service.muc.ChatRoomListChangeEvent;
 import net.java.sip.communicator.service.muc.ChatRoomProviderWrapper;
@@ -33,9 +37,6 @@ import org.jxmpp.jid.impl.JidCreate;
 import org.jxmpp.jid.parts.Resourcepart;
 import org.jxmpp.stringprep.XmppStringprepException;
 import org.jxmpp.util.XmppStringUtils;
-
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 import timber.log.Timber;
 
@@ -143,10 +144,10 @@ public class ChatRoomWrapperImpl extends PropertyChangeNotifier implements ChatR
         this.mPPS = parentProvider.getProtocolProvider();
 
         String val = ConfigurationUtils.getChatRoomProperty(mPPS, chatRoomID, ROOM_STATUS_ENABLE);
-        isRoomStatusEnable = !StringUtils.isEmpty(val) && Boolean.parseBoolean(val);
+        isRoomStatusEnable = StringUtils.isNotEmpty(val) && Boolean.parseBoolean(val);
 
         val = ConfigurationUtils.getChatRoomProperty(mPPS, chatRoomID, AUTOJOIN_PROPERTY_NAME);
-        isAutoJoin = !StringUtils.isEmpty(val) && Boolean.parseBoolean(val);
+        isAutoJoin = StringUtils.isNotEmpty(val) && Boolean.parseBoolean(val);
 
         // Request for passwordPrefix only if chatRoomID is not a serviceName
         if (chatRoomID.contains("@")) {
@@ -437,7 +438,7 @@ public class ChatRoomWrapperImpl extends PropertyChangeNotifier implements ChatR
     public boolean isBookmarked() {
         if (bookmark == null) {
             String val = ConfigurationUtils.getChatRoomProperty(mPPS, chatRoomID, BOOKMARK_PROPERTY_NAME);
-            bookmark = !StringUtils.isEmpty(val) && Boolean.parseBoolean(val);
+            bookmark = StringUtils.isNotEmpty(val) && Boolean.parseBoolean(val);
         }
         return bookmark;
     }

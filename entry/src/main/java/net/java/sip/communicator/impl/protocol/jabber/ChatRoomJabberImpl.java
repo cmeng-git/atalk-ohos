@@ -672,7 +672,7 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
      */
     public void invite(EntityBareJid userJid, String reason)
             throws NotConnectedException, InterruptedException {
-        if (TextUtils.isEmpty(XmppStringUtils.parseLocalpart(userJid.toString()))) {
+        if (StringUtils.isEmpty(XmppStringUtils.parseLocalpart(userJid.toString()))) {
             aTalkApp.showToastMessage(ResourceTable.String_send_message_not_supported, userJid);
         }
         else {
@@ -742,7 +742,7 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
         String errorMessage = aTalkApp.getResString(ResourceTable.String_chatroom_join_failed, nickname, getName());
         mPassword = password;
 
-        if (TextUtils.isEmpty(nickname)) {
+        if (StringUtils.isEmpty(nickname)) {
             throw new OperationFailedException(errorMessage, OperationFailedException.GENERAL_ERROR);
         }
 
@@ -789,7 +789,7 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
             }
             else if (xmppError.getCondition().equals(Condition.registration_required)) {
                 String errText = xmppError.getDescriptiveText();
-                if (TextUtils.isEmpty(errText))
+                if (StringUtils.isEmpty(errText))
                     errorMessage += "\n" + aTalkApp.getResString(ResourceTable.String_chatroom_join_failed_registration);
                 else
                     errorMessage += "\n" + errText;
@@ -1152,7 +1152,7 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
             errMessage = aTalkApp.getResString(ResourceTable.String_message_delivery_not_registered);
         }
 
-        if (!TextUtils.isEmpty(errMessage)) {
+        if (StringUtils.isNotEmpty(errMessage)) {
             Timber.w("%s", errMessage);
             ChatRoomMessageDeliveryFailedEvent failedEvent = new ChatRoomMessageDeliveryFailedEvent(this,
                     null, MessageDeliveryFailedEvent.OMEMO_SEND_ERROR, System.currentTimeMillis(), errMessage, message);
@@ -1845,7 +1845,7 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
         }
         else {
             String displayName;
-            if (TextUtils.isEmpty(name)) {
+            if (StringUtils.isEmpty(name)) {
                 displayName = aTalkApp.getResString(ResourceTable.String_chatroom_conference_item, mNickName.toString());
             }
             else {
@@ -2105,7 +2105,7 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
                     // initialise this from configuration
                     String sTimestamp = ConfigurationUtils.getChatRoomProperty(mPPS, getName(), LAST_RECEIVED_MESSAGE_TS);
                     try {
-                        if (!TextUtils.isEmpty(sTimestamp))
+                        if (StringUtils.isNotEmpty(sTimestamp))
                             lsdMessageTime = new Date(Long.parseLong(sTimestamp));
                     } catch (Throwable ex) {
                         Timber.w("TimeStamp property is null! %s", timeStamp);
@@ -2158,7 +2158,7 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
             }
 
             String stanzaId = message.getStanzaId();
-            if (TextUtils.isEmpty(stanzaId)) {
+            if (StringUtils.isEmpty(stanzaId)) {
                 OriginIdElement orgStanzaElement = OriginIdElement.getOriginId(message);
                 if (orgStanzaElement != null) {
                     stanzaId = orgStanzaElement.getId();
@@ -2185,7 +2185,7 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
 
                 StanzaError error = message.getError();
                 String errorReason = error.getConditionText();
-                if (TextUtils.isEmpty(errorReason)) {
+                if (StringUtils.isEmpty(errorReason)) {
                     // errorReason = error.getDescriptiveText();
                     errorReason = error.toString();
                 }

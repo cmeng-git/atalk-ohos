@@ -96,7 +96,6 @@ public class ActionBarStatusSlice extends BaseSlice
     private GlobalStatusMenu globalStatusMenu;
     private Ability mContext;
 
-
     private static GlobalDisplayDetailsService displayDetailsService;
     private static AppLoginRenderer loginRenderer;
     private Component actionBarView;

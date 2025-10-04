@@ -450,9 +450,12 @@ public class ChatSessionManager {
         }
         // Create new chatPanel only if it does not exist.
         else if (chatMode == MC_CHAT) {
-            MetaContact metaContact = AppGUIActivator.getContactListService().findMetaContactByMetaUID(chatId);
-            if (metaContact != null) {
-                chatPanel = createChat(metaContact);
+            MetaContactListService mcls = AppGUIActivator.getContactListService();
+            if (mcls != null) {
+                MetaContact metaContact = mcls.findMetaContactByMetaUID(chatId);
+                if (metaContact != null) {
+                    chatPanel = createChat(metaContact);
+                }
             }
         }
         else if (chatMode == MUC_CC) {

@@ -56,6 +56,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jxmpp.util.XmppStringUtils;
 
 import java.util.List;
+
 import timber.log.Timber;
 
 /**
@@ -326,18 +327,20 @@ public class ChatRoomListSlice extends BaseSlice
          */
         @Override
         public boolean onMenuItemClick(Component menuItem) {
-            ChatPanel chatPanel = ChatSessionManager.getActiveChat(mClickedChatRoom.getChatRoomID());
+            ChatPanel chatPanel = ChatSessionManager.getMultiChat(mClickedChatRoom, true);
             switch (menuItem.getId()) {
                 case ResourceTable.Id_chatroom_tts_enable:
-                    if (mClickedChatRoom.isTtsEnable()) {
-                        mClickedChatRoom.setTtsEnable(false);
-                        mChatRoomTtsEnable.setText(ResourceTable.String_tts_enable);
+                    if (mClickedChatRoom != null && chatPanel != null) {
+                        if (mClickedChatRoom.isTtsEnable()) {
+                            mClickedChatRoom.setTtsEnable(false);
+                            mChatRoomTtsEnable.setText(ResourceTable.String_tts_enable);
+                        }
+                        else {
+                            mClickedChatRoom.setTtsEnable(true);
+                            mChatRoomTtsEnable.setText(ResourceTable.String_tts_disable);
+                        }
+                        chatPanel.updateChatTtsOption();
                     }
-                    else {
-                        mClickedChatRoom.setTtsEnable(true);
-                        mChatRoomTtsEnable.setText(ResourceTable.String_tts_disable);
-                    }
-                    ChatSessionManager.getMultiChat(mClickedChatRoom, true).updateChatTtsOption();
                     return true;
 
                 case ResourceTable.Id_close_chatroom:

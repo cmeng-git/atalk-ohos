@@ -594,7 +594,7 @@ public class CertificateServiceImpl implements CertificateService, PropertyChang
      * The trust manager which asks the client whether to trust particular certificate which is not
      * android root's CA trusted.
      *
-     * Return TrustManager to use in an SSLContext
+     * @Return TrustManager to use in an SSLContext
      */
     private class EntityTrustManager implements X509TrustManager {
         private final X509TrustManager tm;

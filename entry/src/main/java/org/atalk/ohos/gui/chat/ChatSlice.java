@@ -91,7 +91,7 @@ import net.java.sip.communicator.util.ByteFormat;
 import net.java.sip.communicator.util.GuiUtils;
 import net.java.sip.communicator.util.StatusUtil;
 
-import org.apache.http.util.TextUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.atalk.crypto.CryptoSlice;
 import org.atalk.crypto.listener.CryptoModeChangeListener;
 import org.atalk.impl.timberlog.TimberLog;
@@ -141,11 +141,6 @@ public class ChatSlice extends BaseSlice implements ChatSessionManager.CurrentCh
     private final TaskDispatcher taskDispatcher = getContext().getGlobalTaskDispatcher(TaskPriority.DEFAULT);
     private Revocable asynTask;
     /**
-     * The task that loads history.
-     */
-    private LoadHistoryTask loadHistoryTask;
-
-    /**
      * The session adapter for the contained <code>ChatPanel</code>.
      */
     private ChatItemProvider chatItemProvider;
@@ -189,6 +184,11 @@ public class ChatSlice extends BaseSlice implements ChatSessionManager.CurrentCh
      * The chat state view.
      */
     private DirectionalLayout chatStateView;
+
+    /**
+     * The task that loads history.
+     */
+    private LoadHistoryTask loadHistoryTask;
 
     /**
      * Stores all active file transfer requests and effective transfers with the identifier of the transfer.
@@ -807,7 +807,7 @@ public class ChatSlice extends BaseSlice implements ChatSessionManager.CurrentCh
                                     else {
                                         String msgId = chatMsg.getMessageUID();
                                         // Cannot delete system messages or room status message which has null msgUuid
-                                        if (TextUtils.isEmpty(msgId))
+                                        if (StringUtils.isEmpty(msgId))
                                             continue;
 
                                         msgUidDel.add(msgId);
@@ -1252,7 +1252,7 @@ public class ChatSlice extends BaseSlice implements ChatSessionManager.CurrentCh
          * @param receiptStatus Delivery status to be updated
          */
         public void updateMessageDeliveryStatusForId(String msgId, final int receiptStatus) {
-            if (TextUtils.isEmpty(msgId))
+            if (StringUtils.isEmpty(msgId))
                 return;
 
             for (int index = messages.size(); index-- > 0; ) {
@@ -1613,7 +1613,7 @@ public class ChatSlice extends BaseSlice implements ChatSessionManager.CurrentCh
                 if (messageViewHolder.viewType == SYSTEM_MESSAGE_VIEW) {
                     messageViewHolder.messageView.setMovementMethod(LinkMovementMethod.getInstance());
                 }
-                else if (!TextUtils.isEmpty(body) && !body.toString().matches("(?s)^aesgcm:.*")) {
+                else if (StringUtils.isNotEmpty(body) && !body.toString().matches("(?s)^aesgcm:.*")) {
                     // Set up link movement method i.e. make all links in Text clickable
                     messageViewHolder.messageView.setMovementMethod(LinkMovementMethod.getInstance());
                 }
@@ -1989,7 +1989,7 @@ public class ChatSlice extends BaseSlice implements ChatSessionManager.CurrentCh
                 String str = msg.getMessage();
                 int msgTye = msg.getMessageType();
 
-                if (!TextUtils.isEmpty(str) && ((msgTye == ChatMessage.MESSAGE_IN)
+                if (StringUtils.isNotEmpty(str) && ((msgTye == ChatMessage.MESSAGE_IN)
                         || (msgTye == ChatMessage.MESSAGE_OUT)
                         || (msgTye == ChatMessage.MESSAGE_MUC_IN)
                         || (msgTye == ChatMessage.MESSAGE_MUC_OUT))) {
@@ -2120,7 +2120,7 @@ public class ChatSlice extends BaseSlice implements ChatSessionManager.CurrentCh
              */
             public RichText getBody(Text msgView) {
                 String body = msg.getMessage();
-                if ((msgBody == null) && !TextUtils.isEmpty(body)) {
+                if ((msgBody == null) && StringUtils.isNotEmpty(body)) {
                     boolean hasHtmlTag = body.matches(ChatMessage.HTML_MARKUP);
                     boolean hasImgSrcTag = hasHtmlTag && body.contains("<img");
 
@@ -2623,20 +2623,6 @@ public class ChatSlice extends BaseSlice implements ChatSessionManager.CurrentCh
             onPreExecute();
         }
 
-        public void execute() {
-            Executors.newSingleThreadExecutor().execute(() -> {
-                final Exception ex = doInBackground();
-
-                runOnUiThread(() -> {
-                    if (ex != null) {
-                        Timber.e("Failed to send file: %s", ex.getMessage());
-                        chatPanel.addMessage(currentChatTransport.getName(), new Date(), ChatMessage.MESSAGE_ERROR,
-                                IMessage.ENCODE_PLAIN, aTalkApp.getResString(ResourceTable.String_file_delivery_error, ex.getMessage()));
-                    }
-                });
-            });
-        }
-
         private void onPreExecute() {
             long maxFileLength = currentChatTransport.getMaximumFileLength();
             if (mFile.length() > maxFileLength) {
@@ -2656,6 +2642,20 @@ public class ChatSlice extends BaseSlice implements ChatSessionManager.CurrentCh
                 // chatItemProvider.setXferStatus(msgViewId, FileTransferStatusChangeEvent.PREPARING);
                 sendFTConversion.setStatus(FileTransferStatusChangeEvent.PREPARING, entityJid, mEncryption, null);
             }
+        }
+
+        public void execute() {
+            Executors.newSingleThreadExecutor().execute(() -> {
+                final Exception ex = doInBackground();
+
+                runOnUiThread(() -> {
+                    if (ex != null) {
+                        Timber.e("Failed to send file: %s", ex.getMessage());
+                        chatPanel.addMessage(currentChatTransport.getName(), new Date(), ChatMessage.MESSAGE_ERROR,
+                                IMessage.ENCODE_PLAIN, aTalkApp.getResString(ResourceTable.String_file_delivery_error, ex.getMessage()));
+                    }
+                });
+            });
         }
 
         private Exception doInBackground() {
@@ -2693,7 +2693,7 @@ public class ChatSlice extends BaseSlice implements ChatSessionManager.CurrentCh
                         urlLink = (fileXfer == null) ? null : fileXfer.toString();
                     }
                     // Timber.w("HTTP link: %s: %s", mFile.getName(), urlLink);
-                    if (TextUtils.isEmpty(urlLink)) {
+                    if (StringUtils.isEmpty(urlLink)) {
                         sendFTConversion.setStatus(FileTransferStatusChangeEvent.FAILED, entityJid, mEncryption,
                                 aTalkApp.getResString(ResourceTable.String_file_send_failed, "HttpFileUpload"));
                     }

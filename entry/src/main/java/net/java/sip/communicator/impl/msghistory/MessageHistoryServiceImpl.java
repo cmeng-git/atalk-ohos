@@ -92,7 +92,6 @@ import net.java.sip.communicator.util.UtilActivator;
 import net.java.sip.communicator.util.account.AccountUtils;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.util.TextUtils;
 import org.atalk.impl.timberlog.TimberLog;
 import org.atalk.ohos.ResourceTable;
 import org.atalk.ohos.aTalkApp;
@@ -688,7 +687,7 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
         String msgBody = "";
         long endDate = new Date().getTime();
 
-        if (!TextUtils.isEmpty(sessionUuid)) {
+        if (StringUtils.isNotEmpty(sessionUuid)) {
             String[] columns = {ChatMessage.MSG_BODY};
 
             RdbPredicates rdbPredicates = new RdbPredicates(ChatMessage.TABLE_NAME)
@@ -831,20 +830,20 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
 
             // Ignore any OOB or empty body message
             // if (msg.hasExtension(OutOfBandData.QNAME) || TextUtils.isEmpty(msg.getBody())) {
-            if (TextUtils.isEmpty(msg.getBody())) {
+            if (StringUtils.isEmpty(msg.getBody())) {
                 Timber.w("Skip empty or OOB forward MAM message: %s", msg.getStanzaId());
                 continue;
             }
 
             // Some received/DomainBareJid message does not have msgId. So use stanzaId from StanzaIdElement if found.
             String msgId = msg.getStanzaId();
-            if (TextUtils.isEmpty(msgId)) {
+            if (StringUtils.isEmpty(msgId)) {
                 OriginIdElement orgStanzaElement = OriginIdElement.getOriginId(msg);
                 if (orgStanzaElement != null) {
                     msgId = orgStanzaElement.getId();
                 }
             }
-            if (TextUtils.isEmpty(msgId)) {
+            if (StringUtils.isEmpty(msgId)) {
                 continue;
             }
             // mam messages always sent as <delay/>
@@ -916,13 +915,13 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
         // Some received/DomainBareJid message does not have msgId. So use stanzaId from StanzaIdElement if found.
         boolean isUnexpected = false;
         String msgId = message.getStanzaId();
-        if (TextUtils.isEmpty(msgId)) {
+        if (StringUtils.isEmpty(msgId)) {
             OriginIdElement orgStanzaElement = OriginIdElement.getOriginId(message);
             if (orgStanzaElement != null)
                 msgId = orgStanzaElement.getId();
         }
 
-        if (!TextUtils.isEmpty(msgId)) {
+        if (StringUtils.isNotEmpty(msgId)) {
             RdbPredicates rdbPredicates = new RdbPredicates(ChatMessage.TABLE_NAME)
                     .equalTo(ChatMessage.UUID, msgId)
                     .and()
@@ -1029,7 +1028,7 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
 
         while (resultSet.goToNextRow()) {
             sessionUuid = resultSet.getString(0);
-            if (!TextUtils.isEmpty(sessionUuid))
+            if (StringUtils.isNotEmpty(sessionUuid))
                 sessionUuids.add(sessionUuid);
         }
         resultSet.close();
@@ -1051,7 +1050,7 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
      */
     public int getMessageCountForSessionUuid(String sessionUuid) {
         int msgCount = 0;
-        if (!TextUtils.isEmpty(sessionUuid)) {
+        if (StringUtils.isNotEmpty(sessionUuid)) {
             RdbPredicates rdbPredicates = new RdbPredicates(ChatMessage.TABLE_NAME)
                     .equalTo(ChatMessage.SESSION_UUID, sessionUuid);
             ResultSet resultSet = mRdbStore.query(rdbPredicates, null);
@@ -1513,7 +1512,7 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
         // Replace last message in DB with the new received correction message content only - no new message record
         IMessage message = evt.getSourceMessage();
         String msgCorrectionId = evt.getCorrectedMessageUID();
-        if (!TextUtils.isEmpty(msgCorrectionId))
+        if (StringUtils.isNotEmpty(msgCorrectionId))
             message.setMessageUID(msgCorrectionId);
 
         String sessionUuid = getSessionUuidByJid(contact);
@@ -1534,7 +1533,7 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
 
         // Replace last message in DB with the new delivered correction message content only - no new message record
         String msgCorrectionId = evt.getCorrectedMessageUID();
-        if (!TextUtils.isEmpty(msgCorrectionId))
+        if (StringUtils.isNotEmpty(msgCorrectionId))
             message.setMessageUID(msgCorrectionId);
 
         String sessionUuid = getSessionUuidByJid(contact);
@@ -2550,9 +2549,10 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
      */
     public List<String> getLocallyStoredFilePath(String sessionUuid) {
         List<String> msgFilePathDel = new ArrayList<>();
-        if (TextUtils.isEmpty(sessionUuid)) {
+        if (StringUtils.isEmpty(sessionUuid)) {
             return msgFilePathDel;
         }
+
         String filePath;
         String[] columns = {ChatMessage.FILE_PATH};
 
@@ -2561,7 +2561,7 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
         ResultSet resultSet = mRdbStore.query(rdbPredicates, columns);
         while (resultSet.goToNextRow()) {
             filePath = resultSet.getString(0);
-            if (!TextUtils.isEmpty(filePath)) {
+            if (StringUtils.isNotEmpty(filePath)) {
                 msgFilePathDel.add(filePath);
             }
         }
@@ -2584,7 +2584,7 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
         ResultSet resultSet = mRdbStore.query(rdbPredicates, columns);
         while (resultSet.goToNextRow()) {
             filePath = resultSet.getString(0);
-            if (!TextUtils.isEmpty(filePath)) {
+            if (StringUtils.isNotEmpty(filePath)) {
                 msgFilePathDel.add(filePath);
             }
         }

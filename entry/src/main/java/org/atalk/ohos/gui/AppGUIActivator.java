@@ -5,6 +5,10 @@
  */
 package org.atalk.ohos.gui;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Vector;
+
 import net.java.sip.communicator.service.contactlist.MetaContactListService;
 import net.java.sip.communicator.service.contactsource.ContactSourceService;
 import net.java.sip.communicator.service.contactsource.DemuxContactSourceService;
@@ -33,10 +37,6 @@ import org.atalk.service.neomedia.MediaService;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.Vector;
 
 /**
  * Creates <code>LoginManager</code> and registers <code>AlertUIService</code>. It's moved here from

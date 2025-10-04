@@ -5,9 +5,16 @@
      Don't edit the changelog_<name>_branch.xml files in the gh-pages branch.
      They are automatically updated with "ant bump-version".
 -->
+
 <changelog>
-    <release version="00.04.000 (09/09/2025)" versioncode="0004000">
+    <release version="00.04.010 (10/03/2025)" versioncode="0004010">
         <change>Please read &lt;a href='https://cmeng-git.github.io/atalk/faq.html#ui_01'&gt;aTalk UI design &amp; Implementation&lt;/a&gt; before using aTalk</change>
+        <change>Executors.newSingleThreadExecutor() in AccountInfoPresenceActivity$DetailsLoadWorker must implement shutdown and awaitTermination 1.5s, else ANR in FFR</change>
+        <change>Avoid using smack StringUtils.isEmpty as it does not check for null content</change>
+        <change>Bug fixes and enhancements</change>
+    </release>
+
+    <release version="00.04.000 (09/09/2025)" versioncode="0004000">
         <change>Update source to include all changes upto android/atalk-ohos: Version: 00.09.000 (0009000); Release Date:   09/04/2025/change>
     </release>
     <release version="00.02.030 (01/26/2024)" versioncode="0002030">

@@ -89,6 +89,7 @@ import org.atalk.service.neomedia.SDesControl;
 import org.atalk.service.neomedia.SrtpControl;
 import org.atalk.service.neomedia.SrtpControlType;
 import org.atalk.service.neomedia.ZrtpControl;
+import org.atalk.util.FullScreenHelper;
 import org.atalk.util.MediaType;
 import org.jxmpp.jid.Jid;
 

@@ -15,8 +15,7 @@ import timber.log.Timber;
  *  mAddress = Contact Phone Number
  *  mPerson = Contact Name
  */
-public class Address implements Serializable
-{
+public class Address implements Serializable {
     private static final Pattern ATOM = Pattern.compile("^(?:[a-zA-Z0-9!#$%&'*+\\-/=?^_`{|}~]|\\s)+$");
 
     /**
@@ -27,13 +26,11 @@ public class Address implements Serializable
     private String mAddress;
     private String mPerson;
 
-    public Address(String address, String person)
-    {
+    public Address(String address, String person) {
         this(address, person, true);
     }
 
-    private Address(String address, String person, boolean parse)
-    {
+    private Address(String address, String person, boolean parse) {
         if (parse) {
             RegexTokenizer Rfc822Tokenizer = null;
             Rfc822Token[] tokens = Rfc822Tokenizer.tokenize(address);
@@ -61,23 +58,19 @@ public class Address implements Serializable
         }
     }
 
-    public String getAddress()
-    {
+    public String getAddress() {
         return mAddress;
     }
 
-    public void setAddress(String address)
-    {
+    public void setAddress(String address) {
         mAddress = address;
     }
 
-    public String getPerson()
-    {
+    public String getPerson() {
         return mPerson;
     }
 
-    public void setPerson(String person)
-    {
+    public void setPerson(String person) {
         mPerson = StringUtils.returnIfNotEmptyTrimmed(person);
     }
 
@@ -86,10 +79,10 @@ public class Address implements Serializable
      * array of Address objects, RFC-822 encoded.
      *
      * @param addressList List of addresses
+     *
      * @return An array of 0 or more Addresses.
      */
-    public static Address[] parseUnencoded(String addressList)
-    {
+    public static Address[] parseUnencoded(String addressList) {
         List<Address> addresses = new ArrayList<>();
         if (StringUtils.isNotEmpty(addressList)) {
             Rfc822Token[] tokens = Rfc822Tokenizer.tokenize(addressList);
@@ -107,10 +100,10 @@ public class Address implements Serializable
      * Parse a comma separated list of addresses in RFC-822 format and return an array of Address objects.
      *
      * @param addressList List of addresses
+     *
      * @return An array of 0 or more Addresses.
      */
-    public static Address[] parse(String addressList)
-    {
+    public static Address[] parse(String addressList) {
         if (StringUtils.isEmpty(addressList)) {
             return EMPTY_ADDRESS_ARRAY;
         }
@@ -121,8 +114,7 @@ public class Address implements Serializable
     }
 
     @Override
-    public boolean equals(Object o)
-    {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
@@ -139,8 +131,7 @@ public class Address implements Serializable
     }
 
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         int hash = 0;
         if (mAddress != null) {
             hash += mAddress.hashCode();
@@ -152,8 +143,7 @@ public class Address implements Serializable
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         if (!TextUtils.isEmpty(mPerson)) {
             return quoteAtoms(mPerson) + " <" + mAddress + ">";
         }
@@ -162,16 +152,14 @@ public class Address implements Serializable
         }
     }
 
-    public static String toString(Address[] addresses)
-    {
+    public static String toString(Address[] addresses) {
         if (addresses == null) {
             return null;
         }
         return TextUtils.join(", ", addresses);
     }
 
-    private String toEncodedString()
-    {
+    private String toEncodedString() {
         if (!TextUtils.isEmpty(mPerson)) {
             return EncoderUtil.encodeAddressDisplayName(mPerson) + " <" + mAddress + ">";
         }
@@ -180,8 +168,7 @@ public class Address implements Serializable
         }
     }
 
-    public static String toEncodedString(Address[] addresses)
-    {
+    public static String toEncodedString(Address[] addresses) {
         if (addresses == null) {
             return null;
         }
@@ -199,10 +186,10 @@ public class Address implements Serializable
      * Unpacks an address list previously packed with packAddressList()
      *
      * @param addressList Packed address list.
+     *
      * @return Unpacked list.
      */
-    public static Address[] unpack(String addressList)
-    {
+    public static Address[] unpack(String addressList) {
         if (addressList == null) {
             return new Address[]{};
         }
@@ -238,10 +225,10 @@ public class Address implements Serializable
      * The packed list is a ",\u0000" separated list of: address;\u0000person
      *
      * @param addresses Array of addresses to pack.
+     *
      * @return Packed addresses.
      */
-    public static String pack(Address[] addresses)
-    {
+    public static String pack(Address[] addresses) {
         if (addresses == null) {
             return null;
         }
@@ -269,10 +256,10 @@ public class Address implements Serializable
      * left unquoted; anything else is returned as a quoted string.
      *
      * @param text String to quote.
+     *
      * @return Possibly quoted string.
      */
-    private static String quoteAtoms(final String text)
-    {
+    private static String quoteAtoms(final String text) {
         if (ATOM.matcher(text).matches()) {
             return text;
         }
@@ -294,12 +281,12 @@ public class Address implements Serializable
      * " -> """
      *
      * @param s
+     *
      * @return
      */
 
     @VisibleForTesting
-    static String quoteString(String s)
-    {
+    static String quoteString(String s) {
         if (s == null) {
             return null;
         }

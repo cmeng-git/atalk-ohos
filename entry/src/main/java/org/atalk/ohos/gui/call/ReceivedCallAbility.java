@@ -19,6 +19,7 @@ package org.atalk.ohos.gui.call;
 import ohos.aafwk.content.Intent;
 import ohos.agp.components.Image;
 import ohos.agp.components.Text;
+import ohos.media.image.PixelMap;
 import ohos.security.SystemPermission;
 
 import net.java.sip.communicator.service.protocol.Call;
@@ -31,6 +32,7 @@ import org.atalk.impl.appstray.NotificationPopupHandler;
 import org.atalk.ohos.BaseAbility;
 import org.atalk.ohos.ResourceTable;
 import org.atalk.ohos.gui.aTalk;
+import org.atalk.ohos.util.AppImageUtil;
 
 import timber.log.Timber;
 
@@ -47,13 +49,10 @@ public class ReceivedCallAbility extends BaseAbility implements CallChangeListen
      */
     private String mSid;
 
-    // Jingle Message incoming call parameters
-    private boolean mAutoAccept;
-
     /**
      * The corresponding call.
      */
-    private Call call;
+    private Call mCall;
 
     /**
      * Called when the activity is starting. Initializes the call identifier.
@@ -72,30 +71,29 @@ public class ReceivedCallAbility extends BaseAbility implements CallChangeListen
         hangupView.setClickedListener(v -> hangupCall());
 
         Image mCallButton = findComponentById(ResourceTable.Id_callButton);
-        mCallButton.setClickedListener(v -> answerCall(call, false));
+        mCallButton.setClickedListener(v -> answerCall(mCall, false));
 
         // Proceed with video call only if camera permission is granted.
         Image mVideoCallButton = findComponentById(ResourceTable.Id_videoCallButton);
-        mVideoCallButton.setClickedListener(v -> answerCall(call,
+        mVideoCallButton.setClickedListener(v -> answerCall(mCall,
                 aTalk.hasPermission(this, false, aTalk.PRC_CAMERA, SystemPermission.CAMERA)));
 
         Timber.d("ReceivedCall onInactive!!!");
         mSid = intent.getStringParam(CallManager.CALL_SID);
 
         // Handling the incoming JingleCall
-        call = CallManager.getActiveCall(mSid);
-        if (call != null) {
-            // call.setAutoAnswer(mAutoAccept);
+        mCall = CallManager.getActiveCall(mSid);
+        if (mCall != null) {
 
-            String Callee = CallUIUtils.getCalleeAddress(call);
+            String Callee = CallUIUtils.getCalleeAddress(mCall);
             Text addressView = findComponentById(ResourceTable.Id_calleeAddress);
             addressView.setText(Callee);
 
-            byte[] avatar = CallUIUtils.getCalleeAvatar(call);
+            byte[] avatar = CallUIUtils.getCalleeAvatar(mCall);
             if (avatar != null) {
-                Bitmap bitmap = BitmapFactory.decodeByteArray(avatar, 0, avatar.length);
+                PixelMap pixelmap = AppImageUtil.pixelMapFromBytes(avatar);
                 Image avatarView = findComponentById(ResourceTable.Id_calleeAvatar);
-                avatarView.setImageBitmap(bitmap);
+                avatarView.setPixelMap(pixelmap);
             }
         }
         else {
@@ -105,7 +103,7 @@ public class ReceivedCallAbility extends BaseAbility implements CallChangeListen
         }
 
         if (intent.getBooleanParam(CallManager.AUTO_ACCEPT, false))
-            mVideoCallButton.performClick();
+            mVideoCallButton.simulateClick();
     }
 
     /**
@@ -115,12 +113,12 @@ public class ReceivedCallAbility extends BaseAbility implements CallChangeListen
     protected void onActive() {
         super.onActive();
         // Call is null for call via JingleMessage <propose/>
-        if (call != null) {
-            if (call.getCallState().equals(CallState.CALL_ENDED)) {
+        if (mCall != null) {
+            if (mCall.getCallState().equals(CallState.CALL_ENDED)) {
                 terminateAbility();
             }
             else {
-                call.addCallChangeListener(this);
+                mCall.addCallChangeListener(this);
             }
         }
     }
@@ -130,8 +128,8 @@ public class ReceivedCallAbility extends BaseAbility implements CallChangeListen
      */
     @Override
     protected void onInactive() {
-        if (call != null) {
-            call.removeCallChangeListener(this);
+        if (mCall != null) {
+            mCall.removeCallChangeListener(this);
         }
         NotificationPopupHandler.removeCallNotification(mSid);
         super.onInactive();
@@ -156,7 +154,7 @@ public class ReceivedCallAbility extends BaseAbility implements CallChangeListen
      * Hangs up the call and finishes this <code>Ability</code>.
      */
     private void hangupCall() {
-        CallManager.hangupCall(call);
+        CallManager.hangupCall(mCall);
         terminateAbility();
     }
 

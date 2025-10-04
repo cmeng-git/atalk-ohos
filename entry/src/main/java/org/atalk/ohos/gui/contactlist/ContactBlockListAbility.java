@@ -49,7 +49,6 @@ import org.atalk.ohos.ResourceTable;
 import org.atalk.ohos.gui.AppGUIActivator;
 import org.atalk.ohos.gui.util.EntityListHelper;
 import org.atalk.ohos.util.AppImageUtil;
-import org.atalk.service.osgi.OSGiAbility;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smackx.avatar.AvatarManager;
 import org.jivesoftware.smackx.blocking.BlockingCommandManager;

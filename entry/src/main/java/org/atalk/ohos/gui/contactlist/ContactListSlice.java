@@ -399,7 +399,8 @@ public class ContactListSlice extends BaseSlice
          */
         @Override
         public boolean onMenuItemClick(Component menuItem) {
-            ChatPanel chatPanel = ChatSessionManager.getActiveChat(mClickedContact);
+            ChatPanel chatPanel = ChatSessionManager.createChatForChatId(mClickedContact.getMetaUID(),
+                                ChatSessionManager.MC_CHAT);
             switch (menuItem.getId()) {
                 case ResourceTable.Id_close_chat:
                     if (chatPanel != null)
@@ -421,7 +422,7 @@ public class ContactListSlice extends BaseSlice
                     return true;
 
                 case ResourceTable.Id_contact_tts_enable:
-                    if (mClickedContact != null) {
+                    if (mClickedContact != null && chatPanel != null) {
                         Contact contact = mClickedContact.getDefaultContact();
                         if (contact.isTtsEnable()) {
                             contact.setTtsEnable(false);
@@ -431,8 +432,7 @@ public class ContactListSlice extends BaseSlice
                             contact.setTtsEnable(true);
                             mContactTtsEnable.setText(ResourceTable.String_tts_disable);
                         }
-                        ChatSessionManager.createChatForChatId(mClickedContact.getMetaUID(),
-                                ChatSessionManager.MC_CHAT).updateChatTtsOption();
+                        chatPanel.updateChatTtsOption();
                     }
                     return true;
 

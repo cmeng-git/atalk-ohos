@@ -331,7 +331,7 @@ public class IBRCaptchaProcessDialog extends BaseDialog {
     private void getCaptcha(String urlString) {
         new Thread(() -> {
             try {
-                if (!TextUtils.isEmpty(urlString)) {
+                if (StringUtils.isNotEmpty(urlString)) {
                     URL url = new URL(urlString);
                     InputStream is = url.openConnection().getInputStream();
                     ImageSource.SourceOptions srcOptions = new ImageSource.SourceOptions();
@@ -539,7 +539,7 @@ public class IBRCaptchaProcessDialog extends BaseDialog {
                 errMsg = ex.getMessage();
                 if (ex instanceof XMPPException.XMPPErrorException) {
                     String errDetails = ((XMPPException.XMPPErrorException) ex).getStanzaError().getDescriptiveText();
-                    if (!StringUtils.isEmpty(errDetails))
+                    if (StringUtils.isNotEmpty(errDetails))
                         errMsg += "\n" + errDetails;
                 }
             }

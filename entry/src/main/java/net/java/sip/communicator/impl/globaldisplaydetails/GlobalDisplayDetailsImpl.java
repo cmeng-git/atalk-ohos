@@ -26,7 +26,6 @@ import net.java.sip.communicator.service.protocol.event.ServerStoredDetailsChang
 import net.java.sip.communicator.util.account.AccountUtils;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.util.TextUtils;
 import org.jivesoftware.smackx.avatar.AvatarManager;
 import org.jxmpp.jid.BareJid;
 import org.jxmpp.jid.EntityBareJid;
@@ -309,7 +308,7 @@ public class GlobalDisplayDetailsImpl implements GlobalDisplayDetailsService,
                 fireGlobalAvatarEvent(globalAvatar);
             }
 
-            if (!isUpdate || (!TextUtils.isEmpty(provisionedDisplayName)
+            if (!isUpdate || (!StringUtils.isEmpty(provisionedDisplayName)
                     && StringUtils.isNotEmpty(globalDisplayName)))
                 return;
 

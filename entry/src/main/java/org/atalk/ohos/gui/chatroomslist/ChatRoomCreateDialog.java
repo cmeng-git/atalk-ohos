@@ -113,13 +113,14 @@ public class ChatRoomCreateDialog implements ListContainer.ItemClickedListener, 
         subjectField.setText("");
         component.findComponentById(ResourceTable.Id_subject_clear).setClickedListener(v -> subjectField.setText(""));
 
-        chatRoomComboBox = component.findComponentById(ResourceTable.Id_chatRoom_Combo);
-        chatRoomComboBox.setItemClickedListener(this);
-        new InitComboBox().execute();
-
+        // Must init accountsSpinner prior to InitComboBox()
         accountsSpinner = component.findComponentById(ResourceTable.Id_jid_Accounts_Spinner);
         // Init AccountSpinner only after InitComboBox(), else onItemSelected() will get trigger.
         initAccountSpinner();
+
+        chatRoomComboBox = component.findComponentById(ResourceTable.Id_chatRoom_Combo);
+        chatRoomComboBox.setItemClickedListener(this);
+        new InitComboBox().execute();
 
         DialogA.Builder builder = new DialogA.Builder(mContext);
         builder.setTitle(ResourceTable.String_chatroom_create_join)

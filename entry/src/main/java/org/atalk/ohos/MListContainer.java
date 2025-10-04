@@ -22,8 +22,7 @@ import ohos.app.Context;
 import ohos.utils.PlainBooleanArray;
 
 /**
- * BaseAbility implements the support of user set Theme and locale.
- * All app activities must extend BaseAbility inorder to support Theme and locale.
+ * ListContainer implements the support of list container.
  */
 public class MListContainer extends ListContainer implements ListContainer.ItemClickedListener, ListContainer.ItemSelectedListener {
 
