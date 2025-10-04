@@ -5,8 +5,6 @@
  */
 package net.java.sip.communicator.service.protocol.media;
 
-import android.text.TextUtils;
-
 import java.io.ByteArrayInputStream;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;

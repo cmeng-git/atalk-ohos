@@ -27,6 +27,7 @@ import java.util.Map;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 
+import ohos.agp.colors.Color;
 import ohos.data.rdb.RdbPredicates;
 import ohos.data.rdb.RdbStore;
 import ohos.data.rdb.ValuesBucket;

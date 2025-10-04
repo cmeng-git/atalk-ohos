@@ -49,7 +49,6 @@ import net.java.sip.communicator.service.contactlist.MetaContact;
 import net.java.sip.communicator.service.contactlist.MetaContactGroup;
 import net.java.sip.communicator.service.contactsource.ContactSourceService;
 import net.java.sip.communicator.service.filehistory.FileRecord;
-import net.java.sip.communicator.service.history.HistoryReader;
 import net.java.sip.communicator.service.history.HistoryService;
 import net.java.sip.communicator.service.history.event.HistorySearchProgressListener;
 import net.java.sip.communicator.service.history.event.ProgressEvent;
@@ -2759,11 +2758,6 @@ public class MessageHistoryServiceImpl implements MessageHistoryService,
 
         SearchProgressWrapper(MessageHistorySearchProgressListener listener) {
             this.listener = listener;
-        }
-
-        private void setCurrentValues(HistoryReader currentReader, int allRecords) {
-            currentReaderProgressRatio = (double) currentReader.countRecords() / allRecords * raiser;
-            accumulatedRatio += currentReaderProgressRatio;
         }
 
         public void progressChanged(ProgressEvent evt) {
