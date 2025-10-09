@@ -56,8 +56,8 @@ android {
         applicationId = 'org.atalk.ohos'
         archivesBaseName = 'aTalk'
 
-        versionCode 9010
-        versionName "00.09.010"
+        versionCode 9020
+        versionName "00.09.020"
 
         minSdkVersion rootProject.minSdk
         targetSdkVersion rootProject.compileSdk
@@ -228,7 +228,7 @@ dependencies {
     implementation 'com.github.yalantis:ucrop:2.2.10'
     implementation 'com.google.android.material:material:1.13.0'
 
-    implementation 'com.googlecode.libphonenumber:libphonenumber:9.0.14'
+    implementation 'com.googlecode.libphonenumber:libphonenumber:9.0.15'
     implementation 'com.splitwise:tokenautocomplete:4.0.0-beta05'
     implementation 'com.squareup.okhttp3:okhttp:5.1.0' // 4.12.0'
 

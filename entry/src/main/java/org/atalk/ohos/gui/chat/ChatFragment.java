@@ -441,22 +441,26 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
      */
     @Override
     public void onPause() {
-        // Remove the listener valid only for metaContactChatSession
-        if (chatPanel.getChatSession() instanceof MetaContactChatSession) {
-            chatPanel.removeContactStatusListener(chatListAdapter);
-        }
-        chatPanel.removeChatStateListener(chatListAdapter);
-
-        // Not required - implemented as static map
-        // cryptoFragment.removeCryptoModeListener(this);
-        ChatSessionManager.removeCurrentChatListener(this);
-
-        /*
-         * Indicates that this fragment is no longer in focus, because of this call parent
-         * <code>Activities don't have to call it in onPause().
-         */
-        initChatController(false);
         super.onPause();
+
+        // NPE for FFR
+        if (chatPanel != null) {
+            // Remove the listener valid only for metaContactChatSession
+            if (chatPanel.getChatSession() instanceof MetaContactChatSession) {
+                chatPanel.removeContactStatusListener(chatListAdapter);
+            }
+            chatPanel.removeChatStateListener(chatListAdapter);
+
+            // Not required - implemented as static map
+            // cryptoFragment.removeCryptoModeListener(this);
+            ChatSessionManager.removeCurrentChatListener(this);
+
+            /*
+             * Indicates that this fragment is no longer in focus, because of this call parent
+             * <code>Activities don't have to call it in onPause().
+             */
+            initChatController(false);
+        }
     }
 
     @Override
