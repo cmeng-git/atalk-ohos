@@ -1384,6 +1384,7 @@
     <string name="crypto_msg_omemo_session_unverified">Sending OMEMO messages to some unknown buddies with unverified fingerprints!</string>
     <string name="crypto_msg_omemo_session_unverified_untrusted">MultiUserChat with some buddies untrusted or with unverified fingerprints!</string>
     <string name="crypto_msg_omemo_session_verified">*** All buddies have been authenticated! ***</string>
+
     <string name="crypto_fingerprint_status">Verified: %1$s</string>
     <string name="crypto_no_key_present">No key present</string>
     <string name="crypto_fingerprint_copy">Fingerprint copied to clipboard!</string>
@@ -1439,6 +1440,7 @@
     <string name="permission_video">Photo &amp; Video</string>
     <string name="permission_storage">Storage</string>
     <string name="permission_hint">For application maximum performance and full features support, aTalk requires you to grant permissions for the following services. Without them, aTalk may not work or may have unexpected behavior!</string>
+
     <string name="permission_denied">DENIED</string>
     <string name="permission_granted">GRANTED</string>
     <string name="permission_denied_permanently">PERMANENTLY DENIED</string>

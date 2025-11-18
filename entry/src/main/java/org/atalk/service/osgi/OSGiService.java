@@ -19,8 +19,8 @@ import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.impl.appnotification.AppNotifications;
 import org.atalk.impl.osgi.OSGiServiceImpl;
-
-import java.security.Security;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.jivesoftware.smack.util.SecurityUtil;
 
 /**
  * Implements an Android {@link Service} which (automatically) starts and stops an OSGi framework (implementation).
@@ -177,7 +177,9 @@ public class OSGiService extends Service {
         return -1;
     }
 
+    // ensureProviderAtFirstPosition for "BC", else NoSuchAlgorithmException:
+    // SHA3-256 MessageDigest not available and is independent of smack 4.5.0 used.
     static {
-        Security.insertProviderAt(new org.bouncycastle.jce.provider.BouncyCastleProvider(), 1);
+        SecurityUtil.ensureProviderAtFirstPosition(BouncyCastleProvider.class);
     }
 }

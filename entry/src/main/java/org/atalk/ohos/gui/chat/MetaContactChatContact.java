@@ -29,7 +29,6 @@ import org.atalk.ohos.aTalkApp;
  * @author Lubomir Marinov
  */
 public class MetaContactChatContact extends ChatContact<MetaContact> {
-
     /**
      * Creates an instance of <code>ChatContact</code> by passing to it the
      * corresponding <code>MetaContact</code> and <code>Contact</code>.

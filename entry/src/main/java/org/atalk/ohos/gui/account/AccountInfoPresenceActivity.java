@@ -266,6 +266,7 @@ public class AccountInfoPresenceActivity extends BaseActivity
 
             isRegistered = protocolProvider.isRegistered();
             setFieldEditState(isRegistered);
+            mApplyButton.setVisibility(isRegistered ? View.VISIBLE: View.GONE);
             if (!isRegistered) {
                 Toast.makeText(this, R.string.accountinfo_not_registered_message, Toast.LENGTH_LONG).show();
             }

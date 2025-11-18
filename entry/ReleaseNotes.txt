@@ -1,4 +1,44 @@
 Project aTalk-ohos Release Notes
+========================================================================
+Version:        00.10.000 (0010000)
+Release Date:   11/18/2025
+Author:         cmeng
+- Port aTalk to use smack 4.5.0-rc1 release
+- Set aTalk minSdkVersion = 26 and sourceCompatibility JavaVersion.VERSION_11 to be compatible with smack 4.5.0
+- Fix JingleFile function call HashManager.getMessageDigest(algorithm) throws NoSuchAlgorithmException: SHA3-256;
+  OSGiService makes direct call to smack SecurityUtil.ensureProviderAtFirstPosition(BouncyCastleProvider.class);
+  Smack 4.5.0 exclude openpgp in build, causing FileNoFound during smack init. hence 'BC' order is not set.
+  See Smack 4.5.0-beta9: JingleFile function call HashManager.getMessageDigest(algorithm) throws NoSuchAlgorithmException: SHA3-256
+  https://discourse.igniterealtime.org/t/smack-4-5-0-beta9-jinglefile-function-call-hashmanager-getmessagedigest-algorithm-throws-nosuchalgorithmexception-sha3-256/96162- Remove XMPP-Bosh patch for reconnection failure on network changed - implemented in smack 4.5.0.
+- Change aTalk smack classes to extends XmlElement in place of ExtensionElement where possible.
+- Need to add configuration {all*.exclude group: 'xpp3', module: 'xpp3' and 'xpp3_min'} to resolve duplicate class during build.
+- Do not crash the aTalk app when creating account over insecure connection; show error message instead.
+- Rename IBRCaptchaProcessDialog to IBRProcessDialog; must handle registration for both with/without Captcha Protection;
+  Must allow user to click the submit button for IB Register when without captcha protection.
+- Proceed to purge local user registration record only if serverAccountDeletion is successful.
+- Optimize AccountInfoPresenceActivity implementation to minimize views dynamic settings programmatically.
+- Cleanup and update aTalk.doap file.
+- Remove 'com.jakewharton.threetenabp:threetenabp:1.4.9' dependency; Duration is supported in API-26
+- Remove all aTalk source support for < API-26 build support i.e. (Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
+- Upgrade libraries org.bouncycastle:xxx-jdk18on:1.79 and org.jitsi:zrtp4j-light:4.1.3 etc
+- Remove patch for ejabberd <= 23.01; it sends presence's 'photo' element with no hash value, after user published a new avatar.
+- aTalk v4.6.0 is the last version to support OTR. OTR will be removed in all later aTalk releases.
+
+*** Observation with no solution implemented: ***
+- Some android devices seem unable to handle properly display info setup (TooManyViews) in AccountInfoPresenceActivity,
+  causing ANR in FFR i.e. AccountInfoPresenceActivity$$ExternalSyntheticThrowIAE2.m
+  * Do not check isDetailClassEditable() and isDetailClassSupported()
+  * Simplify the views dynamic settings programmatically, and fixed them in layout xml;
+- aTalk cannot send file to own self using JingleFile Transfer or Legacy Si file transfer.
+- Jarjar repackage errors for smack-experimental, smack-extensions and smack-omemo;
+  ignored as all the jarjar repackaged files creation are OK. e.g.
+  UnsupportedOperationException: NestHost requires ASM7
+  UnsupportedOperationException: NestMember requires ASM7
+
+- aTalk uses PlugInManager to add custom code or to remove unimplemented jmf default codecs:
+  However PlugInManager.getPlugInList(), the instantiate class will immediately trigger static method that execute
+  getPluginInfo(className) hence showing 'Problem loading plugin ...". By design???
+
 =========================================================================
 Version:        00.09.020 (0009020)
 Release Date:   10/09/2025
