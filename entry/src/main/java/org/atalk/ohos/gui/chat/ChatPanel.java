@@ -841,7 +841,6 @@ public class ChatPanel implements Chat, MessageListener, MessageReceiptListener 
      * @param chatMessage the ChatMessage.
      */
     public void addMessage(ChatMessageImpl chatMessage) {
-
         // Do nothing if the MESSAGE_STATUS is disabled
         if (ChatMessage.MESSAGE_STATUS == chatMessage.getMessageType()) {
             Object descriptor = mChatSession.getDescriptor();

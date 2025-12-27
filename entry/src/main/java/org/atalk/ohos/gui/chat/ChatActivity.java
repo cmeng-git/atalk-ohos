@@ -262,7 +262,7 @@ public class ChatActivity extends BaseActivity
      * {@inheritDoc}
      */
     @Override
-    protected void onNewIntent(Intent intent) {
+    protected void onNewIntent(@NonNull Intent intent) {
         super.onNewIntent(intent);
         handleIntent(intent, null);
     }

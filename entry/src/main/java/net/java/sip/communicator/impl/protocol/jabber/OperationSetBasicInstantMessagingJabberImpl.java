@@ -799,6 +799,10 @@ public class OperationSetBasicInstantMessagingJabberImpl extends AbstractOperati
     @Override
     public void onCarbonCopyReceived(CarbonExtension.Direction direction,
             Message carbonCopy, Message wrappingMessage) {
+        // Skip handling of empty msgBody for all incoming message, in case Jid is null from FFR
+        if (carbonCopy.getBody() == null)
+            return;
+
         isForwardedSentMessage = CarbonExtension.Direction.sent.equals(direction);
         Jid userJId = isForwardedSentMessage ? carbonCopy.getTo() : carbonCopy.getFrom();
         isCarbon = wrappingMessage.hasExtension(CarbonExtension.NAMESPACE);
@@ -847,8 +851,8 @@ public class OperationSetBasicInstantMessagingJabberImpl extends AbstractOperati
                 userFullJId = privateContactRoom.findMemberFromParticipant(userFullJId).getJabberId();
             }
         }
-        // Get the message type i.e. OTR or NONE; for chat message encryption indication
-        int encType = msgBody.startsWith("?OTR") ? IMessage.ENCRYPTION_OTR : IMessage.ENCRYPTION_NONE;
+        // Init the message type i.e. NONE; for chat message encryption indication
+        int encType = IMessage.ENCRYPTION_NONE;
 
         // set up default in case XHTMLExtension contains no message
         // if msgBody contains markup text then set as ENCODE_HTML mode

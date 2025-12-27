@@ -1,4 +1,21 @@
 Project aTalk-ohos Release Notes
+=========================================================================
+Version:        00.10.100 (0010100)
+Release Date:   12/27/2025
+Author:         cmeng
+- OperationSetBasicInstantMessagingJabberImpl#onCarbonCopyReceived: Skip handling of empty msgBody for all incoming message, in case Jid is null from FFR
+- Enable an important debug message i.e. 'The provider state changed...' to be printed in release version.
+- OperationSetBasicInstantMessagingJabberImpl#onCarbonCopyReceived: Skip handling of empty msgBody for all incoming message, in case Jid is null from FFR
+- Must set YT parameter 'origin' to other than YT site i.e.'https://www.youtube.com'; else embed video player has error.
+- Incorrect extraction of youtube video Id e.g. https://youtu.be/qwlnX6YJrt8?si=sgdxTEb7kccLplx-
+- Support YT playback of playlist i.e. url contains 'list=' or playlist without 'PL' prefix
+- Display new changes since version installed on device to user in apk update dialog prompt.
+- Fix exception error MamVersion.fromNamespace(mamPrefsIq.getChildElementNamespace())
+- Fix AvatarData cannot be cast to org.jivesoftware.smack.packet.ExtensionElement
+- Revert to use AsyncTask from ExecutorService for AccountInfoPresenceActivity; unknown ANR from field:
+  AccountInfoPresenceActivity$$ExternalSyntheticThrowIAE2.m (D8$$SyntheticClass)
+- Change aTalk.doap file to reflect actual version i.e. 0.3 implemented for XEP-0384: OMEMO Encryption
+
 ========================================================================
 Version:        00.10.000 (0010000)
 Release Date:   11/18/2025

@@ -93,10 +93,7 @@ public class AccountID {
     private static final String KEY_PGP_ID = "pgp_id";
 
     public static final String DEFAULT_PORT = "5222";
-
-    protected String avatarHash;
     protected String rosterVersion;
-    protected String otrFingerprint;
 
     protected String statusMessage = "status_Message";
     protected JSONObject mKeys = new JSONObject();
@@ -1490,28 +1487,6 @@ public class AccountID {
             } catch (final JSONException e) {
                 return false;
             }
-        }
-    }
-
-    public String getOtrFingerprint() {
-        if (this.otrFingerprint == null) {
-            //			try {
-            //				if (this.mOtrService == null) {
-            //					return null;
-            //				}
-            //				final PublicKey publicKey = this.mOtrService.getPublicKey();
-            //				if (publicKey == null || !(publicKey instanceof DSAPublicKey)) {
-            return null;
-            //				}
-            //				this.otrFingerprint = new OtrCryptoEngineImpl().getFingerprint(publicKey)
-            //						.toLowerCase(Locale.US);
-            //				return this.otrFingerprint;
-            //			} catch (final OtrCryptoException ignored) {
-            //				return null;
-            //			}
-        }
-        else {
-            return this.otrFingerprint;
         }
     }
 

@@ -2724,7 +2724,6 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
      * - User scroll the chatFragment pages
      * - User changes cryptoMode for the current chatSession
      */
-
     @Override
     public void onCryptoModeChange(int chatType) {
         chatPanel.setChatType(chatType);

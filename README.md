@@ -26,7 +26,7 @@
 
 ## Features
 aTalk is an xmpp client designed for android and supports the following features:
-* Instant messaging in plain text and End-to-End encryption with [OMEMO](https://conversations.im/omemo/) or [OTR](https://otr.cypherpunks.ca/)
+* Instant messaging in plain text and End-to-End encryption with [OMEMO](https://conversations.im/omemo/)
 * SSL Certificate authentication, DNSSEC and DANE Security implementation for enhanced secure Connection Establishment
 * OMEMO encryption in group chat session enhancing privacy and security
 * OMEMO Media File Sharing for all files including Stickers, Bitmoji and Emoji rich contents

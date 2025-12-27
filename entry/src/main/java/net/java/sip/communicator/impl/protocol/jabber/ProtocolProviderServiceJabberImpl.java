@@ -1400,6 +1400,7 @@ public class ProtocolProviderServiceJabberImpl extends AbstractProtocolProviderS
         /**
          * Notification that the connection was closed normally.
          */
+        @Override
         public void connectionClosed() {
             String errMsg = "Stream closed!";
             StanzaError stanzaError = StanzaError.from(Condition.remote_server_timeout, errMsg).build();
@@ -1435,6 +1436,7 @@ public class ProtocolProviderServiceJabberImpl extends AbstractProtocolProviderS
          *
          * @param exception contains information on the error.
          */
+        @Override
         public void connectionClosedOnError(Exception exception) {
             String errMsg = exception.getMessage();
             int regEvent = RegistrationStateChangeEvent.REASON_NOT_SPECIFIED;
@@ -1505,6 +1507,7 @@ public class ProtocolProviderServiceJabberImpl extends AbstractProtocolProviderS
          *
          * @param connection the XMPPConnection which successfully connected to its endpoint.
          */
+        @Override
         public void connected(XMPPConnection connection) {
             /*
              * re-init mConnection in case this is a new re-connection; FFR:
@@ -1544,6 +1547,7 @@ public class ProtocolProviderServiceJabberImpl extends AbstractProtocolProviderS
          * @param connection the XMPPConnection which successfully authenticated.
          * @param resumed true if a previous XMPP session's stream was resumed.
          */
+        @Override
         public void authenticated(XMPPConnection connection, boolean resumed) {
             accountAuthenticated.reportSuccess();
 

@@ -286,7 +286,6 @@
     <!-- HTTP Authorization Request Dialog -->
     <string name="http_authorization_request">HTTP Authorization Request</string>
     <string name="http_authorization_request_instruction">HTTP (%1$s) Authorization for %2$s\nValidation code: %3$s\nDo you accept this request for account:\n%4$s?\n\nVerify given ID matches site if available</string>
-
     <string name="app_authors_fmt">Authors: %1$s</string>
     <string name="app_libraries">aTalk uses the following third-party libraries: %1$s</string>
     <string name="app_revision_fmt">Revision Information: %1$s</string>
@@ -1440,7 +1439,6 @@
     <string name="permission_video">Photo &amp; Video</string>
     <string name="permission_storage">Storage</string>
     <string name="permission_hint">For application maximum performance and full features support, aTalk requires you to grant permissions for the following services. Without them, aTalk may not work or may have unexpected behavior!</string>
-
     <string name="permission_denied">DENIED</string>
     <string name="permission_granted">GRANTED</string>
     <string name="permission_denied_permanently">PERMANENTLY DENIED</string>

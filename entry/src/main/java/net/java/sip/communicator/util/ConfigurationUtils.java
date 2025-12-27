@@ -947,7 +947,6 @@ public class ConfigurationUtils {
         mConfigService.setProperty(pAutoStart, Boolean.toString(autoStart));
     }
 
-
     /**
      * Return TRUE if "isTtsEnable" property is true, otherwise - return FALSE.
      * Indicates if TTS is enabled.
@@ -2285,7 +2284,8 @@ public class ConfigurationUtils {
      *
      * @return the value of the property, saved through the <code>ConfigurationService</code>.
      */
-    public static String getChatRoomProperty(ProtocolProviderService protocolProvider, String chatRoomId, String property) {
+    public static String getChatRoomProperty(ProtocolProviderService protocolProvider,
+            String chatRoomId, String property) {
         JSONObject attributes = getChatRoomAttributes(protocolProvider, chatRoomId);
         try {
             return attributes.getString(property);

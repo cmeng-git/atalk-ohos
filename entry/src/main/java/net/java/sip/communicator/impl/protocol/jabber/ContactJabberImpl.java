@@ -5,6 +5,8 @@
  */
 package net.java.sip.communicator.impl.protocol.jabber;
 
+import android.text.TextUtils;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Locale;
@@ -21,7 +23,6 @@ import net.java.sip.communicator.service.protocol.jabberconstants.JabberStatusEn
 import net.java.sip.communicator.util.ConfigurationUtils;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.util.TextUtils;
 import org.jivesoftware.smack.roster.RosterEntry;
 import org.jivesoftware.smackx.blocking.BlockingCommandManager;
 import org.json.JSONArray;

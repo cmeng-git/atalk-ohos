@@ -260,7 +260,6 @@
     <!-- HTTP Authorization Request Dialog -->
     <string name="http_authorization_request">طلب تفويض HTTP</string>
     <string name="http_authorization_request_instruction">تفويض HTTP (%1$s) لـ %2$s\nرمز التحقق: %3$s\nهل تقبل هذا الطلب للحساب:\n%4$s؟\n\nتحقق من تطابق المعرف المعطى مع الموقع إذا كان متاحًا</string>
-
     <string name="app_authors_fmt">المؤلفون: %1$s</string>
     <string name="app_libraries">يستخدم aTalk المكتبات الطرفية التالية: %1$s</string>
     <string name="app_revision_fmt">معلومات المراجعة: %1$s</string>

@@ -141,7 +141,7 @@ public abstract class AbstractProtocolProviderService implements ProtocolProvide
             String msg = "The provider state unchanged: " + newState + ". Reason: " + reason;
             (new Exception(msg)).printStackTrace();
         }
-        Timber.d("The provider state changed: %s => %s. Reason: %s", oldState, newState, reason);
+        Timber.i("The provider state changed: %s => %s. Reason: %s", oldState, newState, reason);
 
         RegistrationStateChangeEvent event
                 = new RegistrationStateChangeEvent(this, oldState, newState, reasonCode, reason);
