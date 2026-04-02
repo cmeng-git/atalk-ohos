@@ -35,12 +35,19 @@ import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.AppGUIActivator;
 import org.atalk.persistance.DatabaseBackend;
 import org.atalk.service.configuration.ConfigurationService;
+import org.whispersystems.libsignal.IdentityKey;
+import org.whispersystems.libsignal.IdentityKeyPair;
+import org.whispersystems.libsignal.state.PreKeyRecord;
+import org.whispersystems.libsignal.state.SessionRecord;
+import org.whispersystems.libsignal.state.SignedPreKeyRecord;
+
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
+
 import org.jivesoftware.smackx.omemo.OmemoManager;
+import org.jivesoftware.smackx.omemo.element.OmemoDeviceElement;
 import org.jivesoftware.smackx.omemo.element.OmemoDeviceListElement;
-import org.jivesoftware.smackx.omemo.element.OmemoDeviceListElement_VAxolotl;
 import org.jivesoftware.smackx.omemo.exceptions.CorruptedOmemoKeyException;
 import org.jivesoftware.smackx.omemo.internal.OmemoCachedDeviceList;
 import org.jivesoftware.smackx.omemo.internal.OmemoDevice;
@@ -53,14 +60,10 @@ import org.jivesoftware.smackx.pep.PepManager;
 import org.jivesoftware.smackx.pubsub.LeafNode;
 import org.jivesoftware.smackx.pubsub.PayloadItem;
 import org.jivesoftware.smackx.pubsub.PubSubManager;
+
 import org.jxmpp.jid.BareJid;
 import org.jxmpp.jid.impl.JidCreate;
 import org.jxmpp.stringprep.XmppStringprepException;
-import org.whispersystems.libsignal.IdentityKey;
-import org.whispersystems.libsignal.IdentityKeyPair;
-import org.whispersystems.libsignal.state.PreKeyRecord;
-import org.whispersystems.libsignal.state.SessionRecord;
-import org.whispersystems.libsignal.state.SignedPreKeyRecord;
 
 import timber.log.Timber;
 
@@ -81,6 +84,8 @@ public class SQLiteOmemoStore extends SignalOmemoStore {
     public static final String OMEMO_DEVICES_TABLE_NAME = "omemo_devices";
     public static final String OMEMO_JID = "omemoJid"; // account user
     public static final String OMEMO_REG_ID = "omemoRegId"; // defaultDeviceId
+    public static final String OMEMO_LABEL = "label"; // defaultDevice label
+    public static final String OMEMO_LABELSIG = "labelsig"; // defaultDevice labelsig
     public static final String CURRENT_SIGNED_PREKEY_ID = "currentSignedPreKeyId";
     public static final String LAST_PREKEY_ID = "lastPreKeyId";
 
@@ -356,7 +361,8 @@ public class SQLiteOmemoStore extends SignalOmemoStore {
         IdentityKeyPair identityKeyPair;
         try {
             identityKeyPair = mDB.loadIdentityKeyPair(userDevice);
-        } catch (CorruptedOmemoKeyException e) {
+        }
+        catch (CorruptedOmemoKeyException e) {
             Timber.e("Corrupted Omemo IdentityKeyPair: %s", e.getMessage());
             throw new CorruptedOmemoKeyException(e.getMessage());
         }
@@ -407,7 +413,8 @@ public class SQLiteOmemoStore extends SignalOmemoStore {
         IdentityKey identityKey;
         try {
             identityKey = mDB.loadIdentityKey(contactDevice);
-        } catch (CorruptedOmemoKeyException e) {
+        }
+        catch (CorruptedOmemoKeyException e) {
             // throw only if key is corrupted else return null
             Timber.e("Corrupted Omemo IdentityKey: %s", e.getMessage());
             throw new CorruptedOmemoKeyException(e.getMessage());
@@ -462,6 +469,12 @@ public class SQLiteOmemoStore extends SignalOmemoStore {
             mDB.storeIdentityKey(contactDevice, contactKey, fingerprint, fpStatus);
             trustCache.remove(fingerprint);
         }
+        // Just update the fingerPrint status and set to active
+        else {
+            FingerprintStatus fpStatus = FingerprintStatus.createActiveTrusted();
+            setFingerprintStatus(contactDevice, fingerprint, fpStatus);
+        }
+
         // else {
         //     // Timber.d("Skip Update duplicated identityKey for: %s; %s; %s", contactDevice, contactKey.toString(), fingerprint);
         //     // Code for testing only
@@ -548,22 +561,22 @@ public class SQLiteOmemoStore extends SignalOmemoStore {
             FingerprintStatus fpStatus = getFingerprintStatus(device, fingerprint);
 
             switch (state) {
-                case undecided:
-                    fpStatus = FingerprintStatus.createActiveUndecided();
-                    break;
-                case trusted:
-                    ConfigurationService mConfig = AppGUIActivator.getConfigurationService();
-                    if (mConfig.isBlindTrustBeforeVerification()
-                            && mDB.numTrustedKeys(device.getJid().toString()) == 0) {
-                        fpStatus = FingerprintStatus.createActiveTrusted();
-                    }
-                    else {
-                        fpStatus = fpStatus.toVerified();
-                    }
-                    break;
-                case untrusted:
-                    fpStatus = (fpStatus != null) ? fpStatus.toUntrusted() : FingerprintStatus.createActiveUndecided();
-                    break;
+            case undecided:
+                fpStatus = FingerprintStatus.createActiveUndecided();
+                break;
+            case trusted:
+                ConfigurationService mConfig = AppGUIActivator.getConfigurationService();
+                if (mConfig.isBlindTrustBeforeVerification()
+                        && mDB.numTrustedKeys(device.getJid().toString()) == 0) {
+                    fpStatus = FingerprintStatus.createActiveTrusted();
+                }
+                else {
+                    fpStatus = fpStatus.toVerified();
+                }
+                break;
+            case untrusted:
+                fpStatus = (fpStatus != null) ? fpStatus.toUntrusted() : FingerprintStatus.createActiveUndecided();
+                break;
             }
             setFingerprintStatus(device, fingerprint, fpStatus);
             trustCache.put(fingerprint, fpStatus);
@@ -784,11 +797,12 @@ public class SQLiteOmemoStore extends SignalOmemoStore {
         Timber.d("Purge server bundle and deviceList for old omemo device: %s", omemoDevice);
         PubSubManager pubsubManager = PubSubManager.getInstanceFor(connection, userJid);
         PepManager pepManager = PepManager.getInstanceFor(connection);
+        OmemoManager omemoManager = OmemoManager.getInstanceFor(connection);
 
         // First refresh omemo devicelist on the server i.e. removed old id
-        Set<Integer> deviceIds = Collections.emptySet();
+        Set<OmemoDeviceElement> devices = Collections.emptySet();
         try {
-            String nodeName = OmemoConstants.PEP_NODE_DEVICE_LIST;
+            String nodeName = OmemoConstants.getOmemoNS(omemoManager.isOmemo2Enable());
             LeafNode leafNode = pubsubManager.getLeafNode(nodeName);
             if (leafNode != null) {
                 List<PayloadItem<OmemoDeviceListElement>> items = leafNode.getItems();
@@ -798,26 +812,27 @@ public class SQLiteOmemoStore extends SignalOmemoStore {
                     // pubsubManager.deleteNode(nodeName);
 
                     OmemoDeviceListElement publishedList = items.get(items.size() - 1).getPayload();
-                    deviceIds = publishedList.copyDeviceIds();  // need a copy of the unmodifiable list
-                    deviceIds.remove(omemoDevice.getDeviceId());
+                    devices = publishedList.copyDevices();  // need a copy of the unmodifiable list
+                    devices.remove(new OmemoDeviceElement(omemoDevice.getDeviceId()));
                 }
             }
-            OmemoDeviceListElement deviceList = new OmemoDeviceListElement_VAxolotl(deviceIds);
-            pepManager.publish(nodeName, new PayloadItem<>(deviceList));
-
-        } catch (SmackException | InterruptedException | XMPPException.XMPPErrorException e) {
+            OmemoDeviceListElement devicesElement = omemoManager.getOmemoDeviceList(devices);
+            pepManager.publish(nodeName, new PayloadItem<>(String.valueOf(omemoDevice.getDeviceId()), devicesElement));
+        }
+        catch (SmackException | InterruptedException | XMPPException.XMPPErrorException e) {
             aTalkApp.showToastMessage(R.string.omemo_purge_inactive_device_error, omemoDevice);
         }
 
         // Only then purge omemo preKeys table/bundles on server
         try {
-            String nodeName = omemoDevice.getBundleNodeName();
+            String nodeName = omemoDevice.getBundleNodeName(omemoManager.isOmemo2Enable());
             LeafNode leafNode = pubsubManager.getLeafNode(nodeName);
             if (leafNode != null) {
                 leafNode.deleteAllItems();
                 pubsubManager.deleteNode(nodeName);
             }
-        } catch (SmackException | InterruptedException | XMPPException.XMPPErrorException e) {
+        }
+        catch (SmackException | InterruptedException | XMPPException.XMPPErrorException e) {
             aTalkApp.showToastMessage(R.string.omemo_purge_inactive_device_error, omemoDevice);
         }
     }
@@ -883,10 +898,10 @@ public class SQLiteOmemoStore extends SignalOmemoStore {
 
                 // remove the local inactive devices from identities table and all their associated data if any;
                 // add deviceId -1 to the list, found this on swan during testing???
-                Set<Integer> inactiveDevices = deviceList.getInactiveDevices();
-                inactiveDevices.add(-1);
-                for (int deviceId : inactiveDevices) {
-                    userDevice = new OmemoDevice(userJid, deviceId);
+                Set<OmemoDeviceElement> inactiveDevices = deviceList.getInactiveDevices();
+                inactiveDevices.add(new OmemoDeviceElement(-1));
+                for (OmemoDeviceElement deviceElement : inactiveDevices) {
+                    userDevice = new OmemoDevice(userJid, deviceElement.getId());
                     purgeOwnDeviceKeys(userDevice);
                 }
 
@@ -897,7 +912,8 @@ public class SQLiteOmemoStore extends SignalOmemoStore {
                 // publish a new device list with our own deviceId and cached active devices
                 try {
                     omemoManager.purgeDeviceList();
-                } catch (SmackException | InterruptedException | XMPPException.XMPPErrorException | IOException e) {
+                }
+                catch (SmackException | InterruptedException | XMPPException.XMPPErrorException | IOException e) {
                     aTalkApp.showToastMessage(R.string.omemo_purge_inactive_device_error, userJid);
                 }
             }
@@ -925,7 +941,8 @@ public class SQLiteOmemoStore extends SignalOmemoStore {
             // publish a new device list with our own deviceId and cached active devices
             try {
                 omemoManager.purgeDeviceList();
-            } catch (SmackException | InterruptedException | XMPPException.XMPPErrorException | IOException e) {
+            }
+            catch (SmackException | InterruptedException | XMPPException.XMPPErrorException | IOException e) {
                 aTalkApp.showToastMessage(R.string.omemo_purge_inactive_device_error, omemoDevice);
             }
         }
@@ -983,7 +1000,8 @@ public class SQLiteOmemoStore extends SignalOmemoStore {
                 // server data???
                 purgeOwnDeviceKeys(userDevice);
                 Timber.i("Clean up omemo database for: %s", userDevice);
-            } catch (XmppStringprepException e) {
+            }
+            catch (XmppStringprepException e) {
                 Timber.e("Error in clean omemo database for: %s: %s", userId, deviceId);
             }
         }

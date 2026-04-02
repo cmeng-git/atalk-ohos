@@ -23,14 +23,19 @@ import net.java.sip.communicator.impl.protocol.jabber.OperationSetMultiUserChatJ
 import net.java.sip.communicator.service.protocol.OperationSetBasicInstantMessaging;
 import net.java.sip.communicator.service.protocol.OperationSetMultiUserChat;
 import net.java.sip.communicator.service.protocol.ProtocolProviderService;
+import net.java.sip.communicator.service.protocol.jabber.JabberAccountID;
 
 import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.dialogs.DialogActivity;
+
 import org.jivesoftware.smack.XMPPConnection;
+
 import org.jivesoftware.smackx.omemo.OmemoManager;
 import org.jivesoftware.smackx.omemo.OmemoService;
 import org.jivesoftware.smackx.omemo.OmemoStore;
+import org.jivesoftware.smackx.pubsub.AccessModel;
+
 import org.jxmpp.jid.BareJid;
 
 import timber.log.Timber;
@@ -56,6 +61,20 @@ public class AndroidOmemoService implements OmemoManager.InitializationFinishedC
 
         OperationSetMultiUserChat mucOpSet = pps.getOperationSet(OperationSetMultiUserChat.class);
         ((OperationSetMultiUserChatJabberImpl) mucOpSet).registerOmemoMucListener(mOmemoManager);
+
+        JabberAccountID jabberAccountID = (JabberAccountID) pps.getAccountID();
+        boolean vOmemo2 = jabberAccountID.isOmemo2Enable();
+        AccessModel accessMode = jabberAccountID.getOmemoAccessModel();
+
+        mOmemoManager.setOmemo2Enable(vOmemo2);
+        mOmemoManager.setOmemo2AccessModel(accessMode);
+
+        // Require to perform active subscription to bundles and devices in order to send publish-options
+        if (vOmemo2 && accessMode != null) {
+            if (!mOmemoManager.subscribe(true)) {
+                aTalkApp.showToastMessage(R.string.omemo2_subscription_failed);
+            }
+        }
     }
 
     /**
@@ -66,7 +85,7 @@ public class AndroidOmemoService implements OmemoManager.InitializationFinishedC
      * @return instance of OMEMO Manager
      */
     private OmemoManager initOmemoManager(ProtocolProviderService pps) {
-        OmemoStore mOmemoStore = OmemoService.getInstance().getOmemoStoreBackend();
+        OmemoStore<?, ?, ?, ?, ?, ?, ?, ?, ?> mOmemoStore = OmemoService.getInstance().getOmemoStoreBackend();
 
         BareJid userJid;
         if (mConnection.getUser() != null) {
@@ -90,7 +109,8 @@ public class AndroidOmemoService implements OmemoManager.InitializationFinishedC
         OmemoManager omemoManager = OmemoManager.getInstanceFor(mConnection, defaultDeviceId);
         try {
             omemoManager.setTrustCallback(((SQLiteOmemoStore) mOmemoStore).getTrustCallBack());
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             Timber.w("SetTrustCallBack Exception: %s", e.getMessage());
         }
         return omemoManager;

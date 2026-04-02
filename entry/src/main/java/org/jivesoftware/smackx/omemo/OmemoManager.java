@@ -17,11 +17,11 @@
 package org.jivesoftware.smackx.omemo;
 
 import static org.jivesoftware.smackx.omemo.util.OmemoConstants.OMEMO_NAMESPACE_V_AXOLOTL;
+import static org.jivesoftware.smackx.omemo.util.OmemoConstants.OMEMO_NAMESPACE_V_OMEMO;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -46,9 +46,10 @@ import org.jivesoftware.smack.packet.MessageBuilder;
 import org.jivesoftware.smack.packet.Stanza;
 import org.jivesoftware.smack.packet.StanzaBuilder;
 import org.jivesoftware.smack.packet.XmlElement;
+import org.jivesoftware.smack.packet.id.StandardStanzaIdSource;
 import org.jivesoftware.smack.util.Async;
-
 import org.jivesoftware.smack.util.stringencoder.Base64;
+
 import org.jivesoftware.smackx.carbons.CarbonManager;
 import org.jivesoftware.smackx.carbons.packet.CarbonExtension;
 import org.jivesoftware.smackx.disco.ServiceDiscoveryManager;
@@ -59,9 +60,13 @@ import org.jivesoftware.smackx.muc.MultiUserChat;
 import org.jivesoftware.smackx.muc.MultiUserChatManager;
 import org.jivesoftware.smackx.muc.RoomInfo;
 import org.jivesoftware.smackx.omemo.element.OmemoBundleElement;
+import org.jivesoftware.smackx.omemo.element.OmemoDeviceElement;
 import org.jivesoftware.smackx.omemo.element.OmemoDeviceListElement;
 import org.jivesoftware.smackx.omemo.element.OmemoDeviceListElement_VAxolotl;
+import org.jivesoftware.smackx.omemo.element.OmemoDeviceListElement_VOmemo;
 import org.jivesoftware.smackx.omemo.element.OmemoElement;
+import org.jivesoftware.smackx.omemo.element.OmemoElement_VAxolotl;
+import org.jivesoftware.smackx.omemo.element.OmemoElement_VOmemo;
 import org.jivesoftware.smackx.omemo.exceptions.CannotEstablishOmemoSessionException;
 import org.jivesoftware.smackx.omemo.exceptions.CorruptedOmemoKeyException;
 import org.jivesoftware.smackx.omemo.exceptions.CryptoFailedException;
@@ -77,11 +82,16 @@ import org.jivesoftware.smackx.omemo.trust.OmemoTrustCallback;
 import org.jivesoftware.smackx.omemo.trust.TrustState;
 import org.jivesoftware.smackx.omemo.util.MessageOrOmemoMessage;
 import org.jivesoftware.smackx.omemo.util.OmemoConstants;
+import org.jivesoftware.smackx.omemo.util.OmemoOptOutUtil;
 import org.jivesoftware.smackx.pep.PepEventListener;
 import org.jivesoftware.smackx.pep.PepManager;
+import org.jivesoftware.smackx.pubsub.AccessModel;
+import org.jivesoftware.smackx.pubsub.LeafNode;
 import org.jivesoftware.smackx.pubsub.PubSubException;
 import org.jivesoftware.smackx.pubsub.PubSubManager;
+import org.jivesoftware.smackx.pubsub.Subscription;
 import org.jivesoftware.smackx.pubsub.packet.PubSub;
+import org.jivesoftware.smackx.stanza_content_encryption.element.EnvelopeElement;
 
 import org.jxmpp.jid.BareJid;
 import org.jxmpp.jid.DomainBareJid;
@@ -90,7 +100,7 @@ import org.jxmpp.jid.EntityFullJid;
 import org.jxmpp.jid.FullJid;
 
 /**
- * Manager that allows sending messages encrypted with OMEMO.
+ * Manager that allows sending messages encrypted with OMEMO (support both namespaces).
  * This class also provides some methods useful for a client that implements OMEMO.
  *
  * @author Paul Schaub
@@ -114,10 +124,18 @@ public final class OmemoManager extends Manager implements JingleEnvelopeManager
 
     private OmemoTrustCallback trustCallback;
 
-    private Set<Integer> publishedDeviceList;
-
     private BareJid ownJid;
     private Integer deviceId;
+    private boolean isOmemo2Enable = false;
+    private boolean isDevicesSubscribed = false;
+    private boolean isBundleSubscribed = false;
+
+    // Default to null not to send publish-options; ejabberd server 25.10 returns conflict
+    // and precondition-not-met errors for both publishBundle and publishDeviceList.
+    private AccessModel omemoAccessModel = null;
+
+    PepEventListener<OmemoDeviceListElement> pepDeviceListEventListener_Omemo;
+    PepEventListener<OmemoDeviceListElement> pepDeviceListEventListener_Axolotl;
 
     /**
      * Private constructor.
@@ -135,7 +153,8 @@ public final class OmemoManager extends Manager implements JingleEnvelopeManager
 
         if (connection.isAuthenticated()) {
             initBareJidAndDeviceId(this);
-        } else {
+        }
+        else {
             connection.addConnectionListener(new ConnectionListener() {
                 @Override
                 public void authenticated(XMPPConnection connection, boolean resumed) {
@@ -199,12 +218,13 @@ public final class OmemoManager extends Manager implements JingleEnvelopeManager
         }
 
         OmemoManager manager;
-        if (managers.isEmpty()) {
+        if (managers.size() == 0) {
 
             manager = new OmemoManager(connection, UNKNOWN_DEVICE_ID);
             managers.put(UNKNOWN_DEVICE_ID, manager);
 
-        } else {
+        }
+        else {
             manager = managers.get(managers.firstKey());
         }
 
@@ -231,6 +251,74 @@ public final class OmemoManager extends Manager implements JingleEnvelopeManager
      */
     OmemoTrustCallback getTrustCallback() {
         return trustCallback;
+    }
+
+    /**
+     * Set isOmemo2 state for this particular OmemoManager.
+     * TRUE: Support XEP-0384 v0.9.0; OMEMO element namespace: 'urn:xmpp:omemo:2'.
+     * FALSE: Support XEP-0384 v0.3.0; OMEMO element namespace: 'eu.siacs.conversations.axolotl'.
+     *
+     * @param vOmemo2 omemo:2 option state.
+     */
+    public void setOmemo2Enable(boolean vOmemo2) {
+        isOmemo2Enable = vOmemo2;
+    }
+
+    public boolean isOmemo2Enable() {
+        return isOmemo2Enable;
+    }
+
+    public boolean isBundleSubscribed() {
+        return isBundleSubscribed;
+    }
+
+    public boolean isDevicesSubscribed() {
+        return isDevicesSubscribed;
+    }
+
+    public void setOmemo2AccessModel(AccessModel accessModel) {
+        omemoAccessModel = accessModel;
+    }
+
+    public AccessModel getOmemo2AccessModel() {
+        return omemoAccessModel;
+    }
+
+    /**
+     * Perform active subscriptions for both omemo2 bundles and devices to the server.
+     * A pre-requisite to successfully send pubsub#publish-options to server.
+     *
+     * @param vOmemo2 specify the respective Omemo NameSpace for retrieval of OmemoDeviceListElement.
+     *
+     * @return true if both the bundles and devices nodes subscription are completed successfully.
+     */
+    public boolean subscribe(boolean vOmemo2) {
+        BareJid userJid = getOwnJid();
+        PubSubManager pm = PubSubManager.getInstanceFor(getConnection(), userJid);
+
+        String nodeName = OmemoConstants.getOmemoNS(vOmemo2);
+        try {
+            LeafNode leafNode =  pm.getOrCreateLeafNode(nodeName);
+            Subscription subscription = leafNode.subscribe(userJid);
+            isDevicesSubscribed = (subscription.getId() != null);
+        }
+        catch (SmackException.NoResponseException | XMPPException.XMPPErrorException | NotConnectedException |
+               InterruptedException | PubSubException.NotALeafNodeException e) {
+            LOGGER.log(Level.WARNING, "Subscription unsuccessful for: " + nodeName + "\n" + e.getMessage());
+        }
+
+        nodeName = OmemoConstants.PEP_NODE_BUNDLE_FROM_DEVICE_ID(getDeviceId(), vOmemo2);
+        try {
+            LeafNode leafNode =  pm.getOrCreateLeafNode(nodeName);
+            Subscription subscription = leafNode.subscribe(userJid);
+            isBundleSubscribed = (subscription.getId() != null);
+        }
+        catch (SmackException.NoResponseException | XMPPException.XMPPErrorException | NotConnectedException |
+               InterruptedException | PubSubException.NotALeafNodeException e) {
+            LOGGER.log(Level.WARNING, "Subscription unsuccessful for: " + nodeName + "\n" + e.getMessage());
+        }
+
+        return isDevicesSubscribed && isBundleSubscribed;
     }
 
     /**
@@ -273,7 +361,8 @@ public final class OmemoManager extends Manager implements JingleEnvelopeManager
                 try {
                     initialize();
                     finishedCallback.initializationFinished(OmemoManager.this);
-                } catch (Exception e) {
+                }
+                catch (Exception e) {
                     finishedCallback.initializationFailed(e);
                 }
                 getConnection().setReplyTimeout(SmackConfiguration.getDefaultReplyTimeout());
@@ -285,19 +374,19 @@ public final class OmemoManager extends Manager implements JingleEnvelopeManager
      * Return a set of all OMEMO capable devices of a contact.
      * Note, that this method does not explicitly refresh the device list of the contact, so it might be outdated.
      *
-     * @see #requestDeviceListUpdateFor(BareJid)
-     *
      * @param contact contact we want to get a set of device of.
+     *
      * @return set of known devices of that contact.
      *
      * @throws IOException if an I/O error occurred.
+     * @see #requestDeviceListUpdateFor(BareJid)
      */
     public Set<OmemoDevice> getDevicesOf(BareJid contact) throws IOException {
         OmemoCachedDeviceList list = getOmemoService().getOmemoStoreBackend().loadCachedDeviceList(getOwnDevice(), contact);
         HashSet<OmemoDevice> devices = new HashSet<>();
 
-        for (int deviceId : list.getActiveDevices()) {
-            devices.add(new OmemoDevice(contact, deviceId));
+        for (OmemoDeviceElement deviceElement : list.getActiveDevices()) {
+            devices.add(new OmemoDevice(contact, deviceElement.getId()));
         }
 
         return devices;
@@ -309,10 +398,11 @@ public final class OmemoManager extends Manager implements JingleEnvelopeManager
      *
      * @param recipient recipients bareJid
      * @param message text to encrypt
+     *
      * @return encrypted message
      *
-     * @throws CryptoFailedException                when something crypto related fails
-     * @throws UndecidedOmemoIdentityException      When there are undecided devices
+     * @throws CryptoFailedException when something crypto related fails
+     * @throws UndecidedOmemoIdentityException When there are undecided devices
      * @throws InterruptedException if the calling thread was interrupted.
      * @throws SmackException.NotConnectedException if the XMPP connection is not connected.
      * @throws SmackException.NoResponseException if there was no response from the remote entity.
@@ -333,10 +423,11 @@ public final class OmemoManager extends Manager implements JingleEnvelopeManager
      *
      * @param recipients recipients barejids
      * @param message text to encrypt
+     *
      * @return encrypted message.
      *
-     * @throws CryptoFailedException    When something crypto related fails
-     * @throws UndecidedOmemoIdentityException  When there are undecided devices.
+     * @throws CryptoFailedException When something crypto related fails
+     * @throws UndecidedOmemoIdentityException When there are undecided devices.
      * @throws InterruptedException if the calling thread was interrupted.
      * @throws SmackException.NotConnectedException if the XMPP connection is not connected.
      * @throws SmackException.NoResponseException if there was no response from the remote entity.
@@ -360,6 +451,7 @@ public final class OmemoManager extends Manager implements JingleEnvelopeManager
      *
      * @param muc multiUserChat
      * @param message message to send
+     *
      * @return encrypted message
      *
      * @throws UndecidedOmemoIdentityException when there are undecided devices.
@@ -396,6 +488,7 @@ public final class OmemoManager extends Manager implements JingleEnvelopeManager
      *
      * @param sender bareJid of the message sender (must be the jid of the contact who sent the message)
      * @param omemoElement omemoElement
+     *
      * @return decrypted OmemoMessage
      *
      * @throws SmackException.NotLoggedInException if the Manager is not authenticated
@@ -415,6 +508,7 @@ public final class OmemoManager extends Manager implements JingleEnvelopeManager
      * Decrypt messages from a MAM query.
      *
      * @param mamQuery The MAM query
+     *
      * @return list of decrypted OmemoMessages
      *
      * @throws SmackException.NotLoggedInException if the Manager is not authenticated.
@@ -423,6 +517,23 @@ public final class OmemoManager extends Manager implements JingleEnvelopeManager
     public List<MessageOrOmemoMessage> decryptMamQueryResult(MamManager.MamQuery mamQuery)
             throws SmackException.NotLoggedInException, IOException {
         return new ArrayList<>(getOmemoService().decryptMamQueryResult(new LoggedInOmemoManager(this), mamQuery));
+    }
+
+    public void sendOmemoOptOut(BareJid recipient, String reason) {
+        if (isOmemo2Enable) {
+            EnvelopeElement envelopmentElement = OmemoOptOutUtil.createOmemoOptOut(this, recipient, reason);
+            try {
+                OmemoMessage.Sent encryptedMessage = encrypt(recipient, envelopmentElement.toXML().toString());
+                MessageBuilder messageBuilder = StanzaBuilder.buildMessage(StandardStanzaIdSource.DEFAULT.getNewStanzaId());
+                Message sendMessage = encryptedMessage.buildMessage(messageBuilder, recipient, isOmemo2Enable);
+                connection().sendStanza(sendMessage);
+            }
+            catch (CryptoFailedException | UndecidedOmemoIdentityException | InterruptedException |
+                   NotConnectedException |
+                   SmackException.NoResponseException | SmackException.NotLoggedInException | IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     /**
@@ -464,6 +575,7 @@ public final class OmemoManager extends Manager implements JingleEnvelopeManager
      *
      * @param device device
      * @param fingerprint fingerprint
+     *
      * @return <code>true</code> if this is a trusted OMEMO identity.
      */
     public boolean isTrustedOmemoIdentity(OmemoDevice device, OmemoFingerprint fingerprint) {
@@ -481,6 +593,7 @@ public final class OmemoManager extends Manager implements JingleEnvelopeManager
      *
      * @param device device
      * @param fingerprint fingerprint
+     *
      * @return <code>true</code> if the trust is decided for the identity.
      */
     public boolean isDecidedOmemoIdentity(OmemoDevice device, OmemoFingerprint fingerprint) {
@@ -497,8 +610,8 @@ public final class OmemoManager extends Manager implements JingleEnvelopeManager
      *
      * @param recipient recipient
      *
-     * @throws CorruptedOmemoKeyException           When the used identityKeys are corrupted
-     * @throws CryptoFailedException                When something fails with the crypto
+     * @throws CorruptedOmemoKeyException When the used identityKeys are corrupted
+     * @throws CryptoFailedException When something fails with the crypto
      * @throws CannotEstablishOmemoSessionException When we can't establish a session with the recipient
      * @throws SmackException.NotLoggedInException if the XMPP connection is not authenticated.
      * @throws InterruptedException if the calling thread was interrupted.
@@ -525,9 +638,11 @@ public final class OmemoManager extends Manager implements JingleEnvelopeManager
     }
 
     /**
-     * Returns true, if the contact has any active devices published in a deviceList.
+     * Returns true, if the contact has any active devices published in a OmemoDeviceListElement
+     * for either of the Omemo NameSpace. This smack library supports decryption of both Omemo NS.
      *
      * @param contact contact
+     *
      * @return true if contact has at least one OMEMO capable device.
      *
      * @throws SmackException.NotConnectedException if the XMPP connection is not connected.
@@ -540,8 +655,20 @@ public final class OmemoManager extends Manager implements JingleEnvelopeManager
     public synchronized boolean contactSupportsOmemo(BareJid contact)
             throws InterruptedException, PubSubException.NotALeafNodeException, XMPPException.XMPPErrorException,
             SmackException.NotConnectedException, SmackException.NoResponseException, IOException {
-        OmemoCachedDeviceList deviceList = getOmemoService().refreshDeviceList(connection(), getOwnDevice(), contact);
-        return !deviceList.getActiveDevices().isEmpty();
+        OmemoDeviceListElement omemoDevices = null;
+        try {
+            omemoDevices = OmemoService.fetchDeviceList(connection(), contact, isOmemo2Enable);
+        }
+        catch (PubSubException.NotAPubSubNodeException e) {
+            LOGGER.log(Level.WARNING, "NotAPubSubNodeException for: " + OmemoConstants.getOmemoNS(isOmemo2Enable));
+            try {
+                omemoDevices = OmemoService.fetchDeviceList(connection(), contact, !isOmemo2Enable);
+            }
+            catch (PubSubException.NotAPubSubNodeException ex) {
+                LOGGER.log(Level.WARNING, "NotAPubSubNodeException for: " + OmemoConstants.getOmemoNS(!isOmemo2Enable));
+            }
+        }
+        return (omemoDevices != null) && !omemoDevices.getDevices().isEmpty();
     }
 
     /**
@@ -549,12 +676,13 @@ public final class OmemoManager extends Manager implements JingleEnvelopeManager
      * for OMEMO encryption in MUC).
      *
      * @param multiUserChat MUC
+     *
      * @return true if chat supports OMEMO
      *
-     * @throws XMPPException.XMPPErrorException     if there was an XMPP protocol level error
+     * @throws XMPPException.XMPPErrorException if there was an XMPP protocol level error
      * @throws SmackException.NotConnectedException if the connection is not connected
-     * @throws InterruptedException                 if the thread is interrupted
-     * @throws SmackException.NoResponseException   if the server does not respond
+     * @throws InterruptedException if the thread is interrupted
+     * @throws SmackException.NoResponseException if the server does not respond
      */
     public boolean multiUserChatSupportsOmemo(MultiUserChat multiUserChat)
             throws XMPPException.XMPPErrorException, SmackException.NotConnectedException, InterruptedException,
@@ -569,6 +697,7 @@ public final class OmemoManager extends Manager implements JingleEnvelopeManager
      *
      * @param connection XMPPConnection
      * @param server domainBareJid of the server to test
+     *
      * @return true if server supports pep
      *
      * @throws XMPPException.XMPPErrorException if there was an XMPP error returned.
@@ -605,6 +734,7 @@ public final class OmemoManager extends Manager implements JingleEnvelopeManager
      * Get the fingerprint of a contacts device.
      *
      * @param device contacts OmemoDevice
+     *
      * @return fingerprint of the given OMEMO device.
      *
      * @throws CannotEstablishOmemoSessionException if we have no session yet, and are unable to create one.
@@ -636,6 +766,7 @@ public final class OmemoManager extends Manager implements JingleEnvelopeManager
      * TODO: Make more fail-safe
      *
      * @param contact contact
+     *
      * @return Map of all active devices of the contact and their fingerprints.
      *
      * @throws SmackException.NotLoggedInException if the XMPP connection is not authenticated.
@@ -658,8 +789,8 @@ public final class OmemoManager extends Manager implements JingleEnvelopeManager
         OmemoCachedDeviceList deviceList = getOmemoService().getOmemoStoreBackend().loadCachedDeviceList(getOwnDevice(),
                 contact);
 
-        for (int id : deviceList.getActiveDevices()) {
-            OmemoDevice device = new OmemoDevice(contact, id);
+        for (OmemoDeviceElement deviceElement : deviceList.getActiveDevices()) {
+            OmemoDevice device = new OmemoDevice(contact, deviceElement.getId());
             OmemoFingerprint fingerprint = getFingerprint(device);
 
             if (fingerprint != null) {
@@ -745,41 +876,49 @@ public final class OmemoManager extends Manager implements JingleEnvelopeManager
     public List<Exception> purgeEverything() throws NotConnectedException, InterruptedException, IOException {
         List<Exception> exceptions = new ArrayList<>(5);
         PubSubManager pm = PubSubManager.getInstanceFor(getConnection(), getOwnJid());
+        String nodeName = OmemoConstants.getOmemoNS(isOmemo2Enable);
+
         try {
             requestDeviceListUpdateFor(getOwnJid());
-        } catch (SmackException.NoResponseException | PubSubException.NotALeafNodeException
-                        | XMPPException.XMPPErrorException e) {
+        }
+        catch (SmackException.NoResponseException | PubSubException.NotALeafNodeException
+               | XMPPException.XMPPErrorException e) {
             exceptions.add(e);
         }
 
-        OmemoCachedDeviceList deviceList = OmemoService.getInstance().getOmemoStoreBackend()
+        OmemoCachedDeviceList devices = OmemoService.getInstance().getOmemoStoreBackend()
                 .loadCachedDeviceList(getOwnDevice(), getOwnJid());
 
-        for (int id : deviceList.getAllDevices()) {
+        for (OmemoDeviceElement device : devices.getAllDevices()) {
+            nodeName = OmemoConstants.PEP_NODE_BUNDLE_FROM_DEVICE_ID(device.getId(), isOmemo2Enable);
             try {
-                pm.getLeafNode(OmemoConstants.PEP_NODE_BUNDLE_FROM_DEVICE_ID(id)).deleteAllItems();
-            } catch (SmackException.NoResponseException | PubSubException.NotALeafNodeException
-                            | XMPPException.XMPPErrorException | PubSubException.NotAPubSubNodeException e) {
+                pm.getLeafNode(nodeName).deleteAllItems();
+            }
+            catch (SmackException.NoResponseException | PubSubException.NotALeafNodeException
+                   | XMPPException.XMPPErrorException | PubSubException.NotAPubSubNodeException e) {
                 exceptions.add(e);
             }
 
             try {
-                pm.deleteNode(OmemoConstants.PEP_NODE_BUNDLE_FROM_DEVICE_ID(id));
-            } catch (SmackException.NoResponseException | XMPPException.XMPPErrorException e) {
+                pm.deleteNode(nodeName);
+            }
+            catch (SmackException.NoResponseException | XMPPException.XMPPErrorException e) {
                 exceptions.add(e);
             }
         }
 
         try {
-            pm.getLeafNode(OmemoConstants.PEP_NODE_DEVICE_LIST).deleteAllItems();
-        } catch (SmackException.NoResponseException | PubSubException.NotALeafNodeException
-                        | XMPPException.XMPPErrorException | PubSubException.NotAPubSubNodeException e) {
+            pm.getLeafNode(nodeName).deleteAllItems();
+        }
+        catch (SmackException.NoResponseException | PubSubException.NotALeafNodeException
+               | XMPPException.XMPPErrorException | PubSubException.NotAPubSubNodeException e) {
             exceptions.add(e);
         }
 
         try {
-            pm.deleteNode(OmemoConstants.PEP_NODE_DEVICE_LIST);
-        } catch (SmackException.NoResponseException | XMPPException.XMPPErrorException e) {
+            pm.deleteNode(nodeName);
+        }
+        catch (SmackException.NoResponseException | XMPPException.XMPPErrorException e) {
             exceptions.add(e);
         }
 
@@ -812,7 +951,7 @@ public final class OmemoManager extends Manager implements JingleEnvelopeManager
         getOmemoService().getOmemoStoreBackend().changeSignedPreKey(getOwnDevice());
 
         // publish
-        OmemoBundleElement bundle = getOmemoService().getOmemoStoreBackend().packOmemoBundle(getOwnDevice());
+        OmemoBundleElement bundle = getOmemoService().getOmemoStoreBackend().packOmemoBundle(getOwnDevice(), isOmemo2Enable);
         OmemoService.publishBundle(connection(), getOwnDevice(), bundle);
     }
 
@@ -820,10 +959,12 @@ public final class OmemoManager extends Manager implements JingleEnvelopeManager
      * Return true, if the given Stanza contains an OMEMO element 'encrypted'.
      *
      * @param stanza stanza
+     *
      * @return true if stanza has extension 'encrypted'
      */
     static boolean stanzaContainsOmemoElement(Stanza stanza) {
-        return stanza.hasExtension(OmemoElement.NAME_ENCRYPTED, OMEMO_NAMESPACE_V_AXOLOTL);
+        return stanza.hasExtension(OmemoElement.NAME_ENCRYPTED, OMEMO_NAMESPACE_V_AXOLOTL)
+                || stanza.hasExtension(OmemoElement.NAME_ENCRYPTED, OMEMO_NAMESPACE_V_OMEMO);
     }
 
     /**
@@ -907,13 +1048,13 @@ public final class OmemoManager extends Manager implements JingleEnvelopeManager
     /**
      * Notify all registered OmemoMucMessageListeners of an incoming OmemoMessageElement in a MUC.
      *
-     * @param muc               MultiUserChat the message was received in.
-     * @param stanza            Original Stanza.
-     * @param decryptedMessage  Decrypted OmemoMessage.
+     * @param muc MultiUserChat the message was received in.
+     * @param stanza Original Stanza.
+     * @param decryptedMessage Decrypted OmemoMessage.
      */
     void notifyOmemoMucMessageReceived(MultiUserChat muc,
-                                       Stanza stanza,
-                                       OmemoMessage.Received decryptedMessage) {
+            Stanza stanza,
+            OmemoMessage.Received decryptedMessage) {
         for (OmemoMucMessageListener l : omemoMucMessageListeners) {
             l.onOmemoMucMessageReceived(muc, stanza, decryptedMessage);
         }
@@ -924,15 +1065,15 @@ public final class OmemoManager extends Manager implements JingleEnvelopeManager
      * Remember: If you want to receive OMEMO encrypted carbon copies, you have to enable carbons using
      * {@link CarbonManager#enableCarbons()}.
      *
-     * @param direction             direction of the carbon copy
-     * @param carbonCopy            carbon copy itself
-     * @param wrappingMessage       wrapping message
-     * @param decryptedCarbonCopy   decrypted carbon copy OMEMO element
+     * @param direction direction of the carbon copy
+     * @param carbonCopy carbon copy itself
+     * @param wrappingMessage wrapping message
+     * @param decryptedCarbonCopy decrypted carbon copy OMEMO element
      */
     void notifyOmemoCarbonCopyReceived(CarbonExtension.Direction direction,
-                                       Message carbonCopy,
-                                       Message wrappingMessage,
-                                       OmemoMessage.Received decryptedCarbonCopy) {
+            Message carbonCopy,
+            Message wrappingMessage,
+            OmemoMessage.Received decryptedCarbonCopy) {
         for (OmemoMessageListener l : omemoMessageListeners) {
             l.onOmemoCarbonCopyReceived(direction, carbonCopy, wrappingMessage, decryptedCarbonCopy);
         }
@@ -950,8 +1091,15 @@ public final class OmemoManager extends Manager implements JingleEnvelopeManager
         connection().removeAsyncStanzaListener(this::internalOmemoMessageStanzaListener);
         carbonManager.removeCarbonCopyReceivedListener(this::internalOmemoCarbonCopyListener);
 
-        // Add listeners
-        pepManager.addPepEventListener(OmemoConstants.PEP_NODE_DEVICE_LIST, OmemoDeviceListElement.class, pepOmemoDeviceListEventListener);
+        // Add both omemo PEP_NODE_DEVICES_x namespaces to PepEventListener.
+        pepDeviceListEventListener_Omemo = new PepEventOmemoListener(true);
+        pepDeviceListEventListener_Axolotl = new PepEventOmemoListener(false);
+
+        pepManager.addPepEventListener(OmemoConstants.PEP_NODE_DEVICES_V_OMEMO, OmemoDeviceListElement.class,
+                pepDeviceListEventListener_Omemo);
+        pepManager.addPepEventListener(OmemoConstants.PEP_NODE_DEVICES_V_AXOLOTL, OmemoDeviceListElement.class,
+                pepDeviceListEventListener_Axolotl);
+
         connection().addAsyncStanzaListener(this::internalOmemoMessageStanzaListener, OmemoManager::isOmemoMessage);
         carbonManager.addCarbonCopyReceivedListener(this::internalOmemoCarbonCopyListener);
     }
@@ -960,7 +1108,8 @@ public final class OmemoManager extends Manager implements JingleEnvelopeManager
      * Remove active stanza listeners needed for OMEMO.
      */
     public void stopStanzaAndPEPListeners() {
-        pepManager.removePepEventListener(pepOmemoDeviceListEventListener);
+        pepManager.removePepEventListener(pepDeviceListEventListener_Omemo);
+        pepManager.removePepEventListener(pepDeviceListEventListener_Axolotl);
         connection().removeAsyncStanzaListener(this::internalOmemoMessageStanzaListener);
         CarbonManager.getInstanceFor(connection()).removeCarbonCopyReceivedListener(this::internalOmemoCarbonCopyListener);
     }
@@ -999,7 +1148,7 @@ public final class OmemoManager extends Manager implements JingleEnvelopeManager
 
     @Override
     public String getJingleEnvelopeNamespace() {
-        return OMEMO_NAMESPACE_V_AXOLOTL;
+        return isOmemo2Enable ? OMEMO_NAMESPACE_V_OMEMO : OMEMO_NAMESPACE_V_AXOLOTL;
     }
 
     /**
@@ -1022,7 +1171,8 @@ public final class OmemoManager extends Manager implements JingleEnvelopeManager
                 try {
                     getOmemoService().onOmemoMessageStanzaReceived(packet,
                             new LoggedInOmemoManager(OmemoManager.this));
-                } catch (SmackException.NotLoggedInException | IOException e) {
+                }
+                catch (SmackException.NotLoggedInException | IOException e) {
                     LOGGER.log(Level.SEVERE, "Exception while processing OMEMO stanza", e);
                 }
             }
@@ -1033,8 +1183,8 @@ public final class OmemoManager extends Manager implements JingleEnvelopeManager
      * CarbonCopyListener that listens for incoming carbon copies which contain OMEMO elements.
      */
     private void internalOmemoCarbonCopyListener(final CarbonExtension.Direction direction,
-                    final Message carbonCopy,
-                    final Message wrappingMessage) {
+            final Message carbonCopy,
+            final Message wrappingMessage) {
         Async.go(new Runnable() {
             @Override
             public void run() {
@@ -1042,7 +1192,8 @@ public final class OmemoManager extends Manager implements JingleEnvelopeManager
                     try {
                         getOmemoService().onOmemoCarbonCopyReceived(direction, carbonCopy, wrappingMessage,
                                 new LoggedInOmemoManager(OmemoManager.this));
-                    } catch (SmackException.NotLoggedInException | IOException e) {
+                    }
+                    catch (SmackException.NotLoggedInException | IOException e) {
                         LOGGER.log(Level.SEVERE, "Exception while processing OMEMO stanza", e);
                     }
                 }
@@ -1050,64 +1201,121 @@ public final class OmemoManager extends Manager implements JingleEnvelopeManager
         });
     }
 
-    @SuppressWarnings("UnnecessaryLambda")
-    private final PepEventListener<OmemoDeviceListElement> pepOmemoDeviceListEventListener =
-                    (from, receivedDeviceList, id, message) -> {
-        // Device List <list>
-        OmemoCachedDeviceList deviceList;
-        try {
-            getOmemoService().getOmemoStoreBackend().mergeCachedDeviceList(getOwnDevice(), from,
-                            receivedDeviceList);
+    private class PepEventOmemoListener implements PepEventListener<OmemoDeviceListElement> {
+        final boolean isOmemo2;
 
-            if (!from.asBareJid().equals(getOwnJid())) {
+        PepEventOmemoListener(boolean vOmemo2) {
+            isOmemo2 = vOmemo2;
+        }
+
+        @Override
+        public void onPepEvent(EntityBareJid from, OmemoDeviceListElement receivedDeviceList, String id, Message message) {
+            // Device List <list>
+            OmemoCachedDeviceList deviceList;
+            try {
+                getOmemoService().getOmemoStoreBackend().mergeCachedDeviceList(getOwnDevice(), from, receivedDeviceList);
+
+                if (!from.asBareJid().equals(getOwnJid())) {
+                    return;
+                }
+                deviceList = getOmemoService().cleanUpDeviceList(getOwnDevice());
+            }
+            catch (IOException e) {
+                LOGGER.log(Level.SEVERE, "IOException while processing OMEMO PEP device updates. Message: " + message, e);
                 return;
             }
 
-            deviceList = getOmemoService().cleanUpDeviceList(getOwnDevice());
-        } catch (IOException e) {
-            LOGGER.log(Level.SEVERE,
-                            "IOException while processing OMEMO PEP device updates. Message: " + message,
-                                e);
-            return;
-        }
-        final OmemoDeviceListElement_VAxolotl newDeviceList = new OmemoDeviceListElement_VAxolotl(deviceList);
+            final OmemoDeviceListElement newDeviceList;
+            if (isOmemo2) {
+                newDeviceList = new OmemoDeviceListElement_VOmemo(deviceList);
+            }
+            else {
+                newDeviceList = new OmemoDeviceListElement_VAxolotl(deviceList);
+            }
 
-        if (!newDeviceList.copyDeviceIds().equals(receivedDeviceList.copyDeviceIds())
-                && !newDeviceList.copyDeviceIds().equals(publishedDeviceList)) {
-            LOGGER.log(Level.FINE, "Republish deviceList due to changes:" +
-                            " Received: " + Arrays.toString(receivedDeviceList.copyDeviceIds().toArray()) +
-                            " Published: " + Arrays.toString(newDeviceList.copyDeviceIds().toArray()));
-            Async.go(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        // LOGGER.log(Level.INFO, "received (new) DeviceList: " + receivedDeviceList.getDeviceIds()
-                        //        + " (" + newDeviceList.getDeviceIds() + ")");
-                        getConnection().setReplyTimeout(SMACK_REPLY_OMEMO_PUBLISH);
-                        OmemoService.publishDeviceList(connection(), newDeviceList);
-                        publishedDeviceList = newDeviceList.copyDeviceIds();
-                    } catch (InterruptedException | XMPPException.XMPPErrorException |
-                                    SmackException.NotConnectedException | SmackException.NoResponseException | PubSubException.NotALeafNodeException e) {
-                        LOGGER.log(Level.WARNING, "Could not publish our deviceList upon an received update.", e);
+            if (!newDeviceList.copyDevices().equals(receivedDeviceList.copyDevices())) {
+                LOGGER.log(Level.FINE, "Republish deviceList due to changes:\n" +
+                        " Received: " + receivedDeviceList.copyDevices() + "\n" +
+                        " Published: " + newDeviceList.copyDevices());
+                Async.go(new Runnable() {
+                    @Override
+                    public void run() {
+                        // If the received itemId != ITEM_ID_CURRENT, it must be purged from the server. Otherwise this
+                        // will leads to endless loop in receiving the pepEvent from this item (as it not being updated)
+                        if (!id.equals(OmemoService.ITEM_ID_CURRENT)) {
+                            PubSubManager pm = PubSubManager.getInstanceFor(getConnection(), getOwnJid());
+                            try {
+                                pm.deleteNode(id);
+                                LOGGER.log(Level.WARNING, "Purge Could not publish our deviceList upon an received update.");
+                            }
+                            catch (SmackException.NoResponseException | XMPPException.XMPPErrorException |
+                                   NotConnectedException |
+                                   InterruptedException e) {
+                                LOGGER.log(Level.WARNING, "Could not remove item with id: " + id, e.getMessage());
+                            }
+                        }
+
+                        try {
+                            // LOGGER.log(Level.INFO, "received (new) DeviceList: " + receivedDeviceList.getDevices()
+                            //        + " (" + newDeviceList.getDevices() + ")");
+                            getConnection().setReplyTimeout(SMACK_REPLY_OMEMO_PUBLISH);
+                            OmemoService.publishDeviceList(connection(), newDeviceList);
+                        }
+                        catch (InterruptedException | XMPPException.XMPPErrorException |
+                               SmackException.NotConnectedException | SmackException.NoResponseException |
+                               PubSubException.NotALeafNodeException e) {
+                            LOGGER.log(Level.WARNING, "Could not publish our deviceList upon an received update.", e);
+                        }
+                        getConnection().setReplyTimeout(SmackConfiguration.getDefaultReplyTimeout());
                     }
-                    getConnection().setReplyTimeout(SmackConfiguration.getDefaultReplyTimeout());
-                }
-            });
+                });
+            }
         }
-    };
+    }
 
     /**
      * StanzaFilter that filters messages containing a OMEMO element.
+     *
+     * @param stanza Stanza Message.
+     *
+     * @return true if stanza if an instance Omemo message.
      */
-    private static boolean isOmemoMessage(Stanza stanza) {
+    public static boolean isOmemoMessage(Stanza stanza) {
         return stanza instanceof Message && OmemoManager.stanzaContainsOmemoElement(stanza);
+    }
+
+    public OmemoDeviceListElement getOmemoDeviceList(Set<OmemoDeviceElement> deviceIds) {
+        return isOmemo2Enable ?
+                new OmemoDeviceListElement_VOmemo(deviceIds) : new OmemoDeviceListElement_VAxolotl(deviceIds);
+    }
+
+    public OmemoDeviceListElement getOmemoDeviceList(OmemoCachedDeviceList deviceIds) {
+        return isOmemo2Enable ?
+                new OmemoDeviceListElement_VOmemo(deviceIds) : new OmemoDeviceListElement_VAxolotl(deviceIds);
+    }
+
+    /**
+     * Return OmemoElement (v0.3.0 or v0.9.0) of the given OmemoMessage or null otherwise.
+     *
+     * @param msg Message.
+     *
+     * @return OmemoElement of msg or null.
+     */
+    public static OmemoElement getOmemoMessage(Message msg) {
+        OmemoElement omemoElement = null;
+        if (isOmemoMessage(msg)) {
+            omemoElement = (OmemoElement) msg.getExtensionElement(OmemoElement.NAME_ENCRYPTED, OmemoElement_VAxolotl.NAMESPACE);
+            if (omemoElement == null) {
+                omemoElement = (OmemoElement) msg.getExtensionElement(OmemoElement.NAME_ENCRYPTED, OmemoElement_VOmemo.NAMESPACE);
+            }
+        }
+        return omemoElement;
     }
 
     /**
      * Guard class which ensures that the wrapped OmemoManager knows its BareJid.
      */
     public static class LoggedInOmemoManager {
-
         private final OmemoManager manager;
 
         public LoggedInOmemoManager(OmemoManager manager)
@@ -1120,11 +1328,11 @@ public final class OmemoManager extends Manager implements JingleEnvelopeManager
             if (manager.getOwnJid() == null) {
                 if (manager.getConnection().isAuthenticated()) {
                     manager.ownJid = manager.getConnection().getUser().asBareJid();
-                } else {
+                }
+                else {
                     throw new SmackException.NotLoggedInException();
                 }
             }
-
             this.manager = manager;
         }
 
@@ -1161,9 +1369,10 @@ public final class OmemoManager extends Manager implements JingleEnvelopeManager
 
         if (UNKNOWN_DEVICE_ID.equals(manager.deviceId)) {
             SortedSet<Integer> storedDeviceIds = manager.getOmemoService().getOmemoStoreBackend().localDeviceIdsOf(manager.ownJid);
-            if (!storedDeviceIds.isEmpty()) {
+            if (storedDeviceIds.size() > 0) {
                 manager.setDeviceId(storedDeviceIds.first());
-            } else {
+            }
+            else {
                 manager.setDeviceId(randomDeviceId());
             }
         }
@@ -1171,19 +1380,22 @@ public final class OmemoManager extends Manager implements JingleEnvelopeManager
 
     @Override
     public XmlElement encryptJingleTransfer(FullJid recipient, byte[] keyData)
-            throws JingleEncryptionException, InterruptedException, NoSuchAlgorithmException, SmackException.NotConnectedException, SmackException.NoResponseException {
+            throws
+            JingleEncryptionException, InterruptedException, NoSuchAlgorithmException, SmackException.NotConnectedException, SmackException.NoResponseException {
         BareJid bareJid = recipient.asBareJid();
         Message sendMessage;
         try {
             OmemoMessage.Sent encryptedMessage = encrypt(bareJid, Base64.encodeToString(keyData));
             MessageBuilder messageBuilder = StanzaBuilder.buildMessage();
-            sendMessage = encryptedMessage.buildMessage(messageBuilder, bareJid);
+            sendMessage = encryptedMessage.buildMessage(messageBuilder, bareJid, isOmemo2Enable);
 
-        } catch (CryptoFailedException | UndecidedOmemoIdentityException | SmackException.NotLoggedInException | IOException e) {
+        }
+        catch (CryptoFailedException | UndecidedOmemoIdentityException | SmackException.NotLoggedInException |
+               IOException e) {
             throw new JingleEncryptionException(e);
         }
 
-        XmlElement encryptionElement = sendMessage.getExtensionElement(OmemoElement.NAME_ENCRYPTED, OMEMO_NAMESPACE_V_AXOLOTL);
+        XmlElement encryptionElement = OmemoManager.getOmemoMessage(sendMessage);
         if (encryptionElement == null) {
             throw new AssertionError("OmemoElement MUST NOT be null.");
         }
@@ -1192,8 +1404,9 @@ public final class OmemoManager extends Manager implements JingleEnvelopeManager
 
     @Override
     public byte[] decryptJingleTransfer(FullJid sender, XmlElement envelope)
-            throws JingleEncryptionException, InterruptedException, XMPPException.XMPPErrorException, SmackException.NotConnectedException, SmackException.NoResponseException {
-        if (!envelope.getNamespace().equals(OMEMO_NAMESPACE_V_AXOLOTL)
+            throws
+            JingleEncryptionException, InterruptedException, XMPPException.XMPPErrorException, SmackException.NotConnectedException, SmackException.NoResponseException {
+        if (!(envelope.getNamespace().equals(OMEMO_NAMESPACE_V_AXOLOTL) || envelope.getNamespace().equals(OMEMO_NAMESPACE_V_OMEMO))
                 || !envelope.getElementName().equals(OmemoElement.NAME_ENCRYPTED)) {
             throw new IllegalArgumentException("Passed XmlElement MUST be an OmemoElement!");
         }
@@ -1203,7 +1416,9 @@ public final class OmemoManager extends Manager implements JingleEnvelopeManager
         OmemoMessage.Received decryptedPseudoMessage;
         try {
             decryptedPseudoMessage = decrypt(sender.asBareJid(), omemoElement);
-        } catch (CryptoFailedException | CorruptedOmemoKeyException | NoRawSessionException | SmackException.NotLoggedInException | IOException e) {
+        }
+        catch (CryptoFailedException | CorruptedOmemoKeyException | NoRawSessionException |
+               SmackException.NotLoggedInException | IOException e) {
             throw new JingleEncryptionException(e);
         }
 

@@ -13,7 +13,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
-import net.java.sip.communicator.impl.protocol.jabber.JabberActivator;
 
 import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
@@ -33,8 +32,7 @@ import timber.log.Timber;
  * @author Pawel Domas
  * @author Eng Chong Meng
  */
-public class LogUploadServiceImpl implements LogUploadService
-{
+public class LogUploadServiceImpl implements LogUploadService {
     /**
      * List of log files created for sending logs purpose. There is no easy way of waiting until
      * email is sent and deleting temp log file, so they are cached and removed on OSGI service stop action.
@@ -48,8 +46,7 @@ public class LogUploadServiceImpl implements LogUploadService
      * @param subject the subject if available
      * @param title the title for the action, used any intermediate dialogs that need to be shown, like "Choose action:".
      */
-    public void sendLogs(String[] destinations, String subject, String title)
-    {
+    public void sendLogs(String[] destinations, String subject, String title) {
         /* The path pointing to directory used to store temporary log archives. */
         File logStorageDir = FileBackend.getaTalkStore("atalk-logs", true);
         if (logStorageDir != null) {
@@ -63,7 +60,8 @@ public class LogUploadServiceImpl implements LogUploadService
                 // just wait for 100ms before collect logs - note: process redirect to file, and does not exit
                 Thread.sleep(100);
                 externalStorageFile = LogsCollector.collectLogs(logStorageDir, null);
-            } catch (Exception ex) {
+            }
+            catch (Exception ex) {
                 aTalkApp.showToastMessage("Error creating logs file archive: " + ex.getMessage());
                 return;
             }
@@ -101,13 +99,13 @@ public class LogUploadServiceImpl implements LogUploadService
     /**
      * Extract debug info for android device OS and aTalk installed version
      */
-    private void debugPrintInfo()
-    {
+    private void debugPrintInfo() {
         String property = "http.agent";
         try {
             String sysProperty = System.getProperty(property);
             Timber.i("%s = %s", property, sysProperty);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             Timber.w(e, "An exception occurred while writing debug info");
         }
 
@@ -120,8 +118,7 @@ public class LogUploadServiceImpl implements LogUploadService
      * Frees resources allocated by this service.
      * Purge all files log directory and log sent.
      */
-    public void dispose()
-    {
+    public void dispose() {
         System.err.println("DISPOSE!!!!!!!!!!!!!");
         for (File logFile : storedLogFiles) {
             logFile.delete();

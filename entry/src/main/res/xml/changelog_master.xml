@@ -6,8 +6,26 @@
      They are automatically updated with "ant bump-version".
 -->
 <changelog>
-    <release version="00.10.100 (12/27/2025)" versioncode="0010100">
+    <release version="00.20.000 (04/02/2026)" versioncode="0020000">
         <change>Please read &lt;a href='https://cmeng-git.github.io/atalk/faq.html#ui_01'&gt;aTalk UI design &amp; Implementation&lt;/a&gt; before using aTalk</change>
+        <change>Implement XEP-0384: OMEMO Encryption to support both 'eu.siacs.conversations.axolotl' and 'urn:xmpp:omemo:2' namespaces;
+            mutually exclusive and specified per user account</change>
+        <change>aTalk supports decryption of OMEMO messages, and Jet files received with either namespace</change>
+        <change>Support OMEMO opt-out with reason from user or use the aTalk default message</change>
+        <change>aTalk currently does not support device label, labelsig options</change>
+        <change>Change bundles and devices nodes publish with item id='current' as recommended for Singleton Nodes</change>
+        <change>If onPepEvent received omemo#devices itemId != 'current', it must be purged from the server. Otherwise this will leads to endless loop in receiving the pepEvent for this item (as it not being updated)</change>
+        <change>Must perform active subscription to node 'urn:xmpp:omemo:2:devices' and 'urn:xmpp:omemo:2:bundles', inorder to send publish-options successfully</change>
+        <change>Must have separate PepEventListener for each omemo namespace. Add both omemo PEP_NODE_DEVICES_x namespaces to PepEventListener, so pubsub#events from either PEP_NODE_DEVICES_x are handled properly</change>
+        <change>Upgrade smack to support XEP-0420: Stanza Content Encryption 0.4.1 (2021-11-18)</change>
+        <change>Fix app crashes on HttpFileDownload message received in chatRoom; Omit insert record as message is already in DB</change>
+        <change>Fix unhandled BackKey problems with preference sub-menu for Connection, ICE, and Telephony VoIP-PBX settings</change>
+        <change>Clean up Thumbnail.java file for fully XEP-0264: Jingle Content Thumbnails 0.4.2 (2024-07-24) compliant</change>
+        <change>Remove try-with-resource for all ExecutorService implementation; ANR reported by field units in Android Console</change>
+        <change>Bug fixes and enhancements</change>
+    </release>
+
+    <release version="00.10.100 (12/27/2025)" versioncode="0010100">
         <change>onCarbonCopyReceived: Skip handling of empty msgBody for all incoming message, in case Jid is null from FFR</change>
         <change>Enable an important debug message i.e. 'The provider state changed...' to be printed in release version</change>
         <change>Set YT parameter 'origin' to other than YT site i.e.'https://www.youtube.com'; else embed video player has error</change>

@@ -56,11 +56,7 @@ captures/
 
 # Intellij
 *.iml
-.idea/workspace.xml
-.idea/tasks.xml
-.idea/gradle.xml
-.idea/dictionaries
-.idea/libraries
+.idea/
 
 # Keystore files
 *.jks
@@ -81,6 +77,9 @@ freeline_project_description.json
 # Local reference
 reference/
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
-replay_pid*
+/entry/jni/g722/g722
+/entry/jni/g729/bcg729
+/entry/jni/opus/opus/
+/entry/jni/speex/libogg
+/entry/jni/speex/libspeex
+/entry/jni/static_library_built/libvpx/libvpx/

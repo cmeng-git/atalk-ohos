@@ -98,6 +98,7 @@ import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smackx.httpfileupload.HttpFileUploadManager;
 import org.jivesoftware.smackx.iqlast.LastActivityManager;
+import org.jivesoftware.smackx.omemo.OmemoManager;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jxmpp.jid.DomainBareJid;
@@ -168,6 +169,7 @@ public class ChatActivity extends BaseActivity
     private MenuItem mCallVideoContact;
     private MenuItem mSendFile;
     private MenuItem mSendLocation;
+    private MenuItem mSendOptOut;
     private MenuItem mTtsEnable;
     private MenuItem mStatusEnable;
     private MenuItem mRoomInvite;
@@ -375,6 +377,20 @@ public class ChatActivity extends BaseActivity
     }
 
     /**
+     * Get the current msgEdit content.
+     *
+     * @return the msgEdit current content.
+     */
+    private String getEditText() {
+        ChatFragment chatFragment;
+        String editText = null;
+        if ((chatFragment = chatPagerAdapter.getCurrentChatFragment()) != null) {
+            editText = chatFragment.getChatController().getEditTextAndClear();
+        }
+        return editText;
+    }
+
+    /**
      * Set current chat id handled for this instance.
      *
      * @param chatId the id of the chat to set.
@@ -453,6 +469,7 @@ public class ChatActivity extends BaseActivity
         mCallVideoContact = mMenu.findItem(R.id.call_contact_video);
         mSendFile = mMenu.findItem(R.id.send_file);
         mSendLocation = mMenu.findItem(R.id.share_location);
+        mSendOptOut = mMenu.findItem(R.id.send_optout);
         mTtsEnable = mMenu.findItem(R.id.chat_tts_enable);
         mStatusEnable = mMenu.findItem(R.id.room_status_enable);
         mHistoryErase = mMenu.findItem(R.id.erase_chat_history);
@@ -564,6 +581,22 @@ public class ChatActivity extends BaseActivity
         }
     }
 
+    /**
+     * Update omemo opt-out option on chat session change.
+     *
+     * @param isOmemo2Chat true if it is omemo chat.
+     */
+    public void onChatSessionChange(boolean isOmemo2Chat, MetaContact contact) {
+        // ChatSession chatSession = selectedChatPanel.getChatSession();
+        if (contact != null) {
+            mSendOptOut.setVisible(isOmemo2Chat);
+        }
+        else {
+            mSendOptOut.setVisible(false);
+        }
+        // Timber.d("onChatSessionChange: %s", mSendOptOut.isVisible());
+    }
+
     @Override
     public void localUserPresenceChanged(LocalUserChatRoomPresenceChangeEvent evt) {
         runOnUiThread(this::setupChatRoomOptionItem);
@@ -584,26 +617,40 @@ public class ChatActivity extends BaseActivity
 
         // Common handler for both the ChatRoomWrapper and MetaContact
         switch (item.getItemId()) {
-            case R.id.send_file:
-                AttachOptionDialog attachOptionDialog = new AttachOptionDialog(this);
-                attachOptionDialog.show();
-                return true;
+        case R.id.send_file:
+            AttachOptionDialog attachOptionDialog = new AttachOptionDialog(this);
+            attachOptionDialog.show();
+            return true;
 
-            case R.id.muc_invite:
-                ChatInviteDialog inviteDialog = new ChatInviteDialog(this, selectedChatPanel);
-                inviteDialog.show();
-                return true;
+        case R.id.muc_invite:
+            ChatInviteDialog inviteDialog = new ChatInviteDialog(this, selectedChatPanel);
+            inviteDialog.show();
+            return true;
 
-            case R.id.erase_chat_history:
-                eraseMode = EntityListHelper.SINGLE_ENTITY;
-                EntityListHelper.eraseEntityChatHistory(this, descriptor, null, null);
-                return true;
+        case R.id.erase_chat_history:
+            eraseMode = EntityListHelper.SINGLE_ENTITY;
+            EntityListHelper.eraseEntityChatHistory(this, descriptor, null, null);
+            return true;
 
-            case R.id.share_location:
-                Intent intent = new Intent(this, GeoLocationActivity.class);
-                intent.putExtra(GeoLocationActivity.SHARE_ALLOW, true);
-                startActivity(intent);
-                return true;
+        case R.id.share_location:
+            Intent intent = new Intent(this, GeoLocationActivity.class);
+            intent.putExtra(GeoLocationActivity.SHARE_ALLOW, true);
+            startActivity(intent);
+            return true;
+
+        case R.id.send_optout:
+            XMPPConnection connection = selectedChatPanel.getProtocolProvider().getConnection();
+            boolean isDomainJid = (mRecipient == null) || (mRecipient.getJid() instanceof DomainBareJid);
+
+            if (connection != null && !isDomainJid) {
+                OmemoManager omemoManager = OmemoManager.getInstanceFor(connection);
+                String reason;
+                if((reason = getEditText()) == null) {
+                    reason = getString(R.string.omemo2_optout_reason);
+                }
+                omemoManager.sendOmemoOptOut(mRecipient.getJid().asBareJid(), reason);
+            }
+            return true;
         }
 
         if (descriptor instanceof ChatRoomWrapper) {
@@ -613,84 +660,84 @@ public class ChatActivity extends BaseActivity
             ft.addToBackStack(null);
 
             switch (item.getItemId()) {
-                case R.id.chat_tts_enable:
-                    if (chatRoomWrapper.isTtsEnable()) {
-                        chatRoomWrapper.setTtsEnable(false);
-                        mTtsEnable.setTitle(R.string.tts_enable);
-                    }
-                    else {
-                        chatRoomWrapper.setTtsEnable(true);
-                        mTtsEnable.setTitle(R.string.tts_disable);
-                    }
-                    selectedChatPanel.updateChatTtsOption();
-                    return true;
+            case R.id.chat_tts_enable:
+                if (chatRoomWrapper.isTtsEnable()) {
+                    chatRoomWrapper.setTtsEnable(false);
+                    mTtsEnable.setTitle(R.string.tts_enable);
+                }
+                else {
+                    chatRoomWrapper.setTtsEnable(true);
+                    mTtsEnable.setTitle(R.string.tts_disable);
+                }
+                selectedChatPanel.updateChatTtsOption();
+                return true;
 
-                case R.id.leave_chat_room:
-                    if (chatRoom != null) {
-                        ChatRoomWrapper leavedRoomWrapped = MUCActivator.getMUCService().leaveChatRoom(chatRoomWrapper);
-                        if (leavedRoomWrapped != null) {
-                            MUCActivator.getUIService().closeChatRoomWindow(leavedRoomWrapped);
-                        }
+            case R.id.leave_chat_room:
+                if (chatRoom != null) {
+                    ChatRoomWrapper leavedRoomWrapped = MUCActivator.getMUCService().leaveChatRoom(chatRoomWrapper);
+                    if (leavedRoomWrapped != null) {
+                        MUCActivator.getUIService().closeChatRoomWindow(leavedRoomWrapped);
                     }
-                    ChatSessionManager.removeActiveChat(selectedChatPanel);
-                    MUCActivator.getUIService().closeChatRoomWindow(chatRoomWrapper);
-                    MUCActivator.getMUCService().removeChatRoom(chatRoomWrapper);
-                    finish();
-                    return true;
+                }
+                ChatSessionManager.removeActiveChat(selectedChatPanel);
+                MUCActivator.getUIService().closeChatRoomWindow(chatRoomWrapper);
+                MUCActivator.getMUCService().removeChatRoom(chatRoomWrapper);
+                finish();
+                return true;
 
-                case R.id.destroy_chat_room:
-                    new ChatRoomDestroyDialog().show(this, chatRoomWrapper, selectedChatPanel);
-                    // It is safer to just finish. see case R.id.close_chat:
-                    finish();
-                    return true;
+            case R.id.destroy_chat_room:
+                new ChatRoomDestroyDialog().show(this, chatRoomWrapper, selectedChatPanel);
+                // It is safer to just finish. see case R.id.close_chat:
+                finish();
+                return true;
 
-                case R.id.chatroom_info:
-                    ChatRoomInfoDialog chatRoomInfoDialog = ChatRoomInfoDialog.newInstance(chatRoomWrapper);
-                    chatRoomInfoDialog.show(ft, "infoDialog");
-                    return true;
+            case R.id.chatroom_info:
+                ChatRoomInfoDialog chatRoomInfoDialog = ChatRoomInfoDialog.newInstance(chatRoomWrapper);
+                chatRoomInfoDialog.show(ft, "infoDialog");
+                return true;
 
-                case R.id.chatroom_info_change:
-                    new ChatRoomInfoChangeDialog().show(chatRoomWrapper);
-                    return true;
+            case R.id.chatroom_info_change:
+                new ChatRoomInfoChangeDialog().show(chatRoomWrapper);
+                return true;
 
-                case R.id.chatroom_config:
-                    chatRoomConfig = ChatRoomConfiguration.getInstance(chatRoomWrapper, this);
-                    ft.replace(android.R.id.content, chatRoomConfig).commit();
-                    return true;
+            case R.id.chatroom_config:
+                chatRoomConfig = ChatRoomConfiguration.getInstance(chatRoomWrapper, this);
+                ft.replace(android.R.id.content, chatRoomConfig).commit();
+                return true;
 
-                case R.id.room_status_enable:
-                    if (chatRoomWrapper.isRoomStatusEnable()) {
-                        chatRoomWrapper.setRoomStatusEnable(false);
-                        mStatusEnable.setTitle(R.string.chatroom_status_enable);
+            case R.id.room_status_enable:
+                if (chatRoomWrapper.isRoomStatusEnable()) {
+                    chatRoomWrapper.setRoomStatusEnable(false);
+                    mStatusEnable.setTitle(R.string.chatroom_status_enable);
+                }
+                else {
+                    chatRoomWrapper.setRoomStatusEnable(true);
+                    mStatusEnable.setTitle(R.string.chatroom_status_disable);
+                }
+                return true;
+
+            case R.id.show_chatroom_occupant:
+                StringBuilder memberList = new StringBuilder();
+                List<ChatRoomMember> occupants = chatRoom.getMembers();
+                if (!occupants.isEmpty()) {
+                    for (ChatRoomMember member : occupants) {
+                        ChatRoomMemberJabberImpl occupant = (ChatRoomMemberJabberImpl) member;
+                        memberList.append(occupant.getNickName())
+                                .append(" - ")
+                                .append(occupant.getJabberId())
+                                .append(" (")
+                                .append(member.getRole().getRoleName())
+                                .append(")")
+                                .append("<br/>");
                     }
-                    else {
-                        chatRoomWrapper.setRoomStatusEnable(true);
-                        mStatusEnable.setTitle(R.string.chatroom_status_disable);
-                    }
-                    return true;
-
-                case R.id.show_chatroom_occupant:
-                    StringBuilder memberList = new StringBuilder();
-                    List<ChatRoomMember> occupants = chatRoom.getMembers();
-                    if (!occupants.isEmpty()) {
-                        for (ChatRoomMember member : occupants) {
-                            ChatRoomMemberJabberImpl occupant = (ChatRoomMemberJabberImpl) member;
-                            memberList.append(occupant.getNickName())
-                                    .append(" - ")
-                                    .append(occupant.getJabberId())
-                                    .append(" (")
-                                    .append(member.getRole().getRoleName())
-                                    .append(")")
-                                    .append("<br/>");
-                        }
-                    }
-                    else {
-                        memberList.append(getString(R.string.none));
-                    }
-                    String user = chatRoomWrapper.getProtocolProvider().getAccountID().getUserID();
-                    selectedChatPanel.addMessage(user, new Date(), ChatMessage.MESSAGE_SYSTEM, IMessage.ENCODE_HTML,
-                            memberList.toString());
-                    return true;
+                }
+                else {
+                    memberList.append(getString(R.string.none));
+                }
+                String user = chatRoomWrapper.getProtocolProvider().getAccountID().getUserID();
+                selectedChatPanel.addMessage(user, new Date(), ChatMessage.MESSAGE_SYSTEM, IMessage.ENCODE_HTML,
+                        memberList.toString());
+                return true;
             }
         }
         // Handle item selection for mRecipient if non-null
@@ -698,32 +745,32 @@ public class ChatActivity extends BaseActivity
             Boolean isAudioCall = null;
 
             switch (item.getItemId()) {
-                case R.id.chat_tts_enable:
-                    if (mRecipient.isTtsEnable()) {
-                        mRecipient.setTtsEnable(false);
-                        mTtsEnable.setTitle(R.string.tts_enable);
-                    }
-                    else {
-                        mRecipient.setTtsEnable(true);
-                        mTtsEnable.setTitle(R.string.tts_disable);
-                    }
-                    selectedChatPanel.updateChatTtsOption();
-                    return true;
+            case R.id.chat_tts_enable:
+                if (mRecipient.isTtsEnable()) {
+                    mRecipient.setTtsEnable(false);
+                    mTtsEnable.setTitle(R.string.tts_enable);
+                }
+                else {
+                    mRecipient.setTtsEnable(true);
+                    mTtsEnable.setTitle(R.string.tts_disable);
+                }
+                selectedChatPanel.updateChatTtsOption();
+                return true;
 
-                case R.id.call_contact_audio: // start audio call
-                    Jid jid = mRecipient.getJid();
-                    if (jid instanceof DomainBareJid) {
-                        TelephonyFragment extPhone = TelephonyFragment.newInstance(jid.toString());
-                        getSupportFragmentManager().beginTransaction()
-                                .replace(android.R.id.content, extPhone, TelephonyFragment.TELEPHONY_TAG).commit();
-                        return true;
-                    }
-                    isAudioCall = true;  // fall through to start either audio / video call
-
-                case R.id.call_contact_video:
-                    AppCallUtil.createCall(this, selectedChatPanel.getMetaContact(),
-                            (isAudioCall == null), null);
+            case R.id.call_contact_audio: // start audio call
+                Jid jid = mRecipient.getJid();
+                if (jid instanceof DomainBareJid) {
+                    TelephonyFragment extPhone = TelephonyFragment.newInstance(jid.toString());
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(android.R.id.content, extPhone, TelephonyFragment.TELEPHONY_TAG).commit();
                     return true;
+                }
+                isAudioCall = true;  // fall through to start either audio / video call
+
+            case R.id.call_contact_video:
+                AppCallUtil.createCall(this, selectedChatPanel.getMetaContact(),
+                        (isAudioCall == null), null);
+                return true;
             }
         }
         return super.onOptionsItemSelected(item);
@@ -848,9 +895,10 @@ public class ChatActivity extends BaseActivity
                             long elapseTime = lastActivityManager.getLastActivity(jid).getIdleTime();
                             lastActiveTime = (System.currentTimeMillis() - elapseTime * 1000L);
                             mRecipient.setLastActiveTime(lastActiveTime);
-                        } catch (SmackException.NoResponseException | XMPPException.XMPPErrorException
-                                 | SmackException.NotConnectedException | InterruptedException |
-                                 IllegalArgumentException e) {
+                        }
+                        catch (SmackException.NoResponseException | XMPPException.XMPPErrorException
+                               | SmackException.NotConnectedException | InterruptedException |
+                               IllegalArgumentException e) {
                             Timber.w("Exception in getLastSeen %s", e.getMessage());
                         }
                     }
@@ -888,43 +936,45 @@ public class ChatActivity extends BaseActivity
         String contentType;
 
         switch (attachOptionItem) {
-            case pic:
-                contentType = "image/*";
-                mGetContents.launch(contentType);
-                break;
+        case pic:
+            contentType = "image/*";
+            mGetContents.launch(contentType);
+            break;
 
-            case video:
-                contentType = "video/*";
-                mGetContents.launch(contentType);
-                break;
+        case video:
+            contentType = "video/*";
+            mGetContents.launch(contentType);
+            break;
 
-            case share_file:
-                contentType = "*/*";
-                mGetContents.launch(contentType);
-                break;
+        case share_file:
+            contentType = "*/*";
+            mGetContents.launch(contentType);
+            break;
 
-            case camera:
-                // Take a photo and save to fileUri; then return control to the calling application
-                try {
-                    // create a image file to save the photo
-                    mCameraFilePath = FileBackend.getOutputMediaFile(FileBackend.MEDIA_TYPE_IMAGE);
-                    fileUri = FileBackend.getUriForFile(this, mCameraFilePath);
-                    mTakePhoto.launch(fileUri);
-                } catch (SecurityException e) {
-                    aTalkApp.showToastMessage(R.string.camera_permission_denied_feedback);
-                }
-                break;
+        case camera:
+            // Take a photo and save to fileUri; then return control to the calling application
+            try {
+                // create a image file to save the photo
+                mCameraFilePath = FileBackend.getOutputMediaFile(FileBackend.MEDIA_TYPE_IMAGE);
+                fileUri = FileBackend.getUriForFile(this, mCameraFilePath);
+                mTakePhoto.launch(fileUri);
+            }
+            catch (SecurityException e) {
+                aTalkApp.showToastMessage(R.string.camera_permission_denied_feedback);
+            }
+            break;
 
-            case video_record:
-                try {
-                    // create a mp4 file to save the video
-                    mCameraFilePath = FileBackend.getOutputMediaFile(FileBackend.MEDIA_TYPE_VIDEO);
-                    fileUri = FileBackend.getUriForFile(this, mCameraFilePath);
-                    mTakeVideo.launch(fileUri);
-                } catch (SecurityException e) {
-                    aTalkApp.showToastMessage(R.string.camera_permission_denied_feedback);
-                }
-                break;
+        case video_record:
+            try {
+                // create a mp4 file to save the video
+                mCameraFilePath = FileBackend.getOutputMediaFile(FileBackend.MEDIA_TYPE_VIDEO);
+                fileUri = FileBackend.getUriForFile(this, mCameraFilePath);
+                mTakeVideo.launch(fileUri);
+            }
+            catch (SecurityException e) {
+                aTalkApp.showToastMessage(R.string.camera_permission_denied_feedback);
+            }
+            break;
         }
     }
 
@@ -983,59 +1033,59 @@ public class ChatActivity extends BaseActivity
             List<Attachment> attachments;
 
             switch (requestCode) {
-                case REQUEST_CODE_OPEN_FILE:
-                    if (intent != null) {
-                        Uri uri = intent.getData();
-                        if (uri != null) {
-                            filePath = FilePathHelper.getFilePath(this, uri);
-                            if (StringUtils.isNotEmpty(filePath))
-                                openDownloadable(new File(filePath), null);
-                            else
-                                aTalkApp.showToastMessage(R.string.file_does_not_exist);
-                        }
+            case REQUEST_CODE_OPEN_FILE:
+                if (intent != null) {
+                    Uri uri = intent.getData();
+                    if (uri != null) {
+                        filePath = FilePathHelper.getFilePath(this, uri);
+                        if (StringUtils.isNotEmpty(filePath))
+                            openDownloadable(new File(filePath), null);
+                        else
+                            aTalkApp.showToastMessage(R.string.file_does_not_exist);
                     }
-                    break;
+                }
+                break;
 
-                case REQUEST_CODE_SHARE_WITH:
-                    Timber.d("Share Intent with: REQUEST_CODE_SHARE_WITH");
-                    selectedChatPanel.setEditedText(null);
-                    if ("text/plain".equals(intent.getType())) {
-                        String text = intent.getStringExtra(Intent.EXTRA_TEXT);
-                        if (!TextUtils.isEmpty(text)) {
-                            if (FileBackend.isHttpFileDnLink(text)) {
-                                MediaShareTask msTask = new MediaShareTask();
-                                msTask.execute(text);
-                                break;
-                            }
-                            else {
-                                selectedChatPanel.setEditedText(text);
-                            }
-                        }
-                    }
-                    else {
-                        attachments = Attachment.extractAttachments(this, intent, Attachment.Type.IMAGE);
-                        mediaPreviewAdapter.addMediaPreviews(attachments);
-                    }
-                    // Switch to active chat fragment and update the chatController entry
-                    chatPagerAdapter.notifyDataSetChanged();
-                    toggleInputMethod();
-                    break;
-
-                case REQUEST_CODE_FORWARD:
-                    Timber.d("Share Intent with: REQUEST_CODE_FORWARD");
-                    selectedChatPanel.setEditedText(null);
-                    String text = (intent.getCategories() == null) ? null : intent.getCategories().toString();
+            case REQUEST_CODE_SHARE_WITH:
+                Timber.d("Share Intent with: REQUEST_CODE_SHARE_WITH");
+                selectedChatPanel.setEditedText(null);
+                if ("text/plain".equals(intent.getType())) {
+                    String text = intent.getStringExtra(android.content.Intent.EXTRA_TEXT);
                     if (!TextUtils.isEmpty(text)) {
-                        selectedChatPanel.setEditedText(text);
+                        if (FileBackend.isHttpFileDnLink(text)) {
+                            MediaShareTask msTask = new MediaShareTask();
+                            msTask.execute(text);
+                            break;
+                        }
+                        else {
+                            selectedChatPanel.setEditedText(text);
+                        }
                     }
-
+                }
+                else {
                     attachments = Attachment.extractAttachments(this, intent, Attachment.Type.IMAGE);
                     mediaPreviewAdapter.addMediaPreviews(attachments);
+                }
+                // Switch to active chat fragment and update the chatController entry
+                chatPagerAdapter.notifyDataSetChanged();
+                toggleInputMethod();
+                break;
 
-                    // Switch to active chat fragment and update the chatController entry
-                    chatPagerAdapter.notifyDataSetChanged();
-                    toggleInputMethod();
-                    break;
+            case REQUEST_CODE_FORWARD:
+                Timber.d("Share Intent with: REQUEST_CODE_FORWARD");
+                selectedChatPanel.setEditedText(null);
+                String text = (intent.getCategories() == null) ? null : intent.getCategories().toString();
+                if (!TextUtils.isEmpty(text)) {
+                    selectedChatPanel.setEditedText(text);
+                }
+
+                attachments = Attachment.extractAttachments(this, intent, Attachment.Type.IMAGE);
+                mediaPreviewAdapter.addMediaPreviews(attachments);
+
+                // Switch to active chat fragment and update the chatController entry
+                chatPagerAdapter.notifyDataSetChanged();
+                toggleInputMethod();
+                break;
             }
         }
     }
@@ -1069,7 +1119,8 @@ public class ChatActivity extends BaseActivity
         Uri uri;
         try {
             uri = FileBackend.getUriForFile(this, file);
-        } catch (SecurityException e) {
+        }
+        catch (SecurityException e) {
             Timber.i("No permission to access %s: %s", file.getAbsolutePath(), e.getMessage());
             aTalkApp.showToastMessage(R.string.file_open_no_permission);
             return;
@@ -1121,7 +1172,8 @@ public class ChatActivity extends BaseActivity
             }
             try {
                 startActivity(openIntent);
-            } catch (ActivityNotFoundException e) {
+            }
+            catch (ActivityNotFoundException e) {
                 aTalkApp.showToastMessage(R.string.file_open_no_application);
             }
         }
@@ -1195,36 +1247,37 @@ public class ChatActivity extends BaseActivity
         private String mUrl;
 
         public void execute(String... params) {
-            try (ExecutorService eService = Executors.newSingleThreadExecutor()) {
-                eService.execute(() -> {
-                    // mUrl = "https://vimeo.com/45196609";  // invalid link
-                    mUrl = params[0];
-                    final String result = getUrlInfo(mUrl);
+            ExecutorService eService = Executors.newSingleThreadExecutor();
+            eService.execute(() -> {
+                // mUrl = "https://vimeo.com/45196609";  // invalid link
+                mUrl = params[0];
+                final String result = getUrlInfo(mUrl);
 
-                    runOnUiThread(() -> {
-                                String urlInfo = null;
-                                if (!TextUtils.isEmpty(result)) {
-                                    try {
-                                        final JSONObject attributes = new JSONObject(result);
-                                        String title = attributes.getString("title");
-                                        String imageUrl = attributes.getString("thumbnail_url");
+                runOnUiThread(() -> {
+                            String urlInfo = null;
+                            if (!TextUtils.isEmpty(result)) {
+                                try {
+                                    final JSONObject attributes = new JSONObject(result);
+                                    String title = attributes.getString("title");
+                                    String imageUrl = attributes.getString("thumbnail_url");
 
-                                        urlInfo = getString(R.string.url_media_share, imageUrl, title, mUrl);
-                                        selectedChatPanel.sendMessage(urlInfo, IMessage.ENCODE_HTML);
-                                    } catch (JSONException e) {
-                                        Timber.w("Exception in JSONObject access: %s", result);
-                                    }
+                                    urlInfo = getString(R.string.url_media_share, imageUrl, title, mUrl);
+                                    selectedChatPanel.sendMessage(urlInfo, IMessage.ENCODE_HTML);
                                 }
-
-                                // send mUrl instead fetch urlInfo failed
-                                if (urlInfo == null) {
-                                    // selectedChatPanel.setEditedText(mUrl); too late as controller msgEdit is already initialized
-                                    selectedChatPanel.sendMessage(mUrl, IMessage.ENCODE_PLAIN);
+                                catch (JSONException e) {
+                                    Timber.w("Exception in JSONObject access: %s", result);
                                 }
                             }
-                    );
-                });
-            }
+
+                            // send mUrl instead fetch urlInfo failed
+                            if (urlInfo == null) {
+                                // selectedChatPanel.setEditedText(mUrl); too late as controller msgEdit is already initialized
+                                selectedChatPanel.sendMessage(mUrl, IMessage.ENCODE_PLAIN);
+                            }
+                        }
+                );
+            });
+            eService.shutdown();
         }
 
         /***
@@ -1256,7 +1309,8 @@ public class ChatActivity extends BaseActivity
                     InputStream inputStream = httpConnection.getInputStream();
                     return IOUtils.readAllToString(inputStream);
                 }
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 Timber.w("Exception in get URL info: %s", e.getMessage());
             }
             return null;

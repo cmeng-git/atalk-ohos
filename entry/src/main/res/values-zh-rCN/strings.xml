@@ -56,7 +56,7 @@
     <string name="encrypt_choices">加密选项</string>
     <string name="encrypt_unencrypted">未加密</string>
     <string name="network">网络</string>
-    <string name="notification_setting">通知设置&#8230;</string>
+    <string name="notification_setting">通知设置…</string>
     <string name="open_file_no_application">没有找到打开文件的应用程序</string>
     <string name="password">密码</string>
     <string name="password_change_on_server_failed">服务器上的密码更改失败:\n%1$s</string>
@@ -67,7 +67,7 @@
     <string name="call_info_zrtp">"调用 ZRTP 信息</string>
     <string name="osgi_framework_stop">停止 OSGi 框架</string>
     <string name="save_password">保存密码</string>
-    <string name="system_settings">设置&#8230;</string>
+    <string name="system_settings">设置…</string>
     <string name="username_hint">username@example.com</string>
     <string name="username_">用户名：</string>
 
@@ -77,9 +77,9 @@
     <string name="call_max_transfer">出席呼叫转移最多允许 2 个呼叫！</string>
     <string name="call_transfer_call">转接电话</string>
     <string name="call_transfer">转接</string>
-    <string name="call_transfer_failed">无法继续呼叫转移：%1$s &#8674; %2$s\n%3$s</string>
+    <string name="call_transfer_failed">无法继续呼叫转移：%1$s ⇢ %2$s\n%3$s</string>
     <string name="call_transfer_hint">选择您要转接到的联系人的姓名，然后点击转接。</string>
-    <string name="call_transfer_msg">%1$s 呼叫转移到&#8230; %2$s</string>
+    <string name="call_transfer_msg">%1$s 呼叫转移到… %2$s</string>
 
     <string name="attach_picture">图片</string>
     <string name="attach_take_picture">拍照</string>
@@ -113,7 +113,7 @@
     <string name="accept">接受</string>
     <string name="account">账号</string>
     <string name="account_me">本人</string>
-    <string name="account_settings">账户设置&#8230;</string>
+    <string name="account_settings">账户设置…</string>
     <string name="account_unregistered">%1$s 未注册</string>
     <string name="add">添加</string>
     <string name="add_contact">添加联系人</string>
@@ -125,16 +125,16 @@
     <string name="add_contact_error_network">服务器没有响应我们添加与聊天 ID 的联系的请求：%1$s。</string>
     <string name="add_contact_error_not_supported">添加 ID 为 %1$s 的联系人失败。不支持操作。</string>
     <string name="add_contact_error_not_connected">您需要连接才能添加联系人。请登录所选提供商并重试。</string>
-    <string name="add_group_error_local">无法添加名称为：%1$s 的组。问题发生在本地 IO 操作期间。</string>
+    <string name="add_group_error_local">无法添加名称为：%1$s 的群组。问题发生在本地 IO 操作期间。</string>
     <string name="add_group_error_exist">群组 %1$s 已存在于您的联系人列表中。请选择其他名称。</string>
-    <string name="add_group_error_network">无法添加名称为：%1$s 的组。该问题是由于网络故障而发生的。请检查您的网络连接并重试。</string>
-    <string name="add_group_failed">无法添加名称为：%1$s 的组。</string>
-    <string name="add_group_error_empty_name">组名不能为空</string>
+    <string name="add_group_error_network">无法添加名称为：%1$s 的群组。该问题是由于网络故障而发生的。请检查您的网络连接并重试。</string>
+    <string name="add_group_failed">无法添加名称为：%1$s 的群组。</string>
+    <string name="add_group_error_empty_name">群组名不能为空。</string>
     <string name="add_group_create">创建群组</string>
-    <string name="add_group_name">输入组名</string>
-    <string name="answer">接听来电&#8230;</string>
+    <string name="add_group_name">输入群组名</string>
+    <string name="answer">接听来电…</string>
     <string name="apply">更改</string>
-    <string name="apply_changes">应用帐户更改（~60S）&#8230;</string>
+    <string name="apply_changes">应用帐户更改（~60S）…</string>
     <string name="at">在</string>
     <string name="authentication_failed">%1$s 的身份验证失败。您输入的密码无效。</string>
     <string name="authentication_requested">请求身份验证</string>
@@ -188,20 +188,20 @@
     <string name="reason">原因：</string>
     <string name="set">设置</string>
     <string name="share">分享…</string>
-    <string name="share_text">分享文字&#8230;</string>
-    <string name="share_file">共享文件&#8230;</string>
+    <string name="share_text">分享文字…</string>
+    <string name="share_file">共享文件…</string>
     <string name="snooze">暂停</string>
 
     <!-- ExoPlayer -->
     <string name="playback_error">找不到要播放的媒体内容</string>
-    <string name="playback_buffering">缓冲&#8230;</string>
+    <string name="playback_buffering">缓冲…</string>
     <string name="playback_completed">媒体播放结束</string>
     <string name="playback_rate">播放速率：%1$s</string>
 
     <!-- Conference Chat -->
     <string name="auto_join">自动加入</string>
     <string name="change_nickname">更改昵称</string>
-    <string name="change_nickname_">更改昵称&#8230;</string>
+    <string name="change_nickname_">更改昵称…</string>
     <string name="change_nickname_error_conflict">昵称已经存在</string>
     <string name="change_nickname_error">更改 %1$s 的昵称时出错：%2$s</string>
     <string name="change_nickname_label">在下面的字段中，您可以输入您的新昵称。</string>
@@ -236,7 +236,7 @@
     <string name="chatroom_required_password">%1$s 聊天室要求密码。</string>
     <string name="chatroom_status_disable">禁用聊天室状态</string>
     <string name="chatroom_status_enable">启用聊天室状态</string>
-    <string name="chatroom_subject_changed">聊天室主题已更改：\'%1$s\' => \'%2$s\'</string>
+    <string name="chatroom_subject_changed">聊天室主题已更改：\'%1$s\' ➡ \'%2$s\'</string>
     <string name="chatroom_nickname_changed">%1$s 现在称为 %2$s</string>
     <string name="clear_custom_messages">删除自定义短信</string>
     <string name="close">关闭</string>
@@ -267,12 +267,12 @@
 
     <string name="create">创建</string>
     <string name="create_call_failed">创建通话失败。</string>
-    <string name="create_conference_call">创建电话会议&#8230;</string>
-    <string name="create_conference_chat">创建会议聊天&#8230;</string>
-    <string name="create_group">创建组&#8230;</string>
-    <string name="create_group_name_invalid">无效的组名：%1$s</string>
-    <string name="create_group_name">在下面的字段中输入您要创建的组的名称。</string>
-    <string name="create_group_first_wizard">您的联系人列表不包含任何组。请先创建一个组（文件/创建组）。</string>
+    <string name="create_conference_call">创建电话会议…</string>
+    <string name="create_conference_chat">创建会议聊天…</string>
+    <string name="create_group">创建群组…</string>
+    <string name="create_group_name_invalid">无效的群组名：%1$s</string>
+    <string name="create_group_name">在下面的字段中输入您要创建的群组的名称。</string>
+    <string name="create_group_first_wizard">您的联系人列表不包含任何群组。请先创建一个群组（文件/创建群组）。</string>
 
     <!-- About Dialog -->
     <string name="aboutDialog_help"><a href="https://cmeng-git.github.io/atalk">在线帮助</a></string>
@@ -323,7 +323,7 @@
 
     <!-- Location Permissions -->
     <string name="permission_location_rationale">需要访问定位服务来演示“我的位置”功能，该功能会在地图上显示您的当前位置。</string>
-    <string name="permission_location_denied">此示例需要位置权限才能启用“我的位置”图层。请重试并授予访问权限以使用该位置。\n如果权限已被永久拒绝，可以从系统设置 > 应用程序 &gt; \'Google Maps API 演示\'。</string>
+    <string name="permission_location_denied">此示例需要位置权限才能启用“我的位置”图层。请重试并授予访问权限以使用该位置。\n如果权限已被永久拒绝，可以从系统设置 &gt; 应用程序 &gt; \'Google Maps API 演示\'。</string>
     <string name="permission_location_required">此演示需要位置权限。</string>
 
     <!-- Persistent Store -->
@@ -331,7 +331,7 @@
     <string name="purge_debug_log">删除 aTalk 调试日志文件</string>
     <string name="purge_sql_db">删除 aTalk SQL 数据库 - 警戒！</string>
     <string name="refresh_apply">应用</string>
-    <string name="refresh_store">刷新持久存储&#8230;</string>
+    <string name="refresh_store">刷新持久存储…</string>
     <string name="refresh_store_avatar">XEP-0084/XEP-0153：头像</string>
     <string name="refresh_store_caps">XEP-0115：实体能力</string>
     <string name="refresh_store_disc_info">XEP-0030：服务发现</string>
@@ -340,7 +340,7 @@
     <string name="refresh_store_omemo">XEP-0384：OMEMO 加密</string>
 
     <string name="unregistered_message">账户连接登录失败：\n用户名：%1$s\n服务器名：%2$s\n账户离线。</string>
-    <string name="create_videoBridge">创建视频桥接&#8230;</string>
+    <string name="create_videoBridge">创建视频桥接…</string>
     <string name="create_videoBridge_menu">创建视频桥</string>
     <string name="create_join_video_conference">创建/加入视频会议</string>
     <string name="create_video_conference">为此聊天室创建一个新的视频会议</string>
@@ -370,9 +370,9 @@
     <string name="file_send_completed">文件已成功发送至 %1$s</string>
     <string name="file_send_declined">%1$s 已拒绝此文件</string>
     <string name="file_sending_to">正在发送文件到 %1$s</string>
-    <string name="file_transfer_accepted">文件传输已接受</string>
+    <string name="file_transfer_accepted">文件传输已被接受</string>
     <string name="file_transfer_canceled">文件传输已取消</string>
-    <string name="file_transfer_preparing">正在与 %1$s 准备文件传输。请稍候&#8230;</string>
+    <string name="file_transfer_preparing">正在与 %1$s 准备文件传输。请稍候…</string>
     <string name="file_transfer_declined">文件传输已被拒绝</string>
     <string name="file_transfer_request_received">%1$s 正在与您共享一个文件</string>
     <string name="file_transfer_send_error">将文件发送到 %1$s 时发生错误</string>
@@ -443,7 +443,7 @@
     <string name="chatroom_info_language">语言</string>
     <string name="chatroom_info_ldap_group">LDAP 群组</string>
 
-    <string name="chatroom_create">创建聊天室&#8230;</string>
+    <string name="chatroom_create">创建聊天室…</string>
     <string name="chatroom_create_error">无法为以下对象创建聊天室：\n%1$s</string>
     <string name="chatroom_create_join">创建/加入聊天室</string>
     <string name="chatroom_create_wizard">创建聊天室向导</string>
@@ -476,7 +476,7 @@
     <string name="invitation_received">收到邀请</string>
     <string name="invitation_received_message">%1$s 邀请您加入 %2$s 聊天室。您可以接受、拒绝或忽略此邀请。</string>
     <string name="invitation_rejected">%1$s 拒绝了您加入聊天室的邀请。原因：%2$s.</string>
-    <string name="invite">邀请加入聊天组</string>
+    <string name="invite">邀请加入聊天群组</string>
     <string name="invite_contact_message">选择您要添加到此对话中的联系人姓名，然后单击邀请。</string>
     <string name="invite_contact_to_call">邀请联系人通话</string>
     <string name="invite_contact_to_chat">邀请联系人聊天</string>
@@ -532,7 +532,7 @@
     <string name="chatroom_open_automatically">自动打开房间</string>
     <string name="personal">个人</string>
 
-    <string name="message_delivery_error">发送短信失败</string>
+    <string name="message_delivery_error">发送消息失败。</string>
     <string name="message_delivery_failed">以上短信无法送达</string>
     <string name="message_delivery_internal_error">发生内部错误。这很可能是一个错误。请通过调试日志报告。</string>
     <string name="message_delivery_not_supported">您使用的协议不支持离线短信。您可以尝试通过其他协议联系 %1$s 或等到他/她上线。</string>
@@ -584,7 +584,7 @@
     <string name="recent_messages">最近对话</string>
     <string name="received_">%1$s 已收到</string>
     <string name="referred">推荐</string>
-    <string name="restoring_">正在恢复&#8230;</string>
+    <string name="restoring_">正在恢复…</string>
 
     <string name="decline">拒绝</string>
     <string name="remove">删除</string>
@@ -604,11 +604,11 @@
     <string name="request_authorization_prompt">联系人所有者：%1$s\n\n需要 \'%2$s\' 的授权才能将他/她添加到您的联系人列表中。请再次输入您的请求。</string>
     <string name="retry">重试</string>
     <string name="search">搜索</string>
-    <string name="search_contact">搜索联系人</string>>
+    <string name="search_contact">搜索联系人</string>
     <string name="phonebook">电话簿</string>
     <string name="security">加密</string>
     <string name="select_account_owner">选择账户所有者</string>
-    <string name="assign_group">联系分配的组：</string>
+    <string name="assign_group">联系分配的群组：</string>
     <string name="no_group">没有群组</string>
 
     <!-- Logs -->
@@ -629,7 +629,7 @@
     <string name="send_via">发送方式</string>
     <string name="sent">已发送</string>
     <string name="server_chatroom">服务器聊天室</string>
-    <string name="shutting_down">正在关闭&#8230;</string>
+    <string name="shutting_down">正在关闭…</string>
     <string name="status">状态</string>
     <string name="type_your_request_reason">输入您的请求原因</string>
     <string name="unknown">未知</string>
@@ -734,44 +734,44 @@
     <!-- Security certificates -->
     <string name="trust_always">始终信任此证书</string>
     <string name="cert_dialog_title">证书验证</string>
-    <string name="cert_dialog_description">&lt;html>%1$s 在连接到时无法验证服务器的身份&lt;br/>&lt;b>%2$s&lt;/b>&lt;br/>&lt;br />证书不受信任（自签名证书），这意味着无法自动验证服务器的身份。&lt;br />&lt;br />是否仅针对此实例继续连接？&lt;br />有关更多选项和信息，请单击“显示证书”。&lt;/html></string>
-    <string name="cert_dialog_description_no_host">&lt;html>%1$s 无法验证
-         服务器证书的身份。&lt;br />&lt;br />
+    <string name="cert_dialog_description">&lt;html&gt;%1$s 在连接到时无法验证服务器的身份&lt;br/&gt;&lt;b&gt;%2$s&lt;/b&gt;&lt;br/&gt;&lt;br /&gt;证书不受信任（自签名证书），这意味着无法自动验证服务器的身份。&lt;br /&gt;&lt;br /&gt;是否仅针对此实例继续连接？&lt;br /&gt;有关更多选项和信息，请单击“显示证书”。&lt;/html&gt;</string>
+    <string name="cert_dialog_description_no_host">&lt;html&gt;%1$s 无法验证
+         服务器证书的身份。&lt;br /&gt;&lt;br /&gt;
          该证书不受信任（自签名证书），这意味着服务器的
-         无法自动验证身份。&lt;br />&lt;br />
-         仅针对此实例继续连接？&lt;br />
-         有关更多选项和信息，请单击“显示证书”。&lt;/html></string>
-    <string name="cert_dialog_client_description">&lt;html>%1$s 无法验证
-         连接客户端的身份。&lt;br />&lt;br />
+         无法自动验证身份。&lt;br /&gt;&lt;br /&gt;
+         仅针对此实例继续连接？&lt;br /&gt;
+         有关更多选项和信息，请单击“显示证书”。&lt;/html&gt;</string>
+    <string name="cert_dialog_client_description">&lt;html&gt;%1$s 无法验证
+         连接客户端的身份。&lt;br /&gt;&lt;br /&gt;
          该证书不受信任（自签名证书），这意味着客户端的
-         无法自动验证身份。&lt;br />&lt;br />
-         仅针对此实例继续连接？&lt;br />
-         有关更多选项和信息，请单击“显示证书”。&lt;/html></string>
-    <string name="cert_dialog_peer_description">&lt;html>%1$s 无法验证
-         对等点 %2$s 的身份。&lt;br />&lt;br />
+         无法自动验证身份。&lt;br /&gt;&lt;br /&gt;
+         仅针对此实例继续连接？&lt;br /&gt;
+         有关更多选项和信息，请单击“显示证书”。&lt;/html&gt;</string>
+    <string name="cert_dialog_peer_description">&lt;html&gt;%1$s 无法验证
+         对等点 %2$s 的身份。&lt;br /&gt;&lt;br /&gt;
          该证书不受信任（自签名证书），这意味着对等方的
-         无法自动验证身份。&lt;br />&lt;br />
-         仅针对此实例继续连接？&lt;br />
-         有关更多选项和信息，请单击“显示证书”。&lt;/html></string>
+         无法自动验证身份。&lt;br /&gt;&lt;br /&gt;
+         仅针对此实例继续连接？&lt;br /&gt;
+         有关更多选项和信息，请单击“显示证书”。&lt;/html&gt;</string>
     <string name="proceed">继续</string>
-    <string name="cert_info_issued_to">&lt;b>颁发给&lt;&lt;/b></string>
+    <string name="cert_info_issued_to"><b>颁发给</b></string>
     <string name="cert_info_chain">证书链：</string>
     <string name="cert_info_cn">通用名称：</string>
     <string name="cert_info_O">组织：</string>
     <string name="cert_info_C">国家名称：</string>
     <string name="cert_info_ST">州或省名称：</string>
     <string name="cert_info_L">地区名称：</string>
-    <string name="cert_info_issued_by">&lt;b>颁发者&lt;&lt;/b></string>
+    <string name="cert_info_issued_by"><b>颁发者</b></string>
     <string name="cert_info_OU">组织单位：</string>
-    <string name="cert_info_validity">&lt;b>有效期&lt;&lt;/b></string>
+    <string name="cert_info_validity">&lt;b&gt;有效期&lt;&lt;/b&gt;</string>
     <string name="cert_info_issued_on">颁发于：</string>
     <string name="cert_info_expires_on">过期时间：</string>
-    <string name="cert_info_fingerprints">&lt;b>指纹&lt;&lt;/b></string>
-    <string name="cert_info_details">&lt;b>证书信息&lt;&lt;/b></string>
+    <string name="cert_info_fingerprints">&lt;b&gt;指纹&lt;&lt;/b&gt;</string>
+    <string name="cert_info_details"><b>证书信息</b></string>
     <string name="cert_info_SN">序列号：</string>
     <string name="cert_info_version">版本：</string>
     <string name="cert_info_sign_algo">签名算法：</string>
-    <string name="cert_info_pubkey_info">&lt;b>公钥信息&lt;&lt;/b></string>
+    <string name="cert_info_pubkey_info"><b>公钥信息</b></string>
     <string name="cert_info_algo">算法：</string>
     <string name="cert_info_pubkey">公钥：</string>
     <string name="cert_info_key_bytes">%1$s 字节：%2$s</string>
@@ -784,8 +784,8 @@
     <string name="certificate_hide">隐藏证书</string>
     <string name="unsaved_changes">您有未保存的更改。保存或取消并退出。</string>
     <string name="unsaved_changes_title">未保存的更改</string>
-    <string name="please_wait">请稍候&#8230;</string>
-    <string name="server_info_fetching">获取服务器公布的功能/信息&#8230;</string>
+    <string name="please_wait">请稍候…</string>
+    <string name="server_info_fetching">获取服务器公布的功能/信息…</string>
 
     <!-- Security info -->
     <string name="security_audio_not_secure">音频不安全</string>
@@ -816,7 +816,7 @@
     <string name="update_in_progress">进行中</string>
     <string name="update_download_in_progress">正在下载更新。</string>
     <string name="update_update_available">%3$s 的新发布版本 (%1$s-%2$s) 可用。当前安装的版本：(%4$s-%5$s).</string>
-    <string name="update_up_to_date">您当前安装的版本：(%1$s-%2$s) 是最新的。\n在线版本： (%3$s-%4$s).</string>
+    <string name="update_up_to_date">您当前安装的版本：(%1$s-%2$s) 是最新的。在线可用版本： (%3$s-%4$s).</string>
     <string name="update_new_version_none">没有新版本</string>
     <string name="update_install_update">安装更新</string>
     <string name="update_download_failed">无法下载新更新！</string>
@@ -932,16 +932,16 @@
     <string name="media_configform_audio_device_config_changed">音频设备配置已更改</string>
     <string name="media_configform_audio_device_config_management_click">点击此处进行设备管理</string>
     <string name="media_configform_preview">预览</string>
-    <string name="media_security_checksum_mismatch">&lt;html>内部 ZRTP 数据包校验和不匹配。&lt;br />如果您经常看到此短信，这可能意味着拒绝服务攻击！&lt;/html></string>
-    <string name="media_security_data_send_failed">&lt;html>发送加密数据失败。互联网数据连接或对等端已关闭。&lt;br /><b>您的通话不安全</b>&lt;br />错误代码：%1$s&lt;/html></string>
-    <string name="imedia_security_retry_rate_exceeded">&lt;html>安全协商期间重试次数过多。这可能意味着对方有网络连接问题。&lt;br /><b>您的通话不安全</b>&lt;br />错误代码：%1$s&lt;/html></string>
-    <string name="media_security_internal_protocol_error">&lt;html>出现内部协议错误。&lt;br/>&lt;b>你的调用不安全&lt;/b>&lt;br/>错误代码：%1$s&lt;/html ></string>
+    <string name="media_security_checksum_mismatch"><html>内部 ZRTP 数据包校验和不匹配。<br/>如果您经常看到此短信，这可能意味着拒绝服务攻击！</html></string>
+    <string name="media_security_data_send_failed"><html>发送加密数据失败。互联网数据连接或对等端已关闭。<br/><b>您的通话不安全</b><br/>错误代码：%1$s</html></string>
+    <string name="imedia_security_retry_rate_exceeded"><html>安全协商期间重试次数过多。这可能意味着对方有网络连接问题。<br/><b>您的通话不安全</b><br/>错误代码：%1$s</html></string>
+    <string name="media_security_internal_protocol_error">&lt;html&gt;出现内部协议错误。&lt;br/&gt;&lt;b&gt;你的调用不安全&lt;/b&gt;&lt;br/&gt;错误代码：%1$s&lt;/html &gt;</string>
     <string name="media_security_off">关闭通话加密支持</string>
     <string name="media_security_on">调用加密支持</string>
-    <string name="media_security_severe_generic_message">&lt;html>检测到严重的安全问题。&lt;br/>&lt;b>你的通话不安全&lt;/b>&lt;br/>错误代码：%1$s&lt;/html></string>
-    <string name="media_security_warning_no_rs_match">&lt;html>没有可用的保留共享秘密。&lt;br/>&lt;b>建议使用 SAS 验证&lt;/b>&lt;/html></string>
-    <string name="media_security_warning_no_expected_rs_match">&lt;html>缺少预期的保留共享机密。&lt;br/>&lt;b>需要 SAS 验证&lt;/b>&lt;br/>如果 SAS 代码不匹配，则挂断 然后重试&lt;/html></string>
-    <string name="media_security_zrtp_generic_message">&lt;html>检测到严重的 ZRTP 问题。&lt;br/>&lt;b>您的通话不安全&lt;/b>&lt;br/>错误代码：%1$s&lt;/html></string>
+    <string name="media_security_severe_generic_message">&lt;html&gt;检测到严重的安全问题。&lt;br/&gt;&lt;b&gt;你的通话不安全&lt;/b&gt;&lt;br/&gt;错误代码：%1$s&lt;/html&gt;</string>
+    <string name="media_security_warning_no_rs_match">&lt;html&gt;没有可用的保留共享秘密。&lt;br/&gt;&lt;b&gt;建议使用 SAS 验证&lt;/b&gt;&lt;/html&gt;</string>
+    <string name="media_security_warning_no_expected_rs_match">&lt;html&gt;缺少预期的保留共享机密。&lt;br/&gt;&lt;b&gt;需要 SAS 验证&lt;/b&gt;&lt;br/&gt;如果 SAS 代码不匹配，则挂断 然后重试&lt;/html&gt;</string>
+    <string name="media_security_zrtp_generic_message">&lt;html&gt;检测到严重的 ZRTP 问题。&lt;br/&gt;&lt;b&gt;您的通话不安全&lt;/b&gt;&lt;br/&gt;错误代码：%1$s&lt;/html&gt;</string>
     <string name="media_security_zrtp_handshake_timeout">通话不安全； RTP 握手超时：%1$s</string>
 
     <!-- DTLS-SRTP Securing -->
@@ -957,8 +957,7 @@
     <string name="omemo_identity_key_invalid">omemoDevice 的 IdentityKey 无效：%1$s。\n异常：%2$s。</string>
     <string name="omemo_identity_key_missing">%1$s 的 OMEMO IdentityKey 丢失。\n继续从服务器下载。</string>
     <string name="omemo_identity_keypairs_invalid">omemoDevice 的 IdentityKeyPairs 无效：%1$s。\n异常：%2$s。</string>
-    <string name="omemo_init_failed_corrupted_omemoKey_exception">初始化 OmemoManager 失败，omemo 短信传递不工作。如果问题仍然存在
-         重新启动后，请继续为失败的 omomoDevice 执行“重新生成 OMEMO 身份”：%1$s。\n\n异常：%2$s。</string>
+    <string name="omemo_init_failed_corrupted_omemoKey_exception">初始化 OmemoManager 失败，omemo 短信传递不工作。如果问题仍然存在重新启动后，请继续为失败的 omomoDevice 执行“重新生成 OMEMO 身份”：%1$s。\n\n异常：%2$s。</string>
     <string name="omemo_init_failed_no_response">初始化 OmemoManager 失败，omemo 短信可能无法正常工作：%1$s</string>
     <string name="omemo_init_failed_title">OmemoManager 初始化失败</string>
     <string name="omemo_menu_authenticated">OMEMO 认证</string>
@@ -1007,29 +1006,29 @@
     <string name="dnsconfig_dnssec_enable_failed">状态更改失败</string>
     <string name="dnsconfig_dnssec_enable_failed_message">更改 DNSSEC 启用状态失败。</string>
     <string name="dnsconfig_dnssec_mode">行为</string>
-    <string name="dnsconfig_dnssec_restart_alert">&lt;html>请注意，启用或禁用 DNSSEC 会禁用并行解析器，并且只会在您下次启动 aTalk 时生效。&lt;/html></string>
+    <string name="dnsconfig_dnssec_restart_alert">&lt;html&gt;请注意，启用或禁用 DNSSEC 会禁用并行解析器，并且只会在您下次启动 aTalk 时生效。&lt;/html&gt;</string>
     <string name="dnsconfig_dnssec_title">备份解析器</string>
     <string name="dnsconfig_dnssec_check_absolute">将所有域名视为绝对域名</string>
     <string name="dnsconfig_dnssec_check_enable">启用 DNSSEC 解析器</string>
     <string name="dnsconfig_dnssec_label_default">默认行为</string>
     <string name="dnsconfig_dnssec_label_name_servers">自定义名称服务器</string>
-    <string name="dnsconfig_dnssec_label_name_servers_hint">&lt;html>多个服务器可以用逗号分隔，例如 149.20.64.20、149.20.64.21（OARC 的开放式 DNSSEC 验证解析器）&lt;/html></string>
+    <string name="dnsconfig_dnssec_label_name_servers_hint">&lt;html&gt;多个服务器可以用逗号分隔，例如 149.20.64.20、149.20.64.21（OARC 的开放式 DNSSEC 验证解析器）&lt;/html&gt;</string>
 
     <string name="dns_insecure_answer_title">DNSSEC 失败</string>
     <string name="dns_insecure_answer_message_insecure">%1$s 的 DNS 应答不安全。</string>
     <string name="dns_insecure_answer_message_reason">%1$s 的 DNS 应答不安全。\n原因：%2$s</string>
     <string name="dns_dnssec_advanced_options">显示高级选项</string>
-    <string name="dns_dnssec_advanced_reason_invalid">&lt;html>DNSSEC 签名区域 %1$s 返回了无效数据。&lt;br/>%2$s&lt;/html></string>
+    <string name="dns_dnssec_advanced_reason_invalid">&lt;html&gt;DNSSEC 签名区域 %1$s 返回了无效数据。&lt;br/&gt;%2$s&lt;/html&gt;</string>
     <string name="dns_dnssec_advanced_reason_unsigned">%1$s 对 %2$s 的查询未签名。</string>
-    <string name="dns_dnssec_warning">&lt;html>&lt;div width="600">%1$s 已尝试连接到位于 &lt;b>%2$s&lt;&lt;/b> 的服务器，
-         这是一个具有称为 DNSSEC 的强大保护的域。%1$s 获得的信息
-         来自 DNS 服务器的信息与 DNSSEC 提供的有关此域的信息不一致。&lt;br/>&lt;br/><b>
-         除非在 %2$s 处犯了非常严重的错误，否则这不应该发生。因此，这是一个非常强烈的迹象，表明某事是
-         您的网络连接的可信度严重错误。</b>&lt;br/>&lt;br/>
-         如果您使用的是其他人的互联网连接（如 WiFi 热点），或者如果有特殊情况让您不信任
-         您的常规互联网提供商，我们强烈建议您立即停止使用它并寻找替代的互联网接入点。
-         当您安全地连接到另一个网络时，问题应该会自动解决。如果不是这种情况，请联系您的
-         服务提供商通知他们有关该问题。&lt;/div>&lt;/html></string>
+    <string name="dns_dnssec_warning">&lt;html&gt;&lt;div width=600&gt; %1$s 已尝试连接到位于的 &lt;b&gt;%2$s&lt;&lt;/b&gt;服务器，
+     这是一个具有称为 DNSSEC 的强大保护的域。%1$s 获取自 DNS
+     服务器的信息与 DNSSEC 提供的有关此域的信息不一致。&lt;br/&gt;&lt;br/&gt;&lt;b&gt;
+     除非在 %2$s 处犯了非常严重的错误，否则这不应该发生。因此，这是一个非常强烈的迹象，表明某事是
+     您的网络连接的可信度严重错误。&lt;/b&gt;&amp;lt;br/&amp;gt;&amp;lt;br/&amp;gt;
+     如果您使用的是其他人的互联网连接（如 WiFi 热点），或者如果有特殊情况让您不信任
+     您的常规互联网提供商，我们强烈建议您立即停止使用它并寻找替代的互联网接入点。
+     当您安全地连接到另一个网络时，问题应该会自动解决。如果不是这种情况，请联系您的
+     服务提供商通知他们有关该问题。&lt;/div&gt;&lt;/html&gt;</string>
 
     <!-- SSL Certificates -->
     <string name="settings_ssl_certificate">SSL 证书</string>
@@ -1048,8 +1047,8 @@
     <string name="zid_reset_done">ZID 已重置</string>
 
     <!-- Settings -->
-    <string name="commit_progress_message">正在存储账户变更，请稍候&#8230;</string>
-    <string name="commit_progress_title">"提交&#8230;"</string>
+    <string name="commit_progress_message">正在存储账户变更，请稍候…</string>
+    <string name="commit_progress_title">"提交…"</string>
     <string name="settings_not_set">（未设置）</string>
 
     <!-- Encoding settings -->
@@ -1068,7 +1067,7 @@
 
     <!-- STUN/Jingle Nodes list -->
     <string name="service_gui_SERVERS_LIST_ADD_SERVER">添加服务器</string>
-    <string name="service_gui_SERVERS_LIST_EMPTY">列表为空。点击添加新条目&#8230;</string>
+    <string name="service_gui_SERVERS_LIST_EMPTY">列表为空。点击添加新条目…</string>
 
     <!-- Jingle Nodes edit -->
     <string name="service_gui_JINGLE_EDIT_JID">JID 地址</string>
@@ -1104,7 +1103,7 @@
     <!-- Jabber preferences -->
     <string name="jbr_auto_sign_in">启动时连接</string>
     <string name="jbr_auto_stun_discovery">自动发现 STUN/TURN 服务器</string>
-    <string name="jbr_connection_summary">设置连接细节&#8230;</string>
+    <string name="jbr_connection_summary">设置连接细节…</string>
     <string name="jbr_connection">连接设置</string>
     <string name="jbr_jingle_disable">禁用媒体通话 (Jingle)</string>
     <string name="jbr_jingle_summary">（使用 XMPP 的音频和视频通话）</string>
@@ -1113,9 +1112,9 @@
     <string name="jbr_gmail_notifications">Gmail 新邮件通知</string>
     <string name="jbr_google_contact_search">Google 通讯录搜索</string>
     <string name="jbr_gtalk_domain">将使用 GTalk 调用的域</string>
-    <string name="jbr_ice_summary">配置 ICE 选项&#8230;</string>
+    <string name="jbr_ice_summary">配置 ICE 选项…</string>
     <string name="jbr_jingle_auto">自动发现 Jingle 节点中继</string>
-    <string name="jbr_jingle_list">额外的 Jingle 节点&#8230;</string>
+    <string name="jbr_jingle_list">额外的 Jingle 节点…</string>
     <string name="jbr_jingle_list_summary">用户定义的附加 Jingle 节点以供使用</string>
     <string name="jbr_jingle_nodes">Jingle 节点</string>
     <string name="jbr_jingle_use">使用 jingle 节点</string>
@@ -1141,11 +1140,11 @@
     <string name="jbr_server_options">服务器选项</string>
     <string name="jbr_store_password">记住密码</string>
     <string name="jbr_store_password_summary">保存密码以在应用程序启动时自动登录</string>
-    <string name="jbr_stun_list">额外的 STUN/TURN 服务器&#8230;</string>
+    <string name="jbr_stun_list">额外的 STUN/TURN 服务器…</string>
     <string name="jbr_stun_list_summary">用户定义的附加 STUN/TURN 服务器以供使用</string>
     <string name="jbr_telephony_domain">电话域</string>
     <string name="jbr_telephony_voip_pbx">VoIP-PBX 网关电话</string>
-    <string name="jbr_telephony_summary">配置电话选项&#8230;</string>
+    <string name="jbr_telephony_summary">配置电话选项…</string>
     <string name="jbr_use_default_stun">使用 Jitsi STUN 服务器（回退）</string>
     <string name="jbr_use_ice">使用 ICE</string>
     <string name="jbr_use_google_ice">使用 Google 的 Jingle/ICE（实验性）</string>
@@ -1159,7 +1158,7 @@
     <string name="contact_phone_empty">联系电话不能为空！</string>
     <string name="recipient_error_non_ascii">目前不支持特殊字符！</string>
     <string name="domain_not_in_roster">指定的电话域\'%1$s\'不是联系人列表的成员</string>
-    <string name="not_in_call_group">%1$s 不属于定义的调用组</string>
+    <string name="not_in_call_group">%1$s 不属于定义的调用群组</string>
     <string name="jingle_not_supported">%1$s\n不支持 Jingle 协议</string>
     <string name="recipient_error_parse_failed">地址解析错误！</string>
     <string name="unknown_recipient"><![CDATA[<Unknown Recipient>]]></string>
@@ -1266,9 +1265,9 @@
 
     <!-- TTS Language -->
     <string name="tts_delay">短信文本到语音延迟（毫秒）</string>
-    <string name="tts_settings">常规 TTS 设置&#8230;</string>
-    <string name="tts_disable">禁用文本 &#x27A1; 言语</string>
-    <string name="tts_enable">启用文本 &#x27A1; 言语</string>
+    <string name="tts_settings">常规 TTS 设置…</string>
+    <string name="tts_disable">禁用文本 ➡ 言语</string>
+    <string name="tts_enable">启用文本 ➡ 言语</string>
     <string name="tts_synthesis">输入语音或合成文本并保存到文件：</string>
     <string name="tts_voice">默认 TTS 语音：</string>
 
@@ -1345,6 +1344,13 @@
 
     <!-- OMEMO security category-->
     <string name="omemo_messaging_security">OMEMO 短信加密</string>
+    <!-- OMEMO:2 Enable screen -->
+    <string name="omemo2_access_mode">omemo:2 访问模式</string>
+    <string name="omemo2_enable">启用 omemo:2 支持</string>
+    <string name="omemo2_optout">OMEMO 聊天退出</string>
+    <string name="omemo2_optout_reason">OMEMO 聊天退出。\n抱歉，出于合规性原因，我需要永久保存我们对话的服务器端记录。</string>
+    <string name="omemo2_subscription_failed">订阅 OMEMO 参数包和设备列表发布节点失败！</string>
+    <string name="omemo2_summary">支持 XEP-0384 OMEMO 元素命名空间：\'urn:xmpp:omemo:2\'</string>
     <!-- OMEMO device screen -->
     <string name="omemo_blind_trust_before_verification">验证前盲目信任</string>
     <string name="omemo_blind_trust_before_verification_summary">自动信任之前未验证过的联系人的所有新设备； 当已验证的联系人添加新设备时提示手动确认。</string>
@@ -1478,8 +1484,8 @@
     <string name="storage_permission_denied_feedback">在您授予权限请求之前，不允许将发送和接收的内容保存在存储中</string>
 
     <string name="all_permission_denied_dialog_title">所有权限请求</string>
-    <string name="all_permissions_denied_feedback">aTalk 可能无法正常工作或可能出现意外行为，因为某些服务已被拒绝！\n如果您选择了“不再询问”选项，您需要转到 android 设置 - > APP INFO for aTalk 开启资源访问权限</string>
-    <string name="permission_denied_all_alert">aTalk 无法正常工作。您已经拒绝了 aTalk 的所有权限！\n您需要到安卓设置-> aTalk 的应用信息开启资源访问权限。</string>
+    <string name="all_permissions_denied_feedback">aTalk 可能无法正常工作或可能出现意外行为，因为某些服务已被拒绝！\n如果您选择了“不再询问”选项，您需要转到 android 设置 ➡ APP INFO for aTalk 开启资源访问权限</string>
+    <string name="permission_denied_all_alert">aTalk 无法正常工作。您已经拒绝了 aTalk 的所有权限！\n您需要到安卓设置 ➡ aTalk 的应用信息开启资源访问权限。</string>
 
     <string name="permission_rationale_message">您会看到 aTalk 所需的每项服务； 请允许 aTalk 访问这些服务以获得支持的全部功能</string>
     <string name="permission_rationale_settings_button_text">设置</string>

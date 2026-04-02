@@ -24,7 +24,8 @@ public class Migrations {
         switch (db.getVersion()) {
             case 1:
                 // OmemoDBCreate.createOmemoTables(db);
-                break;
+        case 7:
+            MigrationTo2.addOmemoDeviceLabel(db);
         }
     }
 }
