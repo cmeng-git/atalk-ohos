@@ -44,7 +44,6 @@ import net.java.sip.communicator.service.protocol.globalstatus.GlobalStatusServi
 import net.java.sip.communicator.util.ConfigurationUtils;
 import net.java.sip.communicator.util.account.AccountUtils;
 
-import org.atalk.impl.osgi.framework.BundleImpl;
 import org.atalk.ohos.BaseActivity;
 import org.atalk.ohos.R;
 import org.atalk.ohos.gui.AppGUIActivator;
@@ -64,6 +63,7 @@ import org.atalk.ohos.gui.settings.SettingsActivity;
 import org.atalk.ohos.plugin.geolocation.GeoLocationActivity;
 import org.atalk.ohos.plugin.permissions.PermissionsActivity;
 import org.atalk.ohos.plugin.textspeech.TTSActivity;
+import org.atalk.impl.osgi.framework.BundleImpl;
 import org.osgi.framework.ServiceEvent;
 import org.osgi.framework.ServiceListener;
 import org.osgi.framework.ServiceReference;
@@ -317,6 +317,7 @@ public class MainMenuActivity extends ExitMenuActivity implements ServiceListene
             Intent ttsIntent = new Intent(this, TTSActivity.class);
             startActivity(ttsIntent);
             break;
+
         case R.id.show_hide_offline:
             boolean isShowOffline = !ConfigurationUtils.isShowOffline(); // toggle
             MetaContactListAdapter.presenceFilter.setShowOffline(isShowOffline);
@@ -329,11 +330,12 @@ public class MainMenuActivity extends ExitMenuActivity implements ServiceListene
                     ? R.string.contact_offline_hide
                     : R.string.contact_offline_show;
             mShowHideOffline.setTitle(itemId);
-
             break;
+
         case R.id.notification_setting:
             openNotificationSettings();
             break;
+
         case R.id.sign_in_off:
             // Toggle current account presence status
             boolean isOffline = GlobalStatusEnum.OFFLINE_STATUS.equals(ActionBarUtil.getStatus(this));
@@ -343,6 +345,7 @@ public class MainMenuActivity extends ExitMenuActivity implements ServiceListene
             else
                 globalStatusService.publishStatus(GlobalStatusEnum.OFFLINE);
             break;
+
         default:
             return super.onOptionsItemSelected(item);
         }
@@ -454,7 +457,7 @@ public class MainMenuActivity extends ExitMenuActivity implements ServiceListene
     @Override
     public void contactPresenceStatusChanged(final ContactPresenceStatusChangeEvent evt) {
         // cmeng - how to add the listener onResume - multiple protocol providers???
-        runOnUiThread(() -> {
+        BaseActivity.uiHandler.post(() -> {
             Contact sourceContact = evt.getSourceContact();
             initVideoBridge();
         });

@@ -42,28 +42,24 @@ import timber.log.Timber;
 public abstract class TransportManager<U extends MediaAwareCallPeer<?, ?, ?>> {
     /**
      * The port tracker that we should use when binding generic media streams.
-     *
      * Initialized by {@link #initializePortNumbers()}.
      */
     private static final PortTracker defaultPortTracker = new PortTracker(5000, 6000);
 
     /**
      * The port tracker that we should use when binding video media streams.
-     *
      * Potentially initialized by {@link #initializePortNumbers()} if the necessary properties are set.
      */
     private static PortTracker videoPortTracker;
 
     /**
      * The port tracker that we should use when binding data channels.
-     *
      * Potentially initialized by {@link #initializePortNumbers()} if the necessary properties are set.
      */
     private static PortTracker dataPortTracker;
 
     /**
      * The port tracker that we should use when binding data media streams.
-     *
      * Potentially initialized by {@link #initializePortNumbers()} if the necessary properties are set.
      */
     private static PortTracker audioPortTracker;
@@ -93,6 +89,7 @@ public abstract class TransportManager<U extends MediaAwareCallPeer<?, ?, ?>> {
      *
      * @param mediaType the media type that we want to obtain the port tracker for. Use <code>null</code> to
      * obtain the default port tracker.
+     *
      * @return the port tracker that we are supposed to use when binding ports for the specified {@link MediaType}.
      */
     protected static PortTracker getPortTracker(MediaType mediaType) {
@@ -127,6 +124,7 @@ public abstract class TransportManager<U extends MediaAwareCallPeer<?, ?, ?>> {
      * media type, we simply return the default port tracker.
      *
      * @param mediaTypeStr the name of the media type that we want to obtain a port tracker for.
+     *
      * @return the port tracker that we are supposed to use when binding ports for the
      * {@link MediaType} with the specified name or the default tracker in case the name doesn't ring a bell.
      */
@@ -166,7 +164,9 @@ public abstract class TransportManager<U extends MediaAwareCallPeer<?, ?, ?>> {
      * or in case one of its underlying sockets has been closed.
      *
      * @param mediaType the <code>MediaType</code> that we'd like to create a connector for.
+     *
      * @return this media handler's <code>StreamConnector</code> for the specified <code>mediaType</code>.
+     *
      * @throws OperationFailedException in case we failed to initialize our connector.
      */
     public StreamConnector getStreamConnector(MediaType mediaType)
@@ -238,7 +238,9 @@ public abstract class TransportManager<U extends MediaAwareCallPeer<?, ?, ?>> {
      * minimum and maximum of the media port boundaries are taken into account.
      *
      * @param mediaType the <code>MediaType</code> of the stream for which a <code>StreamConnector</code> is to be created
+     *
      * @return a <code>StreamConnector</code> for the stream of the specified <code>mediaType</code>
+     *
      * @throws OperationFailedException if the binding of the sockets fails
      */
     protected StreamConnector createStreamConnector(MediaType mediaType)
@@ -263,7 +265,9 @@ public abstract class TransportManager<U extends MediaAwareCallPeer<?, ?, ?>> {
      *
      * @param portTracker the port tracker.
      * @param localHostForPeer the address to bind to.
+     *
      * @return the newly created datagram socket.
+     *
      * @throws OperationFailedException if we fail to create the socket.
      */
     private DatagramSocket createDatagramSocket(InetAddress localHostForPeer, PortTracker portTracker)
@@ -485,6 +489,7 @@ public abstract class TransportManager<U extends MediaAwareCallPeer<?, ?, ?>> {
      * Gets the SIP traffic class associated with a specific <code>MediaType</code> from the configuration.
      *
      * @param type the <code>MediaType</code> to get the associated SIP traffic class of
+     *
      * @return the SIP traffic class associated with the specified <code>MediaType</code> or <code>0</code>
      * if not configured
      */
@@ -513,8 +518,10 @@ public abstract class TransportManager<U extends MediaAwareCallPeer<?, ?, ?>> {
      * registrar accounts) From headers.
      *
      * @param peer the CallPeer that we would contact.
+     *
      * @return the <code>InetAddress</code> that is most likely to be to be used as a next hop when
      * contacting the specified <code>destination</code>.
+     *
      * @throws IllegalArgumentException if <code>destination</code> is not a valid host/ip/fqdn
      */
     protected abstract InetAddress getIntendedDestination(U peer);
@@ -532,6 +539,7 @@ public abstract class TransportManager<U extends MediaAwareCallPeer<?, ?, ?>> {
      * Returns the extended type of the candidate selected if this transport manager is using ICE.
      *
      * @param streamName The stream name (AUDIO, VIDEO);
+     *
      * @return The extended type of the candidate selected if this transport manager is using ICE.
      * Otherwise, returns null.
      */
@@ -548,6 +556,7 @@ public abstract class TransportManager<U extends MediaAwareCallPeer<?, ?, ?>> {
      * Returns the ICE local host address.
      *
      * @param streamName The stream name (AUDIO, VIDEO);
+     *
      * @return the ICE local host address if this transport manager is using ICE. Otherwise, returns null.
      */
     public abstract InetSocketAddress getICELocalHostAddress(String streamName);
@@ -556,6 +565,7 @@ public abstract class TransportManager<U extends MediaAwareCallPeer<?, ?, ?>> {
      * Returns the ICE remote host address.
      *
      * @param streamName The stream name (AUDIO, VIDEO);
+     *
      * @return the ICE remote host address if this transport manager is using ICE. Otherwise, returns null.
      */
     public abstract InetSocketAddress getICERemoteHostAddress(String streamName);
@@ -564,6 +574,7 @@ public abstract class TransportManager<U extends MediaAwareCallPeer<?, ?, ?>> {
      * Returns the ICE local reflexive address (server or peer reflexive).
      *
      * @param streamName The stream name (AUDIO, VIDEO);
+     *
      * @return the ICE local reflexive address. May be null if this transport manager is not using
      * ICE or if there is no reflexive address for the local candidate used.
      */
@@ -573,6 +584,7 @@ public abstract class TransportManager<U extends MediaAwareCallPeer<?, ?, ?>> {
      * Returns the ICE remote reflexive address (server or peer reflexive).
      *
      * @param streamName The stream name (AUDIO, VIDEO);
+     *
      * @return the ICE remote reflexive address. May be null if this transport manager is not using
      * ICE or if there is no reflexive address for the remote candidate used.
      */
@@ -582,6 +594,7 @@ public abstract class TransportManager<U extends MediaAwareCallPeer<?, ?, ?>> {
      * Returns the ICE local relayed address (server or peer relayed).
      *
      * @param streamName The stream name (AUDIO, VIDEO);
+     *
      * @return the ICE local relayed address. May be null if this transport manager is not using ICE
      * or if there is no relayed address for the local candidate used.
      */
@@ -591,6 +604,7 @@ public abstract class TransportManager<U extends MediaAwareCallPeer<?, ?, ?>> {
      * Returns the ICE remote relayed address (server or peer relayed).
      *
      * @param streamName The stream name (AUDIO, VIDEO);
+     *
      * @return the ICE remote relayed address. May be null if this transport manager is not using
      * ICE or if there is no relayed address for the remote candidate used.
      */
@@ -608,6 +622,7 @@ public abstract class TransportManager<U extends MediaAwareCallPeer<?, ?, ?>> {
      * Returns the harvesting time (in ms) for the harvester given in parameter.
      *
      * @param harvesterName The class name if the harvester.
+     *
      * @return The harvesting time (in ms) for the harvester given in parameter. 0 if this harvester
      * does not exists, if the ICE agent is null, or if the agent has never harvested with this harvester.
      */
@@ -624,6 +639,7 @@ public abstract class TransportManager<U extends MediaAwareCallPeer<?, ?, ?>> {
      * Returns the number of harvesting time for the harvester given in parameter.
      *
      * @param harvesterName The class name if the harvester.
+     *
      * @return The number of harvesting time for the harvester given in parameter.
      */
     public abstract int getNbHarvesting(String harvesterName);
@@ -633,6 +649,7 @@ public abstract class TransportManager<U extends MediaAwareCallPeer<?, ?, ?>> {
      *
      * @param iceAgent The ICE agent managing the ICE offer/answer exchange, collecting and selecting the candidate.
      * @param streamName The stream name (AUDIO, VIDEO);
+     *
      * @return The ICE candidate extended type selected by the given agent. null if the iceAgent is
      * null or if there is no candidate selected or available.
      */
@@ -661,7 +678,9 @@ public abstract class TransportManager<U extends MediaAwareCallPeer<?, ?, ?>> {
      *
      * @param media the name of the stream we'd like to create.
      * @param agent the ICE {@link Agent} that we will be appending the stream to.
+     *
      * @return the newly created {@link IceMediaStream}
+     *
      * @throws OperationFailedException if binding on the specified media stream fails for some reason.
      */
     protected IceMediaStream createIceStream(String media, Agent agent)

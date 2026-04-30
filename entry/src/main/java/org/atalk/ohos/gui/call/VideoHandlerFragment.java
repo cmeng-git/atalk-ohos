@@ -11,7 +11,6 @@ import static android.hardware.camera2.CameraMetadata.LENS_FACING_FRONT;
 import android.Manifest;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -23,7 +22,6 @@ import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.core.view.MenuProvider;
 
 import java.awt.Component;
@@ -38,6 +36,12 @@ import net.java.sip.communicator.service.protocol.CallState;
 import net.java.sip.communicator.service.protocol.OperationSetVideoTelephony;
 import net.java.sip.communicator.service.protocol.ProtocolProviderService;
 
+import org.atalk.ohos.BaseFragment;
+import org.atalk.ohos.R;
+import org.atalk.ohos.aTalkApp;
+import org.atalk.ohos.gui.aTalk;
+import org.atalk.ohos.gui.controller.SimpleDragController;
+import org.atalk.ohos.gui.util.AppUtils;
 import org.atalk.impl.neomedia.codec.video.AndroidDecoder;
 import org.atalk.impl.neomedia.device.DeviceConfiguration;
 import org.atalk.impl.neomedia.device.util.AndroidCamera;
@@ -46,12 +50,6 @@ import org.atalk.impl.neomedia.device.util.OpenGlCtxProvider;
 import org.atalk.impl.neomedia.device.util.PreviewSurfaceProvider;
 import org.atalk.impl.neomedia.device.util.ViewDependentProvider;
 import org.atalk.impl.neomedia.jmfext.media.protocol.androidcamera.CameraStreamBase;
-import org.atalk.ohos.BaseFragment;
-import org.atalk.ohos.R;
-import org.atalk.ohos.aTalkApp;
-import org.atalk.ohos.gui.aTalk;
-import org.atalk.ohos.gui.controller.SimpleDragController;
-import org.atalk.ohos.gui.util.AppUtils;
 import org.atalk.service.neomedia.ViewAccessor;
 import org.atalk.util.event.SizeChangeVideoEvent;
 import org.atalk.util.event.VideoEvent;
@@ -294,7 +292,8 @@ public class VideoHandlerFragment extends BaseFragment implements MenuProvider, 
         if (cameraSwitchThread != null) {
             try {
                 cameraSwitchThread.join();
-            } catch (InterruptedException e) {
+            }
+            catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
         }

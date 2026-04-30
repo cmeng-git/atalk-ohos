@@ -46,8 +46,9 @@ import net.java.sip.communicator.service.protocol.event.ServerStoredGroupListene
 import net.java.sip.communicator.service.protocol.jabberconstants.JabberStatusEnum;
 import net.java.sip.communicator.util.ConfigurationUtils;
 
-import org.atalk.impl.timberlog.TimberLog;
 import org.atalk.ohos.gui.AppGUIActivator;
+import org.atalk.impl.timberlog.TimberLog;
+
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.SmackException.NoResponseException;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
@@ -62,6 +63,7 @@ import org.jivesoftware.smack.roster.RosterEntry;
 import org.jivesoftware.smack.roster.RosterLoadedListener;
 import org.jivesoftware.smack.roster.RosterUtil;
 import org.jivesoftware.smack.roster.SubscribeListener;
+
 import org.jivesoftware.smackx.avatar.AvatarManager;
 import org.jivesoftware.smackx.avatar.listener.AvatarChangeListener;
 import org.jivesoftware.smackx.avatar.useravatar.UserAvatarManager;
@@ -72,6 +74,7 @@ import org.jivesoftware.smackx.blocking.JidsBlockedListener;
 import org.jivesoftware.smackx.blocking.JidsUnblockedListener;
 import org.jivesoftware.smackx.caps.packet.CapsExtension;
 import org.jivesoftware.smackx.nick.packet.Nick;
+
 import org.jxmpp.jid.BareJid;
 import org.jxmpp.jid.DomainBareJid;
 import org.jxmpp.jid.EntityBareJid;
@@ -542,8 +545,8 @@ public class OperationSetPersistentPresenceJabberImpl
 
         // if we got publish presence, and we are still in a process of initializing the roster,
         // just save the status and we will dispatch it when we are ready with the roster as
-        // sending initial presence is recommended to be done after requesting the roster, but we
-        // want to also dispatch it
+        // sending initial presence is recommended to be done after requesting the roster,
+        // but we want to also dispatch it
         synchronized (ssContactList.getRosterInitLock()) {
             if (!ssContactList.isRosterInitialized()) {
                 // store it
@@ -765,29 +768,29 @@ public class OperationSetPersistentPresenceJabberImpl
         // Check status mode when user is available
         Presence.Mode mode = presence.getMode();
         switch (mode) {
-            case available:
+        case available:
+            return jabberStatusEnum.getStatus(JabberStatusEnum.AVAILABLE);
+        case away:
+            // on the phone a special status which is away with custom status message
+            if (presence.getStatus() != null && presence.getStatus().contains(JabberStatusEnum.ON_THE_PHONE))
+                return jabberStatusEnum.getStatus(JabberStatusEnum.ON_THE_PHONE);
+            else if (presence.getStatus() != null && presence.getStatus().contains(JabberStatusEnum.IN_A_MEETING))
+                return jabberStatusEnum.getStatus(JabberStatusEnum.IN_A_MEETING);
+            else
+                return jabberStatusEnum.getStatus(JabberStatusEnum.AWAY);
+        case chat:
+            return jabberStatusEnum.getStatus(JabberStatusEnum.FREE_FOR_CHAT);
+        case dnd:
+            return jabberStatusEnum.getStatus(JabberStatusEnum.DO_NOT_DISTURB);
+        case xa:
+            return jabberStatusEnum.getStatus(JabberStatusEnum.EXTENDED_AWAY);
+        default:
+            //unknown status
+            if (presence.isAway())
+                return jabberStatusEnum.getStatus(JabberStatusEnum.AWAY);
+            if (presence.isAvailable())
                 return jabberStatusEnum.getStatus(JabberStatusEnum.AVAILABLE);
-            case away:
-                // on the phone a special status which is away with custom status message
-                if (presence.getStatus() != null && presence.getStatus().contains(JabberStatusEnum.ON_THE_PHONE))
-                    return jabberStatusEnum.getStatus(JabberStatusEnum.ON_THE_PHONE);
-                else if (presence.getStatus() != null && presence.getStatus().contains(JabberStatusEnum.IN_A_MEETING))
-                    return jabberStatusEnum.getStatus(JabberStatusEnum.IN_A_MEETING);
-                else
-                    return jabberStatusEnum.getStatus(JabberStatusEnum.AWAY);
-            case chat:
-                return jabberStatusEnum.getStatus(JabberStatusEnum.FREE_FOR_CHAT);
-            case dnd:
-                return jabberStatusEnum.getStatus(JabberStatusEnum.DO_NOT_DISTURB);
-            case xa:
-                return jabberStatusEnum.getStatus(JabberStatusEnum.EXTENDED_AWAY);
-            default:
-                //unknown status
-                if (presence.isAway())
-                    return jabberStatusEnum.getStatus(JabberStatusEnum.AWAY);
-                if (presence.isAvailable())
-                    return jabberStatusEnum.getStatus(JabberStatusEnum.AVAILABLE);
-                break;
+            break;
         }
         return jabberStatusEnum.getStatus(JabberStatusEnum.OFFLINE);
     }
@@ -910,23 +913,24 @@ public class OperationSetPersistentPresenceJabberImpl
             RegistrationState eventNew = evt.getNewState();
             XMPPConnection xmppConnection = mPPS.getConnection();
 
-            if (eventNew == RegistrationState.REGISTERING) {
-                // contactChangesListener will be used to store presence events till roster is initialized
-                mContactChangesListener = new ContactChangesListener();
-                mContactChangesListener.storeEvents();
-            }
-            else if (eventNew == RegistrationState.REGISTERED) {
+            if (eventNew == RegistrationState.CONNECTED) {
                 /*
                  * Add a RosterLoaded listener as this will indicate when the roster is
                  * received or loaded from RosterStore (upon authenticated). We are then ready
                  * to dispatch the contact list. Note the actual RosterListener used is added
                  * and active just after the RosterLoadedListener is triggered.
                  *
-                 * setup to init ssContactList upon receiving the rosterLoaded event
+                 * Must setup to init ssContactList upon receiving the connected event;
+                 * else race condition can happen, and presence indicator not properly updated.
                  */
                 mRoster = Roster.getInstanceFor(xmppConnection);
                 mRoster.addRosterLoadedListener(new ServerStoredListInit());
 
+                // contactChangesListener will be used to store presence events till roster is initialized
+                mContactChangesListener = new ContactChangesListener();
+                mContactChangesListener.storeEvents();
+            }
+            else if (eventNew == RegistrationState.REGISTERED) {
                 // Adds subscription listeners only when user is authenticated
                 if (!handleSubscribeEvent) {
                     mRoster.addSubscribeListener(OperationSetPersistentPresenceJabberImpl.this);
@@ -1210,7 +1214,7 @@ public class OperationSetPersistentPresenceJabberImpl
     /**
      * Manage changes of statuses by resource.
      */
-    class ContactChangesListener extends AbstractRosterListener {
+    protected class ContactChangesListener extends AbstractRosterListener {
         /**
          * Store events for later processing, used when initializing contactList.
          */
@@ -1553,7 +1557,7 @@ public class OperationSetPersistentPresenceJabberImpl
      * cmeng (20190810) - Handler another instance user presence events return from smack
      * smack callback for all presenceAvailable for all entities (users login and contacts).
      *
-     * @param address FullJid of own or the buddy subscribe to (user)
+     * @param address FullJid of own or the buddy subscribed to (user)
      * @param presence presence with available / unavailable state (from presenceUnavailable)
      */
     @Override
@@ -1566,12 +1570,12 @@ public class OperationSetPersistentPresenceJabberImpl
         if (localContact == null)
             localContact = getLocalContact();
 
-        // Update resource if receive from instances of user presence and localContact is not null
+        // Update resource if received from instances of user presence and localContact is not null
         if ((localContact != null) && (address != null)) {
             EntityFullJid ourJid = mPPS.getOurJid(); // Received NPE from FFR
             if ((ourJid != null) && ourJid.asBareJid().isParentOf(address)) {
                 // Timber.d("Smack presence update own instance %s %s: %s", userJid, address, localContact);
-                updateResource(localContact, null, presence);
+                updateResource(localContact, address, presence);
             }
         }
     }

@@ -22,10 +22,10 @@ import net.java.sip.communicator.service.protocol.event.CallChangeEvent;
 import net.java.sip.communicator.service.protocol.event.CallChangeListener;
 import net.java.sip.communicator.service.protocol.event.CallPeerEvent;
 
-import org.atalk.impl.appstray.NotificationPopupHandler;
 import org.atalk.ohos.BaseActivity;
 import org.atalk.ohos.R;
 import org.atalk.ohos.gui.aTalk;
+import org.atalk.impl.appstray.NotificationPopupHandler;
 
 import timber.log.Timber;
 
@@ -100,6 +100,7 @@ public class ReceivedCallActivity extends BaseActivity implements CallChangeList
                 return;
             }
 
+            // Auto answer if call accept via notification.
             if (extras.getBoolean(CallManager.AUTO_ACCEPT, false))
                 mVideoCallButton.performClick();
         }

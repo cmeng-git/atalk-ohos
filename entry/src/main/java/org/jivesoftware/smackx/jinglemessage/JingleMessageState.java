@@ -17,20 +17,22 @@
 package org.jivesoftware.smackx.jinglemessage;
 
 /**
- * Implements <code>XmlElement</code> for XEP-0353: Jingle Message Initiation 0.4.0 (2021-11-27).
+ * Implements <code>XmlElement</code> for XEP-0353: Jingle Message Initiation 0.8.0 (2026-02-19).
  * @see <a href="https://xmpp.org/extensions/xep-0353.html">XEP-0353: Jingle Message Initiation</a>
  *
  * @author Eng Chong Meng
  */
 
-public enum JingleMessageType {
-    accept,
+public enum JingleMessageState {
+    initial,
+    finish,
     proceed,
     propose,
     reject,
-    retract;
+    retract,
+    ringing;
 
-    JingleMessageType() {
+    JingleMessageState() {
     }
 
     @Override
@@ -38,12 +40,12 @@ public enum JingleMessageType {
         return name();
     }
 
-    public static JingleMessageType fromString(String name) {
-        for (JingleMessageType t : JingleMessageType.values()) {
+    public static JingleMessageState fromString(String name) {
+        for (JingleMessageState t : JingleMessageState.values()) {
             if (t.toString().equals(name)) {
                 return t;
             }
         }
-        throw new IllegalArgumentException("Illegal type: " + name);
+        throw new IllegalArgumentException("Illegal state: " + name);
     }
 }

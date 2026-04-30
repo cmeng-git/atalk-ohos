@@ -96,21 +96,27 @@ import net.java.sip.communicator.service.protocol.jabberconstants.JabberStatusEn
 import net.java.sip.communicator.util.ConfigurationUtils;
 import net.java.sip.communicator.util.NetworkUtils;
 
-import org.apache.commons.lang3.StringUtils;
-import org.atalk.crypto.omemo.AndroidOmemoService;
-import org.atalk.impl.timberlog.TimberLog;
 import org.atalk.ohos.BuildConfig;
 import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.aTalk;
 import org.atalk.ohos.gui.account.settings.BoshProxyDialog;
-import org.atalk.ohos.gui.call.JingleMessageSessionImpl;
 import org.atalk.ohos.gui.dialogs.DialogActivity;
 import org.atalk.ohos.gui.login.LoginSynchronizationPoint;
 import org.atalk.ohos.gui.util.LocaleHelper;
+import org.atalk.crypto.omemo.AndroidOmemoService;
+import org.atalk.impl.timberlog.TimberLog;
 import org.atalk.service.configuration.ConfigurationService;
 import org.atalk.service.neomedia.SrtpControlType;
 import org.atalk.util.OSUtils;
+
+import org.apache.commons.lang3.StringUtils;
+import org.minidns.dnsname.DnsName;
+import org.minidns.dnssec.DnssecValidationFailedException;
+import org.minidns.record.SRV;
+import org.osgi.framework.ServiceReference;
+import org.xmlpull.v1.XmlPullParserException;
+
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.ConnectionConfiguration.DnssecMode;
@@ -147,6 +153,7 @@ import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 import org.jivesoftware.smack.util.SslContextFactory;
 import org.jivesoftware.smack.util.TLSUtils;
 import org.jivesoftware.smack.util.dns.minidns.MiniDnsDane;
+
 import org.jivesoftware.smackx.DefaultExtensionElementProvider;
 import org.jivesoftware.smackx.avatar.AvatarManager;
 import org.jivesoftware.smackx.avatar.useravatar.UserAvatarManager;
@@ -212,8 +219,6 @@ import org.jivesoftware.smackx.jingle_rtp.element.SrtpFingerprint;
 import org.jivesoftware.smackx.jingle_rtp.element.ZrtpHash;
 import org.jivesoftware.smackx.jingleinfo.JingleInfoQueryIQ;
 import org.jivesoftware.smackx.jingleinfo.JingleInfoQueryIQProvider;
-import org.jivesoftware.smackx.jinglemessage.JingleMessageManager;
-import org.jivesoftware.smackx.jinglemessage.element.JingleMessage;
 import org.jivesoftware.smackx.jinglenodes.SmackServiceNode;
 import org.jivesoftware.smackx.jinglenodes.TrackerEntry;
 import org.jivesoftware.smackx.jinglenodes.element.JingleChannelIQ;
@@ -256,6 +261,7 @@ import org.jivesoftware.smackx.thumbnails.element.ThumbnailElement;
 import org.jivesoftware.smackx.vcardtemp.packet.VCard;
 import org.jivesoftware.smackx.xhtmlim.XHTMLManager;
 import org.jivesoftware.smackx.xhtmlim.packet.XHTMLExtension;
+
 import org.jxmpp.jid.DomainBareJid;
 import org.jxmpp.jid.EntityBareJid;
 import org.jxmpp.jid.EntityFullJid;
@@ -264,11 +270,6 @@ import org.jxmpp.jid.impl.JidCreate;
 import org.jxmpp.jid.parts.Resourcepart;
 import org.jxmpp.stringprep.XmppStringprepException;
 import org.jxmpp.util.XmppStringUtils;
-import org.minidns.dnsname.DnsName;
-import org.minidns.dnssec.DnssecValidationFailedException;
-import org.minidns.record.SRV;
-import org.osgi.framework.ServiceReference;
-import org.xmlpull.v1.XmlPullParserException;
 
 import timber.log.Timber;
 
@@ -718,6 +719,7 @@ public class ProtocolProviderServiceJabberImpl extends AbstractProtocolProviderS
      *
      * @param authority the security authority that will be used for resolving any security challenges that
      * may be returned during the registration or at any moment while we're registered.
+     *
      * @throws OperationFailedException with the corresponding code it the registration fails for some reason
      * (e.g. a networking error or an implementation problem).
      */
@@ -851,6 +853,7 @@ public class ProtocolProviderServiceJabberImpl extends AbstractProtocolProviderS
      *
      * @param authority SecurityAuthority
      * @param reasonCode the authentication reason code. Indicates the reason of this authentication.
+     *
      * @throws XMPPException if we cannot connect to the server - network problem
      * @throws OperationFailedException if login parameters as server port are not correct
      */
@@ -1009,6 +1012,7 @@ public class ProtocolProviderServiceJabberImpl extends AbstractProtocolProviderS
      *
      * @param userName the username to use
      * @param loginStrategy the login strategy to use
+     *
      * @return return the state how to continue the connect process.
      *
      * @throws XMPPException & SmackException if we cannot connect for some reason
@@ -1295,7 +1299,7 @@ public class ProtocolProviderServiceJabberImpl extends AbstractProtocolProviderS
         }
 
         // cmeng - leave the registering state broadcast when xmpp is connected - may be better to do it here
-        fireRegistrationStateChanged(RegistrationState.UNREGISTERED, RegistrationState.REGISTERING,
+        fireRegistrationStateChanged(RegistrationState.CONNECTED, RegistrationState.REGISTERING,
                 RegistrationStateChangeEvent.REASON_NOT_SPECIFIED, null);
 
         // Init the user authentication SynchronizedPoints
@@ -1546,8 +1550,8 @@ public class ProtocolProviderServiceJabberImpl extends AbstractProtocolProviderS
              * Broadcast to all others after connection is connected but before actual account registration start.
              * This is required by others to init their states and get ready when the user is authenticated
              */
-            // fireRegistrationStateChanged(RegistrationState.UNREGISTERED, RegistrationState.REGISTERING,
-            //        RegistrationStateChangeEvent.REASON_USER_REQUEST, "TCP Connection Successful");
+            fireRegistrationStateChanged(RegistrationState.INIT, RegistrationState.CONNECTED,
+                    RegistrationStateChangeEvent.REASON_USER_REQUEST, "TCP Connection Connected");
         }
 
         /**
@@ -1617,11 +1621,7 @@ public class ProtocolProviderServiceJabberImpl extends AbstractProtocolProviderS
             /*  Start up JetManager for jingle security file transfer */
             JetManager.getInstanceFor(mConnection);
 
-            // Start up both instances for incoming JingleMessage events handlers
-            JingleMessageManager.getInstanceFor(connection);
-            JingleMessageSessionImpl.getInstanceFor(connection);
-
-            // Fire registration state has changed
+            // Fire registration state changed
             if (resumed) {
                 fireRegistrationStateChanged(RegistrationState.REGISTERING, RegistrationState.REGISTERED,
                         RegistrationStateChangeEvent.REASON_RESUMED, msg, false);
@@ -1725,6 +1725,7 @@ public class ProtocolProviderServiceJabberImpl extends AbstractProtocolProviderS
      *
      * @param serviceName the service name
      * @param cvs The CertificateVerificationService to retrieve the trust manager
+     *
      * @return the trust manager
      */
 
@@ -1931,7 +1932,8 @@ public class ProtocolProviderServiceJabberImpl extends AbstractProtocolProviderS
 
     /**
      * Setup all the Smack Service Discovery and other features that can only be performed during
-     * actual account registration stage (mConnection). For initial setup see:
+     * actual account registration stage (mConnection). These features must be added before user
+     * is authenticated, else it will be discovered by others. For initial setup see:
      * {@link #initSmackDefaultSettings()} and {@link #initialize(EntityBareJid, JabberAccountID)}
      * <p>
      * Note: For convenience, many of the OperationSets when supported will handle state and events changes on its own.
@@ -2029,8 +2031,6 @@ public class ProtocolProviderServiceJabberImpl extends AbstractProtocolProviderS
             supportedFeatures.add(URN_XMPP_JINGLE_RTP);
             // XEP-0177: Jingle Raw UDP Transport Method
             supportedFeatures.add(URN_XMPP_JINGLE_RAW_UDP_0);
-
-            supportedFeatures.add(JingleMessage.NAMESPACE);
 
             /*
              * Reflect the preference of the user with respect to the use of ICE.
@@ -2154,7 +2154,7 @@ public class ProtocolProviderServiceJabberImpl extends AbstractProtocolProviderS
      */
     private void registerServiceDiscoveryManager() {
         // Add features aTalk supports in addition to smack.
-        String[] featuresToRemove = new String[]{"http://jabber.org/protocol/commands"};
+        String[] featuresToRemove = new String[] {"http://jabber.org/protocol/commands"};
         String[] featuresToAdd = supportedFeatures.toArray(new String[0]);
 
         scHelper = new ServiceDiscoveryHelper(this, mConnection, featuresToRemove, featuresToAdd);
@@ -2196,7 +2196,7 @@ public class ProtocolProviderServiceJabberImpl extends AbstractProtocolProviderS
          * The CapsExtension reply to be included in the caps <Identity/>
          */
         String category = "client";
-        String appName = aTalkApp.getResString(R.string.app_name);
+        String appName = aTalkApp.getResString(R.string.application_name);
         String type = "android";
 
         DiscoverInfo.Identity identity = new DiscoverInfo.Identity(category, appName, type);
@@ -2268,6 +2268,7 @@ public class ProtocolProviderServiceJabberImpl extends AbstractProtocolProviderS
      *
      * @param screenName the account id/uin/screenName of the account that we're about to create
      * @param accountID the identifier of the account that this protocol provider represents.
+     *
      * @see net.java.sip.communicator.service.protocol.AccountID
      */
     protected void initialize(EntityBareJid screenName, JabberAccountID accountID) {
@@ -2581,6 +2582,7 @@ public class ProtocolProviderServiceJabberImpl extends AbstractProtocolProviderS
      * <li>is the error message if applicable</li>
      * <li>a suggested correction. Index 1 is optional and can only be present if there was a validation failure.</li>
      * </ol>
+     *
      * @return true if the contact id is valid, false otherwise
      */
     @Override
@@ -2655,6 +2657,7 @@ public class ProtocolProviderServiceJabberImpl extends AbstractProtocolProviderS
      *
      * @param ex the <code>Exception</code> which is to be determined whether it signals
      * that attempted authentication has failed
+     *
      * @return if the specified <code>ex</code> signals that attempted authentication is
      * known' otherwise <code>SecurityAuthority.REASON_UNKNOWN</code> is returned.
      *
@@ -2801,6 +2804,7 @@ public class ProtocolProviderServiceJabberImpl extends AbstractProtocolProviderS
      * @param jid the jabber id for which to check;
      * Jid must be FullJid unless it is for service e.g. proxy.atalk.org, conference.atalk.org
      * @param features the list of features to check for
+     *
      * @return <code>true</code> if the list of features is supported; otherwise, <code>false</code>
      */
     public boolean isFeatureListSupported(Jid jid, String... features) {
@@ -2822,6 +2826,7 @@ public class ProtocolProviderServiceJabberImpl extends AbstractProtocolProviderS
      *
      * @param jid the jabber id that we'd like to get information about
      * @param feature the feature to check for
+     *
      * @return <code>true</code> if the list of features is supported, otherwise returns <code>false</code>
      */
     public boolean isFeatureSupported(Jid jid, String feature) {
@@ -2833,6 +2838,7 @@ public class ProtocolProviderServiceJabberImpl extends AbstractProtocolProviderS
      * connected then just returns the given jid (BareJid).
      *
      * @param contact the contact, for which we're looking for a full jid
+     *
      * @return the jid of the specified contact or bareJid if the provider is not yet connected;
      */
     public Jid getFullJidIfPossible(Contact contact) {
@@ -2844,6 +2850,7 @@ public class ProtocolProviderServiceJabberImpl extends AbstractProtocolProviderS
      * connected then just returns the given jid (BareJid).
      *
      * @param jid the contact jid (i.e. usually without resource) whose full jid we are looking for.
+     *
      * @return the jid of the specified contact or bareJid if the provider is not yet connected;
      */
     public Jid getFullJidIfPossible(Jid jid) {
@@ -2890,6 +2897,7 @@ public class ProtocolProviderServiceJabberImpl extends AbstractProtocolProviderS
          *
          * @param chain the cert chain.
          * @param authType authentication type like: RSA.
+         *
          * @throws CertificateException never
          * @throws UnsupportedOperationException always
          */
@@ -2928,6 +2936,7 @@ public class ProtocolProviderServiceJabberImpl extends AbstractProtocolProviderS
          *
          * @param chain the certificate chain.
          * @param authType authentication type like: RSA.
+         *
          * @throws CertificateException not trusted.
          */
         public void checkServerTrusted(X509Certificate[] chain, String authType)
@@ -3077,6 +3086,7 @@ public class ProtocolProviderServiceJabberImpl extends AbstractProtocolProviderS
      * @param errorCode the error code to be assigned to the new <code>OperationFailedException</code>
      * @param cause the <code>Throwable</code> that has caused the necessity to log an error and have a new
      * <code>OperationFailedException</code> thrown
+     *
      * @throws OperationFailedException the exception that we wanted this method to throw.
      */
     public static void throwOperationFailedException(String message, int errorCode, Throwable cause)
@@ -3118,6 +3128,7 @@ public class ProtocolProviderServiceJabberImpl extends AbstractProtocolProviderS
      * Returns true if our account is a Gmail or a Google Apps ones.
      *
      * @param domain domain to check
+     *
      * @return true if our account is a Gmail or a Google Apps ones.
      */
     public static boolean isGmailOrGoogleAppsAccount(String domain) {
