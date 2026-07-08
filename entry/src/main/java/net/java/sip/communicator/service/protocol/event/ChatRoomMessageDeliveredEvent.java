@@ -13,11 +13,11 @@
  */
 package net.java.sip.communicator.service.protocol.event;
 
-import net.java.sip.communicator.service.protocol.ChatRoom;
-import net.java.sip.communicator.service.protocol.IMessage;
-
 import java.util.Date;
 import java.util.EventObject;
+
+import net.java.sip.communicator.impl.protocol.jabber.MessageJabberImpl;
+import net.java.sip.communicator.service.protocol.ChatRoom;
 
 /**
  * <code>MessageDeliveredEvent</code>s confirm successful delivery of an instant message.
@@ -26,8 +26,7 @@ import java.util.EventObject;
  * @author Yana Stamcheva
  * @author Eng Chong Meng
  */
-public class ChatRoomMessageDeliveredEvent extends EventObject
-{
+public class ChatRoomMessageDeliveredEvent extends EventObject {
     /**
      * Serial version UID.
      */
@@ -39,9 +38,14 @@ public class ChatRoomMessageDeliveredEvent extends EventObject
     private final Date mTimestamp;
 
     /**
+     * The ID of the message being corrected, or null if this was a new message and not a message correction.
+     */
+    private final String mCorrectionUid;
+
+    /**
      * The received <code>IMessage</code>.
      */
-    private final IMessage mMessage;
+    private final MessageJabberImpl mMessage;
 
     /**
      * The type of message event that this instance represents.
@@ -61,13 +65,13 @@ public class ChatRoomMessageDeliveredEvent extends EventObject
      * @param timestamp a date indicating the exact moment when the event occurred
      * @param message the message that triggered this event.
      * @param eventType indicating the type of the delivered event.
-     * It is either an ACTION_MESSAGE_DELIVERED or a CONVERSATION_MESSAGE_DELIVERED.
+     * i.e. It is either an ACTION_MESSAGE_DELIVERED or a CONVERSATION_MESSAGE_DELIVERED.
      */
-    public ChatRoomMessageDeliveredEvent(ChatRoom source, Date timestamp, IMessage message, int eventType)
-    {
+    public ChatRoomMessageDeliveredEvent(ChatRoom source, Date timestamp, MessageJabberImpl message, String correctionUid, int eventType) {
         super(source);
         mTimestamp = timestamp;
         mMessage = message;
+        mCorrectionUid = correctionUid;
         mEventType = eventType;
     }
 
@@ -76,8 +80,7 @@ public class ChatRoomMessageDeliveredEvent extends EventObject
      *
      * @return the <code>IMessage</code> that triggered this event.
      */
-    public IMessage getMessage()
-    {
+    public MessageJabberImpl getMessage() {
         return mMessage;
     }
 
@@ -86,8 +89,7 @@ public class ChatRoomMessageDeliveredEvent extends EventObject
      *
      * @return a Date indicating when the event occurred.
      */
-    public Date getTimestamp()
-    {
+    public Date getTimestamp() {
         return mTimestamp;
     }
 
@@ -96,8 +98,7 @@ public class ChatRoomMessageDeliveredEvent extends EventObject
      *
      * @return the <code>ChatRoom</code> that triggered this event.
      */
-    public ChatRoom getSourceChatRoom()
-    {
+    public ChatRoom getSourceChatRoom() {
         return (ChatRoom) getSource();
     }
 
@@ -107,8 +108,7 @@ public class ChatRoomMessageDeliveredEvent extends EventObject
      *
      * @return one of the XXX_MESSAGE_DELIVERED fields of this class indicating the type of this event.
      */
-    public int getEventType()
-    {
+    public int getEventType() {
         return mEventType;
     }
 
@@ -117,8 +117,7 @@ public class ChatRoomMessageDeliveredEvent extends EventObject
      *
      * @return is current event for history message.
      */
-    public boolean isHistoryMessage()
-    {
+    public boolean isHistoryMessage() {
         return mHistoryMessage;
     }
 
@@ -127,8 +126,18 @@ public class ChatRoomMessageDeliveredEvent extends EventObject
      *
      * @param historyMessage whether its event for history message.
      */
-    public void setHistoryMessage(boolean historyMessage)
-    {
+    public void setHistoryMessage(boolean historyMessage) {
         mHistoryMessage = historyMessage;
+    }
+
+    /**
+     * Returns the ID of the message being corrected, or null if this was a new message and not a
+     * message correction.
+     *
+     * @return the ID of the message being corrected, or null if this was a new message and not a
+     * message correction.
+     */
+    public String getCorrectedMessageUid() {
+        return mCorrectionUid;
     }
 }

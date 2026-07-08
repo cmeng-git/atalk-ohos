@@ -46,15 +46,16 @@ import net.java.sip.communicator.service.protocol.Contact;
 import net.java.sip.communicator.service.protocol.ProtocolProviderService;
 import net.java.sip.communicator.util.account.AccountUtils;
 
-import org.atalk.crypto.omemo.FingerprintStatus;
-import org.atalk.crypto.omemo.SQLiteOmemoStore;
 import org.atalk.ohos.BaseActivity;
 import org.atalk.ohos.R;
 import org.atalk.ohos.gui.util.ThemeHelper;
 import org.atalk.ohos.gui.util.ThemeHelper.Theme;
 import org.atalk.ohos.gui.util.ViewUtil;
+import org.atalk.crypto.omemo.FingerprintStatus;
+import org.atalk.crypto.omemo.SQLiteOmemoStore;
 import org.atalk.persistance.DatabaseBackend;
 import org.atalk.util.CryptoHelper;
+
 import org.jivesoftware.smackx.omemo.OmemoManager;
 import org.jivesoftware.smackx.omemo.internal.OmemoDevice;
 import org.jivesoftware.smackx.omemo.signal.SignalOmemoService;
@@ -173,34 +174,34 @@ public class CryptoDeviceFingerPrints extends BaseActivity {
 
         int id = item.getItemId();
         switch (id) {
-            case R.id.trust:
-                if (bareJid.startsWith(OMEMO)) {
-                    trustOmemoFingerPrint(bareJid, remoteFingerprint);
-                    String msg = getString(R.string.crypto_omemo_trust_messaging_resume, bareJid);
-                    Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
-                }
-                fpListAdapter.notifyDataSetChanged();
-                return true;
+        case R.id.trust:
+            if (bareJid.startsWith(OMEMO)) {
+                trustOmemoFingerPrint(bareJid, remoteFingerprint);
+                String msg = getString(R.string.crypto_omemo_trust_messaging_resume, bareJid);
+                Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+            }
+            fpListAdapter.notifyDataSetChanged();
+            return true;
 
-            case R.id.distrust:
-                if (bareJid.startsWith(OMEMO)) {
-                    distrustOmemoFingerPrint(bareJid, remoteFingerprint);
-                    String msg = getString(R.string.crypto_omemo_distrust_messaging_stop, bareJid);
-                    Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
-                }
-                fpListAdapter.notifyDataSetChanged();
-                return true;
+        case R.id.distrust:
+            if (bareJid.startsWith(OMEMO)) {
+                distrustOmemoFingerPrint(bareJid, remoteFingerprint);
+                String msg = getString(R.string.crypto_omemo_distrust_messaging_stop, bareJid);
+                Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+            }
+            fpListAdapter.notifyDataSetChanged();
+            return true;
 
-            case R.id.copy:
-                ClipboardManager cbManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                if (cbManager != null) {
-                    cbManager.setPrimaryClip(ClipData.newPlainText(null,
-                            CryptoHelper.prettifyFingerprint(remoteFingerprint)));
-                    Toast.makeText(this, R.string.crypto_fingerprint_copy, Toast.LENGTH_SHORT).show();
-                }
-                return true;
-            case R.id.cancel:
-                return true;
+        case R.id.copy:
+            ClipboardManager cbManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            if (cbManager != null) {
+                cbManager.setPrimaryClip(ClipData.newPlainText(null,
+                        CryptoHelper.prettifyFingerprint(remoteFingerprint)));
+                Toast.makeText(this, R.string.crypto_fingerprint_copy, Toast.LENGTH_SHORT).show();
+            }
+            return true;
+        case R.id.cancel:
+            return true;
         }
         return super.onContextItemSelected(item);
     }

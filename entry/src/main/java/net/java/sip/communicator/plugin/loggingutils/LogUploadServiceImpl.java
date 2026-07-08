@@ -5,14 +5,13 @@
  */
 package net.java.sip.communicator.plugin.loggingutils;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;

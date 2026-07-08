@@ -79,7 +79,7 @@
     <string name="call_transfer">Передача</string>
     <string name="call_transfer_failed">Не удалось продолжить перевод вызова: %1$s ⇢ %2$s\n%3$s</string>
     <string name="call_transfer_hint">Выберите контакт, который хотите передать, и нажмите Передача.</string>
-    <string name="call_transfer_msg">%1$s перевод вызова на… %2$s</string>
+    <string name="call_transfer_msg">%1$s перевод вызова на %2$s</string>
 
     <string name="attach_picture">Изображение</string>
     <string name="attach_take_picture">Сделать снимок</string>
@@ -93,6 +93,12 @@
     <string name="chat_message_long_press_hint">Не нажимайте в области сообщений для операции выбора нескольких элементов</string>
     <string name="quote">Цитировать</string>
     <string name="reply">Ответ</string>
+    <string name="retract">Отозвать</string>
+    <string name="retract_menu">Отозвать сообщение</string>
+    <string name="retract_message_prompt">Вы уверены, что хотите отозвать все выбранные исходящие сообщения из %1$s?</string>
+    <string name="retract_not_supported">Получатель не поддерживает отзыв сообщения.</string>
+    <string name="retract_own">Вы удалили это сообщение</string>
+    <string name="retract_remote">Это сообщение было удалено.</string>
     <string name="select_all">Выбрать все</string>
     <string name="subject">Тема</string>
     <string name="settings">Настройки</string>
@@ -155,7 +161,8 @@
     <string name="call_audio">Аудиозвонок</string>
     <string name="call_answered">%1$s ответил на звонок.</string>
     <string name="call_disable_on_fault">aTalk не удалось инициализировать %1$s\nЗвонки будут отключены.\n%2$s</string>
-    <string name="call_ended">Абонент завершил звонок: %1$s</string>
+    <string name="call_ended">Звонок завершился</string>
+    <string name="call_ended_by_remote">Абонент завершил звонок: %1$s</string>
     <string name="call_error">Отдалённая сторона возвращает ошибку: %1$s</string>
     <string name="call_failed">Не удалось выполнить вызов</string>
     <string name="call_history_name">Журнал вызовов</string>
@@ -340,10 +347,6 @@
     <string name="refresh_store_omemo">XEP-0384: Шифрование OMEMO</string>
 
     <string name="unregistered_message">Не удалось подключиться к учётной записи:\nИмя пользователя: %1$s\nНазвание сервера: %2$s\nУчётная запись отключена.</string>
-    <string name="create_videoBridge">Создать видеомост…</string>
-    <string name="create_videoBridge_menu">Создать видеомост</string>
-    <string name="create_join_video_conference">Создать или присоединиться к видеозвонку</string>
-    <string name="create_video_conference">Сделать новый видеозвонок для этого чата</string>
     <string name="video_format_not_supported">Не удалось установить предварительный просмотр камеры устройства на: %1$s; Исключение: %2$s.</string>
     <string name="disconnected">Отключено</string>
     <string name="disconnecting_">Отключение %1$s</string>
@@ -354,7 +357,6 @@
     <string name="duration">длительность</string>
 
     <string name="edit_status_message_tip">Установить сообщение о статусе</string>
-    <string name="edited">Отредактировано</string>
     <string name="enter_name_or_number">Введите имя или номер</string>
     <string name="error">Ошибка</string>
     <string name="error_was_">Ошибка: %1$s</string>
@@ -411,7 +413,7 @@
     <string name="history_erase_all">Удалить все истории чатов контактов</string>
     <string name="history_purge_for_contact_warning">Вы уверены, что хотите удалить все выбранные сообщения для %1$s?</string>
     <string name="history_purge_all_warning">Вы действительно хотите очистить все сообщения отовсюду?</string>
-    <string name="history_purge_count">Количество удалённых записей истории: %1$s</string>
+    <string name="history_purge_count">Количество затронутых исторических записей: %1$s</string>
     <string name="history_purge_error">Ошибка удаления локально сохранённых сообщений для %1$s.</string>
     <string name="history_purge_media">Удалить медиа с моего телефона</string>
     <string name="history_offline_warning">Закройте и откройте этот сеанс чата, чтобы сохранять сообщения MAM когда не в сети а затем и когда в сети</string>
@@ -512,6 +514,7 @@
     <string name="kick_failed_not_enough_permission">Не удалось нажать %1$s. У вас недостаточно прав для этого.</string>
     <string name="last">Последняя</string>
     <string name="last_message_correction">Коррекция последнего сообщения</string>
+    <string name="lmc_not_supported">Получатель не поддерживает функцию исправления последнего сообщения.</string>
     <string name="last_name">Фамилия</string>
     <string name="last_seen">сегодня:%1$s</string>
     <string name="leave">Покинуть</string>
@@ -561,8 +564,6 @@
     <string name="folder">Папка</string>
     <string name="other">Другое</string>
     <string name="organization">Организация</string>
-    <string name="phone">Телефон</string>
-    <string name="phones">Телефоны</string>
     <string name="play">Озвучить</string>
     <string name="postal_code">Почтовый код</string>
     <string name="rename">Переименовать</string>
@@ -605,7 +606,6 @@
     <string name="retry">Повторить</string>
     <string name="search">Поиск</string>
     <string name="search_contact">Поиск контакта</string>&gt;
-    <string name="phonebook">Телефонная книга</string>
     <string name="security">Безопасность</string>
     <string name="select_account_owner">Выбрать владельца учётной записи</string>
     <string name="assign_group">Группа:</string>
@@ -684,7 +684,6 @@
     <string name="callinfo_call_information">Информация о вызове</string>
     <string name="callinfo_call_transport">Транзакция вызова сигнализации:</string>
     <string name="callinfo_codec">Кодек/Частота:</string>
-    <string name="callinfo_conference_focus">Фокус конференции:</string>
     <string name="callinfo_default_encrypted">Включено шифрование:</string>
     <string name="callinfo_jitter">Джиттер:</string>
     <string name="callinfo_key_exchange_protocol">Протокол обмена ключами</string>
@@ -694,7 +693,6 @@
     <string name="callinfo_media_srtp">SRTP:</string>
     <string name="callinfo_media_stream_transport_protocol">Протокол передачи медиапотоков:</string>
     <string name="callinfo_na">N.A.</string>
-    <string name="callinfo_peer_count">Количество участников:</string>
     <string name="callinfo_remote_ip">Отдалённый IP/Порт:</string>
     <string name="callinfo_rtt">RTT:</string>
     <string name="callinfo_details">Информация о звонке</string>
@@ -1049,8 +1047,6 @@
     <string name="sec_protocols_title">Протоколы безопасности</string>
     <string name="sec_protocols_message">Выберите нужные протоколы в порядке</string>
     <string name="discard">Отменить</string>
-    <string name="sec_zrtp_signalling_on">ZRTP будет рекламироваться по протоколу сигнализации</string>
-    <string name="sec_zrtp_signalling_off">Не будет рекламы ZRTP</string>
 
     <!-- STUN/Jingle Nodes list -->
     <string name="service_gui_SERVERS_LIST_ADD_SERVER">Добавить сервер</string>
@@ -1078,7 +1074,6 @@
     <string name="security_sdes_dlg_title">Выберите нужный набор шифров</string>
     <string name="security_sdes_title">Набор шифров SDES</string>
     <string name="security_zrtp_options">Параметры ZRTP</string>
-    <string name="security_zrtp_signalling">Передача сигналов ZRTP</string>
 
     <!-- Common preferences -->
     <string name="audio_encoding">Кодирование аудио</string>
@@ -1121,6 +1116,7 @@
     <string name="jbr_server_port">Порт сервера</string>
     <string name="jbr_priority">Приоритет (диапазон: -128~127)</string>
     <string name="jbr_resource_auto_gen">Автоматическое создание ресурса</string>
+    <string name="jbr_resource_auto_summary">Удалите имя ресурса, чтобы это вступило в силу</string>
     <string name="jbr_resource_id">Ресурс идентификатора Jabber</string>
     <string name="jbr_resource_name">Имя ресурса</string>
     <string name="jbr_server_ip">Подключение IP-адреса сервера</string>
@@ -1259,14 +1255,6 @@
     <string name="tts_voice">Голос по умолчанию:</string>
     <string name="loading_wait">Загрузка, пожалуйста подождите…</string>
 
-    <!-- Remove special characters from phone number -->
-    <string name="settings_normalize_number">Специальные символы в телефонных номерах</string>
-    <string name="settings_normalize_off">Нет изменений номера телефона</string>
-    <string name="settings_normalize_on">Специальные символы будут удалены из числа</string>
-    <!-- Convert letters in phone numbers -->
-    <string name="settings_phone_alpha_no_allow">Нет изменений номера телефона</string>
-    <string name="settings_phone_alpha_allow">Письма в телефонных номерах</string>
-
     <!-- Call settings -->
     <string name="call">Вызов</string>
     <string name="media_call">Медиа звонок</string>
@@ -1385,6 +1373,18 @@
     <string name="crypto_omemo_distrust_messaging_stop">Остановить дальнейшую отправку сообщения OMEMO другу: %1$s</string>
     <string name="crypto_omemo_trust_messaging_resume">Возобновить отправку сообщения OMEMO собеседнику: %1$s</string>
 
+    <!-- Language Translation settings -->
+    <string name="translation">Языковой перевод</string>
+    <string name="translation_received">Перевести полученное сообщение</string>
+    <string name="translation_receive_disable">Перевод, прием, отключение</string>
+    <string name="translation_receive_enable">Перевод включить прием</string>
+    <string name="translation_sent">Перевести сообщение отправить</string>
+    <string name="translation_sent_disable">Перевод отправить отключить</string>
+    <string name="translation_sent_enable">Включить отправку перевода</string>
+    <string name="translation_server_apikey">Ключ API сервера перевода</string>
+    <string name="translation_server_apikey_hint">Вводить только при наличии соответствующей информации.</string>
+    <string name="translation_server">URL сервера перевода</string>
+
     <!-- Advanced settings category -->
     <string name="advanced">Дополнительно</string>
     <string name="settings_expert">Расширенные настройки</string>
@@ -1430,7 +1430,6 @@
     <string name="permission_microphone">Микрофон</string>
     <string name="permission_music">Музыка и аудио</string>
     <string name="permission_notifications">Уведомления</string>
-    <string name="permission_phone">Телефон</string>
     <string name="permission_video">Фото и видео</string>
     <string name="permission_storage">Хранение</string>
     <string name="permission_hint">Для максимальной производительности и полной поддержки приложений, aTalk требует предоставления разрешений для следующих служб. Без них aTalk может не работать или может иметь неожиданное поведение!</string>
@@ -1456,9 +1455,6 @@
 
     <string name="notifications_permission_denied_dialog_title">Запрос разрешения на уведомления</string>
     <string name="notifications_permission_denied_feedback">Уведомления от aTalk будут отключены пока вы не предоставите разрешение</string>
-
-    <string name="phone_permission_denied_dialog_title">Прочитать запрос разрешения состояния телефона</string>
-    <string name="phone_permission_denied_feedback">Функции телефона не будут доступны, пока вы не предоставите запрос на разрешение</string>
 
     <string name="video_permission_denied_dialog_title">Запрос разрешения на фото и видео</string>
     <string name="video_permission_denied_feedback">Медиа-фото и видеофайлы недоступны, пока вы не предоставите разрешение</string>

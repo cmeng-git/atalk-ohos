@@ -42,7 +42,21 @@
             android:key="pref.key.theme"
             android:persistent="false"
             android:title="@string/settings_theme" />
+    </PreferenceCategory>
 
+    <!-- Translation Server Setting -->
+    <PreferenceCategory
+        android:key="pref_cat_translate"
+        android:title="@string/translation">
+
+        <EditTextPreference
+            android:key="translate_server"
+            android:title="@string/translation_server" />
+
+        <EditTextPreference
+            android:key="translate_server_apikey"
+            android:title="@string/translation_server_apikey" />
+           android:hint="@string/translation_server_apikey_hint" />
     </PreferenceCategory>
 
     <!-- Chat Security Settings -->
@@ -69,7 +83,6 @@
                 android:targetClass="org.atalk.impl.appcertdialog.ConnectionInfo"
                 android:targetPackage="org.atalk.ohos" />
         </Preference>
-
     </PreferenceCategory>
 
     <!-- Message settings -->
@@ -233,24 +246,6 @@
         </Preference>
     </PreferenceCategory>
 
-    <!-- Phone Call Settings -->
-    <PreferenceCategory
-        android:key="pref.cat.settings.call"
-        android:title="@string/call">
-
-        <CheckBoxPreference
-            android:key="pref.key.call.remove.special"
-            android:summaryOff="@string/settings_normalize_off"
-            android:summaryOn="@string/settings_normalize_on"
-            android:title="@string/settings_normalize_number" />
-
-        <CheckBoxPreference
-            android:key="pref.key.call.convert.letters"
-            android:summaryOff="@string/settings_phone_alpha_no_allow"
-            android:summaryOn="@string/settings_phone_allow_alpha"
-            android:title="@string/settings_phone_alpha_allow" />
-    </PreferenceCategory>
-
     <!-- Advanced Settings -->
     <PreferenceCategory
         android:title="@string/advanced">
@@ -259,12 +254,12 @@
             android:key="pref.key.settings.advanced"
             android:summary="@string/settings_expert_summary"
             android:title="@string/settings_expert"
-            app:fragment="org.atalk.ohos.gui.settings.ExpertSettingsFragment" />
+            app:fragment="org.atalk.android.gui.settings.ExpertSettingsFragment" />
 
         <Preference
             android:key="pref.key.provisioning"
             android:summary="@string/provisioning_summary"
-            android:title="@string/provisioning" >
+            android:title="@string/provisioning">
             <intent
                 android:action="android.intent.action.VIEW"
                 android:targetClass="org.atalk.ohos.gui.settings.ProvisioningSettings"

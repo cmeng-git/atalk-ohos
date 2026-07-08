@@ -5,7 +5,6 @@
  */
 package org.atalk.impl.neomedia.device.util;
 
-import android.app.Activity;
 import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.graphics.SurfaceTexture;
@@ -17,9 +16,9 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 
-import org.atalk.impl.timberlog.TimberLog;
 import org.atalk.ohos.BaseActivity;
 import org.atalk.ohos.aTalkApp;
+import org.atalk.impl.timberlog.TimberLog;
 
 import timber.log.Timber;
 

@@ -105,8 +105,8 @@ public class ComboBox extends LinearLayout {
      * @param column Which column from source to show.
      */
     public void setSuggestionSource(Cursor source, String column) {
-        String[] from = new String[]{column};
-        int[] to = new int[]{android.R.id.text1};
+        String[] from = new String[] {column};
+        int[] to = new int[] {android.R.id.text1};
         SimpleCursorAdapter cursorAdapter = new SimpleCursorAdapter(getContext(),
                 R.layout.simple_spinner_dropdown_item, source, from, to, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
 

@@ -81,11 +81,11 @@ public interface IMessage {
     /**
      * Returns the Http File Download status
      *
-     * @return the file xfer status
+     * @return the message status or file xfer status
      */
-    int getXferStatus();
+    int getStatus();
 
-    // void setXferStatus(int status);
+    void setStatus(int status);
 
     /**
      * Returns the message delivery receipt status
@@ -95,6 +95,15 @@ public interface IMessage {
     int getReceiptStatus();
 
     void setReceiptStatus(int status);
+
+    /**
+     * Returns a unique identifier of this message.
+     *
+     * @return a String that uniquely represents this message in the scope of this protocol.
+     */
+    String getMessageUid();
+
+    void setMessageUid(String msgUid);
 
     /**
      * Returns the server message Id of the message sent - for tracking delivery receipt
@@ -155,13 +164,4 @@ public interface IMessage {
      * @return an int indicating the number of bytes that this message contains.
      */
     int getSize();
-
-    /**
-     * Returns a unique identifier of this message.
-     *
-     * @return a String that uniquely represents this message in the scope of this protocol.
-     */
-    String getMessageUID();
-
-    void setMessageUID(String msgUid);
 }

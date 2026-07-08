@@ -13,7 +13,9 @@ import net.java.sip.communicator.service.protocol.ProtocolProviderService;
 import net.java.sip.communicator.service.protocol.event.MessageListener;
 
 import org.atalk.ohos.gui.chat.filetransfer.FileSendConversation;
+
 import org.jivesoftware.smackx.chatstates.ChatState;
+
 import org.jxmpp.jid.EntityBareJid;
 
 /**
@@ -39,23 +41,21 @@ public interface ChatTransport {
      * @return {@code true} if this chat transport supports instant
      * messaging, otherwise returns {@code false}
      */
-    boolean allowsInstantMessage();
+    boolean allowInstantMessage();
 
     /**
-     * Returns <code>true</code> if this chat transport supports message corrections and false otherwise.
+     * Returns <code>true</code> if this chat transport supports message correction and false otherwise.
      *
-     * @return {@code true} if this chat transport supports message corrections and false otherwise.
+     * @return {@code true} if this chat transport supports message correction and false otherwise.
      */
-    boolean allowsMessageCorrections();
+    boolean allowMessageCorrection();
 
     /**
-     * Returns {@code true} if this chat transport supports sms
-     * messaging, otherwise returns {@code false}.
+     * Returns <code>true</code> if this chat transport supports message retraction and false otherwise.
      *
-     * @return {@code true} if this chat transport supports sms
-     * messaging, otherwise returns {@code false}
+     * @return {@code true} if this chat transport supports message retraction and false otherwise.
      */
-    boolean allowsSmsMessage();
+    boolean allowMessageRetract();
 
     /**
      * Returns {@code true} if this chat transport supports message delivery receipts,
@@ -73,7 +73,7 @@ public interface ChatTransport {
      * @return {@code true} if this chat transport supports chat state
      * notifications, otherwise returns {@code false}
      */
-    boolean allowsChatStateNotifications();
+    boolean allowChatStateNotifications();
 
     /**
      * Returns the name of this chat transport. This is for example the name of the
@@ -123,18 +123,6 @@ public interface ChatTransport {
 
     /**
      * Sends the given instant message through this chat transport, by specifying
-     * the mime type (html or plain text).
-     *
-     * @param message The message to send.
-     * @param encType See IMessage for definition of encType e.g. Encryption, encode & remoteOnly
-     *
-     * @throws Exception if the send doesn't succeed
-     */
-    void sendInstantMessage(String message, int encType)
-            throws Exception;
-
-    /**
-     * Sends the given instant FT message through this chat transport, by specifying
      * the mime type (html or plain text) and a msgUuid.
      *
      * @param message The message to send.
@@ -143,7 +131,7 @@ public interface ChatTransport {
      *
      * @throws Exception if the send doesn't succeed
      */
-    void sendInstantFTMessage(String message, int encType, String msgId)
+    void sendInstantMessage(String message, int encType, String msgId)
             throws Exception;
 
     /**
@@ -152,9 +140,11 @@ public interface ChatTransport {
      *
      * @param message The message to send.
      * @param encType See IMessage for definition of encType e.g. Encryption, encode & remoteOnly
-     * @param correctedMessageUID The ID of the message being corrected by this message.
+     * @param correctionUid The ID of the message being corrected by this message.
      */
-    void sendInstantMessage(String message, int encType, String correctedMessageUID);
+    void sendInstantMessageCorrection(String message, int encType, String correctionUid);
+
+    void retractMessage(String retractUid);
 
     /**
      * Determines whether this chat transport supports the supplied content type
@@ -164,45 +154,6 @@ public interface ChatTransport {
      * @return <code>true</code> if the chat transport supports it and <code>false</code> otherwise.
      */
     boolean isContentTypeSupported(int mimeType);
-
-    /**
-     * Whether a dialog need to be opened so the user can enter the destination number.
-     *
-     * @return <code>true</code> if dialog needs to be open.
-     */
-    boolean askForSMSNumber();
-
-    /**
-     * Sends the given SMS message trough this chat transport.
-     *
-     * @param phoneNumber the phone number to which to send the message
-     * @param message The message to send.
-     *
-     * @throws Exception if the send doesn't succeed
-     */
-    void sendSmsMessage(String phoneNumber, String message)
-            throws Exception;
-
-    /**
-     * Sends the given SMS message through this chat transport, leaving the transport to choose the destination.
-     *
-     * @param message The message to send.
-     *
-     * @throws Exception if the send doesn't succeed
-     */
-    void sendSmsMessage(String message)
-            throws Exception;
-
-    /**
-     * Sends the given SMS multimedia message through this chat transport,
-     * leaving the transport to choose the destination.
-     *
-     * @param file the file to send
-     *
-     * @throws Exception if the send doesn't succeed
-     */
-    Object sendMultimediaFile(File file)
-            throws Exception;
 
     /**
      * Sends the given sticker file through this chat transport,
@@ -271,25 +222,11 @@ public interface ChatTransport {
     ChatSession getParentChatSession();
 
     /**
-     * Adds an sms message listener to this chat transport.
-     *
-     * @param l The message listener to add.
-     */
-    void addSmsMessageListener(MessageListener l);
-
-    /**
      * Adds an instant message listener to this chat transport.
      *
      * @param l The message listener to add.
      */
     void addInstantMessageListener(MessageListener l);
-
-    /**
-     * Removes the given sms message listener from this chat transport.
-     *
-     * @param l The message listener to remove.
-     */
-    void removeSmsMessageListener(MessageListener l);
 
     /**
      * Removes the instant message listener from this chat transport.

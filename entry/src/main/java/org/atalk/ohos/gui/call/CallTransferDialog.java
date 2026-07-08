@@ -54,6 +54,7 @@ import timber.log.Timber;
 public class CallTransferDialog extends Dialog
         implements OnChildClickListener, OnGroupClickListener, DialogInterface.OnShowListener {
     private final CallPeer mInitialPeer;
+
     private CallPeer mCallPeer = null;
     private Contact mSelectedContact = null;
     private Button mTransferButton;

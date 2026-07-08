@@ -26,6 +26,7 @@ import org.atalk.ohos.gui.AppGUIActivator;
 import org.atalk.ohos.gui.dialogs.ProgressDialog;
 import org.atalk.ohos.gui.settings.BasePreferenceFragment;
 import org.atalk.ohos.gui.settings.util.SummaryMapper;
+
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
@@ -131,7 +132,7 @@ public abstract class AccountPreferenceFragment extends BasePreferenceFragment
 
     /**
      * Method should return <code>SecurityAccountRegistration</code> if security details are supported
-     * by impl fragment. Preference category with key <code>pref_key_enable_encryption</code> must be
+     * by impl fragment. Preference category with key <code>pref_key_call_encryption</code> must be
      * present to trigger security edit activity.
      *
      * @return <code>SecurityAccountRegistration</code> if security details are supported by impl fragment.
@@ -287,7 +288,8 @@ public abstract class AccountPreferenceFragment extends BasePreferenceFragment
                 if (wizard.getProtocolName().equals(protocolName))
                     return wizard;
             }
-        } catch (InvalidSyntaxException ex) {
+        }
+        catch (InvalidSyntaxException ex) {
             // this shouldn't happen since we're providing no parameter string but let's log just in case.
             Timber.e(ex, "Error while retrieving service refs");
         }
@@ -349,7 +351,8 @@ public abstract class AccountPreferenceFragment extends BasePreferenceFragment
                 mActivity.finish();
             });
             commitThread.start();
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             Timber.e("Error occurred while trying to commit changes: %s", e.getMessage());
             mActivity.finish();
         }

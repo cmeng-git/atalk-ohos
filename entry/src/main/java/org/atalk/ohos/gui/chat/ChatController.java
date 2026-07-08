@@ -7,7 +7,6 @@ package org.atalk.ohos.gui.chat;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ClipData;
 import android.content.Context;
@@ -46,16 +45,23 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import net.java.sip.communicator.impl.protocol.jabber.CallJabberImpl;
 import net.java.sip.communicator.impl.protocol.jabber.CallPeerJabberImpl;
+import net.java.sip.communicator.impl.protocol.jabber.JabberAccountIDImpl;
 import net.java.sip.communicator.service.contactlist.MetaContact;
 import net.java.sip.communicator.service.gui.UIService;
+import net.java.sip.communicator.service.muc.ChatRoomWrapper;
 import net.java.sip.communicator.service.protocol.Call;
+import net.java.sip.communicator.service.protocol.Contact;
 import net.java.sip.communicator.service.protocol.IMessage;
 import net.java.sip.communicator.util.ConfigurationUtils;
 
-import org.apache.commons.lang3.StringUtils;
 import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.AppGUIActivator;
@@ -69,8 +75,14 @@ import org.atalk.ohos.gui.util.ViewUtil;
 import org.atalk.ohos.plugin.audioservice.AudioBgService;
 import org.atalk.ohos.plugin.audioservice.SoundMeter;
 import org.atalk.persistance.FilePathHelper;
+
+import org.apache.commons.lang3.StringUtils;
+
 import org.jivesoftware.smackx.chatstates.ChatState;
 
+import space.dynomake.libretranslate.Language;
+import space.dynomake.libretranslate.Translator;
+import space.dynomake.libretranslate.exception.BadTranslatorResponseException;
 import timber.log.Timber;
 
 /**
@@ -83,7 +95,7 @@ import timber.log.Timber;
  */
 public class ChatController implements View.OnClickListener, View.OnLongClickListener, View.OnTouchListener, TextWatcher {
 
-    public static final String[] MIME_TYPES_MEDIA = new String[]{"image/*", "video/*"};
+    public static final String[] MIME_TYPES_MEDIA = new String[] {"image/*", "video/*"};
 
     /**
      * The chat fragment used by this instance.
@@ -92,7 +104,7 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
     /**
      * Parent activity: ChatActivity pass in from ChatFragment.
      */
-    private final Activity parent;
+    private final ChatActivity mChatActivity;
     /**
      * Indicates that this controller is attached to the views.
      */
@@ -182,11 +194,11 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
      * @param activity the parent <code>Activity</code>.
      * @param fragment the parent <code>ChatFragment</code>.
      */
-    public ChatController(Activity activity, ChatFragment fragment) {
-        parent = activity;
+    public ChatController(ChatActivity activity, ChatFragment fragment) {
+        mChatActivity = activity;
         mChatFragment = fragment;
         // Do not use aTalk.getInstance, may not have initialized
-        isAudioAllowed = aTalk.hasPermission(parent, false,
+        isAudioAllowed = aTalk.hasPermission(activity, false,
                 aTalk.PRC_RECORD_AUDIO, Manifest.permission.RECORD_AUDIO);
     }
 
@@ -239,10 +251,10 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
             callBtn.setOnClickListener(this);
             mTrashAnimate = (AnimationDrawable) mTrash.getBackground();
 
-            animBlink = AnimationUtils.loadAnimation(parent, R.anim.blink);
-            animZoomOut = AnimationUtils.loadAnimation(parent, R.anim.zoom_out);
+            animBlink = AnimationUtils.loadAnimation(mChatActivity, R.anim.blink);
+            animZoomOut = AnimationUtils.loadAnimation(mChatActivity, R.anim.zoom_out);
             animZoomOut.setDuration(1000);
-            animSlideUp = AnimationUtils.loadAnimation(parent, R.anim.slide_up);
+            animSlideUp = AnimationUtils.loadAnimation(mChatActivity, R.anim.slide_up);
             animSlideUp.setDuration(1000);
 
             updateCorrectionState();
@@ -258,35 +270,35 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
         chatPanel = mChatFragment.getChatPanel();
 
         // Gets message edit view
-        msgEdit = parent.findViewById(R.id.chatWriteText);
+        msgEdit = mChatActivity.findViewById(R.id.chatWriteText);
 
         // Message typing area background
-        msgEditBg = parent.findViewById(R.id.chatTypingArea);
+        msgEditBg = mChatActivity.findViewById(R.id.chatTypingArea);
 
         // Gets the cancel correction button and hooks on click action
-        cancelCorrectionBtn = parent.findViewById(R.id.cancelCorrectionBtn);
+        cancelCorrectionBtn = mChatActivity.findViewById(R.id.cancelCorrectionBtn);
 
         // Quoted reply message view
-        chatMessageReply = parent.findViewById(R.id.chatMsgReply);
-        chatReplyCancel = parent.findViewById(R.id.chatReplyCancel);
+        chatMessageReply = mChatActivity.findViewById(R.id.chatMsgReply);
+        chatReplyCancel = mChatActivity.findViewById(R.id.chatReplyCancel);
 
         // Gets the send message button and hooks on click action
-        sendBtn = parent.findViewById(R.id.sendMessageButton);
+        sendBtn = mChatActivity.findViewById(R.id.sendMessageButton);
         // Gets the send audio button and hooks on click action if permission allowed
-        audioBtn = parent.findViewById(R.id.audioMicButton);
+        audioBtn = mChatActivity.findViewById(R.id.audioMicButton);
         // Gets the call switch button
-        callBtn = parent.findViewById(R.id.chatBackToCallButton);
-        mTrash = parent.findViewById(R.id.ic_mic_trash);
+        callBtn = mChatActivity.findViewById(R.id.chatBackToCallButton);
+        mTrash = mChatActivity.findViewById(R.id.ic_mic_trash);
 
         // Bind all image previews
-        msgRecordView = parent.findViewById(R.id.recordView);
-        imagePreview = parent.findViewById(R.id.imagePreview);
-        mediaPreview = parent.findViewById(R.id.media_preview);
+        msgRecordView = mChatActivity.findViewById(R.id.recordView);
+        imagePreview = mChatActivity.findViewById(R.id.imagePreview);
+        mediaPreview = mChatActivity.findViewById(R.id.media_preview);
 
         // Bind all sound record views
-        mSoundMeter = parent.findViewById(R.id.sound_meter);
-        mRecordTimer = parent.findViewById(R.id.recordTimer);
-        mdBTextView = parent.findViewById(R.id.dBTextView);
+        mSoundMeter = mChatActivity.findViewById(R.id.sound_meter);
+        mRecordTimer = mChatActivity.findViewById(R.id.recordTimer);
+        mdBTextView = mChatActivity.findViewById(R.id.dBTextView);
     }
 
     /**
@@ -304,7 +316,7 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
         }
 
         mChatTransport = chatPanel.getChatSession().getCurrentChatTransport();
-        allowsChatStateNotifications = (mChatTransport.allowsChatStateNotifications()
+        allowsChatStateNotifications = (mChatTransport.allowChatStateNotifications()
                 && ConfigurationUtils.isSendChatStateNotifications());
 
         if (allowsChatStateNotifications) {
@@ -356,30 +368,30 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
         if (chatPanel == null)
             chatPanel = mChatFragment.getChatPanel();
 
-        String correctionUID = chatPanel.getCorrectionUID();
-
         int encryption = IMessage.ENCRYPTION_NONE;
         if (chatPanel.isOmemoChat())
             encryption = IMessage.ENCRYPTION_OMEMO;
 
-        if (correctionUID == null) {
+        String correctionUid = chatPanel.getCorrectionUid();
+        if (correctionUid == null) {
             try {
-                mChatTransport.sendInstantFTMessage(message, encryption | encType, msgUuId);
-            } catch (Exception ex) {
-                Timber.e("Send instant message exception: %s", ex.getMessage());
+                mChatTransport.sendInstantMessage(message, encryption | encType, msgUuId);
+            }
+            catch (Exception ex) {
+                Timber.e("Send instant message: %s", ex.getMessage());
                 aTalkApp.showToastMessage(ex.getMessage());
             }
         }
         // Last message correction
         else {
-            mChatTransport.sendInstantMessage(message, encryption | encType, correctionUID);
+            mChatTransport.sendInstantMessageCorrection(message, encryption | encType, correctionUid);
             // Clears correction UI state
-            chatPanel.setCorrectionUID(null);
+            chatPanel.setCorrectionUid(null);
             updateCorrectionState();
         }
 
         // must run on UiThread when access view
-        parent.runOnUiThread(() -> {
+        mChatActivity.runOnUiThread(() -> {
             // Clears edit text field
             if (msgEdit != null)
                 msgEdit.setText("");
@@ -409,7 +421,7 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
         // Position must be aligned to the number of header views included
         int headersCount = ((ListView) adapter).getHeaderViewsCount();
         int cPos = position - headersCount;
-        ChatMessage chatMessage = chatListAdapter.getMessage(cPos);
+        ChatMessage chatMessage = chatListAdapter.getChatMessage(cPos);
 
         // Ensure the selected message is really the last outgoing message
         if (cPos != chatListAdapter.getCount() - 1) {
@@ -422,19 +434,18 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
         }
 
         if (mChatTransport instanceof MetaContactChatTransport) {
-            if (!chatMessage.getMessage().matches(ChatMessage.HTML_MARKUP))
+            if (!chatMessage.getMessageBody().matches(ChatMessage.HTML_MARKUP))
                 editText(adapter, chatMessage, position);
         }
         // Just put the last message in edit box for Omemo send error
         else {
-            msgEdit.setText(chatMessage.getContentForCorrection());
+            msgEdit.setText(chatMessage.getMessageContent());
         }
     }
 
     public void editText(AdapterView adapter, ChatMessage chatMessage, int position) {
-        // ListView cListView = chatFragment.getChatListView();
         String uidToCorrect = chatMessage.getUidForCorrection();
-        String content = chatMessage.getContentForCorrection();
+        String content = chatMessage.getMessageContent();
 
         if (!TextUtils.isEmpty(content)) {
             // Sets corrected message content and show the keyboard
@@ -444,15 +455,15 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
             // Not send message - uidToCorrect is null
             if (!TextUtils.isEmpty(uidToCorrect)) {
                 // Change edit text bg colors and show cancel button
-                chatPanel.setCorrectionUID(uidToCorrect);
+                chatPanel.setCorrectionUid(uidToCorrect);
                 updateCorrectionState();
 
-                InputMethodManager inputMethodManager = (InputMethodManager) parent.getSystemService(Context.INPUT_METHOD_SERVICE);
+                InputMethodManager inputMethodManager = (InputMethodManager) mChatActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
                 if (inputMethodManager != null)
                     inputMethodManager.showSoftInput(msgEdit, InputMethodManager.SHOW_IMPLICIT);
 
-                // Select corrected message
                 // TODO: it doesn't work when keyboard is displayed for the first time
+                // Select corrected message
                 adapter.setSelection(position);
             }
         }
@@ -464,7 +475,7 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
             chatReplyCancel.setVisibility(View.VISIBLE);
 
             Html.ImageGetter imageGetter = new HtmlImageGetter();
-            String body = replyMessage.getMessage();
+            String body = replyMessage.getMessageBody();
             if (!body.matches(ChatMessage.HTML_MARKUP)) {
                 body = body.replace("\n", "<br/>");
             }
@@ -479,6 +490,62 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
         }
     }
 
+    // Thread pool to handle background operations
+    private String translateMessageSend(final String text) {
+        // Define a Callable task that returns a String
+        Callable<String> task = () -> {
+            String aText = null;
+            JabberAccountIDImpl accountId = (JabberAccountIDImpl) mChatTransport.getProtocolProvider().getAccountID();
+            Language language = Language.fromCode(accountId.getTranslationSend());
+
+            boolean isTranslateSend = false;
+            if (Language.NONE != language) {
+                Object mRecipient = mChatActivity.getRecipient();
+                if (mRecipient instanceof Contact) {
+                    isTranslateSend = ((Contact) mRecipient).isTranslateSend();
+                }
+                else {
+                    isTranslateSend = ((ChatRoomWrapper) mRecipient).isTranslateSend();
+                }
+            }
+
+            if (isTranslateSend) {
+                try {
+                    aText = Translator.translate(language, text);
+                }
+                catch (Exception e) {
+                    String err = "Translation error: " + e.getMessage();
+                    if (e instanceof BadTranslatorResponseException) {
+                        String host = ((BadTranslatorResponseException) e).getHost();
+                        int code = ((BadTranslatorResponseException) e).getCode();
+                        err = "Translation error: (" + code + ") " + host;
+                    }
+                    Timber.w("Translate Message Send: %s", err);
+                    aTalkApp.showToastMessage(err);
+                }
+            }
+            return aText;
+        };
+
+        // Submit the task and get a Future object back
+        final ExecutorService eService = Executors.newSingleThreadExecutor();
+        Future<String> future = eService.submit(task);
+        String result = null;
+
+        // Block and wait for the thread to finish, then get the String
+        try {
+            result = future.get();
+        }
+        catch (InterruptedException | ExecutionException e) {
+            Timber.w("Translate Message Send: %s", e.getMessage());
+        }
+        finally {
+            // Always remember to shut down the executor
+            eService.shutdown();
+        }
+        return result;
+    }
+
     /**
      * Method fired when send a message or cancel correction button is clicked.
      * <p>
@@ -487,102 +554,105 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.sendMessageButton:
-                if (chatPanel.getProtocolProvider().isRegistered()) {
-                    if (mediaPreview.getVisibility() == View.VISIBLE) {
-                        // Disable to prevent user multiple clicks.
-                        sendBtn.setVisibility(View.INVISIBLE);
-                        MediaPreviewAdapter mpAdapter = (MediaPreviewAdapter) mediaPreview.getAdapter();
-                        if (mpAdapter != null) {
-                            List<Attachment> mediaPreviews = mpAdapter.getAttachments();
-                            if (!mediaPreviews.isEmpty()) {
-                                for (Attachment attachment : mediaPreviews) {
-                                    String filePath = FilePathHelper.getFilePath(parent, attachment);
-                                    if (StringUtils.isNotEmpty(filePath)) {
-                                        if (new File(filePath).exists()) {
-                                            chatPanel.addFTSendRequest(filePath, ChatMessage.MESSAGE_FILE_TRANSFER_SEND);
-                                        }
-                                        else {
-                                            aTalkApp.showToastMessage(R.string.file_does_not_exist);
-                                        }
+        case R.id.sendMessageButton:
+            if (chatPanel.getProtocolProvider().isRegistered()) {
+                if (mediaPreview.getVisibility() == View.VISIBLE) {
+                    // Disable to prevent user multiple clicks.
+                    sendBtn.setVisibility(View.INVISIBLE);
+                    MediaPreviewAdapter mpAdapter = (MediaPreviewAdapter) mediaPreview.getAdapter();
+                    if (mpAdapter != null) {
+                        List<Attachment> mediaPreviews = mpAdapter.getAttachments();
+                        if (!mediaPreviews.isEmpty()) {
+                            for (Attachment attachment : mediaPreviews) {
+                                String filePath = FilePathHelper.getFilePath(mChatActivity, attachment);
+                                if (StringUtils.isNotEmpty(filePath)) {
+                                    if (new File(filePath).exists()) {
+                                        chatPanel.addFTSendRequest(filePath, ChatMessage.MESSAGE_FILE_TRANSFER_SEND);
+                                    }
+                                    else {
+                                        aTalkApp.showToastMessage(R.string.file_does_not_exist);
                                     }
                                 }
-                                mpAdapter.clearPreviews();
                             }
+                            mpAdapter.clearPreviews();
                         }
                     }
-                    else {
-                        // allow last message correction to send empty string to clear last sent text
-                        String correctionUID = chatPanel.getCorrectionUID();
-                        String textEdit = ViewUtil.toString(msgEdit);
-                        if ((textEdit == null) && (correctionUID != null)) {
-                            textEdit = " ";
-                        }
-                        if ((textEdit == null) && (quotedMessage == null)) {
-                            return;
-                        }
-
-                        if (quotedMessage != null) {
-                            textEdit = quotedMessage + textEdit;
-                        }
-                        // Send http link as xhtml to avoid being interpreted by the receiver as http file download link
-                        else if (textEdit.matches("(?s)^http[s]:.*") && !textEdit.contains("\\s")) {
-                            textEdit = aTalkApp.getResString(R.string.chat_url_link, textEdit, textEdit);
-                        }
-
-                        // if text contains markup tag then send message as ENCODE_HTML mode
-                        if (textEdit.matches(ChatMessage.HTML_MARKUP)) {
-                            Timber.d("HTML text entry detected: %s", textEdit);
-                            msgEdit.setText(textEdit);
-                            sendMessage(textEdit, IMessage.ENCODE_HTML, null);
-                        }
-                        else
-                            sendMessage(textEdit, IMessage.ENCODE_PLAIN, null);
-                    }
-                    updateSendModeState();
                 }
                 else {
-                    aTalkApp.showToastMessage(R.string.message_delivery_not_registered);
-                }
-                if (quotedMessage == null)
-                    break;
-                // else continue to cleanup quotedMessage after sending
-
-            case R.id.chatReplyCancel:
-                quotedMessage = null;
-                chatMessageReply.setVisibility(View.GONE);
-                chatReplyCancel.setVisibility(View.GONE);
-                break;
-
-            case R.id.cancelCorrectionBtn:
-                cancelCorrection();
-                // Clear last message text
-                msgEdit.setText("");
-                break;
-
-            case R.id.chatBackToCallButton:
-                if (CallManager.getActiveCallsCount() > 0) {
-                    String callId = null;
-                    for (Call call : CallManager.getActiveCalls()) {
-                        callId = call.getCallId();
-                        CallPeerJabberImpl callPeer = ((CallJabberImpl) call).getPeerBySid(callId);
-                        MetaContact metaContact = chatPanel.getMetaContact();
-                        if ((metaContact != null) && metaContact.getDefaultContact().equals(callPeer.getContact())) {
-                            break;
-                        }
+                    String correctionUID = chatPanel.getCorrectionUid();
+                    String textEdit = ViewUtil.toString(msgEdit);
+                    if ((textEdit == null) && (quotedMessage == null)) {
+                        return;
                     }
-                    if (callId != null)
-                        CallNotificationManager.getInstanceFor(callId).backToCall();
-                }
-                else
-                    updateSendModeState();
-                break;
 
-            case R.id.audioMicButton:
-                if (chatPanel.isChatTtsEnable()) {
-                    speechToText();
+                    if (quotedMessage != null) {
+                        textEdit = quotedMessage + textEdit;
+                    }
+                    // Send http link as xhtml to avoid being interpreted by the remote as http file download link
+                    else if (textEdit.matches("(?s)^http[s]:.*") && !textEdit.contains("\\s")) {
+                        textEdit = aTalkApp.getResString(R.string.chat_url_link, textEdit, textEdit);
+                    }
+
+                    // if text contains markup tag then send message as ENCODE_HTML mode
+                    if (textEdit.matches(ChatMessage.HTML_MARKUP)) {
+                        Timber.d("HTML text entry detected: %s", textEdit);
+                        msgEdit.setText(textEdit);
+                        sendMessage(textEdit, IMessage.ENCODE_HTML, null);
+                    }
+                    else {
+                        // Skip language translation for message correction.
+                        if (correctionUID == null) {
+                            String aText = translateMessageSend(textEdit);
+                            textEdit = StringUtils.isEmpty(aText) ? textEdit : textEdit + "\n" + aText;
+                        }
+                        sendMessage(textEdit, IMessage.ENCODE_PLAIN, null);
+                    }
                 }
+                updateSendModeState();
+            }
+            else {
+                aTalkApp.showToastMessage(R.string.message_delivery_not_registered);
+            }
+            if (quotedMessage == null) {
                 break;
+            }
+            // else continue to clean up quotedMessage after sending
+
+        case R.id.chatReplyCancel:
+            quotedMessage = null;
+            chatMessageReply.setVisibility(View.GONE);
+            chatReplyCancel.setVisibility(View.GONE);
+            break;
+
+        case R.id.cancelCorrectionBtn:
+            cancelCorrection();
+            // Clear last message text
+            msgEdit.setText("");
+            break;
+
+        case R.id.chatBackToCallButton:
+            if (CallManager.getActiveCallsCount() > 0) {
+                String callId = null;
+                for (Call call : CallManager.getActiveCalls()) {
+                    callId = call.getCallId();
+                    CallPeerJabberImpl callPeer = ((CallJabberImpl) call).getPeerBySid(callId);
+                    MetaContact metaContact = chatPanel.getMetaContact();
+                    if ((metaContact != null) && metaContact.getDefaultContact().equals(callPeer.getContact())) {
+                        break;
+                    }
+                }
+                if (callId != null)
+                    CallNotificationManager.getInstanceFor(callId).backToCall();
+            }
+            else
+                updateSendModeState();
+            break;
+
+        case R.id.audioMicButton:
+            if (chatPanel.isChatTtsEnable()) {
+                speechToText();
+            }
+            break;
         }
     }
 
@@ -608,7 +678,7 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
             IntentFilter filter = new IntentFilter();
             filter.addAction(AudioBgService.ACTION_AUDIO_RECORD);
             filter.addAction(AudioBgService.ACTION_SMI);
-            LocalBroadcastManager.getInstance(parent).registerReceiver(mReceiver, filter);
+            LocalBroadcastManager.getInstance(mChatActivity).registerReceiver(mReceiver, filter);
             startAudioService(AudioBgService.ACTION_RECORDING);
             return true;
         }
@@ -623,46 +693,46 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
     public boolean onTouch(View v, MotionEvent event) {
         boolean done = false;
         switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN: {
-                downX = event.getX();
-                return false;  // to allow long press detection
-            }
+        case MotionEvent.ACTION_DOWN: {
+            downX = event.getX();
+            return false;  // to allow long press detection
+        }
 
-            case MotionEvent.ACTION_UP: {
-                float upX = event.getX();
-                float deltaX = downX - upX;
+        case MotionEvent.ACTION_UP: {
+            float upX = event.getX();
+            float deltaX = downX - upX;
 
-                //Swipe horizontal detected
-                if (Math.abs(deltaX) > min_distance) {
-                    if (isRecording && (deltaX > 0)) { // right to left
-                        Timber.d("Audio recording cancelled!!!");
-                        isRecording = false;
-                        audioBtn.setEnabled(false); // disable while in animation
-                        LocalBroadcastManager.getInstance(parent).unregisterReceiver(mReceiver);
-                        startAudioService(AudioBgService.ACTION_CANCEL);
+            //Swipe horizontal detected
+            if (Math.abs(deltaX) > min_distance) {
+                if (isRecording && (deltaX > 0)) { // right to left
+                    Timber.d("Audio recording cancelled!!!");
+                    isRecording = false;
+                    audioBtn.setEnabled(false); // disable while in animation
+                    LocalBroadcastManager.getInstance(mChatActivity).unregisterReceiver(mReceiver);
+                    startAudioService(AudioBgService.ACTION_CANCEL);
 
-                        // Start audio sending cancel animation
-                        mSoundMeter.startAnimation(animZoomOut);
-                        mdBTextView.startAnimation(animSlideUp);
-                        mRecordTimer.startAnimation(animSlideUp);
+                    // Start audio sending cancel animation
+                    mSoundMeter.startAnimation(animZoomOut);
+                    mdBTextView.startAnimation(animSlideUp);
+                    mRecordTimer.startAnimation(animSlideUp);
 
-                        mTrash.clearAnimation();
-                        mTrash.setImageDrawable(null);
-                        mTrashAnimate.start();
-                        onAnimationEnd(1200);
-                        done = true;
-                    }
-                }
-                else {
-                    if (isRecording) {
-                        Timber.d("Audio recording sending!!!");
-                        isRecording = false;
-                        startAudioService(AudioBgService.ACTION_SEND);
-                        onAnimationEnd(10);
-                        done = true;
-                    }
+                    mTrash.clearAnimation();
+                    mTrash.setImageDrawable(null);
+                    mTrashAnimate.start();
+                    onAnimationEnd(1200);
+                    done = true;
                 }
             }
+            else {
+                if (isRecording) {
+                    Timber.d("Audio recording sending!!!");
+                    isRecording = false;
+                    startAudioService(AudioBgService.ACTION_SEND);
+                    onAnimationEnd(10);
+                    done = true;
+                }
+            }
+        }
         }
         return done;
     }
@@ -672,7 +742,7 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
      * Note: KeyEvent.Callback is only available in Activity
      */
     public boolean onKeyUp(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_ENTER) {
+        if (keyCode == KeyEvent.KEYCODE_ENTER && event.isCtrlPressed()) {
             if (mChatFragment != null) {
                 sendBtn.performClick();
             }
@@ -686,7 +756,7 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
         new Thread(() -> {
             try {
                 Thread.sleep(wait);
-                parent.runOnUiThread(() -> {
+                mChatActivity.runOnUiThread(() -> {
                     mTrashAnimate.stop();
                     mTrashAnimate.selectDrawable(0);
                     msgEdit.setVisibility(View.VISIBLE);
@@ -697,16 +767,17 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
                     mRecordTimer.clearAnimation();
                     audioBtn.setEnabled(true);
                 });
-            } catch (Exception ex) {
+            }
+            catch (Exception ex) {
                 Timber.e("Exception: %s", ex.getMessage());
             }
         }).start();
     }
 
     private void startAudioService(String mAction) {
-        Intent intent = new Intent(parent, AudioBgService.class);
+        Intent intent = new Intent(mChatActivity, AudioBgService.class);
         intent.setAction(mAction);
-        parent.startService(intent);
+        mChatActivity.startService(intent);
     }
 
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -724,12 +795,12 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
             }
             else if (AudioBgService.ACTION_AUDIO_RECORD.equals(intent.getAction())) {
                 Timber.i("Sending audio recorded file!!!");
-                LocalBroadcastManager.getInstance(parent).unregisterReceiver(mReceiver);
+                LocalBroadcastManager.getInstance(mChatActivity).unregisterReceiver(mReceiver);
                 String filePath = intent.getStringExtra(AudioBgService.URI);
                 if (StringUtils.isNotEmpty(filePath)) {
                     chatPanel.addFTSendRequest(filePath, ChatMessage.MESSAGE_FILE_TRANSFER_SEND);
                 }
-                parent.stopService(new Intent(parent, AudioBgService.class));
+                mChatActivity.stopService(new Intent(mChatActivity, AudioBgService.class));
             }
         }
     };
@@ -741,7 +812,7 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
     private void speechToText() {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        SpeechRecognizer recognizer = SpeechRecognizer.createSpeechRecognizer(parent);
+        SpeechRecognizer recognizer = SpeechRecognizer.createSpeechRecognizer(mChatActivity);
 
         RecognitionListener listener = new RecognitionListener() {
             @Override
@@ -830,8 +901,8 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
      */
     private void cancelCorrection() {
         // Reset correction status
-        if (chatPanel.getCorrectionUID() != null) {
-            chatPanel.setCorrectionUID(null);
+        if (chatPanel.getCorrectionUid() != null) {
+            chatPanel.setCorrectionUid(null);
             updateCorrectionState();
             msgEdit.setText("");
         }
@@ -870,10 +941,10 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
      * Updates visibility state of cancel correction button and toggles bg color of the message edit field.
      */
     private void updateCorrectionState() {
-        boolean correctionMode = (chatPanel.getCorrectionUID() != null);
+        boolean correctionMode = (chatPanel.getCorrectionUid() != null);
         int bgColorId = correctionMode ? R.color.msg_input_correction_bg : R.color.msg_input_bar_bg;
 
-        msgEditBg.setBackgroundColor(parent.getResources().getColor(bgColorId, null));
+        msgEditBg.setBackgroundColor(mChatActivity.getResources().getColor(bgColorId, null));
         cancelCorrectionBtn.setVisibility(correctionMode ? View.VISIBLE : View.GONE);
         mChatFragment.getChatListView().invalidateViews();
     }
@@ -927,7 +998,7 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
 
         // Enabled send text button if text entry box contains text or in correction mode
         // Sending Text before attachment
-        if (!TextUtils.isEmpty(msgEdit.getText()) || (chatPanel.getCorrectionUID() != null)) {
+        if (!TextUtils.isEmpty(msgEdit.getText()) || (chatPanel.getCorrectionUid() != null)) {
             sendBtn.setVisibility(View.VISIBLE);
         }
         else if (hasAttachments) {
@@ -976,6 +1047,7 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
 
     /**
      * Get the current msgEdit content.
+     *
      * @return the msgEdit current content.
      */
     public String getEditTextAndClear() {
@@ -1001,7 +1073,7 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
 
     public void onCommitContent(Uri contentUri) {
         if (chatPanel.getProtocolProvider().isRegistered()) {
-            String filePath = FilePathHelper.getFilePath(parent, contentUri);
+            String filePath = FilePathHelper.getFilePath(mChatActivity, contentUri);
             if (StringUtils.isNotEmpty(filePath)) {
                 sendSticker(filePath);
             }
@@ -1055,28 +1127,29 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
                 long delay;
 
                 switch (mChatState) {
-                    case gone:
-                        delay = 500;
-                        newState = ChatState.active;
-                        break;
-                    case composing:
-                        delay = 10000;
-                        newState = ChatState.paused;
-                        break;
-                    case paused:
-                        delay = 15000;
-                        newState = ChatState.inactive;
-                        break;
-                    default: // active
-                        delay = 30000;
-                        newState = ChatState.inactive;
+                case gone:
+                    delay = 500;
+                    newState = ChatState.active;
+                    break;
+                case composing:
+                    delay = 10000;
+                    newState = ChatState.paused;
+                    break;
+                case paused:
+                    delay = 15000;
+                    newState = ChatState.inactive;
+                    break;
+                default: // active
+                    delay = 30000;
+                    newState = ChatState.inactive;
                 }
 
                 synchronized (this) {
                     try {
                         // Waits the delay to enter newState
                         this.wait(delay);
-                    } catch (InterruptedException e) {
+                    }
+                    catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
                 }
@@ -1127,13 +1200,11 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
             }
             try {
                 this.join();
-            } catch (InterruptedException e) {
+            }
+            catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
         }
     }
-
-    public Activity getParent() {
-        return parent;
-    }
 }
+

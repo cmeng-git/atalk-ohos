@@ -68,7 +68,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
@@ -105,10 +104,6 @@ import net.java.sip.communicator.util.ByteFormat;
 import net.java.sip.communicator.util.GuiUtils;
 import net.java.sip.communicator.util.StatusUtil;
 
-import org.apache.commons.lang3.StringUtils;
-import org.atalk.crypto.CryptoFragment;
-import org.atalk.crypto.listener.CryptoModeChangeListener;
-import org.atalk.impl.timberlog.TimberLog;
 import org.atalk.ohos.BaseFragment;
 import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
@@ -128,7 +123,12 @@ import org.atalk.ohos.gui.util.HtmlImageGetter;
 import org.atalk.ohos.gui.util.XhtmlImageParser;
 import org.atalk.ohos.gui.util.event.EventListener;
 import org.atalk.ohos.plugin.geolocation.SvpApiImpl;
+import org.atalk.crypto.CryptoFragment;
+import org.atalk.crypto.listener.CryptoModeChangeListener;
+import org.atalk.impl.timberlog.TimberLog;
 import org.atalk.persistance.FileBackend;
+
+import org.apache.commons.lang3.StringUtils;
 
 import org.jivesoftware.smack.packet.Stanza;
 
@@ -152,14 +152,9 @@ import timber.log.Timber;
 public class ChatFragment extends BaseFragment implements ChatSessionManager.CurrentChatListener,
         FileTransferStatusListener, CryptoModeChangeListener {
     /**
-     * The session adapter for the contained <code>ChatPanel</code>.
-     */
-    private ChatListAdapter chatListAdapter;
-
-    /**
      * The corresponding <code>ChatPanel</code>.
      */
-    private ChatPanel chatPanel;
+    private ChatPanel mChatPanel;
 
     /**
      * chat MetaContact associated with the chatFragment
@@ -170,6 +165,11 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
      * The chat list view representing the chat.
      */
     private ListView chatListView;
+
+    /**
+     * The session adapter for the contained <code>ChatPanel</code>.
+     */
+    private ChatListAdapter chatListAdapter;
 
     /**
      * List header used to display progress bar when history is being loaded.
@@ -207,7 +207,7 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
     private final Hashtable<String, Object> activeFileTransfers = new Hashtable<>();
 
     /**
-     * Stores all active file transfer requests and effective DisplayMessage position.
+     * Stores all active file transfer requests and effective MessageDisplay position.
      */
     private final Hashtable<String, Integer> activeMsgTransfers = new Hashtable<>();
 
@@ -245,8 +245,8 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
     private View mCFView;
 
     /**
-     * flag indicates fragment is in multi-selection ActionMode; use to temporary disable
-     * last msg correction access etc.
+     * flag indicates fragment is in multi-selection ActionMode;
+     * use to temporary disable last msg correction access etc.
      */
     private boolean isMultiChoiceMode = false;
 
@@ -300,20 +300,6 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
      */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mCFView = inflater.inflate(R.layout.chat_conversation, container, false);
-        chatListAdapter = new ChatListAdapter();
-        chatListView = mCFView.findViewById(R.id.chatListView);
-
-        // Inflates and adds the header, hidden by default
-        this.header = inflater.inflate(R.layout.progressbar, chatListView, false);
-        header.setVisibility(View.GONE);
-        chatListView.addHeaderView(header);
-
-        chatStateView = mCFView.findViewById(R.id.chatStateView);
-        chatListView.setAdapter(chatListAdapter);
-        chatListView.setSelector(R.drawable.list_selector_state);
-        initListViewListeners();
-
         // Chat intent handling - chatId should not be null
         String chatId = null;
         Bundle arguments = getArguments();
@@ -322,16 +308,31 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
         if (chatId == null)
             throw new IllegalArgumentException();
 
-        chatPanel = ChatSessionManager.getActiveChat(chatId);
-        if (chatPanel == null) {
+        mChatPanel = ChatSessionManager.getActiveChat(chatId);
+        if (mChatPanel == null) {
             Timber.e("Chat for given id: %s does not exist", chatId);
             return null;
         }
 
+        mCFView = inflater.inflate(R.layout.chat_conversation, container, false);
+        chatStateView = mCFView.findViewById(R.id.chatStateView);
+
+        chatListAdapter = new ChatListAdapter();
+        chatListView = mCFView.findViewById(R.id.chatListView);
+        chatListView.setAdapter(chatListAdapter);
+        chatListView.setSelector(R.drawable.list_selector_state);
+
+        // Inflates and adds the header, hidden by default
+        header = inflater.inflate(R.layout.progressbar, chatListView, false);
+        header.setVisibility(View.GONE);
+        chatListView.addHeaderView(header);
+
+        mChatPanel.addSessionListener(chatListAdapter);
+        initListViewListeners();
+
         // mChatMetaContact is null for conference
-        mChatMetaContact = chatPanel.getMetaContact();
-        chatPanel.addMessageListener(chatListAdapter);
-        currentChatTransport = chatPanel.getChatSession().getCurrentChatTransport();
+        mChatMetaContact = mChatPanel.getMetaContact();
+        currentChatTransport = mChatPanel.getChatSession().getCurrentChatTransport();
         currentChatFragment = this;
         mProvider = currentChatTransport.getProtocolProvider();
 
@@ -428,11 +429,11 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
             initChatController(true);
 
             // Invoke the listener valid only of metaContactChatSession
-            if (chatPanel.getChatSession() instanceof MetaContactChatSession) {
-                chatPanel.addContactStatusListener(chatListAdapter);
+            if (mChatPanel.getChatSession() instanceof MetaContactChatSession) {
+                mChatPanel.addContactStatusListener(chatListAdapter);
             }
 
-            chatPanel.addChatStateListener(chatListAdapter);
+            mChatPanel.addChatStateListener(chatListAdapter);
             ChatSessionManager.addCurrentChatListener(this);
 
             mSVP_Started = false;
@@ -448,12 +449,12 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
         super.onPause();
 
         // NPE for FFR
-        if (chatPanel != null) {
+        if (mChatPanel != null) {
             // Remove the listener valid only for metaContactChatSession
-            if (chatPanel.getChatSession() instanceof MetaContactChatSession) {
-                chatPanel.removeContactStatusListener(chatListAdapter);
+            if (mChatPanel.getChatSession() instanceof MetaContactChatSession) {
+                mChatPanel.removeContactStatusListener(chatListAdapter);
             }
-            chatPanel.removeChatStateListener(chatListAdapter);
+            mChatPanel.removeChatStateListener(chatListAdapter);
 
             // Not required - implemented as static map
             // cryptoFragment.removeCryptoModeListener(this);
@@ -479,8 +480,8 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
         super.onDetach();
         mChatController = null;
 
-        if (chatPanel != null) {
-            chatPanel.removeMessageListener(chatListAdapter);
+        if (mChatPanel != null) {
+            mChatPanel.removeSessionListener(chatListAdapter);
         }
 
         chatListAdapter = null;
@@ -515,7 +516,7 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
      */
     private void initChatController(boolean inFocus) {
         // chatController => NPE from field && FFR indicates chatPanel may be null???
-        if ((mChatController != null && chatPanel != null)) {
+        if ((mChatController != null && mChatPanel != null)) {
             if (!inFocus) {
                 mChatController.onHide();
                 // Also remove global status listener
@@ -534,7 +535,7 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
                 // Seem mCFView changes on re-entry into chatFragment, so update the listener
                 mCryptoFragment.addCryptoModeListener(currentChatTransport.getDescriptor(), this);
                 // initBackgroundColor();
-                changeBackground(mCFView, chatPanel.getChatType());
+                changeBackground(mCFView, mChatPanel.getChatType());
             }
         }
         else {
@@ -554,7 +555,7 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
          */
         if (!historyLoaded) {
             /*
-             * chatListAdapter.isEmpty() is used as initActive flag, chatPanel.msgCache must be
+             * chatListAdapter.isEmpty() is used as init flag, chatPanel.msgCache must be
              * cleared. Otherwise it will cause chatPanel.getHistory to return old data when the
              * underlying data changed or adapter has been cleared
              */
@@ -616,8 +617,10 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
         MenuItem mQuote;
         MenuItem mForward;
         MenuItem mDelete;
+        MenuItem mRetract;
         MenuItem mShare;
         MenuItem mCopy;
+        MenuItem mTranslate;
         MenuItem mSelectAll;
 
         SparseBooleanArray checkedList;
@@ -627,9 +630,21 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
             // Here you can do something when items are selected/de-selected
             checkedList = chatListView.getCheckedItemPositions();
             checkListSize = checkedList.size();
-            int checkedItemCount = chatListView.getCheckedItemCount();
 
-            // Checked item position is of interest when single item remains selected
+            boolean hasOutMessageSelected = false;
+            for (int i = 0; i < checkListSize; i++) {
+                int key = checkedList.keyAt(i);
+                if (checkedList.valueAt(i)) {
+                    int cType = chatListAdapter.getItemViewType(key - headerCount);
+                    if (cType == ChatListAdapter.OUTGOING_MESSAGE_VIEW) {
+                        hasOutMessageSelected = true;
+                        break;
+                    }
+                }
+            }
+
+            // Checked item position is of interest when single item remains selected.
+            int checkedItemCount = chatListView.getCheckedItemCount();
             boolean isSingleItemSelected = (checkedItemCount == 1);
             if ((isSingleItemSelected && checkListSize > 1)) {
                 position = checkedList.keyAt(checkedList.indexOfValue(true));
@@ -641,47 +656,50 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
             boolean isFileRecord = (cType == ChatListAdapter.FILE_TRANSFER_IN_MESSAGE_VIEW)
                     || (cType == ChatListAdapter.FILE_TRANSFER_OUT_MESSAGE_VIEW);
 
-            // Allow max of 5 actions including the overflow icon to be shown
+            // Allow max of 5 actions including the overflow icon to be shown.
             if (isSingleItemSelected && !isFileRecord) {
-                if ((currentChatTransport instanceof MetaContactChatTransport)
-                        && (cType == ChatListAdapter.OUTGOING_MESSAGE_VIEW)) {
-                    // ensure the selected view is the last MESSAGE_OUT for edit action
-                    mEdit.setVisible(true);
-                    if (cPos != (chatListAdapter.getCount() - 1)) {
-                        for (int i = cPos + 1; i < chatListAdapter.getCount(); i++) {
-                            if (chatListAdapter.getItemViewType(i) == ChatFragment.ChatListAdapter.OUTGOING_MESSAGE_VIEW) {
-                                mEdit.setVisible(false);
-                                mCopy.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-                                break;
-                            }
-                        }
-                    }
+                if (cType == ChatListAdapter.OUTGOING_MESSAGE_VIEW) {
+                    mEdit.setVisible(currentChatTransport.allowMessageCorrection());
+                    mRetract.setVisible(currentChatTransport.allowMessageRetract());
+                    mQuote.setVisible(true);
                 }
                 else {
                     mEdit.setVisible(false);
+                    mRetract.setVisible(false);
+                    mQuote.setVisible(false);
                 }
+                mDelete.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-                mQuote.setVisible(true);
-                if (mEdit.isVisible()) {
+                if (hasOutMessageSelected) {
                     mEdit.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-                    mForward.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+                    mRetract.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                    mForward.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                    mShare.setShowAsAction(mEdit.isVisible() ?
+                            MenuItem.SHOW_AS_ACTION_IF_ROOM : MenuItem.SHOW_AS_ACTION_ALWAYS);
+                    mCopy.setShowAsAction(mRetract.isVisible() ?
+                            MenuItem.SHOW_AS_ACTION_IF_ROOM : MenuItem.SHOW_AS_ACTION_ALWAYS);
                 }
                 else {
                     mForward.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                    mShare.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                    mCopy.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
                 }
-                mQuote.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-                mDelete.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-                mShare.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
             }
             else {
                 mEdit.setVisible(false);
+                mRetract.setVisible(hasOutMessageSelected && currentChatTransport.allowMessageRetract());
                 mQuote.setVisible(false);
-                mForward.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-                mDelete.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-                mShare.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-            }
-            mSelectAll.setVisible(chatListAdapter.getCount() > 1);
 
+                mDelete.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                mRetract.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                mForward.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                mShare.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                mCopy.setShowAsAction(hasOutMessageSelected && mRetract.isVisible() ?
+                        MenuItem.SHOW_AS_ACTION_IF_ROOM : MenuItem.SHOW_AS_ACTION_ALWAYS);
+            }
+
+            mTranslate.setVisible(mChatPanel.isTranslateReceive());
+            mSelectAll.setVisible(chatListAdapter.getCount() > 1);
             mode.invalidate();
             chatListView.setSelection(position);
             mode.setTitle(String.valueOf(checkedItemCount));
@@ -692,20 +710,12 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             int cType;
             File file;
+
             StringBuilder sBuilder = new StringBuilder();
-            ChatMessage chatMsg = chatListAdapter.getMessage(cPos);
+            ChatMessage chatMsg = chatListAdapter.getChatMessage(cPos);
             ArrayList<Uri> imageUris = new ArrayList<>();
 
             switch (item.getItemId()) {
-            case R.id.chat_message_edit:
-                if ((mChatController != null) && (chatMsg != null)) {
-                    mChatController.editText(chatListView, chatMsg, cPos);
-
-                    // Clear the selected Item highlight
-                    // chatListView.clearChoices();
-                }
-                return true;
-
             case R.id.select_all:
                 int size = chatListAdapter.getCount();
                 if (size < 2)
@@ -726,12 +736,12 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
                 for (int i = 0; i < checkListSize; i++) {
                     if (checkedList.valueAt(i)) {
                         cPos = checkedList.keyAt(i) - headerCount;
-                        chatMsg = chatListAdapter.getMessage(cPos);
+                        chatMsg = chatListAdapter.getChatMessage(cPos);
                         if (chatMsg != null) {
                             if (i > 0)
-                                sBuilder.append("\n").append(chatMsg.getContentForClipboard());
+                                sBuilder.append("\n").append(chatMsg.getMessageContent());
                             else
-                                sBuilder.append(chatMsg.getContentForClipboard());
+                                sBuilder.append(chatMsg.getMessageContent());
                         }
                     }
                 }
@@ -753,14 +763,14 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
                     if (checkedList.valueAt(i)) {
                         cPos = checkedList.keyAt(i) - headerCount;
                         cType = chatListAdapter.getItemViewType(cPos);
-                        chatMsg = chatListAdapter.getMessage(cPos);
+                        chatMsg = chatListAdapter.getChatMessage(cPos);
                         if (chatMsg != null) {
                             if ((cType == ChatListAdapter.INCOMING_MESSAGE_VIEW)
                                     || (cType == ChatListAdapter.OUTGOING_MESSAGE_VIEW)) {
                                 if (sBuilder.length() > 0)
-                                    sBuilder.append("\n").append(chatMsg.getContentForClipboard());
+                                    sBuilder.append("\n").append(chatMsg.getMessageContent());
                                 else
-                                    sBuilder.append(chatMsg.getContentForClipboard());
+                                    sBuilder.append(chatMsg.getMessageContent());
                             }
                             else if ((cType == ChatListAdapter.FILE_TRANSFER_IN_MESSAGE_VIEW)
                                     || (cType == ChatListAdapter.FILE_TRANSFER_OUT_MESSAGE_VIEW)) {
@@ -790,8 +800,8 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
                 return true;
 
             case R.id.chat_message_del:
-                List<String> msgUidDel = new ArrayList<>();
-                List<File> msgFilesDel = new ArrayList<>();
+                final List<String> msgUidDel = new ArrayList<>();
+                final List<File> msgFilesDel = new ArrayList<>();
 
                 for (int i = 0; i < checkListSize; i++) {
                     if (checkedList.valueAt(i)) {
@@ -802,7 +812,7 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
                                 || (cType == ChatListAdapter.SYSTEM_MESSAGE_VIEW) // allow delete of system message if any
                                 || (cType == ChatListAdapter.FILE_TRANSFER_IN_MESSAGE_VIEW)
                                 || (cType == ChatListAdapter.FILE_TRANSFER_OUT_MESSAGE_VIEW)) {
-                            chatMsg = chatListAdapter.getMessage(cPos);
+                            chatMsg = chatListAdapter.getChatMessage(cPos);
                             if (chatMsg != null) {
                                 if (i == 0) {
                                     // keep a reference for return to the top of last deleted messages group
@@ -810,46 +820,41 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
                                 }
 
                                 // merged messages do not have file contents
-                                if (chatMsg instanceof MergedMessage) {
-                                    msgUidDel.addAll(((MergedMessage) chatMsg).getMessageUIDs());
-                                }
-                                else {
-                                    String msgId = chatMsg.getMessageUID();
-                                    // Cannot delete system messages or room status message which has null msgUuid
-                                    if (StringUtils.isEmpty(msgId))
-                                        continue;
+                                String msgId = chatMsg.getMessageUid();
+                                // Cannot delete system messages or room status message which has null msgUuid
+                                if (StringUtils.isEmpty(msgId))
+                                    continue;
 
-                                    msgUidDel.add(msgId);
-                                    /*
-                                     * Include only the incoming received media or aTalk created outgoing tmp files
-                                     * OR all voice file for deletion
-                                     */
-                                    if ((cType == ChatListAdapter.FILE_TRANSFER_IN_MESSAGE_VIEW)
-                                            || (cType == ChatListAdapter.FILE_TRANSFER_OUT_MESSAGE_VIEW)) {
-                                        int chatMsgType = chatMsg.getMessageType();
-                                        boolean isSafeDel = (ChatMessage.MESSAGE_FILE_TRANSFER_RECEIVE == chatMsgType);
+                                msgUidDel.add(msgId);
+                                /*
+                                 * Include only the incoming received media or aTalk created outgoing tmp files
+                                 * OR all voice file for deletion
+                                 */
+                                if ((cType == ChatListAdapter.FILE_TRANSFER_IN_MESSAGE_VIEW)
+                                        || (cType == ChatListAdapter.FILE_TRANSFER_OUT_MESSAGE_VIEW)) {
+                                    int chatMsgType = chatMsg.getMessageType();
+                                    boolean isSafeDel = (ChatMessage.MESSAGE_FILE_TRANSFER_RECEIVE == chatMsgType);
 
-                                        // Received or Sent file is in chatHistory fileRecord
+                                    // Received or Sent file is in chatHistory fileRecord
                                             /*
                                              * Last received file does not get updated into the FileRecord if delete performed immediately after received.
                                             // if (isSafeDel)
                                             //    file = ((FileHttpDownloadConversation) chatListAdapter.getFileXfer(cPos)).getXferFile();
                                             */
-                                        if (chatMsg.getFileRecord() != null) {
-                                            file = chatMsg.getFileRecord().getFile();
-                                            isSafeDel = FileRecord.IN.equals(chatMsg.getFileRecord().getDirection());
-                                            // Not safe, the tmp file may be used for multiple send instances
-                                            // (file.getPath().contains("/tmp/"):
-                                        }
-                                        // OR in chatMsg if yet to be received
-                                        else if ((file = chatListAdapter.getFileName(cPos)) == null) {
-                                            file = new File(chatMsg.getMessage());
-                                        }
+                                    if (chatMsg.getFileRecord() != null) {
+                                        file = chatMsg.getFileRecord().getFile();
+                                        isSafeDel = FileRecord.IN.equals(chatMsg.getFileRecord().getDirection());
+                                        // Not safe, the tmp file may be used for multiple send instances
+                                        // (file.getPath().contains("/tmp/"):
+                                    }
+                                    // OR in chatMsg if yet to be received
+                                    else if ((file = chatListAdapter.getFileName(cPos)) == null) {
+                                        file = new File(chatMsg.getMessageBody());
+                                    }
 
-                                        // always include any in/out "voice-" file to be deleted
-                                        if (file.exists() && (isSafeDel || file.getName().startsWith("voice-"))) {
-                                            msgFilesDel.add(file);
-                                        }
+                                    // always include any in/out "voice-" file to be deleted
+                                    if (file.exists() && (isSafeDel || file.getName().startsWith("voice-"))) {
+                                        msgFilesDel.add(file);
                                     }
                                 }
                             }
@@ -859,7 +864,52 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
                 // Timber.d("Transfer file message delete msgUid: %s; files: %s", msgUidDel, msgFilesDel);
                 mChatActivity.setEraseMode(EntityListHelper.SINGLE_ENTITY);
                 EntityListHelper.eraseEntityChatHistory(mChatActivity,
-                        chatPanel.getChatSession().getDescriptor(), msgUidDel, msgFilesDel);
+                        mChatPanel.getChatSession().getDescriptor(), msgUidDel, msgFilesDel);
+                mode.finish();
+                return true;
+
+            case R.id.chat_message_edit:
+                if ((mChatController != null) && (chatMsg != null)) {
+                    mChatController.editText(chatListView, chatMsg, cPos);
+                }
+                mode.finish();
+                return true;
+
+            case R.id.chat_message_retract:
+                final List<String> msgUidRetract = new ArrayList<>();
+
+                for (int i = 0; i < checkListSize; i++) {
+                    if (checkedList.valueAt(i)) {
+                        cPos = checkedList.keyAt(i) - headerCount;
+                        cType = chatListAdapter.getItemViewType(cPos);
+                        if (cType == ChatListAdapter.OUTGOING_MESSAGE_VIEW) {
+                            chatMsg = chatListAdapter.getChatMessage(cPos);
+
+                            // Cannot delete system messages or room status message which has null msgUuid
+                            String msgId = chatMsg.getMessageUid();
+                            if (StringUtils.isEmpty(msgId))
+                                continue;
+                            msgUidRetract.add(msgId);
+                        }
+                    }
+                }
+
+                mChatActivity.setEraseMode(EntityListHelper.SINGLE_RETRACT);
+                EntityListHelper.retractEntityChatHistory(mChatActivity, currentChatTransport, msgUidRetract);
+                mode.finish();
+                return true;
+
+            case R.id.chat_message_translate:
+                for (int i = 0; i < checkListSize; i++) {
+                    if (checkedList.valueAt(i)) {
+                        cPos = checkedList.keyAt(i) - headerCount;
+                        cType = chatListAdapter.getItemViewType(cPos);
+                        if (cType == ChatListAdapter.INCOMING_MESSAGE_VIEW) {
+                            chatMsg = chatListAdapter.getChatMessage(cPos);
+                            mChatPanel.addMessageForTranslate((ChatMessageImpl) chatMsg);
+                        }
+                    }
+                }
                 mode.finish();
                 return true;
 
@@ -877,11 +927,13 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
             headerCount = chatListView.getHeaderViewsCount();
 
             mEdit = menu.findItem(R.id.chat_message_edit);
+            mRetract = menu.findItem(R.id.chat_message_retract);
             mQuote = menu.findItem(R.id.chat_message_quote);
             mForward = menu.findItem(R.id.chat_message_forward);
             mDelete = menu.findItem(R.id.chat_message_del);
             mShare = menu.findItem(R.id.chat_message_share);
             mCopy = menu.findItem(R.id.chat_message_copy);
+            mTranslate = menu.findItem(R.id.chat_message_translate);
             mSelectAll = menu.findItem(R.id.select_all);
 
             isMultiChoiceMode = true;
@@ -910,7 +962,7 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
     /**
      * Refresh avatar and globals status display on change.
      */
-    private final EventListener<PresenceStatus> globalStatusListener = new EventListener<PresenceStatus>() {
+    private final EventListener<PresenceStatus> globalStatusListener = new EventListener<>() {
         @Override
         public void onChangeEvent(PresenceStatus eventObject) {
             if (chatListAdapter != null)
@@ -924,7 +976,7 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
      * @return the corresponding <code>ChatPanel</code>
      */
     public ChatPanel getChatPanel() {
-        return chatPanel;
+        return mChatPanel;
     }
 
     /**
@@ -947,6 +999,7 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
 
     /**
      * @param sender the message sender jid
+     *
      * @return the sender Contact, null if sender is from chatRoom
      */
     private Contact getContact(String sender) {
@@ -974,19 +1027,6 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
      */
     public class ChatListAdapter extends BaseAdapter implements ChatPanel.ChatSessionListener,
             ContactPresenceStatusListener, ChatStateNotificationsListener {
-        /**
-         * The list of chat message displays. All access and modification of this list must be
-         * done on the UI thread.
-         */
-        private final List<MessageDisplay> messages = new ArrayList<>();
-
-        // A mop reference of DisplayMessage position (index) to the viewHolder
-        private final Hashtable<Integer, MessageViewHolder> viewHolders = new Hashtable<>();
-
-        // A map reference of msgUuid to the DisplayMessage position.
-        // Continue get updated when messages are deleted/refresh in getView().
-        private final Hashtable<String, Integer> msgUuid2Idx = new Hashtable<>();
-
         /**
          * The type of the incoming message view.
          */
@@ -1028,187 +1068,55 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
         static final int VIEW_TYPE_MAX = 7;
 
         /**
-         * Counter used to generate row ids.
+         * Counter used to generate row idx.
          */
         private int idGenerator = 0;
 
         /**
-         * HTML image getter.
+         * The stored list of message displays in the ChatListAdapter that are shown in chat window.
+         * All access and modification of this list item must be done on the UI thread.
+         */
+        private final List<MessageDisplay> msgDisplays = new ArrayList<>();
+
+        // A map reference of msgUuid to MessageDisplay row position in the chat window.
+        // Continue get updated when messages are deleted/refresh in getView().
+        private final Hashtable<String, Integer> msgUuid2Idx = new Hashtable<>();
+
+        // A mop reference of MessageDisplay row position to the viewHolder in the chat window.
+        private final Hashtable<Integer, MessageViewHolder> viewHolders = new Hashtable<>();
+
+        /**
+         * HTML image getter to update the image in the view holder asynchronously.
          */
         private final Html.ImageGetter imageGetter = new HtmlImageGetter();
 
         /**
-         * Note: addMessageImpl method must only be processed on UI thread.
-         * Pass the message to the <code>ChatListAdapter</code> for processing;
-         * appends it at the end or merge it with the last consecutive message.
-         * <p>
-         * It creates a new message view holder if this is first message or if this is a new
-         * message sent/received i.e. non-consecutive.
-         */
-        private void addMessageImpl(ChatMessage newMessage) {
-            if (chatListAdapter == null) {
-                Timber.w("Add message handled, when there's no adapter - possibly after onDetach()");
-                return;
-            }
-
-            // Auto enable Omemo option on receive omemo encrypted messages and view is in focus
-            if (primarySelected && (IMessage.ENCRYPTION_OMEMO == newMessage.getEncryptionType())
-                    && !chatPanel.isOmemoChat()) {
-                mCryptoFragment.setChatType(ChatFragment.MSGTYPE_OMEMO);
-            }
-
-            runOnUiThread(() -> {
-                // Create a new message view holder only if message is non-consecutive i.e non-merged message
-                MessageDisplay msgDisplay;
-                int lastMsgIdx = getLastMessageIdx(newMessage);
-                ChatMessage lastMsg = (lastMsgIdx != -1) ? chatListAdapter.getMessage(lastMsgIdx) : null;
-                if ((lastMsg == null) || (!lastMsg.isConsecutiveMessage(newMessage))) {
-                    msgDisplay = new MessageDisplay(newMessage);
-                    messages.add(msgDisplay);
-                    lastMsgIdx++;
-
-                    // Update street view map location if the view is in focus.
-                    if (mSVP_Started && msgDisplay.hasLatLng) {
-                        mSVP = svpApi.svpHandler(mSVP, msgDisplay.mLocation);
-                    }
-                }
-                else {
-                    // Consecutive message (including corrected message); proceed to update the viewHolder only
-                    msgDisplay = messages.get(lastMsgIdx);
-                    msgDisplay.update(lastMsg.mergeMessage(newMessage));
-
-                    MessageViewHolder viewHolder = viewHolders.get(lastMsgIdx);
-                    if (viewHolder != null) {
-                        msgDisplay.getBody(viewHolder.messageView);
-                    }
-                }
-                /*
-                 * List must be scrolled manually, when android:transcriptMode="normal" is set
-                 * Must notifyDataSetChanged to invalidate/refresh display contents; else new content may partial be hidden.
-                 */
-                chatListAdapter.notifyDataSetChanged();
-                chatListView.setSelection(lastMsgIdx + chatListView.getHeaderViewsCount());
-            });
-        }
-
-        /**
-         * Inserts given <code>CopyOnWriteArrayList</code> of <code>ChatMessage</code> at the beginning of the list.
-         * synchronized to avoid java.util.ConcurrentModificationException on receive history messages
-         * - seems still happen so use CopyOnWriteArrayList at ChanPanel#LoadHistory()
-         * <p>
-         * List<ChatMessage> chatMessages = new CopyOnWriteArrayList<>() to avoid ConcurrentModificationException
-         *
-         * @param chatMessages the CopyOnWriteArrayList of <code>ChatMessage</code> to prepend.
-         */
-        private synchronized void prependMessages(final List<ChatMessage> chatMessages) {
-            if (chatMessages.isEmpty()) {
-                return;
-            }
-
-            List<MessageDisplay> newMessageList = new ArrayList<>();
-            MessageDisplay previous = null;
-
-            // Use Iterator to avoid ConcurrentModificationException; observed during testing
-            Iterator<ChatMessage> iteratorCM = chatMessages.iterator();
-            while (iteratorCM.hasNext()) {
-                ChatMessage next = iteratorCM.next();
-                if (previous == null || !previous.msg.isConsecutiveMessage(next)) {
-                    previous = new MessageDisplay(next);
-                    newMessageList.add(previous);
-                }
-                else {
-                    // Merge the message and update the object in the list
-                    previous.update(previous.msg.mergeMessage(next));
-                }
-            }
-//            for (ChatMessage next : chatMessages) {
-//                if (previous == null || !previous.msg.isConsecutiveMessage(next)) {
-//                    previous = new MessageDisplay(next);
-//                    newMessageList.add(previous);
-//                }
-//                else {
-//                    // Merge the message and update the object in the list
-//                    previous.update(previous.msg.mergeMessage(next));
-//                }
-//            }
-            messages.addAll(0, newMessageList);
-        }
-
-        /**
-         * Finds index of the message that will handle <code>newMessage</code> merging process (usually just the last one).
-         * If the <code>newMessage</code> is a correction message, then the last message of the same type will be returned.
-         *
-         * @param newMessage the next message to be merged into the adapter.
-         *
-         * @return index of the message that will handle <code>newMessage</code> merging process. If
-         * <code>newMessage</code> is a correction message, then the last message of the same type will be returned.
-         */
-        private int getLastMessageIdx(ChatMessage newMessage) {
-            // If it's not a correction message then just return the last one
-            if (newMessage.getCorrectedMessageUID() == null)
-                return chatListAdapter.getCount() - 1;
-
-            // Search for the same type
-            int msgType = newMessage.getMessageType();
-            for (int i = (getCount() - 1); i >= 0; i--) {
-                ChatMessage candidate = getMessage(i);
-                if ((candidate != null) && (candidate.getMessageType() == msgType)) {
-                    return i;
-                }
-            }
-            return -1;
-        }
-
-        /**
          * {@inheritDoc}
          */
+        @Override
         public int getCount() {
-            return messages.size();
-        }
-
-        /**
-         * Call after the user selected messages are deleted from the DB. Both the ChatFragment UI
-         * and the ChatPanel#msgCache are updated So they are all in sync. Remove the deleted
-         * messages in reverse order to retain the list index for subsequence reference.
-         *
-         * @param deletedUUIDs List of message UUID to be deleted.
-         */
-        private void onClearMessage(List<String> deletedUUIDs) {
-            // Null signify doEraseAllEntityHistory has been performed i.e. erase all history messages
-            if (deletedUUIDs == null) {
-                messages.clear();
-                msgUuid2Idx.clear();
-                chatPanel.msgCacheClear();
-            }
-            else {
-                // int msgSize = messages.size();
-                for (int idx = deletedUUIDs.size(); idx-- > 0; ) {
-                    String msgUuid = deletedUUIDs.get(idx);
-
-                    // Remove deleted message from ChatPanel#msgCache
-                    chatPanel.updateCacheMessage(msgUuid, null);
-
-                    // Remove deleted message from display messages UI; merged messages may return null.
-                    // Merged messages view is deleted using the root msgUuid.
-                    Integer row = msgUuid2Idx.get(msgUuid);
-                    if (row != null) {
-                        messages.remove(getMessageDisplay(row));
-                        msgUuid2Idx.remove(msgUuid);
-                    }
-                    else {
-                        Timber.e("No message for delete: %s => %s", idx, msgUuid);
-                    }
-                }
-                // Timber.d("Clear Message: %s => %s (%s)", msgSize, messages.size(), deletedUUIDs.size());
-            }
-            notifyDataSetChanged();
+            return msgDisplays.size();
         }
 
         /**
          * {@inheritDoc}
          */
+        @Override
         public Object getItem(int pos) {
-            return ((pos >= 0) && (pos < getCount())) ? messages.get(pos) : null;
+            return ((pos >= 0) && (pos < getCount())) ? msgDisplays.get(pos) : null;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public long getItemId(int pos) {
+            return msgDisplays.get(pos).rowIdx;
+        }
+
+        @Override
+        public int getViewTypeCount() {
+            return VIEW_TYPE_MAX;
         }
 
         /*
@@ -1216,35 +1124,35 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
          * at java.util.ArrayList.get (ArrayList.java:439)
          * at org.atalk.android.gui.chat.ChatFragment$ChatListAdapter.getItem (ChatFragment.java:1118)
          */
-        ChatMessage getMessage(int pos) {
+        ChatMessage getChatMessage(int pos) {
             if (getItem(pos) instanceof MessageDisplay) {
-                return ((MessageDisplay) getItem(pos)).msg;
+                return ((MessageDisplay) getItem(pos)).mdChatMessage;
             }
             else {
                 return null;
             }
         }
 
+        /**
+         * Get the MessageDisplay instance at the chat window row position.
+         *
+         * @param pos Chat window row position
+         *
+         * @return MessageDisplay at the given postion.
+         */
         MessageDisplay getMessageDisplay(int pos) {
             return (MessageDisplay) getItem(pos);
         }
 
         List<MessageDisplay> getMessageDisplays() {
-            return messages;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        public long getItemId(int pos) {
-            return messages.get(pos).id;
+            return msgDisplays;
         }
 
         public int getMessagePosFromDate(Date mDate) {
             int pos = -1;
             if (mDate != null) {
-                for (int i = 0; i < messages.size(); i++) {
-                    ChatMessage chatMessage = getMessage(i);
+                for (int i = 0; i < msgDisplays.size(); i++) {
+                    ChatMessage chatMessage = getChatMessage(i);
                     if (chatMessage != null) {
                         Date msgDate = chatMessage.getDate();
                         if ((msgDate != null) && (msgDate.after(mDate) || msgDate.equals(mDate))) {
@@ -1258,8 +1166,134 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
         }
 
         /**
-         * Must update both the DisplayMessage and ChatPanel#msgCache delivery status;
-         * to ensure onResume the cacheMessages have the latest delivery status.
+         * Note: addMessageImpl method must only be processed on UI thread.
+         * Pass the message to the <code>ChatListAdapter</code> for processing;
+         * appends it at the end or merge it with the last consecutive message.
+         * <p>
+         * It creates a new message view holder if this is first message or if this is a new
+         * message sent/received i.e. non-consecutive.
+         */
+        private void addMessageImpl(final ChatMessage newMessage) {
+            if (chatListAdapter == null) {
+                Timber.w("Add message when there's no adapter - possibly after onDetach()");
+                return;
+            }
+
+            // Auto enable Omemo option on receive omemo encrypted messages and view is in focus
+            if (primarySelected && (IMessage.ENCRYPTION_OMEMO == newMessage.getEncryptionType())
+                    && !mChatPanel.isOmemoChat()) {
+                mCryptoFragment.setChatType(ChatFragment.MSGTYPE_OMEMO);
+            }
+
+            MessageDisplay msgDisplay = new MessageDisplay(newMessage);
+            // Update street view map location if the view is in focus.
+            if (mSVP_Started && msgDisplay.hasLatLng) {
+                mSVP = svpApi.svpHandler(mSVP, msgDisplay.mLocation);
+            }
+            msgDisplays.add(msgDisplay);
+
+            runOnUiThread(() -> {
+                int lastMsgIdx = msgDisplays.size() - 1;
+                MessageViewHolder viewHolder = viewHolders.get(lastMsgIdx);
+                if (viewHolder != null) {
+                    msgDisplay.setSpannedInView(viewHolder.messageView);
+                }
+
+                /*
+                 * List must be scrolled manually, when android:transcriptMode="normal" is set.
+                 * Must notifyDataSetChanged to invalidate/refresh chat window display contents;
+                 * else new content may partial be hidden.
+                 */
+                chatListAdapter.notifyDataSetChanged();
+                chatListView.setSelection(lastMsgIdx + chatListView.getHeaderViewsCount());
+            });
+        }
+
+        /**
+         * Inserts given <code>ChatMessage</code> at the beginning of the list.
+         * Each ChatMessage is transformed to MessageDisplay before it is inserted.
+         * synchronized to avoid ConcurrentModificationException on receive history messages
+         *
+         * @param chatMessages the CopyOnWriteArrayList of <code>ChatMessage</code> to prepend.
+         */
+        private synchronized void prependMessages(final List<ChatMessage> chatMessages) {
+            if (!chatMessages.isEmpty()) {
+                List<MessageDisplay> newMessageList = new ArrayList<>();
+                for (ChatMessage next : chatMessages) {
+                    newMessageList.add(new MessageDisplay(next));
+                }
+                msgDisplays.addAll(0, newMessageList);
+            }
+        }
+
+        /**
+         * Call after the user selected messages are deleted from the DB. Both the ChatFragment UI
+         * and the ChatPanel#msgCache are updated So they are all in sync. Remove the deleted
+         * messages in reverse order to retain the list index for subsequence reference.
+         *
+         * @param deletedUUIDs List of message UUID to be deleted.
+         */
+        private void onClearMessage(List<String> deletedUUIDs) {
+            // Remove deleted messages from ChatPanel#msgCache
+            mChatPanel.clearCacheMessage(deletedUUIDs);
+
+            // Null signify doEraseAllEntityHistory has been performed i.e. erase all history messages
+            if (deletedUUIDs == null) {
+                msgDisplays.clear();
+                msgUuid2Idx.clear();
+            }
+            else {
+                for (int idx = deletedUUIDs.size(); idx-- > 0; ) {
+                    String msgUuid = deletedUUIDs.get(idx);
+
+                    // Remove deleted message from display messages and refresh the chat window UI.
+                    Integer row = msgUuid2Idx.get(msgUuid);
+                    if (row != null) {
+                        msgDisplays.remove(getMessageDisplay(row));
+                        msgUuid2Idx.remove(msgUuid);
+                    }
+                    else {
+                        Timber.e("No message for delete: %s => %s", idx, msgUuid);
+                    }
+                }
+            }
+            notifyDataSetChanged();
+        }
+
+        /**
+         * Routine to update the content of the modified (retracted & corrected).
+         * <p>
+         * When update the content of the modified (retracted & corrected) chat message in ChatFragment:
+         * a. MessageDisplay#ChatMessage bodyText. BaseAdapter retrieves chatMessage info when the view is updated.
+         * b. ChatPanel#msgCache if not already done in ChatPanel, msgCache info is retrieved in loadHistory when chat onResume.
+         * This happen when user closes/reopens the chat window; close active chat and reopen.
+         *
+         * @param message Received message* @param isRetract Denote retracted chatMessage if true, LMC otherwise
+         */
+        private void refreshMessageDisplay(ChatMessageImpl message) {
+            String msgId = message.getMessageUid();
+
+            for (int index = msgDisplays.size(); index-- > 0; ) {
+                ChatMessageImpl chatMessage = (ChatMessageImpl) msgDisplays.get(index).getChatMessage();
+                String msgSid = chatMessage.getMessageUid();
+
+                if ((msgSid != null) && msgSid.equals(msgId)) {
+                    // ChatPanel#updateCacheMessage also update the same instance of chatMessage in MessageDisplay;
+                    // clear msgBody so it can be rebuilt with the new chatMessage Content.
+                    msgDisplays.get(index).update(message);
+
+                    runOnUiThread(() -> {
+                        chatListAdapter.notifyDataSetInvalidated();
+                    });
+                    break;
+                }
+            }
+        }
+
+        /**
+         * a. Update the receipt status in viewHolder; also update the message body if it is for retracted message.
+         * b. Update MessageDisplay#ChatMessage, BaseAdapter retrieve this info when user scroll the chat window.
+         * Note: ChatPanel#msgCache delivery status update is done in chatPanel itself;
          *
          * @param msgId the associated chat message UUid
          * @param receiptStatus Delivery status to be updated
@@ -1268,31 +1302,26 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
             if (StringUtils.isEmpty(msgId))
                 return;
 
-            for (int index = messages.size(); index-- > 0; ) {
-                MessageDisplay message = messages.get(index);
-                String msgIds = message.getServerMsgId();
-                if ((msgIds != null) && msgIds.contains(msgId)) {
-                    // Update MessageDisplay to take care when view is refresh e.g. new message arrived or scroll
-                    ChatMessage chatMessage = message.updateDeliveryStatus(msgId, receiptStatus);
+            for (int index = msgDisplays.size(); index-- > 0; ) {
+                MessageDisplay message = msgDisplays.get(index);
+                String msgSid = message.getMessageUuid();
 
-                    // Timber.d("new Message Receipt: %s", msgId);
-                    MessageViewHolder viewHolder = viewHolders.get(index);
+                if ((msgSid != null) && msgSid.equals(msgId)) {
+                    // Update MessageDisplay to take care when view is refreshed e.g. new message arrived or scroll
+                    message.updateDeliveryStatus(receiptStatus);
                     runOnUiThread(() -> {
-                        if (viewHolder != null) {
-                            // Need to update merged messages new receipt statuses
-                            if (chatMessage instanceof MergedMessage) {
-                                message.getBody(viewHolder.messageView);
-                            }
-                            setMessageReceiptStatus(viewHolder.msgReceiptView, receiptStatus);
-                        }
+                        chatListAdapter.notifyDataSetInvalidated();
                     });
+                    break;
                 }
             }
         }
 
         /**
-         * Update the file transfer status in the msgCache; must do this else file transfer will be
-         * reactivated onResume chat. Also important if historyLog is disabled.
+         * This is called from File Receive/Send/HttpDownload Conversation UI in chat window.
+         * a. Update MessageDisplay#ChatMessage, BaseAdapter retrieve this info when user scroll the chat window.
+         * b. Update the file transfer status in the ChatPanel#msgCache; must do this else file transfer
+         * will be reactivated onResume chat. Also important if historyLog is disabled.
          *
          * @param msgUuid ChatMessage uuid
          * @param status File transfer status
@@ -1300,36 +1329,25 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
          * @param msgType File transfer type see ChatMessage MESSAGE_FILE_
          */
         public void updateMessageFTStatus(String msgUuid, int status, String fileName, int encType, int msgType) {
-            // Remove deleted message from display messages; merged messages may return null
             Integer row = msgUuid2Idx.get(msgUuid);
-            // Fix IndexOutOfBoundsException: Index: 55, Size: 31
-            if (row != null && row < messages.size()) {
-                ChatMessageImpl chatMessage = (ChatMessageImpl) messages.get(row).getChatMessage();
-                chatMessage.updateFTStatus(chatPanel.getDescriptor(), msgUuid, status, fileName,
-                        encType, msgType, chatMessage.getMessageDir());
-                // Timber.e("File record updated for %s => %s", msgUuid, status);
 
-                // Update FT Record in ChatPanel#msgCache as well
-                chatPanel.updateCacheFTRecord(msgUuid, status, fileName, encType, msgType);
+            // Fix IndexOutOfBoundsException: Index: 55, Size: 31
+            if (row != null && row < msgDisplays.size()) {
+                ChatMessageImpl chatMessage = (ChatMessageImpl) msgDisplays.get(row).getChatMessage();
+                chatMessage.updateFTStatus(mChatPanel.getDescriptor(), msgUuid, status, fileName,
+                        encType, msgType, chatMessage.getMessageDir());
+
+                // Must update FT Record in ChatPanel#msgCache as well
+                mChatPanel.updateCacheFTRecord(msgUuid, status, fileName, encType, msgType);
             }
             else {
-                Timber.e("File record not found: %s", msgUuid);
+                Timber.e("File record id not found: %s; %s (%s) ", msgUuid, row, msgDisplays.size());
             }
         }
 
-        // Not use currently
-        public void updateMessageFTStatus(String msgUuid, int status) {
-            // Remove deleted message from display messages; merged messages may return null
-            Integer row = msgUuid2Idx.get(msgUuid);
-            if (row != null) {
-                ChatMessageImpl chatMessage = (ChatMessageImpl) messages.get(row).getChatMessage();
-                chatMessage.updateFTStatus(msgUuid, status);
-            }
-        }
-
-        public int getXferStatus(int pos) {
-            if (pos < messages.size()) {
-                return messages.get(pos).getChatMessage().getXferStatus();
+        public int getStatus(int pos) {
+            if (pos < msgDisplays.size()) {
+                return msgDisplays.get(pos).getChatMessage().getStatus();
             }
 
             // assuming CANCELED if not found
@@ -1337,30 +1355,68 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
         }
 
         private void setFileXfer(int pos, Object mFileXfer) {
-            messages.get(pos).fileXfer = mFileXfer;
+            msgDisplays.get(pos).fileXfer = mFileXfer;
         }
 
         public File getFileName(int pos) {
-            return messages.get(pos).sFile;
+            return msgDisplays.get(pos).sFile;
         }
 
         public void setFileName(int pos, File file) {
-            messages.get(pos).sFile = file;
+            msgDisplays.get(pos).sFile = file;
         }
 
         private Object getFileXfer(int pos) {
-            return messages.get(pos).fileXfer;
+            return msgDisplays.get(pos).fileXfer;
         }
 
-        public int getViewTypeCount() {
-            return VIEW_TYPE_MAX;
+        /**
+         * Hack required to capture TextView(message body) clicks, when <code>LinkMovementMethod</code> is set.
+         */
+        private final OnClickListener msgClickAdapter = new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mChatController != null && v.getTag() instanceof Integer) {
+                    Integer pos = (Integer) v.getTag();
+                    if (!isMultiChoiceMode && !checkHttpDownloadLink(pos)) {
+                        if (mChatPanel.isChatTtsEnable()) {
+                            ChatMessage chatMessage = getChatMessage(pos - chatListView.getHeaderViewsCount());
+                            mChatPanel.ttsSpeak(chatMessage);
+                        }
+                        else
+                            mChatController.onItemClick(chatListView, v, pos, -1 /* id not used */);
+                    }
+                }
+            }
+        };
+
+        /**
+         * Method to check for Http download file link
+         */
+        private boolean checkHttpDownloadLink(int position) {
+            // Position must be aligned to the number of header views included
+            int cPos = position - chatListView.getHeaderViewsCount();
+            boolean isMsgIn = (INCOMING_MESSAGE_VIEW == getItemViewType(cPos));
+            ChatMessage chatMessage = chatListAdapter.getChatMessage(cPos);
+
+            if (chatMessage != null) {
+                String body = chatMessage.getMessageBody();
+                if (isMsgIn && FileBackend.isHttpFileDnLink(body)) {
+                    // Local cache update
+                    ((ChatMessageImpl) chatMessage).setMessageType(ChatMessage.MESSAGE_HTTP_FILE_DOWNLOAD);
+                    this.notifyDataSetChanged();
+                    return true;
+                }
+            }
+            return false;
         }
 
         /*
          * return the view Type of the give position
          */
+        @Override
         public int getItemViewType(int position) {
-            ChatMessage chatMessage = getMessage(position);
+            ChatMessage chatMessage = getChatMessage(position);
             int messageType = chatMessage.getMessageType();
 
             switch (messageType) {
@@ -1373,9 +1429,9 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
             case ChatMessage.MESSAGE_OUT:
             case ChatMessage.MESSAGE_LOCATION_OUT:
             case ChatMessage.MESSAGE_MUC_OUT:
-                String sessionCorrUID = chatPanel.getCorrectionUID();
-                String msgCorrUID = chatMessage.getUidForCorrection();
-                if (sessionCorrUID != null && sessionCorrUID.equals(msgCorrUID)) {
+                String sessionCorrUid = mChatPanel.getCorrectionUid();
+                String msgCorrUid = chatMessage.getUidForCorrection();
+                if (sessionCorrUid != null && sessionCorrUid.equals(msgCorrUid)) {
                     return CORRECTED_MESSAGE_VIEW;
                 }
                 else {
@@ -1411,47 +1467,6 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
         }
 
         /**
-         * Hack required to capture TextView(message body) clicks, when <code>LinkMovementMethod</code> is set.
-         */
-        private final OnClickListener msgClickAdapter = new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mChatController != null && v.getTag() instanceof Integer) {
-                    Integer pos = (Integer) v.getTag();
-                    if (!isMultiChoiceMode && !checkHttpDownloadLink(pos)) {
-                        if (chatPanel.isChatTtsEnable()) {
-                            ChatMessage chatMessage = getMessage(pos - chatListView.getHeaderViewsCount());
-                            chatPanel.ttsSpeak(chatMessage);
-                        }
-                        else
-                            mChatController.onItemClick(chatListView, v, pos, -1 /* id not used */);
-                    }
-                }
-            }
-        };
-
-        /**
-         * Method to check for Http download file link
-         */
-        private boolean checkHttpDownloadLink(int position) {
-            // Position must be aligned to the number of header views included
-            int cPos = position - chatListView.getHeaderViewsCount();
-            boolean isMsgIn = (INCOMING_MESSAGE_VIEW == getItemViewType(cPos));
-            ChatMessage chatMessage = chatListAdapter.getMessage(cPos);
-
-            if (chatMessage != null) {
-                String body = chatMessage.getMessage();
-                if (isMsgIn && FileBackend.isHttpFileDnLink(body)) {
-                    // Local cache update
-                    ((ChatMessageImpl) chatMessage).setMessageType(ChatMessage.MESSAGE_HTTP_FILE_DOWNLOAD);
-                    this.notifyDataSetChanged();
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        /**
          * {@inheritDoc}
          */
         @Override
@@ -1461,7 +1476,7 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
             MessageViewHolder messageViewHolder;
             MessageDisplay msgDisplay = getMessageDisplay(position);
             ChatMessage chatMessage = msgDisplay.getChatMessage();
-            String msgUuid = chatMessage.getMessageUID();
+            String msgUuid = chatMessage.getMessageUid();
             // Update pos changed due to deletions; must not have any new entry added here => error
             if ((msgUuid != null) && msgUuid2Idx.put(msgUuid, position) == null) {
                 Timber.e("Failed updating msgUuid2Idx with msgUuid: %s = %s", position, msgUuid);
@@ -1511,7 +1526,7 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
 
                 case ChatMessage.MESSAGE_FILE_TRANSFER_SEND:
                 case ChatMessage.MESSAGE_STICKER_SEND:
-                    fileName = chatMessage.getMessage();
+                    fileName = chatMessage.getMessageBody();
                     sendTo = chatMessage.getSender();
 
                     FileSendConversation fileXferS = (FileSendConversation) getFileXfer(position);
@@ -1535,7 +1550,7 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
                     date = chatMessage.getDate();
                     HttpFileDownloadJabberImpl httpFileTransfer = chatMessage.getHttpFileTransfer();
                     if (httpFileTransfer == null) {
-                        String dnLink = chatMessage.getMessage();
+                        String dnLink = chatMessage.getMessageBody();
                         if (FileBackend.isHttpFileDnLink(dnLink)) {
                             Contact contact = getContact(sendFrom);
                             httpFileTransfer = new HttpFileDownloadJabberImpl(contact, msgUuid, dnLink);
@@ -1581,11 +1596,12 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
                         convertView = inflateViewForType(viewType, messageViewHolder, parent);
                     }
                 }
+
                 // Set position used for click handling from click adapter
                 // int clickedPos = position + chatListView.getHeaderViewsCount();
                 messageViewHolder.messageView.setTag(clickedPos);
-                if (messageViewHolder.outgoingMessageHolder != null) {
-                    messageViewHolder.outgoingMessageHolder.setTag(clickedPos);
+                if (messageViewHolder.messageHolder != null) {
+                    messageViewHolder.messageHolder.setTag(clickedPos);
                 }
 
                 if (messageViewHolder.viewType == INCOMING_MESSAGE_VIEW
@@ -1620,7 +1636,7 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
                 }
 
                 // check and make link clickable if it is not an HTTP file link
-                Spannable body = (Spannable) msgDisplay.getBody(messageViewHolder.messageView);
+                Spannable body = (Spannable) msgDisplay.setSpannedInView(messageViewHolder.messageView);
 
                 // All system messages must use setMovementMethod to make the link clickable
                 if (messageViewHolder.viewType == SYSTEM_MESSAGE_VIEW) {
@@ -1631,11 +1647,7 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
                     messageViewHolder.messageView.setMovementMethod(LinkMovementMethod.getInstance());
                 }
 
-                // getBody() will return null if there is img src tag to be updated via async
-                // if (body != null)
-                //     messageViewHolder.messageView.setText(body);
-
-                // Set clicks adapter for re-edit last outgoing message OR HTTP link download support
+                // Set clicks adapter for re-edit outgoing message OR HTTP link download support
                 messageViewHolder.messageView.setOnClickListener(msgClickAdapter);
             }
             viewHolders.put(position, messageViewHolder);
@@ -1656,6 +1668,7 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
                 messageViewHolder.encStateView = convertView.findViewById(R.id.encStateView);
                 messageViewHolder.timeView = convertView.findViewById(R.id.incomingTimeView);
                 messageViewHolder.chatStateView = convertView.findViewById(R.id.chatStateImageView);
+                messageViewHolder.messageHolder = convertView.findViewById(R.id.incomingMessageHolder);
                 messageViewHolder.showMapButton = convertView.findViewById(R.id.showMapButton);
 
                 // Option available for conference session
@@ -1665,7 +1678,7 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
                     });
 
                     messageViewHolder.avatarView.setOnLongClickListener(v -> {
-                        showPopupMenuForContact(v, messageViewHolder.mSender);
+                        showPopupMenuForChatroom(v, messageViewHolder.mSender);
                         return true;
                     });
                 }
@@ -1677,13 +1690,14 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
                 else {
                     convertView = inflater.inflate(R.layout.chat_corrected_row, parent, false);
                 }
+
                 messageViewHolder.avatarView = convertView.findViewById(R.id.outgoingAvatarIcon);
                 messageViewHolder.statusView = convertView.findViewById(R.id.outgoingStatusIcon);
                 messageViewHolder.messageView = convertView.findViewById(R.id.outgoingMessageView);
                 messageViewHolder.msgReceiptView = convertView.findViewById(R.id.msg_delivery_status);
                 messageViewHolder.encStateView = convertView.findViewById(R.id.encStateView);
                 messageViewHolder.timeView = convertView.findViewById(R.id.outgoingTimeView);
-                messageViewHolder.outgoingMessageHolder = convertView.findViewById(R.id.outgoingMessageHolder);
+                messageViewHolder.messageHolder = convertView.findViewById(R.id.outgoingMessageHolder);
                 messageViewHolder.showMapButton = convertView.findViewById(R.id.showMapButton);
             }
             else {
@@ -1697,22 +1711,21 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
         }
 
         /**
-         * Inflates chatRoom Item popup menu.
+         * Inflates chatRoom Item popup menu when long click on avatar view.
          * Avoid using android contextMenu (in fragment) - truncated menu list
          *
          * @param avatar click view.
          * @param contactJid an instance of ChatRoomWrapper.
          */
-        private void showPopupMenuForContact(View avatar, String contactJid) {
+        private void showPopupMenuForChatroom(View avatar, String contactJid) {
             if (contactJid == null)
                 return;
 
             String nickName = contactJid.replaceAll("(\\w+)[:|@].*", "$1");
-            ChatRoom chatRoom = ((ChatRoomWrapper) chatPanel.getDescriptor()).getChatRoom();
+            ChatRoom chatRoom = ((ChatRoomWrapper) mChatPanel.getDescriptor()).getChatRoom();
+            ChatRoomMemberRole mUserRole = chatRoom.getUserRole();
 
             ChatRoomMember mOccupant = null;
-            ChatRoomMemberRole mUserRole = chatRoom.getUserRole();
-            ;
             List<ChatRoomMember> occupants = chatRoom.getMembers();
             for (ChatRoomMember occupant : occupants) {
                 if (nickName.equals(occupant.getNickName())) {
@@ -1765,7 +1778,6 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
                 case R.id.chatroom_manage_privilege:
                     if (ChatRoomMemberRole.OWNER == finalOccupant.getRole()) {
                         chatRoom.revokeAdmin(contactJid);
-
                     }
                     else {
                         chatRoom.grantOwnership(contactJid);
@@ -1798,10 +1810,10 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
             Drawable status = null;
             if (viewHolder.viewType == INCOMING_MESSAGE_VIEW) {
                 // FFR: NPE
-                if (chatPanel == null)
+                if (mChatPanel == null)
                     return;
 
-                Object descriptor = chatPanel.getChatSession().getDescriptor();
+                Object descriptor = mChatPanel.getChatSession().getDescriptor();
                 if (descriptor instanceof MetaContact) {
                     MetaContact metaContact = (MetaContact) descriptor;
                     avatar = MetaContactRenderer.getAvatarDrawable(metaContact);
@@ -1833,24 +1845,34 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
             setStatus(viewHolder.statusView, status);
         }
 
-        // ========== Implementation of ChatSessionListener ==========
+        // ========== Implementation of ChatPanel#ChatSessionListener ==========
         @Override
         public void messageReceived(final MessageReceivedEvent evt) {
-            final ChatMessageImpl msg = ChatMessageImpl.getMsgForEvent(evt);
-            addMessageImpl(msg);
+            final ChatMessageImpl chatMessage = ChatMessageImpl.getMsgForEvent(evt);
+            if (ChatMessage.STATUS_RETRACTED == chatMessage.getStatus() || chatMessage.getCorrectedMessageUid() != null) {
+                refreshMessageDisplay(chatMessage);
+            }
+            else {
+                addMessageImpl(chatMessage);
+            }
         }
 
         @Override
         public void messageDelivered(final MessageDeliveredEvent evt) {
             final Contact contact = evt.getContact();
             final MetaContact metaContact = AppGUIActivator.getContactListService().findMetaContactByContact(contact);
-            final ChatMessageImpl msg = ChatMessageImpl.getMsgForEvent(evt);
+            final ChatMessageImpl chatMessage = ChatMessageImpl.getMsgForEvent(evt);
 
             Timber.log(TimberLog.FINER, "MESSAGE DELIVERED to contact: %s", contact.getAddress());
-            if ((metaContact != null) && metaContact.equals(chatPanel.getMetaContact())) {
+            if ((metaContact != null) && metaContact.equals(mChatPanel.getMetaContact())) {
                 Timber.log(TimberLog.FINER, "MESSAGE DELIVERED: process message to chat for contact: %s MESSAGE: %s",
-                        contact.getAddress(), msg.getMessage());
-                addMessageImpl(msg);
+                        contact.getAddress(), chatMessage.getMessageBody());
+                if (ChatMessage.STATUS_RETRACTED == chatMessage.getStatus() || chatMessage.getCorrectedMessageUid() != null) {
+                    refreshMessageDisplay(chatMessage);
+                }
+                else {
+                    addMessageImpl(chatMessage);
+                }
             }
         }
 
@@ -1859,17 +1881,16 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
             // Do nothing, handled in ChatPanel
         }
 
-        // Add a new message directly without an event triggered.
+        // Add a new message directly without an event triggered;
+        // mainly used by chatRoom in/out messages,
+        // including system message, FTSendRequest, and FTReceived etc.
         @Override
-        public void sessionMessageAdded(ChatMessage msg) {
-            if (ChatMessage.MESSAGE_STATUS == msg.getMessageType()) {
-                Object descriptor = chatPanel.getChatSession().getDescriptor();
-                if ((descriptor instanceof ChatRoomWrapper) &&
-                        ((ChatRoomWrapper) descriptor).isRoomStatusEnable())
-                    addMessageImpl(msg);
+        public void sessionMessageAdded(ChatMessageImpl chatMessage) {
+            if (ChatMessage.STATUS_RETRACTED == chatMessage.getStatus() || chatMessage.getCorrectedMessageUid() != null) {
+                refreshMessageDisplay(chatMessage);
             }
             else {
-                addMessageImpl(msg);
+                addMessageImpl(chatMessage);
             }
         }
 
@@ -1877,6 +1898,12 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
         public void receiptReceived(Jid fromJid, Jid toJid, final String receiptId, Stanza receipt) {
             updateMessageDeliveryStatusForId(receiptId, ChatMessage.MESSAGE_DELIVERY_RECEIPT);
         }
+
+        @Override
+        public void updateMessageDisplay(ChatMessageImpl chatMessage) {
+            refreshMessageDisplay(chatMessage);
+        }
+
         // ========== End Implementation of ChatSessionListener ==========
 
         /**
@@ -1887,7 +1914,7 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
             Contact sourceContact = evt.getSourceContact();
             Timber.d("Contact presence status changed: %s", sourceContact.getAddress());
 
-            if ((chatPanel.getMetaContact() != null) && chatPanel.getMetaContact().containsContact(sourceContact)) {
+            if ((mChatPanel.getMetaContact() != null) && mChatPanel.getMetaContact().containsContact(sourceContact)) {
                 updateStatusTask();
             }
         }
@@ -1921,9 +1948,20 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
          */
         private class MessageDisplay implements OnClickListener, View.OnLongClickListener {
             /**
-             * Row identifier.
+             * Row index.
              */
-            private final int id;
+            private final int rowIdx;
+
+            /**
+             * The <code>ChatMessage</code> embedded in the DisplayMessage.
+             */
+            private final ChatMessage mdChatMessage;
+            private final String msgUuid;
+
+            /**
+             * Message Encryption Type.
+             */
+            private int mEncryption;
 
             /**
              * Message Receipt Status.
@@ -1931,11 +1969,14 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
             private int receiptStatus;
 
             /**
-             * Message Encryption Type.
+             * Message body cache
              */
-            private final int encryption;
+            private Spanned msgBody;
 
-            private String serverMsgId;
+            /**
+             * Date string cache
+             */
+            private String dateStr;
 
             /**
              * Incoming or outgoing File Transfer object
@@ -1947,22 +1988,6 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
              */
 
             private File sFile;
-
-            /**
-             * Displayed <code>ChatMessage</code>
-             */
-
-            private ChatMessage msg;
-
-            /**
-             * Date string cache
-             */
-            private String dateStr;
-
-            /**
-             * Message body cache
-             */
-            private Spanned msgBody;
 
             /**
              * Incoming message has LatLng info
@@ -1981,16 +2006,18 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
              * @param msg the <code>ChatMessage</code> that will be displayed by this instance.
              */
             MessageDisplay(ChatMessage msg) {
-                this.id = idGenerator++;
-                this.msg = msg;
-                this.msgBody = null;
-                this.fileXfer = null;
-                this.receiptStatus = msg.getReceiptStatus();
-                this.encryption = msg.getEncryptionType();
-                this.serverMsgId = msg.getServerMsgId();
+                rowIdx = idGenerator++;
+                mdChatMessage = msg;
+                msgBody = null;
+                fileXfer = null;
+                receiptStatus = msg.getReceiptStatus();
+                mEncryption = msg.getEncryptionType();
+
                 // All system messages do not have UUID i.e. null
-                if (msg.getMessageUID() != null)
-                    msgUuid2Idx.put(msg.getMessageUID(), id);
+                msgUuid = msg.getMessageUid();
+                if (msgUuid != null) {
+                    msgUuid2Idx.put(msgUuid, rowIdx);
+                }
                 checkLatLng();
             }
 
@@ -1999,8 +2026,8 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
              * LatLng will be returned if there are multiple LatLng in consecutive messages
              */
             private void checkLatLng() {
-                String str = msg.getMessage();
-                int msgTye = msg.getMessageType();
+                String str = mdChatMessage.getMessageBody();
+                int msgTye = mdChatMessage.getMessageType();
 
                 if (StringUtils.isNotEmpty(str) && ((msgTye == ChatMessage.MESSAGE_IN)
                         || (msgTye == ChatMessage.MESSAGE_OUT)
@@ -2094,11 +2121,11 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
             }
 
             public int getEncryption() {
-                return encryption;
+                return mEncryption;
             }
 
-            public String getServerMsgId() {
-                return serverMsgId;
+            public String getMessageUuid() {
+                return msgUuid;
             }
 
             /**
@@ -2108,52 +2135,57 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
              */
             private String getDateStr() {
                 if (dateStr == null) {
-                    dateStr = GuiUtils.formatDateTime(msg.getDate());
+                    dateStr = GuiUtils.formatDateTime(mdChatMessage.getDate());
                 }
                 return dateStr;
             }
 
             public int getMessageType() {
-                return msg.getMessageType();
+                return mdChatMessage.getMessageType();
             }
 
             private ChatMessage getChatMessage() {
-                return this.msg;
+                return mdChatMessage;
             }
 
             private FileRecord getFileRecord() {
-                return msg.getFileRecord();
+                return mdChatMessage.getFileRecord();
             }
 
             /**
-             * Process HTML tags with image src as async task, populate the given msgView and return null;
-             * Else Returns <code>Spanned</code> message body processed for HTML tags.
+             * Process HTML tags with <img/> src, populate the given msgView;
+             * async will update the text view image content, so just return null to caller.
+             * Otherwise, returns <code>Spanned</code> message body processed for HTML tags.
+             * Reuse msgBody if not null to avoid rebuilding process.
              *
              * @param msgView the message view container to be populated
              *
              * @return <code>Spanned</code> message body if contains no "<img" tag.
              */
-            public Spanned getBody(TextView msgView) {
-                String body = msg.getMessage();
-                if ((msgBody == null) && StringUtils.isNotEmpty(body)) {
+            public Spanned setSpannedInView(final TextView msgView) {
+                String body = mdChatMessage.getMessageBody();
+                if (msgBody == null && StringUtils.isNotEmpty(body)) {
+                    if (!body.matches(ChatMessage.HTML_MARKUP)) {
+                        // Then only replace single '<' to avoid fromHtml stripping off the following text string.
+                        body = body.replaceAll("<", "&lt;");
+                    }
+                    // Convert to Spanned body to support text mark up display
+                    // need to replace '\n' with <br></br> i.e. meet HTML_MARKUP, to avoid stripped off by fromHtml()
+                    body = body.replace("\n", "<br></br>");
+
                     boolean hasHtmlTag = body.matches(ChatMessage.HTML_MARKUP);
                     boolean hasImgSrcTag = hasHtmlTag && body.contains("<img");
-
-                    // Convert to Spanned body to support text mark up display
-                    // need to replace '\n' with <br/> to avoid stripped off by fromHtml()
-                    body = body.replace("\n", "<br/>");
 
                     if (hasImgSrcTag && (msgView != null)) {
                         msgView.setText(Html.fromHtml(body, Html.FROM_HTML_MODE_LEGACY, new XhtmlImageParser(msgView, body), null));
                         // Async will update the text view, so just return null to caller.
                         return null;
                     }
-                    else {
-                        msgBody = Html.fromHtml(body, Html.FROM_HTML_MODE_LEGACY, imageGetter, null);
-                    }
 
                     // Proceed with Linkify process if msgBody contains no HTML tags
                     if (!hasHtmlTag) {
+                        msgBody = Html.fromHtml(body, Html.FROM_HTML_MODE_LEGACY, imageGetter, null);
+
                         try {
                             Pattern urlMatcher = Pattern.compile("\\b[A-Za-z]+://[A-Za-z0-9:./?=]+\\b");
                             Linkify.addLinks((Spannable) msgBody, urlMatcher, null);
@@ -2167,6 +2199,9 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
                             Timber.w("Error in Linkify process: %s", msgBody);
                         }
                     }
+                    else {
+                        msgBody = Html.fromHtml(body, Html.FROM_HTML_MODE_LEGACY, imageGetter, null);
+                    }
 
                     if (msgBody != null) {
                         SpannableStringBuilder strBuilder = new SpannableStringBuilder(msgBody);
@@ -2178,10 +2213,10 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
                             msgView.setText(strBuilder);
                     }
                 }
-                // Must update body if there is no process done for html tags i.e. (msgBody != null)
                 else {
-                    if (msgView != null)
+                    if (msgView != null) {
                         msgView.setText(msgBody);
+                    }
                 }
                 return msgBody;
             }
@@ -2200,54 +2235,39 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
             }
 
             /**
-             * Updates this display instance with a new message.
-             * Both receiptStatus and serverMsgId of the message will use the new chatMessage
+             * Updates this display instance with a new chatMessage.
+             * Both mEncryption and receiptStatus are updated with the chatMessage
              *
              * @param chatMessage new message content
              */
             public void update(ChatMessage chatMessage) {
-                msg = chatMessage;
-                initDMessageStatus();
+                // Following parameters must be set to null for any update to the ChatMessage.
+                // This is to allow rebuild for msgBody and dateStr for view holder display update
+                msgBody = null;
+                dateStr = null;
 
+                // Update message encryption and receiptStatus as user may change text encryption and receipt option
+                // ((ChatMessageImpl) getChatMessage()).setMessageContent(chatMessage.getMessageContent());
+                mEncryption = chatMessage.getEncryptionType();
                 receiptStatus = chatMessage.getReceiptStatus();
-                serverMsgId = chatMessage.getServerMsgId();
             }
 
             /**
              * Update this display instance for the delivery status for both single and merged messages
              *
-             * @param msgId the message Id for which the delivery status has been updated
              * @param deliveryStatus delivery status
-             *
-             * @return the updated ChatMessage instance
              */
 
-            public ChatMessage updateDeliveryStatus(String msgId, int deliveryStatus) {
-                if (msg instanceof MergedMessage) {
-                    msg = ((MergedMessage) msg).updateDeliveryStatus(msgId, deliveryStatus);
-                }
-                else {
-                    ((ChatMessageImpl) msg).setReceiptStatus(deliveryStatus);
-                }
-                initDMessageStatus();
+            public void updateDeliveryStatus(int deliveryStatus) {
+                ((ChatMessageImpl) mdChatMessage).setReceiptStatus(deliveryStatus);
                 receiptStatus = deliveryStatus;
-                return msg;
-            }
-
-            /**
-             * Following parameters must be set to null for any update to the ChatMessage.
-             * This is to allow rebuild for msgBody and dateStr for view holder display update
-             */
-            private void initDMessageStatus() {
-                msgBody = null;
-                dateStr = null;
             }
         }
     }
 
     public static class MessageViewHolder {
         int viewType;
-        View outgoingMessageHolder;
+        View messageHolder;
         ImageView chatStateView;
         ImageView avatarView;
         ImageView statusView;
@@ -2312,6 +2332,9 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
         //  Remembers adapter size before new messages were added.
         private final int preSize;
 
+        /**
+         * @param init indicates that chatListAdapter has been init at least once.
+         */
         public LoadHistoryTask(boolean init) {
             this.init = init;
             header.setVisibility(View.VISIBLE);
@@ -2321,7 +2344,7 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
         public void execute() {
             ExecutorService eService = Executors.newSingleThreadExecutor();
             eService.execute(() -> {
-                List<ChatMessage> chatMessages = chatPanel.getHistory(init);
+                final List<ChatMessage> chatMessages = mChatPanel.getHistory(init);
 
                 runOnUiThread(() -> {
                     chatListAdapter.prependMessages(chatMessages);
@@ -2344,7 +2367,7 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
      */
     private void updateStatusTask() {
         runOnUiThread(() -> {
-            if (chatListView == null || chatPanel == null) {
+            if (chatListView == null || mChatPanel == null) {
                 return;
             }
 
@@ -2354,7 +2377,7 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
 
                 if ((viewHolder != null)
                         && (viewHolder.viewType == ChatListAdapter.INCOMING_MESSAGE_VIEW)) {
-                    Drawable status = MetaContactRenderer.getStatusDrawable(chatPanel.getMetaContact());
+                    Drawable status = MetaContactRenderer.getStatusDrawable(mChatPanel.getMetaContact());
                     ImageView statusView = viewHolder.statusView;
                     setStatus(statusView, status);
                 }
@@ -2568,8 +2591,8 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
     }
 
     /**
-     * Handles file transfer status changed in order to remove completed file transfers from the
-     * list of active transfers.
+     * Handles file transfer status changed in order to remove completed
+     * file transfers from the list of active transfers.
      *
      * @param event the file transfer status change event the notified us for the change
      */
@@ -2586,11 +2609,11 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
             // state. Currently protocol did not broadcast status change under this condition.
 
             if ((newStatus == FileTransferStatusChangeEvent.CANCELED)
-                    && (chatListAdapter.getXferStatus(msgPos) == FileTransferStatusChangeEvent.PREPARING)) {
+                    && (chatListAdapter.getStatus(msgPos) == FileTransferStatusChangeEvent.PREPARING)) {
                 String msg = aTalkApp.getResString(R.string.file_transfer_canceled);
                 try {
-                    chatPanel.getChatSession().getCurrentChatTransport().sendInstantMessage(msg,
-                            IMessage.ENCRYPTION_NONE | IMessage.ENCODE_PLAIN);
+                    mChatPanel.getChatSession().getCurrentChatTransport().sendInstantMessage(msg,
+                            IMessage.ENCRYPTION_NONE | IMessage.ENCODE_PLAIN, null);
                 }
                 catch (Exception e) {
                     aTalkApp.showToastMessage(e.getMessage());
@@ -2662,7 +2685,7 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
                 runOnUiThread(() -> {
                     if (ex != null) {
                         Timber.e("Failed to send file: %s", ex.getMessage());
-                        chatPanel.addMessage(currentChatTransport.getName(), new Date(), ChatMessage.MESSAGE_ERROR,
+                        mChatPanel.addMessage(currentChatTransport.getName(), new Date(), ChatMessage.MESSAGE_ERROR,
                                 IMessage.ENCODE_PLAIN, aTalkApp.getResString(R.string.file_delivery_error, ex.getMessage()));
                     }
                 });
@@ -2710,7 +2733,7 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
                                 aTalkApp.getResString(R.string.file_send_failed, "HttpFileUpload"));
                     }
                     else {
-                        // send HttpFileDownload text message with OOB extension to recipient without a local encho.
+                        // send HttpFileDownload text message with OOB extension to recipient without a local echo.
                         int encType = IMessage.FLAG_REMOTE_ONLY | IMessage.FLAG_MSG_OOB | IMessage.ENCODE_PLAIN;
                         sendFTConversion.setStatus(FileTransferStatusChangeEvent.COMPLETED, entityJid, mEncryption, "");
                         String msgUuid = sendFTConversion.getMessageUuid();
@@ -2728,7 +2751,7 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
 
     @Override
     public void onCurrentChatChanged(String chatId) {
-        chatPanel = ChatSessionManager.getActiveChat(chatId);
+        mChatPanel = ChatSessionManager.getActiveChat(chatId);
     }
 
     /*********************************************************************************************
@@ -2740,10 +2763,10 @@ public class ChatFragment extends BaseFragment implements ChatSessionManager.Cur
      */
     @Override
     public void onCryptoModeChange(OmemoManager manager, int chatType) {
-        chatPanel.setChatType(chatType);
+        mChatPanel.setChatType(chatType);
         changeBackground(mCFView, chatType);
-        if (mChatActivity != null)
-            mChatActivity.onChatSessionChange(manager.isOmemo2Enable() && chatPanel.isOmemoChat(), mChatMetaContact);
+        if (mChatActivity != null && manager != null)
+            mChatActivity.onChatSessionChange(manager.isOmemo2Enable() && mChatPanel.isOmemoChat(), mChatMetaContact);
     }
 
     /**

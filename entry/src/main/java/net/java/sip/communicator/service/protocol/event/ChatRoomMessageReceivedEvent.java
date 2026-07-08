@@ -18,10 +18,10 @@ import java.util.EventObject;
 
 import net.java.sip.communicator.impl.muc.MUCActivator;
 import net.java.sip.communicator.impl.muc.MUCServiceImpl;
+import net.java.sip.communicator.impl.protocol.jabber.MessageJabberImpl;
 import net.java.sip.communicator.service.muc.ChatRoomWrapper;
 import net.java.sip.communicator.service.protocol.ChatRoom;
 import net.java.sip.communicator.service.protocol.ChatRoomMember;
-import net.java.sip.communicator.service.protocol.IMessage;
 
 import org.atalk.ohos.gui.chat.ChatMessage;
 import org.atalk.persistance.FileBackend;
@@ -52,12 +52,17 @@ public class ChatRoomMessageReceivedEvent extends EventObject {
     /**
      * The received <code>IMessage</code>.
      */
-    private final IMessage mMessage;
+    private final MessageJabberImpl mMessage;
 
     /**
      * The type of message event that this instance represents.
      */
     private final int mEventType;
+
+    /**
+     * The ID of the message being corrected, or null if this is a new message and not a correction.
+     */
+    private String mCorrectionUid = null;
 
     /**
      * Some services can fill our room with message history.
@@ -83,7 +88,7 @@ public class ChatRoomMessageReceivedEvent extends EventObject {
      * (one of the XXX_MESSAGE_RECEIVED static fields).
      */
     public ChatRoomMessageReceivedEvent(ChatRoom source, ChatRoomMember from, Date timestamp,
-            IMessage message, int eventType) {
+            MessageJabberImpl message, String correctionUid, int eventType) {
         super(source);
         // Convert to MESSAGE_HTTP_FILE_DOWNLOAD if it is http download link
         if (FileBackend.isHttpFileDnLink(message.getContent())) {
@@ -93,6 +98,7 @@ public class ChatRoomMessageReceivedEvent extends EventObject {
         this.from = from;
         mTimestamp = timestamp;
         mMessage = message;
+        mCorrectionUid = correctionUid;
         mEventType = eventType;
 
         MUCServiceImpl mucService = MUCActivator.getMUCService();
@@ -101,10 +107,10 @@ public class ChatRoomMessageReceivedEvent extends EventObject {
     }
 
     /**
-     * Returns a reference to the <code>ChatRoomMember</code> that has send the <code>IMessage</code>
+     * Returns a reference to the <code>ChatRoomMember</code> that has sent the <code>IMessage</code>
      * whose reception this event represents.
      *
-     * @return a reference to the <code>ChatRoomMember</code> that has send the <code>IMessage</code>
+     * @return a reference to the <code>ChatRoomMember</code> that has sent the <code>IMessage</code>
      * whose reception this event represents.
      */
     public ChatRoomMember getSourceChatRoomMember() {
@@ -116,7 +122,7 @@ public class ChatRoomMessageReceivedEvent extends EventObject {
      *
      * @return the <code>IMessage</code> that triggered this event.
      */
-    public IMessage getMessage() {
+    public MessageJabberImpl getMessage() {
         return mMessage;
     }
 
@@ -191,5 +197,16 @@ public class ChatRoomMessageReceivedEvent extends EventObject {
      */
     public boolean isImportantMessage() {
         return isImportantMessage;
+    }
+
+    /**
+     * Returns the correctedMessageUID The ID of the message being corrected, or null if this is a
+     * new message and not a correction.
+     *
+     * @return the correctedMessageUID The ID of the message being corrected, or null if this is a
+     * new message and not a correction.
+     */
+    public String getCorrectedMessageUid() {
+        return mCorrectionUid;
     }
 }

@@ -79,7 +79,7 @@
     <string name="call_transfer">Transfer</string>
     <string name="call_transfer_failed">Gagal melanjutkan transfer panggilan: %1$s &#8674; %2$s\n%3$s</string>
     <string name="call_transfer_hint">Pilih nama kontak yang ingin Anda transfer, lalu klik Transfer.</string>
-    <string name="call_transfer_msg">%1$s panggilan ditransfer ke&#8230; %2$s</string>
+    <string name="call_transfer_msg">%1$s panggilan ditransfer ke %2$s</string>
 
     <string name="attach_picture">Gambar</string>
     <string name="attach_take_picture">Ambil gambar</string>
@@ -93,6 +93,12 @@
     <string name="chat_message_long_press_hint">Hindari mengklik dalam area pesan untuk operasi pemilihan multi-item</string>
     <string name="quote">Mengutip</string>
     <string name="reply">Jawab</string>
+    <string name="retract">Menarik</string>
+    <string name="retract_menu">Tarik kembali pesan</string>
+    <string name="retract_message_prompt">Apakah Anda yakin ingin menarik kembali semua pesan keluar yang dipilih dari %1$s?</string>
+    <string name="retract_not_supported">Penerima tidak mendukung Penarikan Pesan</string>
+    <string name="retract_own">Anda telah menghapus pesan ini</string>
+    <string name="retract_remote">Pesan ini telah dihapus</string>
     <string name="select_all">Pilih semua</string>
     <string name="subject">Subjek</string>
     <string name="settings">Pengaturan</string>
@@ -155,7 +161,8 @@
     <string name="call_audio">Panggilan audio</string>
     <string name="call_answered">%1$s telah menjawab panggilan.</string>
     <string name="call_disable_on_fault">aTalk gagal menginisialisasi %1$s\nSemua panggilan/layanan media akan dinonaktifkan.\n%2$s</string>
-    <string name="call_ended">Penelepon jarak jauh telah mengakhiri panggilan: %1$s</string>
+    <string name="call_ended">Panggilan berakhir</string>
+    <string name="call_ended_by_remote">Penelepon jarak jauh telah mengakhiri panggilan: %1$s</string>
     <string name="call_error">Pesta jarak jauh mengembalikan kesalahan: %1$s</string>
     <string name="call_failed">Panggilan gagal</string>
     <string name="call_history_name">Riwayat Panggilan</string>
@@ -341,10 +348,6 @@
     <string name="refresh_store_omemo">XEP-0384: Enkripsi OMEMO</string>
 
     <string name="unregistered_message">Gagal login koneksi akun gagal:\nNama Pengguna: %1$s\nNama Server: %2$s\nAkun sedang offline.</string>
-    <string name="create_videoBridge">Buat jembatan video&#8230;</string>
-    <string name="create_videoBridge_menu">Buat jembatan video</string>
-    <string name="create_join_video_conference">Buat/Gabung konferensi video</string>
-    <string name="create_video_conference">Buat konferensi video baru untuk ruang obrolan ini</string>
     <string name="video_format_not_supported">Gagal menyetel pratinjau kamera perangkat ke: %1$s; Pengecualian: %2$s.</string>
     <string name="disconnected">Terputus</string>
     <string name="disconnecting_">Memutuskan sambungan %1$s</string>
@@ -355,7 +358,6 @@
     <string name="duration">durasi</string>
 
     <string name="edit_status_message_tip">Setel status pesan</string>
-    <string name="edited">meredaksi</string>
     <string name="enter_name_or_number">Masukkan nama atau nomor</string>
     <string name="error">Kesalahan</string>
     <string name="error_was_">Kesalahannya adalah: %1$s</string>
@@ -412,7 +414,7 @@
     <string name="history_erase_all">Hapus semua riwayat obrolan kontak</string>
     <string name="history_purge_for_contact_warning">Anda yakin ingin menghapus semua pesan yang dipilih selama %1$s?</string>
     <string name="history_purge_all_warning">Anda yakin ingin menghapus semua pesan untuk semua entitas?</string>
-    <string name="history_purge_count">Jumlah catatan sejarah yang dihapus: %1$s</string>
+    <string name="history_purge_count">Jumlah catatan riwayat yang terpengaruh: %1$s</string>
     <string name="history_purge_error">Kesalahan menghapus pesan yang disimpan secara lokal untuk %1$s.</string>
     <string name="history_purge_media">Hapus media dari ponsel saya</string>
     <string name="history_offline_warning">Tutup dan buka sesi obrolan ini untuk melihat pesan MAM dan Offline saat online</string>
@@ -499,7 +501,8 @@
 	<string name="kick_failed_not_enough_permission">Gagal menendang %1$s. Anda tidak memiliki cukup hak untuk melakukannya.</string>
 	<string name="last">Terakhir</string>
     <string name="last_message_correction">Koreksi pesan terakhir</string>
-	<string name="last_name">Nama belakang</string>
+    <string name="lmc_not_supported">Penerima tidak mendukung koreksi pesan terakhir</string>
+    <string name="last_name">Nama belakang</string>
     <string name="last_seen">Harini:%1$s</string>
 	<string name="leave">Tinggalkan</string>
     <string name="leave_chat_room">Tinggalkan chatRoom</string>
@@ -549,8 +552,6 @@
     <string name="folder">Folder</string>
     <string name="other">Lainnya</string>
     <string name="organization">Organisasi</string>
-    <string name="phone">Telepon</string>
-    <string name="phones">Ponsel</string>
     <string name="play">Main</string>
     <string name="postal_code">Kode Pos</string>
     <string name="rename">Nama baru</string>
@@ -593,7 +594,6 @@
     <string name="retry">Coba lagi</string>
     <string name="search">Cari</string>
     <string name="search_contact">Cari kontak</string >>
-    <string name="phonebook">Buku telepon</string>
     <string name="security">Keamanan</string>
     <string name="select_account_owner">Pilih Pemilik Akun</string>
     <string name="assign_group">Kontak Ditugaskan Grup:</string>
@@ -675,7 +675,6 @@
     <string name="callinfo_call_information">Informasi panggilan</string>
     <string name="callinfo_call_transport">Transportasi panggilan sinyal:</string>
     <string name="callinfo_codec">Codec/Frekuensi:</string>
-    <string name="callinfo_conference_focus">Fokus konferensi:</string>
     <string name="callinfo_default_encrypted">Enkripsi diaktifkan:</string>
     <string name="callinfo_jitter">Jitter:</string>
     <string name="callinfo_key_exchange_protocol">Protokol pertukaran kunci</string>
@@ -685,7 +684,6 @@
     <string name="callinfo_media_srtp">SRTP:</string>
     <string name="callinfo_media_stream_transport_protocol">Protokol transport stream media:</string>
     <string name="callinfo_na">N.A.</string>
-    <string name="callinfo_peer_count">Jumlah peserta:</string>
     <string name="callinfo_remote_ip">IP/Port Jarak Jauh:</string>
     <string name="callinfo_rtt">RTT:</string>
     <string name="callinfo_details">Detail Info Panggilan</string>
@@ -1055,8 +1053,6 @@
     <string name="sec_protocols_title">Protokol keamanan</string>
     <string name="sec_protocols_message">Silakan pilih protokol yang diinginkan agar</string>
     <string name="discard">Buang</string>
-    <string name="sec_zrtp_signalling_on">ZRTP akan diiklankan melalui protokol pensinyalan</string>
-    <string name="sec_zrtp_signalling_off">Tidak akan ada iklan ZRTP</string>
 
     <!-- STUN/Jingle Nodes list -->
     <string name="service_gui_SERVERS_LIST_ADD_SERVER">Tambah server</string>
@@ -1084,7 +1080,6 @@
     <string name="security_sdes_dlg_title">Pilih cipher suite yang diinginkan</string>
     <string name="security_sdes_title">cipher suite SDES</string>
     <string name="security_zrtp_options">Opsi ZRTP</string>
-    <string name="security_zrtp_signalling">pensinyalan ZRTP</string>
 
     <!-- Common preferences -->
     <string name="audio_encoding">Enkode audio</string>
@@ -1127,6 +1122,7 @@
     <string name="jbr_server_port">Server Port</string>
     <string name="jbr_priority">Prioritas (rentang: -128~127)</string>
     <string name="jbr_resource_auto_gen">Menghasilkan sumber daya otomatis</string>
+    <string name="jbr_resource_auto_summary">Hapus nama sumber daya agar perubahan ini berlaku</string>
     <string name="jbr_resource_id">Sumber Daya Jabber ID</string>
     <string name="jbr_resource_name">Nama sumber daya</string>
     <string name="jbr_server_ip">Hubungkan Server IP</string>
@@ -1266,14 +1262,6 @@
 
     <string name="loading_wait">Sedang memuat, harap tunggu…</string>
 
-    <!-- Remove special characters from phone number -->
-    <string name="settings_normalize_number">Simbol khusus dalam nomor telepon</string>
-    <string name="settings_normalize_off">Tidak ada modifikasi nomor telepon</string>
-    <string name="settings_normalize_on">Simbol khusus akan dihapus dari nomor</string>
-    <!-- Convert letters in phone numbers -->
-    <string name="settings_phone_alpha_no_allow">Tidak ada modifikasi nomor telepon</string>
-    <string name="settings_phone_alpha_allow">Surat di nomor telepon</string>
-
     <!-- Call settings -->
     <string name="call">Panggil</string>
     <string name="media_call">Panggilan media</string>
@@ -1394,6 +1382,18 @@
     <string name="crypto_omemo_distrust_messaging_stop">Hentikan pengiriman lebih lanjut pesan OMEMO ke teman: %1$s</string>
     <string name="crypto_omemo_trust_messaging_resume">Lanjutkan pengiriman pesan OMEMO ke teman: %1$s</string>
 
+    <!-- Language Translation settings -->
+    <string name="translation">Terjemahan Bahasa</string>
+    <string name="translation_received">Terjemahkan pesan yang diterima</string>
+    <string name="translation_receive_disable">Terjemahkan terima nonaktifkan</string>
+    <string name="translation_receive_enable">Terjemahkan terima aktifkan</string>
+    <string name="translation_sent">Terjemahkan pesan yang dikirim</string>
+    <string name="translation_sent_disable">Terjemahkan kirim nonaktifkan</string>
+    <string name="translation_sent_enable">Terjemahkan kirim aktifkan</string>
+    <string name="translation_server_apikey">Kunci API Server Terjemahan</string>
+    <string name="translation_server_apikey_hint">Masukkan hanya jika berlaku</string>
+    <string name="translation_server">URL Server Terjemahan</string>
+
     <!-- Advanced settings category -->
     <string name="advanced">Lanjutan</string>
     <string name="settings_expert">Pengaturan ahli</string>
@@ -1439,7 +1439,6 @@
     <string name="permission_microphone">Mikropon</string>
     <string name="permission_music">Musik dan Audio</string>
     <string name="permission_notifications">Notifikasi</string>
-    <string name="permission_phone">Telepon</string>
     <string name="permission_video">Foto dan Video</string>
     <string name="permission_storage">Penyimpanan</string>
     <string name="permission_hint">Untuk aplikasi kinerja maksimum dan dukungan fitur lengkap, aTalk mengharuskan anda memberikan izin untuk layanan berikut. Tanpa mereka, aTalk mungkin tidak berfungsi atau mungkin memiliki perilaku yang tidak terduga!</string>
@@ -1466,9 +1465,6 @@
 
     <string name="notifications_permission_denied_dialog_title">Permintaan izin pemberitahuan</string>
     <string name="notifications_permission_denied_feedback">Notifikasi dari aTalk akan dinonaktifkan hingga Anda mengabulkan permintaan izin</string>
-
-    <string name="phone_permission_denied_dialog_title">Baca permintaan izin Negara Telepon</string>
-    <string name="phone_permission_denied_feedback">Fitur telepon tidak akan tersedia sampai anda memberikan permintaan izin</string>
 
     <string name="video_permission_denied_dialog_title">Permintaan izin foto dan video</string>
     <string name="video_permission_denied_feedback">File foto dan video media tidak dapat diakses sampai Anda memberikan permintaan izin</string>

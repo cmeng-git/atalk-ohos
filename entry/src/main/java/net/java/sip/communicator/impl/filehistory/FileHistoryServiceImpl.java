@@ -43,13 +43,14 @@ import net.java.sip.communicator.service.protocol.event.FileTransferRequestEvent
 import net.java.sip.communicator.service.protocol.event.ScFileTransferListener;
 import net.java.sip.communicator.util.ServiceUtils;
 
-import org.apache.commons.lang3.StringUtils;
-import org.atalk.impl.timberlog.TimberLog;
 import org.atalk.ohos.gui.chat.ChatMessage;
 import org.atalk.ohos.gui.chat.ChatSession;
 import org.atalk.ohos.gui.chat.filetransfer.FileReceiveConversation;
 import org.atalk.ohos.gui.chat.filetransfer.FileSendConversation;
+import org.atalk.impl.timberlog.TimberLog;
 import org.atalk.persistance.DatabaseBackend;
+
+import org.apache.commons.lang3.StringUtils;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceEvent;
@@ -265,8 +266,9 @@ public class FileHistoryServiceImpl implements FileHistoryService, ServiceListen
     }
 
     /**
-     * Create new fileTransfer record in DB when file transfer has started
-     * Also use as conversion for http file upload link message to file transfer message
+     * Create new fileTransfer record in DB when file transfer has started.
+     * Also use as conversion for http file upload link message to file transfer message.
+     * setMamDate to prevent history message from re-trigger the file transfer on returning to chat session.
      *
      * @param evt FileTransferRequestEvent or FileTransferCreatedEvent
      * @param msgType file record message type i.e MESSAGE_FILE_TRANSFER_SEND, MESSAGE_FILE_TRANSFER_RECEIVE, MESSAGE_HTTP_FILE_DOWNLOAD

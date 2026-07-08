@@ -63,8 +63,6 @@ import net.java.sip.communicator.service.protocol.event.MessageDeliveryFailedEve
 import net.java.sip.communicator.service.protocol.globalstatus.GlobalStatusEnum;
 import net.java.sip.communicator.util.ConfigurationUtils;
 
-import org.apache.commons.lang3.StringUtils;
-import org.atalk.impl.timberlog.TimberLog;
 import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.AppGUIActivator;
@@ -76,6 +74,9 @@ import org.atalk.ohos.gui.chatroomslist.AdHocChatRoomList;
 import org.atalk.ohos.gui.chatroomslist.AdHocChatRoomListChangeEvent;
 import org.atalk.ohos.gui.chatroomslist.AdHocChatRoomListChangeListener;
 import org.atalk.ohos.gui.dialogs.DialogActivity;
+import org.atalk.impl.timberlog.TimberLog;
+
+import org.apache.commons.lang3.StringUtils;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.ServiceEvent;
 import org.osgi.framework.ServiceListener;
@@ -134,6 +135,7 @@ public class ConferenceChatManager implements ChatRoomMessageListener, ChatRoomI
         return adHocChatRoomList;
     }
 
+    @Override
     public void invitationReceived(ChatRoomInvitationReceivedEvent evt) {
         final OperationSetMultiUserChat multiUserChatOpSet = evt.getSourceOperationSet();
         final ChatRoomInvitation invitation = evt.getInvitation();
@@ -182,6 +184,7 @@ public class ConferenceChatManager implements ChatRoomMessageListener, ChatRoomI
      * @param evt the <code>ChatRoomMessageDeliveredEvent</code> that notified us that the message was
      * delivered to its destination
      */
+    @Override
     public void messageDelivered(ChatRoomMessageDeliveredEvent evt) {
         ChatRoom sourceChatRoom = evt.getSourceChatRoom();
         Timber.log(TimberLog.FINER, "MESSAGE DELIVERED to chat room: %s", sourceChatRoom.getName());
@@ -194,8 +197,8 @@ public class ConferenceChatManager implements ChatRoomMessageListener, ChatRoomI
                 return;
 
             int messageType = evt.getEventType();
-            chatPanel.addMessage(sourceChatRoom.getUserNickname().toString(), null,
-                    evt.getTimestamp(), messageType, message, null);
+            String sender = sourceChatRoom.getUserNickname().toString();
+            chatPanel.addMessage(sender, null, evt.getTimestamp(), messageType, message, evt.getCorrectedMessageUid());
         }
     }
 
@@ -205,14 +208,11 @@ public class ConferenceChatManager implements ChatRoomMessageListener, ChatRoomI
      *
      * @param evt the <code>ChatRoomMessageReceivedEvent</code> that notified us that a message has been received
      */
+    @Override
     public void messageReceived(ChatRoomMessageReceivedEvent evt) {
         ChatRoom sourceChatRoom = evt.getSourceChatRoom();
-        ChatRoomMember sourceMember = evt.getSourceChatRoomMember();
-        int messageType = evt.getEventType();
-        IMessage message = evt.getMessage();
-        ChatPanel chatPanel;
-
         boolean createWindow = false;
+
         String autoOpenConfig
                 = MUCService.getChatRoomAutoOpenOption(sourceChatRoom.getParentProvider(), sourceChatRoom.getName());
         if (autoOpenConfig == null)
@@ -223,6 +223,7 @@ public class ConferenceChatManager implements ChatRoomMessageListener, ChatRoomI
                 || evt.isImportantMessage())
             createWindow = true;
 
+        ChatPanel chatPanel;
         if (sourceChatRoom.isSystem()) {
             ChatRoomProviderWrapper serverWrapper
                     = mucService.findServerWrapperFromProvider(sourceChatRoom.getParentProvider());
@@ -234,48 +235,50 @@ public class ConferenceChatManager implements ChatRoomMessageListener, ChatRoomI
         if (chatPanel == null)
             return;
 
-        String messageContent = message.getContent();
-        if (evt.isHistoryMessage()) { // cmeng: need to check since it always start with new ?????
-            Date timeStamp = new Date();
-            // chatPanel.getChatConversationPanel().getLastIncomingMsgTimestamp();
-            Collection<Object> c = chatPanel.getChatSession().getHistoryBeforeDate(
-                    new Date(timeStamp.equals(new Date(0))
-                            ? System.currentTimeMillis() - 10000 : timeStamp.getTime()), 20);
+        Date timestamp = evt.getTimestamp();
+        IMessage message = evt.getMessage();
+        int msgStatus = message.getStatus();
+        boolean skipCheck = ChatMessage.STATUS_RETRACTED == msgStatus || ChatMessage.STATUS_EDITED == msgStatus;
+
+        // Timber.e("Message received skip: %s: %s; %s", skipCheck, msgStatus, message.getContent());
+        // cmeng: need to check since the server always send history messages, when start muc session.
+        if (evt.isHistoryMessage() && !skipCheck) {
+            Date tmStamp = new Date();
+            Collection<Object> history = chatPanel.getChatSession().getHistoryBeforeDate(
+                    new Date(tmStamp.equals(new Date(0))
+                            ? System.currentTimeMillis() - 10000 : tmStamp.getTime()), 20);
+
             boolean hasMatch = false;
-            for (Object o : c) {
+            for (Object obj : history) {
                 // cmeng: never match and should be implemented in ChatRoomMessageDeliveredEvent
-                if (o instanceof ChatRoomMessageDeliveredEvent) {
-                    ChatRoomMessageDeliveredEvent ev = (ChatRoomMessageDeliveredEvent) o;
-                    if ((evt.getTimestamp() != null) && evt.getTimestamp().equals(ev.getTimestamp())) {
+                if (obj instanceof ChatRoomMessageDeliveredEvent) {
+                    ChatRoomMessageDeliveredEvent evtObj = (ChatRoomMessageDeliveredEvent) obj;
+                    if (timestamp != null && timestamp.equals(evtObj.getTimestamp())) {
                         hasMatch = true;
                         break;
                     }
                 }
-                else if (o instanceof ChatRoomMessageReceivedEvent) {
-                    ChatRoomMessageReceivedEvent ev = (ChatRoomMessageReceivedEvent) o;
-                    if ((evt.getTimestamp() != null) && evt.getTimestamp().equals(ev.getTimestamp())) {
+                else if (obj instanceof ChatRoomMessageReceivedEvent) {
+                    ChatRoomMessageReceivedEvent evtObj = (ChatRoomMessageReceivedEvent) obj;
+                    if (timestamp != null && timestamp.equals(evtObj.getTimestamp())) {
                         hasMatch = true;
                         break;
                     }
-                }
-                IMessage m2 = evt.getMessage();
-                if (m2 != null && m2.getContent().equals(messageContent)) {
-                    hasMatch = true;
-                    break;
                 }
             }
-            // skip if the message is an old history previously received
-            if (hasMatch)
+            // skip if the message is an old history previously received.
+            if (hasMatch) {
                 return;
+            }
         }
 
         // contact may be null if message received with nickName only or when contact reject invitation
-        // Contact contact = sourceMember.getContact();
-        // String jabberID = (contact == null) ? displayName : contact.getAddress();
-        String jabberID = sourceMember.getContactAddress();
-        String displayName = jabberID.replaceAll("(\\w+)/.*", "$1");
+        ChatRoomMember sourceMember = evt.getSourceChatRoomMember();
+        String jabberId = sourceMember.getContactAddress();
+        String displayName = jabberId.replaceAll("(\\w+)/.*", "$1");
+        int msgType = evt.getEventType();
 
-        chatPanel.addMessage(jabberID, displayName, evt.getTimestamp(), messageType, message, null);
+        chatPanel.addMessage(jabberId, displayName, evt.getTimestamp(), msgType, message, evt.getCorrectedMessageUid());
     }
 
     /**
@@ -284,6 +287,7 @@ public class ConferenceChatManager implements ChatRoomMessageListener, ChatRoomI
      *
      * @param evt the <code>ChatRoomMessageDeliveryFailedEvent</code> that notified us of a delivery failure
      */
+    @Override
     public void messageDeliveryFailed(ChatRoomMessageDeliveryFailedEvent evt) {
         /*
          * FIXME ChatRoomMessageDeliveryFailedEvent#getSource() is not a IMessage instance at the
@@ -294,7 +298,7 @@ public class ConferenceChatManager implements ChatRoomMessageListener, ChatRoomI
          */
 
         // Just show the pass in error message if false
-        boolean mergeMessage = true;
+        boolean mergeErrorMessage = true;
         boolean resendLastMessage = true;
         String errorMsg;
         String reason = evt.getReason();
@@ -325,7 +329,7 @@ public class ConferenceChatManager implements ChatRoomMessageListener, ChatRoomI
         case MessageDeliveryFailedEvent.OMEMO_SEND_ERROR:
         case MessageDeliveryFailedEvent.NOT_ACCEPTABLE:
             errorMsg = evt.getReason();
-            mergeMessage = false;
+            mergeErrorMessage = false;
             break;
 
         case MessageDeliveryFailedEvent.SYSTEM_ERROR_MESSAGE:
@@ -335,11 +339,11 @@ public class ConferenceChatManager implements ChatRoomMessageListener, ChatRoomI
                 errorMsg = aTalkApp.getResString(R.string.message_delivery_unknown_error);
             else {
                 errorMsg = reason;
-                mergeMessage = false;
+                mergeErrorMessage = false;
             }
         }
 
-        if (!TextUtils.isEmpty(reason) && mergeMessage)
+        if (!TextUtils.isEmpty(reason) && mergeErrorMessage)
             errorMsg += " " + aTalkApp.getResString(R.string.error_was_, reason);
 
         // Error message sent from conference has no nickName i.e. contains ""
@@ -348,7 +352,7 @@ public class ConferenceChatManager implements ChatRoomMessageListener, ChatRoomI
         ChatPanel chatPanel = ChatSessionManager.getMultiChat(sourceChatRoom, true);
 
         if (resendLastMessage) {
-            chatPanel.addMessage(sender, new Date(), ChatMessage.MESSAGE_OUT, srcMessage.getMimeType(),
+            chatPanel.addMessage(sender, new Date(), ChatMessage.MESSAGE_MUC_OUT, srcMessage.getMimeType(),
                     srcMessage.getContent());
         }
         chatPanel.addMessage(sender, new Date(), ChatMessage.MESSAGE_ERROR, IMessage.ENCODE_PLAIN, errorMsg);

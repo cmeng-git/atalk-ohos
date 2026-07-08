@@ -32,7 +32,7 @@ public interface ChatMessage {
     String ENC_TYPE = "encType";     // see IMessage for the ENCRYPTION_xxx & MASK definitions
     String MSG_TYPE = "msgType";     // as defined in below * message type *
     String DIRECTION = "direction";  // in or out
-    String STATUS = "status";        // Use by FileTransferStatusChangeEvent and FileRecord STATUS_xxx
+    String STATUS = "status";        // Use by ChatMessage, FileTransferStatusChangeEvent and FileRecord STATUS_xxx
     String FILE_PATH = "filePath";   // filepath
     String FINGERPRINT = "OmemoFingerprint"; // rx fingerPrint
     String STEALTH_TIMER = "stealthTimer";   // stealth timer
@@ -49,12 +49,7 @@ public interface ChatMessage {
      * @see ChatMessage defined constant below
      */
 
-    /* chat message or File transfer status - see FileRecord.STATUS_XXX */
-    int STATUS_SEND = 0;
-    int STATUS_RECEIVED = 1;
-    int STATUS_DELETE = 99;  // to be deleted
-
-    /* READ - message delivery status: Do not change the order, values used in MergedMessage */
+    /* READ - message delivery status */
     int MESSAGE_DELIVERY_NONE = 0;
     int MESSAGE_DELIVERY_CLIENT_SENT = 1;
     int MESSAGE_DELIVERY_SERVER_SENT = 2;
@@ -67,6 +62,14 @@ public interface ChatMessage {
     /* Chat message stream direction */
     String DIR_OUT = "out";
     String DIR_IN = "in";
+
+    /* STATUS: chat message status or File transfer status - @see FileRecord.STATUS_XXX */
+    int STATUS_SEND = 0;
+    int STATUS_RECEIVED = 1;
+    int STATUS_MSG_OL = 5;  // Message Offline use for contact chat only.
+    int STATUS_EDITED = 8;
+    int STATUS_RETRACTED = 9;
+    int STATUS_UNKNOWN = FileRecord.STATUS_UNKNOWN;
 
     /**
      * The message type representing outgoing messages.
@@ -128,16 +131,6 @@ public interface ChatMessage {
     int MESSAGE_STEALTH_IN = 31;
 
     /**
-     * The message type representing sms messages.
-     */
-    int MESSAGE_SMS_OUT = 40;
-
-    /**
-     * an event type indicating that the message being received is an SMS message.
-     */
-    int MESSAGE_SMS_IN = 41;
-
-    /**
      * The file transfer message type.
      */
     int MESSAGE_FILE_TRANSFER_SEND = 50;
@@ -184,6 +177,41 @@ public interface ChatMessage {
     int MESSAGE_MUC_IN = 81;
 
     /**
+     * Returns the UID of this message.
+     *
+     * @return the UID of this message.
+     */
+    String getMessageUid();
+
+    /**
+     * Returns the UID that should be used for matching correction messages.
+     *
+     * @return the UID that should be used for matching correction messages.
+     */
+    String getUidForCorrection();
+
+    /**
+     * Returns the UID of the message that this message replaces, or <code>null</code> if this is a new message.
+     *
+     * @return the UID of the message that this message replaces, or <code>null</code> if this is a new message.
+     */
+    String getCorrectedMessageUid();
+
+    /**
+     * Returns the server message Id of the message sent - for tracking delivery receipt
+     *
+     * @return the server message Id of the message sent.
+     */
+    String getServerMsgId();
+
+    /**
+     * Returns the remote message Id of the message received - for tracking delivery receipt
+     *
+     * @return the remote message Id of the message received.
+     */
+    String getRemoteMsgId();
+
+    /**
      * The display name of the message sender.
      * Returns the string Id of the message sender.
      * Actual value is pending on message type i.e.:
@@ -200,9 +228,9 @@ public interface ChatMessage {
     String getSender();
 
     /**
-     * Returns the display name of the message sender.
+     * Returns the display name of the entity sending the message.
      *
-     * @return the display name of the message sender
+     * @return the display name of the entity sending the message
      */
     String getSenderName();
 
@@ -228,11 +256,18 @@ public interface ChatMessage {
     int getMimeType();
 
     /**
-     * Returns the content of the message.
+     * Returns the content of the message, tagfed with status icon.
      *
      * @return the content of the message.
      */
-    String getMessage();
+    String getMessageBody();
+
+    /**
+     * Returns message content that should be used for copy and paste functionality.
+     *
+     * @return message content that should be used for copy and paste functionality.
+     */
+    String getMessageContent();
 
     /**
      * Returns the encryption type of the content
@@ -246,7 +281,7 @@ public interface ChatMessage {
      *
      * @return the HttpFileDownload file transfer status
      */
-    int getXferStatus();
+    int getStatus();
 
     /**
      * Returns the message delivery receipt status
@@ -255,26 +290,6 @@ public interface ChatMessage {
      */
     int getReceiptStatus();
 
-    /**
-     * Returns the server message Id of the message sent - for tracking delivery receipt
-     *
-     * @return the server message Id of the message sent.
-     */
-    String getServerMsgId();
-
-    /**
-     * Returns the remote message Id of the message received - for tracking delivery receipt
-     *
-     * @return the remote message Id of the message received.
-     */
-    String getRemoteMsgId();
-
-    /**
-     * Returns the UID of this message.
-     *
-     * @return the UID of this message.
-     */
-    String getMessageUID();
 
     /**
      * Returns the message direction i.e. in/put.
@@ -282,55 +297,6 @@ public interface ChatMessage {
      * @return the direction of this message.
      */
     String getMessageDir();
-
-    /**
-     * Returns the UID of the message that this message replaces, or <code>null</code> if this is a new message.
-     *
-     * @return the UID of the message that this message replaces, or <code>null</code> if this is a new message.
-     */
-    String getCorrectedMessageUID();
-
-    /**
-     * Indicates if given <code>nextMsg</code> is a consecutive message or if the <code>nextMsg</code>
-     * is a replacement for this message.
-     *
-     * @param nextMsg the next message to check
-     *
-     * @return <code>true</code> if the given message is a consecutive or replacement message, <code>false</code> - otherwise
-     */
-    boolean isConsecutiveMessage(ChatMessage nextMsg);
-
-    /**
-     * Merges given message. If given message is consecutive to this one, then their contents will be merged.
-     * If given message is a replacement message for <code>this</code> one, then the replacement will be returned.
-     *
-     * @param consecutiveMessage the next message to merge with <code>this</code> instance
-     * (it must be consecutive in terms of <code>isConsecutiveMessage</code> method).
-     *
-     * @return merge operation result that should be used instead of this <code>ChatMessage</code> instance.
-     */
-    ChatMessage mergeMessage(ChatMessage consecutiveMessage);
-
-    /**
-     * Returns the UID that should be used for matching correction messages.
-     *
-     * @return the UID that should be used for matching correction messages.
-     */
-    String getUidForCorrection();
-
-    /**
-     * Returns original message content that should be given for the user to edit the correction.
-     *
-     * @return original message content that should be given for the user to edit the correction.
-     */
-    String getContentForCorrection();
-
-    /**
-     * Returns message content that should be used for copy and paste functionality.
-     *
-     * @return message content that should be used for copy and paste functionality.
-     */
-    String getContentForClipboard();
 
     /**
      * Returns the OperationSetFileTransfer of this message.

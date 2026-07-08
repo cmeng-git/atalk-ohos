@@ -5,16 +5,15 @@
  */
 package org.atalk.ohos.gui.call;
 
-import android.content.Context;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import org.atalk.impl.neomedia.MediaServiceImpl;
-import org.atalk.impl.neomedia.NeomediaActivator;
 import org.atalk.ohos.BaseFragment;
 import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
+import org.atalk.impl.neomedia.MediaServiceImpl;
+import org.atalk.impl.neomedia.NeomediaActivator;
 import org.atalk.service.neomedia.VolumeControl;
 import org.atalk.service.neomedia.event.VolumeChangeEvent;
 import org.atalk.service.neomedia.event.VolumeChangeListener;

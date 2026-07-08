@@ -48,6 +48,7 @@ import org.jivesoftware.smack.packet.XmlElement;
 
 import org.jivesoftware.smackx.avatar.AvatarManager;
 import org.jivesoftware.smackx.jingle.element.JingleReason;
+import org.jivesoftware.smackx.jingle.element.JingleReason.Reason;
 import org.jivesoftware.smackx.jingle_rtp.element.RtpDescription;
 import org.jivesoftware.smackx.jinglemessage.JingleMessageListener;
 import org.jivesoftware.smackx.jinglemessage.JingleMessageManager;
@@ -90,7 +91,7 @@ public final class JingleMessageSessionImpl implements JingleMessageListener {
 
     private final List<String> media = new ArrayList<>();
 
-    private boolean isVideoCall = false;
+    private static boolean isVideoCall = false;
     private static boolean inProgress = false;
 
     private static JingleMessageState mState = JingleMessageState.initial;
@@ -110,7 +111,7 @@ public final class JingleMessageSessionImpl implements JingleMessageListener {
      */
     @Override
     public void handleJmSession(JingleMessage jingleMessage, Message message) {
-        Jid from = message.getFrom();
+        Jid jidFrom = message.getFrom();
         String sid = jingleMessage.getId();
 
         switch (jingleMessage.getAction()) {
@@ -127,7 +128,8 @@ public final class JingleMessageSessionImpl implements JingleMessageListener {
             break;
 
         case JingleMessage.ACTION_PROCEED:
-            if (mRemote.isParentOf(from)) {
+            // The mRemote has accepted the call, so procced start the call.
+            if (mRemote.isParentOf(jidFrom)) {
                 onJingleMessageProceed(jingleMessage, message);
             }
             else {
@@ -136,11 +138,13 @@ public final class JingleMessageSessionImpl implements JingleMessageListener {
             break;
 
         case JingleMessage.ACTION_REJECT:
-            if (mRemote.isParentOf(from)) {
+            // The caller receives callee rejected the call.
+            if (mRemote.isParentOf(jidFrom)) {
                 onJingleMessageReject(jingleMessage, message);
             }
+            // All resources of the callee must clear the notification.
             else {
-                onCallRejected(from, sid);
+                onCallRejected(jingleMessage, message);
             }
             break;
 
@@ -163,9 +167,10 @@ public final class JingleMessageSessionImpl implements JingleMessageListener {
         if (mSid != null && mState.equals(JingleMessageState.propose))
             return;
 
-        // Save a copy of the remote and id for outgoing call.
+        // Save a copy of the remote (BareJid) and id for outgoing call.
         mRemote = recipient;
         mSid = sid;
+        isVideoCall = videoCall;
 
         List<XmlElement> xmlElements = new ArrayList<>();
         RtpDescription.Builder rtpBuilder = RtpDescription.getBuilder();
@@ -256,15 +261,21 @@ public final class JingleMessageSessionImpl implements JingleMessageListener {
      */
     public void onJingleMessagePropose(JingleMessage jingleMessage, Message message) {
         String sid = jingleMessage.getId();
-        Jid fromJid = message.getFrom();
+        Jid jidFrom = message.getFrom();
+
+        media.clear();
+        List<NamedElement> elements = jingleMessage.getElements(RtpDescription.ELEMENT);
+        if (elements != null) {
+            for (NamedElement element : elements) {
+                media.add(((RtpDescription) element).getMedia());
+            }
+        }
+        isVideoCall = media.contains("video");
 
         // Take action on new incoming call while another call is in progress e.g tie-break.
         if (mSid != null) {
             // Use this check to handle call migration handling.
-            if (fromJid.asBareJid().isParentOf(mRemote)) {
-
-                // Use this check to skip call migration handling i.e. handle via aTalk call hold.
-                // if (mRemote.isParentOf(fromJid)) {
+            if (mRemote.asBareJid().isParentOf(jidFrom)) {
                 if (!inProgress) {
                     JingleReason reason = new JingleReason(JingleReason.Reason.expired, "Tie-Break", null);
 
@@ -274,13 +285,15 @@ public final class JingleMessageSessionImpl implements JingleMessageListener {
                     int result = sid.compareTo(mSid);
                     //  New sid preceding mSid: retract current call and proceed with the new incoming call notification.
                     if (result < 0) {
-                        Timber.w("New call takes priority.");
-                        mJnManager.sendJingleMessageRetract(fromJid.asBareJid(), mSid, reason, new TieBreakElement());
-                        endJmCallProcess(mSid, true, R.string.call_retracted, mUser);
+                        Timber.w("Incoming call takes priority: %s", sid);
+                        mJnManager.sendJingleMessageRetract(jidFrom.asBareJid(), mSid, reason, new TieBreakElement());
                     }
-                    // Else just reject the new incoming call; skip showing incoming call notification.
+                    // Else just reject the new incoming call, and inform all other resources that have
+                    // responded to the propose message; Keep JingleMessageCallActivity UI.
                     else if (result > 0) {
-                        mJnManager.sendJingleMessageReject(fromJid, sid, reason, new TieBreakElement());
+                        // Must update mRemote to FullJid for sending Reject, else cause endless loop.
+                        mRemote = jidFrom;
+                        mJnManager.sendJingleMessageReject(mUser.asBareJid(), sid, reason, new TieBreakElement());
                         return;
                     }
                     else {
@@ -293,14 +306,14 @@ public final class JingleMessageSessionImpl implements JingleMessageListener {
                     mJnManager.sendJingleMessageFinish(mRemote, mSid, reason, new MigratedElement(sid));
                     // Hangup the call in progress
                     onCallMigrated(mSid);
-
-                    // End current call.
+                    // End current call and clean up old states.
                     endJmCallProcess(mSid, true, null);
 
                     // Request remote to proceed with the call, without any UI display for user selection.
-                    mJnManager.sendJingleMessageProceed(fromJid, sid);
+                    mJnManager.sendJingleMessageProceed(jidFrom, sid);
+                    // Must re-init all variable to the actual states.
                     mState = JingleMessageState.proceed;
-                    mRemote = fromJid;  // update to new recipient.
+                    mRemote = jidFrom;  // update to new recipient.
                     mSid = sid;
                     inProgress = true;
                     return;
@@ -310,28 +323,18 @@ public final class JingleMessageSessionImpl implements JingleMessageListener {
             else {
                 // Propose from different remote and the call is in progress, then proceed to allow Jingle Call process to take appropriate actions.
                 if (inProgress) {
-                    mRemote2 = fromJid;
+                    mRemote2 = jidFrom;
                     mSid2 = sid;
                     // Secondary call will force to audio call only.
-                    AppCallListener.startIncomingCallNotification(fromJid, sid, SystrayService.JINGLE_MESSAGE_PROPOSE, false);
-                    sendJingleMessageRinging(fromJid.asFullJidIfPossible(), sid);
-
+                    AppCallListener.startIncomingCallNotification(jidFrom, sid, SystrayService.JINGLE_MESSAGE_PROPOSE, isVideoCall);
+                    sendJingleMessageRinging(jidFrom.asFullJidIfPossible(), sid);
                     return;
                 }
             }
         }
 
-        mRemote = fromJid;
+        mRemote = jidFrom;
         mSid = sid;
-
-        media.clear();
-        List<NamedElement> elements = jingleMessage.getElements(org.jivesoftware.smackx.jingle_rtp.element.RtpDescription.ELEMENT);
-        if (elements != null) {
-            for (NamedElement element : elements) {
-                media.add(((RtpDescription) element).getMedia());
-            }
-        }
-        isVideoCall = media.contains("video");
 
         // Check for resource permission before proceed, if mic permission is granted at a minimum
         Timber.d("Starting incoming call notification: %s", sid);
@@ -339,12 +342,14 @@ public final class JingleMessageSessionImpl implements JingleMessageListener {
             // v3.0.5: always starts with heads-up notification for JingleMessage call propose
             AppCallListener.startIncomingCallNotification(mRemote, sid, SystrayService.JINGLE_MESSAGE_PROPOSE, isVideoCall);
             sendJingleMessageRinging(mRemote.asFullJidIfPossible(), sid);
-            mState = JingleMessageState.propose;
         }
         else {
-            JingleReason reason = new JingleReason(JingleReason.Reason.unsupported_applications, "Unsupported", null);
-            mJnManager.sendJingleMessageReject(mRemote.asFullJidIfPossible(), sid, reason, null);
-            endJmCallProcess(sid, true, R.string.call_no_active_device);
+            // Only send reject if all other resources unable to answer call.
+            if (!mJnManager.contactSupportsJingleMessage(mUser.asBareJid())) {
+                JingleReason reason = new JingleReason(JingleReason.Reason.unsupported_applications, "Unsupported", null);
+                mJnManager.sendJingleMessageReject(mRemote.asFullJidIfPossible(), sid, reason, null);
+                endJmCallProcess(sid, true, R.string.call_no_active_device);
+            }
         }
     }
 
@@ -366,14 +371,13 @@ public final class JingleMessageSessionImpl implements JingleMessageListener {
 
         // XXX maybe add answer/hangup abstract method to MediaAwareCallPeer
         if (peer instanceof CallPeerJabberImpl) {
-            ((CallPeerJabberImpl) peer).hangup(false, reasonText, jingleReason);
+            ((CallPeerJabberImpl) peer).hangup(false, jingleReason);
         }
     }
 
     public void sendJingleMessageRinging(FullJid remote, String sid) {
         mJnManager.sendJingleMessageRinging(remote, sid);
         mState = JingleMessageState.ringing;
-
     }
 
     /**
@@ -396,44 +400,54 @@ public final class JingleMessageSessionImpl implements JingleMessageListener {
      */
     public void onCallProceed(JingleMessage jingleMessage, Message message) {
         // Valid caller found, and we are the sender of the "proceed" jingle message, then request sender to proceed
-        Jid from = message.getFrom();
+        Jid jidFrom = message.getFrom();
         String sid = jingleMessage.getId();
 
         // Received self broadcast, so proceed with the call.
-        if (mUser.equals(from)) {
-            Jid remote = sid.equals(mSid) ? mRemote : mRemote2;
+        if (mUser.equals(jidFrom)) {
+            Jid remote = (mRemote2 == null) || sid.equals(mSid) ? mRemote : mRemote2;
             mJnManager.sendJingleMessageProceed(remote.asFullJidIfPossible(), sid);
 
             endJmCallProcess(sid, false, R.string.connecting_, remote);
             mState = JingleMessageState.proceed;
             inProgress = true;
         }
+        // For all other resources, display to user who has accepted the call and remove the notification.
         else {
-            // Display to user who has accepted the call
-            endJmCallProcess(sid, true, R.string.call_answered, from);
+            endJmCallProcess(sid, true, R.string.call_answered, jidFrom);
         }
     }
 
     /**
-     * Local user has rejected the call; prepare Jingle Message reject and send
-     * it to the remote (Primary or secondary incoming call).
+     * Local user has rejected the call; prepare Jingle Message reject and
+     * send it to the own user (Primary or secondary incoming call),
+     * so all resources of callee can end the call.
      *
      * @param sid the intended Jingle Message call id
      */
     public static void sendJingleMessageReject(String sid, JingleReason reason) {
-        Jid remote = sid.equals(mSid) ? mRemote : mRemote2;
-        mJnManager.sendJingleMessageReject(remote.asFullJidIfPossible(), sid, reason, null);
-        endJmCallProcess(sid, true, null);
+        mJnManager.sendJingleMessageReject(mUser.asBareJid(), sid, reason, null);
     }
 
     /**
-     * Dismiss notification if another resource instance has rejected the call propose during normal or tie-break;
+     * The received "reject" message is forwarded by the server.
+     * Check to see if we are the original sender; Reject the caller if so.
+     * endJmCallProcess for either case.
      *
-     * @param from another instance of the user whom has rejected the call.
-     * @param sid the intended Jingle Message call id
+     * @param jingleMessage Accept received from the server
+     * @param message the original received Jingle Message
      */
-    public static void onCallRejected(Jid from, String sid) {
-        endJmCallProcess(sid, true, R.string.call_rejected, from);
+    public static void onCallRejected(JingleMessage jingleMessage, Message message) {
+        // Received self broadcast, so proceed with the call.
+        Jid jidFrom = message.getFrom();
+        String sid = jingleMessage.getId();
+        JingleReason reason = jingleMessage.getReason();
+
+        // Received self broadcast, so send call reject to caller.
+        if (mUser.equals(jidFrom)) {
+            mJnManager.sendJingleMessageReject(mRemote.asFullJidIfPossible(), sid, reason, null);
+        }
+        endJmCallProcess(sid, true, R.string.call_rejected, jidFrom);
     }
 
     /**
@@ -446,18 +460,13 @@ public final class JingleMessageSessionImpl implements JingleMessageListener {
      */
     public void onJingleMessageRetract(JingleMessage jingleMessage, Message message) {
         String sid = jingleMessage.getId();
-        Jid fromJid = message.getFrom();
+        BareJid bareJidFrom = message.getFrom().asBareJid();
 
+        // Show call retract only to the intended callee
         if (sid.equals(mSid)) {
-            BareJid jidFrom = fromJid.asBareJid();
-            endJmCallProcess(sid, true, R.string.call_retracted, jidFrom);
-            onCallRetracted(jidFrom);
+            onCallRetracted(bareJidFrom);
         }
-        else {
-            // Stop all call alerts and clear heads-up notification that are in progress for secondary call.
-            new VibrateHandlerImpl().cancel();
-            NotificationPopupHandler.removeCallNotification(sid);
-        }
+        endJmCallProcess(sid, true, R.string.call_retracted, bareJidFrom);
     }
 
     /**
@@ -493,20 +502,6 @@ public final class JingleMessageSessionImpl implements JingleMessageListener {
         mState = JingleMessageState.finish;
     }
 
-    /**
-     * Routine to take care of non-compliant client which does not send Finish JM or when call exception occurred.
-     *
-     * @param sid Call Sid
-     */
-    public static void setJingleMessageFinish(String sid) {
-        // Only proceed if it was not init yet.
-        if (mState != JingleMessageState.initial || mSid != null) {
-            Timber.d("set JingleMessageFinish!");
-            endJmCallProcess(sid, true, null);
-            inProgress = false;
-        }
-    }
-
     // Send finish in response to remote init to end the call. Block cycling sending.
     private void onJingleMessageFinish(JingleMessage jingleMessage, Message message) {
         // Do not send finish if it was already sent.
@@ -514,16 +509,31 @@ public final class JingleMessageSessionImpl implements JingleMessageListener {
             return;
 
         String sid = jingleMessage.getId();
-        Jid from = message.getFrom();
-        Timber.w("Call ended by remote: (%s) %s", sid, from);
+        Jid jidFrom = message.getFrom();
+        boolean failed = false;
+        String reasonText = aTalkApp.getResString(R.string.call_ended_by_remote, mRemote.asBareJid());
 
         // Do not response with finish if it is a call migration.
         if (jingleMessage.getElements(MigratedElement.ELEMENT).isEmpty()) {
-            JingleReason reason = new JingleReason(JingleReason.Reason.success, "Call ended", null);
-            mJnManager.sendJingleMessageFinish(from.asFullJidIfPossible(), sid, reason, null);
-            mState = JingleMessageState.finish;
+            Reason reason = Reason.success;
+
+            JingleReason jingleReason = jingleMessage.getReason();
+            if (jingleReason != null) {
+                reason = jingleReason.asEnum();
+                failed = Reason.success != reason;
+                if (failed) {
+                    reasonText = jingleReason.getText() != null ? jingleReason.getText() : reasonText;
+                    reasonText = reason + ": " + reasonText;
+                }
+            }
+            jingleReason = new JingleReason(reason, reasonText, null);
+            mJnManager.sendJingleMessageFinish(jidFrom.asFullJidIfPossible(), sid, jingleReason, null);
         }
-        endJmCallProcess(mSid, true, null);
+        Timber.w("Call ended by remote: (%s) %s: %s", sid, jidFrom, reasonText);
+
+        // Will showToast for finish with failed case.
+        endJmCallProcess(mSid, true, failed ? R.string.string_holder : null, reasonText);
+        mState = JingleMessageState.finish;
     }
 
     /**
@@ -535,6 +545,17 @@ public final class JingleMessageSessionImpl implements JingleMessageListener {
      */
     public static boolean isJingleMessageSession(String sid) {
         return sid.equals(mSid) || sid.equals(mSid2);
+    }
+
+    /**
+     * Check to see if jingleMessage session is still active. JingleMessage session must end
+     * properly with sid clear, else subsequent call will have problem. It is called by jingle-rtp
+     * to check if 'finish' need to be send, when session-terminate is send.
+     *
+     * @return true is it is active.
+     */
+    public static boolean isJingleMessageSessionActive() {
+        return JingleMessageState.proceed == mState || mSid != null || mSid2 != null;
     }
 
     /**
@@ -577,26 +598,28 @@ public final class JingleMessageSessionImpl implements JingleMessageListener {
         if (id != null) {
             aTalkApp.showToastMessage(id, arg);
         }
-        Timber.d("endJmCallProcess: %s: %s \n%s \n%s", init, jmEndListener != null, sid,
-                NotificationPopupHandler.getCallNotificationId(sid));
-
-        // Due to race condition, JmCallActivity is not launched until <proceed/> is sent.
-        // Never clear the jmEngListener until the JmCallActivity UI has been disposed of.
-        if (jmEndListener != null) {
-            jmEndListener.endJmCallActivity();
-            jmEndListener = null;
-        }
+        Timber.d("endJmCallProcess: init: %s; listener: %s \nsid: %s \nnotifId: %s", init,
+                (jmEndListener != null), sid, NotificationPopupHandler.getCallNotificationId(sid));
 
         // Stop all call alerts and clear heads-up notification that are in progress.
         new VibrateHandlerImpl().cancel();
         NotificationPopupHandler.removeCallNotification(sid);
 
+        // Due to race condition, JmCallActivity is not launched until <proceed/> is sent.
+        // Never clear the jmEngListener until the JmCallActivity UI has been disposed of.
+        if (jmEndListener != null) {
+            // Clear jmEndListener and  JingleMessageCallActivity UI only if the reject is the correct Sid.
+            if (jmEndListener.endJmCallActivity(sid)) {
+                jmEndListener = null;
+            }
+        }
+
         // Proceed to init call parameters only if sid matches mSid.
         if (init) {
-            inProgress = false;
             mSid = null;
             mSid2 = null;
             mState = JingleMessageState.initial;
+            inProgress = false;
         }
     }
 
@@ -610,6 +633,6 @@ public final class JingleMessageSessionImpl implements JingleMessageListener {
     }
 
     public interface JmEndListener {
-        void endJmCallActivity();
+        boolean endJmCallActivity(String sid);
     }
 }

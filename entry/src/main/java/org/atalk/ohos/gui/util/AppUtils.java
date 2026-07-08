@@ -5,26 +5,22 @@
  */
 package org.atalk.ohos.gui.util;
 
-import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.drawable.TransitionDrawable;
-import android.os.Looper;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 
 import androidx.core.app.NotificationCompat;
 
-import java.util.List;
-
-import org.atalk.impl.appnotification.AppNotifications;
-import org.atalk.impl.timberlog.TimberLog;
 import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.AppGUIActivator;
+import org.atalk.impl.appnotification.AppNotifications;
+import org.atalk.impl.timberlog.TimberLog;
 import org.atalk.service.osgi.OSGiService;
 
 import timber.log.Timber;
@@ -116,14 +112,14 @@ public class AppUtils {
                 TransitionDrawable transition = (TransitionDrawable) v.getBackground();
 
                 switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        transition.startTransition(500);
-                        break;
-                    case MotionEvent.ACTION_HOVER_EXIT:
-                    case MotionEvent.ACTION_CANCEL:
-                    case MotionEvent.ACTION_UP:
-                        transition.reverseTransition(500);
-                        break;
+                case MotionEvent.ACTION_DOWN:
+                    transition.startTransition(500);
+                    break;
+                case MotionEvent.ACTION_HOVER_EXIT:
+                case MotionEvent.ACTION_CANCEL:
+                case MotionEvent.ACTION_UP:
+                    transition.reverseTransition(500);
+                    break;
                 }
                 return false;
             }

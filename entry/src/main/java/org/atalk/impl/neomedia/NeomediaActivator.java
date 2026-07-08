@@ -20,16 +20,17 @@ import net.java.sip.communicator.service.resources.ResourceManagementServiceUtil
 import net.java.sip.communicator.service.systray.SystrayService;
 import net.java.sip.communicator.util.ServiceUtils;
 
-import org.atalk.impl.neomedia.device.DeviceConfiguration;
 import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.aTalk;
+import org.atalk.impl.neomedia.device.DeviceConfiguration;
 import org.atalk.service.audionotifier.AudioNotifierService;
 import org.atalk.service.configuration.ConfigurationService;
 import org.atalk.service.fileaccess.FileAccessService;
 import org.atalk.service.libjitsi.LibJitsi;
 import org.atalk.service.neomedia.MediaService;
 import org.atalk.service.resources.ResourceManagementService;
+
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
@@ -167,7 +168,8 @@ public class NeomediaActivator implements BundleActivator {
                     deviceConfigurationPropertyChangeListener = null;
                 }
             }
-        } finally {
+        }
+        finally {
             configurationService = null;
             fileAccessService = null;
             mediaServiceImpl = null;

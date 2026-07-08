@@ -49,9 +49,6 @@ import net.java.sip.communicator.service.protocol.ProtocolProviderService;
 import net.java.sip.communicator.service.protocol.event.ChatRoomMemberPresenceChangeEvent;
 import net.java.sip.communicator.service.protocol.event.ChatRoomMemberPresenceListener;
 
-import org.atalk.crypto.listener.CryptoModeChangeListener;
-import org.atalk.crypto.omemo.AndroidOmemoService;
-import org.atalk.crypto.omemo.OmemoAuthenticateDialog;
 import org.atalk.ohos.BaseFragment;
 import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
@@ -63,9 +60,14 @@ import org.atalk.ohos.gui.chat.ChatSessionManager;
 import org.atalk.ohos.gui.chat.ChatTransport;
 import org.atalk.ohos.gui.chat.MetaContactChatSession;
 import org.atalk.ohos.gui.settings.SettingsActivity;
+import org.atalk.crypto.listener.CryptoModeChangeListener;
+import org.atalk.crypto.omemo.AndroidOmemoService;
+import org.atalk.crypto.omemo.OmemoAuthenticateDialog;
+
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
+
 import org.jivesoftware.smackx.muc.MultiUserChat;
 import org.jivesoftware.smackx.muc.MultiUserChatManager;
 import org.jivesoftware.smackx.omemo.OmemoManager;
@@ -81,6 +83,7 @@ import org.jivesoftware.smackx.omemo.internal.OmemoCachedDeviceList;
 import org.jivesoftware.smackx.omemo.internal.OmemoDevice;
 import org.jivesoftware.smackx.omemo.trust.OmemoFingerprint;
 import org.jivesoftware.smackx.pubsub.PubSubException;
+
 import org.jxmpp.jid.BareJid;
 import org.jxmpp.jid.DomainBareJid;
 import org.jxmpp.jid.EntityBareJid;
@@ -197,38 +200,38 @@ public class CryptoFragment extends BaseFragment
         menuItem.setChecked(true);
 
         switch (menuItem.getItemId()) {
-            case R.id.crypto_choice:
-                Boolean isOmemoSupported = omemoCapable.get(mDescriptor);
-                if (isOmemoSupported == null)
-                    isOmemoSupported = false;
-                mOmemo.setEnabled(isOmemoSupported);
-                mOmemo.getIcon().setAlpha(isOmemoSupported ? 255 : 80);
+        case R.id.crypto_choice:
+            Boolean isOmemoSupported = omemoCapable.get(mDescriptor);
+            if (isOmemoSupported == null)
+                isOmemoSupported = false;
+            mOmemo.setEnabled(isOmemoSupported);
+            mOmemo.getIcon().setAlpha(isOmemoSupported ? 255 : 80);
 
-                // sync button check to current chatType
-                if (activeChat != null) {
-                    MenuItem mItem = checkCryptoButton(activeChat.getChatType());
-                    mItem.setChecked(true);
-                }
-                return true;
+            // sync button check to current chatType
+            if (activeChat != null) {
+                MenuItem mItem = checkCryptoButton(activeChat.getChatType());
+                mItem.setChecked(true);
+            }
+            return true;
 
-            case R.id.encryption_none:
-                if (mDescriptor instanceof Contact)
-                    mChatType = ChatFragment.MSGTYPE_NORMAL;
-                else
-                    mChatType = ChatFragment.MSGTYPE_MUC_NORMAL;
-                hasChange = true;
-                doHandleOmemoPressed(false);
-                break;
+        case R.id.encryption_none:
+            if (mDescriptor instanceof Contact)
+                mChatType = ChatFragment.MSGTYPE_NORMAL;
+            else
+                mChatType = ChatFragment.MSGTYPE_MUC_NORMAL;
+            hasChange = true;
+            doHandleOmemoPressed(false);
+            break;
 
-            case R.id.encryption_omemo:
-                if (!activeChat.isOmemoChat())
-                    mChatType = MSGTYPE_OMEMO;
-                hasChange = true;
-                doHandleOmemoPressed(true);
-                break;
+        case R.id.encryption_omemo:
+            if (!activeChat.isOmemoChat())
+                mChatType = MSGTYPE_OMEMO;
+            hasChange = true;
+            doHandleOmemoPressed(true);
+            break;
 
-            default:
-                break;
+        default:
+            break;
         }
 
         if (hasChange) {
@@ -253,16 +256,16 @@ public class CryptoFragment extends BaseFragment
     private MenuItem checkCryptoButton(int chatType) {
         MenuItem mItem;
         switch (chatType) {
-            case ChatFragment.MSGTYPE_OMEMO:
-            case ChatFragment.MSGTYPE_OMEMO_UA:
-            case ChatFragment.MSGTYPE_OMEMO_UT:
-                mItem = mOmemo;
-                break;
+        case ChatFragment.MSGTYPE_OMEMO:
+        case ChatFragment.MSGTYPE_OMEMO_UA:
+        case ChatFragment.MSGTYPE_OMEMO_UT:
+            mItem = mOmemo;
+            break;
 
-            case ChatFragment.MSGTYPE_NORMAL:
-            case ChatFragment.MSGTYPE_MUC_NORMAL:
-            default:
-                mItem = mNone;
+        case ChatFragment.MSGTYPE_NORMAL:
+        case ChatFragment.MSGTYPE_MUC_NORMAL:
+        default:
+            mItem = mNone;
         }
         return mItem;
     }
@@ -290,28 +293,32 @@ public class CryptoFragment extends BaseFragment
             try {
                 // mOmemoManager.requestDeviceListUpdateFor(bareJid);
                 fingerPrints = mOmemoManager.getActiveFingerprints(bareJid);
-            } catch (CorruptedOmemoKeyException | CannotEstablishOmemoSessionException |
-                     SmackException.NotConnectedException | SmackException.NotLoggedInException | InterruptedException |
-                     SmackException.NoResponseException | IllegalArgumentException | IOException e) {
+            }
+            catch (CorruptedOmemoKeyException | CannotEstablishOmemoSessionException |
+                   SmackException.NotConnectedException | SmackException.NotLoggedInException | InterruptedException |
+                   SmackException.NoResponseException | IllegalArgumentException | IOException e) {
                 // IllegalArgumentException is throw when IdentityKeyPair is null
                 Timber.w("Fetching active fingerPrints has failed: %s", e.getMessage());
             }
 
             try {
                 mOmemoManager.encrypt(bareJid, "Hi buddy!");
-            } catch (UndecidedOmemoIdentityException e) {
+            }
+            catch (UndecidedOmemoIdentityException e) {
                 Set<OmemoDevice> omemoDevices = e.getUndecidedDevices();
                 Timber.w("There are undecided Omemo devices: %s", omemoDevices);
                 startActivity(OmemoAuthenticateDialog.createIntent(mContext, mOmemoManager, omemoDevices, this));
                 allTrusted = false;
-            } catch (InterruptedException | SmackException.NoResponseException | CryptoFailedException
-                     | SmackException.NotConnectedException | SmackException.NotLoggedInException e) {
+            }
+            catch (InterruptedException | SmackException.NoResponseException | CryptoFailedException
+                   | SmackException.NotConnectedException | SmackException.NotLoggedInException e) {
                 mChatType = ChatFragment.MSGTYPE_MUC_NORMAL;
                 activeChat.addMessage(mEntity, new Date(), ChatMessage.MESSAGE_ERROR, IMessage.ENCODE_PLAIN,
                         getString(R.string.crypto_msg_omemo_session_setup_failed, e.getMessage()));
                 Timber.i("OMEMO changes mChatType to: %s", mChatType);
                 return;
-            } catch (Exception e) { // catch any non-advertised exception
+            }
+            catch (Exception e) { // catch any non-advertised exception
                 Timber.w("UndecidedOmemoIdentity check failed: %s", e.getMessage());
                 mChatType = ChatFragment.MSGTYPE_MUC_NORMAL;
                 activeChat.addMessage(mEntity, new Date(), ChatMessage.MESSAGE_ERROR, IMessage.ENCODE_PLAIN,
@@ -355,19 +362,22 @@ public class CryptoFragment extends BaseFragment
 
             try {
                 mOmemoManager.encrypt(mMultiUserChat, "Hi everybody!");
-            } catch (UndecidedOmemoIdentityException e) {
+            }
+            catch (UndecidedOmemoIdentityException e) {
                 Set<OmemoDevice> omemoDevices = e.getUndecidedDevices();
                 Timber.w("There are undecided Omemo devices: %s", omemoDevices);
                 startActivity(OmemoAuthenticateDialog.createIntent(mContext, mOmemoManager, omemoDevices, this));
                 allTrusted = false;
-            } catch (NoOmemoSupportException | InterruptedException | SmackException.NoResponseException
-                     | XMPPException.XMPPErrorException | CryptoFailedException
-                     | SmackException.NotConnectedException | SmackException.NotLoggedInException e) {
+            }
+            catch (NoOmemoSupportException | InterruptedException | SmackException.NoResponseException
+                   | XMPPException.XMPPErrorException | CryptoFailedException
+                   | SmackException.NotConnectedException | SmackException.NotLoggedInException e) {
                 mChatType = ChatFragment.MSGTYPE_MUC_NORMAL;
                 activeChat.addMessage(mEntity, new Date(), ChatMessage.MESSAGE_ERROR, IMessage.ENCODE_PLAIN,
                         getString(R.string.crypto_msg_omemo_session_setup_failed, e.getMessage()));
                 return;
-            } catch (Exception e) { // catch any non-advertised exception
+            }
+            catch (Exception e) { // catch any non-advertised exception
                 Timber.w("UndecidedOmemoIdentity check failed: %s", e.getMessage());
                 mChatType = ChatFragment.MSGTYPE_MUC_NORMAL;
                 activeChat.addMessage(mEntity, new Date(), ChatMessage.MESSAGE_ERROR, IMessage.ENCODE_PLAIN,
@@ -409,14 +419,17 @@ public class CryptoFragment extends BaseFragment
                         fingerPrint = mOmemoManager.getFingerprint(recipientDevice);
                         allTrusted = mOmemoManager.isTrustedOmemoIdentity(recipientDevice, fingerPrint)
                                 && allTrusted;
-                    } catch (CorruptedOmemoKeyException | CannotEstablishOmemoSessionException e1) {
+                    }
+                    catch (CorruptedOmemoKeyException | CannotEstablishOmemoSessionException e1) {
                         Timber.w("AllTrusted check exception: %s", e1.getMessage());
-                    } catch (SmackException.NotLoggedInException | SmackException.NotConnectedException
-                             | SmackException.NoResponseException | InterruptedException | IOException e1) {
+                    }
+                    catch (SmackException.NotLoggedInException | SmackException.NotConnectedException
+                           | SmackException.NoResponseException | InterruptedException | IOException e1) {
                         e1.printStackTrace();
                     }
                 }
-            } catch (IOException ex) {
+            }
+            catch (IOException ex) {
                 Timber.w("IOException: %s", ex.getMessage());
             }
         }
@@ -436,13 +449,15 @@ public class CryptoFragment extends BaseFragment
                 && ChatRoomMemberPresenceChangeEvent.MEMBER_JOINED.equals(evt.getEventType())) {
             try {
                 mOmemoManager.encrypt(mMultiUserChat, "Hi everybody!");
-            } catch (UndecidedOmemoIdentityException e) {
+            }
+            catch (UndecidedOmemoIdentityException e) {
                 Set<OmemoDevice> omemoDevices = e.getUndecidedDevices();
                 Timber.w("There are undecided Omemo devices: %s", omemoDevices);
                 startActivity(OmemoAuthenticateDialog.createIntent(mContext, mOmemoManager, omemoDevices, this));
-            } catch (NoOmemoSupportException | InterruptedException | SmackException.NoResponseException
-                     | XMPPException.XMPPErrorException | CryptoFailedException | IOException
-                     | SmackException.NotConnectedException | SmackException.NotLoggedInException e) {
+            }
+            catch (NoOmemoSupportException | InterruptedException | SmackException.NoResponseException
+                   | XMPPException.XMPPErrorException | CryptoFailedException | IOException
+                   | SmackException.NotConnectedException | SmackException.NotLoggedInException e) {
                 Timber.w("UndecidedOmemoIdentity check failed: %s", e.getMessage());
             }
         }
@@ -557,28 +572,28 @@ public class CryptoFragment extends BaseFragment
         mChatType = chatType;
 
         switch (chatType) {
-            case ChatFragment.MSGTYPE_OMEMO:
-                iconId = R.drawable.crypto_omemo_verified;
-                tipKey = R.string.omemo_menu_authenticated;
-                break;
-            case ChatFragment.MSGTYPE_OMEMO_UA:
-                iconId = R.drawable.crypto_omemo_unverified;
-                tipKey = R.string.omemo_menu_unauthenticated;
-                break;
-            case ChatFragment.MSGTYPE_OMEMO_UT:
-                iconId = R.drawable.crypto_omemo_untrusted;
-                tipKey = R.string.omemo_menu_untrusted;
-                break;
+        case ChatFragment.MSGTYPE_OMEMO:
+            iconId = R.drawable.crypto_omemo_verified;
+            tipKey = R.string.omemo_menu_authenticated;
+            break;
+        case ChatFragment.MSGTYPE_OMEMO_UA:
+            iconId = R.drawable.crypto_omemo_unverified;
+            tipKey = R.string.omemo_menu_unauthenticated;
+            break;
+        case ChatFragment.MSGTYPE_OMEMO_UT:
+            iconId = R.drawable.crypto_omemo_untrusted;
+            tipKey = R.string.omemo_menu_untrusted;
+            break;
 
-            case MSGTYPE_NORMAL:
-            case MSGTYPE_MUC_NORMAL:
-                iconId = R.drawable.crypto_unsecure;
-                tipKey = R.string.menu_crypto_plain_text;
-                break;
+        case MSGTYPE_NORMAL:
+        case MSGTYPE_MUC_NORMAL:
+            iconId = R.drawable.crypto_unsecure;
+            tipKey = R.string.menu_crypto_plain_text;
+            break;
 
-            // return if it is in none of above
-            default:
-                return;
+        // return if it is in none of above
+        default:
+            return;
         }
         runOnUiThread(() -> {
             mCryptoChoice.setIcon(iconId);
@@ -647,10 +662,12 @@ public class CryptoFragment extends BaseFragment
                         // String usrID = ((Contact) mDescriptor).getAddress();
                         // entityCan = ((SQLiteOmemoStore) mOmemoStore).getContactNumTrustedKeys(usrID) > 0;
                     }
-                } catch (XMPPException.XMPPErrorException | SmackException.NoResponseException
-                         | InterruptedException | SmackException.NotConnectedException | IOException e) {
+                }
+                catch (XMPPException.XMPPErrorException | SmackException.NoResponseException
+                       | InterruptedException | SmackException.NotConnectedException | IOException e) {
                     Timber.w("Exception in omemo support checking: %s", e.getMessage());
-                } catch (PubSubException.NotALeafNodeException e) {
+                }
+                catch (PubSubException.NotALeafNodeException e) {
                     Timber.w("Exception in checking entity omemo support: %s", e.getMessage());
                 }
 
@@ -766,17 +783,17 @@ public class CryptoFragment extends BaseFragment
         }
         runOnUiThread(() -> {
             switch (chatType) {
-                case MSGTYPE_NORMAL:
-                case MSGTYPE_MUC_NORMAL:
-                    onMenuItemSelected(mNone);
-                    break;
+            case MSGTYPE_NORMAL:
+            case MSGTYPE_MUC_NORMAL:
+                onMenuItemSelected(mNone);
+                break;
 
-                case MSGTYPE_OMEMO:
-                    // Do not emulate Omemo button press if mOmemoManager is null
-                    if (mOmemoManager != null) {
-                        onMenuItemSelected(mOmemo);
-                    }
-                    break;
+            case MSGTYPE_OMEMO:
+                // Do not emulate Omemo button press if mOmemoManager is null
+                if (mOmemoManager != null) {
+                    onMenuItemSelected(mOmemo);
+                }
+                break;
             }
         });
     }

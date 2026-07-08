@@ -5,21 +5,21 @@
  */
 package net.java.sip.communicator.service.protocol;
 
+import net.java.sip.communicator.impl.protocol.jabber.MessageJabberImpl;
+
 /**
  * Provides functionality for correcting instant messages.
  *
  * @author Ivan Vergiliev
  */
-public interface OperationSetMessageCorrection extends OperationSetBasicInstantMessaging
-{
+public interface OperationSetMessageCorrection extends OperationSetBasicInstantMessaging {
     /**
      * Replaces the message with ID <code>correctedMessageUID</code> sent to the contact <code>to</code>
      * with the message <code>message</code>
      *
      * @param to The contact to send the message to.
-     * @param resource The ContactResource to send the message to.
      * @param message The new message.
-     * @param correctedMessageUID The ID of the message being replaced.
+     * @param correctionUid The ID of the message being replaced.
      */
-    public void correctMessage(Contact to, ContactResource resource, IMessage message, String correctedMessageUID);
+    void correctMessage(Contact to, MessageJabberImpl message, String correctionUid);
 }

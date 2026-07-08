@@ -48,8 +48,8 @@ android {
         applicationId = 'org.atalk.ohos'
         archivesBaseName = 'aTalk'
 
-        versionCode 30000
-        versionName "00.30.000"
+        versionCode 100000
+        versionName "01.00.000"
 
         minSdkVersion rootProject.minSdk
         targetSdkVersion rootProject.compileSdk
@@ -66,7 +66,7 @@ android {
         ndk {
             // Specifies the ABI configurations of your native libraries
             // Gradle should build and package with your APK.
-            abiFilters 'x86', 'x86_64', 'armeabi-v7a', 'arm64-v8a'
+            abiFilters 'x86_64', 'arm64-v8a'
         }
     }
     ndkVersion = '28.2.13676358'
@@ -105,7 +105,7 @@ android {
             shrinkResources = false
             // too many missing references when enable
             minifyEnabled = false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
 
         debug {
@@ -193,6 +193,7 @@ dependencies {
     // generated files in libs/$(TARGET_ARCH_ABI)/*.so and libs/*.jar
     // implementation fileTree(dir: 'libs', include: ['*.jar'])
 
+    // v1.19.0 required API-37 or later; Do not upgrade as this will need AGP 9.x.x and causes problems.
     implementation 'androidx.core:core-ktx:1.18.0'
 
     implementation 'androidx.activity:activity-ktx:1.13.0'
@@ -203,8 +204,8 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v13:1.0.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.preference:preference-ktx:1.2.1'
-    implementation 'androidx.media3:media3-exoplayer:1.10.0'
-    implementation 'androidx.media3:media3-ui:1.10.0'
+    implementation 'androidx.media3:media3-exoplayer:1.10.1'
+    implementation 'androidx.media3:media3-ui:1.10.1'
     // implementation "androidx.webkit:webkit:1.14.0"
 
     implementation('com.jakewharton.timber:timber:5.0.1') {
@@ -218,11 +219,10 @@ dependencies {
     implementation 'com.github.evgenyneu:js-evaluator-for-android:v6.0.0'
 
     implementation 'com.github.yalantis:ucrop:2.2.10'
-    implementation 'com.google.android.material:material:1.13.0'
+    implementation 'com.google.android.material:material:1.14.0'
 
-    implementation 'com.googlecode.libphonenumber:libphonenumber:9.0.29'
     implementation 'com.splitwise:tokenautocomplete:4.0.0-beta05'
-    implementation 'com.squareup.okhttp3:okhttp:5.3.2'
+    implementation 'com.squareup.okhttp3:okhttp:5.4.0'
     implementation 'de.cketti.library.changelog:ckchangelog:1.2.2'
     // implementation 'com.github.cketti:ckchangelog-core:2.0.0-beta02'
 
@@ -233,8 +233,12 @@ dependencies {
     // or its super classes (declaration of 'org.apache.commons.codec.binary.BinaryCodec' appears in /system/framework/org.apache.http.legacy.jar)
     implementation 'commons-codec:commons-codec:1.22.0'
     implementation 'org.apache.commons:commons-text:1.15.0'
-    implementation 'org.apache.james:apache-mime4j-core:0.8.13'
+    implementation 'org.apache.james:apache-mime4j-core:0.8.14'
     implementation 'org.bitlet:weupnp:0.1.4'
+
+    // Do classRename sdes4j:1.1.5 import 'org.apache.commons.codec.binary.Base64' to '.binary.ApacheBase64'
+    // commons-codec:1.22.0 now provide Base64 class directly.
+    implementation 'ch.imvs:sdes4j:1.1.5'
 
     // bcprov-jdk15on-1.65 works with Android. From bcprov-jdk15on-1.66, Java 16 (major version 59) is required which Android Studio does not support.
     // Can also use jdk15to18: bcprov-jdk15to18-167.jar - not working on aTalk as conflict with others e.g. zrtp4j, smack-openpgp
@@ -291,6 +295,7 @@ dependencies {
     implementation 'org.jxmpp:jxmpp-jid:1.1.0'
     implementation 'org.osgi:osgi.core:8.0.0'
     implementation 'org.whispersystems:signal-protocol-java:2.8.1'
+    implementation 'com.github.stokito:libretranslate-java:v1.2.2'
     implementation 'org.osmdroid:osmdroid-android:6.1.20'
 
     /*
@@ -366,19 +371,6 @@ dependencies {
         classDelete 'org.ice4j.stack.NetAccessManager**'
     }
 
-    // implementation 'ch.imvs:sdes4j:1.1.5' - not compatible due to java library use
-    // libraries from maven repository but need to change Base64 to ApacheBase64 to avoid conflict with android
-    // declaration of 'org.apache.commons.codec.binary.Base64' appears in /system/framework/org.apache.http.legacy.boot.jar
-    implementation jarjar.repackage("sde4j-1.1.4.jar") {
-        from('ch.imvs:sdes4j:1.1.4') {
-            transitive = false
-        }
-        // destinationDir new File("${projectDir}/libs")
-
-        // v1.1.4 uses binary.Base64
-        classRename 'org.apache.commons.codec.binary.Base64', 'org.apache.commons.codec.binary.ApacheBase64'
-    }
-
     // smack-bosh
     implementation jarjar.repackage("smack-bosh-${smackVersion}.jar") {
         from("org.igniterealtime.smack:smack-bosh:${smackVersion}") {
@@ -394,6 +386,10 @@ dependencies {
         from("org.igniterealtime.smack:smack-experimental:${smackVersion}") {
             transitive = false
         }
+
+        // Add support XEP-0424: Message Retraction
+        classDelete 'org.jivesoftware.smackx.fallback_indication.**'
+        classDelete 'org.jivesoftware.smackx.message_retraction.**'
 
         // Add support for media file sharing
         classDelete 'org.jivesoftware.smackx.httpfileupload.HttpFileUploadManager**'
@@ -472,6 +468,7 @@ dependencies {
         classDelete 'org.jivesoftware.smackx.pubsub.PubSubManager**'
         // Update RetractItem implementation to confirm to 1.30.0 (2025-11-11)
         classDelete 'org.jivesoftware.smackx.pubsub.RetractItem**'
+        classDelete 'org.jivesoftware.smackx.pubsub.provider.RetractEventProvider**'
 
         // Custom smack classes that handle the XEP-0264 <File/> element
         classDelete 'org.jivesoftware.smackx.si.packet.StreamInitiation**'
@@ -538,7 +535,7 @@ dependencies {
 }
 
 /*
- * This task downloads lib sources for vpx, opus, speex, and bcg729 per the specified version in the scripts.
+ * This task downloads lib sources for opus, and speex/ogg per the specified version in the scripts.
  * Build of the dynamic libraries *.so for vpx, openssl, ffmpeg and x264 etc are performed by android NDKBuild.
  * This task must be executed at least once prior to aTalk apk build process.
  * It is also being executed in buildJniStaticLibs(), and this task can be omitted.

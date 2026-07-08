@@ -14,8 +14,8 @@ import android.widget.LinearLayout;
 
 import java.awt.Dimension;
 
-import org.atalk.impl.neomedia.codec.video.AndroidDecoder;
 import org.atalk.ohos.aTalkApp;
+import org.atalk.impl.neomedia.codec.video.AndroidDecoder;
 
 import timber.log.Timber;
 

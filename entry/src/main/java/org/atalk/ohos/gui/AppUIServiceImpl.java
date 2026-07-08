@@ -7,6 +7,11 @@ package org.atalk.ohos.gui;
 
 import android.graphics.Point;
 
+import java.awt.Dimension;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+
 import net.java.sip.communicator.service.contactlist.MetaContact;
 import net.java.sip.communicator.service.gui.Chat;
 import net.java.sip.communicator.service.gui.Container;
@@ -28,11 +33,6 @@ import org.atalk.ohos.gui.call.CallManager;
 import org.atalk.ohos.gui.chat.ChatPanel;
 import org.atalk.ohos.gui.chat.ChatSessionManager;
 import org.atalk.ohos.gui.chat.conference.ConferenceChatManager;
-
-import java.awt.Dimension;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * Android <code>UIService</code> stub. Currently used only for supplying the
@@ -490,17 +490,6 @@ public class AppUIServiceImpl implements UIService {
      */
     @Override
     public void startChat(String[] participants) {
-    }
-
-    /**
-     * Starts a new <code>Chat</code> with a specific set of participants.
-     *
-     * @param participants an array of <code>String</code> values specifying the participants to be included into the
-     * newly created <code>Chat</code>
-     * @param isSmsEnabled whether sms option should be enabled if possible
-     */
-    @Override
-    public void startChat(String[] participants, boolean isSmsEnabled) {
     }
 
     /**

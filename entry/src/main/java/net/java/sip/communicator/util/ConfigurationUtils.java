@@ -37,7 +37,6 @@ import net.java.sip.communicator.service.protocol.ProtocolProviderFactory;
 import net.java.sip.communicator.service.protocol.ProtocolProviderService;
 import net.java.sip.communicator.util.account.AccountUtils;
 
-import org.apache.commons.lang3.StringUtils;
 import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.chat.ChatFragment;
@@ -51,6 +50,8 @@ import org.atalk.persistance.DatabaseBackend;
 import org.atalk.service.configuration.ConfigurationService;
 import org.atalk.service.neomedia.codec.EncodingConfiguration;
 import org.atalk.util.MediaType;
+
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.osgi.framework.ServiceReference;
@@ -65,6 +66,8 @@ import org.jivesoftware.smackx.receipts.DeliveryReceiptManager;
 
 import org.jxmpp.jid.Jid;
 
+import space.dynomake.libretranslate.ApiProviders;
+import space.dynomake.libretranslate.Translator;
 import timber.log.Timber;
 
 /**
@@ -101,6 +104,12 @@ public class ConfigurationUtils {
     private static String mWebPage;
 
     /**
+     * The Translation Server url.
+     */
+    private static String mTranslateServer;
+    private static String mTranslateServerApikey = null;
+
+    /**
      * Indicates if the call panel is shown.
      */
     private static boolean isCallPanelShown = true;
@@ -126,7 +135,7 @@ public class ConfigurationUtils {
     private static boolean isAutoStartOnBoot = true;
 
     /**
-     * Indicates if TTS is enable.
+     * Indicates if TTS is enabled.
      */
     private static boolean isTtsEnable = false;
 
@@ -401,16 +410,6 @@ public class ConfigurationUtils {
             = "gui.contactlist.HIDE_ADDRESS_IN_CALL_HISTORY_TOOLTIP_ENABLED";
 
     /**
-     * Texts to notify that sms has been sent or sms has been received.
-     */
-    private static boolean isSmsNotifyTextDisabled = false;
-
-    /**
-     * To disable displaying sms delivered message or sms received.
-     */
-    private static final String SMS_MSG_NOTIFY_TEXT_DISABLED_PROP = "gui.contactlist.SMS_MSG_NOTIFY_TEXT_DISABLED_PROP";
-
-    /**
      * Whether domain will be shown in receive call dialog.
      */
     private static boolean isHideDomainInReceivedCallDialogEnabled = false;
@@ -466,18 +465,10 @@ public class ConfigurationUtils {
     public static final String pTTSDelay = "gui.TTS_DELAY";
     private static final String pTypingNotification = "gui.SEND_TYPING_NOTIFICATIONS_ENABLED";
     public static final String pWebPage = "gui.WEB_PAGE_ACCESS";
+    public static final String pTranslateUrl = "gui.TRANSLATE_URL";
+    public static final String pTranslateApikey = "gui.TRANSLATE_APIKEY";
     private static final String pWindowTransparency = "gui.WINDOW_TRANSPARENCY";
     private static final String pHeadsUpEnable = P_KEY_HEADS_UP_ENABLE;
-
-    /**
-     * Indicates if phone numbers should be normalized before dialed.
-     */
-    private static boolean isNormalizePhoneNumber;
-
-    /**
-     * Indicates if a string containing alphabetical characters might be considered as a phone number.
-     */
-    private static boolean acceptPhoneNumberWithAlphaChars;
 
     /**
      * The name of the single interface property.
@@ -531,6 +522,9 @@ public class ConfigurationUtils {
                 || mWebPage.equals(aTalkApp.getResString(R.string.settings_webView_summary_old))) {
             mWebPage = aTalkApp.getResString(R.string.settings_webView_summary);
         }
+
+        mTranslateServer = mConfigService.getString(pTranslateUrl);
+        mTranslateServerApikey = mConfigService.getString(pTranslateApikey);
 
         // Load the "auPopupNewMessage" property.
         String autoPopup = mConfigService.getString(pAutoPopupNewMessage);
@@ -817,12 +811,7 @@ public class ConfigurationUtils {
 
         isChatRoomConfigDisabled = mConfigService.getBoolean(CHAT_ROOM_CONFIG_DISABLED_PROP, isChatRoomConfigDisabled);
 
-        isNormalizePhoneNumber = mConfigService.getBoolean("gui.NORMALIZE_PHONE_NUMBER", true);
-
         alerterEnabled = mConfigService.getBoolean(ALERTER_ENABLED_PROP, true);
-
-        // Load the "ACCEPT_PHONE_NUMBER_WITH_ALPHA_CHARS" property.
-        acceptPhoneNumberWithAlphaChars = mConfigService.getBoolean("gui.ACCEPT_PHONE_NUMBER_WITH_ALPHA_CHARS", true);
 
         isHideAddressInCallHistoryTooltipEnabled = mConfigService.getBoolean(HIDE_ADDR_IN_CALL_HISTORY_TOOLTIP_PROPERTY,
                 isHideAddressInCallHistoryTooltipEnabled);
@@ -837,7 +826,6 @@ public class ConfigurationUtils {
 
         hideExtendedAwayStatus = mConfigService.getBoolean(pHideExtendedAwayStatus, hideExtendedAwayStatus);
 
-        isSmsNotifyTextDisabled = mConfigService.getBoolean(SMS_MSG_NOTIFY_TEXT_DISABLED_PROP, isSmsNotifyTextDisabled);
         showMasterPasswordWarning = mConfigService.getBoolean(MASTER_PASS_WARNING_PROP, true);
 
         // Quite Time settings
@@ -1539,6 +1527,37 @@ public class ConfigurationUtils {
     }
 
     /**
+     * Updates the "translateUrl" property via the <code>ConfigurationService</code>.
+     *
+     * @param url the server url providing the translation service.
+     */
+    public static void setTranslateServerUrl(String url) {
+        String URL = StringUtils.isEmpty(url) ? ApiProviders.API_URL_FEDILAB : url;
+        mConfigService.setProperty(pTranslateUrl, URL);
+        mTranslateServer = URL;
+        Translator.setUrlApi(URL);
+    }
+
+    public static String getTranslateServerUrl() {
+        return StringUtils.isEmpty(mTranslateServer) ? ApiProviders.API_URL_FEDILAB : mTranslateServer;
+    }
+
+    /**
+     * Updates the "translateUrl" property via the <code>ConfigurationService</code>.
+     *
+     * @param apikey the apikey for the server providing the translation service.
+     */
+    public static void setTranslateServerApikey(String apikey) {
+        mConfigService.setProperty(pTranslateApikey, apikey);
+        mTranslateServerApikey = apikey;
+        Translator.setApiKey(apikey);
+    }
+
+    public static String getTranslateServerApikey() {
+        return StringUtils.isEmpty(mTranslateServerApikey) ? null : mTranslateServerApikey;
+    }
+
+    /**
      * Returns the number of messages from chat history that would be shown in the chat window.
      *
      * @return the number of messages from chat history that would be shown in the chat window.
@@ -1591,25 +1610,6 @@ public class ConfigurationUtils {
      */
     public static String getSendFileLastDir() {
         return sendFileLastDir;
-    }
-
-    /**
-     * Returns {@code true} if phone numbers should be normalized, {@code false} otherwise.
-     *
-     * @return {@code true} if phone numbers should be normalized, {@code false} otherwise.
-     */
-    public static boolean isNormalizePhoneNumber() {
-        return isNormalizePhoneNumber;
-    }
-
-    /**
-     * Updates the "NORMALIZE_PHONE_NUMBER" property.
-     *
-     * @param isNormalize indicates to the user interface whether all dialed phone numbers should be normalized
-     */
-    public static void setNormalizePhoneNumber(boolean isNormalize) {
-        isNormalizePhoneNumber = isNormalize;
-        mConfigService.setProperty("gui.NORMALIZE_PHONE_NUMBER", Boolean.toString(isNormalize));
     }
 
     /**
@@ -1722,29 +1722,6 @@ public class ConfigurationUtils {
     }
 
     /**
-     * Returns {@code true} if a string with a alphabetical character might be considered as
-     * a phone number. {@code false} otherwise.
-     *
-     * @return {@code true} if a string with a alphabetical character might be considered as
-     * a phone number. {@code false} otherwise.
-     */
-    public static boolean acceptPhoneNumberWithAlphaChars() {
-        return acceptPhoneNumberWithAlphaChars;
-    }
-
-    /**
-     * Updates the "ACCEPT_PHONE_NUMBER_WITH_CHARS" property.
-     *
-     * @param accept indicates to the user interface whether a string with alphabetical characters might be
-     * accepted as a phone number.
-     */
-    public static void setAcceptPhoneNumberWithAlphaChars(boolean accept) {
-        acceptPhoneNumberWithAlphaChars = accept;
-        mConfigService.setProperty("gui.ACCEPT_PHONE_NUMBER_WITH_ALPHA_CHARS",
-                Boolean.toString(acceptPhoneNumberWithAlphaChars));
-    }
-
-    /**
      * Returns {@code true} if status changed should be shown in chat history area, {@code false} otherwise.
      *
      * @return {@code true} if status changed should be shown in chat history area, {@code false} otherwise.
@@ -1814,15 +1791,6 @@ public class ConfigurationUtils {
      */
     public static boolean isHideAddressInCallHistoryTooltipEnabled() {
         return isHideAddressInCallHistoryTooltipEnabled;
-    }
-
-    /**
-     * Whether to display or not the text notifying that a message is a incoming or outgoing sms message.
-     *
-     * @return whether to display the text notifying that a message is sms.
-     */
-    public static boolean isSmsNotifyTextDisabled() {
-        return isSmsNotifyTextDisabled;
     }
 
     /**

@@ -24,23 +24,21 @@ import java.util.Set;
 import java.util.Vector;
 import java.util.function.Consumer;
 
+import net.java.sip.communicator.impl.msghistory.MessageHistoryActivator;
+import net.java.sip.communicator.impl.msghistory.MessageHistoryServiceImpl;
 import net.java.sip.communicator.impl.muc.MUCActivator;
 import net.java.sip.communicator.service.gui.Chat;
-import net.java.sip.communicator.service.protocol.AbstractChatRoom;
 import net.java.sip.communicator.service.protocol.ChatRoom;
 import net.java.sip.communicator.service.protocol.ChatRoomConfigurationForm;
 import net.java.sip.communicator.service.protocol.ChatRoomMember;
 import net.java.sip.communicator.service.protocol.ChatRoomMemberRole;
-import net.java.sip.communicator.service.protocol.ConferenceDescription;
 import net.java.sip.communicator.service.protocol.Contact;
 import net.java.sip.communicator.service.protocol.IMessage;
 import net.java.sip.communicator.service.protocol.OperationFailedException;
-import net.java.sip.communicator.service.protocol.OperationSetBasicTelephony;
 import net.java.sip.communicator.service.protocol.OperationSetMultiUserChat;
 import net.java.sip.communicator.service.protocol.OperationSetPersistentPresence;
 import net.java.sip.communicator.service.protocol.PresenceStatus;
 import net.java.sip.communicator.service.protocol.ProtocolProviderService;
-import net.java.sip.communicator.service.protocol.event.ChatRoomConferencePublishedEvent;
 import net.java.sip.communicator.service.protocol.event.ChatRoomLocalUserRoleChangeEvent;
 import net.java.sip.communicator.service.protocol.event.ChatRoomLocalUserRoleListener;
 import net.java.sip.communicator.service.protocol.event.ChatRoomMemberPresenceChangeEvent;
@@ -61,8 +59,6 @@ import net.java.sip.communicator.service.protocol.event.MessageDeliveryFailedEve
 import net.java.sip.communicator.service.protocol.jabberconstants.JabberStatusEnum;
 import net.java.sip.communicator.util.ConfigurationUtils;
 
-import org.apache.commons.lang3.StringUtils;
-import org.atalk.crypto.omemo.OmemoAuthenticateDialog;
 import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.AppGUIActivator;
@@ -71,7 +67,11 @@ import org.atalk.ohos.gui.chat.conference.CaptchaDialog;
 import org.atalk.ohos.gui.chat.conference.ConferenceChatManager;
 import org.atalk.ohos.gui.dialogs.DialogActivity;
 import org.atalk.ohos.gui.util.XhtmlUtil;
+import org.atalk.crypto.omemo.OmemoAuthenticateDialog;
 import org.atalk.impl.timberlog.TimberLog;
+
+import org.apache.commons.lang3.StringUtils;
+
 import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.PresenceListener;
 import org.jivesoftware.smack.SmackException;
@@ -91,18 +91,18 @@ import org.jivesoftware.smack.packet.StanzaError;
 import org.jivesoftware.smack.packet.StanzaError.Condition;
 import org.jivesoftware.smack.packet.XmlElement;
 import org.jivesoftware.smack.packet.id.StandardStanzaIdSource;
+
 import org.jivesoftware.smackx.address.packet.MultipleAddresses;
-import org.jivesoftware.smackx.confdesc.ConferenceDescriptionExtension;
-import org.jivesoftware.smackx.confdesc.TransportExtension;
 import org.jivesoftware.smackx.delay.packet.DelayInformation;
-import org.jivesoftware.smackx.jitsimeet.AvatarUrl;
-import org.jivesoftware.smackx.jitsimeet.Email;
-import org.jivesoftware.smackx.jitsimeet.JsonMessageExtension;
-import org.jivesoftware.smackx.jitsimeet.StatsId;
+import org.jivesoftware.smackx.json.packet.JsonMessageExtension;
+import org.jivesoftware.smackx.message_correct.element.MessageCorrectExtension;
+import org.jivesoftware.smackx.message_retraction.MessageRetractionManager;
+import org.jivesoftware.smackx.message_retraction.element.RetractElement;
 import org.jivesoftware.smackx.muc.Affiliate;
 import org.jivesoftware.smackx.muc.InvitationRejectionListener;
 import org.jivesoftware.smackx.muc.MUCAffiliation;
 import org.jivesoftware.smackx.muc.MUCRole;
+import org.jivesoftware.smackx.muc.MucEnterConfiguration;
 import org.jivesoftware.smackx.muc.MultiUserChat;
 import org.jivesoftware.smackx.muc.MultiUserChatException;
 import org.jivesoftware.smackx.muc.MultiUserChatManager;
@@ -118,7 +118,6 @@ import org.jivesoftware.smackx.muc.packet.MUCUser;
 import org.jivesoftware.smackx.nick.packet.Nick;
 import org.jivesoftware.smackx.omemo.OmemoManager;
 import org.jivesoftware.smackx.omemo.OmemoMessage;
-import org.jivesoftware.smackx.omemo.element.OmemoElement;
 import org.jivesoftware.smackx.omemo.exceptions.CryptoFailedException;
 import org.jivesoftware.smackx.omemo.exceptions.NoOmemoSupportException;
 import org.jivesoftware.smackx.omemo.exceptions.UndecidedOmemoIdentityException;
@@ -134,6 +133,7 @@ import org.jivesoftware.smackx.xdata.packet.DataForm;
 import org.jivesoftware.smackx.xhtmlim.XHTMLManager;
 import org.jivesoftware.smackx.xhtmlim.XHTMLText;
 import org.jivesoftware.smackx.xhtmlim.packet.XHTMLExtension;
+
 import org.jxmpp.jid.BareJid;
 import org.jxmpp.jid.EntityBareJid;
 import org.jxmpp.jid.EntityFullJid;
@@ -155,9 +155,9 @@ import timber.log.Timber;
  * @author Hristo Terezov
  * @author Eng Chong Meng
  */
-public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialog.CaptchaDialogListener {
+public class ChatRoomJabberImpl implements ChatRoom, CaptchaDialog.CaptchaDialogListener {
     /**
-     * The multi user chat smack object that we encapsulate in this room.
+     * The multi-user chat smack object that we encapsulate in this room.
      */
     private final MultiUserChat mMultiUserChat;
 
@@ -204,6 +204,8 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
      */
     private final OperationSetMultiUserChatJabberImpl opSetMuc;
 
+    private final MessageHistoryServiceImpl mMHS = MessageHistoryActivator.getMessageHistoryService();
+
     /**
      * The list of members of this chat room EntityFullJid
      */
@@ -243,17 +245,6 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
     private final Consumer<PresenceBuilder> presenceInterceptor = this::presenceIntercept;
 
     /**
-     * The conference which we have announced in the room in our last sent <code>Presence</code> update.
-     */
-    private ConferenceDescription publishedConference = null;
-
-    /**
-     * The <code>ConferenceAnnouncementPacketExtension</code> corresponding to <code>publishedConference</code> which we
-     * add to all our presence updates. This MUST be kept in sync with <code>publishedConference</code>
-     */
-    private ConferenceDescriptionExtension publishedConferenceExt = null;
-
-    /**
      * List of packet extensions we need to add to every outgoing presence we send.
      * Currently used from external components reusing the protocol provider
      * to permanently add extension to the outgoing stanzas.
@@ -264,8 +255,6 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
      * The last <code>Presence</code> packet we sent to the MUC.
      */
     private Presence lastPresenceSent = null;
-
-    private final List<CallJabberImpl> chatRoomConferenceCalls = new ArrayList<>();
 
     /**
      * All <presence/>'s reason will default to REASON_USER_LIST until user own <code>Presence</code> has been received.
@@ -363,38 +352,40 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
     public void onResult(int state) {
         mCaptchaState = state;
         switch (mCaptchaState) {
-            case CaptchaDialog.validated:
-                if (mMultiUserChat.isJoined())
-                    onJoinSuccess();
-                else {
-                    try {
-                        Timber.d("Rejoined chat room after captcha challenge");
-                        // must re-joined immediately, otherwise smack has problem handling room delayed messages
-                        joinAs(mNickName.toString(), mPassword);
-                    } catch (OperationFailedException e) {
-                        Timber.w("Rejoined error: %s", e.getMessage());
-                    }
-                }
-                break;
-
-            case CaptchaDialog.failed:
-                // CaptchaDialog will display the error message, try to rejoin
+        case CaptchaDialog.validated:
+            if (mMultiUserChat.isJoined())
+                onJoinSuccess();
+            else {
                 try {
+                    Timber.d("Rejoined chat room after captcha challenge");
+                    // must re-joined immediately, otherwise smack has problem handling room delayed messages
                     joinAs(mNickName.toString(), mPassword);
-                } catch (OperationFailedException e) {
+                }
+                catch (OperationFailedException e) {
                     Timber.w("Rejoined error: %s", e.getMessage());
                 }
-                break;
+            }
+            break;
 
-            case CaptchaDialog.cancel:
-                // Show in chat instead of launching an alert dialog
-                String errMsg = aTalkApp.getResString(R.string.chatroom_join_failed, mNickName, getName());
-                addMessage(errMsg, ChatMessage.MESSAGE_ERROR);
-                Timber.d("User cancel: %s", errMsg);
-                // MUCActivator.getAlertUIService().showAlertDialog(aTalkApp.getResString(R.string.service_gui_ERROR), errMsg);
-                break;
-            default:
-                break;
+        case CaptchaDialog.failed:
+            // CaptchaDialog will display the error message, try to rejoin
+            try {
+                joinAs(mNickName.toString(), mPassword);
+            }
+            catch (OperationFailedException e) {
+                Timber.w("Rejoined error: %s", e.getMessage());
+            }
+            break;
+
+        case CaptchaDialog.cancel:
+            // Show in chat instead of launching an alert dialog
+            String errMsg = aTalkApp.getResString(R.string.chatroom_join_failed, mNickName, getName());
+            addMessage(errMsg, ChatMessage.MESSAGE_ERROR);
+            Timber.d("User cancel: %s", errMsg);
+            // MUCActivator.getAlertUIService().showAlertDialog(aTalkApp.getResString(R.string.service_gui_ERROR), errMsg);
+            break;
+        default:
+            break;
         }
     }
 
@@ -426,6 +417,7 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
      * @param listener the <code>ChatRoomChangeListener</code> that is to be registered for
      * <code>ChatRoomChangeEvent</code>-s.
      */
+    @Override
     public void addPropertyChangeListener(ChatRoomPropertyChangeListener listener) {
         synchronized (propertyChangeListeners) {
             if (!propertyChangeListeners.contains(listener))
@@ -438,6 +430,7 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
      *
      * @param listener the <code>ChatRoomChangeListener</code> to remove.
      */
+    @Override
     public void removePropertyChangeListener(ChatRoomPropertyChangeListener listener) {
         synchronized (propertyChangeListeners) {
             propertyChangeListeners.remove(listener);
@@ -451,6 +444,7 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
      * @param listener the <code>ChatRoomMemberPropertyChangeListener</code> that is to be registered for
      * <code>ChatRoomMemberPropertyChangeEvent</code>s.
      */
+    @Override
     public void addMemberPropertyChangeListener(ChatRoomMemberPropertyChangeListener listener) {
         synchronized (memberPropChangeListeners) {
             if (!memberPropChangeListeners.contains(listener))
@@ -464,6 +458,7 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
      *
      * @param listener the <code>ChatRoomMemberPropertyChangeListener</code> to remove.
      */
+    @Override
     public void removeMemberPropertyChangeListener(ChatRoomMemberPropertyChangeListener listener) {
         synchronized (memberPropChangeListeners) {
             memberPropChangeListeners.remove(listener);
@@ -477,6 +472,7 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
      * @param listener a <code>MessageListener</code> that would be notified every time a new message is received
      * on this chat room.
      */
+    @Override
     public void addMessageListener(ChatRoomMessageListener listener) {
         synchronized (messageListeners) {
             if (!messageListeners.contains(listener))
@@ -489,6 +485,7 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
      *
      * @param listener the <code>MessageListener</code> to remove from this room
      */
+    @Override
     public void removeMessageListener(ChatRoomMessageListener listener) {
         synchronized (messageListeners) {
             messageListeners.remove(listener);
@@ -501,6 +498,7 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
      *
      * @param listener a participant status listener.
      */
+    @Override
     public void addMemberPresenceListener(ChatRoomMemberPresenceListener listener) {
         synchronized (memberListeners) {
             if (!memberListeners.contains(listener))
@@ -514,6 +512,7 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
      *
      * @param listener a participant status listener.
      */
+    @Override
     public void removeMemberPresenceListener(ChatRoomMemberPresenceListener listener) {
         synchronized (memberListeners) {
             memberListeners.remove(listener);
@@ -521,37 +520,18 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
     }
 
     /**
-     * Adds a <code>CallJabberImpl</code> instance to the list of conference calls associated with the room.
-     *
-     * @param call the call to add
-     */
-    public synchronized void addConferenceCall(CallJabberImpl call) {
-        if (!chatRoomConferenceCalls.contains(call))
-            chatRoomConferenceCalls.add(call);
-    }
-
-    /**
-     * Removes a <code>CallJabberImpl</code> instance from the list of conference calls associated with the room.
-     *
-     * @param call the call to remove.
-     */
-    public synchronized void removeConferenceCall(CallJabberImpl call) {
-        chatRoomConferenceCalls.remove(call);
-    }
-
-    /**
      * Create a Message instance for sending arbitrary MIME-encoding content.
      *
      * @param content message content value
      * @param encType See IMessage for definition of encType e.g. Encryption, encode & remoteOnly
-     * @param subject a <code>String</code> subject or <code>null</code> for now subject.
+     * @param subject a <code>String</code> subject or <code>null</code> for new subject.
      * @param msgId The message Id when provided is used in sending the message.
      *
      * @return the newly created message.
      */
     @Override
-    public IMessage createMessage(String content, int encType, String subject, String msgId) {
-        return new MessageJabberImpl(content, encType, subject, msgId);
+    public MessageJabberImpl createMessage(String content, int encType, String subject, String msgId) {
+        return new MessageJabberImpl(content, encType, subject, msgId, false);
     }
 
     /**
@@ -562,8 +542,9 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
      *
      * @return IMessage the newly created message
      */
-    public IMessage createMessage(String messageText) {
-        return new MessageJabberImpl(messageText, IMessage.ENCODE_PLAIN, "", null);
+    @Override
+    public MessageJabberImpl createMessage(String messageText) {
+        return new MessageJabberImpl(messageText, IMessage.ENCODE_PLAIN, null, null, false);
     }
 
     /**
@@ -571,6 +552,7 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
      *
      * @return a List of <code>Member</code> corresponding to all room members.
      */
+    @Override
     public List<ChatRoomMember> getMembers() {
         synchronized (members) {
             return new LinkedList<>(members.values());
@@ -582,6 +564,7 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
      *
      * @return int the number of <code>Contact</code>s, currently participating in this room.
      */
+    @Override
     public int getMembersCount() {
         return mMultiUserChat.getOccupantsCount();
     }
@@ -591,6 +574,7 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
      *
      * @return a <code>String</code> containing the name of this <code>ChatRoom</code>.
      */
+    @Override
     public String getName() {
         return mMultiUserChat.getRoom().toString();
     }
@@ -600,6 +584,7 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
      *
      * @return a <code>EntityBareJid</code> containing the identifier of this <code>ChatRoom</code>.
      */
+    @Override
     public EntityBareJid getIdentifier() {
         return mMultiUserChat.getRoom();
     }
@@ -609,6 +594,7 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
      *
      * @return the nickname currently being used by the local user in the context of the local chat room.
      */
+    @Override
     public Resourcepart getUserNickname() {
         return mMultiUserChat.getNickname();
     }
@@ -631,7 +617,8 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
         Jid jid;
         try {
             jid = JidCreate.fullFrom(getIdentifier(), Resourcepart.from(nickname));
-        } catch (XmppStringprepException e) {
+        }
+        catch (XmppStringprepException e) {
             throw new IllegalArgumentException("Invalid XMPP nickname");
         }
 
@@ -649,6 +636,7 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
      * @return the room subject or <code>null</code> if the user hasn't joined the room or the room
      * does not have a subject yet.
      */
+    @Override
     public String getSubject() {
         return mMultiUserChat.getSubject();
     }
@@ -659,6 +647,7 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
      * @param userJid jid of the user to invite to the room.(one may also invite users not on their contact list).
      * @param reason a reason, subject, or welcome message that would tell the the user why they are being invited.
      */
+    @Override
     public void invite(EntityBareJid userJid, String reason)
             throws NotConnectedException, InterruptedException {
         if (StringUtils.isEmpty(XmppStringUtils.parseLocalpart(userJid.toString()))) {
@@ -685,6 +674,7 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
      *
      * @throws OperationFailedException with the corresponding code if an error occurs while joining the room.
      */
+    @Override
     public boolean join()
             throws OperationFailedException {
         return joinAs(JabberActivator.getGlobalDisplayDetailsService().getDisplayName(mPPS));
@@ -697,6 +687,7 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
      *
      * @throws OperationFailedException with the corresponding code if an error occurs while joining the room.
      */
+    @Override
     public boolean join(byte[] password)
             throws OperationFailedException {
         return joinAs(JabberActivator.getGlobalDisplayDetailsService().getDisplayName(mPPS), password);
@@ -710,6 +701,7 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
      *
      * @throws OperationFailedException with the corresponding code if an error occurs while joining the room.
      */
+    @Override
     public boolean joinAs(String nickname)
             throws OperationFailedException {
         return joinAs(nickname, null);
@@ -724,6 +716,7 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
      *
      * @throws OperationFailedException with the corresponding code if an error occurs while joining the room.
      */
+    @Override
     public boolean joinAs(final String nickname, final byte[] password)
             throws OperationFailedException {
         assertConnected();
@@ -744,14 +737,18 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
                     mMultiUserChat.changeNickname(mNickName);
             }
             else {
-                if (password == null)
-                    mMultiUserChat.join(mNickName);
-                else
-                    mMultiUserChat.join(mNickName, new String(password));
+                MucEnterConfiguration.Builder builder = mMultiUserChat.getEnterConfigurationBuilder(mNickName);
+                if (password != null) {
+                    builder.withPassword(new String(password));
+                }
+                // Stop server from sending history messages; aTalk access via mamQuery.
+                builder.requestNoHistory();
+                mMultiUserChat.join(builder.build());
             }
             onJoinSuccess();
             retry = false;
-        } catch (XMPPErrorException ex) {
+        }
+        catch (XMPPErrorException ex) {
             StanzaError xmppError = ex.getStanzaError();
             errorMessage += "\n" + ex.getMessage();
             if (xmppError == null) {
@@ -790,7 +787,8 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
                 Timber.e(ex, "%s", errorMessage);
                 throw new OperationFailedException(errorMessage, OperationFailedException.GENERAL_ERROR, ex);
             }
-        } catch (Throwable ex) {
+        }
+        catch (Throwable ex) {
             Timber.e("%s: %s", errorMessage, ex.getMessage());
             // Ignore server response timeout if received captcha challenge or user canceled captcha challenge request
             // - likely not get call as user cancel is implemented by sending empty reply to cancel smack delay
@@ -915,11 +913,13 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
      *
      * @return <code>true</code> if the room is destroyed.
      */
+    @Override
     public boolean destroy(String reason, EntityBareJid roomName)
             throws XMPPException {
         try {
             mMultiUserChat.destroy(reason, roomName);
-        } catch (NoResponseException | NotConnectedException | InterruptedException e) {
+        }
+        catch (NoResponseException | NotConnectedException | InterruptedException e) {
             DialogActivity.showDialog(aTalkApp.getInstance(), R.string.error,
                     R.string.chatroom_destroy_exception, e.getMessage());
             return false;
@@ -930,6 +930,7 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
     /**
      * Leave this chat room with no alternative room address to join.
      */
+    @Override
     public void leave() {
         this.leave(null, aTalkApp.getResString(R.string.leave_chat_room));
     }
@@ -941,32 +942,6 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
      * @param reason reason for leaving the room
      */
     private void leave(EntityBareJid alternateAddress, String reason) {
-        OperationSetBasicTelephonyJabberImpl basicTelephony
-                = (OperationSetBasicTelephonyJabberImpl) mPPS.getOperationSet(OperationSetBasicTelephony.class);
-        if (basicTelephony != null && publishedConference != null) {
-            ActiveCallsRepositoryJabberImpl activeRepository = basicTelephony.getActiveCallsRepository();
-
-            String callId = publishedConference.getCallId();
-            if (callId != null) {
-                CallJabberImpl call = activeRepository.findByCallId(callId);
-                for (CallPeerJabberImpl peer : call.getCallPeerList()) {
-                    peer.hangup(false, null, null);
-                }
-            }
-        }
-
-        List<CallJabberImpl> tmpConferenceCalls;
-        synchronized (chatRoomConferenceCalls) {
-            tmpConferenceCalls = new ArrayList<>(chatRoomConferenceCalls);
-            chatRoomConferenceCalls.clear();
-        }
-
-        for (CallJabberImpl call : tmpConferenceCalls) {
-            for (CallPeerJabberImpl peer : call.getCallPeerList())
-                peer.hangup(false, null, null);
-        }
-        clearCachedConferenceDescriptionList();
-
         XMPPConnection connection = mPPS.getConnection();
         try {
             // if we are already disconnected; leave may be called from gui when closing chat window
@@ -974,7 +949,8 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
             if ((connection != null) && mMultiUserChat.isJoined()) {
                 mMultiUserChat.leave();
             }
-        } catch (Throwable e) {
+        }
+        catch (Throwable e) {
             Timber.w(e, "Error leaving room (has been destroyed or disconnected): %s", e.getMessage());
             // must proceed to clean up the rest even if exception
         }
@@ -1011,11 +987,12 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
      *
      * @throws OperationFailedException if sending the message fails for some reason.
      */
-    public void sendMessage(IMessage message)
+    @Override
+    public void sendMessage(MessageJabberImpl message)
             throws OperationFailedException {
         mEncType = message.getEncType();
         String content = message.getContent();
-        MessageBuilder messageBuilder = StanzaBuilder.buildMessage(message.getMessageUID());
+        MessageBuilder messageBuilder = StanzaBuilder.buildMessage(message.getMessageUid());
 
         // Add OOB extension if specified.
         if (message.isMessageOob()) {
@@ -1074,14 +1051,35 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
         try {
             assertConnected();
             mMultiUserChat.sendMessage(messageBuilder);
-        } catch (NotConnectedException | InterruptedException e) {
+        }
+        catch (NotConnectedException | InterruptedException e) {
             Timber.e("Failed to send message: %s", e.getMessage());
             throw new OperationFailedException(aTalkApp.getResString(R.string.send_message_failed, messageBuilder.build()),
                     OperationFailedException.GENERAL_ERROR, e);
         }
     }
 
-    public void sendMessage(IMessage message, final OmemoManager omemoManager) {
+    /**
+     * Construct the <code>message</code> for the required ENCODE mode for sending.
+     *
+     * @param message the <code>IMessage</code> to send.
+     * @param correctionUid the correction message uid.
+     *
+     * @throws OperationFailedException if sending the message fails for some reason.
+     */
+    @Override
+    public void correctMessage(MessageJabberImpl message, String correctionUid)
+            throws OperationFailedException {
+        String content = message.getContent();
+        XmlElement extElement = new MessageCorrectExtension(correctionUid);
+
+        MessageBuilder messageBuilder = StanzaBuilder.buildMessage(message.getMessageUid());
+        messageBuilder.addExtension(extElement);
+        messageBuilder.addBody(null, content);
+        sendMessage(messageBuilder);
+    }
+
+    public void sendMessage(MessageJabberImpl message, String correctionUid, final OmemoManager omemoManager) {
         EntityBareJid entityBareJid = mMultiUserChat.getRoom();
         String msgContent = message.getContent();
         String errMessage = null;
@@ -1090,6 +1088,8 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
             OmemoMessage.Sent encryptedMessage = omemoManager.encrypt(mMultiUserChat, msgContent);
 
             MessageBuilder messageBuilder = StanzaBuilder.buildMessage();
+            if (correctionUid != null)
+                messageBuilder.addExtension(new MessageCorrectExtension(correctionUid));
             Message sendMessage = encryptedMessage.buildMessage(messageBuilder, entityBareJid, omemoManager.isOmemo2Enable());
 
             if (IMessage.ENCODE_HTML == message.getMimeType()) {
@@ -1103,32 +1103,40 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
                 encryptedMessage = omemoManager.encrypt(mMultiUserChat, msgContent);
 
                 messageBuilder = StanzaBuilder.buildMessage();
+                messageBuilder = StanzaBuilder.buildMessage(message.getMessageUid());
+                if (correctionUid != null)
+                    messageBuilder.addExtension(new MessageCorrectExtension(correctionUid));
+
                 // Add the XHTML text to the message
                 XHTMLManager.addBody(messageBuilder, xhtmlText);
                 sendMessage = encryptedMessage.buildMessage(messageBuilder, entityBareJid, omemoManager.isOmemo2Enable());
             }
 
             // proceed to send message if no exceptions.
-            // sendMessage.setStanzaId(message.getMessageUID());
+            // correctMessage.setStanzaId(message.getCorrectionUid());
             mMultiUserChat.sendMessage(sendMessage.asBuilder());
 
             // Delivered message for own outgoing message view display
             message.setServerMsgId(sendMessage.getStanzaId());
             message.setReceiptStatus(ChatMessage.MESSAGE_DELIVERY_CLIENT_SENT);
             ChatRoomMessageDeliveredEvent msgDeliveredEvt
-                    = new ChatRoomMessageDeliveredEvent(this, new Date(), message, ChatMessage.MESSAGE_MUC_OUT);
+                    = new ChatRoomMessageDeliveredEvent(this, new Date(), message, correctionUid, ChatMessage.MESSAGE_MUC_OUT);
             fireMessageEvent(msgDeliveredEvt);
-        } catch (UndecidedOmemoIdentityException e) {
-            OmemoAuthenticateListener omemoAuthListener = new OmemoAuthenticateListener(message, omemoManager);
+        }
+        catch (UndecidedOmemoIdentityException e) {
+            OmemoAuthenticateListener omemoAuthListener = new OmemoAuthenticateListener(message, correctionUid, omemoManager);
             Context ctx = aTalkApp.getInstance();
             ctx.startActivity(OmemoAuthenticateDialog.createIntent(ctx, omemoManager, e.getUndecidedDevices(), omemoAuthListener));
             return;
-        } catch (NoOmemoSupportException e) {
+        }
+        catch (NoOmemoSupportException e) {
             errMessage = aTalkApp.getResString(R.string.crypto_msg_omemo_session_setup_failed, "NoOmemoSupportException");
-        } catch (CryptoFailedException | InterruptedException | NotConnectedException | NoResponseException
-                 | XMPPErrorException | IOException e) {
+        }
+        catch (CryptoFailedException | InterruptedException | NotConnectedException | NoResponseException
+               | XMPPErrorException | IOException e) {
             errMessage = aTalkApp.getResString(R.string.crypto_msg_omemo_session_setup_failed, e.getMessage());
-        } catch (NotLoggedInException e) {
+        }
+        catch (NotLoggedInException e) {
             errMessage = aTalkApp.getResString(R.string.message_delivery_not_registered);
         }
 
@@ -1144,18 +1152,20 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
      * Omemo listener callback on user authentication for undecided omemoDevices
      */
     private class OmemoAuthenticateListener implements OmemoAuthenticateDialog.AuthenticateListener {
-        IMessage message;
-        OmemoManager omemoManager;
+        final MessageJabberImpl message;
+        final String correctionUid;
+        final OmemoManager omemoManager;
 
-        OmemoAuthenticateListener(IMessage message, OmemoManager omemoManager) {
+        OmemoAuthenticateListener(MessageJabberImpl message, String correctionUid, OmemoManager omemoManager) {
             this.message = message;
+            this.correctionUid = correctionUid;
             this.omemoManager = omemoManager;
         }
 
         @Override
         public void onAuthenticate(boolean allTrusted, Set<OmemoDevice> omemoDevices) {
             if (allTrusted) {
-                sendMessage(message, omemoManager);
+                sendMessage(message, correctionUid, omemoManager);
             }
             else {
                 String errMessage = aTalkApp.getResString(R.string.omemo_send_error,
@@ -1175,11 +1185,13 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
      *
      * @throws OperationFailedException throws Operation Failed Exception
      */
+    @Override
     public void setSubject(String subject)
             throws OperationFailedException {
         try {
             mMultiUserChat.changeSubject(subject);
-        } catch (XMPPException | NoResponseException | NotConnectedException | InterruptedException ex) {
+        }
+        catch (XMPPException | NoResponseException | NotConnectedException | InterruptedException ex) {
             String errMsg = "Failed to change subject for chat room" + getName();
             Timber.e(ex, "%s: %s", errMsg, ex.getMessage());
             throw new OperationFailedException(errMsg, OperationFailedException.NOT_ENOUGH_PRIVILEGES, ex);
@@ -1191,6 +1203,7 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
      *
      * @return a reference to the <code>ProtocolProviderService</code> instance that created this room.
      */
+    @Override
     public ProtocolProviderService getParentProvider() {
         return mPPS;
     }
@@ -1202,6 +1215,7 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
      *
      * @return ChatRoomMemberRole
      */
+    @Override
     public ChatRoomMemberRole getUserRole() {
         if (mUserRole == null) {
             // return role as GUEST if participant has not joined the chatRoom i.e. nickName == null
@@ -1228,6 +1242,7 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
      *
      * @param role the new mRole to be set for the local user
      */
+    @Override
     public void setLocalUserRole(ChatRoomMemberRole role) {
         setLocalUserRole(role, false);
     }
@@ -1248,8 +1263,8 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
     }
 
     /**
-     * Instances of this class should be registered as <code>ParticipantStatusListener</code> in smack
-     * and translates events .
+     * Instances of this class should be registered as <code>ParticipantStatusListener</code>
+     * in smack and translates events .
      */
     private class MemberListener implements ParticipantStatusListener {
         /**
@@ -1626,8 +1641,9 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
         try {
             mNickName = Resourcepart.from(sNickname);
             mMultiUserChat.changeNickname(mNickName);
-        } catch (XMPPException | NoResponseException | NotConnectedException | XmppStringprepException
-                 | MultiUserChatException.MucNotJoinedException | InterruptedException e) {
+        }
+        catch (XMPPException | NoResponseException | NotConnectedException | XmppStringprepException
+               | MultiUserChatException.MucNotJoinedException | InterruptedException e) {
 
             String msg = "Failed to change nickname for chat room: " + getName() + " => " + e.getMessage();
             Timber.e("%s", msg);
@@ -1651,7 +1667,8 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
         try {
             Jid jid = ((ChatRoomMemberJabberImpl) member).getJabberId();
             mMultiUserChat.banUser(jid.asBareJid(), reason);
-        } catch (XMPPErrorException e) {
+        }
+        catch (XMPPErrorException e) {
             Timber.e(e, "Failed to ban participant.");
 
             // If a moderator or a user with an affiliation of "owner" or "admin" was intended to be kicked.
@@ -1663,7 +1680,8 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
                 throw new OperationFailedException("An error occurred while trying to kick the participant.",
                         OperationFailedException.GENERAL_ERROR);
             }
-        } catch (NoResponseException | NotConnectedException | InterruptedException e) {
+        }
+        catch (NoResponseException | NotConnectedException | InterruptedException e) {
             throw new OperationFailedException("An error occurred while trying to kick the participant.",
                     OperationFailedException.GENERAL_ERROR);
         }
@@ -1685,7 +1703,8 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
         try {
             Resourcepart nick = ((ChatRoomMemberJabberImpl) member).getNickAsResourcepart();
             mMultiUserChat.kickParticipant(nick, reason);
-        } catch (XMPPErrorException e) {
+        }
+        catch (XMPPErrorException e) {
             Timber.e(e, "Failed to kick participant: %s.", e.getMessage());
 
             // If a moderator or a user with an affiliation of "owner" or "admin" was intended to be kicked.
@@ -1704,7 +1723,8 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
                 throw new OperationFailedException("An error occurred while trying to kick the participant. "
                         + e.getMessage(), OperationFailedException.GENERAL_ERROR);
             }
-        } catch (NoResponseException | NotConnectedException | InterruptedException e) {
+        }
+        catch (NoResponseException | NotConnectedException | InterruptedException e) {
             throw new OperationFailedException("An error occurred while trying to kick the participant. "
                     + e.getMessage(), OperationFailedException.GENERAL_ERROR);
         }
@@ -1801,68 +1821,11 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
                 else if (evt instanceof ChatRoomMessageDeliveryFailedEvent) {
                     listener.messageDeliveryFailed((ChatRoomMessageDeliveryFailedEvent) evt);
                 }
-            } catch (Throwable e) {
+            }
+            catch (Throwable e) {
                 Timber.e(e, "Error delivering multi chat message for %s", listener);
             }
         }
-    }
-
-    /**
-     * Publishes a conference to the room by sending a <code>Presence</code> IQ which contains a
-     * <code>ConferenceDescriptionExtensionElement</code>
-     *
-     * @param cd the description of the conference to announce
-     * @param name the name of the conference
-     *
-     * @return the <code>ConferenceDescription</code> that was announced (e.g. <code>cd</code> on
-     * success or <code>null</code> on failure)
-     */
-    @Override
-    public ConferenceDescription publishConference(ConferenceDescription cd, String name) {
-        if (publishedConference != null) {
-            cd = publishedConference;
-            cd.setAvailable(false);
-        }
-        else {
-            String displayName;
-            if (StringUtils.isEmpty(name)) {
-                displayName = aTalkApp.getResString(R.string.chatroom_conference_item, mNickName.toString());
-            }
-            else {
-                displayName = name;
-            }
-            cd.setDisplayName(displayName);
-        }
-
-        ConferenceDescriptionExtension ext = new ConferenceDescriptionExtension(cd.getUri(), cd.getUri(), cd.getPassword());
-        if (lastPresenceSent != null) {
-            if (setPacketExtension(lastPresenceSent, ext, ConferenceDescriptionExtension.NAMESPACE)) {
-                try {
-                    sendLastPresence();
-                } catch (NotConnectedException | InterruptedException e) {
-                    Timber.w(e, "Could not publish conference");
-                }
-            }
-            else {
-                return null;
-            }
-        }
-        else {
-            Timber.w("Could not publish conference, lastPresenceSent is null.");
-            publishedConference = null;
-            publishedConferenceExt = null;
-            return null;
-        }
-        /*
-         * Save the extensions to set to other outgoing Presence packets
-         */
-        publishedConference = (!cd.isAvailable()) ? null : cd;
-        publishedConferenceExt = (publishedConference == null) ? null : ext;
-
-
-        fireConferencePublishedEvent(members.get(mNickName), cd,
-                ChatRoomConferencePublishedEvent.CONFERENCE_DESCRIPTION_SENT);
-        return cd;
     }
 
     /**
@@ -1931,7 +1894,8 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
                     .build();
             try {
                 sendLastPresence();
-            } catch (NotConnectedException | InterruptedException e) {
+            }
+            catch (NotConnectedException | InterruptedException e) {
                 Timber.e(e, "Could not publish presence");
             }
         }
@@ -1946,7 +1910,8 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
         if (lastPresenceSent != null && setPacketExtension(lastPresenceSent, extension, extension.getNamespace(), true)) {
             try {
                 sendLastPresence();
-            } catch (NotConnectedException | InterruptedException e) {
+            }
+            catch (NotConnectedException | InterruptedException e) {
                 Timber.e(e, "Could not send presence");
             }
         }
@@ -1961,7 +1926,8 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
         if (lastPresenceSent != null && setPacketExtension(lastPresenceSent, null, extension.getNamespace())) {
             try {
                 sendLastPresence();
-            } catch (NotConnectedException | InterruptedException e) {
+            }
+            catch (NotConnectedException | InterruptedException e) {
                 Timber.e(e, "Could not remove presence");
             }
         }
@@ -1980,7 +1946,8 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
             for (Affiliate a : mMultiUserChat.getMembers()) {
                 res.add(a.getJid().asBareJid());
             }
-        } catch (XMPPException | NoResponseException | NotConnectedException | InterruptedException e) {
+        }
+        catch (XMPPException | NoResponseException | NotConnectedException | InterruptedException e) {
             Timber.e(e, "Cannot obtain members list");
         }
         return res;
@@ -2003,8 +1970,9 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
 
             if (!members.isEmpty())
                 mMultiUserChat.grantMembership(members);
-        } catch (XMPPException | NoResponseException | NotConnectedException
-                 | InterruptedException e) {
+        }
+        catch (XMPPException | NoResponseException | NotConnectedException
+               | InterruptedException e) {
             Timber.e(e, "Cannot modify members list");
         }
     }
@@ -2056,6 +2024,23 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
             if (OmemoManager.isOmemoMessage(message))
                 return;
 
+            // Skip for any repeated delayed message found in DB, unless it is Retract or Correction message.
+            if (mMHS.isUnexpectedDelayMessage(message)) {
+                return;
+            }
+
+            // If Retract or LMC message is not found in record; skip further processing of message.
+            Date timeStamp = mMHS.getTimeStamp(message);
+            if (timeStamp == null) {
+                return;
+            }
+
+            // Process retract message request including delayed; and skip all other message processing.
+            if (message.hasExtension(RetractElement.QNAME)) {
+                onReceivedRetractMessage(message);
+                return;
+            }
+
             // Captcha challenge body is in body extension.
             String msgBody = null;
             Set<Message.Body> msgBodies = message.getBodies();
@@ -2067,21 +2052,28 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
                     }
                 }
             }
-            // Check if the message is of Type.error if none in Message Body
-            if ((msgBody == null) && (message.getType() == Message.Type.error)) {
+            // Check if the message is of Type.error if Message Body is null
+            if (msgBody == null && message.getType() == Message.Type.error) {
                 msgBody = "";
             }
 
             if (msgBody == null)
                 return;
 
-            Date timeStamp;
-            DelayInformation delayInfo = message.getExtension(DelayInformation.class);
-            if (delayInfo != null) {
-                timeStamp = delayInfo.getStamp();
+            String stanzaId = message.getStanzaId();
+            if (StringUtils.isEmpty(stanzaId)) {
+                OriginIdElement orgStanzaElement = OriginIdElement.getOriginId(message);
+                if (orgStanzaElement != null) {
+                    stanzaId = orgStanzaElement.getId();
+                }
+            }
+            String correctionUid = mMHS.getCorrectionUid(message);
+            String msgId = correctionUid != null ? correctionUid : stanzaId;
 
-                // This is a delayed chat room message, a history message for the room coming from
-                // server. Lets check have we already shown this message and if this is the case
+            DelayInformation delayInfo = message.getExtension(DelayInformation.class);
+            if (delayInfo != null && correctionUid == null) {
+                // This is a delayed chat room message, a history message for the room coming from server.
+                // Let's check have we already shown this message and if this is the case,
                 // skip it otherwise save it as last seen delayed message
                 if (lsdMessageTime == null) {
                     // initialise this from configuration
@@ -2089,21 +2081,23 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
                     try {
                         if (StringUtils.isNotEmpty(sTimestamp))
                             lsdMessageTime = new Date(Long.parseLong(sTimestamp));
-                    } catch (Throwable ex) {
+                    }
+                    catch (Throwable ex) {
                         Timber.w("TimeStamp property is null! %s", timeStamp);
                     }
                 }
-                if (lsdMessageTime != null && !timeStamp.after(lsdMessageTime))
-                    return;
 
+                if (lsdMessageTime != null && timeStamp.before(lsdMessageTime)) {
+                    return;
+                }
                 lsdMessageTime = timeStamp;
             }
-            else {
-                timeStamp = new Date();
+
+            // Save it in configuration for the last received message timeStamp (delayed or new message).
+            if (correctionUid == null) {
+                ConfigurationUtils.updateChatRoomProperty(mPPS, getName(),
+                        LAST_RECEIVED_MESSAGE_TS, String.valueOf(timeStamp.getTime()));
             }
-            // Save it in configuration for the last received message timeStamp (delayed or normal).
-            ConfigurationUtils.updateChatRoomProperty(mPPS, getName(),
-                    LAST_RECEIVED_MESSAGE_TS, String.valueOf(timeStamp.getTime()));
 
             // for delayed message only
             Jid fromJid = message.getFrom(); // chatRoom EntityFullJid
@@ -2113,24 +2107,25 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
                 fromJid = addresses.get(0).getJid(); //.asBareJid();
             }
 
-            int messageReceivedEventType = ChatMessage.MESSAGE_MUC_IN;
-            Resourcepart fromNick = fromJid.getResourceOrNull();
-            ChatRoomMember member;
+            int msgEventType = ChatMessage.MESSAGE_MUC_IN;
+            Resourcepart fromNick = fromJid.getResourceOrEmpty();
+            ChatRoomMemberJabberImpl member;
 
             // when the message comes from the room itself, it is a system message
             if (fromJid.equals(getName())) {
-                messageReceivedEventType = ChatMessage.MESSAGE_SYSTEM;
+                msgEventType = ChatMessage.MESSAGE_SYSTEM;
                 member = new ChatRoomMemberJabberImpl(ChatRoomJabberImpl.this, Resourcepart.EMPTY, getIdentifier());
             }
             else {
                 member = members.get(fromNick);
             }
 
-            // sometimes when connecting to rooms they send history when the member is no longer
-            // available we create a fake one so the messages to be displayed.
+            // sometimes when connecting to room, the server sends history when the member
+            // is no longer available; we create a fake one so the messages can be displayed.
             if (member == null) {
                 member = new ChatRoomMemberJabberImpl(ChatRoomJabberImpl.this, fromNick, fromJid);
             }
+            Jid memberJid = member.getJabberId();
 
             // set up default in case XHTMLExtension contains no message
             // if msgBody contains markup text then set as ENCODE_HTML mode
@@ -2139,28 +2134,18 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
                 encType = IMessage.ENCODE_HTML;
             }
 
-            String stanzaId = message.getStanzaId();
-            if (StringUtils.isEmpty(stanzaId)) {
-                OriginIdElement orgStanzaElement = OriginIdElement.getOriginId(message);
-                if (orgStanzaElement != null) {
-                    stanzaId = orgStanzaElement.getId();
-                }
-            }
-
             String remoteStanzaId = null;
             StanzaIdElement stanzaIdElement = StanzaIdElement.getStanzaId(message);
             if (stanzaIdElement != null) {
                 remoteStanzaId = stanzaIdElement.getId();
             }
 
-            IMessage newMessage = createMessage(msgBody, encType, null, stanzaId);
+            MessageJabberImpl newMessage = new MessageJabberImpl(msgBody, encType, null, msgId, false);
             // check if the message is available in xhtml
             String xhtmString = XhtmlUtil.getXhtmlExtension(message);
             if (xhtmString != null) {
-                newMessage = createMessage(xhtmString, IMessage.ENCODE_HTML, null, stanzaId);
+                newMessage = new MessageJabberImpl(xhtmString, IMessage.ENCODE_HTML, null, msgId, false);
             }
-            newMessage.setServerMsgId(stanzaId);
-            newMessage.setRemoteMsgId(remoteStanzaId);
 
             if (message.getType() == Message.Type.error) {
                 Timber.d("Message error received from: %s", fromJid);
@@ -2168,58 +2153,66 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
                 StanzaError error = message.getError();
                 String errorReason = error.getConditionText();
                 if (StringUtils.isEmpty(errorReason)) {
-                    // errorReason = error.getDescriptiveText();
                     errorReason = error.toString();
                 }
 
-                // Failed Event error
-                int errorResultCode = (ChatMessage.MESSAGE_SYSTEM == messageReceivedEventType) ?
+                // Failed Event.
+                int errorCode = (ChatMessage.MESSAGE_SYSTEM == msgEventType) ?
                         MessageDeliveryFailedEvent.SYSTEM_ERROR_MESSAGE : MessageDeliveryFailedEvent.UNKNOWN_ERROR;
 
                 Condition errorCondition = error.getCondition();
                 if (Condition.service_unavailable == errorCondition) {
                     if (!member.getPresenceStatus().isOnline()) {
-                        errorResultCode = MessageDeliveryFailedEvent.OFFLINE_MESSAGES_NOT_SUPPORTED;
+                        errorCode = MessageDeliveryFailedEvent.OFFLINE_MESSAGES_NOT_SUPPORTED;
                     }
                 }
                 else if (Condition.not_acceptable == errorCondition) {
-                    errorResultCode = MessageDeliveryFailedEvent.NOT_ACCEPTABLE;
+                    errorCode = MessageDeliveryFailedEvent.NOT_ACCEPTABLE;
                 }
 
                 ChatRoomMessageDeliveryFailedEvent failedEvent = new ChatRoomMessageDeliveryFailedEvent(ChatRoomJabberImpl.this,
-                        member, errorResultCode, System.currentTimeMillis(), errorReason, newMessage);
+                        member, errorCode, timeStamp.getTime(), errorReason, newMessage);
                 fireMessageEvent(failedEvent);
                 return;
             }
 
-            Timber.d("Received room message %s %s", fromJid, message.toString());
-            // Check received message for sent message: either a delivery report or a incoming message
-            // from the chaRoom server. Check using nick OR jid in case user join with a different nick.
+            // Check incoming message for message sent: either a delivery report or a incoming message
+            // from the chatRoom server. Check using nick OR jid in case user join with a different nick.
             Resourcepart userNick = getUserNickname();
-            if ((userNick != null && userNick.equals(fromNick))
-                    || fromJid.equals(getUserJid(member.getChatRoom()))) {
+            Jid ourJid = mPPS.getOurJid();
 
+            if (correctionUid != null) {
+                newMessage.setStatus(ChatMessage.STATUS_EDITED);
+            }
+            newMessage.setRemoteMsgId(remoteStanzaId);
+            // Timber.d("Received room message %s %s: %s", userNick, fromNick, msgBody);
+
+            boolean isOutgoing = fromNick.equals(userNick) || ourJid.equals(memberJid);
+            if (isOutgoing) {
                 // MUC received message may be relayed from server on message sent hence reCreate the message if required
                 if (IMessage.FLAG_REMOTE_ONLY == (mEncType & IMessage.FLAG_REMOTE_ONLY)) {
-                    newMessage = createMessage(msgBody, mEncType, "", stanzaId);
+                    newMessage = new MessageJabberImpl(msgBody, mEncType, "", msgId, true);
                     newMessage.setRemoteMsgId(remoteStanzaId);
                 }
 
                 // message delivered for own outgoing message view display
                 newMessage.setServerMsgId(stanzaId);
                 newMessage.setReceiptStatus(ChatMessage.MESSAGE_DELIVERY_CLIENT_SENT);
-                ChatRoomMessageDeliveredEvent msgDeliveredEvt = new ChatRoomMessageDeliveredEvent(
-                        ChatRoomJabberImpl.this, timeStamp, newMessage, ChatMessage.MESSAGE_MUC_OUT);
 
-                msgDeliveredEvt.setHistoryMessage(true);
+                ChatRoomMessageDeliveredEvent msgDeliveredEvt = new ChatRoomMessageDeliveredEvent(
+                        ChatRoomJabberImpl.this, timeStamp, newMessage, correctionUid, ChatMessage.MESSAGE_MUC_OUT);
+
+                // All chatRoom delivered message is history message except correction message.
+                msgDeliveredEvt.setHistoryMessage(correctionUid == null);
                 fireMessageEvent(msgDeliveredEvt);
             }
             else {
+                // Timber.d("Received incoming room message %s %s : %s", userNick, fromNick, msgBody);
                 // CONVERSATION_MESSAGE_RECEIVED or SYSTEM_MESSAGE_RECEIVED
                 ChatRoomMessageReceivedEvent msgReceivedEvt = new ChatRoomMessageReceivedEvent(
-                        ChatRoomJabberImpl.this, member, timeStamp, newMessage, messageReceivedEventType);
+                        ChatRoomJabberImpl.this, member, timeStamp, newMessage, correctionUid, msgEventType);
 
-                if (messageReceivedEventType == ChatMessage.MESSAGE_MUC_IN
+                if (msgEventType == ChatMessage.MESSAGE_MUC_IN
                         && newMessage.getContent().contains(getUserNickname() + ":")) {
                     msgReceivedEvt.setImportantMessage(true);
                 }
@@ -2231,6 +2224,49 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
     }
 
     /**
+     * Handler for the chatroom delivered or received Retract Message.
+     *
+     * @param message chatRoom message either message delivered or message received
+     */
+    private void onReceivedRetractMessage(Message message) {
+        RetractElement retractElement = message.getExtension(RetractElement.class);
+        String retractId = retractElement.getId();
+
+        if (StringUtils.isNotEmpty(retractId)) {
+            EventObject msgEvt = mMHS.getEventObject(ChatRoomJabberImpl.this, retractId);
+            if (msgEvt != null) {
+                if ((msgEvt instanceof ChatRoomMessageDeliveredEvent)) {
+                    ChatRoomMessageDeliveredEvent msgEvent = (ChatRoomMessageDeliveredEvent) msgEvt;
+                    MessageJabberImpl msg = msgEvent.getMessage();
+                    msg.setStatus(ChatMessage.STATUS_RETRACTED);
+                    msg.setContent(aTalkApp.getResString(R.string.retract_own));
+                }
+                else if ((msgEvt instanceof ChatRoomMessageReceivedEvent)) {
+                    ChatRoomMessageReceivedEvent msgEvent = (ChatRoomMessageReceivedEvent) msgEvt;
+                    MessageJabberImpl msg = msgEvent.getMessage();
+                    msg.setStatus(ChatMessage.STATUS_RETRACTED);
+                    msg.setContent(aTalkApp.getResString(R.string.retract_remote));
+                }
+                fireMessageEvent(msgEvt);
+            }
+        }
+    }
+
+    public void sendRetractMessage(String retractUid) {
+        MessageRetractionManager mRetractManager = MessageRetractionManager.getInstanceFor(mPPS.getConnection());
+        EntityBareJid room = mMultiUserChat.getRoom();
+
+        MessageBuilder messageBuilder = StanzaBuilder.buildMessage(retractUid)
+                .ofType(Message.Type.groupchat);
+        try {
+            mRetractManager.retractMessage(room, retractUid, messageBuilder);
+        }
+        catch (NotConnectedException | InterruptedException e) {
+            Timber.e("Retract Message: %s", e.getMessage());
+        }
+    }
+
+    /**
      * Check if the received muc message is sent from me
      *
      * @param message received chatRoom Message
@@ -2238,7 +2274,6 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
      * @return true is message is sent by me
      */
     public boolean isOwnSendChatMessage(Message message) {
-        Jid toJid = message.getTo();
         Jid fromJid = message.getFrom();
 
         Resourcepart fromNick = fromJid.getResourceOrNull();
@@ -2251,7 +2286,7 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
             ourJid = getUserJid(chatRoom);
         }
 
-        Timber.d("isOwnSendChatMessage %s == %s", fromJid, ourJid);
+        // Timber.d("isOwnSendChatMessage %s == %s", fromJid, ourJid);
         return (userNick != null && userNick.equals(fromNick))
                 || fromJid.equals(ourJid);
     }
@@ -2523,7 +2558,8 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
         try {
             smackConfigForm = mMultiUserChat.getConfigurationForm();
             configForm = new ChatRoomConfigurationFormJabberImpl(mMultiUserChat, smackConfigForm);
-        } catch (XMPPErrorException e) {
+        }
+        catch (XMPPErrorException e) {
             if (e.getStanzaError().getCondition().equals(Condition.forbidden))
                 throw new OperationFailedException(
                         "Failed to obtain smack multi user chat config form. User doesn't have enough privileges to see the form.",
@@ -2531,7 +2567,8 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
             else
                 throw new OperationFailedException(
                         "Failed to obtain smack multi user chat config form.", OperationFailedException.GENERAL_ERROR, e);
-        } catch (NoResponseException | NotConnectedException e) {
+        }
+        catch (NoResponseException | NotConnectedException e) {
             throw new OperationFailedException(
                     "Failed to obtain smack multi user chat config form.", OperationFailedException.GENERAL_ERROR, e);
         }
@@ -2566,7 +2603,8 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
             RoomInfo roomInfo = MultiUserChatManager.getInstanceFor(mPPS.getConnection()).getRoomInfo(room);
             persistent = roomInfo.isPersistent();
 
-        } catch (Exception ex) {
+        }
+        catch (Exception ex) {
             Timber.w("could not get persistent state for room '%s':%s", room, ex.getMessage());
         }
         return persistent;
@@ -2595,9 +2633,11 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
     public void grantAdmin(String jid) {
         try {
             mMultiUserChat.grantAdmin(JidCreate.bareFrom(jid));
-        } catch (XMPPException | NoResponseException | NotConnectedException | InterruptedException ex) {
+        }
+        catch (XMPPException | NoResponseException | NotConnectedException | InterruptedException ex) {
             Timber.e(ex, "An error occurs granting administrator privileges to a user.");
-        } catch (XmppStringprepException e) {
+        }
+        catch (XmppStringprepException e) {
             throw new RuntimeException(e);
         }
     }
@@ -2612,8 +2652,9 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
     public void grantMembership(String jid) {
         try {
             mMultiUserChat.grantMembership(JidCreate.bareFrom(jid));
-        } catch (XMPPException | NoResponseException | NotConnectedException | InterruptedException |
-                 XmppStringprepException ex) {
+        }
+        catch (XMPPException | NoResponseException | NotConnectedException | InterruptedException |
+               XmppStringprepException ex) {
             Timber.e(ex, "An error occurs granting membership to a user");
         }
     }
@@ -2628,8 +2669,9 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
     public void grantModerator(String nickname) {
         try {
             mMultiUserChat.grantModerator(Resourcepart.from(nickname));
-        } catch (XMPPException | NoResponseException | NotConnectedException | InterruptedException
-                 | XmppStringprepException ex) {
+        }
+        catch (XMPPException | NoResponseException | NotConnectedException | InterruptedException
+               | XmppStringprepException ex) {
             Timber.e(ex, "An error occurs granting moderator privileges to a user");
         }
     }
@@ -2644,8 +2686,9 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
     public void grantOwnership(String jid) {
         try {
             mMultiUserChat.grantOwnership(JidCreate.bareFrom(jid));
-        } catch (XMPPException | NoResponseException | NotConnectedException | InterruptedException
-                 | XmppStringprepException | IllegalArgumentException ex) {
+        }
+        catch (XMPPException | NoResponseException | NotConnectedException | InterruptedException
+               | XmppStringprepException | IllegalArgumentException ex) {
             Timber.e(ex, "An error occurs granting ownership privileges to a user");
         }
     }
@@ -2665,8 +2708,9 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
     public void grantVoice(String nickname) {
         try {
             mMultiUserChat.grantVoice(Resourcepart.from(nickname));
-        } catch (XMPPException | NoResponseException | NotConnectedException
-                 | InterruptedException | XmppStringprepException ex) {
+        }
+        catch (XMPPException | NoResponseException | NotConnectedException
+               | InterruptedException | XmppStringprepException ex) {
             Timber.e(ex, "An error occurs granting voice to a visitor");
         }
     }
@@ -2681,8 +2725,9 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
     public void revokeAdmin(String jid) {
         try {
             mMultiUserChat.revokeAdmin(JidCreate.bareFrom(jid));
-        } catch (XMPPException | NoResponseException | NotConnectedException
-                 | XmppStringprepException | IllegalArgumentException | InterruptedException ex) {
+        }
+        catch (XMPPException | NoResponseException | NotConnectedException
+               | XmppStringprepException | IllegalArgumentException | InterruptedException ex) {
             Timber.e(ex, "n error occurs revoking administrator privileges to a user");
         }
     }
@@ -2698,8 +2743,9 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
     public void revokeMembership(String jid) {
         try {
             mMultiUserChat.revokeMembership(JidCreate.bareFrom(jid));
-        } catch (XMPPException | NoResponseException | NotConnectedException
-                 | InterruptedException | IllegalArgumentException | XmppStringprepException ex) {
+        }
+        catch (XMPPException | NoResponseException | NotConnectedException
+               | InterruptedException | IllegalArgumentException | XmppStringprepException ex) {
             Timber.e(ex, "An error occurs revoking membership to a user");
         }
     }
@@ -2715,8 +2761,9 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
     public void revokeModerator(String nickname) {
         try {
             mMultiUserChat.revokeModerator(Resourcepart.from(nickname));
-        } catch (XMPPException | NoResponseException | NotConnectedException
-                 | InterruptedException | XmppStringprepException ex) {
+        }
+        catch (XMPPException | NoResponseException | NotConnectedException
+               | InterruptedException | XmppStringprepException ex) {
             Timber.e(ex, "An error occurs revoking moderator privileges from a user");
         }
     }
@@ -2731,8 +2778,9 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
     public void revokeOwnership(String jid) {
         try {
             mMultiUserChat.revokeOwnership(JidCreate.bareFrom(jid));
-        } catch (XMPPException | NoResponseException | NotConnectedException
-                 | InterruptedException | XmppStringprepException | IllegalArgumentException ex) {
+        }
+        catch (XMPPException | NoResponseException | NotConnectedException
+               | InterruptedException | XmppStringprepException | IllegalArgumentException ex) {
             Timber.e(ex, "An error occurs revoking ownership privileges from a user");
         }
     }
@@ -2752,8 +2800,9 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
     public void revokeVoice(String nickname) {
         try {
             mMultiUserChat.revokeVoice(Resourcepart.from(nickname));
-        } catch (XMPPException | NoResponseException | NotConnectedException
-                 | InterruptedException | XmppStringprepException ex) {
+        }
+        catch (XMPPException | NoResponseException | NotConnectedException
+               | InterruptedException | XmppStringprepException ex) {
             Timber.i(ex, "An error occurs revoking voice from a participant");
         }
     }
@@ -2811,8 +2860,9 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
 
                                 // Sending null also picked up the options OperationSetMultiUserChatJabberImpl#createChatRoom and sent
                                 // mMultiUserChat.sendConfigurationForm(null);
-                            } catch (XMPPException | NoResponseException | NotConnectedException |
-                                     InterruptedException e) {
+                            }
+                            catch (XMPPException | NoResponseException | NotConnectedException |
+                                   InterruptedException e) {
                                 Timber.e("Send config form error: %s", e.getMessage());
                             }
                         }
@@ -2880,41 +2930,10 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
                 return;
             }
 
-            ConferenceDescriptionExtension cdExt = presence.getExtension(ConferenceDescriptionExtension.class);
-            if (presence.isAvailable() && cdExt != null) {
-                ConferenceDescription cd = new ConferenceDescription(cdExt.getUri(), cdExt.getCallId(), cdExt.getPassword());
-                cd.setAvailable(cdExt.isAvailable());
-                cd.setDisplayName(getName());
-                for (TransportExtension t : cdExt.getChildExtensionsOfType(TransportExtension.class)) {
-                    cd.addTransport(t.getNamespace());
-                }
-
-                if (!processConferenceDescription(cd, participantNick))
-                    return;
-
-                Timber.d("Received %s from %s in %s", cd, participantNick, mMultiUserChat.getRoom());
-                fireConferencePublishedEvent(member, cd, ChatRoomConferencePublishedEvent.CONFERENCE_DESCRIPTION_RECEIVED);
-            }
-
             // For 4.4.3-master (20200416): presence.getExtension(Nick.class); => IllegalArgumentException
             Nick nickExt = (Nick) presence.getExtension(Nick.QNAME);
             if (nickExt != null) {
                 member.setDisplayName(nickExt.getName());
-            }
-
-            Email emailExtension = presence.getExtension(Email.class);
-            if (emailExtension != null) {
-                member.setEmail(emailExtension.getAddress());
-            }
-
-            AvatarUrl avatarUrl = presence.getExtension(AvatarUrl.class);
-            if (avatarUrl != null) {
-                member.setAvatarUrl(avatarUrl.getAvatarUrl());
-            }
-
-            StatsId statsId = presence.getExtension(StatsId.class);
-            if (statsId != null) {
-                member.setStatisticsID(statsId.getStatsId());
             }
 
             // tell listeners the member was updated (and new information about it is available)
@@ -2949,14 +2968,15 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
                 Resourcepart nick;
                 try {
                     nick = Resourcepart.from(invitee.getLocalpart().toString());
-                } catch (XmppStringprepException e) {
+                }
+                catch (XmppStringprepException e) {
                     nick = Resourcepart.EMPTY;
                 }
                 ChatRoomMemberJabberImpl member = new ChatRoomMemberJabberImpl(ChatRoomJabberImpl.this, nick, invitee);
 
                 String msgBody = aTalkApp.getResString(R.string.invitation_rejected, invitee, reason);
                 ChatRoomMessageReceivedEvent msgReceivedEvt = new ChatRoomMessageReceivedEvent(
-                        ChatRoomJabberImpl.this, member, new Date(), createMessage(msgBody), ChatMessage.MESSAGE_SYSTEM);
+                        ChatRoomJabberImpl.this, member, new Date(), createMessage(msgBody), null, ChatMessage.MESSAGE_SYSTEM);
                 fireMessageEvent(msgReceivedEvt);
             }
         }
@@ -2967,13 +2987,6 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
      * <tt>ConferenceAnnouncementPacketExtension</tt> and custom extensions.
      */
     private void presenceIntercept(PresenceBuilder presenceBuilder) {
-        if (publishedConferenceExt != null) {
-            presenceBuilder.overrideExtension(publishedConferenceExt);
-        }
-        else {
-            presenceBuilder.removeExtension(ConferenceDescriptionExtension.ELEMENT, ConferenceDescriptionExtension.NAMESPACE);
-        }
-
         for (XmlElement ext : presencePacketExtensions) {
             presenceBuilder.overrideExtension(ext);
         }
@@ -3008,7 +3021,8 @@ public class ChatRoomJabberImpl extends AbstractChatRoom implements CaptchaDialo
         Resourcepart nickname;
         try {
             nickname = JidCreate.from(contact.getAddress()).getResourceOrEmpty();
-        } catch (XmppStringprepException | IllegalArgumentException e) {
+        }
+        catch (XmppStringprepException | IllegalArgumentException e) {
             Timber.e("Invalid contact address: %s", contact.getAddress());
             return;
         }

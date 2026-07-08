@@ -5,9 +5,51 @@
      Don't edit the changelog_<name>_branch.xml files in the gh-pages branch.
      They are automatically updated with "ant bump-version".
 -->
+
 <changelog>
-    <release version="00.30.000 (04/30/2026)" versioncode="0030000">
+    <release version="1.00.000 (07/08/2026)" versioncode="100000">
         <change>Please read &lt;a href='https://cmeng-git.github.io/atalk/faq.html#ui_01'&gt;aTalk UI design &amp; Implementation&lt;/a&gt; before using aTalk.</change>
+        <change>Support Language Translation for sent/received messages in chat/multi-user chat sessions.</change>
+        <change>Translation Language Server use aTalk default or user defined URL.</change>
+        <change>Support Translator API key entry for user if available.</change>
+        <change>Translation Language used in sent/received messages is defined per user account.</change>
+        <change>Translation option can be enabled/disabled per contact chat/multi-user chat session.</change>
+        <change>Use background runnable thread to handle history messages translation; eliminate ~1s/message delay in translation and hang chat session UI.</change>
+        <change>aTalk default Translator server has rate limiting. Too many history messages translation will give raise to error code 429.</change>
+        <change>If required, user may use 'Translate message receive' option, to translate messages that have failed.</change>
+        <change>Incoming message translated content is only saved cache; not in DB as it is not part of the message received.</change>
+        <change>Extend support of 'Last Message Correction' in multi-user chat session.</change>
+        <change>Extend Last Message Correction support to all other outgoing messages, and not just the last sent message.</change>
+        <change>Keep the original created message time stamp for Message Correction/Retraction, so sent/received messages chronological are maintained.</change>
+        <change>Need to take care for retract and correction messages handling if remote messages have been deleted, and when history logging is disabled.</change>
+        <change>Start up contact chat session on incoming chat message received; this is to update or cache the message, and to translate if enabled.</change>
+        <change>When joining a chatRoom, includes element &lt;'history maxchars='0'/> in stanza to stop server from sending history messages; chatRoom history messages are retrieved via mam query instead.</change>
+        <change>Add 'before' option for the latest mam messages; fix incorrect setting in field 'with' of mamQuery stanza sent to chatRoom history retrieval.</change>
+        <change>Make call transfer via JingleMessage if the intended transferred callee supports it.</change>
+        <change>Fix undesired double firing of incoming call alert notifications when receiving call via JingleMessageSession.</change>
+        <change>Ensure JingleMessageSession ends properly with sending/receiving of 'finish' message, else subsequent call may have problem.</change>
+        <change>JingleMessage must send JM 'reject' to own user, so server will relay to all its resources for action.</change>
+        <change>Improve the handling process of JingleMessage and UI during tie-break conditions under multiple resources.</change>
+        <change>Enforce call encryption when enabled. Both parties must define a common encryption mode, else call ends with SecurityError.</change>
+        <change>Remove ZRTP signalling option. ZRTP-hash Element will be included in Jingle RTP session when ZRTP option is enabled.</change>
+        <change>Complete revamp jingle_rtp implementation; ensure class extends NameElement and XmlElement appropriately, and avoid mixed handling of classes.</change>
+        <change>Ensure auto generated resource name remains unchanged even when aTalk re-login after app is terminated.</change>
+        <change>Remove support merging of multiple messages in chat window. It limits user usage in, and
+            complicates messages handling for retract, delete, correction and delivery receipt etc.</change>
+        <change>aTalk UI does not support SMS text and multimedia features, hence remove all source support i.e. OperationSetSmsMessaging class and all SMS utilities.</change>
+        <change>Remove aTalk Video conferencing features; it requires both server setup and heavy resource loading on aTalk device.</change>
+        <change>When checking or before update, show all the new changes info when there is a new version found - debug version only.</change>
+        <change>Remove permission.READ_PHONE_STATE, and all PhoneNumberI18nService related sources; not required in aTalk but conflict with android phone security check.</change>
+        <change>Fix implementation for ServiceDiscoveryHelper#discoverInfoNonBlocking end in endless loop if nodeVerHash is null.</change>
+        <change>Fix incorrect cast of Expert Settings to PreferenceCategory class and crashes aTalk.</change>
+        <change>Remove bcg729 jni library support.</change>
+        <change>Upgrade libvpx to 1.16.0. libvpx v1.16.0 removed support for 32-bit targets (armv7, armv7s, and i386).</change>
+        <change>aTalk jni library will support only arm64-v8a and x86_64 ABIS; drops armeabi-v7a and x86 ABI ABIS.</change>
+        <change>Upgrade aTalk to support Android-17.0 CinnamonBun (API-37).</change>
+        <change>Bug fixes and enhancements.</change>
+    </release>
+
+    <release version="00.30.000 (04/30/2026)" versioncode="0030000">
         <change>Migrate all Jingle stanza sid to use UUIDv4 as recommended in XEP-0353: Jingle Message Initiation 0.8.0 (2026-02-19).</change>
         <change>Update JingleMessage design/implementation to compliance with v0.8.0 (2026-02-19) specifications.</change>
         <change>During tie-break, sending of Retract and Reject message to remote Jid will not follow as specified; else JM does not work properly.</change>

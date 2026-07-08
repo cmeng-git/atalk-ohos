@@ -32,7 +32,6 @@ import net.java.sip.communicator.service.protocol.ChatRoom;
 import net.java.sip.communicator.service.protocol.Contact;
 import net.java.sip.communicator.service.protocol.ContactResource;
 import net.java.sip.communicator.service.protocol.OperationSetBasicInstantMessaging;
-import net.java.sip.communicator.service.protocol.OperationSetSmsMessaging;
 import net.java.sip.communicator.service.protocol.ProtocolProviderService;
 
 import org.atalk.ohos.aTalkApp;
@@ -315,7 +314,7 @@ public class ChatSessionManager {
             }
         }
         else if (descriptor instanceof ChatRoomWrapper) {
-            chatId = ((ChatRoomWrapper) descriptor).getChatRoomID();
+            chatId = ((ChatRoomWrapper) descriptor).getChatRoomId();
             chatMode = MUC_CC;
         }
         else if (descriptor instanceof AdHocChatRoomWrapper) {
@@ -419,8 +418,7 @@ public class ChatSessionManager {
      * Return the <code>ChatPanel</code> for the given chatId if exists; Otherwise create and return
      * new and saves it in the list of created <code>ChatPanel</code> by the called routine.
      *
-     * @param chatId A string identifier that uniquely represents the caller in the containing chat
-     * session database
+     * @param chatId A string identifier that uniquely represents the caller in the containing chat session database
      * @param chatMode can have one of the value as shown in below code
      *
      * @return An existing {@code ChatPanel} or newly created.
@@ -584,9 +582,7 @@ public class ChatSessionManager {
     private static Contact getDefaultContact(MetaContact metaContact) {
         Contact defaultContact = metaContact.getDefaultContact(OperationSetBasicInstantMessaging.class);
         if (defaultContact == null) {
-            defaultContact = metaContact.getDefaultContact(OperationSetSmsMessaging.class);
-            if (defaultContact == null)
-                return null;
+            return null;
         }
 
         ProtocolProviderService defaultProvider = defaultContact.getProtocolProvider();

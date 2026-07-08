@@ -13,10 +13,10 @@ import android.widget.SeekBar;
 
 import androidx.annotation.Nullable;
 
-import org.atalk.impl.neomedia.MediaServiceImpl;
-import org.atalk.impl.neomedia.NeomediaActivator;
 import org.atalk.ohos.R;
 import org.atalk.ohos.gui.dialogs.BaseDialogFragment;
+import org.atalk.impl.neomedia.MediaServiceImpl;
+import org.atalk.impl.neomedia.NeomediaActivator;
 import org.atalk.service.neomedia.VolumeControl;
 import org.atalk.service.neomedia.event.VolumeChangeEvent;
 import org.atalk.service.neomedia.event.VolumeChangeListener;

@@ -9,6 +9,7 @@ import static android.hardware.camera2.CameraMetadata.LENS_FACING_BACK;
 import static android.hardware.camera2.CameraMetadata.LENS_FACING_FRONT;
 
 import android.Manifest;
+import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.view.Menu;
@@ -165,12 +166,14 @@ public class VideoHandlerFragment extends BaseFragment implements MenuProvider, 
     private VideoCallActivity mCallActivity;
 
     /**
-     * Must be called by parent activity on fragment attached
+     * Must be called on fragment attached to setup the OnRemoteVideoChangeListener.
      *
-     * @param activity VideoCall Activity
+     * @param context VideoCall Activity
      */
-    public void setRemoteVideoChangeListener(VideoCallActivity activity) {
-        mCallActivity = activity;
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        mCallActivity = (VideoCallActivity) context;
     }
 
     @Override
@@ -400,7 +403,7 @@ public class VideoHandlerFragment extends BaseFragment implements MenuProvider, 
 
         final AndroidCamera newDevice;
 
-        String back = getString(R.string.settings_use_back_camera);
+        String back = mContext.getString(R.string.settings_use_back_camera);
         if (item.getTitle().equals(back)) {
             // Switch to back camera and toggle item name
             newDevice = AndroidCamera.getCameraFromCurrentDeviceSystem(LENS_FACING_BACK);
@@ -444,19 +447,21 @@ public class VideoHandlerFragment extends BaseFragment implements MenuProvider, 
      * Initialize the Call Video Button to its proper state
      */
     private void initLocalVideoState(boolean isVideoEnable) {
-        setLocalVideoEnabled(isVideoEnable);
-        if (!isCameraEnable) {
-            mCallVideoButton.setImageResource(R.drawable.call_video_no_dark);
-            mCallVideoButton.setBackgroundColor(android.graphics.Color.TRANSPARENT);
-        }
-        else if (isVideoEnable) {
-            mCallVideoButton.setImageResource(R.drawable.call_video_record_dark);
-            mCallVideoButton.setBackgroundColor(0x50000000);
-        }
-        else {
-            mCallVideoButton.setImageResource(R.drawable.call_video_dark);
-            mCallVideoButton.setBackgroundColor(android.graphics.Color.TRANSPARENT);
-        }
+        runOnUiThread(() -> {
+            setLocalVideoEnabled(isVideoEnable);
+            if (!isCameraEnable) {
+                mCallVideoButton.setImageResource(R.drawable.call_video_no_dark);
+                mCallVideoButton.setBackgroundColor(android.graphics.Color.TRANSPARENT);
+            }
+            else if (isVideoEnable) {
+                mCallVideoButton.setImageResource(R.drawable.call_video_record_dark);
+                mCallVideoButton.setBackgroundColor(0x50000000);
+            }
+            else {
+                mCallVideoButton.setImageResource(R.drawable.call_video_dark);
+                mCallVideoButton.setBackgroundColor(android.graphics.Color.TRANSPARENT);
+            }
+        });
     }
 
     /**

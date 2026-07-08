@@ -32,12 +32,12 @@ import net.java.sip.communicator.service.notification.event.NotificationActionTy
 import net.java.sip.communicator.service.notification.event.NotificationEventTypeEvent;
 import net.java.sip.communicator.util.ServiceUtils;
 
-import org.atalk.impl.androidresources.AppResourceServiceImpl;
 import org.atalk.ohos.BaseActivity;
 import org.atalk.ohos.R;
 import org.atalk.ohos.gui.AppGUIActivator;
 import org.atalk.ohos.gui.actionbar.ActionBarToggleFragment;
 import org.atalk.ohos.gui.actionbar.ActionBarUtil;
+import org.atalk.impl.androidresources.AppResourceServiceImpl;
 import org.atalk.service.resources.ResourceManagementService;
 
 /**

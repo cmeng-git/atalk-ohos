@@ -41,6 +41,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import net.java.sip.communicator.util.ConfigurationUtils;
+
 import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.actionbar.ActionBarStatusFragment;
@@ -52,10 +54,12 @@ import org.atalk.ohos.gui.menu.MainMenuActivity;
 import org.atalk.ohos.gui.util.DepthPageTransformer;
 import org.atalk.ohos.gui.webview.WebViewFragment;
 import org.atalk.service.osgi.OSGiService;
+
 import org.jetbrains.annotations.NotNull;
 import org.osgi.framework.BundleContext;
 
 import de.cketti.library.changelog.ChangeLog;
+import space.dynomake.libretranslate.Translator;
 import timber.log.Timber;
 
 /**
@@ -170,6 +174,10 @@ public class aTalk extends MainMenuActivity {
      */
     private void handleIntent(Intent intent, Bundle instanceState) {
         mInstances.add(this);
+
+        // Setup Language Translation server uri/apikeyon for the default, or user defined translation server url.
+        Translator.setUrlApi(ConfigurationUtils.getTranslateServerUrl());
+        Translator.setApiKey(ConfigurationUtils.getTranslateServerApikey());
 
         String action = intent.getAction();
         if (Intent.ACTION_SEARCH.equals(action)) {

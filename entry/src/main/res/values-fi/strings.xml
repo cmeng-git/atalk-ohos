@@ -54,7 +54,7 @@
     <string name="call_transfer">Siirto</string>
     <string name="call_transfer_failed">Puhelunsiirtoa ei voitu jatkaa: %1$s ⇢ %2$s\n%3$s</string>
     <string name="call_transfer_hint">Valitse siirrettävän yhteystiedon nimi ja paina \"Siirrä\".</string>
-    <string name="call_transfer_msg">%1$s puhelua siirretään kohteeseen… %2$s</string>
+    <string name="call_transfer_msg">%1$s puhelua siirretään kohteeseen %2$s</string>
 
     <string name="attach_picture">Kuva</string>
     <string name="attach_take_picture">Ota kuva</string>
@@ -68,6 +68,12 @@
     <string name="chat_message_long_press_hint">Vältä viestialueen sisällä klikkaamista valittaessa useaa kohdetta</string>
     <string name="quote">Lainaus</string>
     <string name="reply">Vastaa</string>
+    <string name="retract">Peruuta</string>
+    <string name="retract_menu">Peruuta viesti</string>
+    <string name="retract_message_prompt">Haluatko varmasti peruuttaa kaikki valitut lähtevät viestit käyttäjältä %1$s?</string>
+    <string name="retract_not_supported">Vastaanottaja ei tue viestin peruuttamista</string>
+    <string name="retract_own">Poistit tämän viestin</string>
+    <string name="retract_remote">Tämä viesti poistettiin</string>
     <string name="select_all">Valitse kaikki</string>
     <string name="subject">Aihe</string>
     <string name="settings">Asetukset</string>
@@ -130,7 +136,8 @@
     <string name="call_audio">Äänipuhelu</string>
     <string name="call_answered">%1$s vastasi puheluun.</string>
     <string name="call_disable_on_fault">aTalk:in alustus epäonnistui %1$s\nKaikki mediapuhelut/palvelut otetaan pois käytöstä.\n%2$s</string>
-    <string name="call_ended">Vastapuoli lopetti puhelun: %1$s</string>
+    <string name="call_ended">Puhelu päättyi</string>
+    <string name="call_ended_by_remote">Vastapuoli lopetti puhelun: %1$s</string>
     <string name="call_error">Vastapuoli palautti virheen: %1$s</string>
     <string name="call_failed">Puhelu epäonnistui</string>
     <string name="call_history_name">Puheluloki</string>
@@ -315,10 +322,6 @@
     <string name="refresh_store_omemo">XEP-0384: OMEMO-Salaus</string>
 
     <string name="unregistered_message">Tilin kirjautumisen yhteys epäonnistui:\nKäyttäjän nimi: %1$s\nPalvelimen nimi: %2$s\nTämä tili on offline-tilassa.</string>
-    <string name="create_videoBridge">Luo videosilta…</string>
-    <string name="create_videoBridge_menu">Luo videosilta</string>
-    <string name="create_join_video_conference">Luo / Liity videokokoukseen</string>
-    <string name="create_video_conference">Luo uusi videokokous tälle keskusteluhuoneelle</string>
     <string name="video_format_not_supported">Ei voitu asettaa laitekameran esikatselua kohteeseen: %1$s; Poikkeus: %2$s.</string>
     <string name="disconnected">Yhteys katkaistu</string>
     <string name="disconnecting_">Yhteyttä katkaistaan %1$s</string>
@@ -329,7 +332,6 @@
     <string name="duration">kesto</string>
 
     <string name="edit_status_message_tip">Aseta tilaviesti</string>
-    <string name="edited">muokattu</string>
     <string name="enter_name_or_number">Syötä nimi tai numero</string>
     <string name="error">Virhe</string>
     <string name="error_was_">Virhe oli: %1$s</string>
@@ -386,7 +388,7 @@
     <string name="history_erase_all">Pyyhi keskusteluhistoria kaikille yhteystiedoille</string>
     <string name="history_purge_for_contact_warning">Oletko varma että haluat tyhjentää kaikki valitut viestit kohteelle %1$s?</string>
     <string name="history_purge_all_warning">Oletko varma että haluat tyhjentää kaikki viestit kaikille yksiköille?</string>
-    <string name="history_purge_count">Poistettujen historiatietojen määrä: %1$s</string>
+    <string name="history_purge_count">Vaikuttavien historiatietojen määrä: %1$s</string>
     <string name="history_purge_error">Virhe poistaessa paikallisesti talletettuja viestejä kohteelle %1$s.</string>
     <string name="history_purge_media">Poista kaikki media puhelimestani</string>
     <string name="history_offline_warning">Sulje ja avaa tämä keskusteluistunto nähdäksesi MAM sekä Offline-viestit ollessasi online-tilassa</string>
@@ -487,6 +489,7 @@
     <string name="kick_failed_general_error">Kohteen %1$s potkaiseminen epäonnistui. Tapahtui yleinen palvelinvirhe.</string>
     <string name="last">Viimeinen</string>
     <string name="last_message_correction">Viimeisimmän viestin korjaus</string>
+    <string name="lmc_not_supported">Vastaanottaja ei tue viimeisen viestin korjausta</string>
     <string name="last_name">Sukunimi</string>
     <string name="last_seen">Tänään:%1$s</string>
     <string name="leave">Lähde</string>
@@ -536,8 +539,6 @@
     <string name="folder">Kansio</string>
     <string name="other">Muu</string>
     <string name="organization">Organisaatio</string>
-    <string name="phone">Puhelin</string>
-    <string name="phones">Puhelimet</string>
     <string name="play">Toista</string>
     <string name="postal_code">Postinumero</string>
     <string name="rename">Nimeä uudelleen</string>
@@ -580,7 +581,6 @@
     <string name="retry">Yritä uudelleen</string>
     <string name="search">Etsi</string>
     <string name="search_contact">Etsi yhteystietoa</string>&gt;
-    <string name="phonebook">Puhelinluettelo</string>
     <string name="security">Turvallisuus</string>
     <string name="select_account_owner">Valitse tilin omistaja</string>
     <string name="assign_group">Yhteystiedon määritetty ryhmä:</string>
@@ -659,7 +659,6 @@
     <string name="callinfo_call_information">Puhelun tiedot</string>
     <string name="callinfo_call_transport">Signaloivan puhelun kuljetus:</string>
     <string name="callinfo_codec">Koodekki/taajuus:</string>
-    <string name="callinfo_conference_focus">Kokouksen painopiste:</string>
     <string name="callinfo_default_encrypted">Salaus otettu käyttöön:</string>
     <string name="callinfo_jitter">Heilahtelu:</string>
     <string name="callinfo_key_exchange_protocol">Avaintenvaihtoprotokolla</string>
@@ -669,7 +668,6 @@
     <string name="callinfo_media_srtp">SRTP:</string>
     <string name="callinfo_media_stream_transport_protocol">Mediavirran siirtoprotokolla:</string>
     <string name="callinfo_na">Ei saatavilla.</string>
-    <string name="callinfo_peer_count">Osallistujien määrä:</string>
     <string name="callinfo_remote_ip">Vastapuolen IP-osoite/Portti:</string>
     <string name="callinfo_rtt">Edestakaisen matkan viive (RTT):</string>
     <string name="callinfo_details">Puhelun tarkemmat tiedot</string>
@@ -1010,8 +1008,6 @@
     <string name="sec_protocols_title">Turvallisuusprotokollat</string>
     <string name="sec_protocols_message">Valitse haluamiesi protokollien järjestys</string>
     <string name="discard">Hylkää</string>
-    <string name="sec_zrtp_signalling_on">ZRTP:tä mainostetaan signalointiprotokollan kautta</string>
-    <string name="sec_zrtp_signalling_off">ZRTP-mainosta ei tule</string>
 
     <!-- STUN/Jingle Nodes list -->
     <string name="service_gui_SERVERS_LIST_ADD_SERVER">Lisää palvelin</string>
@@ -1039,7 +1035,6 @@
     <string name="security_sdes_dlg_title">Valitse halutut salausalgoritmit</string>
     <string name="security_sdes_title">SDES-salausalgoritmit</string>
     <string name="security_zrtp_options">ZRTP-asetukset</string>
-    <string name="security_zrtp_signalling">ZRTP-signalointi</string>
 
     <!-- Common preferences -->
     <string name="audio_encoding">Äänen koodaus</string>
@@ -1082,6 +1077,7 @@
     <string name="jbr_server_port">Palvelimen Portti</string>
     <string name="jbr_priority">Prioriteetti (-128~127 välillä)</string>
     <string name="jbr_resource_auto_gen">Generoi resurssi automaattisesti</string>
+    <string name="jbr_resource_auto_summary">Poista resurssin nimi, jotta tämä tulee voimaan</string>
     <string name="jbr_resource_id">Jabber ID-Resurssi</string>
     <string name="jbr_resource_name">Resurssin nimi</string>
     <string name="jbr_server_ip">Yhdistettävän Palvelimen IP</string>
@@ -1220,14 +1216,6 @@
     <string name="tts_voice">Oletus tekstistä puheeksi-ääni:</string>
     <string name="loading_wait">Ladataan, odota…</string>
 
-    <!-- Remove special characters from phone number -->
-    <string name="settings_normalize_off">Ei puhelinnumeron muutoksia</string>
-    <string name="settings_normalize_on">Erikoismerkit poistetaan numerosta</string>
-    <string name="settings_normalize_number">Erikoismerkit puhelinnumeroissa</string>
-    <!-- Convert letters in phone numbers -->
-    <string name="settings_phone_alpha_no_allow">Ei puhelinnumeron muutoksia</string>
-    <string name="settings_phone_alpha_allow">Kirjaimet puhelinnumeroissa</string>
-
     <!-- Call settings -->
     <string name="call">Puhelu</string>
     <string name="media_call">Mediapuhelu</string>
@@ -1347,6 +1335,18 @@
     <string name="crypto_omemo_distrust_messaging_stop">Lopeta OMEMO-viestien lähettäminen kaverille jatkossa: %1$s</string>
     <string name="crypto_omemo_trust_messaging_resume">Jatka OMEMO-viestien lähettämistä kaverille: %1$s</string>
 
+    <!-- Language Translation settings -->
+    <string name="translation">Kielen käännös</string>
+    <string name="translation_received">Käännä viesti</string>
+    <string name="translation_receive_disable">Käännetty vastaanotettu pois käytöstä</string>
+    <string name="translation_receive_enable">Käännä vastaanottotoiminto</string>
+    <string name="translation_sent">Käännä viesti lähetettynä</string>
+    <string name="translation_sent_disable">Käännä lähetys pois käytöstä</string>
+    <string name="translation_sent_enable">Käännä lähetystoiminto</string>
+    <string name="translation_server_apikey">Käännöspalvelimen API-avain</string>
+    <string name="translation_server_apikey_hint">Syötä vain, jos sovellettavissa</string>
+    <string name="translation_server">Käännöspalvelimen URL-osoite</string>
+
     <!-- Advanced settings category -->
     <string name="advanced">Edistyneet</string>
     <string name="settings_expert">Asiantuntija-asetukset</string>
@@ -1392,7 +1392,6 @@
     <string name="permission_microphone">Mikrofoni</string>
     <string name="permission_music">Musiikki ja ääni</string>
     <string name="permission_notifications">Ilmoitukset</string>
-    <string name="permission_phone">Puhelin</string>
     <string name="permission_video">Kuva ja video</string>
     <string name="permission_storage">Tallennustila</string>
     <string name="permission_hint">Sovelluksen maksimaalisen suorituskyvyn ja täyden ominaisuustuen saamiseksi aTalk edellyttää, että myönnät käyttöoikeudet seuraaville palveluille. Ilman niitä, aTalk ei saata toimia tai voi käyttäytyä kummallisesti!</string>
@@ -1418,9 +1417,6 @@
 
     <string name="notifications_permission_denied_dialog_title">Lupapyyntö ilmoituksille</string>
     <string name="notifications_permission_denied_feedback">aTalkin ilmoitukset poistetaan käytöstä, kunnes hyväksyt lupapyynnön</string>
-
-    <string name="phone_permission_denied_dialog_title">Lupapyyntö puhelimen tilan lukemiseen</string>
-    <string name="phone_permission_denied_feedback">Puhelinominaisuudet eivät ole saatavilla, ennen kuin hyväksyt lupapyynnön</string>
 
     <string name="video_permission_denied_dialog_title">Lupapyyntö kuville ja videoille</string>
     <string name="video_permission_denied_feedback">Mediakuvat ja videotiedostot eivät ole saatavilla, ennen kuin hyväksyt lupapyynnön</string>

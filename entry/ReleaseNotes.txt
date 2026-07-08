@@ -1,7 +1,59 @@
 Project aTalk-ohos Release Notes
 =========================================================================
+Version:        1.00.000 (100000)
+Release Date:   07/08/2026
+Author:         cmeng
+- Support Language Translation for sent/received messages in chat/multi-user chat sessions.
+- Translation Language Server use aTalk default or user defined URL.
+- Support Translator API key entry for user if available.
+- Translation Language used in sent/received messages is defined per user account.
+- Translation option can be enabled/disabled per contact chat/multi-user chat session.
+- Use background runnable thread to handle history messages translation; eliminate ~1s/message delay in translation and hang chat session UI.
+- aTalk default Translator server has rate limiting. Too many history messages translation will give raise to error code 429.
+- If required, user may use 'Translate message receive' option, to translate messages that have failed.
+- Incoming message translated content is only saved cache; not in DB as it is not part of the message received.
+- Extend support of 'Last Message Correction' in multi-user chat session.
+- Extend Last Message Correction support to all other outgoing messages, and not just the last sent message.
+- Keep the original created message time stamp for Message Correction/Retraction, so sent/received messages chronological are maintained.
+- Need to take care for retract and correction messages handling if remote messages have been deleted, and when history logging is disabled.
+- Start up contact chat session on incoming chat message received; this is to update or cache the message, and to translate if enabled.
+- When joining a chatRoom, includes element <history maxchars='0'/> in sent stanza to stop server from sending history messages;
+  chatRoom history messages are retrieved via mam query instead.
+- Add 'before' option for the latest mam messages; fix incorrect setting in field 'with' of mamQuery stanza sent to chatRoom history retrieval.
+- Make call transfer via JingleMessage if the intended transferred callee supports it.
+- Fix undesired double firing of incoming call alert notifications when receiving call via JingleMessageSession.
+- Ensure JingleMessageSession ends properly with sending/receiving of 'finish' message, else subsequent call may have problem.
+- JingleMessage must send JM 'reject' to own user, so server will relay to all its resources for action.
+- Improve the handling process of JingleMessage and UI during tie-break conditions under multiple resources.
+- Enforce call encryption when enabled. Both parties must define a common encryption mode, else call ends with SecurityError.
+- Remove ZRTP signalling option. ZRTP-hash Element will be included in Jingle RTP session when ZRTP option is enabled.
+- Complete revamp jingle_rtp implementation; ensure class extends NameElement and XmlElement appropriately, and avoid mixed handling of classes.
+- Ensure auto generated resource name remains unchanged even when aTalk re-login after app is terminated.
+- Remove support merging of multiple messages in chat window. It limits user usage in, and
+  complicates messages handling for retract, delete, correction and delivery receipt etc.
+- aTalk UI does not support SMS text and multimedia features, hence remove all source support i.e. OperationSetSmsMessaging class and all SMS utilities.
+- Remove aTalk Video conferencing features; it requires both server setup and heavy resource loading on aTalk device.
+- When checking or before update, show all the new changes info when there is a new version found - debug version only.
+- Remove permission.READ_PHONE_STATE, and all PhoneNumberI18nService related sources; not required in aTalk but conflict with android phone security check.
+- Fix implementation for ServiceDiscoveryHelper#discoverInfoNonBlocking end in endless loop if nodeVerHash is null.
+- Fix incorrect cast of Expert Settings to PreferenceCategory class and crashes aTalk.
+- Remove bcg729 jni library support.
+- Upgrade libvpx to 1.16.0. libvpx v1.16.0 removed support for 32-bit targets (armv7, armv7s, and i386).
+- aTalk jni library will support only arm64-v8a and x86_64 ABIS; drops armeabi-v7a and x86 ABI ABIS.
+- Upgrade aTalk to support Android-17.0 CinnamonBun (API-37).
+
+*** Observation ***
+- All offline messages sent to contact are streamed upon user registered with the server. Hance not all messages are translated due to Translator server rate limiting.
+  Normally this will not happen, as aTalk should be active and registered with the server to receive incoming messages with translation.
+- All chatRoom history messages are streamed immediatly upon user joining the chatRoom, if history option is not disabled.
+- Update build environment to Android Studio Quail 1 | 2026.1.1 Patch 2.
+  Must keep 'com.android.tools.build:gradle:8.11.2' and not to use AGP 9.x.x.
+  Otherwise, this causes "constant expression required" errors for the generated R.id.xxx;
+  and gradle.properties#android.nonFinalResIds=false is ignored in AGP 9.x.x;
+
+=========================================================================
 Version:        00.30.000 (0030000)
-Release Date:   04/30/2026
+Release Date:   00/30/2026
 Author:         cmeng
 - Migrate all Jingle stanza sid to use UUIDv4 as recommended in XEP-0353: Jingle Message Initiation 0.8.0 (2026-02-19)
   i.e. 5. Business Rules https://xmpp.org/extensions/xep-0353.html#business-rules

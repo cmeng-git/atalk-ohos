@@ -67,12 +67,7 @@ public abstract class ChatSession {
     public static final int MODE_MULTI = 1;
     public static final int MODE_NPE = 2;    // non-persistent entity
 
-    private JSONObject attributes = new JSONObject();
-    private static ChatSession chatSession;
     public final ArrayList<ChatMessageImpl> messages = new ArrayList<>();
-    private AccountID accountId = null;
-    private String nextMessage;
-    private transient MultiUserChat mucOptions = null;
 
     /**
      * The persistable address of the contact from the session.
@@ -243,20 +238,6 @@ public abstract class ChatSession {
      * @return the end date of the history of this chat session.
      */
     public abstract Date getHistoryEndDate();
-
-    /**
-     * Returns the default mobile number used to send sms-es in this session.
-     *
-     * @return the default mobile number used to send sms-es in this session.
-     */
-    public abstract String getDefaultSmsNumber();
-
-    /**
-     * Sets the default mobile number used to send sms-es in this session.
-     *
-     * @param smsPhoneNumber The default mobile number used to send sms-es in this session.
-     */
-    public abstract void setDefaultSmsNumber(String smsPhoneNumber);
 
     /**
      * Disposes this chat session.

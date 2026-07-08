@@ -6,18 +6,17 @@
 package org.atalk.ohos.gui.settings;
 
 import android.os.Bundle;
-import android.view.KeyEvent;
 
 import androidx.activity.OnBackPressedCallback;
 
 import java.util.List;
 
-import org.atalk.impl.neomedia.MediaServiceImpl;
-import org.atalk.impl.neomedia.NeomediaActivator;
 import org.atalk.ohos.BaseActivity;
 import org.atalk.ohos.R;
 import org.atalk.ohos.gui.account.settings.MediaEncodingActivity;
 import org.atalk.ohos.gui.account.settings.MediaEncodingsFragment;
+import org.atalk.impl.neomedia.MediaServiceImpl;
+import org.atalk.impl.neomedia.NeomediaActivator;
 import org.atalk.service.neomedia.codec.EncodingConfiguration;
 import org.atalk.service.neomedia.format.MediaFormat;
 import org.atalk.util.MediaType;

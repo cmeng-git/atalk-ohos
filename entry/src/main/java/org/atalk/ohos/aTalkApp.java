@@ -50,9 +50,6 @@ import net.java.sip.communicator.service.protocol.AccountManager;
 import net.java.sip.communicator.util.ConfigurationUtils;
 import net.java.sip.communicator.util.ServiceUtils;
 
-import org.atalk.impl.appnotification.NotificationHelper;
-import org.atalk.impl.appstray.NotificationPopupHandler;
-import org.atalk.impl.timberlog.TimberLogImpl;
 import org.atalk.ohos.gui.AppGUIActivator;
 import org.atalk.ohos.gui.LauncherActivity;
 import org.atalk.ohos.gui.Splash;
@@ -63,9 +60,13 @@ import org.atalk.ohos.gui.dialogs.DialogActivity;
 import org.atalk.ohos.gui.util.DrawableCache;
 import org.atalk.ohos.gui.util.LocaleHelper;
 import org.atalk.ohos.plugin.permissions.PermissionsActivity;
+import org.atalk.impl.appnotification.NotificationHelper;
+import org.atalk.impl.appstray.NotificationPopupHandler;
+import org.atalk.impl.timberlog.TimberLogImpl;
 import org.atalk.persistance.DatabaseBackend;
 import org.atalk.service.configuration.ConfigurationService;
 import org.atalk.service.log.LogUploadService;
+
 import org.osgi.framework.BundleContext;
 
 import timber.log.Timber;
@@ -124,7 +125,8 @@ public class aTalkApp extends Application implements LifecycleEventObserver {
         // chromium-Monochrome.aab-stable-424011020:5 throw NPE at org.chromium.ui.base.Clipboard.<init>
         try {
             new WebView(this).destroy();
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             Timber.e("WebView init exception: %s", e.getMessage());
         }
 
@@ -150,7 +152,7 @@ public class aTalkApp extends Application implements LifecycleEventObserver {
      */
     @Override
     protected void attachBaseContext(Context base) {
-        // mInstance must be initialize before getProperty() for SQLiteConfigurationStore() init.
+        // mInstance must be initialized before getProperty() for SQLiteConfigurationStore() init.
         mInstance = base;
         String language = ConfigurationUtils.getProperty(P_KEY_LOCALE, "");
         // showToastMessage("aTalkApp reinit locale: " + language);
@@ -516,7 +518,7 @@ public class aTalkApp extends Application implements LifecycleEventObserver {
         String defaultEmail = getConfig().getString("org.atalk.ohos.LOG_REPORT_EMAIL");
 
         if (logUpload != null) {
-            logUpload.sendLogs(new String[]{defaultEmail},
+            logUpload.sendLogs(new String[] {defaultEmail},
                     getResString(R.string.send_log_subject),
                     getResString(R.string.send_log_title));
         }
@@ -534,7 +536,8 @@ public class aTalkApp extends Application implements LifecycleEventObserver {
             while (wait-- > 0) {
                 try {
                     currentActivityMonitor.wait(1000);
-                } catch (InterruptedException e) {
+                }
+                catch (InterruptedException e) {
                     Timber.e("%s", e.getMessage());
                 }
 

@@ -5,6 +5,7 @@
  */
 package net.java.sip.communicator.service.protocol;
 
+import net.java.sip.communicator.impl.protocol.jabber.MessageJabberImpl;
 import net.java.sip.communicator.service.protocol.event.MessageListener;
 
 import org.jivesoftware.smackx.omemo.OmemoManager;
@@ -15,27 +16,7 @@ import org.jivesoftware.smackx.omemo.OmemoManager;
  * @author Emil Ivov
  * @author Eng Chong Meng
  */
-public interface OperationSetBasicInstantMessaging extends OperationSet
-{
-    /**
-     * Create a IMessage instance for sending arbitrary MIME-encoding content.
-     *
-     * @param content content value
-     * @param encType the encryption type for the <code>content</code>
-     * @param subject a <code>String</code> subject or <code>null</code> for now subject.
-     * @return the newly created message.
-     */
-    IMessage createMessage(String content, int encType, String subject);
-
-    /**
-     * Create a IMessage instance for sending a simple text messages with default (text/plain)
-     * content type and encoding.
-     *
-     * @param messageText the string content of the message.
-     * @return IMessage the newly created message
-     */
-    IMessage createMessage(String messageText);
-
+public interface OperationSetBasicInstantMessaging extends OperationSet {
     /**
      * Create a IMessage instance with the specified UID, content type and a default encoding. This
      * method can be useful when message correction is required. One can construct the corrected
@@ -43,36 +24,27 @@ public interface OperationSetBasicInstantMessaging extends OperationSet
      *
      * @param messageText the string content of the message.
      * @param encType the mime and encryption type for the <code>content</code>
-     * @param messageUID the unique identifier of this message.
+     * @param msgUid the unique identifier of this message.
+     *
      * @return IMessage the newly created message
      */
-    IMessage createMessageWithUID(String messageText, int encType, String messageUID);
-
-    /**
-     * Sends the <code>message</code> to the destination indicated by the <code>to</code> contact.
-     *
-     * @param to the <code>Contact</code> to send <code>message</code> to
-     * @param message the <code>IMessage</code> to send.
-     * @throws java.lang.IllegalStateException if the underlying ICQ stack is not registered and initialized.
-     * @throws java.lang.IllegalArgumentException if <code>to</code> is not an instance belonging to the underlying implementation.
-     */
-    void sendInstantMessage(Contact to, IMessage message)
-            throws IllegalStateException, IllegalArgumentException;
+    MessageJabberImpl createMessage(String messageText, int encType, String msgUid);
 
     /**
      * Sends the <code>message</code> to the destination indicated by the <code>to</code> contact and the
      * specific <code>toResource</code>.
      *
      * @param to the <code>Contact</code> to send <code>message</code> to
-     * @param toResource the resource to which the message should be send
      * @param message the <code>IMessage</code> to send.
+     *
      * @throws java.lang.IllegalStateException if the underlying ICQ stack is not registered and initialized.
      * @throws java.lang.IllegalArgumentException if <code>to</code> is not an instance belonging to the underlying implementation.
      */
-    void sendInstantMessage(Contact to, ContactResource toResource, IMessage message);
+    void sendInstantMessage(Contact to, MessageJabberImpl message);
 
-    void sendInstantMessage(Contact to, ContactResource resource, IMessage message, String correctedMessageUID,
-            OmemoManager omemoManager);
+    void sendInstantMessage(Contact to, MessageJabberImpl message, String correctionUid, OmemoManager omemoManager);
+
+    void sendRetractMessage(Contact to, String retractUid);
 
     /**
      * Registers a <code>MessageListener</code> with this operation set so that it gets notifications of
@@ -97,7 +69,7 @@ public interface OperationSetBasicInstantMessaging extends OperationSet
      * protocol to support these messages and yet have a particular account that does not (i.e.
      * feature not enabled on the protocol server). In cases like this it is possible for this
      * method to return <code>true</code> even when offline messaging is not supported, and then have
-     * the sendMessage method throw an <code>OperationFailedException</code> with code
+     * the correctMessage method throw an <code>OperationFailedException</code> with code
      * OFFLINE_MESSAGES_NOT_SUPPORTED.
      *
      * @return <code>true</code> if the protocol supports offline messages and <code>false</code> otherwise.
@@ -108,6 +80,7 @@ public interface OperationSetBasicInstantMessaging extends OperationSet
      * Determines whether the protocol supports the supplied content type
      *
      * @param mimeType the mime type we want to check
+     *
      * @return <code>true</code> if the protocol supports it and <code>false</code> otherwise.
      */
     boolean isContentTypeSupported(int mimeType);
@@ -117,6 +90,7 @@ public interface OperationSetBasicInstantMessaging extends OperationSet
      *
      * @param mimeType the encode mode we want to check
      * @param contact contact which is checked for supported encType
+     *
      * @return <code>true</code> if the contact supports it and <code>false</code> otherwise.
      */
     boolean isContentTypeSupported(int mimeType, Contact contact);

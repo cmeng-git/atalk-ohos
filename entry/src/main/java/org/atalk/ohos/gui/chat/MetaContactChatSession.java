@@ -35,12 +35,11 @@ import net.java.sip.communicator.service.protocol.event.MessageDeliveredEvent;
 import net.java.sip.communicator.service.protocol.event.MessageReceivedEvent;
 import net.java.sip.communicator.util.ConfigurationUtils;
 
-import org.apache.commons.lang3.StringUtils;
 import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.AppGUIActivator;
-import org.json.JSONArray;
-import org.json.JSONException;
+
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * An implementation of the <code>ChatSession</code> interface that represents a user-to-user chat session.
@@ -238,36 +237,6 @@ public class MetaContactChatSession extends ChatSession
             }
         }
         return endHistoryDate;
-    }
-
-    /**
-     * Returns the default mobile number used to send sms-es in this session.
-     *
-     * @return the default mobile number used to send sms-es in this session.
-     */
-    @Override
-    public String getDefaultSmsNumber() {
-        String smsNumber;
-        JSONArray jsonArray = metaContact.getDetails("mobile");
-        if (jsonArray != null && jsonArray.length() > 0) {
-            try {
-                smsNumber = jsonArray.getString(0);
-                return smsNumber;
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Sets the default mobile number used to send sms-es in this session.
-     *
-     * @param smsPhoneNumber The default mobile number used to send sms-es in this session.
-     */
-    @Override
-    public void setDefaultSmsNumber(String smsPhoneNumber) {
-        metaContact.addDetail("mobile", smsPhoneNumber);
     }
 
     /**
@@ -558,7 +527,7 @@ public class MetaContactChatSession extends ChatSession
         MetaContactChatTransport chatTransport = null;
         Collection<ContactResource> contactResources = contact.getResources();
 
-        if (contact.supportResources() && (contactResources != null) && contactResources.size() > 0) {
+        if (contact.supportResources() && (contactResources != null) && !contactResources.isEmpty()) {
             if (contactResources.size() > 1) {
                 chatTransport = new MetaContactChatTransport(this, contact);
                 addChatTransport(chatTransport);

@@ -25,11 +25,12 @@ import net.java.sip.communicator.service.protocol.AccountID;
 import net.java.sip.communicator.service.protocol.ProtocolProviderFactory;
 import net.java.sip.communicator.util.account.AccountUtils;
 
-import org.atalk.crypto.omemo.SQLiteOmemoStore;
 import org.atalk.ohos.R;
 import org.atalk.ohos.gui.AppGUIActivator;
 import org.atalk.ohos.gui.dialogs.CustomDialogCbox;
 import org.atalk.ohos.gui.dialogs.DialogActivity;
+import org.atalk.crypto.omemo.SQLiteOmemoStore;
+
 import org.jivesoftware.smackx.omemo.OmemoService;
 
 /**
@@ -87,7 +88,8 @@ public class AccountDeleteDialog {
                     ProtocolProviderServiceJabberImpl pps = (ProtocolProviderServiceJabberImpl) account.getProtocolProvider();
                     if (pps.deleteAccountOnServer())
                         removeAccount(accountId);
-                } else {
+                }
+                else {
                     removeAccount(accountId);
                 }
             }
@@ -99,7 +101,8 @@ public class AccountDeleteDialog {
             removeAccountThread.join(3000);
             // Notify about results
             l.onAccountRemoved(account);
-        } catch (InterruptedException e) {
+        }
+        catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
     }

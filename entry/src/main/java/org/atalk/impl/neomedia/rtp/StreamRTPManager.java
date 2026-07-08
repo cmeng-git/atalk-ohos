@@ -5,12 +5,6 @@
  */
 package org.atalk.impl.neomedia.rtp;
 
-import org.atalk.impl.neomedia.jmfext.media.rtp.RTPSessionMgr;
-import org.atalk.impl.neomedia.rtp.translator.RTPTranslatorImpl;
-import org.atalk.service.neomedia.MediaStream;
-import org.atalk.service.neomedia.RTPTranslator;
-import org.atalk.service.neomedia.SSRCFactory;
-
 import java.io.IOException;
 import java.util.Vector;
 
@@ -26,6 +20,12 @@ import javax.media.rtp.RemoteListener;
 import javax.media.rtp.SendStream;
 import javax.media.rtp.SendStreamListener;
 import javax.media.rtp.SessionListener;
+
+import org.atalk.impl.neomedia.jmfext.media.rtp.RTPSessionMgr;
+import org.atalk.impl.neomedia.rtp.translator.RTPTranslatorImpl;
+import org.atalk.service.neomedia.MediaStream;
+import org.atalk.service.neomedia.RTPTranslator;
+import org.atalk.service.neomedia.SSRCFactory;
 
 import timber.log.Timber;
 

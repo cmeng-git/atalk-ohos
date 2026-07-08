@@ -26,14 +26,15 @@ import java.util.StringTokenizer;
 import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
 
-import org.atalk.impl.osgi.framework.AsyncExecutor;
-import org.atalk.impl.osgi.framework.launch.FrameworkFactoryImpl;
 import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
+import org.atalk.impl.osgi.framework.AsyncExecutor;
+import org.atalk.impl.osgi.framework.launch.FrameworkFactoryImpl;
 import org.atalk.service.configuration.ConfigurationService;
 import org.atalk.service.osgi.BundleContextHolder;
 import org.atalk.service.osgi.OSGiService;
 import org.atalk.util.OSUtils;
+
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
 import org.osgi.framework.Constants;
@@ -102,13 +103,15 @@ public class OSGiServiceImpl {
     public void onCreate() {
         try {
             setScHomeDir();
-        } catch (Throwable t) {
+        }
+        catch (Throwable t) {
             if (t instanceof ThreadDeath)
                 throw (ThreadDeath) t;
         }
         try {
             setJavaUtilLoggingConfigFile();
-        } catch (Throwable t) {
+        }
+        catch (Throwable t) {
             if (t instanceof ThreadDeath)
                 throw (ThreadDeath) t;
         }
@@ -231,7 +234,8 @@ public class OSGiServiceImpl {
                     }
                 }
                 framework.start();
-            } catch (BundleException be) {
+            }
+            catch (BundleException be) {
                 throw new RuntimeException(be);
             }
 
@@ -271,13 +275,16 @@ public class OSGiServiceImpl {
 
                 if (is != null)
                     props.load(is);
-            } catch (IOException ioe) {
+            }
+            catch (IOException ioe) {
                 throw new RuntimeException(ioe);
-            } finally {
+            }
+            finally {
                 try {
                     if (is != null)
                         is.close();
-                } catch (IOException ignore) {
+                }
+                catch (IOException ignore) {
                 }
             }
 
@@ -303,7 +310,8 @@ public class OSGiServiceImpl {
                         }
                         if (!classNames.isEmpty())
                             startLevels.put(startLevelInt, classNames);
-                    } catch (Throwable t) {
+                    }
+                    catch (Throwable t) {
                         if (t instanceof ThreadDeath)
                             throw (ThreadDeath) t;
                     }
@@ -327,7 +335,8 @@ public class OSGiServiceImpl {
             if (framework != null)
                 try {
                     framework.stop();
-                } catch (BundleException be) {
+                }
+                catch (BundleException be) {
                     throw new RuntimeException(be);
                 }
         }

@@ -15,15 +15,15 @@
  */
 package net.java.sip.communicator.impl.sysactivity;
 
-import net.java.sip.communicator.service.sysactivity.SystemActivityChangeListener;
-import net.java.sip.communicator.service.sysactivity.event.SystemActivityEvent;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import net.java.sip.communicator.service.sysactivity.SystemActivityChangeListener;
+import net.java.sip.communicator.service.sysactivity.event.SystemActivityEvent;
 
 import timber.log.Timber;
 
@@ -138,7 +138,7 @@ public class SystemActivityEventDispatcher implements Runnable {
 
             eventsToDispatch.notifyAll();
 
-            if (dispatcherThread == null && listeners.size() > 0) {
+            if (dispatcherThread == null && !listeners.isEmpty()) {
                 dispatcherThread = new Thread(this);
                 dispatcherThread.start();
             }
@@ -162,7 +162,8 @@ public class SystemActivityEventDispatcher implements Runnable {
 
         try {
             listener.activityChanged(evt);
-        } catch (Throwable e) {
+        }
+        catch (Throwable e) {
             Timber.e(e, "Error delivering event");
         }
     }
@@ -182,7 +183,8 @@ public class SystemActivityEventDispatcher implements Runnable {
                     if (eventsToDispatch.isEmpty()) {
                         try {
                             eventsToDispatch.wait();
-                        } catch (InterruptedException ignore) {
+                        }
+                        catch (InterruptedException ignore) {
                         }
                     }
 
@@ -207,7 +209,8 @@ public class SystemActivityEventDispatcher implements Runnable {
                         synchronized (this) {
                             try {
                                 wait(eventToProcess.getValue());
-                            } catch (Throwable ignore) {
+                            }
+                            catch (Throwable ignore) {
                             }
                         }
 
@@ -216,7 +219,8 @@ public class SystemActivityEventDispatcher implements Runnable {
                     }
                 }
             }
-        } catch (Throwable t) {
+        }
+        catch (Throwable t) {
             Timber.e(t, "Error dispatching thread ended unexpectedly");
         }
     }

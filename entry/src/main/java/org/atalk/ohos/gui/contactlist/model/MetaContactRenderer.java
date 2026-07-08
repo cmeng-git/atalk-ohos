@@ -21,13 +21,15 @@ import net.java.sip.communicator.service.protocol.OperationSetVideoTelephony;
 import net.java.sip.communicator.service.protocol.PresenceStatus;
 import net.java.sip.communicator.util.StatusUtil;
 
-import org.apache.commons.lang3.StringUtils;
-import org.atalk.impl.neomedia.device.util.AndroidCamera;
 import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
 import org.atalk.ohos.gui.chat.ChatSessionManager;
-import org.atalk.ohos.util.AppImageUtil;
 import org.atalk.ohos.gui.util.DrawableCache;
+import org.atalk.ohos.util.AppImageUtil;
+import org.atalk.impl.neomedia.device.util.AndroidCamera;
+
+import org.apache.commons.lang3.StringUtils;
+
 import org.jxmpp.jid.DomainBareJid;
 
 /**

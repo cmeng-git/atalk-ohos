@@ -68,6 +68,12 @@
     <string name="chat_message_long_press_hint">تجنب النقر داخل منطقة الرسالة لعملية اختيار متعدد العناصر</string>
     <string name="quote">اقتباس</string>
     <string name="reply">رد</string>
+    <string name="retract">التراجع</string>
+    <string name="retract_menu">سحب الرسائل</string>
+    <string name="retract_message_prompt">هل أنت متأكد من رغبتك في سحب جميع الرسائل الصادرة المحددة من %1$s؟</string>
+    <string name="retract_not_supported">لا يدعم المستلم خاصية سحب الرسائل</string>
+    <string name="retract_own">لقد حذفت هذه الرسالة</string>
+    <string name="retract_remote">تم حذف هذه الرسالة</string>
     <string name="select_all">تحديد الكل</string>
     <string name="subject">الموضوع</string>
     <string name="settings">الإعدادات</string>
@@ -130,7 +136,8 @@
     <string name="call_audio">مكالمة صوتية</string>
     <string name="call_answered">أجاب %1$s على المكالمة.</string>
     <string name="call_disable_on_fault">فشل aTalk في تهيئة %1$s\nسيتم تعطيل جميع مكالمات/خدمات الوسائط.\n%2$s</string>
-    <string name="call_ended">أنهى الطرف البعيد المكالمة: %1$s</string>
+    <string name="call_ended">انتهت المكالمة</string>
+    <string name="call_ended_by_remote">أنهى الطرف البعيد المكالمة: %1$s</string>
     <string name="call_error">أعاد الطرف البعيد خطأ: %1$s</string>
     <string name="call_failed">فشلت المكالمة</string>
     <string name="call_history_name">سجل المكالمات</string>
@@ -315,10 +322,6 @@
     <string name="refresh_store_omemo">XEP-0384: تشفير OMEMO</string>
 
     <string name="unregistered_message">فشل تسجيل الدخول للاتصال بالحساب:\nاسم المستخدم: %1$s\nاسم الخادم: %2$s\nالحساب غير متصل.</string>
-    <string name="create_videoBridge">إنشاء جسر فيديو…</string>
-    <string name="create_videoBridge_menu">إنشاء جسر فيديو</string>
-    <string name="create_join_video_conference">إنشاء / الانضمام إلى مؤتمر فيديو</string>
-    <string name="create_video_conference">إنشاء مؤتمر فيديو جديد لغرفة الدردشة هذه</string>
     <string name="video_format_not_supported">فشل في تعيين معاينة كاميرا الجهاز إلى: %1$s؛ استثناء: %2$s.</string>
     <string name="disconnected">غير متصل</string>
     <string name="disconnecting_">جارٍ قطع الاتصال بـ %1$s</string>
@@ -329,7 +332,6 @@
     <string name="duration">المدة</string>
 
     <string name="edit_status_message_tip">تعيين رسالة الحالة</string>
-    <string name="edited">تم التعديل</string>
     <string name="enter_name_or_number">أدخل الاسم أو الرقم</string>
     <string name="error">خطأ</string>
     <string name="error_was_">كان الخطأ: %1$s</string>
@@ -386,7 +388,7 @@
     <string name="history_erase_all">محو تاريخ الدردشة لجميع جهات الاتصال</string>
     <string name="history_purge_for_contact_warning">هل أنت متأكد من أنك تريد حذف جميع الرسائل المحددة لـ %1$s؟</string>
     <string name="history_purge_all_warning">هل أنت متأكد من أنك تريد حذف جميع الرسائل لجميع الكيانات؟</string>
-    <string name="history_purge_count">عدد سجلات التاريخ المحذوفة: %1$s</string>
+    <string name="history_purge_count">عدد سجلات التاريخ المتأثرة: %1$s</string>
     <string name="history_purge_error">خطأ في إزالة الرسائل المخزنة محليًا لـ %1$s.</string>
     <string name="history_purge_media">حذف الوسائط من هاتفي</string>
     <string name="history_offline_warning">أغلق وافتح جلسة الدردشة هذه لعرض رسائل MAM والرسائل غير المتصلة عندما تكون متصلاً</string>
@@ -487,6 +489,7 @@
     <string name="kick_failed_not_enough_permission">فشل في طرد %1$s. ليس لديك امتيازات كافية للقيام بذلك.</string>
     <string name="last">الأخير</string>
     <string name="last_message_correction">تصحيح الرسالة الأخيرة</string>
+    <string name="lmc_not_supported">لا يدعم المستلم خاصية تصحيح الرسالة الأخيرة</string>
     <string name="last_name">الاسم الأخير</string>
     <string name="last_seen">اليوم:%1$s</string>
     <string name="leave">مغادرة</string>
@@ -536,8 +539,6 @@
     <string name="folder">مجلد</string>
     <string name="other">أخرى</string>
     <string name="organization">المنظمة</string>
-    <string name="phone">الهاتف</string>
-    <string name="phones">الهواتف</string>
     <string name="play">تشغيل</string>
     <string name="postal_code">الرمز البريدي</string>
     <string name="rename">إعادة تسمية</string>
@@ -580,7 +581,6 @@
     <string name="retry">إعادة المحاولة</string>
     <string name="search">بحث</string>
     <string name="search_contact">البحث عن جهة اتصال</string>&gt;
-    <string name="phonebook">دفتر الهاتف</string>
     <string name="security">الأمان</string>
     <string name="select_account_owner">تحديد مالك الحساب</string>
     <string name="assign_group">المجموعة المخصصة لجهة الاتصال:</string>
@@ -659,7 +659,6 @@
     <string name="callinfo_call_information">معلومات المكالمة</string>
     <string name="callinfo_call_transport">نقل إشارة المكالمة:</string>
     <string name="callinfo_codec">الترميز/التردد:</string>
-    <string name="callinfo_conference_focus">مركز المؤتمر:</string>
     <string name="callinfo_default_encrypted">التشفير مفعل:</string>
     <string name="callinfo_jitter">التقطع:</string>
     <string name="callinfo_key_exchange_protocol">بروتوكول تبادل المفاتيح</string>
@@ -669,7 +668,6 @@
     <string name="callinfo_media_srtp">SRTP:</string>
     <string name="callinfo_media_stream_transport_protocol">بروتوكول نقل تيار الوسائط:</string>
     <string name="callinfo_na">غير متاح</string>
-    <string name="callinfo_peer_count">عدد المشاركين:</string>
     <string name="callinfo_remote_ip">IP/منفذ بعيد:</string>
     <string name="callinfo_rtt">RTT:</string>
     <string name="callinfo_details">تفاصيل معلومات المكالمة</string>
@@ -1006,7 +1004,6 @@
     <string name="sec_protocols_title">بروتوكولات الأمان</string>
     <string name="sec_protocols_message">يرجى اختيار ترتيب البروتوكولات المطلوب</string>
     <string name="discard">تجاهل</string>
-    <string name="sec_zrtp_signalling_off">لن يكون هناك إعلان عن ZRTP</string>
 
     <!-- STUN/Jingle Nodes list -->
     <string name="service_gui_SERVERS_LIST_ADD_SERVER">إضافة خادم</string>
@@ -1034,7 +1031,6 @@
     <string name="security_sdes_dlg_title">اختر مجموعات التشفير المطلوبة</string>
     <string name="security_sdes_title">مجموعات تشفير SDES</string>
     <string name="security_zrtp_options">خيارات ZRTP</string>
-    <string name="security_zrtp_signalling">إشارة ZRTP</string>
 
     <!-- Common preferences -->
     <string name="audio_encoding">ترميز الصوت</string>
@@ -1077,6 +1073,7 @@
     <string name="jbr_server_port">منفذ الخادم</string>
     <string name="jbr_priority">الأولوية (النطاق: -128~127)</string>
     <string name="jbr_resource_auto_gen">إنشاء المورد تلقائيًا</string>
+    <string name="jbr_resource_auto_summary">يرجى تحديد اسم المورد بوضوح حتى يتم تفعيل هذا الإجراء.</string>
     <string name="jbr_resource_id">معرف Jabber</string>
     <string name="jbr_resource_name">اسم المورد</string>
     <string name="jbr_server_ip">IP خادم الاتصال</string>
@@ -1212,14 +1209,6 @@
     <string name="tts_voice">صوت TTS الافتراضي:</string>
     <string name="loading_wait">جارٍ التحميل، يرجى الانتظار…</string>
 
-    <!-- Remove special characters from phone number -->
-    <string name="settings_normalize_number">الرموز الخاصة في أرقام الهاتف</string>
-    <string name="settings_normalize_off">لا توجد تعديلات على رقم الهاتف</string>
-    <string name="settings_normalize_on">سيتم إزالة الرموز الخاصة من الرقم</string>
-    <!-- Convert letters in phone numbers -->
-    <string name="settings_phone_alpha_no_allow">لا توجد تعديلات على رقم الهاتف</string>
-    <string name="settings_phone_alpha_allow">الأحرف في أرقام الهاتف</string>
-
     <!-- Call settings -->
     <string name="call">مكالمة</string>
     <string name="media_call">مكالمة وسائط</string>
@@ -1338,6 +1327,18 @@
     <string name="crypto_omemo_distrust_messaging_stop">إيقاف إرسال رسائل OMEMO إلى الصديق: %1$s</string>
     <string name="crypto_omemo_trust_messaging_resume">استئناف إرسال رسائل OMEMO إلى الصديق: %1$s</string>
 
+    <!-- Language Translation settings -->
+    <string name="translation">ترجمة اللغة</string>
+    <string name="translation_received">ترجمة الرسائل الواردة</string>
+    <string name="translation_receive_disable">تعطيل استقبال الترجمة</string>
+    <string name="translation_receive_enable">تتيح الترجمة إمكانية الوصول</string>
+    <string name="translation_sent">ترجمة الرسائل المرسلة</string>
+    <string name="translation_sent_disable">تعطيل إرسال الترجمة</string>
+    <string name="translation_sent_enable">تفعيل إرسال الترجمة</string>
+    <string name="translation_server_apikey">مفتاح واجهة برمجة تطبيقات خادم الترجمة</string>
+    <string name="translation_server_apikey_hint">أدخل فقط إذا كان ذلك ينطبق</string>
+    <string name="translation_server">رابط خادم الترجمة</string>
+
     <!-- Advanced settings category -->
     <string name="advanced">متقدم</string>
     <string name="settings_expert">إعدادات الخبراء</string>
@@ -1383,7 +1384,6 @@
     <string name="permission_microphone">الميكروفون</string>
     <string name="permission_music">الموسيقى والصوت</string>
     <string name="permission_notifications">الإشعارات</string>
-    <string name="permission_phone">الهاتف</string>
     <string name="permission_video">الصور والفيديو</string>
     <string name="permission_storage">التخزين</string>
     <string name="permission_hint">للحصول على أداء مثالي ودعم كامل للميزات، يتطلب aTalk منح الأذونات للخدمات التالية. بدونها، قد لا يعمل aTalk أو قد يكون له سلوك غير متوقع!</string>
@@ -1409,9 +1409,6 @@
 
     <string name="notifications_permission_denied_dialog_title">طلب إذن الإشعارات</string>
     <string name="notifications_permission_denied_feedback">الإشعارات من aTalk ستكون معطلة حتى تمنح إذن الإشعارات</string>
-
-    <string name="phone_permission_denied_dialog_title">طلب إذن قراءة حالة الهاتف</string>
-    <string name="phone_permission_denied_feedback">ميزات الهاتف لن تكون متاحة حتى تمنح إذن قراءة حالة الهاتف</string>
 
     <string name="video_permission_denied_dialog_title">طلب إذن الصور والفيديو</string>
     <string name="video_permission_denied_feedback">ملفات الصور والفيديو الوسائط لن تكون متاحة حتى تمنح إذن الوصول</string>

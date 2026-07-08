@@ -49,6 +49,7 @@ import org.atalk.ohos.BaseFragment;
 import org.atalk.ohos.BuildConfig;
 import org.atalk.ohos.R;
 import org.atalk.ohos.aTalkApp;
+
 import org.jetbrains.annotations.NotNull;
 
 import timber.log.Timber;
@@ -197,7 +198,8 @@ public class WebViewFragment extends BaseFragment implements OnKeyListener {
             connection.connect();
             InputStream input = connection.getInputStream();
             return BitmapFactory.decodeStream(input);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             Timber.w("Exception %s", e.getMessage());
             return null;
         }

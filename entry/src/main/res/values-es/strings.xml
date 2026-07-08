@@ -82,7 +82,7 @@
     <string name="call_transfer">Transferir</string>
     <string name="call_transfer_failed">Error al continuar con la transferencia de llamadas: %1$s &#8674; %2$s\n%3$s</string>
     <string name="call_transfer_hint">Seleccione el nombre del contacto al que desea transferir y presione Transferir.</string>
-    <string name="call_transfer_msg">%1$s transferencia de llamadas a&#8230; %2$s</string>
+    <string name="call_transfer_msg">%1$s transferencia de llamadas a %2$s</string>
 
     <string name="attach_picture">Fotos</string>
     <string name="attach_take_picture">Hacer Foto</string>
@@ -96,6 +96,12 @@
     <string name="chat_message_long_press_hint">Evite hacer clic dentro del área de mensajes para la operación de selección de varios items.</string>
     <string name="quote">Citar</string>
     <string name="reply">Responder</string>
+    <string name="retract">Retraer</string>
+    <string name="retract_menu">Retractar mensaje</string>
+    <string name="retract_message_prompt">¿Está seguro de que desea anular todos los mensajes salientes seleccionados de %1$s?</string>
+    <string name="retract_not_supported">El destinatario no es compatible con la retracción de mensajes</string>
+    <string name="retract_own">Has borrado este mensaje</string>
+    <string name="retract_remote">Este mensaje fue eliminado</string>
     <string name="select_all">Seleccionar todo</string>
     <string name="subject">Asunto</string>
     <string name="settings">Ajustes</string>
@@ -158,7 +164,8 @@
     <string name="call_audio">Llamada de audio</string>
     <string name="call_answered">%1$s ha contestado la llamada.</string>
     <string name="call_disable_on_fault">aTalk no ha podido inicializar %1$s\nTodas las llamadas/servicios de medios estarán deshabilitados.\n%2$s</string>
-    <string name="call_ended">La persona que llama ha finalizado la llamada.: %1$s</string>
+    <string name="call_ended">Finalizó la llamada</string>
+    <string name="call_ended_by_remote">La persona que llama ha finalizado la llamada.: %1$s</string>
     <string name="call_error">La parte remota devuelve un error: %1$s</string>
     <string name="call_failed">Llamada fallida</string>
     <string name="call_history_name">Histórico de Llamadas</string>
@@ -344,10 +351,6 @@
     <string name="refresh_store_omemo">XEP-0384: Cifrado OMEMO</string>
 
     <string name="unregistered_message">Error en el inicio de sesión de conexión de la cuenta:\nNombre de usuario: %1$s\nServidor: %2$s\nLa cuenta está fuera de línea.</string>
-    <string name="create_videoBridge">Crear una pasarela de vídeo&#8230;</string>
-    <string name="create_videoBridge_menu">Crear una pasarela de vídeo</string>
-    <string name="create_join_video_conference">Crear / Unirse a una videoconferencia</string>
-    <string name="create_video_conference">Crear una nueva videoconferencia para esta sala de chat</string>
     <string name="video_format_not_supported">Error al configurar la vista previa de la cámara del dispositivo en: %1$s; Excepción: %2$s.</string>
     <string name="disconnected">Desconectado</string>
     <string name="disconnecting_">Desconectando %1$s</string>
@@ -358,7 +361,6 @@
     <string name="duration">duración</string>
 
     <string name="edit_status_message_tip">Fijar mensaje de estado</string>
-    <string name="edited">editado</string>
     <string name="enter_name_or_number">Introduzca nombre o número</string>
     <string name="error">Error</string>
     <string name="error_was_">El error fue: %1$s</string>
@@ -415,7 +417,7 @@
     <string name="history_erase_all">Borrar el historial de chat de todos los contactos</string>
     <string name="history_purge_for_contact_warning">¿Está seguro de que desea purgar todos los mensajes seleccionados para %1$s?</string>
     <string name="history_purge_all_warning">¿Seguro que se quiere borrar todos los mensajes de todos los entidades?</string>
-    <string name="history_purge_count">Número de registros del historial eliminados: %1$s</string>
+    <string name="history_purge_count">Número de registros históricos afectados: %1$s</string>
     <string name="history_purge_error">Error al eliminar mensajes almacenados localmente de %1$s</string>
     <string name="history_purge_media">Eliminar medios de mi teléfono</string>
     <string name="history_offline_warning">Cierre y abra esta sesión de chat para ver mensajes MAM y sin conexión cuando esté en línea</string>
@@ -516,6 +518,7 @@
     <string name="kick_failed_not_enough_permission">Error al expulsar a %1$s. No se tienen suficientes privilegios para hacerlo.</string>
     <string name="last">Último</string>
     <string name="last_message_correction">Correción del último mensaje</string>
+    <string name="lmc_not_supported">El destinatario no admite la corrección del último mensaje.</string>
     <string name="last_name">Apellido</string>
     <string name="last_seen">Hoy:%1$s</string>
     <string name="leave">Salir</string>
@@ -566,8 +569,6 @@
     <string name="folder">Carpeta</string>
     <string name="other">Otro</string>
     <string name="organization">Organización</string>
-    <string name="phone">Teléfono</string>
-    <string name="phones">Teléfonos</string>
     <string name="play">Reproducir</string>
     <string name="postal_code">Código postal</string>
     <string name="rename">Renombrar</string>
@@ -610,7 +611,6 @@
     <string name="retry">Reintentar</string>
     <string name="search">Buscar</string>
     <string name="search_contact">Buscar contacto</string>>
-    <string name="phonebook">Agenda telefónica</string>
     <string name="security">Seguridad</string>
     <string name="select_account_owner">Selecciona el propietario de la cuenta</string>
     <string name="assign_group">Contacto asignado al grupo:</string>
@@ -692,7 +692,6 @@
     <string name="callinfo_call_information">Información de la llamada</string>
     <string name="callinfo_call_transport">Señalización del transporte de llamadas:</string>
     <string name="callinfo_codec">Codificador/Frecuencia:</string>
-    <string name="callinfo_conference_focus">Tema central de la conferencia:</string>
     <string name="callinfo_default_encrypted">Cifrado habilitado:</string>
     <string name="callinfo_jitter">Inestabilidad:</string>
     <string name="callinfo_key_exchange_protocol">Protocolo de intercambio de claves</string>
@@ -702,7 +701,6 @@
     <string name="callinfo_media_srtp">SRTP:</string>
     <string name="callinfo_media_stream_transport_protocol">Protocolo de transporte de secuencias de medios:</string>
     <string name="callinfo_na">N.A.</string>
-    <string name="callinfo_peer_count">Recuento de participantes:</string>
     <string name="callinfo_remote_ip">IP/Puerto remoto:</string>
     <string name="callinfo_rtt">RTT:</string>
     <string name="callinfo_details">Información de los detalles de la llamada</string>
@@ -1074,8 +1072,6 @@
     <string name="sec_protocols_title">Protocolos de seguridad</string>
     <string name="sec_protocols_message">Por favor, seleccionar los protocolos deseados en orden</string>
     <string name="discard">Descartar</string>
-    <string name="sec_zrtp_signalling_on">ZRTP será anunciado sobre el protocolo de señalización</string>
-    <string name="sec_zrtp_signalling_off">No habrá ningún anuncio ZRTP</string>
 
     <!-- STUN/Jingle Nodes list -->
     <string name="service_gui_SERVERS_LIST_ADD_SERVER">Añadir servidor</string>
@@ -1103,7 +1099,6 @@
     <string name="security_sdes_dlg_title">Selecciona las suites de cifrado deseadas</string>
     <string name="security_sdes_title">Suites de cifrado SDES</string>
     <string name="security_zrtp_options">Opciones ZRTP</string>
-    <string name="security_zrtp_signalling">Señalización ZRTP</string>
 
     <!-- Common preferences -->
     <string name="audio_encoding">Codificación de audio</string>
@@ -1146,6 +1141,7 @@
     <string name="jbr_server_port">Puerto del servidor</string>
     <string name="jbr_priority">Prioridad (rango:-128~127)</string>
     <string name="jbr_resource_auto_gen">Autogenerar recurso</string>
+    <string name="jbr_resource_auto_summary">Nombre de recurso claro para que esto surta efecto.</string>
     <string name="jbr_resource_id">ID del recurso Jabber</string>
     <string name="jbr_resource_name">Nombre del recurso</string>
     <string name="jbr_server_ip">Conectar al servidor con IP</string>
@@ -1285,14 +1281,6 @@
 
     <string name="loading_wait">Cargando, por favor espere…</string>
 
-    <!-- Remove special characters from phone number -->
-    <string name="settings_normalize_number">Símbolos especiales en los números de teléfono</string>
-    <string name="settings_normalize_off">Sin modificaciones de número de teléfono</string>
-    <string name="settings_normalize_on">Se eliminarán los símbolos especiales del número</string>
-    <!-- Convert letters in phone numbers -->
-    <string name="settings_phone_alpha_no_allow">Sin modificaciones de número de teléfono</string>
-    <string name="settings_phone_alpha_allow">Letras en números de teléfono</string>
-
     <!-- Call settings -->
     <string name="call">Llamar</string>
     <string name="media_call">Llamada medios</string>
@@ -1413,6 +1401,18 @@
     <string name="crypto_omemo_distrust_messaging_stop">Dejar de enviar más mensajes OMEMO al amigo: %1$s</string>
     <string name="crypto_omemo_trust_messaging_resume">Reanudar el envío de mensajes OMEMO al amigo: %1$s</string>
 
+    <!-- Language Translation settings -->
+    <string name="translation">Traducción de idiomas</string>
+    <string name="translation_received">Traducir mensaje recibido</string>
+    <string name="translation_receive_disable">Traducir recibir deshabilitar</string>
+    <string name="translation_receive_enable">Traducir recibir habilitar</string>
+    <string name="translation_sent">Traducir mensaje enviar</string>
+    <string name="translation_sent_disable">Traducir enviar deshabilitar</string>
+    <string name="translation_sent_enable">Traducir enviar habilitar</string>
+    <string name="translation_server_apikey">Clave API del servidor de traducción</string>
+    <string name="translation_server_apikey_hint">Introduzca solo si corresponde.</string>
+    <string name="translation_server">URL del servidor de traducción</string>
+
     <!-- Advanced settings category -->
     <string name="advanced">Avanzado</string>
     <string name="settings_expert">Opciones para expertos</string>
@@ -1458,7 +1458,6 @@
     <string name="permission_microphone">Micrófono</string>
     <string name="permission_music">Música y audio</string>
     <string name="permission_notifications">Notificaciones</string>
-    <string name="permission_phone">Teléfono</string>
     <string name="permission_video">Foto y vídeo</string>
     <string name="permission_storage">Almacenamiento</string>
     <string name="permission_hint">¡Para obtener el máximo rendimiento de la aplicación y compatibilidad con todas las funciones, aTalk requiere que otorgues los permisos para los siguientes servicios. Sin ellos, aTalk puede no funcionar o tener un comportamiento inesperado!</string>
@@ -1485,9 +1484,6 @@
 
     <string name="notifications_permission_denied_dialog_title">Solicitud de permiso de notificaciones</string>
     <string name="notifications_permission_denied_feedback">Las notificaciones de aTalk estarán deshabilitadas hasta que concedas la solicitud de permiso.</string>
-
-    <string name="phone_permission_denied_dialog_title">Solicitud de permiso para leer estado del teléfono</string>
-    <string name="phone_permission_denied_feedback">Las funciones del teléfono no estarán disponibles hasta que otorgues la solicitud de permiso</string>
 
     <string name="video_permission_denied_dialog_title">Solicitud de permiso de fotografía y vídeo.</string>
     <string name="video_permission_denied_feedback">No se puede acceder al archivo multimedia de fotografía y vídeo hasta que usted conceda la solicitud de permiso</string>

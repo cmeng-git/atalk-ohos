@@ -17,10 +17,10 @@ import androidx.preference.EditTextPreference;
 import androidx.preference.EditTextPreference.OnBindEditTextListener;
 import androidx.preference.Preference;
 
-import org.atalk.impl.neomedia.codec.video.AndroidDecoder;
-import org.atalk.impl.neomedia.codec.video.AndroidEncoder;
 import org.atalk.ohos.R;
 import org.atalk.ohos.gui.AppGUIActivator;
+import org.atalk.impl.neomedia.codec.video.AndroidDecoder;
+import org.atalk.impl.neomedia.codec.video.AndroidEncoder;
 import org.atalk.service.configuration.ConfigurationService;
 
 /**

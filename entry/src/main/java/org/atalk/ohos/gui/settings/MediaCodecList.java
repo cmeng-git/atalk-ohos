@@ -17,11 +17,11 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import org.atalk.impl.neomedia.codec.video.CodecInfo;
 import org.atalk.ohos.BaseActivity;
 import org.atalk.ohos.R;
 import org.atalk.ohos.gui.util.ThemeHelper;
 import org.atalk.ohos.gui.util.ThemeHelper.Theme;
+import org.atalk.impl.neomedia.codec.video.CodecInfo;
 
 /**
  * Activity that lists video <code>MediaCodec</code>s available in the system.

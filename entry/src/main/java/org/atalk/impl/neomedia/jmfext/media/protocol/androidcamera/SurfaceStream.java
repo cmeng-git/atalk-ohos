@@ -18,6 +18,9 @@ import java.util.Collections;
 import javax.media.Buffer;
 import javax.media.control.FormatControl;
 
+import org.atalk.ohos.BaseActivity;
+import org.atalk.ohos.gui.call.VideoCallActivity;
+import org.atalk.ohos.gui.call.VideoHandlerFragment;
 import org.atalk.impl.neomedia.NeomediaServiceUtils;
 import org.atalk.impl.neomedia.codec.video.AndroidEncoder;
 import org.atalk.impl.neomedia.device.DeviceConfiguration;
@@ -26,10 +29,6 @@ import org.atalk.impl.neomedia.device.util.CodecInputSurface;
 import org.atalk.impl.neomedia.device.util.OpenGLContext;
 import org.atalk.impl.neomedia.device.util.OpenGlCtxProvider;
 import org.atalk.impl.timberlog.TimberLog;
-
-import org.atalk.ohos.BaseActivity;
-import org.atalk.ohos.gui.call.VideoCallActivity;
-import org.atalk.ohos.gui.call.VideoHandlerFragment;
 
 import timber.log.Timber;
 
@@ -196,7 +195,8 @@ public class SurfaceStream extends CameraStreamBase {
             // mCaptureBuilder.addTarget(mEncoderSurface.getSurface());
             // mCameraDevice.createCaptureSession(Arrays.asList(mEncoderSurface.getSurface(), mPreviewSurface), //Collections.singletonList(mPreviewSurface),
             mCameraDevice.createCaptureSession(Collections.singletonList(mPreviewSurface), mSessionStateCallBack, mBackgroundHandler);
-        } catch (CameraAccessException e) {
+        }
+        catch (CameraAccessException e) {
             Timber.w("Surface stream onInitPreview exception: %s", e.getMessage());
         }
     }
@@ -269,7 +269,8 @@ public class SurfaceStream extends CameraStreamBase {
                     if (!frameAvailable) {
                         throw new RuntimeException("Camera frame wait timed out");
                     }
-                } catch (InterruptedException ie) {
+                }
+                catch (InterruptedException ie) {
                     throw new RuntimeException(ie);
                 }
             }
@@ -314,7 +315,8 @@ public class SurfaceStream extends CameraStreamBase {
                     // mDisplayTV.releaseEGLSurfaceContext();
                     myCtxProvider.textureUpdated = false;
                 }
-            } finally {
+            }
+            finally {
                 synchronized (paintLock) {
                     paintDone = true;
                     paintLock.notifyAll();
@@ -327,7 +329,8 @@ public class SurfaceStream extends CameraStreamBase {
             if (!paintDone) {
                 try {
                     paintLock.wait();
-                } catch (InterruptedException e) {
+                }
+                catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
             }
@@ -386,7 +389,8 @@ public class SurfaceStream extends CameraStreamBase {
             try {
                 captureThread.join();
                 captureThread = null;
-            } catch (InterruptedException e) {
+            }
+            catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
         }

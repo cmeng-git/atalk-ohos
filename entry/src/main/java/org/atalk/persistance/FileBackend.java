@@ -25,8 +25,6 @@ import android.webkit.MimeTypeMap;
 
 import androidx.core.content.FileProvider;
 
-import org.atalk.ohos.aTalkApp;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -39,6 +37,8 @@ import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+
+import org.atalk.ohos.aTalkApp;
 
 import timber.log.Timber;
 

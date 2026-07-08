@@ -15,7 +15,6 @@ import java.util.Locale;
 
 import org.atalk.ohos.aTalkApp;
 
-
 public class TTSService extends Service implements TextToSpeech.OnInitListener {
     public static final String EXTRA_MESSAGE = "message";
     public static final String EXTRA_QMODE = "qmode";
