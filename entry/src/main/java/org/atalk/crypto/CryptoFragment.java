@@ -37,6 +37,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import net.java.sip.communicator.impl.msghistory.MessageHistoryActivator;
 import net.java.sip.communicator.service.contactlist.MetaContact;
@@ -88,7 +90,6 @@ import org.jxmpp.jid.BareJid;
 import org.jxmpp.jid.DomainBareJid;
 import org.jxmpp.jid.EntityBareJid;
 import org.jxmpp.jid.EntityFullJid;
-import org.jxmpp.jid.Jid;
 
 import timber.log.Timber;
 
@@ -631,54 +632,54 @@ public class CryptoFragment extends BaseFragment
             return;
         }
 
-        // Execute in a new thread to avoid ANR with black screen when chat window is opened.
-        new Thread() {
-            @Override
-            public void run() {
-                boolean serverCan = false;
-                boolean entityCan = false;
+        ExecutorService eService = Executors.newSingleThreadExecutor();
+        eService.execute(() -> {
+            // Execute in a new thread to avoid ANR with black screen when chat window is opened.
+            boolean serverCan = false;
+            boolean entityCan = false;
 
-                try {
-                    DomainBareJid serverJid = mConnection.getXMPPServiceDomain();
-                    serverCan = AndroidOmemoService.isOmemoInitSuccessful
-                            || OmemoManager.serverSupportsOmemo(mConnection, serverJid);
+            try {
+                DomainBareJid serverJid = mConnection.getXMPPServiceDomain();
+                serverCan = AndroidOmemoService.isOmemoInitSuccessful
+                        || OmemoManager.serverSupportsOmemo(mConnection, serverJid);
 
-                    if (mDescriptor instanceof ChatRoom) {
-                        MultiUserChat muc = ((ChatRoom) mDescriptor).getMultiUserChat();
-                        entityCan = mOmemoManager.multiUserChatSupportsOmemo(muc);
+                if (mDescriptor instanceof ChatRoom) {
+                    MultiUserChat muc = ((ChatRoom) mDescriptor).getMultiUserChat();
+                    entityCan = mOmemoManager.multiUserChatSupportsOmemo(muc);
+                }
+                else {
+                    // buddy online check may sometimes experience reply timeout; OMEMO obsoleted feature
+                    // not a good idea to include PEP_NODE_DEVICE_LIST_NOTIFY as some siblings may
+                    // support omemo encryption.
+                    // boolean support = ServiceDiscoveryManager.getInstanceFor(connection)
+                    //      .discoverInfo(contactJId).containsFeature(PEP_NODE_DEVICE_LIST_NOTIFY);
+
+                    // Check based on present of keys on server - may have problem if buddy has old axolotf data
+                    BareJid contact = ((Contact) mDescriptor).getJid().asBareJid();
+
+                    // entityCan = mOmemoManager.contactSupportsOmemo(contact);
+                    // cmeng - what about check from backend database entities table instead
+                    Set<OmemoDevice> activeDevices = mOmemoManager.getDevicesOf(contact);
+                    if (activeDevices.isEmpty()) {
+                        mOmemoManager.requestDeviceListUpdateFor(contact);
+                        activeDevices = mOmemoManager.getDevicesOf(contact);
                     }
-                    else {
-                        // buddy online check may sometimes experience reply timeout; OMEMO obsoleted feature
-                        // not a good idea to include PEP_NODE_DEVICE_LIST_NOTIFY as some siblings may
-                        // support omemo encryption.
-                        // boolean support = ServiceDiscoveryManager.getInstanceFor(connection)
-                        //      .discoverInfo(contactJId).containsFeature(PEP_NODE_DEVICE_LIST_NOTIFY);
-
-                        // Check based on present of keys on server - may have problem if buddy has old axolotf data
-                        Jid contactJId = ((Contact) mDescriptor).getJid();
-                        entityCan = mOmemoManager.contactSupportsOmemo(contactJId.asBareJid());
-
-                        // cmeng - what about check from backend database entities table instead
-                        // String usrID = ((Contact) mDescriptor).getAddress();
-                        // entityCan = ((SQLiteOmemoStore) mOmemoStore).getContactNumTrustedKeys(usrID) > 0;
-                    }
+                    entityCan = !activeDevices.isEmpty();
                 }
-                catch (XMPPException.XMPPErrorException | SmackException.NoResponseException
-                       | InterruptedException | SmackException.NotConnectedException | IOException e) {
-                    Timber.w("Exception in omemo support checking: %s", e.getMessage());
-                }
-                catch (PubSubException.NotALeafNodeException e) {
-                    Timber.w("Exception in checking entity omemo support: %s", e.getMessage());
-                }
-
-                // update omemoSupported in cache; revert to MSGTYPE_NORMAL if Default OMEMO not supported by session
-                boolean omemoSupported = serverCan && entityCan;
-                omemoCapable.put(mDescriptor, omemoSupported);
-
-                if (!omemoSupported && (MSGTYPE_OMEMO == mChatType))
-                    setChatType(MSGTYPE_NORMAL);
             }
-        }.start();
+            catch (XMPPException.XMPPErrorException | SmackException.NoResponseException | InterruptedException |
+                   SmackException.NotConnectedException | IOException | PubSubException.NotALeafNodeException e) {
+                Timber.w("Exception in omemo support checking: %s", e.getMessage());
+            }
+
+            // update omemoSupported in cache; revert to MSGTYPE_NORMAL if Default OMEMO not supported by session
+            boolean omemoSupported = serverCan && entityCan;
+            omemoCapable.put(mDescriptor, omemoSupported);
+
+            if (!omemoSupported && (MSGTYPE_OMEMO == mChatType))
+                setChatType(MSGTYPE_NORMAL);
+        });
+        eService.shutdown();
     }
 
     /**
@@ -701,7 +702,7 @@ public class CryptoFragment extends BaseFragment
     }
 
     /**
-     * Callback when user clicks the omemo Authentication dialog's confirm/cancel button.
+     * Callback when user clicks the omemo Authentication dialog confirm/cancel button.
      *
      * @param allTrusted allTrusted state.
      * @param omemoDevices set of unTrusted devices

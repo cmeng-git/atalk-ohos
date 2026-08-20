@@ -115,7 +115,7 @@ public class OkHttpUtils {
     }
 
     /**
-     * Posting form to <tt>url</tt>. For submission we use POST method i.e. "application/x-www-form-urlencoded" encoded.
+     * Posting form to <tt>url</tt>. For submission, we use POST method i.e. "application/x-www-form-urlencoded" encoded.
      * By default, OkHttp automatically follows redirects, including 307s. This means that if you send a POST request
      * and get a 307 response, OkHttp will automatically resend the POST request to the new location.
      *

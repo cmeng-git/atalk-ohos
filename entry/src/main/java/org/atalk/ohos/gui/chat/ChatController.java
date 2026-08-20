@@ -20,6 +20,7 @@ import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.text.Editable;
 import android.text.Html;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Pair;
@@ -517,8 +518,8 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
                     String err = "Translation error: " + e.getMessage();
                     if (e instanceof BadTranslatorResponseException) {
                         String host = ((BadTranslatorResponseException) e).getHost();
-                        int code = ((BadTranslatorResponseException) e).getCode();
-                        err = "Translation error: (" + code + ") " + host;
+                        // int code = ((BadTranslatorResponseException) e).getCode();
+                        err = Html.fromHtml(host, Html.FROM_HTML_MODE_LEGACY).toString();
                     }
                     Timber.w("Translate Message Send: %s", err);
                     aTalkApp.showToastMessage(err);

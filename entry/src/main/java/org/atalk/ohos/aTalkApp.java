@@ -149,14 +149,18 @@ public class aTalkApp extends Application implements LifecycleEventObserver {
 
     /**
      * setLocale for Application class to work properly with PBContext class.
+     * Locale is handled by Per Language preference for TIRAMISU.
+     * Must keep attachBaseContext, else aTalk crashes on start; due to ContextWrapper mBase not init.
      */
     @Override
     protected void attachBaseContext(Context base) {
         // mInstance must be initialized before getProperty() for SQLiteConfigurationStore() init.
         mInstance = base;
-        String language = ConfigurationUtils.getProperty(P_KEY_LOCALE, "");
-        // showToastMessage("aTalkApp reinit locale: " + language);
-        mInstance = LocaleHelper.setLocale(base, language);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            String language = ConfigurationUtils.getProperty(P_KEY_LOCALE, "");
+            // showToastMessage("aTalkApp reinit locale: " + language);
+            mInstance = LocaleHelper.setLocale(base, language);
+        }
         super.attachBaseContext(mInstance);
     }
 
@@ -219,7 +223,7 @@ public class aTalkApp extends Application implements LifecycleEventObserver {
      *
      * @return the size of the main application display window.
      */
-    public static Dimension getDisplaySize() {
+    public Dimension getDisplaySize() {
         // Get android device screen display size
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
             Point size = new Point();

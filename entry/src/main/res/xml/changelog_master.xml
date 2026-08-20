@@ -7,6 +7,27 @@
 -->
 
 <changelog>
+    <release version="1.01.000 (20/08/2026)" versioncode="101000">
+        <change>Please read &lt;a href='https://cmeng-git.github.io/atalk/faq.html#ui_01'&gt;aTalk UI design &amp; Implementation&lt;/a&gt; before using aTalk.</change>
+        <change>Add per-app language preferences support for android >= API-33 (TIRAMISU).</change>
+        <change>Android API-37 broadcast ACTION_BOOT_COMPLETED on aTalk start-up, leading to aTalk SystemEventReceiver() to exit app,
+            and restart. This causes aTalk hangs in endless loop.</change>
+        <change>Update libretranslate-java to work with LibreTranslate v1.9.6.</change>
+        <change>When adding a new contact, pre-approve subscription for it.
+            See https://github.com/cmeng-git/atalk-android/pull/257.</change>
+        <change>Incorrect QNAME specified for FallbackIndicationElement.class.</change>
+        <change>Fix RetractedElement toXML() do not close the element properly.</change>
+        <change>Replace OmemoManager #contactSupportsOmemo() with #getDevicesOf() in local DB;
+            Proceed to #requestDeviceListUpdateFor() if contact identity is not found.
+            This avoids online check, and fetch missing omemoDevice if not found in identities table.
+            Found ejabberd 26.04 server does not send pubsub#event notifications for all the sr_user omemo devices.</change>
+        <change>Android device with API-29 is not compatible with aTalk. InetAddress.getByName(hostname) returns null i.e. DNS not supported.</change>
+        <change>Execute all omemo message encryption in background task to avoid ANR.</change>
+        <change>Remove XMPP-Bosh patch for reconnection failure on network changed - implemented in smack 4.5.0-rc1.</change>
+        <change>Included 'XMPP Messaging Server Setup' document in the aTalk repository/resources for home server setup reference.</change>
+        <change>Bug fixes and enhancements.</change>
+    </release>
+
     <release version="1.00.000 (07/08/2026)" versioncode="100000">
         <change>Please read &lt;a href='https://cmeng-git.github.io/atalk/faq.html#ui_01'&gt;aTalk UI design &amp; Implementation&lt;/a&gt; before using aTalk.</change>
         <change>Support Language Translation for sent/received messages in chat/multi-user chat sessions.</change>

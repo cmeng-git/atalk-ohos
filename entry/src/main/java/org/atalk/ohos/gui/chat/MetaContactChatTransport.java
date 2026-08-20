@@ -376,6 +376,11 @@ public class MetaContactChatTransport implements ChatTransport, ContactPresenceS
      */
     @Override
     public boolean allowMessageRetract() {
+        XMPPConnection connection = mPPS.getConnection();
+        if (connection == null) {
+            return false;
+        }
+
         MessageRetractionManager manager = MessageRetractionManager.getInstanceFor(mPPS.getConnection());
         return manager.contactSupportsMessageRetraction(mContact.getJid())
                 || !mContact.getPresenceStatus().isOnline();

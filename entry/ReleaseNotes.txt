@@ -1,5 +1,31 @@
 Project aTalk-ohos Release Notes
 =========================================================================
+Version:        1.01.000 (101000)
+Release Date:   08/20/2026
+Author:         cmeng
+- Add per-app language preferences support for android >= API-33 (TIRAMISU).
+- Android API-37 broadcast ACTION_BOOT_COMPLETED on aTalk start-up, leading to aTalk SystemEventReceiver() to exit app,
+  and restart. This causes aTalk hangs in endless loop.
+- Update libretranslate-java to work with LibreTranslate v1.9.6.
+- When adding a new contact, pre-approve subscription for it.
+  See https://github.com/cmeng-git/atalk-android/pull/257.
+- Incorrect QNAME specified for FallbackIndicationElement.class.
+- Fix RetractedElement toXML() do not close the element properly.
+- Replace OmemoManager #contactSupportsOmemo() with #getDevicesOf() in local DB;
+  Proceed to #requestDeviceListUpdateFor() if contact identity is not found.
+  This avoids online check, and fetch missing omemoDevice if not found in identities table.
+  Found ejabberd 26.04 server does not send pubsub#event notifications for all the sr_user omemo devices.
+- Execute all omemo message encryption in background task to avoid ANR.
+- Android device with API-29 is not compatible with aTalk. InetAddress.getByName(hostname) returns null i.e. DNS not supported.
+- Remove XMPP-Bosh patch for reconnection failure on network changed - implemented in smack 4.5.0-rc1.
+- Included 'XMPP Messaging Server Setup' document in the aTalk repository/resources for home server setup reference.
+
+*** Observation ***
+- aTalk cannot run on android AVD API-29 due to null returns; DNS not working?
+  * InetAddress addr = InetAddress.getByName(hostname);
+- Source sync to atalk-android v6.5.0
+
+=========================================================================
 Version:        1.00.000 (100000)
 Release Date:   07/08/2026
 Author:         cmeng
