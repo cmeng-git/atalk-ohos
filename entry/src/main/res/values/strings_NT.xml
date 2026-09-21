@@ -26,7 +26,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools"
     tools:ignore="MissingTranslation" >
 
-    <string name="application_name">aTalk</string>
+    <string name="app_name">aTalk</string>
     <string name="xmpp_server_port">5222</string>
     <string name="chatroom_hint">chatroom@example.com</string>
     <string name="encryption_omemo">OMEMO</string>

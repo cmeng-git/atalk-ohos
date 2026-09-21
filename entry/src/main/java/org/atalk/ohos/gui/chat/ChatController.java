@@ -20,7 +20,6 @@ import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.text.Editable;
 import android.text.Html;
-import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Pair;
@@ -554,8 +553,8 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
      */
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-        case R.id.sendMessageButton:
+        int id = v.getId();
+        if (id == R.id.sendMessageButton) {
             if (chatPanel.getProtocolProvider().isRegistered()) {
                 if (mediaPreview.getVisibility() == View.VISIBLE) {
                     // Disable to prevent user multiple clicks.
@@ -615,23 +614,24 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
                 aTalkApp.showToastMessage(R.string.message_delivery_not_registered);
             }
             if (quotedMessage == null) {
-                break;
+                return;
             }
-            // else continue to clean up quotedMessage after sending
-
-        case R.id.chatReplyCancel:
+           // clean up quotedMessage after sending
             quotedMessage = null;
             chatMessageReply.setVisibility(View.GONE);
             chatReplyCancel.setVisibility(View.GONE);
-            break;
-
-        case R.id.cancelCorrectionBtn:
+        }
+        else if (id == R.id.chatReplyCancel) {
+            quotedMessage = null;
+            chatMessageReply.setVisibility(View.GONE);
+            chatReplyCancel.setVisibility(View.GONE);
+        }
+        else if (id == R.id.cancelCorrectionBtn) {
             cancelCorrection();
             // Clear last message text
             msgEdit.setText("");
-            break;
-
-        case R.id.chatBackToCallButton:
+        }
+        else if (id == R.id.chatBackToCallButton) {
             if (CallManager.getActiveCallsCount() > 0) {
                 String callId = null;
                 for (Call call : CallManager.getActiveCalls()) {
@@ -647,13 +647,11 @@ public class ChatController implements View.OnClickListener, View.OnLongClickLis
             }
             else
                 updateSendModeState();
-            break;
-
-        case R.id.audioMicButton:
+        }
+        else if (id == R.id.audioMicButton) {
             if (chatPanel.isChatTtsEnable()) {
                 speechToText();
             }
-            break;
         }
     }
 

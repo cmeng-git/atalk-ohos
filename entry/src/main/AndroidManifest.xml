@@ -138,7 +138,7 @@
             android:launchMode="singleTask" />
 
         <activity
-            android:name="org.atalk.android.gui.share.ShareActivity"
+            android:name="org.atalk.ohos.gui.share.ShareActivity"
             android:exported="true"
             android:launchMode="singleTask">
 
